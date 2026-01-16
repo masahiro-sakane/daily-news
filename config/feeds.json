@@ -1,0 +1,296 @@
+{
+  "feeds": [
+    {
+      "name": "Zenn",
+      "url": "https://zenn.dev/feed",
+      "type": "rss",
+      "enabled": true
+    },
+    {
+      "name": "Qiita",
+      "url": "https://qiita.com/popular-items/feed",
+      "type": "atom",
+      "enabled": true
+    },
+    {
+      "name": "はてなブックマーク - テクノロジー",
+      "url": "https://b.hatena.ne.jp/hotentry/it.rss",
+      "type": "rss",
+      "enabled": true
+    },
+    {
+      "name": "Dev.to",
+      "url": "https://dev.to/feed",
+      "type": "rss",
+      "enabled": true
+    },
+    {
+      "name": "GitHub Blog",
+      "url": "https://github.blog/feed/",
+      "type": "rss",
+      "enabled": true
+    },
+    {
+      "name": "CSS-Tricks",
+      "url": "https://css-tricks.com/feed/",
+      "type": "rss",
+      "enabled": false
+    },
+    {
+      "name": "Smashing Magazine",
+      "url": "https://www.smashingmagazine.com/feed/",
+      "type": "rss",
+      "enabled": false
+    },
+    {
+      "name": "Cloud Native Computing Foundation",
+      "url": "https://www.cncf.io/feed/",
+      "type": "rss",
+      "enabled": true
+    },
+    {
+      "name": "GREE Engineering",
+      "url": "http://labs.gree.jp/blog/feed/",
+      "type": "rss",
+      "enabled": true
+    },
+    {
+      "name": "Amazon Web Services ブログ",
+      "url": "https://aws.amazon.com/jp/blogs/news/feed/",
+      "type": "rss",
+      "enabled": true
+    },
+    {
+      "name": "CNET Japan",
+      "url": "http://feed.japan.cnet.com/rss/index.rdf",
+      "type": "rss",
+      "enabled": true
+    },
+    {
+      "name": "EnterpriseZine",
+      "url": "http://enterprisezine.jp/rss/new/20/index.xml",
+      "type": "rss",
+      "enabled": true
+    },
+    {
+      "name": "MITテクノロジーレビュー",
+      "url": "https://www.technologyreview.jp/feed/",
+      "type": "rss",
+      "enabled": true
+    },
+    {
+      "name": "＠IT",
+      "url": "http://www.atmarkit.co.jp/rss/rss091.xml",
+      "type": "rss",
+      "enabled": true
+    },
+    {
+      "name": "エンタープライズギークス",
+      "url": "http://enterprisegeeks.hatenablog.com/feed",
+      "type": "rss",
+      "enabled": true
+    },
+    {
+      "name": "メルカリエンジニアリングブログ",
+      "url": "http://tech.mercari.com/feed",
+      "type": "rss",
+      "enabled": true
+    },
+    {
+      "name": "クックパッド開発者ブログ",
+      "url": "http://techlife.cookpad.com/feed/",
+      "type": "rss",
+      "enabled": true
+    },
+    {
+      "name": "Google Japan Blog",
+      "url": "http://googlejapan.blogspot.com/atom.xml",
+      "type": "atom",
+      "enabled": true
+    },
+    {
+      "name": "徳丸浩の日記",
+      "url": "http://blog.tokumaru.org/feeds/posts/default",
+      "type": "rss",
+      "enabled": true
+    },
+    {
+      "name": "Engineering Blog (LinkedIn)",
+      "url": "https://engineering.linkedin.com/blog.rss",
+      "type": "rss",
+      "enabled": true
+    },
+    {
+      "name": "ゆううきブログ",
+      "url": "http://yuuki.hatenablog.com/feed",
+      "type": "rss",
+      "enabled": true
+    },
+    {
+      "name": "豆蔵デベロッパーサイト",
+      "url": "https://developer.mamezou-tech.com/feed/",
+      "type": "rss",
+      "enabled": true
+    },
+    {
+      "name": "Martin Fowler's Bliki (ja)",
+      "url": "http://bliki-ja.github.io/feed.xml",
+      "type": "rss",
+      "enabled": true
+    },
+    {
+      "name": "かとじゅんの技術日誌",
+      "url": "http://d.hatena.ne.jp/j5ik2o/rss",
+      "type": "rss",
+      "enabled": true
+    },
+    {
+      "name": "クラスメソッド開発ブログ",
+      "url": "http://dev.classmethod.jp/feed/",
+      "type": "rss",
+      "enabled": true
+    },
+    {
+      "name": "さくらのナレッジ",
+      "url": "https://knowledge.sakura.ad.jp/rss/",
+      "type": "rss",
+      "enabled": true
+    },
+    {
+      "name": "Netflix TechBlog",
+      "url": "https://medium.com/feed/netflix-techblog",
+      "type": "rss",
+      "enabled": true
+    },
+    {
+      "name": "Hatena Developer Blog",
+      "url": "http://d.hatena.ne.jp/hatenatech/rss",
+      "type": "rss",
+      "enabled": true
+    },
+    {
+      "name": "Dropbox Tech Blog",
+      "url": "https://tech.dropbox.com/feed/",
+      "type": "rss",
+      "enabled": true
+    },
+    {
+      "name": "LINEヤフー Tech Blog",
+      "url": "http://techblog.yahoo.co.jp/atom.xml",
+      "type": "atom",
+      "enabled": true
+    },
+    {
+      "name": "さくらインターネット研究所",
+      "url": "http://research.sakura.ad.jp/feed/",
+      "type": "rss",
+      "enabled": true
+    },
+    {
+      "name": "t-wadaのブログ",
+      "url": "http://t-wada.hatenablog.jp/rss",
+      "type": "rss",
+      "enabled": true
+    },
+    {
+      "name": "DeNA Engineering",
+      "url": "http://engineer.dena.jp/atom.xml",
+      "type": "atom",
+      "enabled": true
+    },
+    {
+      "name": "Indeed Engineering Blog",
+      "url": "http://engineering.indeedblog.com/feed/",
+      "type": "rss",
+      "enabled": true
+    },
+    {
+      "name": "CyberAgent Developers Blog",
+      "url": "https://developers.cyberagent.co.jp/blog/feed/",
+      "type": "rss",
+      "enabled": true
+    },
+    {
+      "name": "Misreading Chat",
+      "url": "https://misreading.chat/feed/",
+      "type": "rss",
+      "enabled": true
+    },
+    {
+      "name": "PayPay Product Blog",
+      "url": "https://blog.paypay.ne.jp/feed/",
+      "type": "rss",
+      "enabled": true
+    },
+    {
+      "name": "Spotify Engineering",
+      "url": "http://labs.spotify.com/feed/",
+      "type": "rss",
+      "enabled": true
+    },
+    {
+      "name": "Engineering at Slack",
+      "url": "https://slack.engineering/feed",
+      "type": "rss",
+      "enabled": true
+    },
+    {
+      "name": "Uzabase for Engineers",
+      "url": "http://tech.uzabase.com/feed",
+      "type": "rss",
+      "enabled": true
+    },
+    {
+      "name": "gihyo.jp",
+      "url": "https://gihyo.jp/feed/rss2",
+      "type": "rss",
+      "enabled": true
+    },
+    {
+      "name": "InfoQ",
+      "url": "http://www.infoq.com/jp/feed/news",
+      "type": "rss",
+      "enabled": true
+    },
+    {
+      "name": "Gunosyデータ分析ブログ",
+      "url": "http://data.gunosy.io/feed",
+      "type": "rss",
+      "enabled": true
+    },
+    {
+      "name": "渋谷駅前で働くデータサイエンティストのブログ",
+      "url": "https://tjo.hatenablog.com/feed",
+      "type": "rss",
+      "enabled": true
+    },
+    {
+      "name": "Coral Capital",
+      "url": "https://coralcap.co/feed/",
+      "type": "rss",
+      "enabled": true
+    }
+  ],
+  "keywords": [
+    "React",
+    "TypeScript",
+    "Node.js",
+    "JavaScript",
+    "Vue",
+    "Next.js",
+    "GraphQL",
+    "Docker",
+    "Kubernetes",
+    "AWS",
+    "Azure",
+    "GCP",
+    "CI/CD",
+    "GitHub Actions",
+    "マイクロサービス",
+    "アーキテクチャ",
+    "DDD",
+    "テスト",
+    "パフォーマンス",
+    "セキュリティ"
+  ]
+}

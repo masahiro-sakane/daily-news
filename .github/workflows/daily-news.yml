@@ -1,0 +1,91 @@
+name: Daily News
+
+on:
+  # 毎日 UTC 0:00 (JST 9:00) に自動実行
+  schedule:
+    - cron: '0 0 * * *'
+
+  # 手動実行を許可（Actions タブから実行可能）
+  workflow_dispatch:
+    inputs:
+      keywords:
+        description: 'カスタムキーワード（カンマ区切り、例: React,TypeScript,Docker）'
+        required: false
+        type: string
+      skip_notify_if_empty:
+        description: '新着記事がない場合は通知をスキップ'
+        required: false
+        type: boolean
+        default: false
+      max_articles:
+        description: '通知する記事の最大数（1-9）'
+        required: false
+        type: number
+
+jobs:
+  fetch-and-notify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15  # 翻訳処理を考慮してタイムアウトを設定
+
+    steps:
+      - name: リポジトリをチェックアウト
+        uses: actions/checkout@v4
+
+      - name: Node.js環境をセットアップ
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: 依存関係をインストール
+        run: npm ci
+
+      - name: TypeScriptプロジェクトをビルド
+        run: npm run build
+
+      - name: Daily Newsを実行（記事取得・翻訳・Discord通知）
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          NODE_ENV: production
+          FEED_CONFIG_PATH: config/feeds.json
+          STORAGE_PATH: data/read-articles.json
+          RETENTION_DAYS: 30
+          MAX_RETRIES: 3
+          RETRY_DELAY_MS: 1000
+          FETCH_TIMEOUT_MS: 10000
+        run: |
+          if [ -n "${{ github.event.inputs.keywords }}" ]; then
+            OPTIONS="--keywords \"${{ github.event.inputs.keywords }}\""
+          else
+            OPTIONS=""
+          fi
+
+          if [ "${{ github.event.inputs.skip_notify_if_empty }}" = "true" ]; then
+            OPTIONS="$OPTIONS --skip-notify-if-empty"
+          fi
+
+          if [ -n "${{ github.event.inputs.max_articles }}" ]; then
+            OPTIONS="$OPTIONS --max-articles ${{ github.event.inputs.max_articles }}"
+          fi
+
+          npm start -- $OPTIONS
+
+      - name: 既読記事データをコミット＆プッシュ
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add data/read-articles.json
+          git diff --staged --quiet || git commit -m "chore: update read articles [skip ci]"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: 失敗時にログをアップロード
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: daily-news-logs
+          path: |
+            logs/*.log
+            *.log
+          retention-days: 7
