@@ -26,6 +26,8 @@ jobs:
   fetch-and-notify:
     runs-on: ubuntu-latest
     timeout-minutes: 15  # 翻訳処理を考慮してタイムアウトを設定
+    permissions:
+      contents: write  # 既読記事データのコミット・プッシュに必要
 
     steps:
       - name: リポジトリをチェックアウト
