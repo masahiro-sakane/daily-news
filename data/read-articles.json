@@ -2540,6 +2540,260 @@
       "description": "はじめに\n先日、AWS Certified Solutions Architect - Professional (SAP-C02) に\n合格しましたので、学習方法や試験の感想を共有します。\nこれから受験される方の参考になれば幸いです。\n\n筆者のバックグラウンド\n\n項...",
       "publishedAt": "2026-01-23T08:33:49.000Z",
       "feedName": "Qiita"
+    },
+    {
+      "id": "581094a9e80942eda670ffc7629e3fd24f184ba08bcde30b822442513c56c122",
+      "title": "I Built a Running Metronome App to Solve My Pacing Problem",
+      "url": "https://dev.to/pipeabellos/i-built-a-running-metronome-app-to-f5p",
+      "description": "When I started training for marathons, I faced a frustrating problem: I couldn't hold a consistent pace.\nGPS watches show your current pace, but there's always a 5-10 second lag. By the time you see you're going too fast or slow, you've already been off-pace for a while. Over 26.2 miles, these small inconsistencies add up to either bonking early or leaving time on the table.\nI built Runo — a metronome app specifically for runners. You set your target cadence (steps per minute), and it plays an audible beat you can sync your footsteps to. No more constantly watching your wrist. Just listen to the rhythm and run.\nResearch shows that a cadence around 180 steps per minute reduces impact forces, improves running efficiency, and helps prevent common injuries. But most runners don't know their current cadence, let alone how to train it.\nRuno makes it simple: set your target BPM, hear the beat, match your steps.\nMobile App: React Native / Expo\nWebsite: Next.js + Payload CMS\nAnalytics: PostHog\n4.7★ rating on the App Store\n10,000+ runners using the app\n$1.6k MRR and growing\nWe just launched Runo 2.0 with:\nApple Watch haptic feedback (feel the beat on your wrist)\nSocial features (run with friends)\nStrava integration\nCheck it out at runoapp.com — available on iOS and Android.\nWould love to hear your feedback! What features would make this more useful for your training?",
+      "publishedAt": "2026-01-27T01:22:38.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "3fe759aea487182a5784a7cb6ce53e2634fbab5d846e426133cc6b597bf8a291",
+      "title": "Data Engineering ZoomCamp Module 1 Notes Part 2",
+      "url": "https://dev.to/abdelrahman_adnan/data-engineering-zoomcamp-module-1-notes-part-2-5871",
+      "description": "Part 4: Data Ingestion with Python\n\n\nWe're going to load the NYC Taxi dataset into Postgres.\nInstall dependencies:\npip install pandas sqlalchemy psycopg2-binary jupyter\n\nOr with uv:\nuv add pandas sqlalchemy psycopg2-binary\nuv add --dev jupyter\n\nWe use the NYC Taxi trip data. Download it:\nwget https://github.com/DataTalksClub/nyc-tlc-data/releases/download/yellow/yellow_tripdata_2021-01.csv.gz\n\nHere's the basic approach:\nimport pandas as pd\nfrom sqlalchemy import create_engine\n\n# Create connection\nengine = create_engine('postgresql://root:root@localhost:5432/ny_taxi')\n\n# Read CSV in chunks (it's a big file)\ndf_iter = pd.read_csv('yellow_tripdata_2021-01.csv.gz', \n                       iterator=True, \n                       chunksize=100000)\n\n# Create table from first chunk\nfirst_chunk = next(df_iter)\nfirst_chunk.head(0).to_sql(name='yellow_taxi_data', con=engine, if_exists='replace')\n\n# Insert first chunk\nfirst_chunk.to_sql(name='yellow_taxi_data', con=engine, if_exists='append')\n\n# Insert remaining chunks\nfor chunk in df_iter:\n    chunk.to_sql(name='yellow_taxi_data', con=engine, if_exists='append')\n    print(f'Inserted {len(chunk)} rows')\n\nThe key things here:\nchunksize prevents loading the whole file into memory\nif_exists='replace' creates the table (first time)\nif_exists='append' adds rows (subsequent chunks)\nRunning multiple docker run commands is annoying. Docker Compose lets you define everything in one file.\nCreate docker-compose.yaml:\nservices:\n  pgdatabase:\n    image: postgres:17\n    environment:\n      POSTGRES_USER: \"root\"\n      POSTGRES_PASSWORD: \"root\"\n      POSTGRES_DB: \"ny_taxi\"\n    volumes:\n      - \"ny_taxi_postgres_data:/var/lib/postgresql/data\"\n    ports:\n      - \"5432:5432\"\n\n  pgadmin:\n    image: dpage/pgadmin4\n    environment:\n      PGADMIN_DEFAULT_EMAIL: \"admin@admin.com\"\n      PGADMIN_DEFAULT_PASSWORD: \"root\"\n    volumes:\n      - \"pgadmin_data:/var/lib/pgadmin\"\n    ports:\n      - \"8080:80\"\n\nvolumes:\n  ny_taxi_postgres_data:\n  pgadmin_data:\n\nNow just run:\ndocker-compose up      # start everything\ndocker-compose up -d   # start in background\ndocker-compose down    # stop everything\ndocker-compose down -v # stop and remove volumes\n\nDocker Compose automatically creates a network so containers can talk to each other using their service names (e.g., pgdatabase instead of localhost).\nOpen http://localhost:8080 in browser\nLogin with the email/password from docker-compose\nRight-click Servers > Create > Server\nName it whatever you want\nUnder Connection tab:\n\n\nHost: pgdatabase (the service name, not localhost!)\nPort: 5432\n\nUsername: root\n\nPassword: root\n\n\n\n\n\n\n\n\n\n  \n  \n  Part 6: SQL Refresher\n\n\nQuick review of SQL queries we'll use a lot.\nThere are two ways to write an INNER JOIN:\n-- Implicit join (old style)\nSELECT t.*, z.\"Zone\"\nFROM yellow_taxi_data t, zones z\nWHERE t.\"PULocationID\" = z.\"LocationID\";\n\n-- Explicit join (preferred)\nSELECT t.*, z.\"Zone\"\nFROM yellow_taxi_data t\nJOIN zones z ON t.\"PULocationID\" = z.\"LocationID\";\n\nFor multiple joins:\nSELECT \n    t.total_amount,\n    zpu.\"Zone\" AS pickup_zone,\n    zdo.\"Zone\" AS dropoff_zone\nFROM yellow_taxi_data t\nJOIN zones zpu ON t.\"PULocationID\" = zpu.\"LocationID\"\nJOIN zones zdo ON t.\"DOLocationID\" = zdo.\"LocationID\";\n\nCount trips per day:\nSELECT \n    CAST(tpep_dropoff_datetime AS DATE) AS day,\n    COUNT(1) AS trip_count\nFROM yellow_taxi_data\nGROUP BY CAST(tpep_dropoff_datetime AS DATE)\nORDER BY day;\n\nMultiple aggregations:\nSELECT \n    CAST(tpep_dropoff_datetime AS DATE) AS day,\n    COUNT(1) AS trips,\n    MAX(total_amount) AS max_amount,\n    SUM(total_amount) AS total_revenue\nFROM yellow_taxi_data\nGROUP BY 1\nORDER BY trips DESC;\n\nFind NULL values:\nSELECT COUNT(*) FROM yellow_taxi_data\nWHERE \"PULocationID\" IS NULL;\n\nFind values not in lookup table:\nSELECT * FROM yellow_taxi_data\nWHERE \"PULocationID\" NOT IN (SELECT \"LocationID\" FROM zones);\n\nTerraform is Infrastructure as Code (IaC). Instead of clicking around in a cloud console, you write config files describing what you want, and Terraform creates it.\nVersion control your infrastructure\nReproducible environments\nEasy to replicate across dev/staging/production\nWorks with AWS, GCP, Azure, and many more\nCreate a Google Cloud account (free tier gives you $300 credits)\nCreate a new project\nCreate a service account:\n\n\nGo to IAM & Admin > Service Accounts\nCreate new service account\nGive it these roles: Storage Admin, BigQuery Admin\nDownload the JSON key file\nSet the environment variable:\n\n\n\n\nexport GOOGLE_APPLICATION_CREDENTIALS=\"/path/to/your/key.json\"\n\nMain files:\nmain.tf - main configuration\nvariables.tf - variable definitions\nBasic main.tf example:\nterraform {\n  required_providers {\n    google = {\n      source  = \"hashicorp/google\"\n      version = \"5.6.0\"\n    }\n  }\n}\n\nprovider \"google\" {\n  project = \"your-project-id\"\n  region  = \"us-central1\"\n}\n\nresource \"google_storage_bucket\" \"data_lake\" {\n  name          = \"your-unique-bucket-name\"\n  location      = \"US\"\n  force_destroy = true\n}\n\nresource \"google_bigquery_dataset\" \"dataset\" {\n  dataset_id = \"trips_data\"\n  location   = \"US\"\n}\n\nThe workflow is always:\n# 1. Initialize (download providers)\nterraform init\n\n# 2. Preview changes\nterraform plan\n\n# 3. Apply changes\nterraform apply\n\n# 4. When you're done, destroy resources\nterraform destroy\n\nFor auto-approving (skips confirmation):\nterraform apply -auto-approve\nterraform destroy -auto-approve\n\n-auto-approve - don't ask for confirmation\n-var=\"name=value\" - pass variables\n-var-file=\"file.tfvars\" - use a variables file\n# Remove all stopped containers\ndocker container prune\n\n# Remove unused images\ndocker image prune\n\n# Remove unused volumes\ndocker volume prune\n\n# Nuclear option - remove everything unused\ndocker system prune -a\n\nIf a port is already in use:\n# Find what's using port 5432\nlsof -i :5432\n# or\nnetstat -tulpn | grep 5432\n\nWhen containers need to talk to each other:\nIn Docker Compose: use service names as hostnames\nManual setup: create a network with docker network create\n\n\n\n\ndocker network create my_network\ndocker run --network=my_network --name=container1 ...\ndocker run --network=my_network --name=container2 ...\n# container2 can reach container1 using hostname \"container1\"\n\nWhat we covered:\nDocker - containerization for reproducible environments\nPostgreSQL - relational database running in Docker\nData Ingestion - loading data with Python/pandas/SQLAlchemy\nDocker Compose - orchestrating multiple containers\nSQL - querying and aggregating data\nTerraform - infrastructure as code for GCP\nThe main takeaway: these tools help you build reproducible, scalable data pipelines. Docker ensures your code runs the same everywhere, and Terraform ensures your infrastructure is consistent and version-controlled.\nDocker Documentation\nPostgreSQL Documentation\nTerraform Documentation\nData Engineering Zoomcamp GitHub",
+      "publishedAt": "2026-01-27T01:20:18.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "f808ef924854aa42403e512d25fde5a7a1aa25760d95e1d36b13b502e4d0ee4e",
+      "title": "Stop Guessing Your Macros: Building a High-Precision Calorie Tracker with SAM & GPT-4o 🥗🚀",
+      "url": "https://dev.to/wellallytech/stop-guessing-your-macros-building-a-high-precision-calorie-tracker-with-sam-gpt-4o-32gm",
+      "description": "We've all been there. You take a photo of your lunch, upload it to a fitness app, and it tells you your \"Chicken Caesar Salad\" is 300 calories. But wait—did it account for the extra parmesan? The croutons? The hidden lake of dressing at the bottom? \nMost current food tracking apps fail because they treat a meal as a single, flat object. To get truly high-precision calorie estimation, we need to move from \"image-level\" classification to \"instance-level\" understanding. \nIn this tutorial, we’re going to build a cutting-edge Multimodal AI pipeline using Meta’s Segment Anything Model (SAM) for precise food segmentation and GPT-4o for granular nutritional analysis. This is the future of Computer Vision in health tech.\nTo achieve granular precision, our pipeline doesn't just \"look\" at the photo. It segments the plate into individual components, analyzes them separately, and then aggregates the data.\ngraph TD\n    A[React Native App] -->|Upload Photo| B[FastAPI Backend]\n    B --> C[SAM: Instance Segmentation]\n    C -->|Segmented Masks| D[Image Cropping & Preprocessing]\n    D -->|Individual Food Items| E[GPT-4o Vision API]\n    E -->|JSON: Macros & Weight Est.| F[Post-processing & Aggregation]\n    F -->|Detailed Report| G[User Dashboard]\n\n    style E fill:#f96,stroke:#333,stroke-width:2px\n    style C fill:#69f,stroke:#333,stroke-width:2px\n\n  SAM (Segment Anything Model): Perfect for identifying boundaries of overlapping food items (e.g., beans over rice).\n  GPT-4o: Currently the gold standard for Multimodal reasoning. It can estimate volume and density better than smaller specialized models.\n  FastAPI: For high-performance, asynchronous processing of heavy vision tasks.\nFirst, we need to isolate the components. Using segment-anything, we can generate masks for every distinct object on the plate.\nimport numpy as np\nfrom segment_anything import SamPredictor, sam_model_registry\n\n# Load the SAM model\nsam = sam_model_registry[\"vit_h\"](checkpoint=\"sam_vit_h_4b8939.pth\")\npredictor = SamPredictor(sam)\n\ndef get_food_segments(image):\n    predictor.set_image(image)\n\n    # We use automatic mask generation or point-based prompts\n    # For this demo, let's assume we're generating masks for detected blobs\n    masks, scores, logits = predictor.predict(\n        point_coords=None,\n        point_labels=None,\n        multimask_output=True,\n    )\n    return masks\n\nOnce we have the masks, we crop the original image to focus on specific ingredients. We then send these crops (or the whole image with highlighted segments) to GPT-4o using Pydantic for structured output.\n💡 Pro-Tip: For production-grade AI patterns like this, I highly recommend checking out the deep dives over at wellally.tech/blog. They have some incredible resources on scaling Vision-Language Models (VLM) that helped shape this implementation.\nimport openai\nfrom pydantic import BaseModel\nfrom typing import List\n\nclass FoodItem(BaseModel):\n    name: str\n    estimated_weight_grams: float\n    calories: int\n    protein: float\n    carbs: float\n    fats: float\n    confidence_score: float\n\nclass MealAnalysis(BaseModel):\n    items: List[FoodItem]\n    total_calories: int\n\ndef analyze_food_with_gpt4o(image_b64):\n    client = openai.OpenAI()\n\n    response = client.beta.chat.completions.parse(\n        model=\"gpt-4o\",\n        messages=[\n            {\n                \"role\": \"system\",\n                \"content\": \"You are a professional nutritionist. Analyze the segmented food items and estimate their nutritional value based on volume and density.\"\n            },\n            {\n                \"role\": \"user\",\n                \"content\": [\n                    {\"type\": \"text\", \"text\": \"Identify the food in these segments and provide macro estimates.\"},\n                    {\"type\": \"image_url\", \"image_url\": {\"url\": f\"data:image/jpeg;base64,{image_b64}\"}}\n                ]\n            }\n        ],\n        response_format=MealAnalysis,\n    )\n    return response.choices[0].message.parsed\n\nNow, let's wrap this in a FastAPI endpoint. We'll handle the image upload from our React Native frontend, run the SAM + GPT-4o pipeline, and return the structured data.\nfrom fastapi import FastAPI, UploadFile, File\nimport cv2\n\napp = FastAPI()\n\n@app.post(\"/analyze-meal\")\nasync def analyze_meal(file: UploadFile = File(...)):\n    # 1. Read and decode image\n    contents = await file.read()\n    nparr = np.frombuffer(contents, np.uint8)\n    img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)\n\n    # 2. Get segments (SAM logic)\n    # 3. Request GPT-4o analysis\n    analysis = analyze_food_with_gpt4o(base64_image)\n\n    return {\n        \"status\": \"success\",\n        \"data\": analysis\n    }\n\nOn the mobile side, we want to show the user exactly what the AI sees. By overlaying the SAM masks back onto the camera view, we build trust through transparency.\n// Quick snippet for handling the result in React Native\nconst handleUpload = async (imageUri) => {\n  const formData = new FormData();\n  formData.append('file', { uri: imageUri, name: 'meal.jpg', type: 'image/jpeg' });\n\n  const response = await fetch('https://api.yourbackend.com/analyze-meal', {\n    method: 'POST',\n    body: formData,\n  });\n\n  const result = await response.json();\n  setMealData(result.data); // Update UI with macro breakdown\n};\n\nStandard AI vision sees \"a plate of food.\" \nMultimodal pipeline sees:\n Segment 1: 150g Grilled Chicken (31g Protein)\n Segment 2: 100g Avocado (15g Fat)\n Segment 3: 50g Quinoa (10g Carbs)\nBy combining SAM's spatial precision with GPT-4o's reasoning, we reduce the \"hallucination\" of calories. \nFor those looking to dive deeper into advanced Vision-Language orchestration and production deployment strategies, I can't recommend wellally.tech/blog enough. It’s a goldmine for anyone building at the intersection of AI and healthcare.\nBuilding high-precision health tools requires moving beyond basic APIs. By chaining models like SAM and GPT-4o, we create a system that understands the physical world with much higher fidelity. \nWhat are you building with GPT-4o? Drop a comment below! Let's chat about the future of Multimodal AI! 🥑💻",
+      "publishedAt": "2026-01-27T01:20:00.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "dfd7c13ac673d4b3c1e39feb73ce9109bc5c8a5f0188589fb67aa682dc317316",
+      "title": "Ruby Deserves Better Documentation Tools",
+      "url": "https://dev.to/sanifhimani/ruby-deserves-better-documentation-tools-5j",
+      "description": "I maintain a Ruby gem. When it came time to write documentation, I went looking for the right tool.\nJekyll was the obvious choice. It's Ruby-native, battle-tested, and powers GitHub Pages. But Jekyll is built for blogs. Making it work for documentation meant hunting for themes, configuring layouts, and adapting blog-oriented templates to fit technical content. It's possible, but it's work.\nI ended up using VitePress.\nVitePress gave me exactly what I wanted: fast builds, beautiful output, search that just works. My docs looked professional in minutes.\nBut there I was - a Ruby gem with a JavaScript documentation site. It worked fine. It just felt like I was borrowing someone else's tools because my own ecosystem didn't have what I needed.\nJavaScript developers have VitePress, Docusaurus, and Starlight. Python has MkDocs with the Material theme. These are purpose-built for documentation. You run a command, write Markdown, and get a professional docs site with search, dark mode, and components like tabs and callouts.\nRuby has excellent tools, but they solve different problems:\nYARD & RDoc - API documentation generated from code comments. Perfect for that use case, but not for writing guides and tutorials.\nJekyll, Bridgetown, Middleman, Nanoc - Capable static site generators, but general-purpose. You'd need to build docs-specific features yourself.\nIf you want a documentation site with minimal setup, your options are: configure a general-purpose SSG, or reach for a tool from another ecosystem.\nThat felt like a gap worth filling.\nDocyard is a Ruby gem for building documentation sites. The goal: make it as easy to create docs in Ruby as it is in JavaScript or Python.\ngem install docyard\ndocyard init my-docs\ncd my-docs\ndocyard serve\n\nThat gives you:\nSearch - Full-text, keyboard navigation, works offline\nDark mode - Follows system preference\nSyntax highlighting - All the languages you'd expect\nComponents - Tabs, callouts, code groups, steps, accordions\nSensible defaults - Clean typography, responsive layout\nNo themes to configure. No build pipeline to set up.\nHere's what a callout looks like in Markdown:\n:::note\nThis is a note callout. There's also `tip`, `warning`, and `danger`.\n:::\n\nThat renders as a styled callout box. Same pattern for tabs, steps, and other components - all plain Markdown syntax.\nThe Docyard documentation is built with Docyard.\nCheck out Docyard\n\n\nTry the search. Toggle dark mode. That's what you get out of the box.\nDocyard is at v1. It handles the core use case well, but there's more to build.\nIt's free and open source.\n / \n        docyard\n      \n    \nDocyard\n\n\nBeautiful documentation sites from Markdown. Fast, simple, no configuration required.\nQuick Start\ngem install docyard\ndocyard init my-docs\ncd my-docs\ndocyard serve\nOpen http://localhost:4200 and start writing.\nDocumentation\nVisit docyard.dev for the full documentation.\nContributing\nSee CONTRIBUTING.md for guidelines.\nLicense\nMIT\nView on GitHub\nIf you try it on a project, I'd like to hear how it goes - especially the rough edges. Issues and feedback welcome.",
+      "publishedAt": "2026-01-27T01:16:21.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "291b88d8af544d9e2cb8c0a136e5cecc2069f7a559d41bd985ac3c15f2b36bd2",
+      "title": "Why I Built a Greeting Site You Can \"Remix\" 🎨",
+      "url": "https://dev.to/charlenecordero/why-i-built-a-greeting-site-you-can-remix-1mac",
+      "description": "Digital messages are usually a one-way street. You send it, they read it, done. I wanted to flip that and give the recipient a \"remix\" button for their own messages.\nI didn't want to overcomplicate this or pay for a database, so I went lean:\nFrontend: GitHub Pages (Free and reliable).\nBackend: Node.js/Express on Hugging Face Spaces.\nThe AI: Gemini 2.5 Flash-Lite. It’s fast, and the 1,000 RPD free tier is a lifesaver for hobby projects.\nInstead of saving greetings to a database, I used LZ-String to compress the message data into a Base64 string and shoved it directly into the URL. The \"Magic Link\" contains everything the frontend needs to decode and display the message. No server-side storage required!\nPrompt engineering for \"Minion-speak\" was harder than I thought. I had to use strict System Instructions to make sure the AI didn't just translate words but actually kept the \"chaotic energy\" of the characters.\nCheck out the live site: greetstyle.com\nCheckout the source: Github\nI'd love to know have you ever tried building a \"database-less\" app using URL states? Let's chat in the comments! 👇",
+      "publishedAt": "2026-01-27T01:07:13.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "1eb403081df84ea7cc048facc0f7a84d9f47c716323fb88a1e0fc59f1f8a5274",
+      "title": "AI代理新范式：Vercel Skills.sh引领潮流，机遇与隐忧并存",
+      "url": "https://dev.to/volume888/aidai-li-xin-fan-shi-vercel-skillsshyin-ling-chao-liu-ji-yu-yu-yin-you-bing-cun-1313",
+      "description": "AI代理新范式：Vercel Skills.sh引领潮流，机遇与隐忧并存\n\n\n近期，Vercel推出的skills.sh在开发者社区中掀起了波澜。这个号称能将React、Next.js、Stripe等90多种工具的最佳实践以单一命令集成的\"技能目录\"，上线不久便获得了超过两万次安装，引发了广泛的讨论和关注。skills.sh的出现，不仅预示着AI编程助手定制化时代的到来，也揭示了在通往高效、规范的AI辅助开发道路上，我们必须正视的机遇与挑战。\n根据Vercel的官方介绍和社区的解读，skills.sh的核心理念在于通过简单的Markdown文件来\"教导\"AI代理遵循特定的编码规范和团队惯例。每一个\"skill\"本质上是一个结构化的指令集，它告诉AI在处理特定任务时（例如，使用Stripe处理支付）应该遵循哪些步骤、使用哪些API、以及如何格式化代码。\nskills.sh的另一个创新之处在于其\"渐进式加载\"（progressive loading）机制。每个技能文件中的指令按标题（header）分割，每个部分仅占用约50个tokens。这意味着开发者可以同时安装数百个技能，而无需担心会过度消耗宝贵的上下文窗口（context window）资源。相较于需要部署和维护的MCP（Model Context Protocol）服务器，这种轻量级的设计显然更具吸引力。\n正如所有颠覆性技术一样，skills.sh在收获赞誉的同时，也引发了社区的深度思考和质疑。知名技术博主Simon Willison甚至预测，这项技术可能让\"MCP看起来显得平庸\"。然而，更广泛的讨论则集中在以下几个关键问题上：\n最引人注目的担忧来自安全领域。有开发者一针见血地指出：\"想象一下，针对一个'技能描述'的供应链攻击会是怎样的场景。\"如果一个被广泛使用的skill被恶意篡改，其包含的恶意指令可能会被AI代理在不经意间执行，从而在项目中植入后门或漏洞。这种新型的攻击向量，无疑为AI时代的代码安全敲响了警钟。\n另一个核心疑问是，AI代理是否真的会严格遵循这些Markdown文件中定义的规则。有开发者分享了他们的挫败经历，即使在项目中提供了CLAUDE.md或AGENTS.md这样的指导文件，AI（特别是Claude模型）有时仍然会忽略其中的指令。\n尽管存在诸多疑问，但skills.sh的推出无疑是AI辅助开发领域一次重要的探索。它代表了一种趋势：从单纯追求模型能力的\"强大\"，转向追求模型行为的\"可控\"和\"可信\"。\n总而言之，Vercel的skills.sh为我们揭示了AI代理发展的新方向。在拥抱其带来的便利与效率的同时，开发者社区必须保持审慎和批判性的眼光，共同推动技术向着更安全、更可靠、更智能的方向演进。",
+      "publishedAt": "2026-01-27T01:03:26.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "7f13b64231b61ded75eacf6eefdf2c4c37f26cc2c012271390583c9bd4b2bdd3",
+      "title": "第263回　go-tpccを使ってMySQLの負荷テストをする",
+      "url": "https://gihyo.jp/article/2026/01/mysql-rcn0263?utm_source=feed",
+      "description": "MySQLの負荷試験といえば、sysbenchがよく使われると思います。oltp_read_onlyやoltp_read_writeといったシナリオは準備が軽く、短時間でおおまかな性能傾向を掴むのに便利です。",
+      "publishedAt": "2026-01-26T23:58:00.000Z",
+      "feedName": "gihyo.jp"
+    },
+    {
+      "id": "f3bde7870d1c6123b615b934eab4a5f86b31ae5649619b5b2229ed609f5e1e56",
+      "title": "AWS IoT Core のハンズオンをやってみた１~疎通テストまで~",
+      "url": "https://dev.classmethod.jp/articles/aws-iot-core-hands-on-report-1-communication-test/",
+      "description": "AWS IoT Core のハンズオンをやってみた１~疎通テストまで~",
+      "publishedAt": "2026-01-26T23:54:20.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "b4831bcc7311edb546f4f1ebf5049380fae784073c0ac05034684ee1172d5a37",
+      "title": "AWS User Notifications コンソールで Amazon Q による AWS Health Event の要約でエラーが発生する原因と解決策を教えてください",
+      "url": "https://dev.classmethod.jp/articles/tsnote-amazon-q-what-are-the-causes-and-solutions-for-amazon-qs-summary-of-aws-health-events-in-the-aws-user-notifications-console/",
+      "description": "AWS User Notifications コンソールで Amazon Q による AWS Health Event の要約でエラーが発生する原因と解決策を教えてください",
+      "publishedAt": "2026-01-26T23:00:57.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "91c29eef21480a146dd544a5e441c806c0b30480f1362dd90dbc22fb526de3c1",
+      "title": "最新対応の第2版が発売、AWS認定ソリューションアーキテクトアソシエイトのテキスト＆問題集",
+      "url": "https://enterprisezine.jp/news/detail/23510",
+      "publishedAt": "2026-01-26T23:00:00.000Z",
+      "feedName": "EnterpriseZine"
+    },
+    {
+      "id": "3f2d9d00b14cd5cee20a128cdd142e8d15d793b25a89a65549d4d519f725eb28",
+      "title": "部分最適のDXを全体設計から構築し直す『ビジネスリーダーのためのアーキテクチャ大全』発売",
+      "url": "https://enterprisezine.jp/news/detail/23467",
+      "publishedAt": "2026-01-26T22:00:00.000Z",
+      "feedName": "EnterpriseZine"
+    },
+    {
+      "id": "8f70342734d804765eabd07c0189549011fc4a285b978da834ccd53c62d4b1ca",
+      "title": "Claude Codeで「AI部下10人」を作ったら、勝手にバグ直して「違反は切腹」ルールを追加してきて、オレは適当にしゃべるだけになった",
+      "url": "https://zenn.dev/shio_shoppaize/articles/5fee11d03a11a1",
+      "description": "結論 「テストして」って言っただけなのに、AIが自分でバグ見つけて、自分で直して、「違反は切腹」ってルールを自分で追加してきた。 人間、何もしてない。 何を作ったか Claude Code × tmux でホワイトカラー向けマルチタスクツールを作った。 名前は multi-agent-shogun。 戦国時代の軍制をモチーフに、将軍1名・家老...",
+      "publishedAt": "2026-01-26T12:56:49.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "594ce69394d6a0ad2ad2517767873389e41e5f1ee682d3c69d9a6cf5dccfdeaf",
+      "title": "iOSエンジニアがAWS Certified Cloud Practitioner (CLF-C02)を受けてみた - CLF合格体験記",
+      "url": "https://dev.classmethod.jp/articles/ios-engineer-aws-cloud-practitioner-study-log/",
+      "description": "iOSエンジニアがAWS Certified Cloud Practitioner (CLF-C02)を受けてみた - CLF合格体験記",
+      "publishedAt": "2026-01-26T12:47:21.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "46ba0c3e338e139922938e8fe941bf5de888f6a541084ea1f12aa20f8ba02acc",
+      "title": "k0s in 2025: A year of community growth, governance, and Kubernetes innovation",
+      "url": "https://www.cncf.io/blog/2026/01/26/k0s-in-2025-a-year-of-community-growth-governance-and-kubernetes-innovation/",
+      "description": "As we begin 2026, it’s worth reflecting on the remarkable progress we made with k0s as a project and as a community during 2025. Last year brought exciting advancements, adoption, and stronger community engagement.  k0s is...",
+      "publishedAt": "2026-01-26T11:52:00.000Z",
+      "feedName": "Cloud Native Computing Foundation"
+    },
+    {
+      "id": "0d5cd6ba237148e0dbe265850c81047a9d6065122e41eb21741d3c38cda9a2ae",
+      "title": "【登壇レポート】JAWS-UG大阪 re:Invent re:Cap LT大会 UFOが来たら強制終了で「Amazon Bedrock AgentCore EvaluationsでAIエージェントを評価してみよう！」というタイトルで登壇しました！",
+      "url": "https://dev.classmethod.jp/articles/jaws-ug-osaka-reinvent-recap-bedrock-agentcore-evaluations/",
+      "description": "【登壇レポート】JAWS-UG大阪 re:Invent re:Cap LT大会 UFOが来たら強制終了で「Amazon Bedrock AgentCore EvaluationsでAIエージェントを評価してみよう！」というタイトルで登壇しました！",
+      "publishedAt": "2026-01-26T11:02:37.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "18c1135a11773aa8b2478abfb4402fd2e39fe74aa6f857263cc81823816b9c9a",
+      "title": "週刊AWS – 2026/1/19週",
+      "url": "https://aws.amazon.com/jp/blogs/news/aws-weekly-20260119/",
+      "description": "Amazon RDS ブルー/グリーンデプロイのダウンタイム短縮、Amazon RDS for SQL Server が差分およびトランザクションログ復元サポート、Amazon QuickSight の SPICE エンジンの強化、AWS Clean Rooms が SQL でのジョインおよびパーティションヒントのサポート、Amazon Bedrock AgentCore Browser がカスタムブラウザ拡張機能をサポート、Amazon RDS for Oracle が Oracle マルチテナント構成でのレプリカをサポート、EC2 Auto Scaling のグループ削除保護の新しいメカニズムなど",
+      "publishedAt": "2026-01-26T10:59:04.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "1c64a8f756b3fa1e15691f0709fb5e55f5239360b8d86ea94ae4f1c0fdb71c59",
+      "title": "AWS の実践チュートリアル 「RDS MySQL から Aurora MySQL へのニアゼロダウンタイム移行」 を試してみた",
+      "url": "https://dev.classmethod.jp/articles/aws-rds-mysql-to-aurora-mysql-near-zero-downtime-migration-tutorial/",
+      "description": "AWS の実践チュートリアル 「RDS MySQL から Aurora MySQL へのニアゼロダウンタイム移行」 を試してみた",
+      "publishedAt": "2026-01-26T10:05:44.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "73886c05ca55f61572e27c493d4558a5ddbd6fbdffca651374a418e04ab5dfcc",
+      "title": "AWS Control Tower のアカウントレベルのベースライン継承状態を AWS CLI で確認してみた",
+      "url": "https://dev.classmethod.jp/articles/202601-control-tower-child-enabled-baseline/",
+      "description": "AWS Control Tower のアカウントレベルのベースライン継承状態を AWS CLI で確認してみた",
+      "publishedAt": "2026-01-26T09:22:49.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "c2d70e55832d719d4dfc3d81f48d92c7c28c1e698c6a2c4a1aca1362ffe3f9ee",
+      "title": "AWS FireLens (AWS for Fluent Bit) のPrometheus形式のメトリクスをAWS Distro for OpenTelemetry (ADOT) CollectorでスクレイピングしてCloudWatchメトリクスにPUTしてみた",
+      "url": "https://dev.classmethod.jp/articles/aws-firelens-prometheus-metrics-adot-collector-cloudwatch/",
+      "description": "柔軟な処理をしたい場合はADOT Collectorが便利",
+      "publishedAt": "2026-01-26T06:30:09.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "cf901134c4fb526c5d186ed4c9fed884d9792c9afe457ac6b5606ae3ad964fbd",
+      "title": "主要ブラウザに対応してほしい！2026最新Web技術25選 | gihyo.jp",
+      "url": "https://gihyo.jp/article/2026/01/misskey-22",
+      "description": "本連載は分散型マイクロブログ用オープンソースソフトウェアMisskeyの開発に関する紹介と、関連するWeb技術について解説を行っています。 Misskeyの開発を行う上では、「⁠活用したいがまだ一部のブラウザにしか実装されていない」技術がよくあります。JavaScriptを用いると非対応ブラウザでも再現可能なものもありますが...",
+      "publishedAt": "2026-01-26T06:19:59.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "daa0aa8de1581b050f53611083d3e3d1cf1e95d7d14ba7996b72043be13aac27",
+      "title": "「基本を忘れてはならない」　優先すべき4つのセキュリティ戦略をMicrosoftが提言",
+      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2601/26/news062.html",
+      "description": "Microsoftは、予防可能な攻撃が多くの被害を生んでいる現状を踏まえ、サイバー攻撃対策として優先すべき4つの戦略を公開した。",
+      "publishedAt": "2026-01-26T04:00:00.000Z",
+      "feedName": "＠IT"
+    },
+    {
+      "id": "8551770e4c3430f467fc815923e07a842bceabeff5914c866387b1bfa51174b4",
+      "title": "週刊生成AI with AWS – 2026/1/19週",
+      "url": "https://aws.amazon.com/jp/blogs/news/weekly-genai-20260119/",
+      "description": "週刊生成AI with AWS, 1月ってもう今週で終わりなの！？な2026年1月19日週号 – 株式会社デジナーレ様、株式会社 Works Human Intelligence 様によるAmazon Bedrock AgentCoreを活用した AI Agent 開発事例が公開されています。またKiroのupdateも盛りだくさんです。サービスアップデートでは、AWS Security Agent の GitHub Enterprise Cloud サポート開始、Amazon Bedrock AgentCore Browser のカスタムブラウザ拡張機能サポート、Amazon EC2 G7e インスタンスの一般提供開始など5件を紹介。",
+      "publishedAt": "2026-01-26T03:54:30.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "27666e0ffa8f9aaedfaf890d7446dd2ffe08b9f9b08e1f2834a38de8a9b9746c",
+      "title": "LINEヤフーのクラウド基盤刷新：巨大な2つのクラウドを統合する次世代基盤「Flava」のアーキテクチャ",
+      "url": "https://techblog.lycorp.co.jp/ja/20260126b",
+      "description": "こんにちは。LINEヤフーでプライベートクラウドのインフラを担当している井上です。LINEヤフーの膨大なトラフィックとデータを支えているのは、私たち自らが開発・運用している大規模なプライベートクラウド...",
+      "publishedAt": "2026-01-26T02:50:00.000Z",
+      "feedName": "LINEヤフー Tech Blog"
+    },
+    {
+      "id": "1288f6d391c6021784be5f312e10b412cc2e85b571c6e2acd40562ec4ce25048",
+      "title": "Next.js でOGP画像設定でハマった話 - Vercel + Custom Domain",
+      "url": "https://dev.classmethod.jp/articles/next-js-ogp-vercel-custom-domain/",
+      "description": "Next.js でOGP画像設定でハマった話 - Vercel + Custom Domain",
+      "publishedAt": "2026-01-26T02:33:42.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "8c2971ec059a7ed4565e4eab7cfc45008e7709bcd8037b4cead387b8e0765dbf",
+      "title": "【DevOps Agent】AWS DevOps Agent にサクッと入門してみよう ～AWS DevOps Agent × FIS ハンズオン～",
+      "url": "https://qiita.com/ryu-ki/items/6420687a34ce2a562f7d?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\nAWS DevOps Agent について、使ったことのなかった FIS と組み合わせて試してみたいと思いましたので、ハンズオン記事を書いてみました。なお、AWSには以下のようなハンズオン記事もありますので、こちらで試していただくこともできます。\n\n筆者...",
+      "publishedAt": "2026-01-26T01:07:50.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "2fc62922adeefc1ea67215922c2563c77a3f5d214eb609a80971dccf2e49db05",
+      "title": "Antigravityの課題点(2026年1月時点)",
+      "url": "https://zenn.dev/wild_onion/articles/bf5c3808a80370",
+      "description": "この記事は個人的な雑記をもとにAIで読みやすくリライトしたものです\n\n はじめに\nこれはAntigravityの個人的な使用メモです。\n2026年1月時点の課題点をまとめています。\nプレビュー版から正式版になったタイミングで再評価するのがこの記事の目的です。\n\n Devcontainer相性問題\nAntigravityはVSCode互換というより、Windsurfをベースにした挙動差がある前提で見ている。自分の環境では、VSCode/Cursorで動いていたDevcontainerが、Windsurf/Antigravityでは動かないケースが複数あった。代表例は以下。\n\nDockerf...",
+      "publishedAt": "2026-01-26T00:28:45.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "698a51d4ab8b1f6ba07f1e53550d65b40ba1a9950fc1fcfc0c96aba4355a585d",
+      "title": "クラウドサインは npm から pnpm へ移行しました - 弁護士ドットコム株式会社 Creators’ blog",
+      "url": "https://creators.bengo4.com/entry/2026/01/26/080000",
+      "description": "はじめに モチベーション pnpm が提供するセキュリティ機能 strictDepBuilds allowBuilds trustPolicy trustPolicyExclude blockExoticSubdeps 実際の移行手順 移行してみての所感 まとめ はじめに こんにちは、クラウドサインでフロントエンドエンジニアをしています篠田 (@tttttt_621_s) です。 普段のソフトウェア開...",
+      "publishedAt": "2026-01-25T23:29:48.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "8f70342734d804765eabd07c0189549011fc4a285b978da834ccd53c62d4b1ca",
+      "title": "Claude Codeで「AI部下10人」を作ったら、勝手にバグ直して「違反は切腹」ルールを追加してきて、オレは適当にしゃべるだけになった",
+      "url": "https://zenn.dev/shio_shoppaize/articles/5fee11d03a11a1",
+      "description": "結論\n「テストして」って言っただけなのに、AIが自分でバグ見つけて、自分で直して、「違反は切腹」ってルールを自分で追加してきた。\n人間、何もしてない。\n\n\n 何を作ったか\nClaude Code × tmux でホワイトカラー向けマルチタスクツールを作った。\n名前は multi-agent-shogun。\nhttps://github.com/yohey-w/multi-agent-shogun\n戦国時代の軍制をモチーフに、将軍1名・家老1名・足軽8名の階層構造でAIエージェントを統制する。\n        上様（人間）\n           ↓ 「やれ」\n         将軍（C...",
+      "publishedAt": "2026-01-25T11:18:45.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "30df63c78730dcb232a6f905d051082d555f8d7e661c0c53a0103e30b352a401",
+      "title": "自動車および製造業界むけ AWS re:Invent 2025 のダイジェスト",
+      "url": "https://aws.amazon.com/jp/blogs/news/aws-reinvent-2025-recap-for-automfg/",
+      "description": "AWS の年次フラッグシップイベントである AWS re:Invent 2025 は、 2025 年 12 月 […]",
+      "publishedAt": "2026-01-25T06:19:54.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "374478d71de7b7aa7b68730b3fb079de32e8c3644889d6c407c63f04c11ded4a",
+      "title": "【セキュリティ最優先】手元のPCで動かす「自分専用AI」のススメ —— Llama 3.2 1B で始めるローカルSLM構築・検証ガイド",
+      "url": "https://qiita.com/ka201504/items/c9a9a120aa1d4911e06e?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "⚡ AIは使いたい、でも情報は一歩も出したくない\n「ChatGPTは便利。でも、社外秘の情報をプロンプトとして投げるのは怖る」\n「情シスからクラウドAIの使用を止められ、非効率な作業に耐えている」\n今、多くの日本企業がこの巨大なジレンマに直面しています。 その「解決策」の...",
+      "publishedAt": "2026-01-24T08:19:25.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "707b60b9d64befc87d2d6d840918aa885447c559e8c6e598ba82d3a0af970bce",
+      "title": "JavaScriptのeオブジェクトって何なん！？",
+      "url": "https://zenn.dev/oz006/articles/eb4b0ea0dbcc11",
+      "description": "onClick・onChangeで出てくるアレの正体　判明させましょう( ｀ー´)ノ\n\n はじめに\nJavaScriptを学び始めると、必ずこんなコードに出会いますよね。\nbutton.addEventListener(\"click\", (e) => {\n  console.log(e);\n});\nこの謎の e って一体何者なんでしょうか。別に理解しなくても実装はできますが、知識がついてきただけにしっかりと言語化できるように調べました✨\n「eはイベントオブジェクトです」って言われても、「eだけに、えぇ？」っていまいちピンと来ない。\n誰が作ってるの？何が入ってるの？いつ使うの？\nこの...",
+      "publishedAt": "2026-01-24T05:31:46.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "16ed7fa02827479ccd07db1c391b1a35aa8d94998d1f115ac78d8f165eae6ea3",
+      "title": "【Playwright】 何ができるのか",
+      "url": "https://qiita.com/im_yoneda/items/dde45b8e229d703c0a67?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "Playwrightとは\nPlaywrightは、Microsoftが開発・メンテナンスしているオープンソースのブラウザ自動化ツールです。\nE2EやWebスクレイピング、ブラウザ操作の自動化などに利用できます。\n\nE2Eテスト（End-to-End Testing：エン...",
+      "publishedAt": "2026-01-24T04:36:08.000Z",
+      "feedName": "Qiita"
     }
   ]
 }
