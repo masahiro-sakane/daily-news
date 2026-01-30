@@ -3257,6 +3257,262 @@
       "description": "All Containers Images Dockerfile Volumes Networks Compose System Troubleshooting",
       "publishedAt": "2026-01-20T08:20:58.000Z",
       "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "c719f0e24782bb98f5b0019bbc54a7a339ed1ae529afdc10dd4e84fe3c9485e8",
+      "title": "How to deploy scalable web apps with Azure App service",
+      "url": "https://dev.to/ojosamuel129/how-to-deploy-scalable-web-apps-with-azure-app-service-3e1o",
+      "description": "Introduction\nDeploying web applications shouldn’t feel complicated or overwhelming. Azure App Service simplifies the process by providing a fully managed platform where you can build, deploy, and scale applications without worrying about the underlying infrastructure.\nIn this lab, you’ll learn how to create an Azure App Service from scratch and deploy your application using the Azure Portal. Whether you’re new to Azure or looking for a clean deployment workflow, this walkthrough will help you get a production-ready app up and running quickly.\nKey Terms\nAzure Portal\nAzure App Service\nResource Group\nApp Service Plan\nRuntime Stack\nDeployment Center\n1.Login to your azure portal: Sign in to the Azure Portal using your Azure account.\n\nType App Services in the search bar of your Azure portal and select App Services from the options it displays\n\n2.Click + create and select Web App.\n\n3.In the Project details, create a Resource group.\n\n4.In your Instance details, choose the web name, Runtime stack .Net 10 (LTS), publish (we choose Code), region - (Canada Central). Then Click Review + create\n\n5.Click create.\n\n6.Wait for the deployment to complete, then click Go to resource.\n\n7.This is the App we just created. Now, click the default domain link\n\n8.This shows we have created an App but it is still empty which is why it shows Your Web App is running and waiting for your content\n\n9.The App we created is empty at the moment, and we need to fill it up. Now, type a prompt to ChatGPT to generate a code for any type of application you intend to build. In this article, we are building a Game App called \"Dodge App\". So this is the prompt we are using \"Create for me an HTML/CSS/JS code for a game called “Dodge App” (dodge falling blocks, survive as long as possible)\".\n\n10.When it finishes, copy the code\n\n11.In the search bar of the Web App, search for Advanced Tools, select it and then click Go.\n\n12.Click Debug console and select powershell.\n\n13.Click site.\n\n14.Click wwwroot.\n\n15.Click edit (pencil icon).\n\n16.Now, remove anything you see on this page and replace it with the code you copied from chatGPT\n17.Click Save.\n\n18.Go back to Azure portal, click Home and select App Services.\n\n19.Click the App you created\n\n20.Click the default domain link of the App you created\n\n21.This is the Dodge App we created from Azure App Services\n\n\n\nConclusion\nAzure App Service offers a straightforward and reliable way to deploy web applications without managing servers or infrastructure. By combining easy resource creation, multiple deployment options, and built-in monitoring, it allows developers to focus on writing code rather than maintaining environments.\nOnce your app is deployed, you can enhance it further by enabling logging, configuring custom domains, setting up CI/CD pipelines, or scaling based on demand. Azure App Service is a solid foundation for both small projects and enterprise-grade applications.\nThanks for reading, see you in the next one",
+      "publishedAt": "2026-01-30T01:41:13.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "45afc1685e76a66890be683b77fbe98b6ed1203dea7d154e2158187b1f497dfb",
+      "title": "Amazon GuardDuty Malware Protection for AWS Backup でバックアップデータのマルウェアスキャンを試してみた",
+      "url": "https://dev.classmethod.jp/articles/guardduty-malware-protection-aws-backup-scan/",
+      "description": "Amazon GuardDuty Malware Protection for AWS Backup でバックアップデータのマルウェアスキャンを試してみた",
+      "publishedAt": "2026-01-30T01:35:23.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "a607efd14aead2c552f0bae0987de5e555b381fd49135a946f415aa9f8f66cdb",
+      "title": "I Built a LinkedIn Spam Filter in a Weekend (And You Can Too)",
+      "url": "https://dev.to/kvntrnds/i-built-a-linkedin-spam-filter-in-a-weekend-and-you-can-too-25cb",
+      "description": "I Built a LinkedIn Spam Filter in a Weekend (And You Can Too)\n\n\n\n  \n  \n  The Problem\n\n\nLinkedIn has become unusable for job seekers.\nLast month, I received 47 connection requests. 19 were \"life coaches.\" 8 were forex traders. 6 were MLM recruiters. Only 7 were actual talent acquisition professionals.\nI missed 2 legitimate recruiter messages because they were buried under spam.\nI built Request Radar - a Chrome extension that automatically labels LinkedIn invitations:\n🟢 Recruiter - Don't miss these\n🔴 Spam - Avoid these\n\n🔵 Normal - Consider these\n// manifest.json\n{\n  \"content_scripts\": [{\n    \"matches\": [\"https://www.linkedin.com/*\"],\n    \"js\": [\"content.js\"],\n    \"run_at\": \"document_idle\"\n  }]\n}\n\nThe extension injects a content script into LinkedIn pages. We use document_idle to ensure LinkedIn's content has loaded.\nLinkedIn loads invitations dynamically. We use MutationObserver to watch for new content:\nconst observer = new MutationObserver(() => {\n  scanInvitations();\n});\n\nobserver.observe(document.body, { \n  childList: true, \n  subtree: true \n});\n\nSimple keyword matching:\nfunction classifyInvitation(headline) {\n  const recruiterKeywords = [\n    'recruiter', 'talent acquisition', \n    'hiring manager', 'headhunter'\n  ];\n\n  const spamKeywords = [\n    'life coach', 'passive income',\n    'financial freedom', 'dm me'\n  ];\n\n  let recruiterScore = 0;\n  let spamScore = 0;\n\n  const text = headline.toLowerCase();\n\n  recruiterKeywords.forEach(keyword => {\n    if (text.includes(keyword)) recruiterScore++;\n  });\n\n  spamKeywords.forEach(keyword => {\n    if (text.includes(keyword)) spamScore++;\n  });\n\n  if (recruiterScore > spamScore && recruiterScore > 0) {\n    return 'recruiter';\n  } else if (spamScore > recruiterScore && spamScore > 0) {\n    return 'spam';\n  }\n\n  return 'normal';\n}\n\nfunction addBadge(card, type) {\n  const badge = document.createElement('div');\n  badge.className = 'radar-badge';\n\n  const config = {\n    recruiter: { emoji: '🟢', label: 'Recruiter', color: '#28a745' },\n    spam: { emoji: '🔴', label: 'Spam', color: '#dc3545' },\n    normal: { emoji: '🔵', label: 'Normal', color: '#0077b5' }\n  };\n\n  const { emoji, label, color } = config[type];\n\n  badge.style.cssText = `\n    position: absolute;\n    top: 10px;\n    right: 10px;\n    background: ${color};\n    color: white;\n    padding: 8px 14px;\n    border-radius: 20px;\n    font-weight: 700;\n  `;\n\n  badge.innerHTML = `${emoji} ${label}`;\n  card.appendChild(badge);\n}\n\nInitial version was slow (200ms per invitation). Optimizations:\nCache keyword processing: Lowercase keywords once, not on every check\nMark processed nodes: Use dataset.processed to avoid re-scanning\nDebounce mutations: Don't process every single DOM change\nResult: 15ms per invitation (13x faster)\nNo external API calls. No tracking. No data collection.\nAll settings stored locally using Chrome's Storage API:\nchrome.storage.sync.set({ \n  settings: userSettings \n});\n\nThis syncs across user's devices via Chrome's encrypted sync.\nWeek 1: 1,000+ users\nTop feedback: \"This should be built into LinkedIn\"\nSimple > Complex: I almost built an ML classifier. Keyword matching works for 85% of cases.\n\n\nPerformance matters: Users notice 200ms delays. They don't notice 15ms.\n\n\nPrivacy sells: \"No tracking\" was the most-mentioned feature in reviews.\n\n\nDistribution is everything: Building took 16 hours. Marketing took 40 hours.\n\n\n\n\n  \n  \n  Try It Yourself\n\n\nChrome Web Store: https://chromewebstore.google.com/detail/Request%20Radar/pmpkcbnkoojpenphcempidfgkjkemife\nPlanning to add:\nAnalytics dashboard (local-only)\nBetter classification (context-aware)\nPremium tier ($3.99/mo) with advanced features\nWant to create a similar extension? Here's the tech stack:\nVanilla JavaScript (no frameworks)\nChrome Extension Manifest V3\nMutationObserver API\nChrome Storage API\nFor me, it wasn't \"detect spam\" - it was \"don't miss opportunities.\"\nWhat obvious-but-unbuilt tool will you create?\nQuestions? Drop them in the comments!",
+      "publishedAt": "2026-01-30T01:09:37.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "e12ecbf88d5e1cc5bcc90f357ee9e6253913da9deaafef41ce9c446c68723014",
+      "title": "Bun is Fast, pnpm is Correct: The Future of the JS Ecosystem as Shown by Two Package Managers",
+      "url": "https://dev.to/tumf/bun-is-fast-pnpm-is-correct-the-future-of-the-js-ecosystem-as-shown-by-two-package-managers-2l06",
+      "description": "Originally published on 2026-01-15\nOriginal article (Japanese): Bunは速い、pnpmは正しい：2つのパッケージマネージャが示すJSエコシステムの未来\n\nWhen considering a transition from npm or Yarn, two options that inevitably come up are pnpm and Bun. Both claim to be \"faster than npm,\" but what are the actual differences?\nAccording to the State of JS 2024, pnpm has a high \"retention\" rate and stable ratings from developers. Meanwhile, Bun is also gaining traction as a new option. However, the design philosophies of the two are quite contrasting. pnpm focuses on \"correct dependency management,\" while Bun pursues \"speed and developer experience (DX).\" In this article, we will clarify the differences between these two package managers and provide hints for finding the right choice for your project.\nBefore considering a transition, let's first outline the challenges that npm faces.\nAccording to official benchmarks (as of January 2026), the speed of clean installs is as follows:\n\n\n\nPackage Manager\nTime\n\n\n\n\nnpm\n34.1s\n\n\npnpm\n8.5s (4x faster)\n\n\nYarn Classic\n7.2s\n\n\nYarn PnP\n3.5s\n\n\n\nConsidering not only the waiting time for npm install during local development but also the cumulative time in CI/CD pipelines, this difference is significant.\nnpm copies packages into node_modules for each project, leading to duplication of the same packages across multiple projects. If you have 10 projects with the same dependencies, you end up consuming 10 times the disk space.\nIn npm's flat node_modules structure, dependencies that are not explicitly listed in package.json can still be accessed via require(). This creates \"phantom dependencies\" that are not documented in package.json, undermining the portability of the project.\npnpm (performant npm) is a package manager that aims to solve npm's problems in a \"correct way.\"\nThe most significant feature of pnpm is its use of a global Content-Addressable Store. All packages are stored on disk only once and referenced via hard links from each project's node_modules.\n# Even if the same package is used in multiple projects\n# Disk usage is only for one instance\n~/.pnpm-store/\n├── react@18.2.0/\n└── lodash@4.17.21/\n\n# Each project references via hard links\nproject-a/node_modules/react  → ~/.pnpm-store/react@18.2.0/\nproject-b/node_modules/react  → ~/.pnpm-store/react@18.2.0/\n\nThis significantly reduces disk usage as the number of projects increases.\nThe location of the store varies by environment, and you can check it with pnpm store path.\npnpm creates a symbolic link structure within node_modules, making only the dependencies listed in package.json accessible.\nnode_modules/\n├── .pnpm/                    # Actual packages are here\n│   ├── react@18.2.0/\n│   └── lodash@4.17.21/\n├── react -> .pnpm/react@18.2.0/node_modules/react\n└── (lodash is inaccessible)\n\nThis mechanism technically prevents Phantom Dependencies. If code that worked in npm breaks in pnpm, it simply reveals a latent bug.\nThe most common issue when transitioning to pnpm is precisely this \"correctness.\" Code like the following may stop working:\n// Only \"react\" is listed in package.json\n// But lodash is a dependency of react, so it works in npm\nimport _ from 'lodash';  // ❌ Error in pnpm\n\nThe fix is straightforward:\n# Explicitly add if truly needed\npnpm add lodash\n\nThis \"breaking\" experience is a good opportunity to diagnose the health of your project. There are reports in Reddit threads stating, \"It took 4 days, but it was 100% worth it.\"\nBun is an \"all-in-one JavaScript runtime\" that goes beyond just being a package manager.\nBun is implemented in the Zig language and integrates not just a package manager, but also a JavaScript runtime, test runner, and bundler.\n# As a package manager\nbun install        # Incredibly faster than npm install\n\n# As a runtime\nbun run app.ts     # Faster than Node.js/ts-node\n\n# As a test runner\nbun test           # Faster than Jest\n\n# As a bundler\nbun build app.ts   # Faster than webpack/esbuild\n\nSince everything is integrated, there is no cost of switching tools, providing a consistent developer experience (DX).\nBun's installation speed is astonishing. Official benchmarks show it surpassing pnpm and Yarn. However, this is due to a different approach than the traditional Content-Addressable Store.\nBun's biggest challenge is compatibility with the Node.js ecosystem. Issues may arise with native modules (.node files) and certain APIs.\n# Example: Packages that depend on node-gyp\nbun install bcrypt  # May not work\n\nThe official stance is to aim for \"100% compatibility,\" but in real projects, some differences can be critical.\npnpm is ideal if you meet the following conditions:\nLarge Projects / Monorepos: You want to strictly manage dependencies across multiple packages.\nConcerned About CI/CD Costs: You want to reduce charges on platforms like GitHub Actions.\nLong-Term Operations: You prioritize the health of dependencies.\nTransitioning from npm: You want high compatibility and a gradual migration.\nEspecially in monorepo setups using Turborepo or Nx, pnpm workspaces have become standard.\n# pnpm-workspace.yaml\npackages:\n  - 'apps/*'\n  - 'packages/*'\n\nBun is optimal if you meet the following conditions:\nNew Projects: You have a greenfield project with few compatibility issues.\nSpeed is Paramount: You prioritize accelerating the development cycle.\nPrimarily Using TypeScript: You have little dependency on native modules.\nExperimental Projects: You want to keep up with the latest technologies.\nEspecially in personal projects or the early stages of startups, Bun's integration and speed can significantly enhance development efficiency.\nIn fact, pnpm and Bun are not mutually exclusive. You can use them in the following way:\n# Use Bun for fast local development\nbun install\nbun run dev\n\n# Use pnpm for stability in CI (Docker caching works well)\npnpm install --frozen-lockfile\npnpm test\n\n# Remove existing node_modules\nrm -rf node_modules\n\n# For pnpm\nnpm install -g pnpm\npnpm import  # Generate pnpm-lock.yaml from package-lock.json (keep package-lock.json)\nrm -f package-lock.json\npnpm install\n\n# For Bun\ncurl -fsSL https://bun.sh/install | bash\nbun install\n\n# Run tests to detect issues\npnpm test  # or bun test\n\n# Check the build\npnpm build  # or bun run build\n\nExplicitly add any packages that cause errors:\n# Example error:\n# Error: Cannot find module 'lodash'\n\npnpm add lodash\n\n# Example for GitHub Actions (pnpm)\n- uses: pnpm/action-setup@v2\n  with:\n    version: 8\n- run: pnpm install --frozen-lockfile\n- run: pnpm test\n\n# Example for GitHub Actions (Bun)\n- uses: oven-sh/setup-bun@v1\n  with:\n    bun-version: latest\n- run: bun install --frozen-lockfile\n- run: bun test\n\nBoth pnpm and Bun share the commonality of being \"faster than npm,\" but their underlying philosophies are vastly different.\npnpm pursues correctness and robustness. It prevents Phantom Dependencies, improves disk efficiency, and ensures the long-term health of projects. The \"breaking\" during migration is an opportunity to uncover hidden issues in your project.\nBun pursues speed and DX. It integrates a package manager, runtime, test runner, and bundler to provide a consistent high-speed experience. It shines in new projects and experimental development.\nThe choice between the two depends on your project's priorities. For large-scale, long-term operations, choose pnpm; for speed and innovation, opt for Bun. Fortunately, both have low migration costs, allowing you to experiment easily.\nIf you're tired of the node_modules hell of npm, consider trying one of them in a small project first. That experience will likely inform your choice for your next project.\npnpm Official Site\nBun Official Site\npnpm Benchmarks\npnpm Motivation: Why pnpm Was Created\nWhy Your Code Breaks After Switching to pnpm: The Phantom Dependencies\nState of JS 2024 (Libraries)\nTurborepo Official Documentation",
+      "publishedAt": "2026-01-30T01:07:52.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "93fc44279ec0c59d2f9cc76e2ac4ef55daaac8ed946623845dfc63dd6276c234",
+      "title": "claude-switcher: The Concept of Piping Prompts into Unix",
+      "url": "https://dev.to/tumf/claude-switcher-the-concept-of-piping-prompts-into-unix-2o2h",
+      "description": "Originally published on 2026-01-16\nOriginal article (Japanese): claude-switcher: プロンプトをUnixパイプに流し込む発想\nRecently, I came across a post on Hacker News titled “Executable Markdown files with Unix pipes”. I couldn't help but think, \"This is interesting.\"\nBy using claude-switcher, you can make a Markdown file executable simply by writing #!/usr/bin/env claude-run at the top of the file. Furthermore, it can be piped together just like any ordinary Unix command.\ncat data.json | ./analyze.md > results.txt\ngit log -10 | ./summarize.md\n\nThe idea of \"integrating LLMs into a pipeline\" is refreshing, and I was eager to try it out.\nclaude-switcher is a tool that makes Markdown files executable on Claude Code. It was developed by the team at Andi Search and is released under the MIT license.\nKey features include:\nShebang support: Markdown files can be executed directly.\nUnix pipe support: stdin/stdout can be used, allowing for combinations with other commands.\nProvider switching: You can switch between multiple cloud providers like AWS Bedrock, Vertex AI, and Azure.\nSession isolation: Completely separate your personal Claude Code environment from automation scripts.\nThe essence of this tool lies in the \"combination of deterministic processing and LLMs.\"\nTasks that were difficult to handle with traditional shell scripts can now be accomplished, such as:\nSummarizing log files\nEvaluating test results\nGenerating commit messages\nClassifying and formatting data\nThese \"ambiguous tasks that required human judgment\" can now be delegated to LLMs. Moreover, they can be treated as part of a pipeline.\n# Run tests and have LLM summarize the results\n./run_tests.sh | ./summarize-results.md > report.txt\n\n# Generate a changelog based on Git history\ngit log --oneline -20 | ./generate-changelog.md > CHANGELOG.md\n\nThe novelty is in connecting deterministic processing (shell scripts, command lines) with non-deterministic processing (LLMs) in the same pipeline.\nIn the comments section of Hacker News, there were many criticisms regarding \"nondeterministic shell scripting.\" LLMs return different outputs even with the same input. Therefore, unlike shell scripts, \"consistent results\" cannot be guaranteed.\nHowever, I believe this is a matter of usage.\nFor parts that can be solved with traditional shell scripts (file operations, data extraction, command execution, etc.), you can use them as they are. Delegate only the parts that require \"judgment,\" \"summarization,\" and \"classification\" to the LLM.\nFor example:\n# Deterministic part: Run tests and extract logs\n./run_tests.sh 2>&1 | tee test.log\n\n# Nondeterministic part: LLM summarizes the logs\ncat test.log | ./summarize.md > summary.txt\n\nThe expression of the summary may change each time, but the goal of \"identifying and reporting the 3 failed tests\" can be achieved.\nClaude Code must be installed.\nA macOS or Linux environment is required.\ngit clone https://github.com/andisearch/claude-switcher.git\ncd claude-switcher\n./setup.sh\n\nThe command will be installed in /usr/local/bin, and a configuration file will be created in ~/.claude-switcher/.\nTo update, run git pull and re-execute ./setup.sh:\ncd claude-switcher\ngit pull\n./setup.sh\n\nLet's start with a simple example:\ncat > analyze.md << 'EOF'\n#!/usr/bin/env claude-run\nAnalyze this codebase and summarize the architecture in 3 bullet points.\nEOF\n\nchmod +x analyze.md\n./analyze.md\n\nThis will analyze the codebase in the current directory.\nHere’s an example that receives data from standard input:\ncat > summarize-commits.md << 'EOF'\n#!/usr/bin/env claude-run\nSummarize the following git commits in plain Japanese, focusing on what changed and why.\nEOF\n\nchmod +x summarize-commits.md\ngit log --oneline -10 | ./summarize-commits.md\n\nWhen you pipe the Git history, it will summarize it in Japanese.\nBy default, Executable Markdown does not have code execution permissions. This is a design choice for safety.\nIf code execution is necessary, you must explicitly allow it with a flag:\n#!/usr/bin/env -S claude-run --permission-mode bypassPermissions\nRun ./test/automation/run_tests.sh and summarize what passed and failed.\n\nSpecifying --permission-mode bypassPermissions allows the LLM to execute shell commands. When passing multiple arguments in the shebang, use #!/usr/bin/env -S on macOS and similar systems.\nImportant: Use this flag only with trusted scripts. There is a risk of the LLM inadvertently executing dangerous commands (e.g., rm -rf).\nIf you want to separate your personal Claude Code environment from automation scripts, you can execute them via cloud provider APIs.\n# Using AWS Bedrock\nclaude-run --aws task.md\n\n# Using Google Vertex AI\nclaude-run --vertex task.md\n\n# Using Anthropic API\nclaude-run --apikey task.md\n\nConfiguration is done in ~/.claude-switcher/secrets.sh:\nnano ~/.claude-switcher/secrets.sh\n\n# AWS Bedrock\nexport AWS_PROFILE=\"your-profile-name\"\nexport AWS_REGION=\"us-west-2\"\n\n# Anthropic API\nexport ANTHROPIC_API_KEY=\"sk-ant-...\"\n\nThis allows you to run automation scripts in the cloud without worrying about rate limits on your personal Claude Code subscription.\nI tried a practical example that could be quite useful.\n1. Test Execution Script (standard bash)\n#!/bin/bash\n# test-runner.sh\npytest tests/ --tb=short > test-output.txt 2>&1\necho $? > test-exit-code.txt\n\n2. Markdown for Summarizing Results\n#!/usr/bin/env claude-run\nRead test-output.txt and test-exit-code.txt.\nIf exit code is 0, output \"✅ All tests passed\".\nOtherwise, summarize failed tests in Japanese (max 3 lines).\n\n3. Connecting in a Pipeline\n./test-runner.sh && ./summarize-test.md | slack-cli post -c dev-alerts\n\nThis setup allows the LLM to summarize the test results and post them to Slack.\nEven with the same input, LLMs may return different outputs. It is not suitable for tasks expecting \"exactly the same results.\"\nWhen executing via API, token usage fees will apply. It is advisable to estimate costs before processing large amounts of data.\nWhen using --permission-mode bypassPermissions, code generated by the LLM will be executed. If dealing with untrusted input data, it should be run in an isolated environment, such as a DevContainer.\nSimilar tools mentioned in the Hacker News comments include:\nmdflow: Supports variable expansion within Markdown.\nAtuin Desktop: YAML format \"Executable Runbook.\"\nRunme: Executes code blocks within Markdown documents.\nEach of these tools attempts to \"make documents executable\" in different ways.\nThe appeal of claude-switcher lies in the fact that \"prompts become files.\"\nThey can be managed with Git (allowing for diffs and history).\nThey can be shared with teams (enabling reusable automation).\nThey can be integrated into Unix pipelines (allowing combinations with existing tools).\nThere was also a comment noting that it is \"more readable than curl | bash.\" Indeed, instructions written in Markdown are easier to follow regarding \"what is being done.\"\nThe idea of treating LLMs as \"commands\" is likely to become important in future workflow automation. If you're interested, I encourage you to give it a try.\nclaude-switcher - GitHub\nShow HN: Executable Markdown files with Unix pipes - Hacker News\nClaude Code\nPete Koomen (@koomen) - Originator of the Executable Markdown proposal",
+      "publishedAt": "2026-01-30T01:06:35.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "c1ed79295180f1e0ec5429064e5fe6421cc7f1e8491274c084070469e00e04b6",
+      "title": "寄稿： JFE スチールが挑むインテリジェント製鉄所への道 – Amazon SageMaker AI による CPS 開発実行基盤の構築",
+      "url": "https://aws.amazon.com/jp/blogs/news/jfesteel-cps-ml-sagemaker-ai/",
+      "description": "JFE スチール株式会社における Amazon SageMaker AI を中核とした CPS 開発実行基盤の構築事例をご紹介します。ブログの中では、プロジェクトの背景、開発体制、AWS の活用方法、そして今後の AWS IoT Greengrass によるエッジ配信基盤の展開についても解説します。",
+      "publishedAt": "2026-01-30T00:40:54.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "909975b157f51a8f4957a5269f47b1d2afba49a26e9f337f8dc1ecc5e55a02d7",
+      "title": "AWSマネジメントコンソールのセッションタイムアウトを整理・検証してみた",
+      "url": "https://dev.classmethod.jp/articles/console-session/",
+      "description": "AWSマネジメントコンソールのセッションタイムアウトを整理・検証してみた",
+      "publishedAt": "2026-01-30T00:06:37.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "9ed486f350092a5f9259b6d25c28453f145a3018354f6fbbcd1df4b214438180",
+      "title": "AWS Cross-Account Backup 구성하기",
+      "url": "https://dev.classmethod.jp/articles/aws-cross-account-backup/",
+      "description": "AWS Cross-Account Backup 구성하기",
+      "publishedAt": "2026-01-30T00:00:00.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "aacea0670fac1f621c58c1df6c19ab17327f6bf016310cf62a08de69381f48d5",
+      "title": "AWS Transit GatewayとVPCピアリングのデータ転送のコストを比較してみた",
+      "url": "https://dev.classmethod.jp/articles/transit-gateway-vs-vpc-peering-data-transfer-cost/",
+      "description": "AWS Transit GatewayとVPCピアリングのデータ転送のコストを比較してみた",
+      "publishedAt": "2026-01-29T23:44:33.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "a96c5bf1d678f3be10af1e5fe5f452e6e93107aade04cc9dfc212bdb437b5162",
+      "title": "GitHub Actions: Smarter editing, clearer debugging, and a new case function - GitHub Changelog",
+      "url": "https://github.blog/changelog/2026-01-29-github-actions-smarter-editing-clearer-debugging-and-a-new-case-function/",
+      "description": "Menu. Currently selected: Write more expressive expressions with a case function We’ve shipped several improvements to GitHub Actions that make it easier to write, validate, and troubleshoot workflow logic, especially when you rely on if: conditionals to control what runs. Here are some of the ne...",
+      "publishedAt": "2026-01-29T22:12:20.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "d46c74127a7c23d09a748a0fdde1d2cd73c0c07d7769b85235e9ce66fa79e5ea",
+      "title": "今、iPhone 16eを買うべきではない理由",
+      "url": "https://japan.cnet.com/article/35243338/",
+      "description": "アップルのiPhone 16eはコストパフォーマンスに優れるが、今すぐ購入するのは得策ではない。ほんの少し「待ち」の姿勢をとるべき大きな理由がある──。",
+      "publishedAt": "2026-01-29T21:20:00.000Z",
+      "feedName": "CNET Japan"
+    },
+    {
+      "id": "3e7e7f9bd94381a4fbd2a6b41c56986bfdaf945daddd8eeed51f2d2a2761ffd8",
+      "title": "EC2 で実行した k6 負荷テスト結果を Grafana OSS でリアルタイム可視化してみた",
+      "url": "https://dev.classmethod.jp/articles/shoma-k6-load-test-on-ec2-realtime-visualization-with-grafana-oss/",
+      "description": "EC2 で実行した k6 負荷テスト結果を Grafana OSS でリアルタイム可視化してみた",
+      "publishedAt": "2026-01-29T16:33:29.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "66ce81a5c6f596834db82cf539f8c453f32e4bbb92e0849ff9c3ab9a6232516c",
+      "title": "Azure の各管理グループに所属しているサブスクリプション一覧を csv で出力してみる",
+      "url": "https://dev.classmethod.jp/articles/list-azure-management-group-subscriptions-to-csv/",
+      "description": "Azure の各管理グループに所属しているサブスクリプション一覧を csv で出力してみる",
+      "publishedAt": "2026-01-29T15:18:42.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "871a6b11ccd54c996b0afda4221bf18c956ce84467e477143fd66a75eb1d0a70",
+      "title": "[AWS CDK] Lambda (デフォルト) を LMI 化したい（あるいはその逆）を行う際の注意点",
+      "url": "https://dev.classmethod.jp/articles/aws-cdk-lambda-default-managed-instances-no-direct-conversion/",
+      "description": "関数の Lambda (デフォルト) と LMI の直接の変換はできません。一度削除を挟む必要があります。",
+      "publishedAt": "2026-01-29T14:13:13.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "42630f5d2a614fc2c57c7945ea4929bb1ea3372d484f39ea7bd2fbb1d00da833",
+      "title": "AWS Deadline Cloudでジョブ名・説明が後から編集可能に",
+      "url": "https://dev.classmethod.jp/articles/aws-deadline-cloud-edit-job-name-description/",
+      "description": "AWS Deadline Cloudで、ジョブ名と説明がジョブ投入後でも編集できるようになりました。これにより、誤字の修正や、レビュー結果・管理番号などを後から追記でき、ジョブに情報を残しやすくなりました。",
+      "publishedAt": "2026-01-29T10:40:28.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "019d6e1e5b916ca3a8cbfe28f8c07156be11c8076d7dd36c5fc7f050e94f98ce",
+      "title": "ひとりAWS BuilderCards 会を開催した話",
+      "url": "https://qiita.com/amarelo_n24/items/84cab16855350d69d195?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\n私は去年、AWS BuilderCards（以降、BuilderCardsと表記）のセットをいただきました。これを機にBuilderCardsを広めたいと考えていましたが、BuilderCardsのルールを熟知できておらず、BuilderCards会の開催に踏み...",
+      "publishedAt": "2026-01-29T10:00:04.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "95fe45896af27e7d0cd477b96b2d7c55fddf1246f2aa730b46feac7f63e2ad59",
+      "title": "Automated Security Response on AWS（ASR）を v3 にアップグレードして Web UI を使ってみた",
+      "url": "https://dev.classmethod.jp/articles/asr-v3-upgrade-webui/",
+      "description": "Automated Security Response on AWS（ASR）を v3 にアップグレードして Web UI を使ってみた",
+      "publishedAt": "2026-01-29T07:57:52.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "7c7d77f10982bb5660e0dcadf8861fea17dfa79961b8633d0151a46a6385bd53",
+      "title": "Next.js 15 から 16 へのアップデートで遭遇した問題と対処法をまとめてみた",
+      "url": "https://dev.classmethod.jp/articles/next-js-15-16/",
+      "description": "Next.js 15 から 16 へのアップデートで遭遇した問題と対処法をまとめてみた",
+      "publishedAt": "2026-01-29T07:51:51.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "bf86a074467eeacce42840c926578534fc6536711c637ad559f434a85dda0fee",
+      "title": "テスト時間を最大 90% 削減 – Amazon Connect のテストとシミュレーション機能",
+      "url": "https://aws.amazon.com/jp/blogs/news/reduce-testing-time-by-up-to-90-introducing-native-testing-and-simulation-for-amazon-connect/",
+      "description": "Amazon Connect はネイティブのテストとシミュレーション機能を発表しました。外部ツールや手動での電話テストなしでコンタクトフローを自動的にテストでき、検証時間を削減します。直感的なビジュアルデザイナーでテストケースを作成し、イベント駆動型モデルで自然な顧客インタラクションをシミュレートできます。このブログ記事ではテストの概要、実践例とベストプラクティスを紹介します。",
+      "publishedAt": "2026-01-29T07:23:02.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "8bc3a3e6406b1f7cb93fa37f72551f6b7d956dbdb72b264dbcb29db34f51933a",
+      "title": "生成AIを複数使い倒す！ソフトウェアのセキュリティチェックリストを爆速で作り管理する技（Nginx編）",
+      "url": "https://qiita.com/miura0620/items/6476837c5a2e5726f172?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\nGMOコネクト三浦です。\n新しいソフトウェアを導入する際、セキュリティ設定の確認（チェックリスト作成）に頭を悩ませていませんか？\n手動で一から作るのは時間がかかりますし、最新のベストプラクティスを網羅するのは至難の業です。\n本記事では、Nginxをサンプル題材と...",
+      "publishedAt": "2026-01-29T06:59:14.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "41000196a758c82ad2981e442149fb73a9e29fa8fd120d2eecdbb1199d7abf65",
+      "title": "狙われるSnap Store ―元CanonicalエンジニアリングマネージャがSnapユーザにマルウェアの注意喚起",
+      "url": "https://gihyo.jp/article/2026/01/daily-linux-260129?utm_source=feed",
+      "description": "人気の高いオープンソースプロダクトは悪質なサイバーセキュリティ攻撃のターゲットにもされやすい。",
+      "publishedAt": "2026-01-29T06:58:00.000Z",
+      "feedName": "gihyo.jp"
+    },
+    {
+      "id": "01e4a073bfe61de802fea9a74ec9c56273db33cdd38b3553dce1328cade9ac9c",
+      "title": "F5、「AIガードレール」と「AIレッドチーム」を一般提供開始　断片化したセキュリティ製品に依存しないAI防御を",
+      "url": "https://enterprisezine.jp/news/detail/23623",
+      "description": "F5は、エンタープライズ向けの基幹AIシステムを保護する2つのソリューション「F5 AIガードレール（AI Guardrails）」と「F5 AIレッドチーム（AI Red Team）」の一般提供を...",
+      "publishedAt": "2026-01-29T05:41:00.000Z",
+      "feedName": "EnterpriseZine"
+    },
+    {
+      "id": "f4677f2bef08ac57d60d885df2c4ccc4dec347b2b6d4f0bf085e9c05b321960a",
+      "title": "【VPN設備なし】WireGuardでオフィスのAIサーバー(DGX Spark ollama)を外部利用",
+      "url": "https://qiita.com/ntaka329/items/9d292b578278473eb052?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\nGMOコネクトの永田です。\nDGX Sparkが届きました！🎉\n\nしかし、すぐに問題が…\n「オフィス外からollamaを使いたいけど、グローバルIPもVPN設備もない！」\n同じような環境の方も多いのではないでしょうか？\n今回はWireGuard + AWS EC...",
+      "publishedAt": "2026-01-29T04:25:01.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "737acdba31bac6a82a3000710915596b35134ada1f11446395d238301979fe2b",
+      "title": "セキュリティ診断でCSP不備を指摘されたので、まずはSentryで違反レポートを集める仕組みを構築した話",
+      "url": "https://qiita.com/keishin_nishiura/items/8687970e66cb5a449bf1?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "1. はじめに\nソーイ株式会社の西浦です。入社1年目でWebアプリケーションの開発に携わっています。\n先日、OWASP ASVS 3.4.3基準のセキュリティ診断を受け、「CSP（Content-Security-Policy）ヘッダがない」との指摘を受けました。\n本記事...",
+      "publishedAt": "2026-01-29T03:13:45.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "fd296a87d0223da7145feb1be73d145e7c8c42f5283e226a4b76822206786166",
+      "title": "IPA、「情報セキュリティ10大脅威 2026」を発表　“AIリスク”が初登場3位に",
+      "url": "https://enterprisezine.jp/news/detail/23620",
+      "description": "情報処理推進機構（IPA）は2026年1月29日、「情報セキュリティ10大脅威 2026」を発表した。\n\n　同ランキングは、2025年に発生した社会的に影響が大きかった情報セキュリティの事故や攻撃の...",
+      "publishedAt": "2026-01-29T03:01:00.000Z",
+      "feedName": "EnterpriseZine"
+    },
+    {
+      "id": "47e1aa28ff60fbf925286697678840ec50d5f5348422160652219c7ece995ae2",
+      "title": "Figma x Claudeでフルでコーディングしてみた",
+      "url": "https://zenn.dev/hamworks/articles/0d57ca09e695c5",
+      "description": "自分ではメインで手を動かさず、ClaudeにHTMLコーディングをほぼ任せました。\n地味にFigma MCPを初めて使ったので、いい感じの進め方ないかなーって試行錯誤した記録を残しておきます。\n今回はReactとかじゃなく、HTML（Nunjucksを用いたtwig）を作成しています。\nコーディングルール等はルールで定義します。CLAUDE.mdにばーっと全部書いてからルールにわけてって頼むと、いい感じに分けてくれます。（読んでくれるとは言ってない）\n今回は、\n\nアーキテクチャ\nCSSルール\n\nレスポンシブのブレークポイント\n命名規則\n\n今回はBEM指定だったので、サンプルも載せる\n\n\n...",
+      "publishedAt": "2026-01-29T02:56:51.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "cf3ad02c6c27608c6d35d6982f86be7ae33a2faf7cf682e5c2aa858832857b6d",
+      "title": "AG Grid で実際にテーブル表示してみる",
+      "url": "https://qiita.com/kaz_prg/items/4446d18f3639752b10fd?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "前回はAGGridの概要について簡単にまとめてみました。\n今回は実際に JavaScript でシンプルに導入してみたいと思います。\n\nサンプルコード\n\nHTML",
+      "publishedAt": "2026-01-29T02:02:25.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "ab1625c4452fccceb7c0ff6eed856eba8d6261154c4bff13aabdbd7ce708147a",
+      "title": "ソフトバンク、AIデータセンター向け「Infrinia AI Cloud OS」を発表",
+      "url": "https://enterprisezine.jp/news/detail/23618",
+      "description": "ソフトバンクは1月21日、AIデータセンター向けの新たなソフトウエアスタック「Infrinia AI Cloud OS」を発表した。同システムは、次世代AIインフラアーキテクチャーやシステム開発を担...",
+      "publishedAt": "2026-01-29T02:00:00.000Z",
+      "feedName": "EnterpriseZine"
+    },
+    {
+      "id": "5764cb724cf3c2ad3bd51511394a67bb3c2a5b5a88e145bd1bb12a545d0754fa",
+      "title": "Better Authを理解する",
+      "url": "https://zenn.dev/praha/articles/46992f8e56c480",
+      "description": "はじめに\nWebで動的なサイトを作るとき，多くの場合で認証は欠かせません．\nPrAhaで作成しているWebアプリでも，その大半に何らかのログイン機構が組み込まれています．\nこれらのログイン機構について，多くの場合ではフルスクラッチでの実装ではなく，ライブラリによる実装を選択すると思います．\n今回は，それらのライブラリの1つとして，Typescriptの認証・認可フレームワークである，Better Authについて紹介したいと思います．\nただし，導入や基本的な利用方法については，公式ドキュメントに譲り，この記事では，Better Authの全体を俯瞰して理解することを目指します．\nバー...",
+      "publishedAt": "2026-01-28T23:40:30.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "fc997a754c1ad4de61bba01d35811e4694163aa443cdfa6dde47dd22e28cbe60",
+      "title": "Next.js+Turbopack構成でsymbol-sdk v3を使えるようにする",
+      "url": "https://qiita.com/_oe/items/775892fcc7a33198dff2?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "環境\n> node -v    \nv24.13.0\n\n>npm -v\n11.6.2\n\nNext.js アプリ作成\n最新のcreate-next-appからウィザード形式で作成します\nmkdir your-next-proj\ncd your-next-proj\nnpx c...",
+      "publishedAt": "2026-01-28T14:19:11.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "f231ab351ea8d3c2d88d5601b5c3819f9cf0429ee693424447b8cae67f7b5e70",
+      "title": "【経営層に伝わる】NIST IR 8286で学ぶ「セキュリティ＝事業リスク」の説明技法",
+      "url": "https://zenn.dev/moneymog/articles/c1f014b3299159",
+      "description": "「セキュリティの話をするな」\nある経営会議で、CISOがそう言われた。予算申請のプレゼンを準備して、脆弱性の数も、攻撃の傾向も、対策の必要性も丁寧に説明したのに。\n返ってきたのは「で、結局いくら損するの？」という一言だった。\nこの光景、見覚えがある人は多いと思う。セキュリティの「技術的な正しさ」と、経営層が求める「事業への影響」の間には、深い溝がある。その溝を埋めるためのフレームワークが、NISTから出ている。NIST IR 8286だ。\n\n 経営層と「言語」が違う問題\nセキュリティ担当者が経営層に説明するとき、よくある失敗パターンがある。\n技術的な正確さを追求しすぎる。「CVSSスコア...",
+      "publishedAt": "2026-01-28T10:00:02.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "8031f96c64dc31f13281a30c9f7f3eb30f7c8fca040416eb74855db4ac2025f5",
+      "title": "開発者が知っておくべきPostgreSQLパフォーマンス改善Tips 入門10選",
+      "url": "https://zenn.dev/gizmo/articles/f61b3e999a5137",
+      "description": "対象読者\n\n最近になってAIコーディングをはじめたひと\n経験2年未満レベルのジュニアエンジニア\nほか、そのへんのレベル感の方向け\n\n\n はじめに\n「開発環境では爆速だったのに、本番データが入った途端にタイムアウトする」\nそんな「時限爆弾」を埋め込まないために、開発者が最低限知っておくべきPostgreSQLのパフォーマンス改善Tipsをまとめました。\nPostgreSQLと銘打ってますが、別にそれ以外でも応用効くものばかりです。\n高度なパラメータチューニングではなく、入門編です。日々のコード実装ですぐに実践できます。\n\n\n 【クエリの書き方・アンチパターン】\n\n 1. WHERE句の...",
+      "publishedAt": "2026-01-27T23:00:26.000Z",
+      "feedName": "Zenn"
     }
   ]
 }
