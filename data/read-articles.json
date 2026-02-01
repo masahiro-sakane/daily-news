@@ -512,14 +512,6 @@
       "feedName": "Cloud Native Computing Foundation"
     },
     {
-      "id": "c3c11f7cdfaf1408b35c4e00aa57fd53b4e9fb29038e7a5a461064531dace357",
-      "title": "豆蔵デベロッパーサイト 2025年10-12月のサマリー",
-      "url": "https://developer.mamezou-tech.com/blogs/2026/01/02/2025-3q-retrospective/",
-      "description": "あけましておめでとうございます。\n2025年もご愛読いただきありがとうございました。本年も豆蔵デベロッパーサイトをよろしくお願いします。\n記事数・執筆者数\n#\nこの3ヶ月で49本の記事が投稿され、記事数は843になりました。新たに4名が執筆デビューし、累計75名になりました。\nテーマ別の記事\n#\nロボット\n#\n/robotics/twincat/introduction-chapter2/twincat-introduction-chapter2/\n\n\n/blogs/2025/12/10/ceres-solver/\n\n\n/robotics/bizen/bizen_introduction/\n\n\nローカル LLM\n#\n/blogs/2025/10/14/local_rag_on_lm_studio/\n\n\n/blogs/2025/10/15/local_rag_on_lm_studio_part2/\n\n\nプログラミング言語\n#\n/blogs/2025/10/16/csharp_di/\n\n\n/blogs/2025/12/09/jspecify/\n\n\nQ Developer\n#\n/blogs/2025/11/12/qdev_beginner_day1/\n\n\n/blogs/2025/11/17/qdev_beginner_day2/\n\n\n/blogs/2025/11/21/qdev_beginner_day3/\n\n\n/blogs/2025/11/28/qdev-aidd-spec-kit/\n\n\n/blogs/2025/12/11/amazon_q_collaborative_writing/\n\n\n仕様駆動開発\n#\n/blogs/2025/12/16/github-spec-kit-iac-entry/\n\n\n/blogs/2025/12/24/kiro-sphinx-sdd/\n\n\nCI/CD\n#\n/blogs/2025/11/16/github-immutable-releases/\n\n\n/blogs/2025/11/17/cd-pipeline-for-ubuntu-desktop/\n\n\nテスト\n#\n/blogs/2025/12/17/kiro_ide_pbt/\n\n\n/blogs/2025/12/19/edu-user-dept-training-1/\n\n\nパブリッククラウド\n#\n/blogs/2025/12/12/google_cloud_entry/\n\n\n/blogs/2025/12/22/aws-controltower-deepdive/\n\n\n/blogs/2025/12/22/aws-controltower-deepdive/\n\n\n/blogs/2025/12/23/aws_all_certified_2025/\n\n\n/in-house-project/sss/webhook-with-sqs/\n\n\nモデリング\n#\n/blogs/2025/12/05/modeling-forum-2025-report/\n\n\nアーキテクチャ\n#\n/blogs/2025/12/08/hexagonal_questions/\n\n\nアジャイル\n#\n/blogs/2025/12/04/scrum-ai-1/\n\n\n/blogs/2025/12/18/sushi/\n\n\nGitHub Copilot\n#\n/blogs/2025/10/30/intro-to-github-copilot-cli/\n\n\n開発環境構築\n#\n/blogs/2025/10/13/write-java-with-vscode-2025/\n\n\n個人開発\n#\n/blogs/2025/10/13/python-game/\n\n\n/blogs/2025/12/01/porting-an-electron-app-to-tauri2/\n\n\n/blogs/2025/12/03/customize-markdown-preview-style-with-agent-skills/\n\n\n書籍紹介\n#\n/blogs/2025/12/02/think-again/\n\n\nヘルスケア\n#\n/blogs/2025/12/25/Vitality/\n\n\nアドベントカレンダー2025\n#\nアドベントカレンダー2025が開催され、バラエティ豊かな19記事が公開されました。公開された各記事は本記事内でも紹介しています。\n/events/advent-calendar/2025/\n\n\nさいごに\n#\n以上、2025年度第3四半期のサマリーでした。\nよかったらフィードの購読、X や Bluesky でのフォローもお願いします。Facebook でも本サイトの注目記事をはじめ豆蔵に関するイベントを紹介しています。note にも時々本サイト関連の記事が掲載されています。",
-      "publishedAt": "2026-01-02T00:00:00.000Z",
-      "feedName": "豆蔵デベロッパーサイト"
-    },
-    {
       "id": "35aea6d202c3303616fd63e9994bfdd39844b729720abd663dcbe5543d1ac13d",
       "title": "n8n Integrates Note, Obsidian, Dify, and SNS - Complete Overview of the Increasingly Chaotic Automation Workflow",
       "url": "https://dev.to/takashi_abe_c6e5ce4004697/n8n-integrates-note-obsidian-dify-and-sns-complete-overview-of-the-increasingly-chaotic-23bi",
@@ -3736,6 +3728,206 @@
       "url": "https://zenn.dev/miyaco_log/articles/6f084e82688fa1",
       "description": "※本ページはプロモーションが含まれています\n【この記事でわかること】\n\nAmazon Q Developerは、AWS版の「無料GitHub Copilot」。\nVS Codeに入れるだけで、コードの自動生成やチャット相談ができる。\nクレジットカード登録不要。必要なのはメールアドレスだけ。\n\n\n はじめに：月額10ドルの壁\n「AIコーディング、便利そうだけど毎月1,500円（$10）はちょっと……」 「会社のセキュリティ規定で、GitHub Copilotが使えない……」\nそんな理由で、AIの恩恵を諦めていませんか？ もしあなたが、「VS Code」を使っているなら、今すぐ無料で最強のメ...",
       "publishedAt": "2026-01-28T22:29:15.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "881e12f4523a1fe4d1bc9c43f5cd39a4745078f1425fa9e7aaed55d44c58fd7a",
+      "title": "DenunzIA: E2EE Anonymous Reporting Platform (Looking for Security Audit/Feedback)",
+      "url": "https://dev.to/denuncia_siie/denunzia-e2ee-anonymous-reporting-platform-looking-for-security-auditfeedback-55eg",
+      "description": "Hi everyone,\nI’ve developed DenunzIA, an open-source platform designed for totally anonymous citizen whistleblowing and ethical intelligence. Given the sensitive nature of the data it's meant to handle, security and anonymity are the top priorities.\nThe project is currently in a \"ready-for-audit\" state, and I would love for the community to tear it apart and help me find any potential vulnerabilities.\nTechnical Stack & Security Implementation:\nEnd-to-End Encryption (E2EE): Using RSA-4096 to protect whistleblower identities.\nBackend: Node.js with a focus on secure API endpoints.\nDatabase: PostgreSQL for robust and structured data persistence.\nInfrastructure: Fully Dockerized for isolated and reproducible deployments.\nFrontend: React/TypeScript with client-side encryption.\nWhat I’m looking for:\nCode Audit: Specifically regarding the encryption/decryption flow in services/cryptoService.ts.\nArchitecture Review: PostgreSQL schema and data isolation.\nVulnerability Assessment: Any potential for leakages in the Docker configuration or API.\nThe goal is to provide a safe tool for social transparency. Any feedback, PRs, or \"issues\" reported on GitHub would be greatly appreciated.\nRepository: https://github.com/denunciasiie/denunzia-v1\nThanks in advance for your time and expertise!",
+      "publishedAt": "2026-02-01T01:57:37.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "f949a1e2cabc86f8cd8d387fc846534ac7c9dc3686e2854439ab9d1c21df5468",
+      "title": "How I Cut My AI Coding Tool Costs by 70% (And You Can Too)",
+      "url": "https://dev.to/vishal_veerareddy_9cdd17d/how-i-cut-my-ai-coding-tool-costs-by-70-and-you-can-too-ol0",
+      "description": "Run Cursor, Claude Code, Cline, and more on ANY LLM — including free local models\nIf you're like me, you've probably fallen in love with AI coding assistants. Tools like Cursor, Claude Code CLI, Cline, and OpenClaw/Clawdbot have genuinely transformed how I write code. But there's a catch — they're expensive.\nBetween API costs and subscription fees, I was burning through $100-300/month just on AI coding tools. That's when I built Lynkr.\nLynkr is an open-source universal LLM proxy that lets you run your favorite AI coding tools on any model provider — including completely free local models via Ollama.\nThink of it as a universal adapter. Your tools think they're talking to their native API, but Lynkr transparently routes requests to whatever backend you choose.\nHere's what frustrates developers:\nVendor lock-in — Cursor only works with OpenAI/Anthropic. Claude Code CLI only works with Anthropic.\nExpensive APIs — Claude API costs add up fast, especially for heavy coding sessions\nNo local option — Want to use your RTX 4090 for coding assistance? Too bad.\nEnterprise restrictions — Many companies can't send code to external APIs\nLynkr fixes all of this.\n┌─────────────┐     ┌─────────┐     ┌──────────────────┐\n│ Cursor      │     │         │     │ Ollama (local)   │\n│ Claude Code │────▶│  Lynkr  │────▶│ AWS Bedrock      │\n│ Cline       │     │  Proxy  │     │ Azure OpenAI     │\n│ OpenClaw    │     │         │     │ OpenRouter       │\n└─────────────┘     └─────────┘     └──────────────────┘\n\nLynkr acts as a drop-in replacement for the Anthropic API. It:\nReceives requests from your AI coding tool\nTranslates them to your target provider's format\nStreams responses back seamlessly\nYour tools don't know the difference.\nLynkr supports 12+ providers:\nOllama - 100% local, FREE\nAWS Bedrock - Enterprise-grade, ~60% cheaper\nAzure OpenAI - Enterprise-grade\nAzure Anthropic - Claude on Azure\nOpenRouter - 100+ models via single API\nOpenAI - Direct GPT access\nGoogle Vertex AI - Gemini models\nDatabricks - Enterprise ML platform\nZ.AI (Zhipu) - ~1/7 cost of Anthropic\nLM Studio - Local models with GUI\nllama.cpp - Local GGUF models\n# Install Ollama\ncurl -fsSL https://ollama.com/install.sh | sh\n\n# Pull a coding model\nollama pull qwen2.5-coder:latest\n\n# Clone and configure Lynkr\ngit clone https://github.com/Fast-Editor/Lynkr.git\ncd Lynkr\ncp .env.example .env\n\n# Edit .env:\nMODEL_PROVIDER=ollama\nOLLAMA_MODEL=qwen2.5-coder:latest\nOLLAMA_ENDPOINT=http://localhost:11434\n\n# Start\nnpm install && npm start\n\n# Clone and configure\ngit clone https://github.com/Fast-Editor/Lynkr.git\ncd Lynkr\ncp .env.example .env\n\n# Edit .env:\nMODEL_PROVIDER=bedrock\nAWS_BEDROCK_API_KEY=your-bedrock-api-key\nAWS_BEDROCK_REGION=us-east-1\nAWS_BEDROCK_MODEL_ID=anthropic.claude-3-5-sonnet-20241022-v2:0\n\n# Start\nnpm install && npm start\n\n# Edit .env:\nMODEL_PROVIDER=openrouter\nOPENROUTER_API_KEY=sk-or-v1-your-key\nOPENROUTER_MODEL=anthropic/claude-3.5-sonnet\n\nnpm start\n\nPoint your AI coding tool to Lynkr:\n# For Claude Code CLI\nexport ANTHROPIC_API_KEY=dummy\nexport ANTHROPIC_BASE_URL=http://localhost:8081\n\n# Now use Claude Code normally!\nclaude \"Refactor this function\"\n\nHere's what I was spending vs. what I spend now:\n\n\n\nTool\nBefore (Direct API)\nAfter (Lynkr + Bedrock)\nSavings\n\n\n\n\nClaude Code CLI\n$150/month\n$45/month\n70%\n\n\nHeavy Cursor usage\n$100/month\n$30/month\n70%\n\n\nWith Ollama\n-\n$0/month\n100%\n\n\n\nThe local Ollama option is genuinely free. If you have a decent GPU (RTX 3080+), models like qwen2.5-coder run surprisingly well.\nLynkr shines in enterprise environments:\nAir-gapped networks: Run entirely local with Ollama\nCompliance: Keep code on AWS/Azure infrastructure you control\nCost control: Set usage limits and track spending per team\nAudit trails: Log all requests for compliance\nHybrid Routing: Use Ollama for simple requests, fallback to cloud for complex ones\nToken Optimization: 60-80% cost reduction through smart compression\nLong-Term Memory: Titans-inspired memory system for context persistence\nHeadroom Compression: 47-92% token reduction via intelligent context compression\nHot Reload: Config changes apply without restart\nSmart Tool Selection: Automatic tool filtering to reduce token usage\nLynkr is open source (MIT license). Contributions welcome:\n🐛 Bug reports and fixes\n🔌 New provider integrations\n📖 Documentation improvements\n⭐ Stars on GitHub!\nStop overpaying for AI coding tools. With Lynkr, you can:\nSave 60-80% using AWS Bedrock or Azure\nPay nothing using local Ollama models\nKeep code private in enterprise environments\n⭐ Star on GitHub: github.com/Fast-Editor/Lynkr\n📚 Full Documentation: deepwiki.com/Fast-Editor/Lynkr\nWhat AI coding tools do you use? Have you tried running them locally? Let me know in the comments!",
+      "publishedAt": "2026-02-01T01:45:11.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "a511c24f6c04a7842ca706aad3c113dc51d4e159a1254b3344fe604099f2a382",
+      "title": "Supercharge Your Hytale Modding Workflow with mdevtools",
+      "url": "https://dev.to/mbround18/hytale-mod-development-hot-reloading-46je",
+      "description": "Tired of restarting your server every time you change a line of code?\nIn this guide, we’ll set up mdevtools to enable hot-reloading for your Hytale modding environment. By creating a tight loop between your Gradle build and your running server, you can iterate faster and stay in the flow.\nI’m actively using this exact workflow right now to build the procedural generation systems for Vex's Dungeon Challenge. When you are tweaking complex dungeon logic or iterating on gameplay mechanics, saving those 30-second restart loops saves hours of development time every week.\nHere is how to set it up.\nFirst, grab the latest mdevtools jar file from CurseForge:\nDownload mdevtools\nWhere to place the jar:\nDepending on your project structure, place the downloaded jar in the following location:\n\n\n\nProject Type\nDestination Path\n\n\n\n\n\nStandard Template (mbround18)\ndata/server/Server/builtin\n\n\nCustom Setup\nCreate a builtin folder in your server root and drop it there.\n\n\n\nTo ensure the mod loads correctly without crashing, verify that your hytale-mod.json (or equivalent manifest) contains the dependency fields.\nAdd the following to your manifest:\n\"Dependencies\": {},\n\"OptionalDependencies\": {}\n\n\nNote: For single-mod development, leaving these objects empty is perfectly fine. They just need to be present.\nWe need a way to move your compiled jar into the server's mods folder automatically. Add this task to your build.gradle file.\nThis snippet creates an installModJar task that builds your jar and immediately copies it to the server directory:\n// In build.gradle\ntasks.register(\"installModJar\", Copy) {\n    // 1. Build the jar first\n    dependsOn \":plugins:yourmod:jar\" \n\n    // 2. Grab the output file\n    from { project(\":plugins:yourmod\").tasks.named(\"jar\").flatMap { it.archiveFile } }\n\n    // 3. Drop it into the server mods folder\n    into file(\"data/server/Server/mods\")\n}\n\n\nFinally, we tie it all together with a lightweight Bash script. This allows you to rebuild and replace the jar without restarting your Docker container.\nSave this as dev-reload.sh in your project root and make it executable (chmod +x dev-reload.sh).\n#!/bin/bash\nset -euo pipefail\nIFS=$'\\n\\t'\n\n# Configuration\nWATCH_DIR=\"plugin/src\"\nBUILD_TASK=\"installModJar\" # Updated to match the Gradle task above\nJAR_NAME=\"plugin-name-0.1.0.jar\"\nJAR_SOURCE=\"./plugin/build/libs\"\nJAR_DEST=\"data/server/Server/mods\"\nDEBOUNCE_SECONDS=5\n\nlast_build_time=0\n\nbuild_and_copy() {\n  # Run the gradle task we created in Step 3\n  ./gradlew \"$BUILD_TASK\" \n}\n\nhard_reload() {\n  build_and_copy\n  # NOTE: UI assets do NOT hot reload. \n  # If you have new UI files, uncomment lines below to rebuild assets zip.\n  # ./gradlew assetsZip \\\n  #    && cp \"dist/$(ls dist | grep -m1 -E 'assets.*\\.zip')\" \"$JAR_DEST/\"\n\n  echo \"Restarting Docker container...\"\n  docker compose restart\n  echo \"Hard reload complete.\"\n}\n\necho \"==========================================================\"\necho \" Hytale Dev Loop: Ready.\"\necho \" [r] Reload Code (Hot)\"\necho \" [h] Hard Reload (Restart Container + UI)\"\necho \" [e] Exit\"\necho \"==========================================================\"\n\nwhile true; do\n  printf \"> \"\n  IFS= read -r -n1 key\n  echo\n  case \"$key\" in\n    r|R)\n      now=$(date +%s)\n      if (( now - last_build_time < DEBOUNCE_SECONDS )); then\n        echo \"Debounced. Wait a moment before reloading again.\"\n        continue\n      fi\n      last_build_time=$now\n      echo \"Rebuilding and hot-swapping...\"\n      build_and_copy\n      ;;\n    h|H)\n      echo \"Hard reload requested...\"\n      hard_reload\n      ;;\n    e|E)\n      echo \"Exiting.\"\n      break\n      ;;\n    *)\n      # Ignore other keys\n      ;;\n  esac\ndone\n\n\nWhile mdevtools handles your Java code hot-reloading, writing Hytale UI files (.ui) can still be tricky. The game requires a Hard Reload to see UI changes, so you want to catch errors before you restart.\nI’ve built a VS Code extension specifically to solve this:\nHytale UI Ultimate\nI use this tool to build the interfaces for Vex's Dungeon Challenge. It provides:\nSyntax Highlighting for .ui files.\nDiagnostics to catch invalid group naming and missing attributes.\nImport Navigation (Ctrl+Click) to jump between UI files.\nPairing this extension with the Hard Reload (h) script above gives you the most robust workflow currently possible.\nYou now have a terminal dashboard for development. Instead of manually moving files or waiting for long boot times, you can simply press r to inject your new code instantly.\nHappy Modding!",
+      "publishedAt": "2026-02-01T01:29:17.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "4357df55932802bfb287559d9c99173d3637365ffd3382812c93e50296d8694d",
+      "title": "[AWS] Testing whether Kiro's web tools can be used in conjunction with other features [Kiro]",
+      "url": "https://dev.to/aws-builders/aws-testing-whether-kiros-web-tools-can-be-used-in-conjunction-with-other-features-kiro-1h47",
+      "description": "This article is a machine translation of the contents of the following URL, which I wrote in Japanese:\nhttps://qiita.com/Nana_777/items/e20bc79d935a13e620f1\nOn December 18, 2025, Kirono IDE announced Web Tools as a new feature.\nThis is one of the new features announced on December 18, 2025.\nKiro uses Web Tools when searching for the latest library versions or when explicitly requesting web information.\n↓ Kiro attempts to invoke the web tool\n\n↓ Kiro searches several sources and provides the final answer\n\n↓ When I asked, \"Please search the web for information and briefly explain what Kiro is,\" a web tool was launched.\n\nThe steering file defines rules for Kiro's behavior and output, but you don't need to write the text directly in a single file.\nWe will verify whether Kiro can calculate fees from the information in a local file referenced by the steering file.\n\nThis time, we will enter a portion of the information from the \"Postman\" pricing table (as of February 1, 2026) from the following website into the local file.\nhttps://www.postman.com/pricing/\nThe information to be entered into the local file is as follows:\n\n## Postman Pricing Plan List\n\nRetrieved: February 1, 2026\nSource: https://www.postman.com/pricing/\n\n### Plan Overview\n\n| Plans | Pricing | Billing | Key Features |\n|--------|------|----------|----------|\n| **Free** | $0 | - | Free for up to 3 users |\n| **Basic** | $14/user/month | Annual billing | Full team collaboration (unlimited invites) |\n| **Professional** | $29/user/month | Annual billing | Invite-only workspaces, advanced features |\n| **Enterprise** | $49/user/month | Annual billing | SSO, SAML, advanced RBAC, audit logging |\n\n### Detailed Features of Each Plan\n\n#### Free Plan ($0)\n- **Users**: Up to 3 users\n- **API Client**: HTTP, GraphQL, gRPC, WebSocket, MQTT supported\n- **Mock Servers**: 1,000 requests/month\n- **Collection Recovery**: 1 day\n- **Monitors**: 1,000 requests/month\n- **Postman AI**: 50 credits/user/month\n- **Packages**: 3\n- **Payment Method**: Credit card only\n\n#### Basic Plan ($14/user/month)\n- **Users**: Unlimited (charged per user)\n- **Mock Servers: 10,000 requests/month\n- Collection Recovery: 30 days\n- Monitors: 10,000 requests/month\n- Postman AI: 400 credits/user/month\n- Packages: 3\n- Private APIs in Spec Hub: 3\n- Postman API Calls: 100,000/month\n- Payment Method: Credit card only\n- Billing: Annual billing only\n(Omitted)\n\n\nThe steering file contains the rules for POSTMAN fee calculations, as shown below.\n##[[file:postman-pricing-plans.md]]\n\n\nThis statement refers to a file in your workspace.\n---\ninclusion: always\n---\n\n## Pricing Rules\n\n### Postman Pricing Calculation\n\nWhen calculating or estimating Postman pricing, be sure to refer to the following file:\n\n##[[file:postman-pricing-plans.md]]\n\n#### Notes on Calculation\n\n1. **Annual Billing Only**: Basic, Professional, and Enterprise plans are billed annually only.\n2. **Per-User Billing**: Each plan is charged per user.\n\n#### Calculation Example\n\n- Monthly Fee x Number of Users x Number of Months = Total Amount\n- However, an annual contract is required, so a minimum of 12 months is required for the calculation.\n\n#### Items to Check When Estimating\n\n- Number of Users\n- Contract Length (Annual Contract Only)\n\nLet's ask Kiro, \"What is the total fee for five users using Postman on the Basic plan for three years?\"\n\nChange the information referenced in the steering file to the actual Postman URL and perform the test.\nThe steering file was changed from a local file to a web URL, as shown below.\n## Pricing Rules\n\n### Postman Pricing Calculation\n\nWhen calculating or quoting Postman pricing, be sure to refer to the following URL:\n\nhttps://www.postman.com/pricing/\n\n#### Notes on Calculation\n\n1. **Annual Billing Only**: Basic, Professional, and Enterprise plans are billed annually only.\n2. **User-Based Billing**: Each plan is charged per user.\n\n#### Calculation Example\n\n- Monthly Fee x Number of Users x Number of Months = Total Amount\n- However, since an annual contract is required, a minimum of 12 months' worth of calculations is required.\n\n#### Items to Check When Estimating\n\n- Number of Users\n- Contract Length (Annual Contract Only)\n\n\nLet's ask Kiro, \"What is the total cost for five users using Postman on the Basic plan for three years?\"\nAs a result, the web tool was called via steering and the calculation was performed.\n\nAs we verified in the steering section, we will verify whether Hooks can be integrated with web tools.\nAs a simple verification method, we will write the POSTMAN fee calculation results in a file, then use the hook function to call the web information and verify it.\n\nI created a hook with the following conditions:\nEvent: Manual Trigger\nTitle: Postman Pricing Plan Verification\nDescription: Obtain the latest pricing information from https://www.postman.com/pricing/ and verify that the contents of postman-pricing-plans.md are accurate.\nInstructions for Kiro Agent: Obtain the latest Postman pricing information from https://www.postman.com/pricing/ and thoroughly verify that the contents of postman-pricing-plans.md (including pricing, features, and limitations) are accurate. Please point out any discrepancies.\n\nWe will change the contents of the verification file \"postman-pricing-plans.md.\"\n## Postman Pricing Plan List\n\nRetrieved: February 1, 2026\nSource: https://www.postman.com/pricing/\n\n### Plan Overview\n\n| Plans | Pricing | Billing | Key Features |\n|--------|------|----------|----------|\n| **Free** | $0 | - | Free for up to 3 users |\n| **Basic** | $15/user/month | Annual billing | Full team collaboration (unlimited invites) |\n| **Professional** | $29/user/month | Annual billing | Invite-only workspaces, advanced features |\n| **Enterprise** | $49/user/month | Annual billing | SSO, SAML, advanced RBAC, audit logging |\n\n\nExecute a manual Hook.\n↓ Enter \"slash\" in the chat field to invoke a manual command.\n\nAfter execution, the URL specified in the Hook was invoked, and the error in the file was identified.\n\nDevTools offers a variety of features, not just Kiro.\nThe Web Tools feature, while limited to just \"searching web information\" by itself, expands its range of use by combining it with other features. In this article, we used it to obtain the latest information and ensure accurate calculations for billing.\nThere are many simple, detailed features that are often overlooked individually, but it's fun to think about what you can do when combined with other features, and it may improve the efficiency of your current tasks.\nCheck the tool's change history to see if there are any features you can use.",
+      "publishedAt": "2026-02-01T01:22:09.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "deeaae5547a6746f43d9e2039dff86de381155b0a73bc6e161996300eb1a090b",
+      "title": "The Human-Machine Interface: An Intelligent Engineering Portfolio",
+      "url": "https://dev.to/phoenixa/the-human-machine-interface-an-intelligent-engineering-portfolio-o0p",
+      "description": "New Year, New You Portfolio Challenge Submission\n\n\nPresented by Google AI\nI am Salwa Khattami, an AI Engineer and Systems Architect who views code not just as instructions, but as a living architecture. My work bridges the gap between rigorous engineering (Math, Physics, AI Pipelines) and immersive digital experiences.\nI specialize in building intelligent systems—from RAG pipelines to Computer Vision models—and I wanted my portfolio to reflect that \"System Level\" depth. I don't just build websites; I build environments.\nLink to my portfolio: \nhttps://portfolio-497550669510.us-central1.run.app/\n--labels dev-tutorial=devnewyear2026\nThis portfolio was built as a \"Tactical Engineering Environment,\" designed to feel like a heads-up display (HUD) for a high-tech system.\nCore: React 19, Vite\n\n\nStyling: Tailwind CSS (Custom \"Dark Onyx\" Design System)\n\n\n3D & Motion: React Three Fiber (Drei), Framer Motion\n\n\nIcons: Lucide React\n\n\n\n\n\n\n\n  \n  \n  The \"Pair Programming\" Experience with Google AI\n\n\nI built this entire project in collaboration with Google's Advanced Agentic Coding AI (Gemini Models). Ideally, a portfolio is a solo journey, but treating the AI as a \"Senior Partner\" allowed me to:\nAccelerate Prototyping: Iterated through the \"System Architecture\" theme rapidly, generating 3D concepts and layout ideas in minutes.\n\n\nRefine Code Quality: Implemented complex Framer Motion animations (like the infinite scroll projects) and Three.js scenes efficiently.\n\n\nSolve Infrastructure Challenges: Debugged Docker containers for Cloud Run and configured Nginx ports with AI acting as my DevOps engineer.\n\n\n\nIt wasn't just \"generating code\"; it was a dialogue about design, structure, and \"feeling.\" The result is a site that feels distinctly me, amplified by AI efficiency.\nThe \"Live System\" Aesthetic: The portfolio doesn't feel static. It has a \"heartbeat\" (pulsing status indicators), a \"terminal\" for contact, and a \"Command Center\" vibe.\n\n\nThe Git Graph Timeline: Instead of a boring generic resume list, I visualized my career path (Education, Internships, Hackathons) as a Git Commit Graph. Each node is a \"commit\" to my personal repository, branching and merging as I grow.\n\n\nPerformance & Polish: Despite heavy visuals (glassmorphism, 3D spheres), the site remains performant and accessible, a balance heavily tuned during development.\n\n\n\n\n\n\nStatus: SYSTEM_ONLINE\n\nDeployed via: Google Cloud Run",
+      "publishedAt": "2026-02-01T01:10:26.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "fc89f7f29bdfb2e5512f8b0d15c58053a690ed7cec22fc2f7f1c638c57fa9888",
+      "title": "Reasonable security baseline for self-hosted services 2026?",
+      "url": "https://dev.to/driftya/reasonable-security-baseline-for-self-hosted-services-2026-1jjk",
+      "description": "Running a hobby project on a self-hosted server and wanted a quick sanity check on whether this counts as a reasonable minimum security baseline in 2026.\nHigh-level setup:\nLinux host\nDockerized services\nOnly 80/443 exposed publicly\nReverse proxy terminating TLS (HTTPS enforced)\nASP.NET (.NET 10) with built-in Identity + OAuth\nEF Core/ORM only (no raw SQL)\nauto-encoding, no user HTML rendering\nBasic security headers (CSP, HSTS, nosniff, referrer, permissions)\nHost firewall enabled (default deny incoming)\nRegular security updates (OS + container rebuilds, unattended upgrades)\nThis isn’t meant to be enterprise-grade, just sensible for a hobby app.\nAny common blind spots people usually miss at this stage (ops, maintenance, or process-wise)?",
+      "publishedAt": "2026-02-01T01:06:05.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "a9abc6cf6d3d6fa2c189ec00fa6388e62ae1c796097f32eb67a4b7bc98c2a13e",
+      "title": "AWS Elemental MediaConnectでNDI入出力を試してみた",
+      "url": "https://dev.classmethod.jp/articles/aws-elemental-mediaconnect-ndi-source-and-output/",
+      "description": "AWS Elemental MediaConnectでNDI入出力を試してみた",
+      "publishedAt": "2026-01-31T14:53:37.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "8983e77d18028472f0ff7fcca6a0a1e0611e3d3f7db6eb6ce26ea3fb40be056a",
+      "title": "2026年版ハンズオン用IDE環境をAmazon SageMaker StudioのCode Editorで作成してAWS CodeCommitを利用する権限をアタッチする手順",
+      "url": "https://dev.classmethod.jp/articles/codeeditor-with-codecommit-2026/",
+      "description": "AWSのハンズオンをやっていくためにAmazon SageMaker StudioのCode Editorに権限を割り当ててAWS CodeCommitを利用できるようにします",
+      "publishedAt": "2026-01-31T14:24:00.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "336130f438a5867a95094d329d639535a34a90bdaa10966c48bc56731d39737a",
+      "title": "Amazon CloudWatch Logs の IA ログクラス使用時に Lambda Insights を利用できるのか確認してみた",
+      "url": "https://dev.classmethod.jp/articles/amazon-cloudwatch-logs-ia-log-class-lambda-insights/",
+      "description": "結論: ロググループ 「/aws/lambda-insights」さえ標準ログクラスであれば Lambda Insights は利用可能です。",
+      "publishedAt": "2026-01-31T14:16:01.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "a030192889a840d5f10834bc8d2c1945b31e4d6d0a45bece6c7cd4b189d21c90",
+      "title": "Security Agent で VPC 内リソースに対してペネトレーションテストを実行してみる",
+      "url": "https://dev.classmethod.jp/articles/security-agent-vpc-settings/",
+      "description": "Security Agent で VPC 内リソースに対してペネトレーションテストを実行してみる",
+      "publishedAt": "2026-01-31T14:07:36.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "30379056ec99c944c3ac1b99afa2af08d7f502bd3ea07168d554c36b2884bc18",
+      "title": "公式ドキュメントを見る癖をつけておこう - Qiita",
+      "url": "https://qiita.com/sada_/items/1ca66d782de23ca1a82a",
+      "description": "「こんなAPIあったんだ」と思いつつ、仕様チェックのためにReactの公式ドキュメントを確認してみると、、、 なんとcloneElementは、コードを壊す危険性のあるレガシーAPIでした。 このことを実装者に伝え、 結果的にレガシーAPIを使わない形に修正していただくことができました。 もし公式ドキュメントを見なかったら も...",
+      "publishedAt": "2026-01-31T09:58:45.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "510a5df7cb59a82ab44ed60fa726a7497d16e7e56177007ed86957b56633946e",
+      "title": "AWS Security Hub CSPM コントロール 「EC2.182」 を AWS Organizations の宣言型ポリシーで対応してみた",
+      "url": "https://dev.classmethod.jp/articles/security-hub-cspm-ec2-182-organizations-policy/",
+      "description": "AWS Security Hub CSPM コントロール 「EC2.182」 を AWS Organizations の宣言型ポリシーで対応してみた",
+      "publishedAt": "2026-01-31T09:32:36.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "791ab1e0bca03c9eb6aff2e618089461d898cc33dd69ee425f2e099b35b8c00e",
+      "title": "[アップデート] マルチリージョン強整合性のAmazon DynamoDBグローバルテーブルがAWS FISに対応したのでやってみた",
+      "url": "https://dev.classmethod.jp/articles/dynamodb-global-tables-mrsc-fis-support/",
+      "description": "マルチリージョン強整合性が設定されたAmazon DynamoDBグローバルテーブルがAWS FISに対応したので、実際にやってみました。「書き込みが他のリージョンにレプリケートされてから成功を返す」というマルチリージョン強整合性をしっかり感じられる挙動です。",
+      "publishedAt": "2026-01-31T09:05:11.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "258ff878cc6cd7a454f6561e0fa155f0088086b6fbfd483bd92df1964f3fa5e9",
+      "title": "寿司屋のサイトをmicroCMSからpitcmsに乗り換えた",
+      "url": "https://zenn.dev/yutopia898/articles/e8005988b656d4",
+      "description": "microCMSからpitcmsにヘッドレスCMSを移行したのでその記録をのこします。\n開発した本人なので、贔屓目マックスではありますが、Jamstackアーキテクチャのサイトには最適な選択肢だと思っているので、pitcmsがどのようなものかわかってもらえたら嬉しいです。\n\n pitcmsとは\npitcmsは、「はがしやすい日本製ヘッドレスCMS」というキャッチコピーのヘッドレスCMSです。\n2026年の1月下旬にリリースしたのでまだ生まれたばかりのサービスです。\nhttps://pitcms.net\nmicroCMSとの大きな違いは、APIベースではなく、GitベースのCMSであるとこ...",
+      "publishedAt": "2026-01-31T05:40:02.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "7fb19b2dca7b6fb0f3e137af47a6734c39050c6e59bae50e5858135943c3f511",
+      "title": "AWS で DER アグリゲーター向けのスケーラブルな DERMS ソリューションを構築する",
+      "url": "https://aws.amazon.com/jp/blogs/news/building-scalable-derms-solutions-for-der-aggregators-on-aws/",
+      "description": "エネルギー環境が分散型モデルへと進化する中、分散型エネルギーリソース (DER) は、エネルギー市場のさまざまなプレーヤー (電力会社、立法機関、アグリゲーター、消費者、サービスプロバイダー) に課題と機会の両方をもたらしています。 さまざまな関係者が Amazon Web Services (AWS) を活用して DER を最大限に活用する方法について、一連のブログを計画しています。最初のブログでは、アグリゲーターが事業の成長に合わせて拡張できる堅牢な分散型エネルギーリソース管理システム (DERMS) を構築するために、AWS サービスがどのように役立つかを探ります。",
+      "publishedAt": "2026-01-31T04:41:07.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "ab083a5edbdc1e83b1fbf465c276aa49ed14482d30e8df41d0e6a51b5288bae5",
+      "title": "Strands Agentsのグラフパターンのワークフローについて",
+      "url": "https://qiita.com/yakumo_09/items/7590809ccb8541266b82?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\nStrands Agentsは、AWSが開発したAIエージェント構築用のオープンソースSDKです。本記事では、Strands Agentsのマルチエージェントパターンのひとつである「グラフパターン」について、具体的な実装例とともに詳しく解説していこうと思います。...",
+      "publishedAt": "2026-01-31T04:16:40.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "7838502e21424641bc04d32c8db5515cee8e0fb2f968d86776dd1b8fcfcd168e",
+      "title": "Azure Virtual Desktop（AVD）のコストを抑える7つの方法",
+      "url": "https://qiita.com/yuyanz/items/236df61c2b9a890c481c?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\n「AVDを導入したけど、思ったよりコストがかかっている…」\nそんな悩みを抱える方に向けて、本記事ではAVDのコスト最適化に役立つ方法を整理してみました。\nVMの選定からスケーリング、リザーブドインスタンスやSavings Planの活用まで、幅広い観点から節約の...",
+      "publishedAt": "2026-01-31T04:06:22.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "bd601f4080c0ecd6020228de39813c90fa6d2f985016cb40736104d9cea3afc6",
+      "title": "AWS Graviton4でARM Performance Librariesを使ってOpenBLASと性能比較してみた",
+      "url": "https://dev.classmethod.jp/articles/aws-graviton4-armpl-openblas-performance-comparison/",
+      "description": "AWS Graviton4でARM Performance Librariesを使ってOpenBLASと性能比較してみた",
+      "publishedAt": "2026-01-31T03:54:15.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "5eab42989aa27579b9e03f19253ff722cc5812f41ca9e4990017d2c930ce9388",
+      "title": "【AWS】Kiroのステアリングの適用タイミングとスコープの検証【Kiro】",
+      "url": "https://qiita.com/Nana_777/items/9130b466b5cb82e3a82e?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\nKiroのSteering(ステアリング)ファイルを設定することでプロダクト開発において常に意識しなければならない独自のコーディング規約やベストプラクティスなどの知識やルールをKiroに常に意識させることができます。\nステアリングファイルは常に全ファイルに適用す...",
+      "publishedAt": "2026-01-31T01:27:33.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "638ca12bb39fefe05df2266525c0016a7c3b726039134de0dfd4f862348d4ebe",
+      "title": "混乱しました。AWS MCP ServersとAWS MCP Serverの違いを徹底解説",
+      "url": "https://qiita.com/sh_fukatsu/items/93719d61d3251df07a59?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\n2025年、AWSはAIエージェントとの連携を大きく進化させました。その中心の1つがAWS MCP Serversだと私は考えています。\nこの記事では、re:Invent2025のタイミングでPreview版が公開されたAWS MCP Serverについて、従来...",
+      "publishedAt": "2026-01-31T01:20:30.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "c8e916613a1589405c4e8cbd6270906a58d36d85f5b1569bb2b7eedfef7c4b6f",
+      "title": "2025年のセキュリティ最前線：ランサムウェア対策の完全ガイド：AI時代の攻撃から組織を守る実践的な方法",
+      "url": "https://qiita.com/mhamadajp/items/442208ab53b4fe5b6286?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "この記事でわかること\n\n2025年のランサムウェア攻撃の最新トレンド\nすぐに実装できる具体的な対策方法\nインシデント発生時の対応手順\n無料で使えるセキュリティツールの紹介\n\n月曜日の朝、オフィスに到着すると、社内のシステムがすべて停止している。画面には、見慣れないメッセ...",
+      "publishedAt": "2026-01-30T19:35:04.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "7a4e3a3a1fdb683be115cdad684f165f7e894cb634a415fc074bfb14c8d05107",
+      "title": "公式ドキュメントを見る癖をつけておこう",
+      "url": "https://qiita.com/sada_/items/1ca66d782de23ca1a82a?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "記事を書くに至った経緯\nチームメンバーのPR(React)をレビューしていたら、見慣れないcloneElementというAPIが使われていました。\nconst cloneElement = React.cloneElement(element, { className: ...",
+      "publishedAt": "2026-01-30T15:22:19.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "0d396d39484ffa8016a4af6e86a7311e294adc8c70b6dbfd3d10c3332e0c0ad8",
+      "title": "Firefoxを20年以上使ってわかった、「やらないと損」な設定まとめ | ライフハッカー・ジャパン",
+      "url": "https://www.lifehacker.jp/article/2601-10-hacks-every-firefox-user-should-know/",
+      "description": "私は20年以上、デフォルトのブラウザとしてFirefoxを使い、その中でFirefoxの多彩な機能を最大限に活用する方法をいろいろ学んできました。 デフォルトで有効になっている機能の中にはオフにしたほうがいいものもあれば、ちょっとした調整でプライバシーやセキュリティを大きく向上させられるポイントもあります。 ここ...",
+      "publishedAt": "2026-01-30T13:00:07.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "a5e042450442684d6bdf77b1aed3e5e87a916570d3d15d62720e97b8ed66891c",
+      "title": "HTML: 「JavaScriptなし」で動く最新の多機能確認ダイアログを構築する（翻訳）｜TechRacho by BPS株式会社",
+      "url": "https://techracho.bpsinc.jp/hachi8833/2026_01_30/156001",
+      "description": "概要 元サイトの許諾を得て翻訳・公開いたします。 英語記事: Stylish dialogs | Fractaled Mind 原文公開日: 2025/12/18 原著者: Stephen Margheim 日本語タイトルは内容に即したものにしました。 以下のような複雑なスタイル付きダイアログをJavaScriptなしで構築できます。 https://play.tailwindcss.com/0V4LTBpdHC...",
+      "publishedAt": "2026-01-30T08:35:39.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "bb6b7add0682d9b22564019fcfb719505f7040f1722192c568adc207a4b67fd3",
+      "title": "【初級編】開発者が知っておくべきPostgreSQLパフォーマンス改善Tips 初級10選",
+      "url": "https://zenn.dev/gizmo/articles/5a3b81b56309c6",
+      "description": "はじめに\nPostgreSQL記事の入門編はこちら\nhttps://zenn.dev/gizmo/articles/f61b3e999a5137\n入門編では、インデックスの効き方やN+1問題といった、明日からすぐに使えるコードレベルの改善に焦点を当てました。\nしかし、サービスが成長し、データ量が増え、多くのユーザーが同時にアクセスするようになると、単なるSQLの書き方だけでは解決できない課題に直面します。\n「テスト環境では動いていたのに、本番で謎のデッドロックが起きる」「データが増えすぎてバッチ処理が終わらない」「コネクション数が溢れた」……。\n今回は**「初級編」**として、そうし...",
+      "publishedAt": "2026-01-29T22:59:07.000Z",
       "feedName": "Zenn"
     }
   ]
