@@ -5521,6 +5521,262 @@
       "description": "Go 1.26の全体像（参考） Go 1.26は2026年2月リリース予定です 派手な新機能はないものの、実務に直結する改善が多数含まれています。全変更点を把握したい方は以下を参照してください。 主要な変更点一覧 パフォーマンス改善 Green Tea GC: GCオーバーヘッド10〜40%削減。Go 1.26でデフォルト有効化 io.ReadAll最適化: ...",
       "publishedAt": "2026-01-24T03:53:02.000Z",
       "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "0cbf15f09cef3b689076f35383bd6bae4b31394bc461ae4a114a710f18da8f39",
+      "title": "From Bathroom Rapper to Studio Flow: What I Learned After Actually Using an AI Rap Generator",
+      "url": "https://dev.to/alliman_schane_462c5932ff/from-bathroom-rapper-to-studio-flow-what-i-learned-after-actually-using-an-ai-rap-generator-2530",
+      "description": "A few months ago, out of pure curiosity, I started looking into AI Rap Generator tools. Not because I thought they’d turn me into a professional overnight, but because I wanted to hear my ideas outside my own head. I was skeptical. Early AI music experiments always sounded stiff and uncanny, like text-to-speech pretending to rap. But the technology has clearly moved forward. Under the hood, many of these tools rely on neural audio synthesis and transformer-based models, similar to what Google’s Magenta project has explored in music generation research. Instead of stitching together pre-recorded phrases, the models learn timing, rhythm, and emphasis from large amounts of real performances. That doesn’t mean they understand hip-hop culture—but they understand patterns well enough to be useful.\nThe first thing I learned is that this is not a “press one button and get fire” situation. Garbage lyrics still produce garbage results. Structure still matters. When I fed in unfocused verses, the output sounded generic and lifeless. The experience only started to click when I treated the AI like an instrument instead of a replacement. I’d write a verse the way I normally do, then listen to how the AI interpreted the cadence. Sometimes it emphasized words in places I wouldn’t have chosen, landing on off-beats that gave the verse a more modern bounce. Other times it completely missed the vibe, and I had to tweak parameters like energy or pacing multiple times before anything usable came out. A lot of outputs were simply discarded.\nOver one weekend, I tested a few different tools just to understand the landscape. Some focused heavily on vocal texture, others leaned more toward rhythmic flow. I also tried Freemusic AI during this process, mostly to experiment with backing elements and see how different rap styles—boom-bap versus trap—were handled. I didn’t stick with one platform exclusively, and honestly, none of them felt “finished” on their own. But together, they helped me hear my writing from a new angle. That was the real value.\nWhat surprised me most wasn’t the quality of the AI’s voice, but how useful it was as a reference. I started using generated verses as demo tracks, listening to them while driving or walking, internalizing the rhythm before recording my own vocals. It made practice more efficient. From a technical perspective, this recent jump in quality makes sense. Newer models handle long-term structure better, paying attention to how earlier rhymes relate to later ones instead of treating every line in isolation. If you’ve ever read about attention mechanisms in transformers, you’ll recognize why that matters for rap flow.\nIs this “real” hip-hop? I don’t think that’s the right question. Hip-hop has always evolved alongside technology—from turntables to samplers to DAWs. An AI Rap Generator doesn’t replace lived experience, taste, or intent. It doesn’t know why a line matters to you. But as a tool for sketching ideas, testing flow, or lowering the barrier between writing and listening, it’s genuinely useful. For me, it didn’t kill creativity—it exposed weak spots in my own delivery and helped me practice with more focus.\nIf you’re curious about trying this space out, my advice is simple: write your own bars, expect a lot of unusable outputs, and treat AI as a collaborator, not a shortcut. Respect the human artists whose work trained these systems, and don’t mistake technical polish for authenticity. Used thoughtfully, these tools won’t make you famous—but they might help you finally hear your ideas the way you imagined them in the shower.",
+      "publishedAt": "2026-02-10T02:18:34.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "1b744473e9f4b6d30b4fa1f599232fececacdc18ffd0842c2e5d0a3d2ab2002c",
+      "title": "コミュニティと共に成長する実践的なセキュリティ知識、LINE CTF",
+      "url": "https://techblog.lycorp.co.jp/ja/20260210a",
+      "description": "こんにちは。セキュリティエンジニアのSEOK KI YEOです。LINEヤフー株式会社は、2021年から毎年、グローバルセキュリティ技術大会であるLINE CTFを開催しています。LINE CTFは、...",
+      "publishedAt": "2026-02-10T02:00:00.000Z",
+      "feedName": "LINEヤフー Tech Blog"
+    },
+    {
+      "id": "e92be7f882223db04062557c7807b3eafc426f07a5a9a40bc0ef1abe9e2a46a5",
+      "title": "OpenAI、「ChatGPT」無料・低価格プランに広告　米国でテスト開始",
+      "url": "https://japan.cnet.com/article/35243719/",
+      "description": "OpenAIは数週間の予告期間を経て、米国で「ChatGPT」に広告を表示するテストを開始した。",
+      "publishedAt": "2026-02-10T01:22:00.000Z",
+      "feedName": "CNET Japan"
+    },
+    {
+      "id": "85e13c241d40feafdbc72d7b9c45bcefb8e2a21631536bdae6358577745ca848",
+      "title": "Why I keep a personal work log even when the team has a task tracker",
+      "url": "https://dev.to/iamantonreznik/why-i-keep-a-personal-work-log-even-when-the-team-has-a-task-tracker-5e64",
+      "description": "In every project, I keep a simple table for myself: plans for the week/sprint and what I actually got done. Even when the team has a task tracker and everything is logged there\nWhy? This kind of log gives management visibility into my workload and hours if needed, but it helps me in other ways:\nLast year I joined a development team to help with DevOps tasks and, as usual, started keeping this table. For the team, it was only useful for tracking my work hours, but it helped me see my accomplishments over time\nIn the moment, almost every task felt like routine work. Only looking back at the table helped me notice something worth paying attention to: in my first three weeks on the team, while onboarding on my own, I managed to build things the team still uses after I left\nIn those first three weeks, I created a modular CI/CD pipeline template from scratch and made it the company standard - a catalog of separate actions that can be assembled like building blocks with parameters, where developers just need to fill in a short list of variables for their project\nDuring the same time, I also introduced and established the practice of recording architectural decisions (ADRs) for infrastructure and DevOps tasks, plus templates for standard projects across different languages and frameworks\nSo I recommend this method to others - keep your own activity log. Tasks in a tracker can get visually lost among all the tasks, sprints, and columns. Some real work might not even make it into the tracker. But your own log, even though it takes some extra time, stays with you and highlights your actual work\nIn the end, it turns into a conversation backed by data",
+      "publishedAt": "2026-02-10T01:20:43.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "e0577bce08814a5d9d01c3a300105819eae27fc5f5635cccf63418c971ffa910",
+      "title": "【無料開催】日本企業が狙われるサイバー脅威、クラウドストライクが提唱する次世代セキュリティとは？",
+      "url": "https://enterprisezine.jp/news/detail/23697",
+      "description": "EnterpriseZine編集部は3月17日（火）、オンライン配信イベント「Security Online Day 2026 Spring」を開催します。\n\n\n\n　16回目の開催を迎えた今回は、「...",
+      "publishedAt": "2026-02-10T01:11:00.000Z",
+      "feedName": "EnterpriseZine"
+    },
+    {
+      "id": "9e8b864c3f7deca3d07c6c5b08278befded4936547becef7863a364bd5b26242",
+      "title": "Day 9 of 100 Days of Code — Understanding the React Context API",
+      "url": "https://dev.to/m_saad_ahmad/day-9-of-100-days-of-code-understanding-the-react-context-api-2198",
+      "description": "If you’ve spent some time working with React, you’ve probably heard about the Context API but may not have fully understood when or why to use it. The Context API is a built-in feature of React that allows data to be shared across components without having to pass props through every level of the component tree. It becomes particularly useful in situations where multiple components need access to the same data, such as theme settings, authentication status, or app-wide configurations. Learning for Day 9, the idea was to understand the Context API, an essential tool for building clean, maintainable React applications and avoiding the complexities of prop drilling in larger projects.\nExactly Is the React Context API?\n\n\nThe Context API is a built-in React feature that allows you to share data across your component tree without having to manually pass props down through every level.\nThink of it as:\n“A centralized, React-native way to manage shared state or shared values across deeply nested components.”\nIt removes the need for prop-drilling — that messy situation where a value must be passed through many components that don’t even use it.\nProps are fantastic for parent-to-child communication. But they fall short when:\nA value is needed by many deeply nested components\nYou are forced to pass the same prop five layers deep\nComponents become tightly coupled because of unnecessary prop passing\nThis is called prop drilling, and it quickly becomes hard to manage — even in medium-sized apps.\nContext API solves this by allowing components to skip the chain and access shared values directly.\nContext shines when you have global-ish values—things many components might need:\nAuthentication/user data\nTheme (dark/light)\nLanguage preferences\nShopping cart state\nApp-level settings\nUI states like modals or toasts\nIf the data must be accessed by multiple siblings, nested or unrelated components, Context API is the cleanest and most scalable approach.\nA Context usually includes:\nCreating a context\nWrapping your app (or part of it) with a provider\nPassing values to the provider\nConsuming those values anywhere\nProviders act like a data broadcasting station — any component listening to them can instantly receive the state.\nConsider a real use case:\nYou want to toggle light and dark mode, and multiple components need to know the current theme.\nPassing theme as a prop everywhere?\nStep 1: Create the Theme Context\n\n\n\n\n\n// ThemeContext.js\nimport { createContext } from \"react\";\n\nexport const ThemeContext = createContext();\n\nWhat’s happening here?\ncreateContext() creates a new Context object.\nIt will store and share theme-related data across the app.\nStep 2: Build a Theme Provider\n\n\n\n\n\n// ThemeProvider.js\nimport { useState } from \"react\";\nimport { ThemeContext } from \"./ThemeContext\";\n\nexport const ThemeProvider = ({ children }) => {\n  const [theme, setTheme] = useState(\"light\");\n\n  const toggleTheme = () =>\n    setTheme((prev) => (prev === \"light\" ? \"dark\" : \"light\"));\n\n  return (\n    <ThemeContext.Provider value={{ theme, toggleTheme }}>\n      {children}\n    </ThemeContext.Provider>\n  );\n};\n\nExplanation:\ntheme state is stored here.\ntoggleTheme updates the theme.\nThe value prop exposes the shared data to all children.\nEvery nested component can now read theme directly — not through props.\nStep 3: Wrap Your App with the Provider\n\n\n\n\n\n// App.jsx\nimport { ThemeProvider } from \"./ThemeProvider\";\nimport Home from \"./Home\";\n\nexport default function App() {\n  return (\n    <ThemeProvider>\n      <Home />\n    </ThemeProvider>\n  );\n}\n\nNow every component inside <Home /> has access to theme data.\nStep 4: Consume the Context Anywhere\n\n\n\n\n\n// Home.jsx\nimport { useContext } from \"react\";\nimport { ThemeContext } from \"./ThemeContext\";\n\nexport default function Home() {\n  const { theme, toggleTheme } = useContext(ThemeContext);\n\n  return (\n    <div style={{ padding: 20 }}>\n      <h1>Current Theme: {theme}</h1>\n      <button onClick={toggleTheme}>Toggle Theme</button>\n    </div>\n  );\n}\n\nWhat’s happening here:\nuseContext(ThemeContext) pulls data directly from the provider.\nNo props. No drilling. No unnecessary pass-throughs.\nClean. Direct. Easy to maintain.\nTypeScript makes Context safer by ensuring the shape of your context is always correct.\nStep 1: Define the Type\n\n\n\n\n\ntype ThemeContextType = {\n  theme: \"light\" | \"dark\";\n  toggleTheme: () => void;\n};\n\nStep 2: Create a Typed Context\n\n\n\n\n\nimport { createContext } from \"react\";\n\nexport const ThemeContext = createContext<ThemeContextType | null>(null);\n\nStep 3: Provide Typed Values\n\n\n\n\n\nexport const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({\n  children,\n}) => {\n  const [theme, setTheme] = useState<\"light\" | \"dark\">(\"light\");\n\n  const toggleTheme = () =>\n    setTheme((t) => (t === \"light\" ? \"dark\" : \"light\"));\n\n  return (\n    <ThemeContext.Provider value={{ theme, toggleTheme }}>\n      {children}\n    </ThemeContext.Provider>\n  );\n};\n\nStep 4: Safely Consume the Context\n\n\n\n\n\nconst ctx = useContext(ThemeContext);\nif (!ctx) throw new Error(\"ThemeContext must be used under ThemeProvider\");\n\nconst { theme, toggleTheme } = ctx;\n\nThis ensures full type-safety and prevents runtime errors.\nContext API is used to share data across components without prop drilling.\nIt is ideal for state that many components need (auth, theme, settings).\nDo not use it for every tiny piece of state; props still work great for simple parent-child communication.\nContext becomes necessary when data is accessed by deep or unrelated components.\nProvider patterns allow clean state broadcasting and decoupled architecture.\nTyping Context in TypeScript improves safety, autocompletion, and debugging.\nUsing the Context API helps keep React applications organized and state management clean, especially in larger projects. By sharing data efficiently across components, it reduces unnecessary prop drilling and simplifies maintenance. Mastering Context ensures that state is managed responsibly, making your code more scalable and easier to work with.\nHappy coding!",
+      "publishedAt": "2026-02-10T01:08:51.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "d296b98c99271c9d7036c0309688935b82c2d4acbadbfd3a036f745f37aff837",
+      "title": "[アップデート] Amazon EC2 Capacity Blocks for ML が AWS RAM によるクロスアカウント共有に対応しました",
+      "url": "https://dev.classmethod.jp/articles/amazon-ec2-capacity-blocks-for-ml-cross-account-sharing-via-aws-ram/",
+      "description": "[アップデート] Amazon EC2 Capacity Blocks for ML が AWS RAM によるクロスアカウント共有に対応しました",
+      "publishedAt": "2026-02-10T00:42:28.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "58bfc13465e07bfaeff224a7b722459c7b6b56f5dc261d6920d895281b87e03d",
+      "title": "AWS Lambda と Amazon DynamoDB を使用したクロスアカウントストリーム処理の簡素化",
+      "url": "https://aws.amazon.com/jp/blogs/news/simplify-cross-account-stream-processing-with-aws-lambda-and-amazon-dynamodb/",
+      "description": "本記事は 2026 年 02 月 09 日 に公開された “Simplify cross-acco […]",
+      "publishedAt": "2026-02-10T00:03:56.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "fcb538f9d0b5faa753f609659c4f842ee13f0826aa21457650dcd8683940e8c1",
+      "title": "DJIドローン開発Tips - カスタムペイロードデバイスの Application Binding",
+      "url": "https://developer.mamezou-tech.com/robotics/solar-panel-clean-robot/dji-drone-psdk-application-binding/",
+      "description": "はじめに\n#\n豆蔵では太陽光発電パネルの清掃ロボットシステムの開発に取り組んでいます。\n本システムでは太陽光発電パネルを清掃するロボットとロボットを搬送するドローンで構成されています。本記事では、ドローン側の開発技術である Payload SDK における Application Binding について紹介します。\nPayload SDK については以下の記事でもご紹介していますので併せて参照して下さい。\nhttps://developer.mamezou-tech.com/robotics/solar-panel-clean-robot/dji-drone-psdk-introduction/\n\n\nApplication Binding について\n#\n一部の機体ではペイロードデバイスを使用する前に Application Binding という以下の手順が必要となります。\n機体とペイロードデバイスを接続し Payload SDK で開発されたアプリケーションを起動する\n\nPayload SDK の初期化シーケンスで機体とのバインド待ちとなる\n機体とPCを接続し DJI Assistant 2 を起動する\n\nバインド待ちとなっているペイロードデバイスの一覧が表示される\nDJI Assistant 2 で機体とペイロードデバイスをバインドする\n\nSDK の初期化シーケンスで機体が応答を返すようになり SDK の API を利用可能となる\nバインドしたペイロードデバイスの情報は機体内に永続化され、以降は対象のペイロードデバイスを使用可能となります。\nApplication Binding が必要な機体\n#\n以下は、現行機体が提供している拡張ポートの一覧です。Standard Hardware Port Introduction より抜粋。\nAircraft\nPort Name\nSupports App Binding\n\n\n\n\nFlyCart 100\nE-Port Lite\n–\n\n\nFlyCart 30\nE-Port Lite\n–\n\n\nMatrice 4D/4TD\nE-Port, E-Port Lite\n✓\n\n\nMatrice 4E/4T\nE-Port, E-Port Lite\n✓\n\n\nMatrice 3D/3TD\nE-Port, E-Port Lite\n–\n\n\nMatrice 30/30T\nE-Port\n–\n\n\nMavic 3E/3T\nE-Port\n–\n\n\nM400\nE-Port V2\n✓\n\n\nM350 RTK\nE-Port\n–\n\n\nM350 RTK\nGimbal Port\n✓\n\n\nM300 RTK\nOSDK Port\n–\n\n\nM300 RTK\nGimbal Port\n✓\n\n\n\nSupports App Binding にチェックが入っている機体の拡張ポートに対してペイロードデバイスを接続する場合はバインドが必要です。\nE-Port、E-Port V2、Gimbal Portで接続するペイロードデバイスが対象ですが、Matrice 系では\nSDK 認証チップ\n#\nバインドするサードパーティ製のペイロードデバイスには DJI SDK 認証チップ（略称 DJI SDK CC）を取り付ける必要があります。\nDJIストア から50個セットのものを購入できます。\n以下の写真のパッケージングされた細長いシート状のものが購入した認証チップです。\n\n認証チップは機体とサードパーティ製ペイロードデバイス間の通信を認証・暗号化するハードウェアセキュリティモジュールです。\nこの認証チップにより機体側が各ペイロードデバイスを識別可能となり、バインド済のペイロードデバイスの情報（認証チップの情報）が機体内に永続化されます。\nこのチップはサードパーティ向けに提供されているものですが DJI製のペイロードデバイスにも同様の認証チップ或いはこれに準ずる仕組みが組み込まれているものと思います。\nSDK 認証チップの接続\n#\nSDK Certified Chip Quick Start に Raspberry Pi 4B を対象とした接続例が記載されていますので、これをベースに解説致します。\nSDK 認証チップのインターフェイス\n#\n認証チップは I²C インターフェースでホスト（ Raspberry Pi ）と通信します。\n下図は認証チップのピン配置です。\n\nVCC: 電源入力ピン（動作電圧範囲: 1.62 V - 5.5 V）\nGND: グランドピン\nNRST: 外部リセットピン\nI2C_SCL: I²Cバスインターフェースピン（Serial Clock Line）\nI2C_SDA: I²Cバスインターフェースピン（Serial Data Line）\nチップのパッケージタイプは DFN8 2x3 です。\n\nSDK 認証チップと Raspberry Pi の接続\n#\nRaspberry Pi の 40-pin GPIO header のピンと認証チップを接続します。\n\n認証チップと GPIO のピン対応は以下のとおりです。\n認証チップ\nGPIO\n\n\n\n\n1pin(7816IO)\n(NC)\n\n\n2pin(Vcc)\n1pin(3.3V power)\n\n\n3pin(7816CLK)\n(NC)\n\n\n4pin(GND)\n9pin(Ground)\n\n\n5pin(I2C_SDA)\n3pin(GPIO2:SDA)\n\n\n6pin(NC)\n(NC)\n\n\n7pin(I2C_SCL)\n5pin(GPIO3:SCL)\n\n\n8pin(NRST)\n7pin(GPIO4:GPCLK0)\n\n\n9pin(GND)\n9pin(Ground)\n\n\n\nデバイスツリーで I²C を有効化した後に i2cdetect コマンドなどで I²C のアドレスが表示されればOKです。\n以下の例だと認証チップに割り当たっているデバイスは /dev/i2c-1 です。\n$ ls /dev/i2c-*\n/dev/i2c-1  /dev/i2c-20  /dev/i2c-21\n\n\n  \n\n認証チップの Vcc に 3.3V が給電されただけでは反応しません。\n$ sudo i2cdetect -y 1\n     0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f\n00:                         -- -- -- -- -- -- -- -- \n10: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- \n20: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- \n30: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- \n40: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- \n50: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- \n60: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- \n70: -- -- -- -- -- -- -- --\n\n\n  \n\n以下のように GPIO4（認証チップの NRST と接続）を LOW にして HIGH にすると認証チップがリセットされ、I²C アドレス 0x2a が検出されます。\n$ sudo gpioset gpiochip0 4=0\n$ sudo i2cdetect -y 1\n     0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f\n00:                         -- -- -- -- -- -- -- -- \n10: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- \n20: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- \n30: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- \n40: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- \n50: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- \n60: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- \n70: -- -- -- -- -- -- -- --                         \n\n$ sudo gpioset gpiochip0 4=1\n$ sudo i2cdetect -y 1\n     0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f\n00:                         -- -- -- -- -- -- -- -- \n10: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- \n20: -- -- -- -- -- -- -- -- -- -- 2a -- -- -- -- -- \n30: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- \n40: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- \n50: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- \n60: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- \n70: -- -- -- -- -- -- -- --\n\n\n  \n\n\nDJIのデベロッパーセンターで Payload SDK アプリケーションを登録する\n#\nバインドする前に Payload SDK アプリケーションを DJIのデベロッパーセンター で登録する必要があります。\nアプリケーションの情報を入力します。\n\nアプリケーションの登録後に Send Email を押下するとアクティベーションのインビテーションメールが送信されます。\n\nメールのリンク先を開くとアクティベーションが完了し ID や KEY が表示されます。\n\nページに記載されている通り、登録したアプリケーションに対してバインドできるペイロードデバイスは最大で20台までです。\nApplication Verification のページで会社の説明やペイロードデバイスのテストレポートなど様々な書類を用意して審査が完了すると、台数の制約が解除されます。開発初期にはこの台数の制約は問題になりませんが、ペイロードデバイスを量産するフェーズではテストレポートを用意して申請しましょう。\n\nPayload SDK アプリケーションの設定\n#\nここでは Payload SDK の Raspberry Pi 向けのサンプルアプリケーションを例にして SDK への設定内容を説明します。\nDJIのデベロッパーセンターで登録したアプリケーション情報を以下のファイルへ設定します。\nPayload-SDK/samples/sample_c++/platform/linux/raspberry_pi/application/dji_sdk_app_info.h\n/* Exported constants --------------------------------------------------------*/\n// ATTENTION: User must goto https://developer.dji.com/user/apps/#all to create your own dji sdk application, get dji sdk application\n// information then fill in the application information here.\n#define USER_APP_NAME               \"your_app_name\"\n#define USER_APP_ID                 \"your_app_id\"\n#define USER_APP_KEY                \"your_app_key\"\n#define USER_APP_LICENSE            \"your_app_license\"\n#define USER_DEVELOPER_ACCOUNT      \"your_developer_account\"\n#define USER_BAUD_RATE              \"460800\"\n\n\n  \n\n\n\n\n定数名\n説明\n例\n\n\n\n\nUSER_APP_NAME\nDJIのデベロッパーセンターの登録情報の App Name が対応します\nDockingControl\n\n\nUSER_APP_ID\nDJIのデベロッパーセンターの登録情報の App ID が対応します\n（省略）\n\n\nUSER_APP_KEY\nDJIのデベロッパーセンターの登録情報の App Key が対応します\n（省略）\n\n\nUSER_APP_LICENSE\nDJIのデベロッパーセンターの登録情報の App Basic License が対応します\n（省略）\n\n\nUSER_DEVELOPER_ACCOUNT\nDJIのデベロッパーセンターのアカウント名です\nmasayuki-kono\n\n\n\nサンプルアプリケーションを起動して以下のログが延々と出力されれば OK です（バインド待ちの状態です）。\n[Error]\tdji_auth_sha256_rsa_verify.c:137  The DJI SDK CC has not binded. Please check the bind state of the DJI SDK CC and bind it.\n\n\n  \n\n -->\n Information\nRaspberry Pi 向けのサンプルコードはメンテナンスされていないようで、そのままでは以下のようなエラーが出力されて認証チップと通信に失敗します。\nConnect DJI SDK CC device failed, errno: 0x30000002\n\n\n  \n\nアドレス 0x2A への書き込みで ioctl(I2C_RDWR) が -1 を返し、スレーブが ACK を返していないのが原因です。\nHalI2c_ResetDevice() で GPIO4 を LOW→25ms→HIGH とリセットした直後に、即座にデバイスを開いて書き込みしています。チップがリセットから復帰しきる前に初回トランザクションが走っているのが原因と考えられます。リセット解放後、チップが I²C に応答できるまでに必要な待ち時間が不足しているようなので、リセット解放後 50ms 待ってから I²C アクセスを行うように変更して改善しました。\nPayload SDKをフォークしたリポジトリ に修正したコードをアップしていますので参考にして下さい。デバッグログの出力も追加しているのでどのようなデータをチップと送受信しているか観測すると理解が深まると思います。\n機体とペイロードデバイスを接続する\n#\n今回は Matrice 4E を使用しました。\n各機器の接続イメージは以下の通りです。\n\nMatrice 4E\n\nApplication Binding で使用する機体\nPC\n\nDJI Assistant 2 の動作環境\nDJI Assistant 2 は機体によってバリエーションがあり Matrice 4E の場合は Enterprise Series を使用する\nDJI Assistant 2 は DJI のクラウドサービスと通信するためインターネットに接続する必要がある\nE-Port Development Kit\n\n機体とペイロードデバイスを接続するためのアダプタボード\nUART-USB Adapter\n\n今回は FTDI のUART-USB変換アダプタを中継\nRaspberry Pi のGPIO（UART ピン）へ直接接続する場合は不要\nRaspberry Pi\n\nPayload SDK アプリケーションの動作環境\nDFN8 Breakout Adapter\n\nDFN8（2×3 mm）パッケージの表面実装ICを DIP8 互換ピン配置に変換するためのブレークアウトアダプタ\nSDK Certified Chip\nE-Port Development Kit\n#\nDevelopment Kit の基盤上に E-Port switch というディップスイッチがあり、これを ON にして UART の出力を有効にします。\nUSB ID switch(Device|Host) のディップスイッチは、USB で RNDIS や Bulk 転送する場合に Host を設定する必要があります。今回は UART のみを使用するため、設定不要（どちらでも良い）です。\n\nE-Port のコネクタはHW的にはリバーシブルですが、機体の E-Port コネクタと Development Kit を接続する際に機体側と開発キット側のコネクタの向きに指定があります。\nConnect Development Board to E-Port からの抜粋です。\nNote: The E-Port coaxial USB-C cable doesn't have a foolproof design, allowing A/B side to be reversibly connected.\nDue to pin layout differences in the aircraft's USB-C, if the coaxial cable is reversed, the other end also needs to be flipped correspondingly.\nIf not flipped correspondingly, the E-Port Development Kit can not power up and communicate.\n\n\n  \n\n以下の写真のようにコネクタに A/B が印字されており、機体側が A なら開発キット側は B 、機体側が B なら開発キット側は A のようにフリップする必要があります。\n\nDJI のページの記載では、どの向きが正しいのか判断できないため、結局、どちらも試して動作する向きを特定しました（写真は動作した時の組み合わせです）。\nApplication Binding を行う\n#\nPayload SDK アプリケーションから以下のログが延々と出力される状態（バインド待ち）にします。\n[Error]\tdji_auth_sha256_rsa_verify.c:137  The DJI SDK CC has not binded. Please check the bind state of the DJI SDK CC and bind it.\n\n\n  \n\nこの状態で 機体と E-Port Lite で接続した PC 上で DJI Assistant 2 を開くと Payload SDK メニューに以下が表示されます。\n\nBind ボタンを押下すると、バインドが完了します。\n\nバインドが完了すると、サンプルアプリケーションの起動時のログは以下のようになります。\n0.016\t            core\t[Info]\t               dji_core.c:113  Payload SDK Version : V3.15.0-beta.0-build.2318 Dec 10 2025 17:27:05\n1.075\t         adapter\t[Info]\t     dji_access_adapter.c:351  Identify mount position type is Extension Port Type\n1.075\t         adapter\t[Info]\t     dji_access_adapter.c:371  Identify aircraft series is Matrice 4 Series\n1.578\t         adapter\t[Info]\t     dji_access_adapter.c:493  Identity uart0 baudrate is 921600 bps\n1.582\t            core\t[Info]\t    dji_identity_verify.c:627  Updating dji sdk policy file...\n2.582\t            core\t[Info]\t    dji_identity_verify.c:635  Update dji sdk policy file successfully\n2.627\t            core\t[Info]\t               dji_core.c:261  Identify AircraftType = Matrice 4E, MountPosition = Extension Port, SdkAdapterType = None\n2.748\t            auth\t[Info]\t        dji_sdk_cc_auth.c:86   Get DJI SDK CC serial num: 99PDN73EUB13J3\n4.812\t          linker\t[Warn]\t            dji_command.c:1025 <0xd5d0>Command async send retry: index = 0, retryTimes = 1, 0x0A06->0x0F01(0x002F) 0x3C13\n5.945\t          linker\t[Warn]\t            dji_command.c:910  Received invalid ack,<0xd5d0> 0x0F01(0x002F)->0x0A06(0x00CA) 0x3C13\n6.322\t         adapter\t[Info]\t    dji_identity_verify.c:257  the license level is basic\n6.322\t            core\t[Info]\t       dji_product_info.c:187  Set alias: PSDK_APPALIAS\n6.942\t            user\t[Info]\t            test_widget.c:141  widget file: /home/dev/DockingController/third_party/Payload-SDK/samples/sample_c/module_sample/widget/widget_file/en_big_screen\n6.952\t            user\t[Info]\t    test_widget_speaker.c:594  Set widget speaker volume: 60\n6.952\t            user\t[Warn]\t    test_widget_speaker.c:613  No audio device found, please add audio device and init speaker volume here!!!\n12.455\t            core\t[Info]\t               dji_core.c:328  Start dji sdk application\n12.455\t            user\t[Info]\t          application.cpp:372  Application start.\n\n| Available commands:                                                                              |\n| [0] Fc subscribe sample - subscribe quaternion and gps data                                      |\n| [1] Flight controller sample - you can control flying by PSDK                                    |\n| [2] Hms info manager sample - get health manger system info by language                          |\n| [a] Gimbal manager sample - you can control gimbal by PSDK                                       |\n| [c] Camera stream view sample - display the camera video stream                                  |\n| [d] Stereo vision view sample - display the stereo image                                         |\n| [e] Run camera manager sample - you can test camera's functions interactively                    |\n| [f] Start rtk positioning sample - you can receive rtk rtcm data when rtk signal is ok           |\n| [g] Request Lidar data sample - Request Lidar data and store the point cloud data as pcd files   |\n| [h] Request Radar data sample - Request radar data                                               |\n| [l] Run widget states manager sample, control widget states on other payload                     |\n\n\n  \n\n -->\n Information\nI²C への読み書きする hal_i2c.c で通信データをログ出力すると分かりますが、SDK は初期化完了後も周期的に認証チップと通信しており、毎回異なるデータを送受信しています。\n公式のプロトコル仕様は公開されていないため以下は推測ですが、チャレンジ・レスポンス型の認証として次のような流れと考えられます。\n機体 → 認証チップ: チャレンジデータ送信（ランダム値やタイムスタンプを含む）\n認証チップ → 機体: 署名済みレスポンス返送（認証チップ固有の秘密鍵を使用）\n機体側が認証チップの公開鍵で署名を検証\nこれによりサードパーティが販売したペイロードデバイスを機体が正規のものとして識別でき、バインド済みのデバイスのみが Payload SDK を利用可能になっているようです。\nバインド完了後に、DJIのデベロッパーセンターを開くと 1 Payloads が表示されカウントが増えていることが確認できるはずです。\n\nまとめ\n#\nApplication Binding は Matrice 4E/4T（2025年1月発売）以降で登場した比較的新しい仕様です。\n本記事では、Application Binding が必要な機体の一覧、SDK 認証チップの接続方法（Raspberry Pi を例に）、デベロッパーセンターでのアプリケーション登録を説明しました。\nApplication Binding は今後発売される機体では標準となる可能性が高いです。\nカスタムペイロードの開発に取り組まれる方は、本記事を手がかりにぜひ試してみてください。",
+      "publishedAt": "2026-02-10T00:00:00.000Z",
+      "feedName": "豆蔵デベロッパーサイト"
+    },
+    {
+      "id": "0769f3f93e46e5fd13a708a230839e1cfe771cb9ac9efaa523ffa6b5d61985e8",
+      "title": "ランサムウェア対策のための Azure Backup + Recovery Services の不変コンテナー設定を確認してみた",
+      "url": "https://dev.classmethod.jp/articles/azure-backup-imutable-container/",
+      "description": "ランサムウェア対策のための Azure Backup + Recovery Services の不変コンテナー設定を確認してみた",
+      "publishedAt": "2026-02-09T14:07:18.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "127818058a34c75568dbb33e375fe25b7369a6827b6b3fa3274fe316e37cf625",
+      "title": "モーダルやツールチップで役立つ! HTMLのcommandとinterestfor属性を使って、JSを減らすスマートなUI開発 - ICS MEDIA",
+      "url": "https://ics.media/entry/260209/",
+      "description": "モーダルやツールチップで役立つ! HTMLのcommandとinterestfor属性を使って、JSを減らすスマートなUI開発 HTMLとCSSは進歩していますが、以前はJavaScriptが必須だった機能も、今ではHTMLとCSSだけで実現できることも増えています。HTMLの新属性command属性とcommandfor属性、そしてinterestfor属性を使うとダイアログや...",
+      "publishedAt": "2026-02-09T13:21:23.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "637d69ec9432233748963fa9956b1b6b7414e749d7b09c8395210562db11c9ba",
+      "title": "Cluster API v1.12: Introducing in-place updates and chained upgrades",
+      "url": "https://www.cncf.io/blog/2026/02/09/cluster-api-v1-12-introducing-in-place-updates-and-chained-upgrades/",
+      "description": "Cluster API brings declarative management to Kubernetes cluster lifecycle, allowing users and platform teams to define the desired state of clusters and rely on controllers to continuously reconcile toward it. Similar to how you can use...",
+      "publishedAt": "2026-02-09T12:00:00.000Z",
+      "feedName": "Cloud Native Computing Foundation"
+    },
+    {
+      "id": "96ce0286ac0973ebccdddb6b75a77e1728e4ebede2fdfe58f8a673791b36900a",
+      "title": "週刊AWS – 2026/2/2週",
+      "url": "https://aws.amazon.com/jp/blogs/news/aws-weekly-20260202/",
+      "description": "CloudFront が相互 TLS サポート開始、Multi-party approval で OTP 認証が必須に、STS が外部 IdP の詳細クレーム検証に対応、Lightsail でメモリ最適化インスタンス提供開始、SageMaker JumpStart で DeepSeek OCR など 3 モデル追加、IAM Identity Center が複数リージョン対応、Management Console でアカウント名表示が可能に、DynamoDB グローバルテーブルが複数アカウント間レプリケーション対応、EC2 と VPC でセキュリティグループの関連リソース表示、Bedrock で構造化出力が利用可能に、Claude Opus 4.6 が Bedrock で利用可能に、WorkSpaces が Graphics G6/Gr6/G6f バンドル開始、Network Firewall が新たな料金削減を発表、Bedrock AgentCore Browser がブラウザプロファイルをサポート開始等",
+      "publishedAt": "2026-02-09T10:51:13.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "4baa6a5622499e2ba754d23253a44af63af69b6e45d965510ed6534df6c47897",
+      "title": "無料で広告なし・ログイン不要のYouTube再生ができるAndroidアプリ「FreeTube Android」",
+      "url": "https://gigazine.net/news/20260209-freetube-android/",
+      "description": "Googleアカウントにログイン不要で広告なしで動画を無料で視聴できるYouTube専用プレイヤーである「FreeTube」からフォークして誕生したAndroidアプリが「FreeTube Android」です。GoogleによるCookieやJavaScriptを使ったトラッキングから解放されプライバシーの保たれた環境でYouTubeを再生できるFreeTubeのメリットは...",
+      "publishedAt": "2026-02-09T08:32:42.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "3536e96aa60fb12beb1574c17e4ecb71e9db8a1b492c2b250ee4f750c73955f5",
+      "title": "【寄稿】CO2 排出量可視・削減サービス「e-dash」化を支えるサーバーレスアーキテクチャと IaC 戦略",
+      "url": "https://aws.amazon.com/jp/blogs/news/e-dash-serverless-architecture-and-iac-strategy/",
+      "description": "こんにちは、AWS ソリューションアーキテクトの松本 敢大です。 本日は、三井物産発の環境系スタートアップである e-dash 株式会社様が提供する CO2 排出量可視化・削減サービスプラットフォーム「e-dash」のシステム構築事例をご紹介します。e-dash 株式会社 プロダクト開発部部長の佐藤様、プロダクト開発部の伊藤様、竹内様に、AWS を活用したモダンなアプリケーション開発の取り組みについてお話を伺いました。",
+      "publishedAt": "2026-02-09T08:13:31.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "e02629d53cae175e3646b6144c4c1e78736407a2c52b21504a885b3d9827df80",
+      "title": "週刊生成AI with AWS – 2026/2/2 週",
+      "url": "https://aws.amazon.com/jp/blogs/news/weekly-genai-20260202/",
+      "description": "週刊生成AI with AWS、AI-DLCと実用化事例が充実の2026年2月3日週号 - 11社合同AI-DLC Unicorn Gymの開催報告、熊本中央病院様の生成AI環境構築事例を紹介。また、KiroでのOpus 4.6対応、AIを活用したゲーム制作、AWS DevOps Agent開発の教訓、オブザーバビリティエージェント、フィジカルAI、鉄道技術展出展報告などのブログ記事も。サービスアップデートではClaude Opus 4.6のBedrock対応、Structured Outputs、Browser Profiles、SageMaker JumpStartでの新モデル追加をはじめとする8件のアップデートを紹介。",
+      "publishedAt": "2026-02-09T07:07:25.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "f095688ea2c01438746f926ccf70d9464279c25c8abaa45c7ff07c14395a8b01",
+      "title": "AWS上にObservability検証環境を構築してみた（AMG + CloudWatch + X-Ray）",
+      "url": "https://dev.classmethod.jp/articles/aws-o11y-amg-cloudwatch-xray/",
+      "description": "AWS上にObservability検証環境を構築してみた（AMG + CloudWatch + X-Ray）",
+      "publishedAt": "2026-02-09T05:53:55.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "d652f61f43f00222cb8d90f07d07075d4b1aaf060e9fd17d3e03208fd6a5475a",
+      "title": "複数の EC2 インスタンスに同一のセキュリティグループを一括で追加してみた",
+      "url": "https://dev.classmethod.jp/articles/ec2-add-sg-multiple-instances/",
+      "description": "複数の EC2 インスタンスに同一のセキュリティグループを一括で追加してみた",
+      "publishedAt": "2026-02-09T05:33:23.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "b5d25c118c35a8cc8b065cec4af29ec9b19c41e1dfda54bf472e86c1dca3f228",
+      "title": "Amazon Quick Suiteの新機能がすごすぎる!?",
+      "url": "https://qiita.com/CEC_Cloud_Community/items/eca05c24641f7fa0c319?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\nはじめまして！株式会社シーイーシー AWSコミュニティチームです。\nこのたび、AWSに関する技術情報を発信するテックブログを開設しました。\n日々の業務の中で、AWSを使ったシステムの設計や構築、運用に取り組む中で得られた知見や「実際にやってみて分かったこと」「つ...",
+      "publishedAt": "2026-02-09T05:00:50.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "b355624d1f4eb4310ac67d5eb0e8be115838702b93076991c95be1f2fb021228",
+      "title": "量子×クラウドはなぜ難しい？第2の壁：プログラミングモデルとAPIの分断",
+      "url": "https://qiita.com/imh1104/items/07293a679cf692150413?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "おさらい\nAWS 105万人 vs 量子エンジニア 1,300人：数字で見る“圧倒的格差”では、量子エンジニアが少ない理由を「技術成熟度の差・参入難易度の差・実行環境の差」という3つの要因で整理し、それら3要因が量子コンピュータをクラウドシステムに統合するにあたっての4つ...",
+      "publishedAt": "2026-02-09T04:53:45.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "07b38f35bea02ad13f50767680490b185cd0405d09bda00d014886481e56d518",
+      "title": "住信SBIネット銀行が勘定系システムをAWS上へ移行、基盤にDatadogプラットフォーム採用",
+      "url": "https://enterprisezine.jp/news/detail/23693",
+      "description": "2026年2月9日、Datadogは、住信SBIネット銀行が勘定系システムをアマゾン ウェブ サービス（AWS）上のクラウド環境へ移行するにあたり、Datadogのプラットフォームを採用することを発...",
+      "publishedAt": "2026-02-09T04:40:00.000Z",
+      "feedName": "EnterpriseZine"
+    },
+    {
+      "id": "7de659146cc87c80532e0d742e867b70097ad56603bca0691c549a457410ed95",
+      "title": "AI支援開発のコストやコード生成量、分かる？　GoogleがGemini CLIに監視ダッシュボードを追加",
+      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2602/09/news059.html",
+      "description": "Google Cloudは、「Gemini CLI」において、事前構成済みの監視ダッシュボードを提供開始した。ツールの導入状況やトークン消費量、パフォーマンスなどを可視化できるという。",
+      "publishedAt": "2026-02-09T04:00:00.000Z",
+      "feedName": "＠IT"
+    },
+    {
+      "id": "f377b48c2b70c41334d1dcb89ca5f96557c633ab53c69c8090977d1f07ad2af9",
+      "title": "七十七銀行、境界型防御からゼロトラストモデルへ移行　「インターネットが使えるようになり業務効率向上」",
+      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2602/09/news046.html",
+      "description": "七十七銀行は、同行のDX推進とセキュリティ強化を目的に、従来の境界型防御モデルからゼロトラストモデルに移行した。従来の境界型防御に伴う利便性の低下を解消しつつ、AIを活用した脅威検知精度の向上を実現した。",
+      "publishedAt": "2026-02-09T04:00:00.000Z",
+      "feedName": "＠IT"
+    },
+    {
+      "id": "83dea466f3088ca650407b7a16364c9a8e4417f69a0a8be00d27e13924db5ae4",
+      "title": "5大コーディングエージェントの比較で分かった「バイブコーディング」の落とし穴",
+      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2602/09/news029.html",
+      "description": "サイバーセキュリティ企業のTenzaiは、「Cursor」「Claude Code」「OpenAI Codex」「Replit」「Devin」という5つの主要なコーディングエージェントを取り上げ、セキュアコーディング能力を比較した結果を公開した。",
+      "publishedAt": "2026-02-09T04:00:00.000Z",
+      "feedName": "＠IT"
+    },
+    {
+      "id": "557e5d38c7ae890b53088fe6de053d24fbd3afd2d834e2f8e2f2920dfe1e2b74",
+      "title": "中小企業必見！ライフネット生命に学ぶ、セキュリティを“全社事”にした組織改革のポイント",
+      "url": "https://enterprisezine.jp/news/detail/23691",
+      "description": "EnterpriseZine編集部は3月17日（火）、オンライン配信イベント「Security Online Day 2026 Spring」を開催する。\n\n\n\n　イベントテーマは「AI vs AI...",
+      "publishedAt": "2026-02-09T03:25:00.000Z",
+      "feedName": "EnterpriseZine"
+    },
+    {
+      "id": "e81a8ff41e6800b49260fba7073ecd2934ebf6a535869326aaa072c6f48f7cf3",
+      "title": "Googleが台湾のPixel開発拠点を公開　「10 Pro Fold」ヒンジ開発の裏側、“7年サポート”を支える耐久テスト",
+      "url": "https://www.itmedia.co.jp/mobile/articles/2602/09/news074.html",
+      "description": "Googleは台湾にあるハードウェア研究開発拠点と各種ラボの内部を公開した。同拠点はサプライチェーンとの密接な連携を強みとし、Pixelシリーズの設計から検証までを担う。 Pixel 10 Pro Foldのヒンジ開発や過酷な耐久試験などの現場を見ることができた。",
+      "publishedAt": "2026-02-09T03:02:52.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "e86269f2ffe3d191a26211b3cd7d2d2493576909deac9b21008d66907c07b7f5",
+      "title": "TCP/IPのきほんで学ぶ「ネットワークのセキュリティ① 」HTTPS・暗号化・VPNを整理してみた",
+      "url": "https://qiita.com/masa_tech_0326/items/9cd09d8a0d598bdff9fb?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\n最近技術書を毎日30分以上読むようにしているのですが、記事としてアウトプットしないと、自分の中で定着しない気がしたので、読んで学んだことを共有していきたいと思います。\n今回は『スラスラわかるネットワーク&TCP/IPのきほん』のChapter06 セキュリティ章...",
+      "publishedAt": "2026-02-09T02:16:12.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "eff5c8389bb06e8f0024a19fa00fba22b65fbef95d73f6d6548d0b4bdc41f317",
+      "title": "Claude CodeのSkillsで作る、AIライフマネジメント",
+      "url": "https://zenn.dev/react_uncle/articles/840efe2fdc6963",
+      "description": "はじめに\nこんにちは。@react_nextjs です。\nみなさんこの動画を見ましたか？\nhttps://www.youtube.com/watch?v=KHiq6nf0Jio\n私も以前、似たようなことを試みたことがあります。GitHubリポジトリで自分のタスクや目標を管理しようとしたのですが、結局続きませんでした。\n理由は明確で、管理すること自体が負担になっていたからです。\n私は顧問先や副業を複数抱えており、本業以外に使える学習時間と副業時間のリソースが可視化されていませんでした。毎日「今日はどれくらい時間があるのか」「何から手をつけるべきか」を考えて計画を立てるものの、達成できな...",
+      "publishedAt": "2026-02-09T00:49:00.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "66ccdec93ea5593cacb4cb54d525e12660aa48e22c19e67426b8af7dea9d31aa",
+      "title": "AIが脆弱性を96%見つける時代に、僕らがセキュリティを学ぶ意味はあるのか",
+      "url": "https://zenn.dev/smartvain/articles/ai-finds-96pct-vulns-why-learn-security",
+      "description": "「このコード、セキュリティ的に大丈夫かな……」 PRレビューのたびに、なんとなく不安になる。SQLインジェクション、XSS、CSRF——知識としては知っている。でも、自分のレビューで本当に脆弱性を潰しきれているかと聞かれたら、正直自信がない。 そしてある日、こんなニュースが流れてきた。 「自律型AIハッカーツール Sha...",
+      "publishedAt": "2026-02-09T00:30:24.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "50e919b64e4775778aab43b38f597523355e250e3ef3607dd948c5e64f9363e3",
+      "title": "2026/02/09 今日のQiitaトレンド記事をポッドキャストで聴こう！",
+      "url": "https://qiita.com/ennagara128/items/215c565375b4074442cc?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "前日夜の最新トレンド記事のAIポッドキャストを毎日朝7時に更新しています。\n通勤中などにながら聴きしよう！\n（Qiita投稿は通勤には間に合わないと思われますが）\nフィードバックとか助かりますのでください\n↓こちらから\n\n出典\nWebのしないといけないセキュリティ対策\nht...",
+      "publishedAt": "2026-02-08T23:48:42.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "66ccdec93ea5593cacb4cb54d525e12660aa48e22c19e67426b8af7dea9d31aa",
+      "title": "AIが脆弱性を96%見つける時代に、僕らがセキュリティを学ぶ意味はあるのか",
+      "url": "https://zenn.dev/smartvain/articles/ai-finds-96pct-vulns-why-learn-security",
+      "description": "「このコード、セキュリティ的に大丈夫かな……」\nPRレビューのたびに、なんとなく不安になる。SQLインジェクション、XSS、CSRF——知識としては知っている。でも、自分のレビューで本当に脆弱性を潰しきれているかと聞かれたら、正直自信がない。\nそしてある日、こんなニュースが流れてきた。\n「自律型AIハッカーツール Shannon、既知の脆弱性に対して96%の成功率でexploitを自動生成」\n——あ、もう僕らの出番ないじゃん。\n\n はじめに\n結論から少しだけ言うと、AIがセキュリティを自動化する時代だからこそ、僕ら開発者のセキュリティ\"感覚\"がむしろ重要になる——と今は思っている。\n「え...",
+      "publishedAt": "2026-02-08T13:25:40.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "4f307f077c0cdcc6aaf3525d831026d6b089870f96448640b268438c9e2d5ad8",
+      "title": "Async Reactとは何か",
+      "url": "https://zenn.dev/cryptobox/articles/70b502e22954be",
+      "description": "React Conf 2025でAsync Reactというタイトルの講演が行われました。\nhttps://www.youtube.com/watch?v=B_2E96URooA\n自分はこの動画を見るまでAsync Reactという言葉自体聞いたことがなかったのですが、一通り見終えたところでこの先React開発チームが目指していきたい未来を感じることができたので、この記事で紹介したいと思います。\n\n TL;DR\n\nAsync Reactとはアプリケーションをデフォルトで非同期とみなして構築する考え方である。\n\nawait UI = await f(await state)\n\n\nAsync...",
+      "publishedAt": "2026-02-08T08:07:20.000Z",
+      "feedName": "Zenn"
     }
   ]
 }
