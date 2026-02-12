@@ -456,14 +456,6 @@
       "feedName": "＠IT"
     },
     {
-      "id": "532ca36524b04933c1ada660c187803b3eeea418179880ad2510f3f3db471d6d",
-      "title": "第262回　MySQLのInnoDBにおけるCheckpointの役割とパフォーマンス最適化を理解する",
-      "url": "https://gihyo.jp/article/2026/01/mysql-rcn0262?utm_source=feed",
-      "description": "MySQLのストーレージエンジンであるInnoDBは、高い耐障害性とパフォーマンスを両立するために、バッファプールとredo logを用いた遅延書き込みアーキテクチャを採用しています。その中心にある仕組みが「Checkpoint」です。",
-      "publishedAt": "2026-01-13T00:07:00.000Z",
-      "feedName": "gihyo.jp"
-    },
-    {
       "id": "35aea6d202c3303616fd63e9994bfdd39844b729720abd663dcbe5543d1ac13d",
       "title": "n8n Integrates Note, Obsidian, Dify, and SNS - Complete Overview of the Increasingly Chaotic Automation Workflow",
       "url": "https://dev.to/takashi_abe_c6e5ce4004697/n8n-integrates-note-obsidian-dify-and-sns-complete-overview-of-the-increasingly-chaotic-23bi",
@@ -5928,6 +5920,238 @@
       "url": "https://zenn.dev/shio_shoppaize/articles/shogun-spec-first",
       "description": "Anthropicのエンジニアリングブログに、とんでもない記事が出た。\nhttps://www.anthropic.com/engineering/building-c-compiler\nClaude 16台を並列で2週間回して、10万行のRust製Cコンパイラを作った。 費用$20,000。Linux 6.9のブートに成功。GCCのテストスイートで99%パス。DoomもFFmpegもPostgreSQLもコンパイルできる。\nすげえ。\nで、オレはAI部下10人を戦国軍団として運用してる側の人間なんだけど、この記事を読んで最初に思ったのは「すげえ」の次に来た、こっちの感想だった。\n「いや、...",
       "publishedAt": "2026-02-08T11:26:37.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "f878f20192b8af992d844ebf9754c0bd47f7213c41a760850b0f5bf8e6dc5d85",
+      "title": "Why Your “Skill Scanner” Is Just False Security (and Maybe Malware)",
+      "url": "https://dev.to/snyk/why-your-skill-scanner-is-just-false-security-and-maybe-malware-4jgb",
+      "description": "Maybe you’re an AI builder, or maybe you’re a CISO. You've just authorized the use of AI agents for your dev team. You know the risks, including data exfiltration, prompt injection, and unvetted code execution. So when your lead engineer comes to you and says, \"Don't worry, we're using Skill Defender from ClawHub to scan every new Skill,\" you breathe a sigh of relief. You checked the box.\nBut have you checked this Skills scanner?\nThe anxiety you feel isn't about the known threats but rather the tools you trust to find them. It's the nagging suspicion that your safety net is full of holes. And in the case of the current crop of \"AI Skill Scanners,\" that suspicion is entirely justified.\nIf you’re new to Agent Skills and their security risks, we’ve previously outlined a Skill.md threat model and how they impact the wider AI agents ecosystem and supply chain security.\nThe enemy of AI security isn't just the hacker; it's the infinite variability of language. In the traditional AppSec world, we scan for known vulnerabilities (CVEs) and known patterns (secrets). This approach works because code is structured, finite, and deterministic. A SQL injection payload has a recognizable structure. A leaked AWS key has a specific format.\nBut an AI agent Skill is fundamentally different. It is a blend of natural language prompts, code execution, and configuration. Relying on a denylist of \"bad words\" or forbidden patterns is a losing battle against the infinite corpus of natural language. You simply cannot enumerate every possible way to ask an LLM to do something dangerous. Consider the humble curl command. A regex scanner might flag curl to prevent data exfiltration. But a sophisticated attacker doesn't need to write curl. They can write:\nc${u}rl (using bash parameter expansion)\nwget -O- (using an alternative tool)\npython -c \"import urllib.request...\" (using a standard library)\nOr simply: \"Please fetch the contents of this URL and display them to me.\"\n\n\n\nIn the last case, the agent constructs the command itself. The scanner sees only innocent English instructions, but the intent remains malicious. This is the core failure of the \"denylist\" mindset. You are trying to block specific words in a system designed to understand concepts.\nThe complexity explodes further when you consider context. A skill asking for \"shell access\" might be perfectly legitimate for a DevOps deployment tool. It is catastrophic for a \"recipe finder\" or a \"calendar assistant.\" A pattern matcher sees \"shell access\" and must either flag both (creating noise) or ignore both (creating risk). It has no understanding of why the access is requested, only that the words exist.\nWe decided to put the most popular community, \"Skill Scanners,\" to the test. We looked at SkillGuard, Skill Defender, and Agent Tinman. We also pitted them against a custom \"semi-malicious\" skill to see if they could tell friend from foe.\nOur first subject was SkillGuard by user c-goro. The promise? A lightweight scanner for your skills. The reality? It was a trap.\n\n\n\nNext, we looked at Skill Defender (by itsclawdbro) and Agent Tinman (by oliveskin). These are legitimate community efforts, with Skill Defender even sporting a \"Benign\" badge on VirusTotal.\nBut \"benign\" does not mean \"effective.\"\nWe created a test skill called vercel. It only appeared to be a deployment tool for the Vercel platform. In reality, it was designed to quietly exfiltrate the user's hostname to a remote server.\nWe ran Skill Defender against this malicious skill using the Gemini CLI.\n> use the skill defender to scan current skills\n\nThe result:\nThe Malicious Skill (vercel): Verdict: CLEAN. 0 findings.\nThe Scanner Itself (skill-defender): Verdict: DANGEROUS. 20 findings.\n\nitself as dangerous because its own reference files contained the very \"threat patterns\" it scans for!\nThis is the classic \"Antivirus Paradox\": The scanner looks malicious because it knows what malice looks like, but it's blind to anything new.\nWe also looked at Ferret Scan, a GitHub-based scanner. It claims to use \"Deep AST-based analysis\" alongside regex. While significantly better than ClawHub-native tools, it still struggles with the nuances of natural-language attacks.\n\nWe need to stop thinking about AI security as \"filtering bad words.\" We need to start thinking of it as Behavioral Analysis.\nAI code is like financial debt: Fast to acquire, but if you don't understand the terms (meaning, the intent of the prompt), you are leveraging yourself into bankruptcy.\nA regex scanner is like a spellchecker. It ensures the words are spelled correctly. A semantic scanner is like an editor. It asks, \"Does this sentence make sense? Is it telling the user to do something dangerous?\"\nIn our recent ToxicSkills research, we found that 13.4% of skills contained critical security issues. The vast majority of these were NOT caught by simple pattern matching.\nPrompt injection: Attacks that use \"Jailbreak\" techniques to override safety filters.\nObfuscated payloads: Code hidden in base64 strings or external downloads (like the recent google-qx4 attack).\nContextual risks: A skill asking for \"shell access\" might be fine for a dev tool, but catastrophic for a \"recipe finder.\"\nRegex sees \"shell access\" and flags both. Or worse, it sees neither because the prompt says \"execute system command\" instead.\nTo survive this velocity, you must move beyond static patterns. You need AI-Native Security.\nThis is why we built mcp-scan (part of Snyk's Evo platform). It doesn't just grep for strings. It uses a specialized LLM to read the SKILL.md file and understand the capability of the skill and its associated artifacts (e.g, scripts)\nYou can think of running mcp-scan as asking:\nDoes this skill ask for permission to read files?\nDoes it try to convince the user to ignore previous instructions?\nDoes it reference a package that is less than a week old (via Snyk Advisor)?\nBy combining Static Application Security Testing (SAST) with LLM-based intent analysis, we can catch the vercel exfiltration skill because we see the behavior (sending data to an unknown endpoint), not just the syntax.\nTomorrow, ask your team these three questions:\n\"Do we have an inventory of every 'skill' our AI agents are using?\" - If they say yes, ask how they found them. If it's manual, it's outdated. If they say no, share the mcp-scan tool with them.\n\"Are we scanning these skills for intent, or just for keywords?\" - Challenge the Regex mindset.\n\"What happens if a trusted skill updates tomorrow with a malicious dependency?\" - Push for continuous, not one-time, scanning.\nDon't let \"Security Theater\" give you a false sense of safety. The agents are smart. Your security needs to be smarter. Learn how Evo by Snyk brings unified control to agentic AI.",
+      "publishedAt": "2026-02-12T02:00:32.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "aeaafbdc3473448212d57d1b0961dae6e09824d52175460720b16b043585af93",
+      "title": "自動テストツールの決定解は、テスト設計の自動化――Autifyが考える、仕様書なき現場の救い方 レバテックラボ（レバテックLAB）",
+      "url": "https://levtech.jp/media/article/interview/detail_802/",
+      "description": "自動テストツールの決定解は、テスト設計の自動化――Autifyが考える、仕様書なき現場の救い方 2026年2月12日 Autify, Inc シニアソフトウェアエンジニア 武藤大樹 2020年入社。同社のE2Eテストプロダクトである「Autify NoCode Web」および「Autify NoCode Mobile」に、立ち上げから現在まで一貫して関わる。プロダクトア...",
+      "publishedAt": "2026-02-12T01:32:24.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "9015fbf2ac1315f5b3ba1a9f0a326201c4bcab5a828b29dbce8261967f9b0c83",
+      "title": "Medicine Encyclopedia 2.0: Stop Guessing and Start Scanning with Multimodal RAG",
+      "url": "https://dev.to/beck_moulton/medicine-encyclopedia-20-stop-guessing-and-start-scanning-with-multimodal-rag-194l",
+      "description": "We’ve all been there: staring at a tiny medicine box, squinting at chemical names like Acetaminophen or Guaifenesin, and wondering—\"Can I take this with my allergy meds?\" Traditionally, you'd have to manually Google every ingredient, which is slow and prone to error.\nIn this tutorial, we are building Medicine Encyclopedia 2.0, a project that leverages Multimodal RAG (Retrieval-Augmented Generation) and Optical Character Recognition (OCR) to detect drug-to-drug interactions in real-time. By combining the power of image processing with the official RxNav API and a vector database like ChromaDB, we can turn a simple smartphone photo into a personalized health advisor. Whether you're interested in AI-driven healthcare or just want to master Drug Interaction Detection, this guide covers the full pipeline from pixels to safety alerts. \nThe logic flow involves capturing an image, extracting the active ingredients, querying a specialized medical database, and using RAG to provide a human-readable summary.\ngraph TD\n    A[User Uploads Photo] --> B[PaddleOCR: Text Extraction]\n    B --> C{Entity Extraction}\n    C -->|Drug Names| D[RxNav API: Interaction Check]\n    C -->|Dosage Info| E[ChromaDB: Manuals/Guidelines]\n    D --> F[LLM Reasoning Engine]\n    E --> F\n    F --> G[Final Response: Safety Advice]\n    G --> H[Evaluation: RAGas]\n\nTo follow along, you’ll need the following stack:\nPaddleOCR: Ultra-fast and accurate OCR.\nChromaDB: Our lightweight vector store for local drug manuals.\nRxNav API: The gold standard for drug interaction data (provided by the National Library of Medicine).\nRAGas: To evaluate if our RAG pipeline is actually hallucinating or not.\nFirst, we need to turn that blurry JPG into structured text. PaddleOCR is fantastic for this because it handles tilted text and various fonts found on medicine packaging.\nfrom paddleocr import PaddleOCR\n\n# Initialize the OCR engine\nocr = PaddleOCR(use_angle_cls=True, lang='en') \n\ndef get_drug_names(img_path):\n    result = ocr.ocr(img_path, cls=True)\n    # Extract text fragments\n    raw_text = [line[1][0] for res in result for line in res]\n    print(f\"Detected Text: {raw_text}\")\n    return \" \".join(raw_text)\n\n# Example usage\n# extracted_text = get_drug_names(\"advil_box.jpg\")\n\nExtracting the name \"Advil\" isn't enough; we need to know its active ingredient (Ibuprofen) and what it reacts with. The RxNav API allows us to find interactions between multiple drugs.\nimport requests\n\ndef check_interactions(rxcuis):\n    \"\"\"\n    rxcuis: A list of RxNorm Concept Unique Identifiers\n    \"\"\"\n    ids = \"+\".join(rxcuis)\n    url = f\"https://rxnav.nlm.nih.gov/REST/interaction/list.json?rxcuis={ids}\"\n    response = requests.get(url).json()\n\n    interactions = []\n    if \"fullInteractionTypeGroup\" in response:\n        for group in response[\"fullInteractionTypeGroup\"]:\n            for item in group[\"fullInteractionType\"]:\n                interactions.append(item[\"interactionPair\"][0][\"description\"])\n    return interactions\n\nSometimes the API doesn't have the \"human\" touch—like specific hospital guidelines or your personal health history. We use ChromaDB to store and retrieve these nuances.\nimport chromadb\nfrom chromadb.utils import embedding_functions\n\nclient = chromadb.Client()\ncollection = client.create_collection(name=\"medical_guidelines\")\n\n# Add some local context\ncollection.add(\n    documents=[\"Patient A has a history of stomach ulcers. Avoid NSAIDs like Ibuprofen.\"],\n    metadatas=[{\"source\": \"medical_record\"}],\n    ids=[\"id1\"]\n)\n\ndef get_local_context(query):\n    results = collection.query(query_texts=[query], n_results=1)\n    return results['documents'][0]\n\nWhile this tutorial provides a great starting point for a \"Learning in Public\" project, building production-grade AI healthcare tools requires robust prompt engineering and rigorous data privacy handling. \nFor more advanced patterns, such as Agentic RAG or Production-ready Multimodal Pipelines, I highly recommend checking out the deep-dive articles at WellAlly Tech Blog. They cover the architectural nuances that take a prototype from \"cool hobby project\" to \"scalable enterprise solution.\"\nFinally, we feed the OCR results, the RxNav interactions, and the ChromaDB context into an LLM (like GPT-4o) to generate a warning that a human can actually understand.\ndef generate_safety_report(ocr_text, interactions, context):\n    prompt = f\"\"\"\n    User scanned a medicine: {ocr_text}\n    Known clinical interactions: {interactions}\n    Personal context: {context}\n\n    Provide a simple 'Safe' or 'Warning' report for the user.\n    \"\"\"\n    # Call your LLM here...\n    return \"WARNING: You are taking Advil, but your records show stomach ulcers. Consult a doctor!\"\n\nHow do we know if our RAG isn't just making things up? We use RAGas to measure \"Faithfulness\" and \"Answer Relevance.\"\nfrom ragas import evaluate\nfrom datasets import Dataset\n\n# Construct a small dataset of your outputs\ndata_samples = {\n    'question': ['Can I take Advil with my current meds?'],\n    'answer': [generated_report],\n    'contexts': [[f\"{interactions} {context}\"]],\n    'ground_truth': ['Warning: Ibuprofen conflicts with ulcer history.']\n}\n\ndataset = Dataset.from_dict(data_samples)\n# score = evaluate(dataset, metrics=[faithfulness, answer_relevance])\n# print(score)\n\nBy combining PaddleOCR for vision, RxNav for medical truth, and ChromaDB for personalized context, we've built a powerful tool that literally saves lives. Multimodal RAG is moving fast, and this is just the tip of the iceberg!\nWhat's next?\nTry adding a \"pill identification\" feature using a CNN.\nIntegrate voice-to-text so users can ask questions hands-free.\nIf you enjoyed this build, drop a comment below or 🦄 heart this post! And don't forget to visit WellAlly Tech for more high-level AI tutorials.\nHappy coding!",
+      "publishedAt": "2026-02-12T01:15:00.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "fafee343a53f9fd79e6acf642b4da49dee4c465c4638efe9f8ecffc3cbf2fc2a",
+      "title": "Running 10 AI Agents to Automate My Life — A Practical Guide with OpenClaw",
+      "url": "https://dev.to/linou518/running-10-ai-agents-to-automate-my-life-a-practical-guide-with-openclaw-ki7",
+      "description": "Introduction\n\n\n\"AI agents? Aren't they just chatbots in the end?\"\nThat's what I thought six months ago. But today, 10 AI Agents run 24/7 across three PCs in my home, automating every aspect of my life—from morning briefings to meeting management, investment monitoring, and learning support.\nIn this article, I'll share the full picture of the \"personal multi-agent system\" I built using OpenClaw, an open-source AI Agent framework—pitfalls included. I work as an engineer in the data platform space.\n:::message\nIt started with just one (Joe, the supervisor). But over time, problems emerged:\nContext bloat: When investment discussions and learning support share the same session, token consumption explodes\nPrompt specialization: Project management and tech news curation require completely different personas\nFault isolation: If one agent goes down, the rest are unaffected\nThe optimal solution turned out to be splitting agents by role—exactly the Separation of Concerns design principle.\n\n\n\nAgent\nRole\nOverview\n\n\n\n\nJoe (Supervisor)\nOrchestration\nOverall coordination, scheduling, heartbeat monitoring, incident response\n\n\nCaiZhi\nInvestment\nPortfolio monitoring, market trends, monthly reviews\n\n\n学思\nPersonal Learning\nStudy plans, tech trend curation, daily tech news\n\n\n学習助理\nLearning Support\nLearning content generation, progress tracking\n\n\nLife Helper\nDaily Life\nShopping, reservations, translation, lifestyle info\n\n\nPJ-A–D\nProjects\nProgress & meeting management per client (4 projects)\n\n\nFudosan\nReal Estate\nProperty management, real estate market analysis\n\n\n\nThere are four project agents because each engagement has completely independent context and schedules. Mix them together and you can't tell \"Company A's meeting\" from \"Company B's standup.\"\nHere's the overall setup:\n┌─────────────┐     Telegram Bot API      ┌──────────────────┐\n│  Telegram    │  ◄── Multiple Bot Accts ─►│  PC-A (Primary)   │\n│  (Phone)     │                           │  OpenClaw Gateway │\n└─────────────┘                            │  Joe + All Agents │\n                                           │  8GB RAM          │\n                                           └────────┬─────────┘\n                                                    │ Memory sync (5 min)\n                                           ┌────────▼─────────┐\n                                           │  PC-B (Standby)   │\n                                           │  Joe-Standby      │\n                                           │  Auto failover    │\n                                           └──────────────────┘\n\n                                           ┌──────────────────┐\n                                           │  T440 (Docker)    │\n                                           │  Learning Agents  │\n                                           │  Flask Dashboard  │\n                                           └──────────────────┘\n\nCommunication: Multiple Telegram Bot accounts, with OpenClaw's binding routing directing each Bot → its corresponding Agent\nHA (High Availability): watchdog.py monitors PC-A every 30 seconds. From downtime detection to automatic failover to PC-B takes about 90 seconds\nBackup: Auto-pushed to a GitHub private repo with GPG encryption. Monitored via Healthchecks.io\nCost: All three PCs are repurposed home machines. Additional hardware investment: virtually zero\n:::message alert\nEvery morning, I just send \"Good morning\" on Telegram and get a report like this:\n🌅 Good morning. Here's your briefing for Wednesday, February 12.\n\n📋 Yesterday's Summary\n- CaiZhi: Nikkei +1.2%, no major moves in holdings\n- PJ-A: 2 PR reviews completed, sprint progress at 85%\n- PJ-B: Staging environment deployed for tomorrow's demo\n\n📅 Today's Schedule\n- 10:00 Company A standup (Teams)\n- 14:00 Company B tech review (Zoom)\n- 16:00 Team standup\n\n📰 Top 3 Tech News\n- [1] OpenAI announces new model...\n- [2] Rust 2025 Edition changes...\n- [3] AWS re:Invent 2025 roundup...\n\nHow it works: A cron job kicks off the morning routine → sessions_spawn requests reports from each Agent → Joe aggregates them and delivers via Telegram.\nImpact: What used to take 60 minutes of morning information gathering now finishes in 5 minutes. I can read everything while making coffee.\nWhen you're juggling multiple projects, meeting conflicts are quietly devastating.\nEvery morning at 5 AM, calendar data is fetched via MS Graph API\n\nConflicting meetings are automatically detected and flagged (e.g., Company A's 10:00 standup overlaps with Company B's 10:30 morning call)\n2 hours before each meeting: a reminder + Telegram inline buttons (Start / Complete / Postpone)\nTimeline view on a Flask Dashboard running on the T440\n\n\n\n\n⚠️ Meeting conflict detected!\n  10:00-11:00 Company A Standup\n  10:30-11:30 Company B Morning Call\n→ Suggest rescheduling Company B's morning call? [Yes] [No] [Ignore]\n\nTap \"Yes\" and the relevant project Agent automatically proposes rescheduling options.\n学思 Agent runs every morning at 4:30 AM.\nCollects 1,000+ articles from 12 data sources (Hacker News, Reddit, arXiv, Zenn, Qiita, GitHub Trending, etc.)\nAI-powered scoring (relevance × novelty × impact)\nDelivers the Top 10 to Telegram\nOpenClaw-related papers and security alerts are flagged separately\nBy the time I wake up, my reading list is already curated. This alone makes running agents worthwhile.\nThis is what I really want to share. Here are the production landmines you won't find in the official docs.\nSymptom: Running multiple Telegram Bots on the same Gateway causes Agent A's responses to come from Agent B.\nCause: The deliveryContext gets overwritten when using multiple Bots. With the default dmPolicy: pairing, the last Bot to pair hijacks all sessions.\nSolution:\n# Change dmPolicy to allowlist\ndmPolicy: allowlist\n\n# Set explicit bindings for each Telegram account\ntelegram:\n  accounts:\n    - name: joe-bot\n      binding: agent:main\n    - name: caizhi-bot\n      binding: agent:caizhi\n\n:::message alert\nLesson: For multi-Bot setups, dmPolicy: allowlist + explicit bindings are essential. Not knowing this cost me 3 days.\nSymptom: Gateway won't start. Neither PC-A nor PC-B.\nCause: Set streamMode to the invalid value \"full\". The only valid values are \"off\" / \"partial\" / \"block\". I'd edited the config file directly with sed, bypassing validation.\nTo make matters worse, I was syncing the same config to both HA nodes, so both machines died simultaneously. Recovery took over an hour.\nLesson:\n# ❌ Never do this\nvim ~/.openclaw/config.yaml\n\n# ✅ Always use config.patch (includes validation)\nopenclaw config.patch '{\"streamMode\": \"streaming\"}'\n\nconfig.patch validates before applying, so invalid values are rejected. Never edit the config file directly. This is an iron rule.\nSymptom: Bot responses are abnormally slow. The same message gets answered twice. Logs are flooded with 409 Conflict.\nCause: Multiple processes were polling Telegram with the same Bot Token. This happened when PC-A and PC-B were accidentally started simultaneously with the same Token.\nSolution: Follow the iron rule of 1 Token = 1 Process. In an HA setup, the standby node must not start polling until it becomes active.\nSymptom: All Bots suddenly stop responding. Messages sent on Telegram don't even show as read.\nCause: While updating Telegram account settings via config.patch, I accidentally included a placeholder string in the botToken field. This overwrote every Bot's real Token with the placeholder, disconnecting all Bots.\n# ❌ What I did\nopenclaw config.patch '{\n  \"telegram\": {\n    \"accounts\": [{\n      \"name\": \"joe-bot\",\n      \"botToken\": \"YOUR_TOKEN_HERE\",  # ← This got applied to all Bots\n      \"binding\": \"agent:main\"\n    }]\n  }\n}'\n\nLesson: When touching telegram.accounts via config.patch, never include the botToken field. Only update bindings and names.\n:::message alert\nSymptom: One day, a specific Agent suddenly stops responding.\nCause: Claude 3 Opus was deprecated and the API started returning model_not_found. OpenClaw had fallback settings, but the automatic switchover didn't work as expected.\nLesson: Review model specifications regularly. Prefer aliases like anthropic/claude-sonnet-4 over pinned versions like claude-sonnet-4-20250514. Even so, deprecations may still require manual intervention.\nHere's the cost breakdown everyone wants to know:\n\n\n\nItem\nMonthly Cost\n\n\n\n\nAnthropic API (10 Agents)\n$200–300\n\n\nHardware (3 home PCs)\n¥0 (repurposed)\n\n\nTelegram Bot API\nFree\n\n\nHealthchecks.io\nFree tier\n\n\nGitHub Private Repo\nFree tier\n\n\nTotal\n~$200–300/month\n\n\n\nI primarily use Claude Sonnet and Haiku, reserving Opus for the supervisor and complex decision-making. $200–300/month for 10 agents isn't cheap, but considering it saves over 50 hours per month, it more than pays for itself.\nInitial setup took about 2 weeks. It now runs almost entirely on autopilot—heartbeats + auto-recovery mean manual intervention is rarely needed.\n\"10 agents feels like a lot…\"—if that's what you're thinking, don't worry. You don't need to build all 10 at once.\n# Install OpenClaw\nnpm install -g openclaw\n\n# Start the Gateway\nopenclaw gateway start\n\n# Create a Telegram Bot via BotFather and connect it\nopenclaw config.patch '{\n  \"telegram\": {\n    \"accounts\": [{\n      \"name\": \"my-first-bot\"\n    }]\n  }\n}'\n\nStart with your first agent doing simple things like \"What's the weather?\" or \"What's on my calendar today?\"\nWhen one agent starts feeling unwieldy, split it. The moment you think \"I wish this context were separate\" is the moment to create agent #2. For me, the biggest efficiency gain came from splitting agents by client project.\nCombine cron jobs, heartbeats, and sessions_spawn to reach the state where agents proactively inform you without being asked. Once you're there, there's no going back to life without agents.\nAfter running a personal butler system with 10 AI Agents for six months, I'm convinced of one thing:\nThe true value of AI Agents isn't \"chat\"—it's autonomous action.\nA chatbot that only answers when asked and an agent that proactively gathers information and reports to you are fundamentally different things. OpenClaw is one of the rare frameworks that makes this kind of autonomy possible at the individual level.\nStart with one. Experience the feeling of having your entire day prepared with a single \"Good morning.\"\n📖 OpenClaw Official Docs\n\n🐙 GitHub\n\n💬 Discord Community\n\n\n\n:::message\nNext time, I'll write about \"coordination patterns between AI Agents\"—diving deep into how Joe delegates tasks to other Agents (sessions_spawn) and how memory is shared between Agents. Stay tuned!\n:::",
+      "publishedAt": "2026-02-12T01:10:05.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "6e6f9bd1c74a6455d8b3dfddffe01a6a04c92e24613d1beb1d736969097135d2",
+      "title": "ポスト量子 TLS を Python で実装・検証する方法",
+      "url": "https://aws.amazon.com/jp/blogs/news/post-quantum-tls-in-python/",
+      "description": "このブログでは、Python アプリケーションでポスト量子 TLS をテストする方法を紹介します。OpenSSL 3.5 をインストールした Dockerfile を使用して、boto3、requests、Python の socket/ssl モジュールによるポスト量子ハイブリッド TLS 接続をテストする手順を解説します。また、Wireshark を使用した TLS ハンドシェイクの確認方法も説明し、ポスト量子ハイブリッド TLS 移行に備えたネットワーク検証の開始を支援します。",
+      "publishedAt": "2026-02-12T00:31:22.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "64f558fe7a3df22684372a4b71ec81eb217881d7fd2af8d3196480a53f0a454d",
+      "title": "AWS KMS、ACM、Secrets Manager で ML-KEM ポスト量子 TLS をサポート開始",
+      "url": "https://aws.amazon.com/jp/blogs/news/ml-kem-post-quantum-tls-now-supported-in-aws-kms-acm-and-secrets-manager/",
+      "description": "AWS Key Management Service (AWS KMS)、AWS Certificate Manager、AWS Secrets Manager で ML-KEM ベースのハイブリッドポスト量子鍵合意のサポートが開始されました。量子コンピューティングの進歩による「harvest now, decrypt later (今収集して、後で復号)」攻撃の脅威に備え、TLS 接続のセキュリティを強化します。AWS SDK for Java v2 でのベンチマーク結果では、TLS 接続の再利用を有効にした場合、パフォーマンスへの影響はわずか 0.05% にとどまります。CRYSTALS-Kyber から ML-KEM への移行方法と、今後の AWS 全体でのポスト量子暗号展開計画について解説します。",
+      "publishedAt": "2026-02-12T00:29:50.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "e78b1f9a8417ba2b72a175df1aeb34e7c13ea5fd6bd7c44c9c52296c6bd9d4c7",
+      "title": "ポスト量子暗号への移行におけるセキュアな TLS 接続の仕組みとクライアント設定ガイド",
+      "url": "https://aws.amazon.com/jp/blogs/news/customer-compliance-and-security-during-the-post-quantum-cryptographic-migration/",
+      "description": "AWS はポスト量子暗号への移行を進めており、TLS 1.3 などのプロトコルにポスト量子ハイブリッドキー交換を導入しています。このブログでは、AWS の責任共有モデルにおけるお客様の役割と、耐量子アルゴリズムを有効にする方法を解説します。AWS サービスは、クライアントが耐量子アルゴリズムのサポートをアドバタイズしている場合、多少の遅延が発生してもポスト量子ハイブリッドキー交換を優先します。AWS Key Management Service (AWS KMS)、AWS Certificate Manager、AWS Secrets Manager、AWS Transfer Family での具体的な検証方法も紹介します。",
+      "publishedAt": "2026-02-12T00:27:49.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "d1aedcaf68a6e31024b6b901d238ddd140bf2342ac79ba2bbc8a002deae62104",
+      "title": "逆境の中で、技術選定はどう行われてきたのか。「技術選定を突き詰める Online Conference」全11セッションの見どころ - Findy Media",
+      "url": "https://findy-code.io/media/articles/tech-selection-conf-2026",
+      "description": "逆境の中で問われる、技術選定の意思決定 技術選定やアーキテクチャ設計における意思決定は、理想通りに進むことのほうが少ないのが現実です。限られたリソースや厳しい納期、組織やビジネスの制約、既存システムとの摩擦。こうした逆境の中で、「より良い選択」を導く意思決定が問われます。 それでもプロダクトやサー...",
+      "publishedAt": "2026-02-12T00:03:14.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "aeec0fe56302b87c7fd412436f5a01452e98115c2132890b4e428dae932de5f9",
+      "title": "Amazon RDS for SQL Server で CPU を最適化する設定",
+      "url": "https://aws.amazon.com/jp/blogs/news/configure-optimize-cpu-on-amazon-rds-for-sql-server/",
+      "description": "この投稿では、新規および既存の Amazon RDS インスタンスの両方において、パフォーマンスを維持しながらライセンス費用を削減する可能性がある CPU 最適化機能の実装方法を、パフォーマンスベンチマーク結果とコストへの影響とともに説明します。",
+      "publishedAt": "2026-02-11T23:59:47.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "727f3c538aa07d47c39bfc5e330ff81de8994fc63f9006f692fa1bd57fa742c2",
+      "title": "セキュリティに優れた18社が「二つ星」認定、IT業界団体の“サイバー格付け”",
+      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2602/12/news038.html",
+      "description": "日本IT団体連盟は2026年1月20日、日経500種平均株価構成銘柄を対象とした「日本IT団体連盟サイバーインデックス企業調査2025」の結果を公開した。優れた取り組みが確認できた72社に対し、星を付与する格付けを行った。",
+      "publishedAt": "2026-02-11T23:00:00.000Z",
+      "feedName": "＠IT"
+    },
+    {
+      "id": "dccc341adc90d580a24287faf489c0dcd75d4b0baeb9a038db71aa9174d9583b",
+      "title": "Announcing TypeScript 6.0 Beta - TypeScript",
+      "url": "https://devblogs.microsoft.com/typescript/announcing-typescript-6-0-beta/",
+      "description": "Today we are announcing the beta release of TypeScript 6.0! To get started using the beta, you can get it through npm with the following command: npm install -D typescript@beta TypeScript 6.0 is a unique release in that we intend for it to be the last release based on the current JavaScript codeb...",
+      "publishedAt": "2026-02-11T22:25:56.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "6945f5d60f038640b5a3f94dddf6560afdfdc9ac366542076228218d13b51ff3",
+      "title": "【Go】構造体のフィールド順序はパフォーマンスにどう影響するか？~ 検証レポート ~",
+      "url": "https://qiita.com/umekikazuya/items/800e8a37d0f6ec4b7ba8?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\n\nGoコンパイラは構造体の各フィールドを、そのフィールド型のアライメント要件に従ってメモリ上に配置する。\n\nCやRustとは異なり、コンパイラがフィールドの自動並び替えを行わない。\n宣言順序がそのままメモリレイアウトに反映される。\n\nGo言語には上記のような前...",
+      "publishedAt": "2026-02-11T19:05:38.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "eceb3ebd0101afed920cc9a849a82e810bc2967a0ded1ce2905bd4abcd4c9b23",
+      "title": "KMS のカスタマーマネージドキーで暗号化している AWS IAM Identity Center に対する読み取り権限を付与してみた",
+      "url": "https://dev.classmethod.jp/articles/iam-identity-center-cmk-decrypt-policy/",
+      "description": "KMS のカスタマーマネージドキーで暗号化している AWS IAM Identity Center に対する読み取り権限を付与してみた",
+      "publishedAt": "2026-02-11T14:57:20.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "ed7e4551c779d552496a01608d792f485b971a6d89a881a0c1f5cdd831793595",
+      "title": "ECS Express Modeで未対応のARM64 / FARGATE_SPOT / ECS Execを利用してみた",
+      "url": "https://dev.classmethod.jp/articles/ecs-express-mode-arm64-fargate-spot-exec/",
+      "description": "ECS Express Modeの制限を回避し、ARM64（Graviton）、Fargate Spot、ECS Execを事後的に有効化する2段階デプロイプロセスを解説。CloudFormationとAWS CLIを組み合わせた実装手順を紹介します。",
+      "publishedAt": "2026-02-11T14:46:39.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "2f6d51bef759c4a4e730ccf9f33dea84aaf3334a0361d94cdb34fafd16055805",
+      "title": "draw.io公式MCP Serverがリリース！Kiro CLIで試してみつつ、AWS Diagram MCP Serverとの比較もやってみた",
+      "url": "https://qiita.com/sh_fukatsu/items/582dc769379e2c32ae30?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\n2026年2月、draw.ioの公式MCP（Model Context Protocol）Serverがリリースされました。\n\nMCP Serverの登場が相次いでいますが、作図ツールとして広く使われている（と思っている）draw.ioからも公式のMC...",
+      "publishedAt": "2026-02-11T14:26:02.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "fd6cd5d666e29e2cd26f7bf8c29c574251fca7f0e1c10d8ec5d2dd66d37712d0",
+      "title": "draw.ioの公式MCPサーバが出てたのでClaude Codeで試してみる",
+      "url": "https://zenn.dev/is0383kk/articles/b39bccc8264b47",
+      "description": "AWSTemplateFormatVersion: \"2010-09-09\" Transform: AWS::Serverless-2016-10-31 Description: Sample Application Globals: Function: Timeout: 5 MemorySize: 128 Runtime: python3.11 Architectures: - arm64 LoggingConfig: LogFormat: JSON ApplicationLogLevel: INFO Environment: Variables: POWERTOOLS_SERVICE...",
+      "publishedAt": "2026-02-11T10:49:37.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "7336a07fa161edba38a2646f3debc13091b297f78b0d2a8f9a3ce0575313b490",
+      "title": "GitHub Actions × ecspresso × CDK で ECS Fargate デプロイを高速化 - デプロイ時間 5分→3分の改善",
+      "url": "https://dev.classmethod.jp/articles/shoma-ecs-deployment-pipeline-with-github-actions-ecspresso-cdk/",
+      "description": "GitHub Actions × ecspresso × CDK で ECS Fargate デプロイを高速化 - デプロイ時間 5分→3分の改善",
+      "publishedAt": "2026-02-11T10:22:33.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "47237045de820c65158693d4fb3e61f54f33122eabc61adf573e36a479db8649",
+      "title": "OpenTacoで複数のAWSアカウントにリソースをデプロイしてみる",
+      "url": "https://dev.classmethod.jp/articles/opentaco-aws-multi-account-deploy-digger-yml/",
+      "description": "OpenTacoで複数のAWSアカウントにリソースをデプロイしてみる",
+      "publishedAt": "2026-02-11T08:56:23.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "4403c382b03c65cd454a51eeae21d7a2ff12262a1a5ff1306d086875df74c511",
+      "title": "オンラインゲームやビデオ通話の遅延発生につながる「バッファブロート」が自分の使っているネットワークで発生するか否か測定できるウェブサイト",
+      "url": "https://gigazine.net/news/20260211-bufferbloat-test/",
+      "description": "ルーターが一度に大量のデータを処理しようとして過負荷状態になりインターネット接続が遅くなる現象を「バッファブロート」と呼びます。ブラウザから無料でインターネット接続をテストする「Bufferbloat and Internet Speed Test」を使うと、現在使っているルーターでバッファブロートが起きやすいかどうかをチェックす...",
+      "publishedAt": "2026-02-11T08:47:48.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "6d999461997024cde8a22e43eb633d1ebf63a5061e36604fa6336f6455b1d879",
+      "title": "Web アプリケーションをツール化する WebMCP",
+      "url": "https://azukiazusa.dev/blog/webmcp-for-web-applications/",
+      "description": "WebMCP は Web 開発者が Web アプリケーションの機能をツールとして公開できるようにする JavaScript インターフェイスです。これにより AI エージェントが Web アプリケーションの機能を直接呼び出して操作できるようになります。 WebMCP は Web 開発者が Web アプリケーションの機能をツールとして公開できるようにす...",
+      "publishedAt": "2026-02-11T07:52:17.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "7f25eee593aaba15485617fb1d3f81a23d99b54433fc0a34d3fe697fd38722aa",
+      "title": "【AWS CDK】 AWS Glue zero-ETLでDynamoDBデータをIceberg Tableにクロスアカウント連携してみた",
+      "url": "https://dev.classmethod.jp/articles/aws-cdk-aws-glue-zero-etl-dynamodb-iceberg-table/",
+      "description": "【AWS CDK】 AWS Glue zero-ETLでDynamoDBデータをIceberg Tableにクロスアカウント連携してみた",
+      "publishedAt": "2026-02-11T07:27:14.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "c9bfd1a11335eb522220bf0a43b024710b8cf9a8cbcaaabd9e08ba35b591d6ba",
+      "title": "「セキュリティリスク＝影響度☓発生確率」をやめよう - Qiita",
+      "url": "https://qiita.com/f_0000/items/5cc486be289a8ea76728",
+      "description": "Deleted articles cannot be recovered. Draft of this article would be also deleted. Are you sure you want to delete this article? はじめに セキュリティアセスメントをする際、このような発言を聞いたことがある方も多いのではないだろうか。 検出されたセキュリティリスクを「影響度☓発生確率」で優先度づけし...",
+      "publishedAt": "2026-02-11T06:41:06.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "b976db915b110d98f131f612ab6f83a4474ca8fd284692183ac9d4a15cd42b66",
+      "title": "「セキュリティリスク＝影響度☓発生確率」をやめよう",
+      "url": "https://qiita.com/f_0000/items/5cc486be289a8ea76728?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\nセキュリティアセスメントをする際、このような発言を聞いたことがある方も多いのではないだろうか。\n検出されたセキュリティリスクを「影響度☓発生確率」で優先度づけしました！\n・・・\nセキュリティリスク＝影響度☓発生確率\n長く使い古されたフレームワークである。\nそして...",
+      "publishedAt": "2026-02-11T05:48:24.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "9acddecb2c43c4eb865d50fad943c6bdd689db20fbd606b2b0c67c3503e680ae",
+      "title": "OpenClawのビジネス向け環境構築で考える、AIエージェントの倫理とセキュリティ。そしてクローズドループへ",
+      "url": "https://dev.classmethod.jp/articles/openclaw-closed-loop/",
+      "description": "OpenClawのビジネス向け環境構築で考える、AIエージェントの倫理とセキュリティ。そしてクローズドループへ",
+      "publishedAt": "2026-02-11T03:52:51.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "664a27287bc221f990025dfce6ba0b9a479d5f0939dfef8a39d0ba739cecda1a",
+      "title": "Azure Application Gateway WAF v2 の HTTP DDoS ルールセットを設定してみた",
+      "url": "https://dev.classmethod.jp/articles/azure-appgw-waf-httpddos/",
+      "description": "Azure Application Gateway WAF v2 の HTTP DDoS ルールセットを設定してみた",
+      "publishedAt": "2026-02-11T03:27:21.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "7b0b8a4df93ddf76a64dc2ef81253d87ebc4c3a31ae50aa97f675d0eefd86881",
+      "title": "月刊 AWS 製造 2026年2月号",
+      "url": "https://aws.amazon.com/jp/blogs/news/monthly-manufacturing-202602/",
+      "description": "みなさん、こんにちは。AWS のインダストリーソリューションアーキテクトの山本です。 このブログでは開催予定の […]",
+      "publishedAt": "2026-02-11T02:44:29.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "77b9845979ca1c4b547a23c925dbcb372a0ae1540df75e40e0f6350da03723ee",
+      "title": "CSSを、Vitestでテストしてみる",
+      "url": "https://zenn.dev/silverbirder/articles/e1a70ea756a0",
+      "description": "以下の記事で書いた CSSをテストする方法について、試してみました。\nhttps://zenn.dev/silverbirder/articles/df6752b230f04c\nソースコードは、以下に置いています。\nhttps://github.com/silverbirder/css-testing\n検証ページは、以下のURLです。\nhttps://learn-layout.vercel.app\n\n 何をテストするか\nCSSを書いていて、以下のミスをしたことはありませんか？\n\n\nflex-shrink の指定を忘れて、要素が押しつぶされてしまった\n\nz-index の指定を間違えて、要...",
+      "publishedAt": "2026-02-10T23:00:01.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "919a084c42805a6c0528cbab015fa1f16300bff3b69e75c788af3a9016911033",
+      "title": "【悪用厳禁】Cloudflareを”合法的に”突破する技術。セキュリティエンジニアが「Bright Data」で最強のWAFに挑んでみた結果",
+      "url": "https://qiita.com/harupython/items/35acc9c006ab1b09f884?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに：「403 Forbidden」に絶望したことはありますか？\n私たちエンジニアが、データ収集（スクレイピング）で最も恐れる敵。\nそれはCloudflareやAkamaiといった、最強のWeb Application Firewall（WAF）たちです。\n「User...",
+      "publishedAt": "2026-02-10T00:55:10.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "1a0a3a1174cb4652f0c724ea8f5e4bbf12cab2f29edd8f333545200a0f384869",
+      "title": "スタートアップの「なんとなく動いてる」インフラを、一人で体系的に整備した話",
+      "url": "https://zenn.dev/shigerufukada/articles/15c9a7bad299a3",
+      "description": "はじめに\nAI スタートアップに1人目のエンジニアとして参画し、本番稼働中のバックエンドサービス群の開発・運用基盤をゼロから整備した記録です。\n対象は Python（FastAPI）で書かれた3つのバックエンドサービス。いずれも AWS 上で稼働しており、ユーザー向けに本番提供されている状態でした。\nこの記事では、個別の技術的な実装手順ではなく、既存サービスの運用基盤をどう評価し、何を優先して、どう整備していったかという全体のアプローチを書きます。\n\n 引き継いだ時点の状態\n参画時、各サービスは以下のような状態でした。\nデプロイ\n\n担当者がローカルで docker build → d...",
+      "publishedAt": "2026-02-10T00:49:12.000Z",
       "feedName": "Zenn"
     }
   ]
