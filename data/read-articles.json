@@ -80,54 +80,6 @@
       "feedName": "はてなブックマーク - テクノロジー"
     },
     {
-      "id": "5535cb32f6feafc2fdfa3027c44da158b72c9c084153413aeb30d5da7784c4f9",
-      "title": "「横のガードレール」でAIにアーキテクチャを教えるのをやめた話",
-      "url": "https://zenn.dev/hideyuki_toyama/articles/horizontal-guard-rails",
-      "description": "はじめに\nAI駆動開発、やってますか？\nClaude Code や Codex に「クリーンアーキテクチャ+DDDで実装して」と指示すると、最初はある程度きれいなコードが出てきます。でも1週間後、気づいたらドメイン層が infrastructure を import してたり、UseCase に presentation のロジックが混入してたり。\n仕様駆動でも最初の構成は作れる。しかし人の介入なしには維持できない。\nこの問題、どう解決すればいいんでしょうか。\n!\nこの記事は note で書いた「縦と横のガードレール」の実装版です。思想的な背景が気になる方は、先にそちらをどうぞ。\n\n...",
-      "publishedAt": "2026-01-14T23:15:00.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "c462c7a47a4dc35e03247f78c9748f2898e34af1ade2406700ca23b6150e4def",
-      "title": "AWS CLIのloginコマンドで別のAWSアカウントにアクセスする",
-      "url": "https://qiita.com/inamuu/items/32184382a409e664709c?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "概要\n2025年末、AWS CLIがアップデートして、loginコマンドを使ってAWSのログインを行うことができるようになった。\nhttps://dev.classmethod.jp/articles/aws-cli-aws-login/\nこの結果、ブラウザによる認証を経...",
-      "publishedAt": "2026-01-14T16:26:38.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "67cf42ec73313d8f756605acf470244aad00127c0be7d758e9a663ce778f8cdd",
-      "title": "Rust+Wasmで爆速ライフゲームを作って動く壁紙にする",
-      "url": "https://zenn.dev/108_twil3akine/articles/rust-wasm-lifegame-wallpaper",
-      "description": "はじめに\nRust と WebAssembly（Wasm）の学習として、コンウェイのライフゲームを作成しました。\nただブラウザで動かすだけでは面白くないので、Windows の「Lively Wallpaper」を使って、自分のデスクトップ壁紙としてヌルヌル動かすところまでをゴールにしています。\n成果物はこんな感じです\n\nライフゲームが動いてる図\n1000×1000 を超える巨大なグリッドでも 60fps で動作します。\nこの記事では、Rust によるロジック実装、特に JavaScript（以下JS）と Wasm 間での配列受け渡しをゼロコピーにする最適化と、それを Lively ...",
-      "publishedAt": "2026-01-14T16:06:58.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "8ecccd933e0e6e5340a3793aae74f808a7b207d0f5d484a5c4311ad7225d7c42",
-      "title": "Next.jsを書くときは、ある程度バックエンドを理解して書いてほしい話",
-      "url": "https://zenn.dev/kt57/articles/0b87349d94ddcc",
-      "description": "はじめに\n今回は、フロントエンドエンジニアがNext.jsのApp Routerに触れた際に陥りがちな問題を取り上げます。\nここ最近のトレンド(フレームワーク、AI、ライブラリなど)と共に、フロントエンドエンジニアがバックエンド処理を実装する機会がかなり増えたと感じています。\nしかし、レビューをしていると何度も致命的なセキュリティ問題が見つかり、コメントをしてもバックエンドがどのように処理されるか理解しないまま書いているため、理解してもらえないことが多いです。\n難しいセキュリティの専門知識を深掘りする必要はありません！\nすごく基本的で初歩の知識だけ紹介するので、この記事で知識をつける...",
-      "publishedAt": "2026-01-14T12:43:00.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "c5918db21939b511c4158e88a588007e4114c2c1c3d4817b4b63b9b8fe420836",
-      "title": "Reactの魔法を理解する",
-      "url": "https://zenn.dev/gaomond/articles/7c69f904c53ceb",
-      "description": "僕はバックエンドエンジニアなんですが、モノを作ろうとするとどうしてもフロントを触る必要があります。\nここではReactを触れるようになるための最低限の知識をまとめておこうと思います。\nできるだけ「なぜそうなるのか？」を深堀りながら書きたいと思います。\nAI使いながら書いてます。Reactの公式ドキュメントも参考にしてます。\n\nReactのコードは初見には「魔法」だらけです。急に出てきたreact hooksという呪文を丸暗記するのは辛い。hooks導入の背景を理解し、呪文を呪文で無くします。\n\n 1. 原理原則: UI = f(state)\n\nReactのすべては、この数式に集約されます...",
-      "publishedAt": "2026-01-14T04:57:48.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "f74f5fc2dc54c48d8ae40fe751631241dee31e7a7bf9a2b2668e466fc8c5820f",
-      "title": "Web関係のセキュリティについて初心者でもわかるようにまとめてみた - OWASP Top 10:2025",
-      "url": "https://qiita.com/shibata1111/items/e64b9f26c54607f7862b?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "はじめに\nセキュリティに問題があると、大変なことになります。\n普通のバグは不便で済むこともありますが、セキュリティの穴はアカウント乗っ取り、情報漏えい、サービス停止など、取り返しがつかない形で表に出やすいのです。\nそうした重大な事故を未然に防ぐために、本記事ではOWASP...",
-      "publishedAt": "2026-01-14T03:32:15.000Z",
-      "feedName": "Qiita"
-    },
-    {
       "id": "da229e9ae17d754a92795b08fa7d413187c8c52dc86aee1369c55b55dff2724f",
       "title": "[Boost]",
       "url": "https://dev.to/heytechomaima/-2e74",
@@ -309,78 +261,6 @@
       "url": "https://aws.amazon.com/jp/blogs/news/aws-secrets-manager-launches-managed-external-secrets-for-third-party-credentials/",
       "description": "AWS Secrets Manager の新機能「マネージド外部シークレット」を紹介します。この機能により、Salesforce、Snowflake、BigID などのサードパーティソフトウェアの認証情報を、事前定義されたフォーマットと自動ローテーションで安全に管理できるようになりました。カスタムストレージ戦略やローテーション関数の開発が不要になり、AWS とサードパーティ両方のシークレットを単一のサービスから一元管理できます。IAM によるきめ細かなアクセス許可管理、CloudWatch と CloudTrail による監視、GuardDuty による脅威検出など、標準の Secrets Manager と同じセキュリティ機能を追加コストなしで利用できます。",
       "publishedAt": "2026-01-15T02:44:20.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "c31f1500d518cbfec008d586957807df69dd9eb3b73afbc05615f41e4c410ca4",
-      "title": "AIが生成したコードの品質を定量的に測定・比較してみた",
-      "url": "https://dev.classmethod.jp/articles/ai-generated-code-quality-measurement/",
-      "description": "ソフトウェアアーキテクチャ手法の利用有無で、\nAIが生成したコード品質のうち可読性と保守性に違いがどれくらい発生するのかTODOアプリ用のAPIを作成し比較してみました。",
-      "publishedAt": "2026-01-15T00:35:56.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "77720a81b92dce1dc5c22a1cb26c4b46f1355cd7ee7057ed9ff922845d3df3f4",
-      "title": "「2025セキュリティ10大ニュース」ランサムウェアなどの被害報道数と拮抗してきた防御側の話題、何があった？",
-      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2601/15/news052.html",
-      "description": "日本ネットワークセキュリティ協会が「JNSA 2025セキュリティ十大ニュース」を発表した。選考委員会は、被害事案と政府などによる新たな取り組みに関するニュース数が拮抗してきた点に着目している。",
-      "publishedAt": "2026-01-14T23:00:00.000Z",
-      "feedName": "＠IT"
-    },
-    {
-      "id": "fb4dda12beb90b0049b8051b3172a15cc5e5d70929b8aaa699773fff2f3f8d24",
-      "title": "「ペネトレーションテストは死んだ？」",
-      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2601/07/news084.html",
-      "description": "セキュリティリサーチャー辻伸弘氏が、サイバーセキュリティの世界におけるさまざまな“常識”や思い込みに、次々と一石を投じる新連載。第1回は、辻氏のキャリアの原点でもあるペネトレーションテストにつき、身を切る思いで問題を提起する。",
-      "publishedAt": "2026-01-14T20:00:00.000Z",
-      "feedName": "＠IT"
-    },
-    {
-      "id": "0c74a9814215768c320e69eca86d070828be9009006a8ead18bc291dc88835e3",
-      "title": "ツール導入時における法務確認のリードタイム削減",
-      "url": "https://engineering.dena.com/blog/2026/01/legal-check-automation/",
-      "description": "はじめに こんにちは、IT本部IT戦略部テクニカルオペレーショングループの成田です。 DeNAグループにおけるITツールやシステムの運用管理、改善業務を担当しています。\n本記事では、SaaS などのサービスを社内に導入する際に必要となる法務確認のリードタイム削減を目的として行った施策についてご紹介します。\nツール利用申請による法務確認 DeNAグループでは、SaaS などのクラウドサービスやインストール型ソフトウェアといった各種ツールの導入時に、ツール利用申請というkintoneアプリで申請を受け付けており、このプロセスの中でセキュリティ部門や法務部門などによるリスク確認を実施しています。",
-      "publishedAt": "2026-01-14T15:00:00.000Z",
-      "feedName": "DeNA Engineering"
-    },
-    {
-      "id": "a5935073481ec1793ace009011072ddfaa97ca0bd9a048165e6d26adaace836f",
-      "title": "【開催報告】企業の生成 AI 活用を加速する Dify Enterprise on AWS 〜セキュアなデータの活用とパートナー導入事例〜",
-      "url": "https://aws.amazon.com/jp/blogs/news/dify-enterprise-on-aws-event-20251121-report/",
-      "description": "こんにちは！ アマゾン ウェブ サービス ジャパンのソリューションアーキテクト馬渕です。普段は交通業界のお客様 […]",
-      "publishedAt": "2026-01-14T10:40:35.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "6fae1a12fdab0c098ae822b1aea82728a6d34031039975e510dfd26e06e7c78c",
-      "title": "VMware マイグレーションの加速: AWS Transform の新しいエクスペリエンス",
-      "url": "https://aws.amazon.com/jp/blogs/news/accelerating-vmware-migration-aws-transforms-new-experience/",
-      "description": "AWS Transform for VMware に新しい AI 機能が追加され、VMware マイグレーションが大幅に強化されました。チャットベース操作、マルチアカウントサポート、動的な移行計画、Cisco ACI、Palo Alto、Fortinet を含む拡張ネットワークサポートにより、エンドツーエンドマイグレーションを効率化します。",
-      "publishedAt": "2026-01-14T07:57:09.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "a33fc1366dd8b7136ca75f10b46b0f9743b5e6b3fd7c9e7f733cd395ffee4e4a",
-      "title": "AWS Certificate Manager に OV 証明書や EV 証明書をインポートできますか",
-      "url": "https://dev.classmethod.jp/articles/tsnote-certificate-manager-public-certificate/",
-      "description": "AWS Certificate Manager に OV 証明書や EV 証明書をインポートできますか",
-      "publishedAt": "2026-01-14T07:30:09.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "3595ae8895ecdef6a23e3c2dfd569ec7576bd3462f217ec7f10cf54c222050a9",
-      "title": "年収1位は3年連続「Go」　求人数1位は「JavaScript」　需給のギャップが生む「穴場言語」とは",
-      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2601/14/news031.html",
-      "description": "paizaは、同社が運営する学習プラットフォーム「paiza」のユーザーを対象に、年収水準や企業ニーズ、内定率などの指標からプログラミング言語のトレンドを分析した調査結果を発表した。",
-      "publishedAt": "2026-01-14T04:00:00.000Z",
-      "feedName": "＠IT"
-    },
-    {
-      "id": "38c31c1b0f7a42cf5e2ad06c932862b6aa5dd17f3385cc6e2f91261762d0cf15",
-      "title": "弥生株式会社様の AI-DLC Unicorn Gym 開催レポート: 開発プロセスの再設計による生産性の限界突破への挑戦",
-      "url": "https://aws.amazon.com/jp/blogs/news/yayoi-ai-dlc/",
-      "description": "本稿は弥生株式会社様と AWS Japan の共同執筆により、AI 駆動開発ライフサイクル（AI-DLC）Unicorn Gym の実践を通じて得られた学びと今後の取り組みをお伝えするものです。 2025年、生成 AI の台頭により開発現場は大きな変革期を迎えました。弥生株式会社でも AI ツールの導入を推進してきましたが、従来の開発手法と AI のポテンシャルをどう融合させるべきか、プロダクトごとに異なる環境の中で最適な手法を模索している段階にありました。こうした中、AWS が提唱する「AI 駆動開発ライフサイクル（AI-DLC）」が、開発プロセスを再定義する鍵になると考え、2025年12月10日から12日の3日間にわたって「AI-DLC Unicorn Gym」を AWS と共同で実施しました。本記事では、その実践から得られた学びを共有します。",
-      "publishedAt": "2026-01-14T02:16:02.000Z",
       "feedName": "Amazon Web Services ブログ"
     },
     {
@@ -6337,6 +6217,237 @@
       "description": "はじめに\n前回の記事の続きです。\n\nここまでの記事で、\n\n通信はそのままだと危険であること\n暗号化によって「見られない通信」ができること\n公開鍵・電子証明書・電子署名によって「なりすまし」や「改ざん」を防げること\n\nを整理してきました。\n『「ネットワークのセキュ...",
       "publishedAt": "2026-02-11T01:35:55.000Z",
       "feedName": "Qiita"
+    },
+    {
+      "id": "902b90defec4ca18fb9107aa7493d5b7dca20781e916f8252a9a573895f4278a",
+      "title": "From Tab Chaos to Clarity: Why I Built a Chrome Extension for Jira + GitHub",
+      "url": "https://dev.to/just_a_programmer/from-tab-chaos-to-clarity-why-i-built-a-chrome-extension-for-jira-github-1579",
+      "description": "This is a submission for the GitHub Copilot CLI Challenge\nA Chrome extension but let me tell you about the problem first.\nIf you work in a team where:\nJira tickets aren’t pre-assigned\nMultiple developers resolve tickets dynamically\nTicket status determines what goes to production\nCommits are used to track ownership\nThen you probably know this problem.\nIt’s not about writing code.\nIt’s about tracking responsibility — without losing your mind.\nIn our setup:\nDevelopers pick up tickets freely.\nGit commits.\nSo we started adding Jira ticket IDs inside commit messages.\nExample:\nfeat: add validation for payment form (PROJ-142)\n\nThis helped us:\nIdentify who solved which ticket\nTrack what goes to dev vs prod\nAvoid duplicate work\nMaintain accountability\nBut a new problem started.\nEvery time I needed to commit a ticket:\nOpen Jira\nFind the ticket\nCopy the ID\nSwitch back to GitHub\nWrite the commit\nRe-check acceptance criteria\nSwitch again\nOpen another tab\nLose context\nSometimes I reused the same tab.\nEither way — I kept breaking flow.\nWhen you’re working across multiple tickets?\nIt’s chaos.\nWhile committing, I often needed to check:\nEdge cases mentioned in comments\nSpecial instructions\nWhether something should not go to production yet\nSmall requirements hidden in discussion threads\nI even started writing personal reminders in Notepad.\nThat’s risky.\nThe issue wasn’t copying ticket IDs.\nIt was losing context.\nJira lived in one tab.\nMy brain became the integration layer.\nAnd that’s not scalable.\n\nSo I Built a Chrome Extension\nInstead of accepting the chaos, I built a Chrome extension that connects Jira context directly inside GitHub.\nView Jira Tickets Inside GitHub\nHover over a ticket ID\nInstantly see ticket details in a tooltip\nOpen Jira in a side panel without leaving GitHub\nNo more full tab switching.\nPersonal Notes Per Ticket\nI added a feature to:\nSave private notes per ticket\nReview them before merging or pushing\nNo more scattered Notepad files.\nLightweight Configuration\nIt works quietly in the background.\nFor the UI layer, I experimented with AI-assisted development using GitHub Copilot terminal. Since this is a Chrome extension, the UI had to be built using plain JavaScript along with HTML and CSS, with no heavy frameworks and no React setup, just lightweight scripts injected directly into GitHub’s DOM. Instead of manually scaffolding every component, I described the UI structure in comments and let Copilot suggest layout patterns, tooltip logic, and side panel structures. I iterated on those suggestions, refined the styling and interactions step by step, and adjusted state handling to fit the extension environment. Copilot accelerated the repetitive parts such as structuring the popup, creating consistent UI elements, and wiring basic state flows, while I focused on the core logic, workflow decisions, and overall UX design. It did not replace thinking; it acted like a fast UI assistant. The result was a clean, lightweight interface that solves a real problem without overengineering it.\nWhat’s Next?\nI’m still improving it. \nIf you’ve faced similar Jira + GitHub workflow problems, I’d love to hear how you solved them.\nBecause at the end of the day:\nGreat engineering isn’t just about code.\nIt’s about designing better systems — including how we work.",
+      "publishedAt": "2026-02-14T01:36:29.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "5ccb0055c69a5c241687ca9fead4ab210736bf4952c48efce25a3f67348f4cd0",
+      "title": "Keeping Your Secrets in Sync: Environment Lifecycle Management That Actually Works",
+      "url": "https://dev.to/jds64/keeping-your-secrets-in-sync-environment-lifecycle-management-that-actually-works-24ga",
+      "description": "Introduction\n\n\nKeyshade is an open-source real-time secret and configuration management platform that helps developers securely store, sync, and rotate sensitive data like API keys, passwords, and environment variables across multiple environments. It uses end-to-end encryption and live updates to eliminate insecure .env file sharing, manual dashboard updates, and secret sprawl. Designed for teams and solo developers alike, Keyshade improves collaboration, auditability, and security by providing version history, access controls, and seamless integrations with modern deployment platforms.\nTry it out on https://keyshade.io/\n#1254)\n\n\nThe problem was that the integrations with Vercel or AWS Lambda would only respond to updates in secrets and variables. It would completely ignore situations where the user had deleted the environment or renamed the environment. This meant that when a user deleted an environment in Keyshade, the secrets and variables would still be available in Vercel or AWS Lambda but would be orphaned. This presented a problem from a security point of view. Also, when the environment was renamed, the integrations would be out of sync.\nThis problem was significant because of several factors:\nSecurity Risk: When a user deleted an environment using Keyshade (like an environment in staging mode), the secrets became active in Vercel and AWS Lambda. This meant the secrets were exposed on another platform. That is, credentials became potential attack vectors.\nData Integrity: The disconnect between Keyshade’s environment state and the external platforms led to a situation where users couldn’t be assured of data integrity. It defeats the purpose of having a reliable tool like Keyshade.\nUser Experience: It will be the responsibility of the consumers of Keyshade to manually log in to the Vercel or AWS Lambda interface to clean up after environment changes, thereby defeating the purpose of the integration in the first place. Such an interface might discourage the use of Keyshade.\nProduction Readiness: The integrations must be prepared to handle the full lifecycle of environments, not only the secrets within static environments, for Keyshade to be considered viable in production, especially by teams with high rates of environment changes (e.g., CI/CD workflows creating ephemeral environments). It was marked as \"priority: high\" and \"difficulty: 4.\" This was my hardest PR that took around two months.\nkeyshade/apps/api/src/integrations/plugins/vercel.integration.ts\napps/api/src/integration/plugins/aws-lambda.integration.ts\napps/api/src/common/util.ts\napps/api/src/integration/reconciler.ts\napps/api/src/event/event.types.ts\nTest files:\nSupporting materials/artifacts\nNot receive or process the ENVIRONMENT_DELETED event\nError behavior:\nKey Implementation Detail:\nWhile preparing my pull request, I ran into several real-world challenges that highlight what contributing to an active open-source project actually looks like behind the scenes. The first issue was merge conflicts between my branch (attempt-1254) and the target develop branch. In a fast-moving repository with many contributors, this is almost inevitable. I resolved the conflicts by pulling the latest upstream changes and manually reviewing each conflicting section to understand both sides. My goal was to preserve other contributors’ work while ensuring my environment lifecycle handler implementation remained intact. After merging, I tested everything locally to confirm nothing regressed, then committed with a clear explanation of the resolution. It was a reminder that merge conflicts aren’t just mechanical fixes — they’re moments where you have to understand the intent of multiple developers and reconcile them thoughtfully.\nPR #1255)\n\n\nAfter working through these issues collaboratively, the pull request was successfully merged. The final solution included environment lifecycle event handlers for both Vercel and AWS Lambda, retry logic with exponential backoff, a reconciliation system for eventual consistency, and comprehensive test coverage. All CI checks passed, and review feedback was fully addressed. More importantly, the contribution closed a high-priority bug that had been blocking production adoption of cloud integrations. It was a strong reminder that persistence, careful communication, and respect for the review process are just as important as writing the code itself. Open-source success isn’t just technical, it’s collaborative.\nHow to read official Typescript documentation to break down confusing code\nHow to ask beneficial questions to maintainers\nHow to navigate CI/CD failures as an external contributor\nUnderstanding Event-Driven API Architecture\nSnyk improves security in development",
+      "publishedAt": "2026-02-14T01:25:14.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "5decbfb1bd3f22d6ed44620664b10bde315774117b80260b5c7000a0024f90c4",
+      "title": "When to Move From Zapier and Make to Custom Python Automation",
+      "url": "https://dev.to/syntora/when-to-move-from-zapier-and-make-to-custom-python-automation-3n68",
+      "description": "Zapier and Make are genuinely good products. I have recommended them to clients, used them myself, and watched them save small teams hundreds of hours. If you are running a handful of automations that move data between two or three apps, those tools are the right choice. You should not be writing Python to send a Slack message when a form is submitted.\nBut there is a ceiling. I have watched dozens of businesses hit it, and the pattern is always the same: what started as five clean Zaps turns into forty tangled workflows with retry logic duct-taped onto error handlers, and a monthly bill that rivals a junior developer's salary.\nThis article is about recognizing that ceiling before you slam into it, and understanding what sits on the other side.\nZapier's pricing is task-based. Every time a Zap fires, that counts. When you are processing hundreds or thousands of events per day, you burn through task allotments fast. Make uses operations the same way.\nThe real problem is not the bill (though we will get to that). The problem is that rate limits introduce silent failures. Your CRM sync missed 200 contacts because you hit your daily cap at 2 PM. Nobody noticed until Friday.\nCustom Python does not have artificial task limits. A script running on a VPS processes as many events as the hardware allows. You pay for compute, not per execution.\nHere is a rough cost comparison that I walk through with clients regularly:\n\n\n\nScenario\nZapier/Make Cost\nCustom Python Cost\n\n\n\n\n5,000 tasks/month, basic workflows\n$70-100/mo\nOverkill, stay on Zapier\n\n\n20,000 tasks/month, 30+ Zaps\n$300-500/mo\n$5-20/mo VPS\n\n\n100,000 tasks/month, complex logic\n$1,000-2,000/mo\n$20-40/mo VPS\n\n\n500,000+ tasks/month, data pipelines\n$2,000+/mo\n$40-80/mo VPS\n\n\n\nThe custom Python column assumes a basic VPS (DigitalOcean, Hetzner, or Railway) running your scripts. The infrastructure cost is almost always under $50/month, even at high volume. The real cost is the development time to build it, but that is a one-time investment that pays for itself within a few months at the higher tiers.\nZapier paths and Make routers handle simple branching. But when you need to evaluate data against business rules that involve lookups, calculations, or stateful decisions, you start fighting the visual builder instead of working with it.\nI had a client who built a 47-step Zap with 12 paths to handle lead routing. It took 30 seconds to execute and failed silently when any upstream API was slow. The Python replacement was 80 lines and ran in under a second.\nNo-code tools handle simple mapping well. Field A goes to Field B. But the moment you need to reshape nested JSON, aggregate records, deduplicate based on fuzzy matching, or transform data formats, you are writing JavaScript in Zapier's code steps anyway.\nIf you are already writing code inside your no-code tool, you have outgrown the no-code tool.\nZapier's error handling is: retry, then notify you. Make is slightly better with error routes. But neither gives you what production systems actually need: dead letter queues, partial failure recovery, idempotency guarantees, or structured logging that lets you debug an issue three weeks after it happened.\nWhen a failure at step 7 of 12 means you need to roll back steps 3 through 6, no visual builder is going to save you.\nLet me show you concrete examples of what replaces common Zapier patterns. These are simplified versions of real code I have built for clients at Syntora.\nA common Zapier pattern: receive a webhook from Stripe, then create a record in your CRM and send a Slack notification.\nIn Python with FastAPI:\nfrom fastapi import FastAPI, Request\nimport httpx\n\napp = FastAPI()\n\n@app.post(\"/webhooks/stripe\")\nasync def handle_stripe_webhook(request: Request):\n    payload = await request.json()\n    event_type = payload.get(\"type\", \"\")\n\n    if event_type == \"checkout.session.completed\":\n        session = payload[\"data\"][\"object\"]\n        customer_email = session[\"customer_details\"][\"email\"]\n        amount = session[\"amount_total\"] / 100\n\n        # Create CRM contact\n        async with httpx.AsyncClient() as client:\n            await client.post(\n                \"https://api.your-crm.com/contacts\",\n                json={\n                    \"email\": customer_email,\n                    \"deal_value\": amount,\n                    \"source\": \"stripe_checkout\"\n                },\n                headers={\"Authorization\": \"Bearer YOUR_CRM_KEY\"}\n            )\n\n            # Notify the team\n            await client.post(\n                \"https://hooks.slack.com/services/YOUR/SLACK/WEBHOOK\",\n                json={\n                    \"text\": f\"New sale: {customer_email} for ${amount:.2f}\"\n                }\n            )\n\n    return {\"status\": \"ok\"}\n\nThis handles the same flow as a 3-step Zap, but now you can add any logic you want: validation, deduplication, conditional routing, database lookups. No task limits, no per-execution billing.\nMany businesses use Zapier's scheduled triggers to sync data between systems every 15 minutes. Here is the Python equivalent using a simple scheduler:\nimport schedule\nimport time\nimport httpx\nimport logging\n\nlogging.basicConfig(\n    filename=\"sync.log\",\n    level=logging.INFO,\n    format=\"%(asctime)s - %(levelname)s - %(message)s\"\n)\n\ndef sync_contacts():\n    try:\n        with httpx.Client() as client:\n            # Pull new contacts from source\n            response = client.get(\n                \"https://api.source-app.com/contacts\",\n                params={\"updated_since\": get_last_sync_time()},\n                headers={\"Authorization\": \"Bearer SOURCE_KEY\"}\n            )\n            contacts = response.json()[\"data\"]\n\n            if not contacts:\n                logging.info(\"No new contacts to sync\")\n                return\n\n            # Transform and push to destination\n            transformed = [\n                {\n                    \"full_name\": f\"{c['first_name']} {c['last_name']}\",\n                    \"email\": c[\"email\"].lower().strip(),\n                    \"company\": c.get(\"organization\", \"Unknown\"),\n                    \"value\": calculate_lead_score(c)\n                }\n                for c in contacts\n            ]\n\n            result = client.post(\n                \"https://api.dest-app.com/contacts/batch\",\n                json={\"contacts\": transformed},\n                headers={\"Authorization\": \"Bearer DEST_KEY\"}\n            )\n\n            logging.info(f\"Synced {len(transformed)} contacts: {result.status_code}\")\n            save_last_sync_time()\n\n    except Exception as e:\n        logging.error(f\"Sync failed: {e}\")\n        send_alert(f\"Contact sync failed: {e}\")\n\nschedule.every(15).minutes.do(sync_contacts)\n\nwhile True:\n    schedule.run_pending()\n    time.sleep(1)\n\nNotice what you get for free here: structured logging, error handling with alerts, data transformation that would be painful in a visual builder, and batch operations that reduce API calls.\nThis is where Python really pulls ahead. Here is a real pattern: pulling order data from one system, enriching it with inventory data from another, and pushing a summary report.\nfrom collections import defaultdict\n\ndef build_daily_report(orders, inventory):\n    # Group orders by product\n    product_totals = defaultdict(lambda: {\"units\": 0, \"revenue\": 0.0})\n\n    for order in orders:\n        for item in order[\"line_items\"]:\n            sku = item[\"sku\"]\n            product_totals[sku][\"units\"] += item[\"quantity\"]\n            product_totals[sku][\"revenue\"] += item[\"quantity\"] * item[\"unit_price\"]\n\n    # Enrich with inventory data\n    report_rows = []\n    for sku, totals in product_totals.items():\n        stock = inventory.get(sku, {})\n        report_rows.append({\n            \"sku\": sku,\n            \"units_sold\": totals[\"units\"],\n            \"revenue\": round(totals[\"revenue\"], 2),\n            \"current_stock\": stock.get(\"quantity\", 0),\n            \"reorder_needed\": stock.get(\"quantity\", 0) < totals[\"units\"] * 3,\n            \"days_of_stock\": (\n                round(stock.get(\"quantity\", 0) / totals[\"units\"], 1)\n                if totals[\"units\"] > 0 else None\n            )\n        })\n\n    # Sort by revenue descending\n    report_rows.sort(key=lambda r: r[\"revenue\"], reverse=True)\n    return report_rows\n\nTry building that in Zapier. You would need multiple Zaps, a database in between, and Zapier's code steps straining under the weight of business logic they were never designed to carry.\nOne misconception I run into constantly: people think moving to custom Python means ripping out every Zap on day one. That is not how we approach it.\nThe practical path looks like this:\nPhase 1: Identify your most expensive or fragile automations. These are the ones failing regularly, burning through tasks, or requiring code steps that are hard to maintain. Migrate those first.\nPhase 2: Build a small Python service that handles the heavy lifting. This might be a single FastAPI app on a VPS that processes webhooks and runs scheduled jobs. Keep your simple Zaps running for the stuff that genuinely works fine.\nPhase 3: Gradually consolidate. As you add capabilities to your Python service, you can retire Zaps one by one. No rush, no big-bang migration.\nThis phased approach means you are never without automation during the transition, and you can validate the custom solution against real workloads before going all-in.\nThe infrastructure is simpler than most people expect:\nA VPS ($5-20/month on DigitalOcean, Hetzner, or Railway)\nSupervisor or systemd to keep your processes running\nA logging solution (even just structured log files to start)\nA simple deployment process (git pull and restart, or a basic CI/CD pipeline)\nMonitoring (a health check endpoint and uptime monitoring like UptimeRobot)\nYou do not need Kubernetes. You do not need microservices. You do not need a team of DevOps engineers. A single Python process on a $10/month VPS can handle more throughput than most businesses will ever need from their automations.\nTo be clear about when no-code is still the right answer:\nYou have fewer than 20 automations and they are straightforward\nYour total monthly cost is under $200 and predictable\nYou do not have anyone on the team who can maintain Python\nYour automations do not require complex error recovery\nSpeed of setup matters more than long-term cost\nThere is no shame in using the right tool for the job. Zapier and Make are the right tools for a lot of jobs. They just stop being the right tool when your automation needs cross a complexity and volume threshold.\nNo-code automation tools solve a real problem: they let non-technical teams automate workflows without hiring developers. That value is real and I am not dismissing it.\nBut when you are spending $1,000+ per month on Zapier, debugging 40-step Zaps at midnight, and losing data to silent failures, you have crossed the line where custom infrastructure costs less and does more. A Python service on a cheap VPS, built once and maintained incrementally, will outperform a tangle of no-code workflows in reliability, cost, and capability.\nThe question is not whether to make the move. The question is whether you have already passed the point where you should have.\nI'm Parker Gawne, founder of Syntora. We build custom Python infrastructure for small and mid-size businesses. syntora.io",
+      "publishedAt": "2026-02-14T01:18:55.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "a71d46e2ce3cc1e3b56603dac99fb2a4885f5b7becee776f71bb40ea64665e6b",
+      "title": "Your Health Data, Your GPU: Local 7B LLM Inference with WebLLM & Google Health Connect 🛡️💻",
+      "url": "https://dev.to/wellallytech/your-health-data-your-gpu-local-7b-llm-inference-with-webllm-google-health-connect-1l64",
+      "description": "In an era where privacy is a luxury, sending your sensitive medical records and activity logs to a cloud-based AI feels like a massive gamble. But what if you could harness the power of a 7B parameter model directly in your browser? \nToday, we're diving into the bleeding edge of Local LLM inference and Private AI. By leveraging WebLLM and the high-performance WebGPU API, we will build a health dashboard that analyzes Google Health Connect logs entirely on the client side. No data leaves the device. No API keys are leaked to third-party servers. Just pure, hardware-accelerated privacy.\nWhen dealing with Google Health Connect API data—which includes everything from heart rate variability to sleep cycles—traditional cloud LLMs pose a significant privacy risk. By using a WebLLM tutorial approach, we utilize the user's local GPU to perform Private AI reasoning. This ensures 100% data sovereignty while maintaining the \"smart\" features users expect.\nThe flow is simple but powerful: we fetch raw JSON logs from the health API and feed them into a WebGPU-accelerated instance of a model like Llama-3-8B or Mistral-7B-Instruct.\ngraph TD\n    A[User Device] --> B[Google Health Connect API]\n    B -->|Sensitive Health Logs| C[Browser Sandbox]\n    C --> D{WebGPU Available?}\n    D -->|Yes| E[WebLLM Engine]\n    E --> F[7B Parameter Model]\n    F -->|Local Inference| G[Health Summary & Insights]\n    G --> H[User Dashboard]\n    style F fill:#f96,stroke:#333,stroke-width:2px\n    style C fill:#bbf,stroke:#333,stroke-width:2px\n\nTo follow this advanced guide, you'll need:\n  Browser: Chrome 113+ or Edge (WebGPU support is mandatory).\n  Tech Stack: TypeScript, WebLLM, and the Google Health Connect SDK.\n  Hardware: A dedicated GPU (M1/M2 Mac or NVIDIA RTX series) is highly recommended for 7B models.\nFirst, we need to set up the engine. WebLLM uses a worker-based approach to keep the UI responsive while the GPU does the heavy lifting.\nimport * as webllm from \"@mlc-ai/web-llm\";\n\n// Define the model we want to use\nconst selectedModel = \"Llama-3-8B-Instruct-v0.1-q4f16_1-MLC\";\n\nasync function initializeAI() {\n  const engine = await webllm.CreateEngine(selectedModel, {\n    initProgressCallback: (report) => {\n      console.log(\"Loading Progress:\", report.text);\n    }\n  });\n  return engine;\n}\n\nIn a real-world scenario, you would use the HealthConnectClient. For this example, let's assume we've retrieved a JSON payload containing step counts and sleep stages.\ninterface HealthLog {\n  timestamp: string;\n  type: string;\n  value: number | string;\n}\n\nconst healthData: HealthLog[] = [\n  { timestamp: \"2023-10-01T08:00Z\", type: \"Steps\", value: 1200 },\n  { timestamp: \"2023-10-01T23:00Z\", type: \"Sleep\", value: \"REMSleep\" },\n  // ... more sensitive data\n];\n\nNow, we feed this data into the model. We use a system prompt that instructs the LLM to act as a health data analyst.\nasync function generatePrivateReport(engine: webllm.Engine, data: HealthLog[]) {\n  const prompt = `\n    Analyze the following health logs and provide a summary of habits. \n    Focus on sleep quality and activity levels.\n    Data: ${JSON.stringify(data)}\n  `;\n\n  const messages: webllm.ChatCompletionMessageParam[] = [\n    { role: \"system\", content: \"You are a private medical AI. You analyze logs locally.\" },\n    { role: \"user\", content: prompt }\n  ];\n\n  const reply = await engine.chat.completions.create({\n    messages,\n    temperature: 0.7,\n  });\n\n  return reply.choices[0].message.content;\n}\n\nWhile running 7B models in the browser is revolutionary, production-grade applications often require hybrid patterns to balance performance and battery life. For more advanced architectural patterns on deploying local-first AI and optimizing WebGPU throughput, I highly recommend checking out the technical deep-dives at WellAlly Tech Blog. \nThey provide excellent resources on transitioning from browser-based prototypes to production-ready Private AI solutions that scale across mobile and desktop environments.\nA 4-bit quantized 7B model still requires roughly 4GB-5GB of VRAM. If the user's device is underpowered, we can fallback to smaller models like Phi-3-Mini (3.8B), which WebLLM supports out of the box.\nThe first load requires downloading weights. \nPro-tip: Use Cache API to persist model weights locally so the user only pays the \"download tax\" once.\nRunning a 7B model to analyze Google Health Connect logs in the browser isn't just a party trick—it's a fundamental shift in how we handle user data. By combining WebLLM, WebGPU, and TypeScript, we've built a system that respects privacy without sacrificing intelligence. \nAre you ready to stop leaking your data to the cloud? Start building locally today! 🥑✨\nDrop a comment below if you've tried WebGPU yet, and don't forget to subscribe for more deep-tech tutorials!",
+      "publishedAt": "2026-02-14T01:10:00.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "0cd6d2e144f00f85d2365c31d58ab99ae6e268968341a6b0908b0a4239999e7d",
+      "title": "The AI Coding Trap: Refactoring my Next.js SaaS with OpenSpec (and why I ditched spec-kit)",
+      "url": "https://dev.to/wanxinvc/the-ai-coding-trap-refactoring-my-nextjs-saas-with-openspec-and-why-i-ditched-spec-kit-49ie",
+      "description": "In 2025, I heavily relied on AI coding assistants to build the MVP of my SaaS, Printable Handwriting—a platform featuring 5 custom worksheet generators and an AI handwriting analysis tool.\nIt shipped, but beneath the surface, the codebase was a nightmare. Here is the story of my AI-generated technical debt, the specific hallucinations that drove me crazy, and why I ultimately chose openspec over spec-kit to dig myself out.\nThe biggest nightmare occurred in the core worksheet rendering module. The AI completely failed to grasp a fundamental architectural concept: the frontend preview area and the final PDF generator must share the exact same rendering engine.\nInstead, the AI hallucinated two entirely separate logic paths. What users saw on the screen during the preview never perfectly matched the PDF they downloaded. I spent hours wrestling with the AI, tweaking prompts endlessly, trying to force it to synchronize the two. But it kept spinning in circles, patching bad logic with worse logic. It simply couldn't find the right direction within that single context window.\nI finally realized I had to step back and act as the architect. I couldn't let the AI handle the entire scope at once.\nI opened a brand new chat session and strictly instructed the AI to do one single thing: encapsulate the core rendering logic into a pure, isolated module. Once that raw rendering engine was built, I opened another entirely fresh session specifically to handle the assembly and state management.\nIt worked. The preview and the PDF output finally aligned perfectly across all my tools (Lines, Alphabet, Print, Cursive, and Name for signatures). However, there was a massive catch: while the resulting assembled code achieved the outcome I wanted, its readability was absolutely terrible. It was dense, tangled, and entirely unmaintainable for future feature iterations.\nI needed to properly refactor this Next.js app to ensure long-term stability.\nInitially, I reached for spec-kit. It has great concepts, but as I dove in, I quickly realized a critical limitation: spec-kit feels heavily optimized for scaffolding brand-new projects from scratch. For a legacy, AI-tangled codebase that needed gradual iteration and untangling, it felt like forcing a square peg into a round hole.\nI then explored openspec, and it was a game-changer. Its approach to engineering felt much more aligned with the messy reality of refactoring an existing project. It provided the structural rigor I needed to iteratively untangle the AI's spaghetti code, modularize my 5 different generators, and maintain the site's uptime without requiring a \"burn-it-all-down\" complete rewrite from day one.\nRelying blindly on AI to architect a complex UI rendering pipeline is a trap. AI is a fantastic typist, but you still need to enforce strict engineering boundaries.\nThe refactor with openspec finally gave me the stable, scalable foundation I needed to confidently launch my core feature: an AI tool that actually analyzes users' handwriting styles and generates personalized training plans based on their specific needs.\nIf you're curious to see how the unified rendering engine performs in production, or want to test the AI handwriting analysis to improve your own writing, check out printablehandwriting.com.\nHas anyone else experienced the \"renderer split\" hallucination with AI coding tools? Let me know your refactoring stories in the comments!",
+      "publishedAt": "2026-02-14T01:00:51.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "35da376a6757285f0d160de59212bcba67473ea0a94bcf02868f4a7161125c8b",
+      "title": "【参加レポート】Vancouver で行われた AWS re:Invent re:Cap に参加してきました",
+      "url": "https://dev.classmethod.jp/articles/recap2025_van/",
+      "description": "【参加レポート】Vancouver で行われた AWS re:Invent re:Cap に参加してきました",
+      "publishedAt": "2026-02-13T23:48:40.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "531345207c9dade1e19fe1cf1c9da923fb73b6d75c8cd8efedb1890aa8c432c4",
+      "title": "クラスメソッド データアナリティクス通信(AWSデータ分析編) – 2026年2月号",
+      "url": "https://dev.classmethod.jp/articles/cm-news-analytics-202602/",
+      "description": "クラスメソッド データアナリティクス通信(AWSデータ分析編) – 2026年2月号",
+      "publishedAt": "2026-02-13T14:28:03.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "c4b464128ddbff4dd1a3e8bdc878e4db25a873f18ea37e2ffe59344123f495de",
+      "title": "Automate repository tasks with GitHub Agentic Workflows  ",
+      "url": "https://github.blog/ai-and-ml/automate-repository-tasks-with-github-agentic-workflows/",
+      "description": "Discover GitHub Agentic Workflows, now in technical preview. Build automations using coding agents in GitHub Actions to handle triage, documentation, code quality, and more.\nThe post Automate repository tasks with GitHub Agentic Workflows   appeared first on The GitHub Blog.",
+      "publishedAt": "2026-02-13T14:00:00.000Z",
+      "feedName": "GitHub Blog"
+    },
+    {
+      "id": "edc619bb55abc2640d3641920caee0218c3447e51a54b9160d65878576c32929",
+      "title": "【AWS中級へのステップ】ACL 無効化時代の S3 へのクロスアカウントアクセス 2 選",
+      "url": "https://dev.classmethod.jp/articles/aws-step-to-intermediate-disabling-acls-s3-cross-account-access/",
+      "description": "S3 へのクロスアカウントアクセスとして、「パターン1．S3が存在するアカウントのIAMロールにスイッチする」　「パターン2. S3バケットポリシーで他アカウントからのアクセスを許可する」を紹介します。",
+      "publishedAt": "2026-02-13T08:50:34.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "3a7582afd7a80252b5d4ecd13c02c67853203a05800826d88de7b52f330a9c5a",
+      "title": "ゼロデイ脆弱性「CVE-2026-20700」はmacOS / tvOS / watchOS / visionOSにも影響／Appleがセキュリティ更新を実施",
+      "url": "https://forest.watch.impress.co.jp/docs/news/2085724.html",
+      "publishedAt": "2026-02-13T08:39:42.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "74af67383be8f5a255f46bf0d2f1f4a3b3db643b64f2ac547fe33af3ce300004",
+      "title": "Geminiをハッカーたちはどんなことに使ってるの？ Googleの報告から",
+      "url": "https://qiita.com/ohkitashigeto/items/56514650b9afe970b842?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "Geminiをハッカーたちはどんなことに使ってるの？ Googleの報告から\nAIを使ったセキュリティ記事の勉強をしていくのっておもしろいんですけど、ハッカーこそAI使いまくってる時代に突入してるよ～という記事が上がってました。\nGoogle Reports State-...",
+      "publishedAt": "2026-02-13T05:48:24.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "38ff021a0452ac3d1ef7645ec6ea6d9056cb28a1fc3870d78bde12cc010b5db4",
+      "title": "AWS WAF の WebACL を使って日本以外からのアクセスをブロックする方法",
+      "url": "https://dev.classmethod.jp/articles/tsnote-waf-block-non-Japan-traffic/",
+      "description": "AWS WAF の WebACL を使って日本以外からのアクセスをブロックする方法",
+      "publishedAt": "2026-02-13T05:42:42.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "e6520c3ddb235903f10efe70aa799488a58641450927fbba3386e8123f8fd7f8",
+      "title": "Kiro Power に AWS HealthOmics が仲間入りしたのでワークフローの作成・登録・実行を試してみた",
+      "url": "https://dev.classmethod.jp/articles/kiro-power-aws-healthomics-workflow-create-register-run/",
+      "description": "Kiro Power に AWS HealthOmics が仲間入りしたのでワークフローの作成・登録・実行を試してみた",
+      "publishedAt": "2026-02-13T05:36:49.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "054dde092262d494af4d84a9df729151038cc0484e9e19bfdc23e54e9a72244c",
+      "title": "【対策Gem付】GASスクリプトにAPIキーをハードコードするな",
+      "url": "https://qiita.com/ryo_nakamura/items/66a1046f5c605a781de0?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "TL;DR\n\nAPIキーやWebhook URLをコード内にハードコードすると、デプロイした際にリスクがあるよ\n機密情報はスクリプトプロパティを使ってね\nGASでのセキュリティ原則を定義したGemを作ったよ\n\nはじめに\n昨年から今の会社に入社し、PdMとして自社プロダク...",
+      "publishedAt": "2026-02-13T04:52:52.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "2fd949b061f6c81f6c3dcfaaaa0d1406dfe68c5fba299b14cef33e857e9d6986",
+      "title": "セキュリティ基礎講座：公開鍵暗号は３種類あるよ",
+      "url": "https://qiita.com/peridotan/items/441f4c6a467dae69583a?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "0.はじめに\nセキュリティ（ソリューション）に携わって早20数年の元システムエンジニアです。\n私が新人システムエンジニアとしてSIerで働き始めたころ、\n会社から支給されたパソコンにはウイルス対策ソフトがインストールされていませんでした。\n（ウソだろ、と思うかもしれません...",
+      "publishedAt": "2026-02-13T04:48:45.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "bc6e7aced8b020421f3bba542300fe834a489a8a669e49b030abf18fec94a41c",
+      "title": "AWS AI-DLC Unicorn Gymに参加してきました！",
+      "url": "https://dev.classmethod.jp/articles/aws-ai-dlc-unicorn-gym-260122-23/",
+      "description": "AWS AI-DLC Unicorn Gymに参加してきました！",
+      "publishedAt": "2026-02-13T04:09:16.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "aa65ce58d6224e682999c17cf39a5700690dfa1e5c843f96820df0691807e986",
+      "title": "そのnpmパッケージは安全か？　生成AIの悪用などで「トークン」を狙うソフトウェアサプライチェーン攻撃と対策をAWSが解説",
+      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2602/13/news055.html",
+      "description": "AWSは、2025年に発生した一連のnpmサプライチェーン攻撃キャンペーンへの対応経験と、そこから得た知見を公開した。",
+      "publishedAt": "2026-02-13T04:00:00.000Z",
+      "feedName": "＠IT"
+    },
+    {
+      "id": "6fb2113f7140296c75ef30c975cf1727749cce98d05188cf0661d700b6507375",
+      "title": "octorusはなぜ30万行のdiffを高速表示できるのか？",
+      "url": "https://zenn.dev/ushironoko/articles/ae9fa49dd18515",
+      "description": "以前上記で、自作しているtuiツールを紹介しました。 需要があるかわかりませんが、今回はoctorusで行っているパフォーマンス最適化について紹介します。 そもそも何が速いのか？ 「速い」といっても色々あります。表示ひとつとっても、初回表示の速さやハイライトを当てる速さ、スクロールのスムーズさ（fps）など多様...",
+      "publishedAt": "2026-02-13T03:16:20.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "cb86f0cc6dd734774f756935a8d747d1ff15a90c53486feb3c3a00f6143f49c7",
+      "title": ".bashrc / .zshrc を使って開発コマンドを短縮する方法",
+      "url": "https://qiita.com/chaochire/items/25e18f62a1ddd5650109?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "こんにちは。\nソーイ株式会社、入社１年目の村上です。\nLaravel開発中、docker関係のコマンドやバッチコマンドの入力が煩わしく感じました。\nREADMEやドキュメント、該当のバッチファイルを確認し、書いてあるものをコピペすれば済む話ですが、それらを毎回入力することさ...",
+      "publishedAt": "2026-02-13T03:00:23.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "6fb2113f7140296c75ef30c975cf1727749cce98d05188cf0661d700b6507375",
+      "title": "octorusはなぜ30万行のdiffを高速表示できるのか？",
+      "url": "https://zenn.dev/ushironoko/articles/ae9fa49dd18515",
+      "description": "https://zenn.dev/ushironoko/articles/90d34dd61a1825\n以前上記で、自作しているtuiツールを紹介しました。\n需要があるかわかりませんが、今回はoctorusで行っているパフォーマンス最適化について紹介します。\nhttps://github.com/ushironoko/octorus\n\n そもそも何が速いのか？\n「速い」といっても色々あります。表示ひとつとっても、初回表示の速さやハイライトを当てる速さ、スクロールのスムーズさ（fps）など多様です。\nユーザーの体感速度の速さと、内部的な速さは必ずしもイコールにはなりません。例えばどれだけゼ...",
+      "publishedAt": "2026-02-13T02:24:59.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "3e26d2f0a1754fb6d16a8dcf623af018178c5494efc50f6963d830c36cccce6e",
+      "title": "【React-PDF × Next.js】日本語PDF生成の文字化け地獄をなんとかした話",
+      "url": "https://qiita.com/k2a_Y4a/items/7cb4558808088593e8a5?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "💡この記事で分かること\n\nNext.js 14 App Routerでのファイルパス問題の解決\n@react-pdf/rendererの日本語フォント対応\nAI開発ツール（Cursor）を使った問題解決のプロセス\n\n対象読者： Next.jsでPDF生成機能を実装したい方...",
+      "publishedAt": "2026-02-13T01:39:38.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "6750c8c213e0d638826b15d308b1a41dfb541c08fad7d6c2969e5f4a6a1a5484",
+      "title": "2026/02/13 今日のQiitaトレンド記事をポッドキャストで聴こう！",
+      "url": "https://qiita.com/ennagara128/items/2f40f7df504d6a7727cd?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "前日夜の最新トレンド記事のAIポッドキャストを毎日朝7時に更新しています。\n通勤中などにながら聴きしよう！\n（Qiita投稿は通勤には間に合わないと思われますが）\nフィードバックとか助かりますのでください\n↓こちらから\n\n出典\n【WebF】React/Vue/Svelteが...",
+      "publishedAt": "2026-02-13T01:03:44.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "4eb7a750b1c92126246c48f6fe3a3e687ba811814ba3abb932b51c68d87d4aa2",
+      "title": "SLPの脆弱性を突いた攻撃について",
+      "url": "https://qiita.com/jouse_sakamoto/items/2ab3e0048abd95ac7041?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\nこんにちは、三菱電機の坂本です。\n三菱電機　情報技術総合研究所では、製品開発時のセキュリティ対策にフィードバックする目的で、複数種類のハニーポットを設置・運用しています。\n運用しているハニーポットの1つに、IoT機器を応答機能に設置した「IoT家電ハニーポット」...",
+      "publishedAt": "2026-02-13T00:31:23.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "8060077d793c997cefe62f67939ec8b3823031e7b278b6ed2aa0012ed190d413",
+      "title": "コンテナセキュリティの最新事情 ~ 2026年版 ~",
+      "url": "https://speakerdeck.com/kyohmizu/kontenasekiyuriteinozui-xin-shi-qing-2026nian-ban",
+      "description": "イベント登壇資料です。 2026/2/12 SCSK Sysdig Bootcamp",
+      "publishedAt": "2026-02-12T23:29:00.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "53d306b2a131ac487bb6b9032fb1cd54567bfbb5e668788259c69683a77bc2db",
+      "title": "OpenSearch のクエリパターンに合わせたインデックス戦略の選択",
+      "url": "https://aws.amazon.com/jp/blogs/news/matching-your-ingestion-strategy-with-your-opensearch-query-patterns/",
+      "description": "Amazon OpenSearch Service でオートコンプリート機能を効率的に実装する方法を紹介します。Edge n-gram トークナイザーを使ったカスタムインデックスアナライザーにより、ワイルドカードを使わずにプレフィックスクエリをマッチさせ、検索パフォーマンスを向上させる手法を解説します。",
+      "publishedAt": "2026-02-12T18:13:12.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "e9d4f018f55c430395c9cc4412b59faede272a73578a5ff1983c4ac97bb50dfc",
+      "title": "Claude Codeにコードジェネレーターを作らせるのがとても良かった",
+      "url": "https://zenn.dev/happy_elements/articles/fc36f545f9e457",
+      "description": "はじめに\nこれまでの開発シーンでは、OpenAPIなどのスキーマ定義ファイルを最上流のファイルとして、そこからRuby、Go、C#などのコードを自動生成する手法があったと思います。\n!\n弊社（Happy Elements）ではサーバーサイド言語としてRubyを採用することが多いですが、プロジェクトの特性やパフォーマンス要件に応じてGoなどの他言語を選択する場合もあります。\n\nしかし、Claude Codeの登場によって、このフローに大きな変化を感じています。\n私のプロジェクトでClaude Codeを使って 「Goのstruct定義（もしくはDB用のSQL定義）」を最上流のファイルと...",
+      "publishedAt": "2026-02-12T07:12:35.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "c1434e57fdd1651337925aeb90780449ae8f09b9074b9e218c9502515486aa36",
+      "title": "個人サービスのホスティング代、年1,500円まで削れた — 6サービス比較した結果",
+      "url": "https://zenn.dev/helloworld/articles/b42240ad018a51",
+      "description": "きっかけ\n個人サービスをいくつか運用しています。全部 AWS に載せていたんですが、ふと月額を見直したら「これ、個人で払い続けるにはちょっと高くないか？」と思い始めました。将来的には広告も入れたい。\n安いところに移せないか調べていて、まず定番の Vercel を見てみるか——と料金ページを開いたら、こんな一文が目に入りました。\n\nThe Hobby plan is limited to non-commercial, personal use only.\n\nHobby プラン（無料）は非商用・個人利用のみ。広告を貼る、アフィリエイトリンクを置く、寄付を受け付ける——全部アウトです。\n...",
+      "publishedAt": "2026-02-12T04:41:56.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "89e70f936f20f4df43de24a9bb9c70524f44e8b0a478320168689b39fc7ce918",
+      "title": "【Mac】Docker Desktop を使わずに Docker をインストールする",
+      "url": "https://qiita.com/kamata-bug-factory/items/f3b669ab113fd5c91115?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\nMac で Docker を利用する際、最も一般的な選択肢は「Docker Desktop for Mac」です。\nしかし、以下の理由からデスクトップ版を使わずに環境を構築したくなる場合があります。\n\nライセンス制限: 企業の規模によっては有料ライセンスが必要...",
+      "publishedAt": "2026-02-12T02:33:13.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "2617a4c65f6d50f426bce3f9da8e96680bdcb4af29d8c2eed0da4da03427fb4c",
+      "title": "ウォーターフォールを成功させるには、結局先の工程に取りかからないと厳しいと思った話",
+      "url": "https://zenn.dev/tonbi_attack/articles/c07206607bb3b1",
+      "description": "はじめに\nウォーターフォールは、要件定義から順番に進める前提で語られることが多いです。私も最初はそのイメージで進めていました。\nただ、実務で何度か痛い目を見て、結局は先の工程に早めに触れないと成立しない場面が多いと感じるようになりました。\nこの記事で言いたいことはシンプルです。\n工程を崩したいのではなく、前工程の精度を上げるために、先の工程の情報を先に取りにいく必要があるという話です。\n\n よくある前提\nウォーターフォールの説明では、次のような順序が理想形として置かれます。\n\n要件定義\n基本設計\n詳細設計\n実装\nテスト\n\nこの順序自体は間違っていません。\nただし、既存システム改修では...",
+      "publishedAt": "2026-02-11T09:57:19.000Z",
+      "feedName": "Zenn"
     }
   ]
 }
