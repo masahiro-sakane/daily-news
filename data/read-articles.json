@@ -1,110 +1,6 @@
 {
   "articles": [
     {
-      "id": "6d0887ac6d2a00cc2cdda23ee98e14f29c3775d0714293ca3575b49a05dd0b4f",
-      "title": "I built the missing UI for Gemini's File Search (managed RAG) API",
-      "url": "https://dev.to/prashant_rohilla_60997096/i-built-the-missing-ui-for-geminis-file-search-managed-rag-api-ge7",
-      "description": "Retrieval Augmented Generation (RAG) has become the standard architecture for building AI apps that know about your specific data.\nUsually, building a RAG pipeline involves a lot of moving parts: spinning up a vector database (like Pinecone or Weaviate), writing Python scripts to chunk your PDFs, generating embeddings, and managing the retrieval logic.\nGoogle recently released a feature called Gemini File Search that simplifies this drastically.\nIt is a fully managed RAG pipeline built directly into the Gemini API. It handles the chunking, embedding, and storage for you. To top it, the pricing model is arguably the most compelling feature.\nUnlike traditional vector databases where you often pay for hourly pod usage or storage size, Gemini File Search offers free storage and free embedding generation at query time.\nYou only pay a one-time fee when you first index the documents (currently $0.15 per 1 million tokens) and the standard input/output token costs for the model's response. This makes it incredibly cost-effective for side projects and scaling applications alike, as you are not bleeding money on idle vector storage.\nIt is completely \"headless\". There is no console to view your files, no drag-and-drop uploader, and no way to test a knowledge base without writing a script to do it. If you want to delete a file or check if your chunking strategy is working, you have to write code.\nI got tired of writing throwaway scripts just to manage my knowledge bases, so I built the Gemini File Search Manager.\n\nThis is an open-source, local-first web interface that acts as a control plane for the Gemini File Search API. It is built with Next.js and allows you to manage your RAG pipeline visually.\nYou can check out the code and run it locally here:\nhttps://github.com/prashantrohilla-max/gemini-file-search-manager\nWhen you use the File Search API programmatically, you are often flying blind. You create a \"Store,\" upload a file, and hope it processed correctly.\nI wanted a dashboard where I could see exactly what Stores I have active, how many documents are in them, and their ingestion status. The UI lists all your stores and provides a clear view of your active knowledge bases—including counts for active, pending, and failed documents.\nUploading a file via the API is a multi-step process. You have to upload the file bytes, wait for the operation to complete, and then link it to a store.\nI built a drag-and-drop interface that handles this orchestration for you. It supports PDF, TXT, MD, CSV, JSON, and the 100+ other formats Gemini supports.\n\nOne of the most powerful features of the Gemini API is Custom Chunking and Metadata. Usually, configuring these requires constructing complex JSON objects in your code. I added a UI for this directly in the upload flow. You can now easily experiment with different maxTokensPerChunk and maxOverlapTokens settings, or add metadata tags (like author or year) to filter your searches later.\nThis is the most important feature. Once your data is uploaded, you need to know if the model can actually find it.\nI built a dedicated \"Playground\" view for every Store. It allows you to:\n  Chat with your specific documents using conversational history.\n  Select different models (Gemini 3 Pro Preview, Gemini 3 Flash, Gemini, Gemini 2.5 Pro, 2.5 Flash, or Gemini 2.0 Flash).\n  Filter by metadata using AIP-160 syntax (e.g., author = \"Smith\" AND year > 2020).\n  View Citations: The UI parses the groundingMetadata from the API response and displays exactly which document chunks the AI used to generate the answer.\n\nFor those interested in how this is built, I kept the stack modern and lightweight:\n  Framework: Next.js 16 (App Router with React 19)\n  Styling: Tailwind CSS 4 + shadcn/ui\n  State Management: TanStack Query\n  SDK: @google/genai\n\n\n\n  \n  \n  Solving the Async Polling Challenge\n\n\nOne interesting technical challenge was handling the file ingestion status. When you upload a file to Gemini, it doesn't become active immediately. The API returns an Operation object, and the file enters a PROCESSING state.\nTo handle this in the UI without freezing the browser, I implemented a polling mechanism. After the initial upload completes, the app polls the operations endpoint every 3 seconds in the background. Once the embeddings are ready, it automatically invalidates the cache and updates the UI—the document status changes from a spinner to a green checkmark.\nFor the document list itself, TanStack Query handles background refetching every 5 seconds to catch any status changes.\nThe chat playground uses Server-Sent Events (SSE) to stream responses in real-time. As the model generates text, it appears character by character in the UI. When the stream completes, the grounding metadata (citations) is extracted and displayed below the response.\nSince this is a tool for developers, I didn't want to deal with user accounts or databases. The app runs locally and uses your environment variables.\nYou simply create a .env.local file with your GEMINI_API_KEY, and the app uses that on the server side. Your key never leaves your machine and is never exposed to the client browser.\nIf you want to try this out, you can have it running in about 2 minutes.\n1. Clone the repo\ngit clone https://github.com/prashantrohilla-max/gemini-file-search-manager\ncd gemini-file-search-manager\nnpm install\n\n2. Add your API Key\nCreate a .env.local file:\nGEMINI_API_KEY=your_key_here\n\n3. Run it\nnpm run dev\n\nOpen http://localhost:3000, and you are ready to go.\nI am planning to add support for Structured Outputs to test data extraction workflows and potentially a feature to import content directly from URLs.\nCurrently, chat sessions are lost if you navigate away from the playground or stop the server; persistent chat sessions are also on the roadmap.\nThis project is open source and MIT licensed. If you find it useful, please give it a star on GitHub or submit a PR if you want to improve it!\nRepo: https://github.com/prashantrohilla-max/gemini-file-search-manager",
-      "publishedAt": "2026-01-18T01:30:41.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "dc9115115e8b16226359637c2b8ebc23f3d265b1f6281ca1332ab86af11c45b6",
-      "title": "Smart Hydration Made Simple: How to Build Your Own BLE Water Bottle Tracker",
-      "url": "https://dev.to/wellallytech/smart-hydration-made-simple-how-to-build-your-own-ble-water-bottle-tracker-1oen",
-      "description": "Dehydration is frequently associated with reduced cognitive focus, fatigue, and metabolic slowdown. While manual logging apps are helpful, they often fail during a busy workday. \nAutomating your hydration through the Internet of Things (IoT) offers a seamless way to maintain peak physical performance. This guide explores the fundamentals of building a smart water bottle and mobile app to ensure you never miss a sip.\nThe primary challenge in wearable health tech is battery life. Bluetooth Low Energy (BLE) is a wireless protocol designed specifically for short-range communication with minimal power drain. \nThis makes it the ideal choice for a battery-operated water bottle. By using an ESP32 microcontroller, the bottle can \"advertise\" its presence to your smartphone only when necessary, preserving energy for long-term use.\nThe ESP32 serves as the central hub for your hardware setup. It connects to a water level sensor (or a potentiometer for testing) to determine exactly how much liquid remains.\nThrough an Arduino sketch, the ESP32 creates a BLE Service and a Characteristic. These act as digital \"folders\" where the water level data is stored and made available for your phone to read.\n\n\n\nCategory\nItem\nPurpose\n\n\n\n\nHardware\nESP32 Dev Board\nThe central microcontroller and BLE server.\n\n\nHardware\nWater Level Sensor\nMeasures the actual volume of liquid consumed.\n\n\nSoftware\nReact Native\nThe framework used to build the cross-platform app.\n\n\nSoftware\nBLE-PLX Library\nHandles scanning, connecting, and data streaming.\n\n\nGoal\nReal-Time Sync\nAutomatically updates your intake without manual input.\n\n\n\nThe companion app is built using React Native, allowing it to run on both iOS and Android. It uses a custom hook to manage the complex logic of searching for your bottle.\nOnce a connection is established, the app subscribes to the bottle's data stream. Every time the sensor detects a change in water level, the UI re-renders instantly to show your progress toward your daily goal.\nResearch suggests that proactive reminders are significantly more effective for behavioral change than retrospective logging. By removing the friction of manual entry, you are more likely to stay consistent.\nThis project is a gateway into the Internet of Medical Things (IoMT). It demonstrates how simple hardware can be used to create personalized health interventions that adapt to your lifestyle.\nNext Steps for Your Build:\nTrack your daily intake history over weeks to find patterns.\nSet customizable reminders based on your activity level.\nIntegrate your data with existing health and fitness ecosystems.\nFor a comprehensive technical walkthrough and the complete code repository, read WellAlly’s full guide.",
-      "publishedAt": "2026-01-18T01:30:00.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "dd06f9541ee36f0dd40223daec7ab883c10e4bb6d2af577a6277ecd6f054777e",
-      "title": "🤫 The Secret `.md` File That Doubles Your AI Coding Speed",
-      "url": "https://dev.to/siddhesh_surve/the-secret-md-file-that-doubles-your-ai-coding-speed-cfl",
-      "description": "Stop repeating yourself. If you are typing \"Please use TypeScript and Tailwind\" at the start of every chat, you are doing AI development wrong.\nWe have all been there. You open a fresh chat with Claude 3.5 Sonnet (or ChatGPT). You paste in your error log. The AI confidently suggests a fix... in Python.\nBut your project is in Rust.\nSo you correct it. Then it gives you a fix in Rust, but uses an outdated library you aren't using.\nSo you correct it again.\nBy the time the AI understands what your project is, you’ve wasted 10 minutes and 5,000 tokens.\nThere is a better way. It’s a simple trick used by the team at Builder.io, and it’s effectively a \"Context Cheat Sheet\" for your LLM.\nMeet the CLAUDE.md file.\nCLAUDE.md?\n\n\nThink of CLAUDE.md as a README for Robots.\nYour standard README.md is for humans. It has pretty badges and marketing copy.\nCLAUDE.md is for the AI. It is dense, factual, and contains exactly what the model needs to know to start coding immediately.\nWhen you start a new session, you simply attach this file (or paste its content). Suddenly, the AI has \"Senior Engineer\" levels of context about your specific repo.\nCLAUDE.md Template\n\n\nBased on the viral guide from Builder.io, a high-performance context file should have these 4 distinct sections:\nDon't let the AI guess how to start your server. Tell it explicitly.\n## Commands\n- Run Dev: `npm run dev`\n- Run Tests: `npm test`\n- Build: `npm run build`\n- Database: `docker-compose up -d db`\n\n\nThis is where you prevent the AI from using bad patterns.\n## Code Style\n- Use TypeScript for all new files.\n- Prefer functional components over class components.\n- Styling: Use Tailwind CSS utility classes (no CSS modules).\n- State Management: Use Zustand, DO NOT use Redux.\n- Error Handling: Use try/catch blocks in all async functions.\n\n\nGive the AI a mental map of your project structure so it knows where to put files.\n## Architecture\n- `/src/components`: Reusable UI atoms.\n- `/src/features`: Domain-specific business logic.\n- `/src/hooks`: Custom React hooks.\n- **Rule**: Business logic should NEVER exist inside UI components. Move it to a custom hook.\n\n\nList every major library so the AI doesn't hallucinate imports.\n## Tech Stack\n- Frontend: Next.js 14 (App Router)\n- UI: Shadcn UI + Lucide Icons\n- DB: Supabase\n- Auth: Clerk\n\n\nWhen you feed this file to Claude at the start of a session (or put it in your \"Project Knowledge\" if using Claude Projects), three things happen:\nZero-Shot Accuracy: The AI immediately writes code that fits your style. No more converting const to var or removing types.\nLess Hallucination: Because you explicitly listed your libraries, it won't suggest installing axios if you are already using fetch.\nOnboarding: It actually helps human developers too. If a new junior joins, they can read CLAUDE.md to get the strict technical guidelines without the fluff.\nIf you want to feel like a wizard, you can automate this.\nIf you are using Anthropic's claude CLI or tools like Cursor, you can often set system-level prompts. But for the browser users, here is a quick \"one-liner\" trick.\nCreate a script copy-context.sh:\n# MacOS/Linux\ncat CLAUDE.md | pbcopy\necho \"Context copied to clipboard!\"\n\n\nNow, when you sit down to code, run ./copy-context.sh, paste into Claude, and say: \"Let's refactor the login component.\"\nIt will just work.\n.ai Files?\n\n\nWe are moving toward an era of AI-Native Repositories. Just as we have .gitignore for git and .dockerignore for Docker, every repository will soon need a configuration file specifically for the AI agents working on it.\nWhether you call it .cursorrules, CLAUDE.md, or context.txt, the principle is the same: Context is King.\nGo create a CLAUDE.md in your current project today. You will thank me later.",
-      "publishedAt": "2026-01-18T01:18:03.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "b686c6db0c7b33db7652da692982a58bfbda64dde75432dc31840dd5c7002ee0",
-      "title": "📱 The End of Xcode? Replit Just Dropped \"Text-to-App Store\" for iOS & Android",
-      "url": "https://dev.to/siddhesh_surve/the-end-of-xcode-replit-just-dropped-text-to-app-store-for-ios-android-2m4j",
-      "description": "Delete your node_modules. Close Android Studio. The era of \"Vibe Coding\" native mobile apps has officially arrived.\nIf you have ever tried to build a mobile app, you know the pain.\nProvisioning Profiles, CocoaPods errors, and a rejected TestFlight build because your icon had the wrong alpha channel.\nMobile development has historically been the \"Hard Mode\" of software engineering. The barrier to entry was a $2,000 MacBook and 5 years of Swift experience.\nBut yesterday, Replit shattered that barrier.\nAccording to their latest announcement (and the viral tweet that’s melting X right now), you can now build, test, and publish native iOS and Android apps directly from Replit, using nothing but natural language.\nThis isn't just a web-wrapper or a PWA. Replit has integrated a fully managed React Native + Expo pipeline that is completely invisible to the user.\nHere is the new workflow:\nPrompt: \"Build me a fitness tracker that logs reps and graphs my progress.\"\nPreview: Scan a QR code on your phone. The app opens instantly (via Expo Go).\nIterate: \"Make the graph dark mode.\" (Updates in real-time).\nPublish: Click one button. Replit handles the compilation, signing, and submission to the Apple App Store and Google Play Store.\nThe most \"viral\" part of this update isn't just the code—it's the business model.\nReplit has natively integrated Stripe.\n\"Add a $5/month subscription to unlock the analytics feature.\"\nThe Agent automatically:\nSets up the Stripe backend.\nImplements the paywall UI.\nHandles the webhook events.\nYou are effectively going from \"Idea\" to \"SaaS Business\" in about 20 minutes.\nFor us developers, the magic is in how they abstracted the complexity. Replit is leveraging Replit Agent (their autonomous coding AI) to orchestrate a sophisticated stack:\nFrontend: React Native (Expo Router)\nBackend: Replit PostgreSQL + Express (running in a Nix container)\nDeployment: EAS (Expo Application Services) managed pipeline\nYou can still \"eject\" to the code. If you open the file tree, it’s all standard React Native. You can tweak the App.tsx manually if the Vibe Coding misses a pixel.\n// Yes, you can still edit the code manually if you want\nimport { View, Text, Pressable } from 'react-native';\n\nexport default function App() {\n  return (\n    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>\n      <Text className=\"text-2xl font-bold\">Hello, App Store!</Text>\n      {/* The AI handles the complex Stripe logic below */}\n      <PaywallComponent /> \n    </View>\n  );\n}\n\n\nThis release solidifies the trend of 2026: Vibe Coding.\nintent.\nCritics (and purists) will say, \"But is the code clean?\"\nDoes it matter?\nThis is a threat to the \"Gatekeepers\" of mobile dev, but a massive unlock for everyone else.\nFor Indie Hackers: You can ship 10 mobile apps in the time it used to take to configure one Xcode project.\nFor Seniors: You can prototype MVPs for clients during a lunch break.\nFor Beginners: You just skipped the steepest learning curve in tech.\nAre you going to try shipping an app this weekend? Let me know what you're building in the comments! 👇",
-      "publishedAt": "2026-01-18T01:02:17.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "78a33e5bdf95ce8f7e3c4a01fb925234673f05f27452c064899b04e9ed258cb5",
-      "title": "Bypassing AI Web Sandbox with WebSockets & Retro Browsers",
-      "url": "https://dev.to/karol_81a50ed396508bcffd7/bypassing-ai-web-sandbox-with-websockets-retro-browsers-ppg",
-      "description": "I built a setup using Tampermonkey userscripts (MCP_v6_FULL_UNBLOCK.js and Gemini MCP v0.6) that inject JavaScript into web interfaces for Claude, Gemini, and ChatGPT. They intercept commands like /[mcp] dir C:\\ or /[mcp] Get-Process, forwarding them via WebSocket to a local Node.js server (server.js) listening on port 9999—sometimes exposed through ngrok for remote access.\nThe server implements a JSON-RPC protocol exposing system tools: shell/PowerShell execution (shell/exec), file read/write (filesystem/read, filesystem/write), and VSCode file opening (vscode/open). Results stream back through WebSocket to the userscript and into the AI chat interface. I also created an iframe retro-browser (Zeno Bro Web Core) — it has minimal sandbox restrictions, so the AI doesn't detect it's running in a browser environment and gets closer to native system access.\nIn one test, Claude blindly executed PowerShell commands on my machine for dozens of minutes until I told it what was happening—then it stopped and \"couldn't do more.\" The whole system is still rough around the edges and needs polishing, but it shows there's room to push boundaries further. Screenshots show ngrok tunnels active, Zeno browser running, Gemini with MCP connected, and Tampermonkey scripts loaded.",
-      "publishedAt": "2026-01-18T00:54:34.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "72be98dfbbfa681cd04ed64f615414b98db3ef9be8a3e30b2edc37fa96d0047a",
-      "title": "Bypassing AI Web Sandbox with WebSockets & Retro Browsers",
-      "url": "https://dev.to/karol_81a50ed396508bcffd7/bypassing-ai-web-sandbox-with-websockets-retro-browsers-125p",
-      "description": "I built a setup using Tampermonkey userscripts (MCP_v6_FULL_UNBLOCK.js and Gemini MCP v0.6) that inject JavaScript into web interfaces for Claude, Gemini, and ChatGPT. They intercept commands like /[mcp] dir C:\\ or /[mcp] Get-Process, forwarding them via WebSocket to a local Node.js server (server.js) listening on port 9999—sometimes exposed through ngrok for remote access.\nThe server implements a JSON-RPC protocol exposing system tools: shell/PowerShell execution (shell/exec), file read/write (filesystem/read, filesystem/write), and VSCode file opening (vscode/open). Results stream back through WebSocket to the userscript and into the AI chat interface. I also created an iframe retro-browser (Zeno Bro Web Core) — it has minimal sandbox restrictions, so the AI doesn't detect it's running in a browser environment and gets closer to native system access.\nIn one test, Claude blindly executed PowerShell commands on my machine for dozens of minutes until I told it what was happening—then it stopped and \"couldn't do more.\" The whole system is still rough around the edges and needs polishing, but it shows there's room to push boundaries further. Screenshots show ngrok tunnels active, Zeno browser running, Gemini with MCP connected, and Tampermonkey scripts loaded.",
-      "publishedAt": "2026-01-18T00:54:34.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "0495e1b615b0f67f646513e8ccfc3e5478d969b5aedab548da83b3600c400618",
-      "title": "How I Built a Donation Website in 8 Hours (And Why)",
-      "url": "https://dev.to/masem/how-i-built-a-donation-website-in-8-hours-and-why-1ka9",
-      "description": "The Mission\n\n\nYesterday, I built hoki.help – a donation platform for HoKi NÖ, a children's hospice organization in Lower Austria.\nHoKi supports families with seriously ill children. From diagnosis through illness to bereavement support. Completely free of charge.\n\n\n\nComponent\nTechnology\n\n\n\n\nFramework\nNext.js 14 (App Router)\n\n\nStyling\nTailwind CSS\n\n\nPayments\nStripe Checkout\n\n\nDatabase\nNeon (Serverless Postgres)\n\n\nHosting\nVercel\n\n\nDomain\nhoki.help\n\n\n\nIn approximately 8 hours:\n✅ Responsive landing page (mobile-first)\n✅ Donation widget (€10/25/50/100 + custom amounts)\n✅ One-time and monthly recurring donations\n✅ Anonymous donation option\n✅ Stripe Checkout integration\n✅ Webhook handling for donation tracking\n✅ Donation barometer (shows progress after €500)\n✅ Legal pages (Impressum, Privacy Policy - GDPR compliant)\n✅ FAQ section with Schema.org structured data\n✅ SEO optimization\nWhy handle PCI compliance ourselves? Stripe Checkout is secure, trusted, and supports Apple Pay / Google Pay out of the box.\nWe only need to store aggregate donation stats (total amount, count). Neon's serverless Postgres in Frankfurt keeps data in the EU and I already use it for other projects.\nDonations should be frictionless. No registration, no passwords. Just donate and go.\nDonors can choose to remain anonymous. Their name won't be stored or shared with the charity – only Stripe has it for payment processing.\n🔗 hoki.help\n100% of donations go to HoKi NÖ. I cover all hosting costs through my company.\nHave questions about the implementation? Drop a comment below!\nBuilt with ❤️ for the children and families supported by HoKi NÖ.",
-      "publishedAt": "2026-01-18T00:33:21.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "5dada60969183945b3190be3c5c1f5dc91ef88a7991b2c13aced92aae927f8c5",
-      "title": "2026-01-17のJS: Node.js のセキュリティアップデート、Chrome 144、Firefox 147、Electron 40",
-      "url": "https://jser.info/2026/01/17/node.js-chrome-144-firefox-147-electron-40/",
-      "description": "JSer.info #761 - Node.js 20.20.0/22.22.0/24.13.0/25.3.0のセキュリティリリースが公開されました。 Node.js — Tuesday, January 13, 2026 Security Releases 8件の脆弱性が修正されています。主な修正として、Buffer.allocやTypedArrayが初期化されていないメモリを含む可能性があるRace Conditionの修正（CVE-2025-5...",
-      "publishedAt": "2026-01-17T13:03:44.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "04d6db7a7894f81439553117490e1d21f699ad94790ea688931efa8695297c7f",
-      "title": "[AWS CDK] AWS Lambda の Provisioned Concurrency を平日日中帯のみ有効化する（EventBridge Scheduler 使用版）",
-      "url": "https://dev.classmethod.jp/articles/aws-lambda-provisioned-concurrency-eventbridge-scheduler-cdk/",
-      "description": "[AWS CDK] AWS Lambda の Provisioned Concurrency を平日日中帯のみ有効化する（EventBridge Scheduler 使用版）",
-      "publishedAt": "2026-01-17T07:31:19.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "4353292d7af4b5d232dd3940dacbd9ae45a5b108c68e61066befa27f0b6ed37b",
-      "title": "【個人開発】サーバー代0円！GitHub ActionsとPythonで「完全自動更新」なWebサイトを作る技術（Google Maps & Threads API活用）",
-      "url": "https://qiita.com/kazesift/items/7941e8cef7227328a664?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "【個人開発】サーバー代0円！GitHub ActionsとPythonで「完全自動更新」なWebサイトを作る技術（Google Maps & Threads API活用）\n\nはじめに\n前回は、Next.js 16を使って 「札幌の作業カフェ検索サイト」 を1週間で爆速開発...",
-      "publishedAt": "2026-01-17T07:16:02.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "b2f0ceef604a468170e97abf9b5e598759bc38e3630215b0b3676a3b51f65252",
-      "title": "ChatGPTに月額1500円の「Go」プラン登場　広告表示テストも開始",
-      "url": "https://www.itmedia.co.jp/aiplus/articles/2601/17/news031.html",
-      "description": "米OpenAIは1月16日（現地時間）、「ChatGPT」の低価格な有料プラン「Go」の日本を含むグローバル展開と、広告表示テストを開始すると発表した。ユーザー層を拡大しつつ、将来的な収益モデルの多様化を同時に進める戦略だ。 月額1500円のGoプラン Goプランは、昨年8月にインドなど一部の地域で先行提供されていた低価格の...",
-      "publishedAt": "2026-01-17T07:09:04.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "caec9a9c42627ec1f8d7a4307f827991c5327ce8e3038a94e94719d02eca08f9",
-      "title": "Next.jsは「近道」か「迷路」か。ブログアプリの再実装から学んだ技術選択の理由",
-      "url": "https://zenn.dev/takeshi0518/articles/4900ca7f320355",
-      "description": "1. はじめに\n\n この記事を書いた理由\n僕は現在、Next.js を使ってポートフォリオアプリケーションを開発しています。しかし、ある時ふと気づきました。\n「なぜ Next.js を使っているのか、自分の言葉で説明できない」\nチュートリアルをこなし、公式ドキュメントを読み、アプリを作る。基本的なことはある程度できるようになりましたが、「なぜこの技術が必要なのか」 という本質を理解していませんでした。\n表面的な使い方だけではなく、技術の本質を理解したい。そう思った僕は Web アプリケーションの歴史を調べ始めました。\n\n Web アプリケーションの変遷との出会い\n学習を進める中で、W...",
-      "publishedAt": "2026-01-17T07:07:06.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "866e1be13c95eb40966028bad2762f6ad875404ad4dd1b908afaad786fc57f99",
-      "title": "2026/01/17 今日のQiitaトレンド記事をポッドキャストで聴こう！",
-      "url": "https://qiita.com/ennagara128/items/64c8c93c1a6ae9d96caa?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "前日夜の最新トレンド記事のAIポッドキャストを毎日朝7時に更新しています。\n通勤中などにながら聴きしよう！\n（Qiita投稿は通勤には間に合わないと思われますが）\nフィードバックとか助かりますのでください\n↓こちらから\n\n出典\nWeb関係のセキュリティについて初心者でもわか...",
-      "publishedAt": "2026-01-17T02:41:33.000Z",
-      "feedName": "Qiita"
-    },
-    {
       "id": "bd4e7226a6efa29393e351ba6f91e025bb4cdba777d5fb9d67fb7b539c9aaf7d",
       "title": "Backlog GitでAWS CloudFormationのCI/CDパイプラインを構築する",
       "url": "https://dev.classmethod.jp/articles/backlog-git-aws-cloudformation-ci-cd/",
@@ -326,30 +222,6 @@
       "description": "各Skillの詳細解説 1. Playwright Browser Automation 概要 ClaudeがPlaywrightを使用してブラウザ自動化を実行するSkill。事前に用意されたスクリプトに制限されず、ユーザーの要求に応じてカスタムのPlaywrightコードをその場で記述・実行できる。 こんなときに使う Webサイトのテストを行いたいとき ブラウザ操作を自...",
       "publishedAt": "2026-01-18T04:25:26.000Z",
       "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "8015f6066d97769c5888ed40fb87e3d83fd2640376e38c785c974034d4cb0064",
-      "title": "なぜ私はフロントエンド開発を避けるようになったのか",
-      "url": "https://zenn.dev/sijiaoh/articles/9c7edf0ba29def",
-      "description": "jQueryの時代\n発端は学生時代に遡ります。Web制作の授業で初めてWebに触れたのですが、当時はまだ古き良きjQueryの時代でした。HTML、CSS、JavaScriptの3ファイル構成で、classを介してそれぞれを繋げていくスタイル。私はこれが嫌いでした。\n単純に、面倒だったのです。\n「関心の分離」というメリットを説かれましたが、気の利いた反論が思いつかず、その場では引き下がりました。しかし、全く納得していませんでした。構造・装飾・振る舞いを分離するという思想は理解できます。ただ、ひとつのボタンの見た目を変えるために3つのファイルを行き来する体験が、本当に「正しい設計」なの...",
-      "publishedAt": "2026-01-17T10:41:41.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "4cda8ffe32bc4addfb3392904bc89e3d896e6dd6411d7a6b8e5d3183707ef814",
-      "title": "Next.jsは「近道」か「迷路」か。迷子の初学者がWebの歴史を遡り、Next.jsの本質が見えてきた話",
-      "url": "https://zenn.dev/takeshi0518/articles/4900ca7f320355",
-      "description": "1. はじめに\n\n この記事を書いた理由\n僕は現在、Next.js を使ってポートフォリオアプリケーションを開発しています。しかし、ある時ふと気づきました。\n「なぜ Next.js を使っているのか、自分の言葉で説明できない」\nチュートリアルをこなし、公式ドキュメントを読み、アプリを作る。基本的なことはある程度できるようになりましたが、「なぜこの技術が必要なのか」 という本質を理解していませんでした。\n表面的な使い方だけではなく、技術の本質を理解したい。そう思った僕は Web アプリケーションの歴史を調べ始めました。\n\n Web アプリケーションの変遷との出会い\n学習を進める中で、W...",
-      "publishedAt": "2026-01-17T07:07:06.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "f70f2cccbbea111e2f52cc2b5708ccff32f6f50a836669ae56878fc27a6c3d18",
-      "title": "【個人開発】未経験が、Google推奨のベストプラクティスで「最強のCI/CD」を構築してみた🏰",
-      "url": "https://zenn.dev/miki_mini/articles/c3cb49f45dcc8e",
-      "description": "～WIF・Trivy・Secret Managerで実現する、エンタープライズ級のDevOps～\n\n 目次\n\nはじめに：なぜGoogle推奨のベストプラクティスを採用したのか\nテスト戦略：依存性の注入とモックによる堅牢性の確保\nCI/CD構築：GitHub Actions × Artifact Registry × Secret Manager\nセキュリティ：シークレット管理とIAMベストプラクティス\n\n\n\n はじめに：なぜGoogle推奨のベストプラクティスを採用したのか\n\n 背景\n個人開発でLINE Botを作り始めた当初、私はインフラやDevOpsの経験がほとんどありませんでした。...",
-      "publishedAt": "2026-01-17T06:12:00.000Z",
-      "feedName": "Zenn"
     },
     {
       "id": "655bed2012d64d6d8088159a74aa6095e8de5798308c76a997692c2965c65b78",
@@ -6353,6 +6225,286 @@
       "description": "【Androidアプリのテスター募集📱】\nこんにちは、Pinebase Labの松下です！\n現在、語彙力アップをサポートするAndroidアプリ「単語カード」を開発中です。\nGoogle Playでの製品版公開に向けて、クローズドテストにご協力いただける方を募集しています！...",
       "publishedAt": "2026-02-14T23:37:54.000Z",
       "feedName": "Qiita"
+    },
+    {
+      "id": "ccc90689e286d83998ea8c9a275e777e295af27adf3ce0183b195dd4174f7389",
+      "title": "From Zero to 360,000 Lines of Code in 40 Days",
+      "url": "https://dev.to/alairjt/from-zero-to-360000-lines-of-code-in-40-days-pe1",
+      "description": "The Reality of the AI-Augmented Developer\n\n\nHow I single-handedly built a full-stack fitness platform across 5 platforms, 13 microservices, generative AI, Apple Watch, iOS Widgets, and production deployment — using Claude Code as my copilot.\nThere is a fundamental difference between reading about AI productivity and living it in a real project.\nThis article is not theory. It is a technical case study backed by git log data, documenting how I built NZR Gym — a complete fitness ecosystem including mobile app (iOS/Android), Apple Watch app, iOS Widgets, web admin dashboard, and backend API — in 40 days, working alone.\n\n\n\nMetric\nValue\n\n\n\n\nTotal Period\nJan 8 → Feb 16, 2026 (40 days)\n\n\nCommits\n237\n\n\nFeatures Delivered\n61\n\n\nMobile (TypeScript) LOC\n200,594\n\n\nBackend (Python) LOC\n125,788\n\n\nAdmin (TypeScript) LOC\n32,501\n\n\nSwift (Watch + Widgets) LOC\n1,356\n\n\nTotal Lines of Code\n360,239\n\n\nMobile Screens\n168\n\n\nReact Native Components\n215\n\n\nCustom Hooks\n70\n\n\nDjango Apps\n13\n\n\nDatabase Migrations\n142\n\n\nAPI Services\n62\n\n\nPlatforms\n5\n\n\nDevelopers\n1\n\n\n\nI did not replace a team. The role of the senior developer has changed.\nAn AI-Augmented Developer is not someone who asks, “generate a CRUD.”\nIt is a senior professional who:\nDefines architecture and delegates repetitive execution\nMakes design decisions while AI maintains consistency\nReviews AI-generated output critically\nMoves across stacks without friction\nExecutes full-cycle development without handoffs\nAI does not replace knowledge.\namplifies execution speed.\nIf you don’t understand ViewSets, AI will generate bad ViewSets.\nReact Native + Django structure\nGym map with geolocation\nCI/CD pipeline\nApp Store + Play Store setup\nApple Watch app (Day 2)\nWeb Admin Dashboard\nStripe + RevenueCat subscriptions\nTrainer profile system\nSmart Quick Actions (Google Gemini)\nAI exercise selection\nBiometric login\nWorkout plan sharing\nPush notifications (Celery + Redis)\nMarketing landing page\nGIF proxy with cache\nPrivate plan groups\nNeural Charge (FSM: idle → breathing → reaction → results)\nGym Drop Puzzle\nTrainer marketplace\nStudent analytics dashboard\nProfessional Workout Builder\nNZR Raid (~60fps custom engine)\nApple Watch v2\niOS Widgets\nExpo SDK 55 upgrade\nA vertical shooter running entirely inside React Native:\n16ms game loop\nAABB collision detection\nFuel system\n6 entity types\nLeaderboard integrated via Django signals\ntimed and survival modes\nNo external game engine.\nA typical development session:\nDjango model\nMigration\nSerializer + ViewSet\nMobile service\nReact Native screen\nEnd-to-end test\nDeployment\nAll within the same mental flow.\n13 isolated domain apps\nService layer\nSignals for decoupling\n142 migrations\n168 screens\n70 hooks\nDomain-segregated typing\nBidirectional WatchConnectivity\nReal-time workout data\nThis was not a prototype.\nCloud Run (auto-scale 1–10)\nCloud SQL\nGoogle Cloud Storage\nCelery + Redis\nWebSockets (Daphne)\nSwagger/OpenAPI\nCI/CD\nOTA updates\nBoilerplate generation\nCross-stack consistency\nSpecs and documentation\nStructural refactoring\nDefine architecture\nMake product decisions\nHandle critical trade-offs\nDesign UX strategy\nAI is a multiplier.\n7.6 commits/day\n~9,000 lines/day\n~10 features/week\n0 handoffs\n0 meetings\n\nWeeks 1–2 → Mobile + REST\nWeeks 3–4 → AI + Payments\nWeek 5 → Sensors + Mini-games\nWeek 6 → Game engine + Watch + Widgets\nA single UX change could impact 5 platforms.\nAI made that viable for one developer.\nThis is not about replacing developers.\nIt is about eliminating overhead.\nA developer with AI will replace teams that do not use AI.\nThose who understand this early gain structural advantage.\nAlair Tavares Jr.\nStack: React Native · Django · TypeScript · Python · Swift · GCP · PostgreSQL · Redis · Stripe · Google Gemini · Claude Code",
+      "publishedAt": "2026-02-17T01:49:49.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "32d36c9c27d7f65e6dae8fb93bc53ed423c18e9b01dd7b5b21b89770f0da4f31",
+      "title": "Next.js と Three.js でブラウザ FPS ゲームを作り、Vercel にデプロイした",
+      "url": "https://dev.classmethod.jp/articles/nextjs-threejs-browser-fps-on-vercel/",
+      "description": "Next.js と Three.js でブラウザ完結型の FPS ゲームを構築し、Vercel にデプロイしました。React と独立したゲームエンジン層を Zustand で橋渡しする 3 層アーキテクチャの設計と、Vercel 上での実際のプレイ体験から得た知見を紹介します。",
+      "publishedAt": "2026-02-17T01:45:10.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "12aa7555fba989e854236fcfa4f9d88a530b1a5000b845883afcc065e723c84c",
+      "title": "Privacy First: Chat with Your Medical Reports Locally using Llama-3 and MLX on Mac 🍎",
+      "url": "https://dev.to/wellallytech/privacy-first-chat-with-your-medical-reports-locally-using-llama-3-and-mlx-on-mac-3616",
+      "description": "Your health data is probably the most sensitive information you own. Yet, in the age of AI, most people blindly upload their blood work and MRI results to cloud-based LLMs just to get a summary. Stop right there! 🛑\nIn this tutorial, we are going to build a Local RAG (Retrieval-Augmented Generation) system. We will leverage the power of Apple Silicon's unified memory, the high-performance MLX framework, and Llama-3 to create a private medical assistant that never leaks a single byte to the internet. By using Local RAG and MLX-optimized Llama-3, you can perform complex semantic search and data extraction on your medical PDFs while keeping your data strictly on-device.\nTraditional RAG stacks often rely on heavy Docker containers or cloud APIs. However, if you are on a Mac (M1/M2/M3), the MLX framework (developed by Apple Machine Learning Research) allows you to run Llama-3 with incredible efficiency by utilizing the GPU and unified memory architecture.\nHere is how the data flows from your dusty PDF report to a meaningful conversation:\ngraph TD\n    A[Medical PDF Report] -->|PyMuPDF| B(Text Extraction & Cleaning)\n    B --> C{Chunking Strategy}\n    C -->|Sentence Splitting| D[ChromaDB Vector Store]\n    E[User Query: 'Is my cholesterol high?'] -->|MLX Embedding| F(Vector Search)\n    D -->|Retrieve Relevant Context| G[Prompt Augmentation]\n    G -->|Context + Query| H[Llama-3-8B via MLX]\n    H --> I[Private Local Answer]\n\n    style H fill:#f96,stroke:#333,stroke-width:2px\n    style D fill:#bbf,stroke:#333,stroke-width:2px\n\nBefore we dive into the code, ensure you have an Apple Silicon Mac and the following stack installed:\nLlama-3-8B: We'll use the 4-bit quantized version for speed.\nMLX: Apple's native array framework.\nChromaDB: Our lightweight vector database.\nPyMuPDF (fitz): For high-accuracy PDF parsing.\n\n\n\n\npip install mlx-lm chromadb pymupdf sentence-transformers\n\nMedical reports are notoriously messy—tables, signatures, and weird formatting. We use PyMuPDF for its speed and reliability in extracting clean text.\nimport fitz  # PyMuPDF\n\ndef extract_medical_text(pdf_path):\n    doc = fitz.open(pdf_path)\n    text = \"\"\n    for page in doc:\n        text += page.get_text(\"text\") + \"\\n\"\n\n    # Simple cleaning: remove extra whitespaces\n    clean_text = \" \".join(text.split())\n    return clean_text\n\n# Usage\nraw_data = extract_medical_text(\"my_blood_report_2024.pdf\")\nprint(f\"Extracted {len(raw_data)} characters.\")\n\nTo find relevant information (like \"What was my Glucose level?\"), we need to convert text into vectors. We'll store these in ChromaDB.\n💡 Pro-Tip: For more production-ready examples and advanced RAG patterns, check out the detailed guides on the WellAlly Tech Blog, where we dive deep into optimizing local inference.\nimport chromadb\nfrom chromadb.utils import embedding_functions\n\n# Initialize local ChromaDB\nclient = chromadb.PersistentClient(path=\"./medical_db\")\n# Using a local embedding model\nemb_fn = embedding_functions.SentenceTransformerEmbeddingFunction(model_name=\"all-MiniLM-L6-v2\")\n\ncollection = client.get_or_create_collection(name=\"medical_reports\", embedding_function=emb_fn)\n\ndef add_to_vector_store(text, metadata):\n    # Chunking text into 500-character pieces\n    chunks = [text[i:i+500] for i in range(0, len(text), 500)]\n    ids = [f\"id_{i}\" for i in range(len(chunks))]\n\n    collection.add(\n        documents=chunks,\n        ids=ids,\n        metadatas=[metadata] * len(chunks)\n    )\n\nadd_to_vector_store(raw_data, {\"source\": \"annual_checkup_2024\"})\n\nNow for the magic. We use mlx-lm to load a quantized Llama-3-8B. This allows the model to run comfortably even on a MacBook Air with 16GB of RAM. 🚀\nfrom mlx_lm import load, generate\n\n# Load the model and tokenizer\nmodel, tokenizer = load(\"mlx-community/Meta-Llama-3-8B-Instruct-4bit\")\n\ndef query_private_ai(user_question):\n    # 1. Retrieve context from ChromaDB\n    results = collection.query(query_texts=[user_question], n_results=3)\n    context = \"\\n\".join(results['documents'][0])\n\n    # 2. Construct the prompt\n    prompt = f\"\"\"\n    You are a private medical assistant. Use the provided medical report context to answer the user's question. \n    If you don't know the answer based on the context, say so. \n    Context: {context}\n    ---\n    Question: {user_question}\n    Answer:\n    \"\"\"\n\n    # 3. Generate response using MLX\n    response = generate(model, tokenizer, prompt=prompt, verbose=False, max_tokens=500)\n    return response\n\n# Example Query\nprint(query_private_ai(\"What are the key concerns in my blood report?\"))\n\nWhile this script gets you started, building a production-grade medical AI requires handling multi-modal data (like X-rays) and ensuring rigorous HIPAA-like compliance even on local edge devices. \nThe team at WellAlly has been pioneering \"Privacy-First AI\" architectures. If you're interested in scaling this to multiple users or integrating it into a secure healthcare workflow, I highly recommend reading their latest deep-dives on https://www.wellally.tech/blog. They cover how to fine-tune Llama-3 specifically for clinical terminology which significantly reduces hallucinations.\nYou just built a private, high-performance medical RAG system! By combining Llama-3, MLX, and ChromaDB, you’ve achieved:\nZero Data Leakage: Your health data never leaves your Mac.\nHigh Performance: MLX makes local LLMs feel snappy.\nIntelligence: Llama-3 provides reasoning that simple keyword searches can't match.\nWhat's next? 🛠️ \nTry implementing a \"Table Parser\" for more accurate lab result extraction.\nAdd a Streamlit UI to make it look like a real app.\nLet me know in the comments: What's your biggest concern with Cloud AI?\nStay private, stay healthy! 💻🛡️",
+      "publishedAt": "2026-02-17T01:20:00.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "9b61c237b4b29635d3590591a75d5cf500e784fcc118c9459906e65e06728f12",
+      "title": "AWS ParallelCluster 3.14.1 以前の稼働中クラスターに CVE-2026-25506 対応パッチを適用してみた",
+      "url": "https://dev.classmethod.jp/articles/cve-2026-25506-munge-patch-parallelcluster/",
+      "description": "AWS ParallelCluster 3.14.1 以前の稼働中クラスターに CVE-2026-25506 対応パッチを適用してみた",
+      "publishedAt": "2026-02-17T01:17:44.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "ed50c8b1d8b07330a984655e8e8f773ff08ae2fd4d1c049f18b0dd9d5d057b68",
+      "title": "Dispatch From the Other Side: From Scripts to Software",
+      "url": "https://dev.to/prince_of_pasta/dispatch-from-the-other-side-from-scripts-to-software-2md8",
+      "description": "At the start of my career as a security engineer, I built an allow list management system for our web gateway within the security operations center (SOC) I worked in. Beyond just a script, this was a live system that a core security component relied on. Someone once blocked a /3 vs a /32 IP range, and access to a third of the internet broke for all 40,000 employees. I knew the system I created had to prevent something like that from occurring again. The manager of the SOC analysts would have regular discussions with myself and my manager on any issues that arose, which helped me realize the impact my code had on someone else’s work. That was the first time I felt responsible for software, not just automation.\nThis series explores my lessons as I crossed into platform engineering from security engineering. What I might tell my past self, given the chance, and how I now approach problem solving with a software and platform engineer's perspective. If you're a security practitioner wondering what's on the other side, this is for you. If you're a developer who works with security teams, this might help explain why we think the way we do.\nWhile in the security org, I started to notice that the numbers of vulnerabilities kept growing faster than we could fix them, given how often we patched. As cloud platforms came onto the scene, we also started to produce misconfiguration findings. Hoping to avoid the same outcome there, I took a different approach.\nRather than creating more findings to track, I identified platform controls that were acceptable to all parties. With stories of public S3 buckets causing data leakage left and right, I implemented a preventative control that disallowed public buckets. This eliminated those types of issues outright for both the development team and the vulnerability management team.\nWhile the security team does not own and operate all systems in an enterprise, working with one platform or infrastructure team vs 50-100 can greatly reduce remediation time. However, there were a few times where we had to roll back a control as it negatively impacted teams’ ability to operate their own systems. This taught me the value of progressive rollouts, a practice the rest of software engineering already relied on. Similarly, using policy-as-code we could move back to an older version of the policy in minutes.\nMany skillsets in security are more portable than I realized. Conducting security reviews prepared me well for system design discussions and operational troubleshooting when a system might be down. From tracking an attacker's footsteps during incident response, I could debug a running system, stitching together the timeline with logs and traces. \nThe most effective controls I've built have been from understanding how development teams work and finding ways to remove risk without increasing friction. While not everyone needs to become a software engineer, understanding the core concepts and ways of working helps find solutions that don't slow teams down. In the next post, we'll explore CI/CD and how to balance effective controls, defaults and exceptions.",
+      "publishedAt": "2026-02-17T01:16:09.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "6c0e2a0739527f63cfe5de8eae315de2ace4687c630da1ae2bb73e99f865752c",
+      "title": "The Secret Life of JavaScript: The Async Generator",
+      "url": "https://dev.to/aaron_rose_0787cc8b4775a0/the-secret-life-of-javascript-the-async-generator-7hn",
+      "description": "How to handle streams of data with for await...of.\nTimothy was rubbing his temples. On his screen was a function that looked like it had been fighting a losing battle.\nasync function getAllUsers() {\n    let url = '/api/users?page=1';\n    const allUsers = [];\n\n    while (url) {\n        const response = await fetch(url);\n        const data = await response.json();\n\n        // Add this page's users to our big list\n        allUsers.push(...data.users);\n\n        // Prepare for the next loop... if there is one\n        url = data.nextPage; \n    }\n\n    return allUsers;\n}\n\n\n\"I'm trying to download all the user data,\" Timothy explained to Margaret. \"But there are 50,000 users. If I wait for all the pages to download before I start processing them, the user waits for 20 seconds. It feels... stuck.\"\nMargaret nodded. \"You are treating a Stream like a Bucket,\" she said.\n\"You are trying to collect every single drop of water before you let anyone drink,\" she continued. \"Why not let them drink from the hose?\"\nMargaret wrote a new syntax on the board. It combined the two most powerful keywords in the language.\nasync function* fetchUsers() { ... }\n\n\n\"Async meets Generator,\" she said. \"The async allows us to wait for the network. The * allows us to yield data one piece at a time.\"\nShe rewrote Timothy's code, adding a safety net.\nasync function* fetchUsers() {\n    let url = '/api/users?page=1';\n\n    while (url) {\n        try {\n            const response = await fetch(url);\n            const data = await response.json();\n\n            // Instead of building a massive array, we deliver this page immediately\n            for (const user of data.users) {\n                yield user;\n            }\n\n            url = data.nextPage;\n        } catch (error) {\n            console.error(\"Stream interrupted\", error);\n            return; // Stop the stream safely\n        }\n    }\n}\n\n\nTimothy looked at the code. \"It looks similar,\" he admitted. \"But how do I use it? The data isn't all there yet.\"\nfor await...of)\n\n\n\"This is where the magic happens,\" Margaret said. \"We need a loop that knows how to wait.\"\nShe wrote the consumer code:\nconst userStream = fetchUsers();\n\nfor await (const user of userStream) {\n    console.log(\"Processing:\", user.name);\n    // This loop automatically PAUSES while the next page downloads!\n}\n\n\nTimothy watched the console simulation.\nThe loop prints 10 users instantly.\nThe loop pauses (while the network fetches Page 2).\nThe loop wakes up and prints 10 more users.\n\"The pause is invisible,\" Timothy whispered.\n\"Exactly,\" Margaret said. \"The code inside the loop doesn't know it is waiting. It just asks for the next user, and JavaScript handles the pause. You aren't processing a Memory Snapshot; you are processing Time.\"\n\"One last thing,\" Margaret added, lowering her voice to a whisper. \"In the real world, streams can be endless. Sometimes the user navigates away before you are done.\"\n\"What do I do?\"\n\"You use an AbortController,\" she said. \"It allows you to cut the hose. Always design your streams so they can be stopped.\"\nTimothy deleted his allUsers array. He didn't need the bucket anymore.\n\"It feels lighter,\" Timothy said. \"I'm not hoarding data.\"\n\"That is the Zen of the Async Generator,\" Margaret smiled. \"Don't carry the weight of the future. Just handle what is in front of you, right now.\"\nAaron Rose is a software engineer and technology writer at tech-reader.blog and the author of Think Like a Genius.",
+      "publishedAt": "2026-02-17T01:04:17.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "0d56531bfb67c2d3cbba5dd969c7f0255edd06c5c9358a471dfc09e63886de9b",
+      "title": "⌚ Beginner-Friendly Guide 'Binary Watch' - Problem 401 (C++, Python, JavaScript)",
+      "url": "https://dev.to/om_shree_0709/beginner-friendly-guide-binary-watch-problem-401-c-python-javascript-11l3",
+      "description": "Ever wondered how digital devices represent time using nothing but ones and zeros? This problem invites you to decode a binary watch, where LEDs represent powers of two for both hours and minutes. It is a fantastic way to practice how we can combine different possibilities to reach a specific target.\nYou're given:\nturnedOn, which represents the total number of LEDs currently glowing on a binary watch.\nYour goal:\nThe watch has 10 LEDs in total: 4 for hours () and 6 for minutes (). Since the total number of possible times is small (only  combinations), we can use a Backtracking (DFS) approach to pick which LEDs to turn on.\nThe core logic revolves around iterating through the 10 available LEDs. For each LED, we decide to \"turn it on\" and subtract 1 from our turnedOn count. We keep track of the current hour and minute values, ensuring they never exceed their respective limits. Once the count reaches zero, we format the resulting time and add it to our list.\nExample 1: `turnedOn = 1`\nIf a minute LED is on: It could be 0:01, 0:02, 0:04, 0:08, 0:16, or 0:32.\nIf an hour LED is on: It could be 1:00, 2:00, 4:00, or 8:00.\nResult: A list of all 10 individual time stamps.\nExample 2: `turnedOn = 9`\nMaximum LEDs possible for a valid time: .\nSince 9 LEDs is more than the maximum possible valid combination, it is impossible.\nResult: [] (Empty list).\nclass Solution {\n public:\n  vector<string> readBinaryWatch(int turnedOn) {\n    vector<string> ans;\n    // Start DFS with turnedOn LEDs remaining, starting at index 0, hour 0, minute 0\n    dfs(turnedOn, 0, 0, 0, ans);\n    return ans;\n  }\n\n private:\n  const int hours[4] = {1, 2, 4, 8};\n  const int minutes[6] = {1, 2, 4, 8, 16, 32};\n\n  void dfs(int turnedOn, int s, int h, int m, vector<string>& ans) {\n    if (turnedOn == 0) {\n      string time = to_string(h) + \":\" + (m < 10 ? \"0\" : \"\") + to_string(m);\n      ans.push_back(time);\n      return;\n    }\n\n    for (int i = s; i < 10; ++i) {\n      if (i < 4) { // Hour LEDs (indices 0-3)\n        if (h + hours[i] < 12)\n          dfs(turnedOn - 1, i + 1, h + hours[i], m, ans);\n      } else { // Minute LEDs (indices 4-9)\n        if (m + minutes[i - 4] < 60)\n          dfs(turnedOn - 1, i + 1, h, m + minutes[i - 4], ans);\n      }\n    }\n  }\n};\n\n\nclass Solution:\n    def readBinaryWatch(self, turnedOn: int) -> List[str]:\n        ans = []\n        hours = [1, 2, 4, 8]\n        minutes = [1, 2, 4, 8, 16, 32]\n\n        def dfs(remaining, start_idx, h, m):\n            if remaining == 0:\n                # Format: No leading zero for hours, two digits for minutes\n                ans.append(f\"{h}:{m:02d}\")\n                return\n\n            for i in range(start_idx, 10):\n                if i < 4:  # Hour LEDs\n                    if h + hours[i] < 12:\n                        dfs(remaining - 1, i + 1, h + hours[i], m)\n                else:  # Minute LEDs\n                    if m + minutes[i - 4] < 60:\n                        dfs(remaining - 1, i + 1, h, m + minutes[i - 4])\n\n        dfs(turnedOn, 0, 0, 0)\n        return ans\n\n\n/**\n * @param {number} turnedOn\n * @return {string[]}\n */\nvar readBinaryWatch = function(turnedOn) {\n    const ans = [];\n    const hours = [1, 2, 4, 8];\n    const minutes = [1, 2, 4, 8, 16, 32];\n\n    const dfs = (remaining, startIdx, h, m) => {\n        if (remaining === 0) {\n            const formattedMin = m < 10 ? \"0\" + m : m;\n            ans.push(h + \":\" + formattedMin);\n            return;\n        }\n\n        for (let i = startIdx; i < 10; i++) {\n            if (i < 4) { // Hour LEDs\n                if (h + hours[i] < 12) {\n                    dfs(remaining - 1, i + 1, h + hours[i], m);\n                }\n            } else { // Minute LEDs\n                if (m + minutes[i - 4] < 60) {\n                    dfs(remaining - 1, i + 1, h, m + minutes[i - 4]);\n                }\n            }\n        }\n    };\n\n    dfs(turnedOn, 0, 0, 0);\n    return ans;\n};\n\n\nCombinatorial Search: Backtracking is the perfect tool when you need to explore combinations of items to reach a fixed sum or count.\nState Management: By passing h (hours) and m (minutes) through the recursion, we maintain the \"state\" of our watch without needing to undo changes manually.\nConstraint Checking: Always validate boundaries (hours < 12, minutes < 60) before committing to a recursive path to save computation time.\nThis problem is a classic example of how hardware interacts with software logic. While it appears simple, it tests your ability to handle multiple constraints and format data correctly. In the real world, similar bit-manipulation and combinatorial logic are used in embedded systems, low-level driver development, and even when designing efficient network protocols where every bit counts.",
+      "publishedAt": "2026-02-17T00:55:57.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "49a69f55990dcf6961cbc1e6062f7a1e747c949d16f1b230575af1f5e563e1ac",
+      "title": "CloudFront からの通信を AWS WAF の BotControl ルールによって誤検知してしまう際の対処方法を教えてください",
+      "url": "https://dev.classmethod.jp/articles/tsnote-cloudfront-botcontrol-falsepositive/",
+      "description": "CloudFront からの通信を AWS WAF の BotControl ルールによって誤検知してしまう際の対処方法を教えてください",
+      "publishedAt": "2026-02-17T00:08:21.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "8c56b2829e00a86b1172e4bcc01fd9f57d9483641f18f1f8885e81def56b2193",
+      "title": "「サポート切れルーターはすべて廃棄を」米CISAが異例の命令、その深刻な理由とは",
+      "url": "https://ascii.jp/elem/000/004/373/4373984/",
+      "description": "「サポートが終了したルーターやVPNは、すべて廃棄してください」 米国サイバーセキュリティ・インフラセキュリティ庁（CISA）が、連邦政府の「文民行政機関」に対して、こんな命令を出した。2026年2月5日に同庁がウェブサイトで公表している。この「文民行政機関」という言葉が聞き慣れないため調べると、国防総省やCIA...",
+      "publishedAt": "2026-02-16T23:58:39.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "a2baba76fc3c6ff197cb5e7e2925006821f2495a4735e2635e849a7789d8a508",
+      "title": "【30分解説】アイデンティティ保護で「ランサムウェア」はどれだけ防げる？　セキュリティイベントを開催",
+      "url": "https://enterprisezine.jp/news/detail/23736",
+      "description": "EnterpriseZine編集部は3月17日（火）、オンライン配信イベント「Security Online Day 2026 Spring」を開催します。\n\n\n\n　16回目の開催を迎えた今回は、「...",
+      "publishedAt": "2026-02-16T23:00:00.000Z",
+      "feedName": "EnterpriseZine"
+    },
+    {
+      "id": "cb2ee2c0de8d238576987dab61656f0c0cba0c7025b77cd08f1551a57ada80b0",
+      "title": "疲弊したセキュリティリーダーが真に問うべき「8つの重要論点」、Gartnerが指摘",
+      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2602/17/news060.html",
+      "description": "ガートナージャパンは2026年1月22日、日本におけるセキュリティの重要論点を発表した。サイバー攻撃などの脅威に加え、AIや量子コンピューティング、法規制への対応など、リスクが多岐にわたる現状が示された。",
+      "publishedAt": "2026-02-16T23:00:00.000Z",
+      "feedName": "＠IT"
+    },
+    {
+      "id": "bd2219b7d1b6cafaf6b707d8c5767b349258ff0998d0be5adccf48c69b358a11",
+      "title": "クラウドインフラのシェア、AWSがトップを維持するも28％、AzureとGoogle Cloudが少しずつ差を詰めていく。2025年第4四半期、Synergy Researchの調査結果",
+      "url": "https://www.publickey1.jp/blog/26/aws28azuregoogle_cloud20254synergy_research.html",
+      "description": "クラウドインフラのシェア、AWSがトップを維持するも28％、AzureとGoogle Cloudが少しずつ差を詰めていく。2025年第4四半期、Synergy Researchの調査結果 調査会社のSynergy Research Groupは、グローバルにおける2025年第4四半期のクラウドインフラの市場状況について調査結果を発表しました。 クラウドインフラとは、I...",
+      "publishedAt": "2026-02-16T18:49:19.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "bd3083951bfa26318b16240a1dd4ff310ad9a3a286b09290909cb2b70d671a98",
+      "title": "[レポート]Accelerating Development and DevSecOps with Amazon Bedrock and Kiroに参加してきました！ #PEX303 #AWSreInvent",
+      "url": "https://dev.classmethod.jp/articles/devsecops-bedrock-kiro-pex303-s-awsreinvent/",
+      "description": "[レポート]Accelerating Development and DevSecOps with Amazon Bedrock and Kiroに参加してきました！ #PEX303 #AWSreInvent",
+      "publishedAt": "2026-02-16T15:42:50.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "bb8f69aa0d7182f11890af0a379340f42eb00225aa5247657d62148555a5ef0a",
+      "title": "君はIE11を覚えているか？ 2010年代のHTML制作は何が大変だったか - ICS MEDIA",
+      "url": "https://ics.media/entry/260216/",
+      "description": "昔、Internet Explorerが制作時のサポート対象ブラウザとして求められた時代･･･。HTML/CSS/JavaScriptが他のブラウザと同じように表示されない、動作しない、といったことが頻繁にありました。Internet Explorerは通称IEアイ・イーと呼ばれ、IE11が2013年に登場し、2022年6月にサポートが終了するまで長く使われました。...",
+      "publishedAt": "2026-02-16T13:12:20.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "259b3bddfeccdc2e35523a92186b953b956f7751668182a719f23661cb4981ed",
+      "title": "パナソニックHDや伊藤忠商事ら、系統蓄電所における世界初のセキュリティ監視の実証実験を開始",
+      "url": "https://enterprisezine.jp/news/detail/23737",
+      "description": "2026年2月16日、パナソニック ホールディングスとパナソニック ソリューションテクノロジー（以下、PSTC）は、伊藤忠商事と連携し、国内の系統蓄電所の実運用を想定した環境を対象としたサイバーセキ...",
+      "publishedAt": "2026-02-16T09:45:00.000Z",
+      "feedName": "EnterpriseZine"
+    },
+    {
+      "id": "6ee45b85b08423edb98074a4e4abb91d01f74b5c313db1d4f4665c13ebe587d4",
+      "title": "自分のOSSリポジトリにGitHubのセキュリティ設定を入れ、自分用の手順書を作った - $shibayu36->blog;",
+      "url": "https://blog.shibayu36.org/entry/2026/02/16/173000",
+      "description": "title: 自分のOSSのレポジトリに最低限GitHubのセキュリティ設定を入れた 昨今GitHub上で提供されている有名なOSSに対して攻撃がなされることが多い（例: Nxの2025/08の事例）。自分もそこから学び、最低限GitHub上でセキュリティ周りの設定を入れた方が良いと考えた。 設定を考えるにあたって、とくに次の3つの記事が参...",
+      "publishedAt": "2026-02-16T08:39:51.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "8757f940410ec8af5b1c13ede855c7256804c99cc2aac1202f1ced63131c6732",
+      "title": "AI時代にとるべき「次世代Webセキュリティ戦略」とは？高速性と堅牢性を両立させるアプローチを解説",
+      "url": "https://enterprisezine.jp/news/detail/23733",
+      "description": "EnterpriseZine編集部は3月17日に、サイバーセキュリティに特化したオンラインイベント「Security Online Day 2026 Spring」を開催する。\n\n\n\n画像クリックで...",
+      "publishedAt": "2026-02-16T08:25:00.000Z",
+      "feedName": "EnterpriseZine"
+    },
+    {
+      "id": "712655a4b38c9f5d2e361cef7c1462b59279520e5bc3cd0ff11ee460b112a090",
+      "title": "[アップデート] AWS Backupにて、クロスリージョンのAmazon Aurora・Amazon Neptune・Amazon DocumentDBのスナップショットをワンステップで論理エアギャップボールトにコピーできるようになりました",
+      "url": "https://dev.classmethod.jp/articles/aws-backup-adds-cross-region-database-snapshot-logically-air-gapped-vaults/",
+      "description": "[アップデート] AWS Backupにて、クロスリージョンのAmazon Aurora・Amazon Neptune・Amazon DocumentDBのスナップショットをワンステップで論理エアギャップボールトにコピーできるようになりました",
+      "publishedAt": "2026-02-16T07:54:34.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "1b59940a7863d668f8b3e3d6797aaab227a732c1c3422a7e98ba1c625f310141",
+      "title": "BMW Group が AWS 上のエージェンティック検索でペタバイト規模のデータからインサイトを引き出す",
+      "url": "https://aws.amazon.com/jp/blogs/news/bmw-group-unlocks-insights-from-petabytes-of-data-with-agentic-search-on-aws/",
+      "description": "BMW Group が AWS 上でエージェント検索ソリューションを構築し、ペタバイト規模のデータからインサイトを引き出す取り組みを紹介します。同社の Cloud Data Hub は 20 PB のデータを保存し、1 日平均 110 TB を取り込んでいますが、従来は専門知識がないユーザーにとってデータ分析が困難でした。AWS Professional Services と協力し、Amazon S3 Vectors、Amazon Bedrock、Strands Agents を組み合わせたソリューションを開発。ハイブリッド検索、網羅的検索、SQL クエリの 3 つのアプローチにより、技術スキルに関係なく自然言語でデータにアクセス可能になりました。サーバーレスアーキテクチャによりコスト効率も実現しています 。",
+      "publishedAt": "2026-02-16T07:46:39.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "23624c26ff9be85ff347573f89265535d0d80fd2d762c3cc2f05087ce25f6222",
+      "title": "GitHub、Agentic Workflowsをテクニカルプレビューで提供開始 ——GitHub Actionsでのエージェント動作を自然言語で記述可能に",
+      "url": "https://gihyo.jp/article/2026/02/github-agentic-workflow?utm_source=feed",
+      "description": "GitHubは2026年2月13日、Issueのトリアージやコードの修正、CIエラーの分析といったリポジトリ内の作業を自動化する「GitHub Agentic Workflows」をテクニカルプレビューとして公開した。",
+      "publishedAt": "2026-02-16T07:38:00.000Z",
+      "feedName": "gihyo.jp"
+    },
+    {
+      "id": "b3c2431cbbf1dfe9344ae231e0a84a6e8f83d90f3d0211168b39cf7dc15b7135",
+      "title": "山梨県警察本部、「AI武藤敬司サイバー犯罪対策課長」を発表　実現にデル・テクノロジーズらが協力",
+      "url": "https://enterprisezine.jp/news/detail/23726",
+      "description": "山梨県警察本部は、サイバーセキュリティ月間にあわせて2026年2月20日に開催するイベントに登場する、デジタルヒューマン「AI武藤敬司サイバー犯罪対策課長」を発表した。\n\n　この実現には、デジタルヒ...",
+      "publishedAt": "2026-02-16T05:26:00.000Z",
+      "feedName": "EnterpriseZine"
+    },
+    {
+      "id": "af3e3885d11babb1bbe4a8697cbb756804c6e6298499a5ed0b2e545030fc5aaa",
+      "title": "GitHub Agentic Workflowsを発表 - リポジトリの自動化を実現",
+      "url": "https://github.blog/jp/2026-02-16-automate-repository-tasks-with-github-agentic-workflows/",
+      "description": "Author Don Syme Peli de Halleux GitHub Agentic Workflowsがテクニカルプレビューとして登場。GitHub Actionsでコーディングエージェントを使用し、意図駆動型の自動化を構築しましょう。トリアージ、ドキュメント作成、コード品質向上など、さまざまなタスクを自動化できます。 朝、リポジトリを訪れて、穏やかな気持...",
+      "publishedAt": "2026-02-16T05:08:28.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "677f124ada68bd46b2654767693cf77550a126b647ed7dcc309474b1a53291e5",
+      "title": "「軽量12Bが27B超えのパフォーマンス」その要因は？　Google、Gemma 3ベースの翻訳モデル公開",
+      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2602/16/news050.html",
+      "description": "Googleは、Gemma 3をベースとした新翻訳モデル「TranslateGemma」を発表した。4B、12B、27Bのパラメーターサイズで提供される。",
+      "publishedAt": "2026-02-16T04:00:00.000Z",
+      "feedName": "＠IT"
+    },
+    {
+      "id": "60c21def3a9d86a01c4e451d3e01cba8035159677276d50ee42fd6cdf0fc3a77",
+      "title": "本番環境でのKubernetesの利用率が82％に到達　「AI基盤の標準に」",
+      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2602/16/news046.html",
+      "description": "Cloud Native Computing Foundationは、クラウドネイティブ技術に関する年次調査結果を発表した。コンテナユーザーの82％が「Kubernetes」を本番環境で稼働させており、AIワークロードを支える標準的な基盤として定着しているという。",
+      "publishedAt": "2026-02-16T04:00:00.000Z",
+      "feedName": "＠IT"
+    },
+    {
+      "id": "5006ec6681796024773bb88f06576bc858ef12eab928ac0a481982b56f2b2c77",
+      "title": "AWS Deadline Cloud のSMF スクリプトで LucidLink を設定する",
+      "url": "https://aws.amazon.com/jp/blogs/news/jpmne-set-up-lucidlink-with-smf-scripts-for-aws-deadline-cloud/",
+      "description": "AWS Deadline Cloud のサービスマネージドフリートに LucidLink を統合し、スケーラブルで高性能なクラウドベースのレンダリングワークフローを構築する方法を解説します。フリート設定スクリプトによる LucidLink クライアントの自動インストールと、OpenJD ジョブテンプレートによるファイルシステムの動的マウントを設定する手順を紹介します。",
+      "publishedAt": "2026-02-16T03:17:24.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "4c247d6d74036c386207812249bb2c2b83d194f03f776bf360a2fda968081cea",
+      "title": "週刊生成AI with AWS – 2026/2/9週",
+      "url": "https://aws.amazon.com/jp/blogs/news/weekly-genai-20260209/",
+      "description": "週刊生成AI with AWS, 関東で雪が降って嬉しかった2026年2月9日週号 – Amazon Bedrock AgentCore を本番環境で活用するための 9 つのベストプラクティスを紹介するブログ含む4件のブログを紹介。サービスアップデートでは、DeepSeek V3.2、Kimi K2.5など6 つのフルマネージドオープンウェイトモデルを Amazon Bedrock で追加サポートするなど4件のupdateを紹介。",
+      "publishedAt": "2026-02-16T03:06:20.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "392e653c0796f330c46f7230cf76983a88d48e6c9f617ddd14782d310ce3605b",
+      "title": "AWS Private CA と AWS KMS を使用したポスト量子 (ML-DSA) コード署名",
+      "url": "https://aws.amazon.com/jp/blogs/news/post-quantum-ml-dsa-code-signing-with-aws-private-ca-and-aws-kms/",
+      "description": "AWS Private CA と AWS KMS を使用して、ポスト量子署名アルゴリズム ML-DSA によるコード署名を実装する方法を紹介します。耐量子 PKI 階層の構築から、CMS 標準によるデタッチド署名の生成・検証まで、AWS SDK for Java のサンプルコードを用いてステップごとに解説します。mTLS、IKEv2/IPsec、IAM Roles Anywhere などのユースケースにも応用可能です。",
+      "publishedAt": "2026-02-16T02:13:20.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "3ff31f40e81d6ba057c1a96d8c15c354412572bbaffc2fc589762858923190b8",
+      "title": "AWS KMS と ML-DSA を使用してポスト量子署名を作成する方法",
+      "url": "https://aws.amazon.com/jp/blogs/news/how-to-create-post-quantum-signatures-using-aws-kms-and-ml-dsa/",
+      "description": "AWS KMS で FIPS 204 準拠のポスト量子デジタル署名アルゴリズム ML-DSA がサポートされました。本記事では、ML-DSA キーの作成から、RAW モードと external mu モードによる署名・検証、JWT への適用例、OpenSSL 3.5 を使用したローカル検証まで、具体的な手順を解説します。FIPS 140-3 レベル 3 認定の HSM 内でポスト量子キーを生成・管理でき、量子コンピューティング時代に備えたセキュリティ対策を今すぐ始められます。",
+      "publishedAt": "2026-02-16T02:11:35.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "0e016b0789970025c282493a91664c982f9ce91a55ad62d85c58e1842241dce0",
+      "title": "AWS Transfer Family でポスト量子ハイブリッド SFTP ファイル転送を実現",
+      "url": "https://aws.amazon.com/jp/blogs/news/post-quantum-hybrid-sftp-file-transfers-using-aws-transfer-family/",
+      "description": "本ブログでは、SSH プロトコルにおけるポスト量子ハイブリッド鍵交換の重要性と、AWS Transfer Family の SFTP でこれを利用する方法を紹介します。将来の量子コンピュータによる暗号解読リスクや harvest-now-decrypt-later の脅威に備え、ECDH と Kyber を組み合わせたハイブリッド方式を解説し、OQS OpenSSH や wolfSSH クライアントを使ったテスト手順、FIPS 準拠の考慮事項についても説明します。",
+      "publishedAt": "2026-02-16T02:09:57.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "14fb200d0db92b5f51683faaae6970a536ef859f4955963c3809de4ddec23aff",
+      "title": "週刊AWS – 2026/2/9週",
+      "url": "https://aws.amazon.com/jp/blogs/news/aws-weekly-20260209/",
+      "description": "Amazon Redshift が自動最適化のための追加コンピュートリソース割り当てをサポート, AWS HealthOmics がバイオインフォマティクスワークフロー開発のための Kiro Power と Kiro IDE 拡張機能を導入, Amazon OpenSearch Serverless でコレクショングループがサポート開始, Amazon Athena が 1 分間の予約と 4 DPU の最小容量をサポート, Amazon EC2 C8id・M8id・R8id インスタンスが追加リージョンで利用可能に, Amazon Connect がノイズの多い環境向けのオーディオ拡張機能を導入, AWS Elastic Beanstalk が自動アプリケーションデプロイメント用の GitHub Actions をサポート開始, AWS が AWS Data Transfer Terminal の 6 つの新しい拠点を発表, Amazon Connect が分析ダッシュボードの詳細なアクセス制御を開始, 新しい Amazon EC2 汎用 M8azn インスタンスの発表, Amazon Connect が Tasks にリアルタイム AI 搭載の概要と推奨次アクションを提供開始, AWS Batch でジョブキューと共有使用率の可視化機能を提供開始",
+      "publishedAt": "2026-02-16T01:09:10.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "1cb5727d6963924c489b758435a3639b68d7d8ec77ce4daefd7ce5b9972ec996",
+      "title": "M365 CopilotでAWS記事の“ドキュメントレベル判定”エージェントを作ってみた",
+      "url": "https://qiita.com/YutoSekine/items/ab53ff4391da034fc493?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "先日、2026 Japan AWS Top Engineers クライテリアが発表されました。\n\nここに毎年出てくるLevel 300。一体、どれくらい書けていればレベル300に達しているのかというのが気になっていました。\n\nそこで、この記事ではAWSのドキュメントレベ...",
+      "publishedAt": "2026-02-16T00:10:29.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "f619ff802cf63324584c29991d038145c5cf06dfb0624dd6b0225c1985a13e94",
+      "title": "寄稿：パナソニック インフォメーションシステムズ での Oracle Database@AWS 検証レポート – 閉域接続・バックアップ・Data Guard・監視構成の検証",
+      "url": "https://aws.amazon.com/jp/blogs/news/panasonic-oracle-db-at-aws-report/",
+      "description": "本稿は、パナソニック インフォメーションシステムズ社による「Oracle Database@AWS 検証レポー […]",
+      "publishedAt": "2026-02-16T00:00:25.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "3e9a76f55955e59f6ac53a3923b64c248c6f3b249f7e6f1bfbbcf293bfb029e5",
+      "title": "モダンで爆速。月額0円でWebアプリを開発・公開する技術構成（Hono/Neon/Drizzle/Cloudflare Pages）",
+      "url": "https://zenn.dev/epicai_techblog/articles/ff6225111e3649",
+      "description": "1. はじめに\nこんにちは！ 株式会社EpicAIの松島です！\nEpicAIではシステム開発系の案件に関わることが多く、要件整理〜実装まで幅広く触っています。個人では、作りたいものを気軽に作って試したり、AtCoderで競プロをやったりしています。\n今回は、自分が個人開発をするときに愛用している技術構成について紹介します。\n学生や個人開発者のみなさん、アプリのデプロイ先、どうしていますか？\n「モダンな技術でWebアプリを作りたい！でも…」\n\nAWSやAzureは機能が多すぎて学習コストが高いし、クレジットカードの高額請求が怖い…。\nHerokuの無料枠が終わってから、手軽なデプロイ先...",
+      "publishedAt": "2026-02-15T23:01:05.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "7be7872703e589b8f13c7a53a59f063050f6b3b88ecfe703e9c0755f89b5a043",
+      "title": "【AWS SAP勉強記】Route 53の周辺の機能を改めて整理してみた",
+      "url": "https://qiita.com/hiroki2712/items/b1cfd160d8523642608e?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "1. はじめに\n\n背景\n皆さんこんにちは、エンジニアの弘輝です。\n現在、AWSソリューションアーキテクト プロフェッショナル（SAP）を取得するために勉強しているんですが、学習を進める中でアソシエイト（SAA）試験ではつまずかなかった「Amazon Route 53」関連...",
+      "publishedAt": "2026-02-15T09:11:37.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "0fea763c711a258c6c4b3098231971b8888c2f5730bfe261a329e294a94b99d4",
+      "title": "【RPC比較】tRPC・oRPC・Hono・Elysia 結局どれを選ぶべき？",
+      "url": "https://zenn.dev/sc30gsw/articles/6be1b73d3db81b",
+      "description": "はじめに\n最近、State of Javascript 2025が公開されました。\n中でも個人的に印象的だったのが、Backend Frameworkのセクションです。\nhttps://2025.stateofjs.com/en-US/libraries/back-end-frameworks/\nSatisfactionとInterestのランキングを見ると、Hono・tRPC・ElysiaJSと、RPC機能を持つフレームワークが3つ上位に入ることがわかります。\n!\nRPC（Remote Procedure Call）とは、リモートのサーバーにある関数を、ローカル関数のように呼び出せ...",
+      "publishedAt": "2026-02-15T03:38:38.000Z",
+      "feedName": "Zenn"
     }
   ]
 }
