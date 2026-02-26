@@ -1,196 +1,6 @@
 {
   "articles": [
     {
-      "id": "581094a9e80942eda670ffc7629e3fd24f184ba08bcde30b822442513c56c122",
-      "title": "I Built a Running Metronome App to Solve My Pacing Problem",
-      "url": "https://dev.to/pipeabellos/i-built-a-running-metronome-app-to-f5p",
-      "description": "When I started training for marathons, I faced a frustrating problem: I couldn't hold a consistent pace.\nGPS watches show your current pace, but there's always a 5-10 second lag. By the time you see you're going too fast or slow, you've already been off-pace for a while. Over 26.2 miles, these small inconsistencies add up to either bonking early or leaving time on the table.\nI built Runo — a metronome app specifically for runners. You set your target cadence (steps per minute), and it plays an audible beat you can sync your footsteps to. No more constantly watching your wrist. Just listen to the rhythm and run.\nResearch shows that a cadence around 180 steps per minute reduces impact forces, improves running efficiency, and helps prevent common injuries. But most runners don't know their current cadence, let alone how to train it.\nRuno makes it simple: set your target BPM, hear the beat, match your steps.\nMobile App: React Native / Expo\nWebsite: Next.js + Payload CMS\nAnalytics: PostHog\n4.7★ rating on the App Store\n10,000+ runners using the app\n$1.6k MRR and growing\nWe just launched Runo 2.0 with:\nApple Watch haptic feedback (feel the beat on your wrist)\nSocial features (run with friends)\nStrava integration\nCheck it out at runoapp.com — available on iOS and Android.\nWould love to hear your feedback! What features would make this more useful for your training?",
-      "publishedAt": "2026-01-27T01:22:38.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "3fe759aea487182a5784a7cb6ce53e2634fbab5d846e426133cc6b597bf8a291",
-      "title": "Data Engineering ZoomCamp Module 1 Notes Part 2",
-      "url": "https://dev.to/abdelrahman_adnan/data-engineering-zoomcamp-module-1-notes-part-2-5871",
-      "description": "Part 4: Data Ingestion with Python\n\n\nWe're going to load the NYC Taxi dataset into Postgres.\nInstall dependencies:\npip install pandas sqlalchemy psycopg2-binary jupyter\n\nOr with uv:\nuv add pandas sqlalchemy psycopg2-binary\nuv add --dev jupyter\n\nWe use the NYC Taxi trip data. Download it:\nwget https://github.com/DataTalksClub/nyc-tlc-data/releases/download/yellow/yellow_tripdata_2021-01.csv.gz\n\nHere's the basic approach:\nimport pandas as pd\nfrom sqlalchemy import create_engine\n\n# Create connection\nengine = create_engine('postgresql://root:root@localhost:5432/ny_taxi')\n\n# Read CSV in chunks (it's a big file)\ndf_iter = pd.read_csv('yellow_tripdata_2021-01.csv.gz', \n                       iterator=True, \n                       chunksize=100000)\n\n# Create table from first chunk\nfirst_chunk = next(df_iter)\nfirst_chunk.head(0).to_sql(name='yellow_taxi_data', con=engine, if_exists='replace')\n\n# Insert first chunk\nfirst_chunk.to_sql(name='yellow_taxi_data', con=engine, if_exists='append')\n\n# Insert remaining chunks\nfor chunk in df_iter:\n    chunk.to_sql(name='yellow_taxi_data', con=engine, if_exists='append')\n    print(f'Inserted {len(chunk)} rows')\n\nThe key things here:\nchunksize prevents loading the whole file into memory\nif_exists='replace' creates the table (first time)\nif_exists='append' adds rows (subsequent chunks)\nRunning multiple docker run commands is annoying. Docker Compose lets you define everything in one file.\nCreate docker-compose.yaml:\nservices:\n  pgdatabase:\n    image: postgres:17\n    environment:\n      POSTGRES_USER: \"root\"\n      POSTGRES_PASSWORD: \"root\"\n      POSTGRES_DB: \"ny_taxi\"\n    volumes:\n      - \"ny_taxi_postgres_data:/var/lib/postgresql/data\"\n    ports:\n      - \"5432:5432\"\n\n  pgadmin:\n    image: dpage/pgadmin4\n    environment:\n      PGADMIN_DEFAULT_EMAIL: \"admin@admin.com\"\n      PGADMIN_DEFAULT_PASSWORD: \"root\"\n    volumes:\n      - \"pgadmin_data:/var/lib/pgadmin\"\n    ports:\n      - \"8080:80\"\n\nvolumes:\n  ny_taxi_postgres_data:\n  pgadmin_data:\n\nNow just run:\ndocker-compose up      # start everything\ndocker-compose up -d   # start in background\ndocker-compose down    # stop everything\ndocker-compose down -v # stop and remove volumes\n\nDocker Compose automatically creates a network so containers can talk to each other using their service names (e.g., pgdatabase instead of localhost).\nOpen http://localhost:8080 in browser\nLogin with the email/password from docker-compose\nRight-click Servers > Create > Server\nName it whatever you want\nUnder Connection tab:\n\n\nHost: pgdatabase (the service name, not localhost!)\nPort: 5432\n\nUsername: root\n\nPassword: root\n\n\n\n\n\n\n\n\n\n  \n  \n  Part 6: SQL Refresher\n\n\nQuick review of SQL queries we'll use a lot.\nThere are two ways to write an INNER JOIN:\n-- Implicit join (old style)\nSELECT t.*, z.\"Zone\"\nFROM yellow_taxi_data t, zones z\nWHERE t.\"PULocationID\" = z.\"LocationID\";\n\n-- Explicit join (preferred)\nSELECT t.*, z.\"Zone\"\nFROM yellow_taxi_data t\nJOIN zones z ON t.\"PULocationID\" = z.\"LocationID\";\n\nFor multiple joins:\nSELECT \n    t.total_amount,\n    zpu.\"Zone\" AS pickup_zone,\n    zdo.\"Zone\" AS dropoff_zone\nFROM yellow_taxi_data t\nJOIN zones zpu ON t.\"PULocationID\" = zpu.\"LocationID\"\nJOIN zones zdo ON t.\"DOLocationID\" = zdo.\"LocationID\";\n\nCount trips per day:\nSELECT \n    CAST(tpep_dropoff_datetime AS DATE) AS day,\n    COUNT(1) AS trip_count\nFROM yellow_taxi_data\nGROUP BY CAST(tpep_dropoff_datetime AS DATE)\nORDER BY day;\n\nMultiple aggregations:\nSELECT \n    CAST(tpep_dropoff_datetime AS DATE) AS day,\n    COUNT(1) AS trips,\n    MAX(total_amount) AS max_amount,\n    SUM(total_amount) AS total_revenue\nFROM yellow_taxi_data\nGROUP BY 1\nORDER BY trips DESC;\n\nFind NULL values:\nSELECT COUNT(*) FROM yellow_taxi_data\nWHERE \"PULocationID\" IS NULL;\n\nFind values not in lookup table:\nSELECT * FROM yellow_taxi_data\nWHERE \"PULocationID\" NOT IN (SELECT \"LocationID\" FROM zones);\n\nTerraform is Infrastructure as Code (IaC). Instead of clicking around in a cloud console, you write config files describing what you want, and Terraform creates it.\nVersion control your infrastructure\nReproducible environments\nEasy to replicate across dev/staging/production\nWorks with AWS, GCP, Azure, and many more\nCreate a Google Cloud account (free tier gives you $300 credits)\nCreate a new project\nCreate a service account:\n\n\nGo to IAM & Admin > Service Accounts\nCreate new service account\nGive it these roles: Storage Admin, BigQuery Admin\nDownload the JSON key file\nSet the environment variable:\n\n\n\n\nexport GOOGLE_APPLICATION_CREDENTIALS=\"/path/to/your/key.json\"\n\nMain files:\nmain.tf - main configuration\nvariables.tf - variable definitions\nBasic main.tf example:\nterraform {\n  required_providers {\n    google = {\n      source  = \"hashicorp/google\"\n      version = \"5.6.0\"\n    }\n  }\n}\n\nprovider \"google\" {\n  project = \"your-project-id\"\n  region  = \"us-central1\"\n}\n\nresource \"google_storage_bucket\" \"data_lake\" {\n  name          = \"your-unique-bucket-name\"\n  location      = \"US\"\n  force_destroy = true\n}\n\nresource \"google_bigquery_dataset\" \"dataset\" {\n  dataset_id = \"trips_data\"\n  location   = \"US\"\n}\n\nThe workflow is always:\n# 1. Initialize (download providers)\nterraform init\n\n# 2. Preview changes\nterraform plan\n\n# 3. Apply changes\nterraform apply\n\n# 4. When you're done, destroy resources\nterraform destroy\n\nFor auto-approving (skips confirmation):\nterraform apply -auto-approve\nterraform destroy -auto-approve\n\n-auto-approve - don't ask for confirmation\n-var=\"name=value\" - pass variables\n-var-file=\"file.tfvars\" - use a variables file\n# Remove all stopped containers\ndocker container prune\n\n# Remove unused images\ndocker image prune\n\n# Remove unused volumes\ndocker volume prune\n\n# Nuclear option - remove everything unused\ndocker system prune -a\n\nIf a port is already in use:\n# Find what's using port 5432\nlsof -i :5432\n# or\nnetstat -tulpn | grep 5432\n\nWhen containers need to talk to each other:\nIn Docker Compose: use service names as hostnames\nManual setup: create a network with docker network create\n\n\n\n\ndocker network create my_network\ndocker run --network=my_network --name=container1 ...\ndocker run --network=my_network --name=container2 ...\n# container2 can reach container1 using hostname \"container1\"\n\nWhat we covered:\nDocker - containerization for reproducible environments\nPostgreSQL - relational database running in Docker\nData Ingestion - loading data with Python/pandas/SQLAlchemy\nDocker Compose - orchestrating multiple containers\nSQL - querying and aggregating data\nTerraform - infrastructure as code for GCP\nThe main takeaway: these tools help you build reproducible, scalable data pipelines. Docker ensures your code runs the same everywhere, and Terraform ensures your infrastructure is consistent and version-controlled.\nDocker Documentation\nPostgreSQL Documentation\nTerraform Documentation\nData Engineering Zoomcamp GitHub",
-      "publishedAt": "2026-01-27T01:20:18.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "f808ef924854aa42403e512d25fde5a7a1aa25760d95e1d36b13b502e4d0ee4e",
-      "title": "Stop Guessing Your Macros: Building a High-Precision Calorie Tracker with SAM & GPT-4o 🥗🚀",
-      "url": "https://dev.to/wellallytech/stop-guessing-your-macros-building-a-high-precision-calorie-tracker-with-sam-gpt-4o-32gm",
-      "description": "We've all been there. You take a photo of your lunch, upload it to a fitness app, and it tells you your \"Chicken Caesar Salad\" is 300 calories. But wait—did it account for the extra parmesan? The croutons? The hidden lake of dressing at the bottom? \nMost current food tracking apps fail because they treat a meal as a single, flat object. To get truly high-precision calorie estimation, we need to move from \"image-level\" classification to \"instance-level\" understanding. \nIn this tutorial, we’re going to build a cutting-edge Multimodal AI pipeline using Meta’s Segment Anything Model (SAM) for precise food segmentation and GPT-4o for granular nutritional analysis. This is the future of Computer Vision in health tech.\nTo achieve granular precision, our pipeline doesn't just \"look\" at the photo. It segments the plate into individual components, analyzes them separately, and then aggregates the data.\ngraph TD\n    A[React Native App] -->|Upload Photo| B[FastAPI Backend]\n    B --> C[SAM: Instance Segmentation]\n    C -->|Segmented Masks| D[Image Cropping & Preprocessing]\n    D -->|Individual Food Items| E[GPT-4o Vision API]\n    E -->|JSON: Macros & Weight Est.| F[Post-processing & Aggregation]\n    F -->|Detailed Report| G[User Dashboard]\n\n    style E fill:#f96,stroke:#333,stroke-width:2px\n    style C fill:#69f,stroke:#333,stroke-width:2px\n\n  SAM (Segment Anything Model): Perfect for identifying boundaries of overlapping food items (e.g., beans over rice).\n  GPT-4o: Currently the gold standard for Multimodal reasoning. It can estimate volume and density better than smaller specialized models.\n  FastAPI: For high-performance, asynchronous processing of heavy vision tasks.\nFirst, we need to isolate the components. Using segment-anything, we can generate masks for every distinct object on the plate.\nimport numpy as np\nfrom segment_anything import SamPredictor, sam_model_registry\n\n# Load the SAM model\nsam = sam_model_registry[\"vit_h\"](checkpoint=\"sam_vit_h_4b8939.pth\")\npredictor = SamPredictor(sam)\n\ndef get_food_segments(image):\n    predictor.set_image(image)\n\n    # We use automatic mask generation or point-based prompts\n    # For this demo, let's assume we're generating masks for detected blobs\n    masks, scores, logits = predictor.predict(\n        point_coords=None,\n        point_labels=None,\n        multimask_output=True,\n    )\n    return masks\n\nOnce we have the masks, we crop the original image to focus on specific ingredients. We then send these crops (or the whole image with highlighted segments) to GPT-4o using Pydantic for structured output.\n💡 Pro-Tip: For production-grade AI patterns like this, I highly recommend checking out the deep dives over at wellally.tech/blog. They have some incredible resources on scaling Vision-Language Models (VLM) that helped shape this implementation.\nimport openai\nfrom pydantic import BaseModel\nfrom typing import List\n\nclass FoodItem(BaseModel):\n    name: str\n    estimated_weight_grams: float\n    calories: int\n    protein: float\n    carbs: float\n    fats: float\n    confidence_score: float\n\nclass MealAnalysis(BaseModel):\n    items: List[FoodItem]\n    total_calories: int\n\ndef analyze_food_with_gpt4o(image_b64):\n    client = openai.OpenAI()\n\n    response = client.beta.chat.completions.parse(\n        model=\"gpt-4o\",\n        messages=[\n            {\n                \"role\": \"system\",\n                \"content\": \"You are a professional nutritionist. Analyze the segmented food items and estimate their nutritional value based on volume and density.\"\n            },\n            {\n                \"role\": \"user\",\n                \"content\": [\n                    {\"type\": \"text\", \"text\": \"Identify the food in these segments and provide macro estimates.\"},\n                    {\"type\": \"image_url\", \"image_url\": {\"url\": f\"data:image/jpeg;base64,{image_b64}\"}}\n                ]\n            }\n        ],\n        response_format=MealAnalysis,\n    )\n    return response.choices[0].message.parsed\n\nNow, let's wrap this in a FastAPI endpoint. We'll handle the image upload from our React Native frontend, run the SAM + GPT-4o pipeline, and return the structured data.\nfrom fastapi import FastAPI, UploadFile, File\nimport cv2\n\napp = FastAPI()\n\n@app.post(\"/analyze-meal\")\nasync def analyze_meal(file: UploadFile = File(...)):\n    # 1. Read and decode image\n    contents = await file.read()\n    nparr = np.frombuffer(contents, np.uint8)\n    img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)\n\n    # 2. Get segments (SAM logic)\n    # 3. Request GPT-4o analysis\n    analysis = analyze_food_with_gpt4o(base64_image)\n\n    return {\n        \"status\": \"success\",\n        \"data\": analysis\n    }\n\nOn the mobile side, we want to show the user exactly what the AI sees. By overlaying the SAM masks back onto the camera view, we build trust through transparency.\n// Quick snippet for handling the result in React Native\nconst handleUpload = async (imageUri) => {\n  const formData = new FormData();\n  formData.append('file', { uri: imageUri, name: 'meal.jpg', type: 'image/jpeg' });\n\n  const response = await fetch('https://api.yourbackend.com/analyze-meal', {\n    method: 'POST',\n    body: formData,\n  });\n\n  const result = await response.json();\n  setMealData(result.data); // Update UI with macro breakdown\n};\n\nStandard AI vision sees \"a plate of food.\" \nMultimodal pipeline sees:\n Segment 1: 150g Grilled Chicken (31g Protein)\n Segment 2: 100g Avocado (15g Fat)\n Segment 3: 50g Quinoa (10g Carbs)\nBy combining SAM's spatial precision with GPT-4o's reasoning, we reduce the \"hallucination\" of calories. \nFor those looking to dive deeper into advanced Vision-Language orchestration and production deployment strategies, I can't recommend wellally.tech/blog enough. It’s a goldmine for anyone building at the intersection of AI and healthcare.\nBuilding high-precision health tools requires moving beyond basic APIs. By chaining models like SAM and GPT-4o, we create a system that understands the physical world with much higher fidelity. \nWhat are you building with GPT-4o? Drop a comment below! Let's chat about the future of Multimodal AI! 🥑💻",
-      "publishedAt": "2026-01-27T01:20:00.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "dfd7c13ac673d4b3c1e39feb73ce9109bc5c8a5f0188589fb67aa682dc317316",
-      "title": "Ruby Deserves Better Documentation Tools",
-      "url": "https://dev.to/sanifhimani/ruby-deserves-better-documentation-tools-5j",
-      "description": "I maintain a Ruby gem. When it came time to write documentation, I went looking for the right tool.\nJekyll was the obvious choice. It's Ruby-native, battle-tested, and powers GitHub Pages. But Jekyll is built for blogs. Making it work for documentation meant hunting for themes, configuring layouts, and adapting blog-oriented templates to fit technical content. It's possible, but it's work.\nI ended up using VitePress.\nVitePress gave me exactly what I wanted: fast builds, beautiful output, search that just works. My docs looked professional in minutes.\nBut there I was - a Ruby gem with a JavaScript documentation site. It worked fine. It just felt like I was borrowing someone else's tools because my own ecosystem didn't have what I needed.\nJavaScript developers have VitePress, Docusaurus, and Starlight. Python has MkDocs with the Material theme. These are purpose-built for documentation. You run a command, write Markdown, and get a professional docs site with search, dark mode, and components like tabs and callouts.\nRuby has excellent tools, but they solve different problems:\nYARD & RDoc - API documentation generated from code comments. Perfect for that use case, but not for writing guides and tutorials.\nJekyll, Bridgetown, Middleman, Nanoc - Capable static site generators, but general-purpose. You'd need to build docs-specific features yourself.\nIf you want a documentation site with minimal setup, your options are: configure a general-purpose SSG, or reach for a tool from another ecosystem.\nThat felt like a gap worth filling.\nDocyard is a Ruby gem for building documentation sites. The goal: make it as easy to create docs in Ruby as it is in JavaScript or Python.\ngem install docyard\ndocyard init my-docs\ncd my-docs\ndocyard serve\n\nThat gives you:\nSearch - Full-text, keyboard navigation, works offline\nDark mode - Follows system preference\nSyntax highlighting - All the languages you'd expect\nComponents - Tabs, callouts, code groups, steps, accordions\nSensible defaults - Clean typography, responsive layout\nNo themes to configure. No build pipeline to set up.\nHere's what a callout looks like in Markdown:\n:::note\nThis is a note callout. There's also `tip`, `warning`, and `danger`.\n:::\n\nThat renders as a styled callout box. Same pattern for tabs, steps, and other components - all plain Markdown syntax.\nThe Docyard documentation is built with Docyard.\nCheck out Docyard\n\n\nTry the search. Toggle dark mode. That's what you get out of the box.\nDocyard is at v1. It handles the core use case well, but there's more to build.\nIt's free and open source.\n / \n        docyard\n      \n    \nDocyard\n\n\nBeautiful documentation sites from Markdown. Fast, simple, no configuration required.\nQuick Start\ngem install docyard\ndocyard init my-docs\ncd my-docs\ndocyard serve\nOpen http://localhost:4200 and start writing.\nDocumentation\nVisit docyard.dev for the full documentation.\nContributing\nSee CONTRIBUTING.md for guidelines.\nLicense\nMIT\nView on GitHub\nIf you try it on a project, I'd like to hear how it goes - especially the rough edges. Issues and feedback welcome.",
-      "publishedAt": "2026-01-27T01:16:21.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "291b88d8af544d9e2cb8c0a136e5cecc2069f7a559d41bd985ac3c15f2b36bd2",
-      "title": "Why I Built a Greeting Site You Can \"Remix\" 🎨",
-      "url": "https://dev.to/charlenecordero/why-i-built-a-greeting-site-you-can-remix-1mac",
-      "description": "Digital messages are usually a one-way street. You send it, they read it, done. I wanted to flip that and give the recipient a \"remix\" button for their own messages.\nI didn't want to overcomplicate this or pay for a database, so I went lean:\nFrontend: GitHub Pages (Free and reliable).\nBackend: Node.js/Express on Hugging Face Spaces.\nThe AI: Gemini 2.5 Flash-Lite. It’s fast, and the 1,000 RPD free tier is a lifesaver for hobby projects.\nInstead of saving greetings to a database, I used LZ-String to compress the message data into a Base64 string and shoved it directly into the URL. The \"Magic Link\" contains everything the frontend needs to decode and display the message. No server-side storage required!\nPrompt engineering for \"Minion-speak\" was harder than I thought. I had to use strict System Instructions to make sure the AI didn't just translate words but actually kept the \"chaotic energy\" of the characters.\nCheck out the live site: greetstyle.com\nCheckout the source: Github\nI'd love to know have you ever tried building a \"database-less\" app using URL states? Let's chat in the comments! 👇",
-      "publishedAt": "2026-01-27T01:07:13.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "1eb403081df84ea7cc048facc0f7a84d9f47c716323fb88a1e0fc59f1f8a5274",
-      "title": "AI代理新范式：Vercel Skills.sh引领潮流，机遇与隐忧并存",
-      "url": "https://dev.to/volume888/aidai-li-xin-fan-shi-vercel-skillsshyin-ling-chao-liu-ji-yu-yu-yin-you-bing-cun-1313",
-      "description": "AI代理新范式：Vercel Skills.sh引领潮流，机遇与隐忧并存\n\n\n近期，Vercel推出的skills.sh在开发者社区中掀起了波澜。这个号称能将React、Next.js、Stripe等90多种工具的最佳实践以单一命令集成的\"技能目录\"，上线不久便获得了超过两万次安装，引发了广泛的讨论和关注。skills.sh的出现，不仅预示着AI编程助手定制化时代的到来，也揭示了在通往高效、规范的AI辅助开发道路上，我们必须正视的机遇与挑战。\n根据Vercel的官方介绍和社区的解读，skills.sh的核心理念在于通过简单的Markdown文件来\"教导\"AI代理遵循特定的编码规范和团队惯例。每一个\"skill\"本质上是一个结构化的指令集，它告诉AI在处理特定任务时（例如，使用Stripe处理支付）应该遵循哪些步骤、使用哪些API、以及如何格式化代码。\nskills.sh的另一个创新之处在于其\"渐进式加载\"（progressive loading）机制。每个技能文件中的指令按标题（header）分割，每个部分仅占用约50个tokens。这意味着开发者可以同时安装数百个技能，而无需担心会过度消耗宝贵的上下文窗口（context window）资源。相较于需要部署和维护的MCP（Model Context Protocol）服务器，这种轻量级的设计显然更具吸引力。\n正如所有颠覆性技术一样，skills.sh在收获赞誉的同时，也引发了社区的深度思考和质疑。知名技术博主Simon Willison甚至预测，这项技术可能让\"MCP看起来显得平庸\"。然而，更广泛的讨论则集中在以下几个关键问题上：\n最引人注目的担忧来自安全领域。有开发者一针见血地指出：\"想象一下，针对一个'技能描述'的供应链攻击会是怎样的场景。\"如果一个被广泛使用的skill被恶意篡改，其包含的恶意指令可能会被AI代理在不经意间执行，从而在项目中植入后门或漏洞。这种新型的攻击向量，无疑为AI时代的代码安全敲响了警钟。\n另一个核心疑问是，AI代理是否真的会严格遵循这些Markdown文件中定义的规则。有开发者分享了他们的挫败经历，即使在项目中提供了CLAUDE.md或AGENTS.md这样的指导文件，AI（特别是Claude模型）有时仍然会忽略其中的指令。\n尽管存在诸多疑问，但skills.sh的推出无疑是AI辅助开发领域一次重要的探索。它代表了一种趋势：从单纯追求模型能力的\"强大\"，转向追求模型行为的\"可控\"和\"可信\"。\n总而言之，Vercel的skills.sh为我们揭示了AI代理发展的新方向。在拥抱其带来的便利与效率的同时，开发者社区必须保持审慎和批判性的眼光，共同推动技术向着更安全、更可靠、更智能的方向演进。",
-      "publishedAt": "2026-01-27T01:03:26.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "7f13b64231b61ded75eacf6eefdf2c4c37f26cc2c012271390583c9bd4b2bdd3",
-      "title": "第263回　go-tpccを使ってMySQLの負荷テストをする",
-      "url": "https://gihyo.jp/article/2026/01/mysql-rcn0263?utm_source=feed",
-      "description": "MySQLの負荷試験といえば、sysbenchがよく使われると思います。oltp_read_onlyやoltp_read_writeといったシナリオは準備が軽く、短時間でおおまかな性能傾向を掴むのに便利です。",
-      "publishedAt": "2026-01-26T23:58:00.000Z",
-      "feedName": "gihyo.jp"
-    },
-    {
-      "id": "f3bde7870d1c6123b615b934eab4a5f86b31ae5649619b5b2229ed609f5e1e56",
-      "title": "AWS IoT Core のハンズオンをやってみた１~疎通テストまで~",
-      "url": "https://dev.classmethod.jp/articles/aws-iot-core-hands-on-report-1-communication-test/",
-      "description": "AWS IoT Core のハンズオンをやってみた１~疎通テストまで~",
-      "publishedAt": "2026-01-26T23:54:20.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "b4831bcc7311edb546f4f1ebf5049380fae784073c0ac05034684ee1172d5a37",
-      "title": "AWS User Notifications コンソールで Amazon Q による AWS Health Event の要約でエラーが発生する原因と解決策を教えてください",
-      "url": "https://dev.classmethod.jp/articles/tsnote-amazon-q-what-are-the-causes-and-solutions-for-amazon-qs-summary-of-aws-health-events-in-the-aws-user-notifications-console/",
-      "description": "AWS User Notifications コンソールで Amazon Q による AWS Health Event の要約でエラーが発生する原因と解決策を教えてください",
-      "publishedAt": "2026-01-26T23:00:57.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "91c29eef21480a146dd544a5e441c806c0b30480f1362dd90dbc22fb526de3c1",
-      "title": "最新対応の第2版が発売、AWS認定ソリューションアーキテクトアソシエイトのテキスト＆問題集",
-      "url": "https://enterprisezine.jp/news/detail/23510",
-      "publishedAt": "2026-01-26T23:00:00.000Z",
-      "feedName": "EnterpriseZine"
-    },
-    {
-      "id": "3f2d9d00b14cd5cee20a128cdd142e8d15d793b25a89a65549d4d519f725eb28",
-      "title": "部分最適のDXを全体設計から構築し直す『ビジネスリーダーのためのアーキテクチャ大全』発売",
-      "url": "https://enterprisezine.jp/news/detail/23467",
-      "publishedAt": "2026-01-26T22:00:00.000Z",
-      "feedName": "EnterpriseZine"
-    },
-    {
-      "id": "8f70342734d804765eabd07c0189549011fc4a285b978da834ccd53c62d4b1ca",
-      "title": "Claude Codeで「AI部下10人」を作ったら、勝手にバグ直して「違反は切腹」ルールを追加してきて、オレは適当にしゃべるだけになった",
-      "url": "https://zenn.dev/shio_shoppaize/articles/5fee11d03a11a1",
-      "description": "結論 「テストして」って言っただけなのに、AIが自分でバグ見つけて、自分で直して、「違反は切腹」ってルールを自分で追加してきた。 人間、何もしてない。 何を作ったか Claude Code × tmux でホワイトカラー向けマルチタスクツールを作った。 名前は multi-agent-shogun。 戦国時代の軍制をモチーフに、将軍1名・家老...",
-      "publishedAt": "2026-01-26T12:56:49.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "594ce69394d6a0ad2ad2517767873389e41e5f1ee682d3c69d9a6cf5dccfdeaf",
-      "title": "iOSエンジニアがAWS Certified Cloud Practitioner (CLF-C02)を受けてみた - CLF合格体験記",
-      "url": "https://dev.classmethod.jp/articles/ios-engineer-aws-cloud-practitioner-study-log/",
-      "description": "iOSエンジニアがAWS Certified Cloud Practitioner (CLF-C02)を受けてみた - CLF合格体験記",
-      "publishedAt": "2026-01-26T12:47:21.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "46ba0c3e338e139922938e8fe941bf5de888f6a541084ea1f12aa20f8ba02acc",
-      "title": "k0s in 2025: A year of community growth, governance, and Kubernetes innovation",
-      "url": "https://www.cncf.io/blog/2026/01/26/k0s-in-2025-a-year-of-community-growth-governance-and-kubernetes-innovation/",
-      "description": "As we begin 2026, it’s worth reflecting on the remarkable progress we made with k0s as a project and as a community during 2025. Last year brought exciting advancements, adoption, and stronger community engagement.  k0s is...",
-      "publishedAt": "2026-01-26T11:52:00.000Z",
-      "feedName": "Cloud Native Computing Foundation"
-    },
-    {
-      "id": "0d5cd6ba237148e0dbe265850c81047a9d6065122e41eb21741d3c38cda9a2ae",
-      "title": "【登壇レポート】JAWS-UG大阪 re:Invent re:Cap LT大会 UFOが来たら強制終了で「Amazon Bedrock AgentCore EvaluationsでAIエージェントを評価してみよう！」というタイトルで登壇しました！",
-      "url": "https://dev.classmethod.jp/articles/jaws-ug-osaka-reinvent-recap-bedrock-agentcore-evaluations/",
-      "description": "【登壇レポート】JAWS-UG大阪 re:Invent re:Cap LT大会 UFOが来たら強制終了で「Amazon Bedrock AgentCore EvaluationsでAIエージェントを評価してみよう！」というタイトルで登壇しました！",
-      "publishedAt": "2026-01-26T11:02:37.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "18c1135a11773aa8b2478abfb4402fd2e39fe74aa6f857263cc81823816b9c9a",
-      "title": "週刊AWS – 2026/1/19週",
-      "url": "https://aws.amazon.com/jp/blogs/news/aws-weekly-20260119/",
-      "description": "Amazon RDS ブルー/グリーンデプロイのダウンタイム短縮、Amazon RDS for SQL Server が差分およびトランザクションログ復元サポート、Amazon QuickSight の SPICE エンジンの強化、AWS Clean Rooms が SQL でのジョインおよびパーティションヒントのサポート、Amazon Bedrock AgentCore Browser がカスタムブラウザ拡張機能をサポート、Amazon RDS for Oracle が Oracle マルチテナント構成でのレプリカをサポート、EC2 Auto Scaling のグループ削除保護の新しいメカニズムなど",
-      "publishedAt": "2026-01-26T10:59:04.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "1c64a8f756b3fa1e15691f0709fb5e55f5239360b8d86ea94ae4f1c0fdb71c59",
-      "title": "AWS の実践チュートリアル 「RDS MySQL から Aurora MySQL へのニアゼロダウンタイム移行」 を試してみた",
-      "url": "https://dev.classmethod.jp/articles/aws-rds-mysql-to-aurora-mysql-near-zero-downtime-migration-tutorial/",
-      "description": "AWS の実践チュートリアル 「RDS MySQL から Aurora MySQL へのニアゼロダウンタイム移行」 を試してみた",
-      "publishedAt": "2026-01-26T10:05:44.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "73886c05ca55f61572e27c493d4558a5ddbd6fbdffca651374a418e04ab5dfcc",
-      "title": "AWS Control Tower のアカウントレベルのベースライン継承状態を AWS CLI で確認してみた",
-      "url": "https://dev.classmethod.jp/articles/202601-control-tower-child-enabled-baseline/",
-      "description": "AWS Control Tower のアカウントレベルのベースライン継承状態を AWS CLI で確認してみた",
-      "publishedAt": "2026-01-26T09:22:49.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "c2d70e55832d719d4dfc3d81f48d92c7c28c1e698c6a2c4a1aca1362ffe3f9ee",
-      "title": "AWS FireLens (AWS for Fluent Bit) のPrometheus形式のメトリクスをAWS Distro for OpenTelemetry (ADOT) CollectorでスクレイピングしてCloudWatchメトリクスにPUTしてみた",
-      "url": "https://dev.classmethod.jp/articles/aws-firelens-prometheus-metrics-adot-collector-cloudwatch/",
-      "description": "柔軟な処理をしたい場合はADOT Collectorが便利",
-      "publishedAt": "2026-01-26T06:30:09.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "cf901134c4fb526c5d186ed4c9fed884d9792c9afe457ac6b5606ae3ad964fbd",
-      "title": "主要ブラウザに対応してほしい！2026最新Web技術25選 | gihyo.jp",
-      "url": "https://gihyo.jp/article/2026/01/misskey-22",
-      "description": "本連載は分散型マイクロブログ用オープンソースソフトウェアMisskeyの開発に関する紹介と、関連するWeb技術について解説を行っています。 Misskeyの開発を行う上では、「⁠活用したいがまだ一部のブラウザにしか実装されていない」技術がよくあります。JavaScriptを用いると非対応ブラウザでも再現可能なものもありますが...",
-      "publishedAt": "2026-01-26T06:19:59.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "daa0aa8de1581b050f53611083d3e3d1cf1e95d7d14ba7996b72043be13aac27",
-      "title": "「基本を忘れてはならない」　優先すべき4つのセキュリティ戦略をMicrosoftが提言",
-      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2601/26/news062.html",
-      "description": "Microsoftは、予防可能な攻撃が多くの被害を生んでいる現状を踏まえ、サイバー攻撃対策として優先すべき4つの戦略を公開した。",
-      "publishedAt": "2026-01-26T04:00:00.000Z",
-      "feedName": "＠IT"
-    },
-    {
-      "id": "8551770e4c3430f467fc815923e07a842bceabeff5914c866387b1bfa51174b4",
-      "title": "週刊生成AI with AWS – 2026/1/19週",
-      "url": "https://aws.amazon.com/jp/blogs/news/weekly-genai-20260119/",
-      "description": "週刊生成AI with AWS, 1月ってもう今週で終わりなの！？な2026年1月19日週号 – 株式会社デジナーレ様、株式会社 Works Human Intelligence 様によるAmazon Bedrock AgentCoreを活用した AI Agent 開発事例が公開されています。またKiroのupdateも盛りだくさんです。サービスアップデートでは、AWS Security Agent の GitHub Enterprise Cloud サポート開始、Amazon Bedrock AgentCore Browser のカスタムブラウザ拡張機能サポート、Amazon EC2 G7e インスタンスの一般提供開始など5件を紹介。",
-      "publishedAt": "2026-01-26T03:54:30.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "27666e0ffa8f9aaedfaf890d7446dd2ffe08b9f9b08e1f2834a38de8a9b9746c",
-      "title": "LINEヤフーのクラウド基盤刷新：巨大な2つのクラウドを統合する次世代基盤「Flava」のアーキテクチャ",
-      "url": "https://techblog.lycorp.co.jp/ja/20260126b",
-      "description": "こんにちは。LINEヤフーでプライベートクラウドのインフラを担当している井上です。LINEヤフーの膨大なトラフィックとデータを支えているのは、私たち自らが開発・運用している大規模なプライベートクラウド...",
-      "publishedAt": "2026-01-26T02:50:00.000Z",
-      "feedName": "LINEヤフー Tech Blog"
-    },
-    {
-      "id": "1288f6d391c6021784be5f312e10b412cc2e85b571c6e2acd40562ec4ce25048",
-      "title": "Next.js でOGP画像設定でハマった話 - Vercel + Custom Domain",
-      "url": "https://dev.classmethod.jp/articles/next-js-ogp-vercel-custom-domain/",
-      "description": "Next.js でOGP画像設定でハマった話 - Vercel + Custom Domain",
-      "publishedAt": "2026-01-26T02:33:42.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
       "id": "d024bb27efa65685dba1d1a97019b8784ff040a7154f74f0e5d84d01e4975d86",
       "title": "The App Era is Ending: Why I Just Deleted 13 Apps from My Phone",
       "url": "https://dev.to/kawshik-ornob8/the-app-era-is-ending-why-i-just-deleted-13-apps-from-my-phone-1m68",
@@ -422,46 +232,6 @@
       "feedName": "Amazon Web Services ブログ"
     },
     {
-      "id": "958dd8f92007879548ad0655a330b28237070df8682bfd1afdcc253b58e1f2eb",
-      "title": "GCP インスタンスグループ入門（実案件で感じた価値）",
-      "url": "https://qiita.com/chinen-gmoconnect/items/daea0bfaea56912a96f0?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "GCP インスタンスグループ入門（実案件で感じた価値）\n\nはじめに\nGoogle Cloud Platform（以下、GCP）へのシステム基盤移行を進める中で、主に Compute Engine（以下、VM）の構築を担当してきました。\nオンプレミス環境で運用されてきた V...",
-      "publishedAt": "2026-01-27T01:21:38.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "70c70f10abf37567d085ce5976da1bd069adc66864674c52eba707ea05bdf8ec",
-      "title": "Microsoft Ignite 2025：クラウド移行もAIエージェントで！",
-      "url": "https://qiita.com/daisuketakehara/items/bcd9c801ee710c082077?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "Azure Copilot Migration Agentは本記事執筆(2026年1月19日)時点でPreview中(申請制)となっています。そのため、本内容を参照いただく時期によっては、サービス仕様が大きく変更されている可能性があります。最新情報は、Microsoft...",
-      "publishedAt": "2026-01-27T01:19:26.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "40c009e60db812c4565990c55fd87a69c1880d83ac3da5cc529609f8f9a8104f",
-      "title": "2026/01/27 今日のQiitaトレンド記事をポッドキャストで聴こう！",
-      "url": "https://qiita.com/ennagara128/items/3d85998f128e448f8da9?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "前日夜の最新トレンド記事のAIポッドキャストを毎日朝7時に更新しています。\n通勤中などにながら聴きしよう！\n（Qiita投稿は通勤には間に合わないと思われますが）\nフィードバックとか助かりますのでください\n↓こちらから\n\n出典\n【初心者完全版】0からDockerをフルスタッ...",
-      "publishedAt": "2026-01-27T00:18:30.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "d617e009cb2baa83ea385f1012f1d6ff8e8134d580784a30dbd94f92f46b1499",
-      "title": "ペネトレーションテスト チートシート（CRTP）",
-      "url": "https://qiita.com/sanyamarseille/items/b15f9adc9fb807a3e148?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "CRTP CheatSheet\n\n参考リンク\n\nCRTP Notes\nCRTP Study Notes\nWindows SID一覧\nCertify\n\n目次\n\n一般\n\nセキュリティ機能の無効化\nセキュリティ機能の検知回避\nアプリケーション実行制御の無効化\nファイル配送\n...",
-      "publishedAt": "2026-01-26T12:49:04.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "16267897640f43fefc887b2e5f14afd0aaa05dc4d0b218844f591f847f9acdb3",
-      "title": "【JavaScript】ES2026の新機能全部解説する",
-      "url": "https://qiita.com/rana_kualu/items/7c5305349815f5142d7d?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "JavaScriptの仕様は、TC39というところで決められています。\nブラウザベンダや関係者が定期的に会合を行い、様々な新機能について話し合って今後のJavaScriptの方向性を決めていきます。\nここでは2025年にFinishedになったproposalについて紹介し...",
-      "publishedAt": "2026-01-26T12:13:46.000Z",
-      "feedName": "Qiita"
-    },
-    {
       "id": "2430ac7ac42d53cf5f624cdb94b3d1481d19db0b463bcedaf314d5e326f57763",
       "title": "Is the language war even real?",
       "url": "https://dev.to/ujja/is-the-language-war-even-real-13n0",
@@ -604,14 +374,6 @@
       "description": "こんにちは！satto workspaceでSREチームに所属している梶原（@rina_kajihara）です。\n\n!\nこの記事でわかること\n\n✅ Dockerビルド方法の選定基準（IaCツール / docker/build-push-action）\n✅ マトリックス機能を使った並列ビルドでビルド時間を短縮する方法\n✅ GitHub Actions Cache / ローカル / ECRなどキャッシュ戦略の比較と選定基準\n✅ GitHub ActionsでのARMビルド方法の比較と選定基準（QEMU・Larger Runners・セルフホストランナー等）\n\n\n\n はじめに\nGitHub A...",
       "publishedAt": "2026-01-27T04:31:35.000Z",
       "feedName": "Zenn"
-    },
-    {
-      "id": "6ea8ea0767b66f0d9b6fabda2f600acb8a3b31bf428ff87440a05c9f958db122",
-      "title": "【AWS】SAA-C03試験対策まとめ（AWS主要サービスの全体像）",
-      "url": "https://qiita.com/RizumuUEDA/items/20a2d4af87aa3541f1d3?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "こんにちは。株式会社ジールの@RizumuUEDAです。\nこの度AWS SAA-C03試験を受験し合格することができました。\nAWSに関しては昨年からCLFをはじめいくつかの資格取得や、実務で実際にサービス利用をしてきましたが、経験を積む中でようやくAWSの理解が深まった実...",
-      "publishedAt": "2026-01-27T00:50:22.000Z",
-      "feedName": "Qiita"
     },
     {
       "id": "c719f0e24782bb98f5b0019bbc54a7a339ed1ae529afdc10dd4e84fe3c9485e8",
@@ -6481,6 +6243,246 @@
       "description": "AWS Developer Tools Blog Introducing Agent Plugins for AWS Deploying applications to AWS typically involves researching service options, estimating costs, and writing infrastructure-as-code tasks that can slow down development workflows. Agent plugins extend coding agents with specialized skills,...",
       "publishedAt": "2026-02-17T20:03:54.000Z",
       "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "b7921d3aae46e3f8b400e6a3220fa84a8100eef5f0009121172a4d604ca14764",
+      "title": "Agent orchestration. The end of coding as we know.",
+      "url": "https://dev.to/merlos/agent-orchestration-the-end-of-coding-as-we-know-jih",
+      "description": "Are we doomed or it's the best time to be a software developer? \nThese days, if you don't mention AI in your writing, you risk appearing obsolete. Software engineering is currently undergoing a profound paradigm shift—one that may see traditional engineering disappear in favor of what can be called Code Agent Orchestration.\nYou have likely heard of OpenClaw, an open-source personal assistant that has gained massive traction on GitHub. Its creator was recently hired by OpenAI. \nWhile the product itself is interesting, its tagline is what truly resonates: \"An agent that actually does things.\" What I find most enlightening is how it was developed. In a recent interview on the Max Friedman podcast, Peter Steinberger, the creator of OpenClaw explained his development process.\nEssentially, to evolve the product, he engages in a conversation with a coding AI (using tools like Claude Code or CodeX). Indeed he does this with several in parallel. And these agents are the ones actually writing the code in the repository.\nSteinberger explains in the podcast how he leveraged AI agents to generate the code. And the key change is the agentic nature of the LLM—the ability of the AI to work directly on the codebase. \nIn the \"early days\" (only a year or two ago!), the workflow was incredibly high-friction. To get anything done with ChatGPT, you had to follow a manual loop:\nPrompt: Provide a detailed spec in a chat window.\nWait: Watch the code chunk generate line-by-line.\nManual Labor: Copy-paste the code into your IDE.\nDebug: Copy-paste the error back to the chat if it failed and repeat.\nThis process was clunky and fragmented.\nNow, the code agent removes the \"middle-human\" for these repetitive tasks, allowing the AI to work directly on the codebase. It can:\nRead the existing architecture.\nModify source files directly.\nWrite and run tests to verify the changes.\nFix runtime problems before finishing the task.\nThis is further enabled by increased context windows. Where early models could only \"remember\" a few hundred lines of code, modern models can hold entire relatively large codebases in memory, allowing the agent to understand complex dependencies across a large project.\nBecause it can take some time for an agent to complete a task, to be more productive, Steinberger was launching several agents in parallel. For instance, while one was completing a complex refactor, he was discussing the architectural approach of a new feature with another. Indeed, he achieved such level of proficiency that he confessed he had to purchase several accounts because he run out of credits. \nPeter Steinberger also confesses that he no longer reviews every line of code; he focuses only on critical components. His rationale is that most code is \"boring\"—simply moving data from one place to another or transforming between formats. Newer models are now proficient enough to handle these tasks autonomously.\nAnother interesting shift is that you no longer need to be \"proficient\" in a specific language to build with it. Most programming languages share common concepts: variables, loops, and conditions. While the syntax varies—semicolons here, indentation there—the logic remains similar.\nHistorically, the real barrier was learning the libraries and ecosystems. This is what separated a senior developer from a newbie. However, LLMs have \"read\" all the documentation. This enables a frontend developer who knows JavaScript to suddenly write a Python backend, a native iOS app in Swift, or even C++ for an IoT microcontroller. \nLanguage is no longer the barrier, but your skill to instruct the agent to write what you need.\nWe are at the \"steam engine\" moment of software development. This is a period of creative destruction. How may this affect our industry?\nA developer might see the glass as half-empty: years of skill-building are being devalued as LLMs do the job faster and cheaper. However, the glass is also half-full: these tools provide superpowers. You can now build ideas in weeks that previously required a full team and months of effort.\nTheseWe can expect software development costs to plummet. Here is how I believe this shift will affect the industry:\nLayoffs and Salaries: We can expect a market correction. As a single developer becomes as productive as five, the demand for traditional \"junior\" roles may decrease. Additionally, the barriers to entry will lower; as more people enter the market, we may see a downward trend in average salaries.\n\n\nSaaS Competition: Established enterprise software giants will face a \"mushrooming\" of new competitors who can offer the same core features at a fraction of the price. In an even more saturated market, strategies to make your product shine among the others.\n\n\nCommoditization of Development: Small to medium companies that previously relied on off-the-shelf SaaS or complex enterprise systems may now choose to build custom, in-house tools. While custom software can be perfectly integrated into a company's specific processes, enterprise software often requires the company to adapt to the tool—cluttering the experience with unnecessary features and a steeper learning curve.\n\n\n\n\n  \n  \n  A Paradox of Creativity\n\n\nThere is a strange paradox in this revolution. We once imagined technology would automate \"blue-collar\" labor—cleaning floors or filing invoices—to free humans for the \"white-collar\" joy of writing, drawing, and coding.\nInstead, we are seeing a world where generative AI targets the tasks we find most intellectually rewarding, while humans are still required for the physical labor.\nI love coding. Even after 20 years, I still find it magical to see logic come to life on a screen.  However, I’ve been playing with this \"mini-army\" of agentic minions lately, and it is transformative. \nWhile agentic workflows might commoditize the syntax, they amplify the vision. We aren't losing the craft; we are evolving into Code Agent Orchestrators. The ceiling for what a single developer can build has just been shattered. What a time to be alive. \nAre you ready to lead the orchestra?",
+      "publishedAt": "2026-02-26T01:45:31.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "ee686b6b778ae44881b5808450da2c4e0639f982efa195d7e6b0c78a8d933e14",
+      "title": "Mensajes de WhatsApp iniciados por el agente desde Amazon Connect",
+      "url": "https://dev.to/aws-espanol/mensajes-de-whatsapp-iniciados-por-el-agente-desde-amazon-connect-25i4",
+      "description": "Aprende a construir una experiencia de mensajería proactiva por WhatsApp desde Amazon Connect, permitiendo a los agentes de atención al cliente enviar mensajes de plantilla de WhatsApp con un solo clic desde el Agent Workspace. Ideal para equipos que buscan automatizar y simplificar la comunicación saliente por WhatsApp sin salir de la consola de Amazon Connect\n\n¿Tu equipo de atención al cliente necesita enviar mensajes proactivos por WhatsApp? Imagina que un agente pueda, desde su escritorio de Amazon Connect, enviar un mensaje de plantilla de WhatsApp a un cliente con un solo clic. Sin salir de la consola, sin copiar y pegar números, sin errores.\nEn este blog te muestro cómo construir esa experiencia usando AWS CDK, AWS Lambda, AWS End User Messaging Social y Amazon Connect.\nRevisa el código en https://github.com/aws-samples\nUna experiencia guiada dentro del Agent Workspace de Amazon Connect que permite a los agentes:\nVer los datos del cliente pre-cargados en un formulario\nRevisar y editar los parámetros de la plantilla de WhatsApp\nEnviar el mensaje con un clic\nTodo orquestado por un Contact Flow, funciones Lambda y un formulario (Connect view).\n\nEl flujo es el siguiente:\nUn Contact Flow invoca una función AWS Lambda (get_customer_data) para obtener la información del cliente (nombre, teléfono, etc.). También puede utilizar el bloque  Customer Profile para buscar información de cliente en Customer Profiles de Connect.\nEl flujo presenta un formulario (View) en el Agent Workspace con los datos pre-llenados\nEl agente revisa, edita si es necesario, y envía\nUna segunda Lambda (send_whatsapp_message) envía el mensaje de plantilla de WhatsApp usando la API de AWS End User Messaging Social\nAntes de comenzar necesitas:\nPara comenzar, necesitas crear una nueva cuenta de WhatsApp Business (WABA) o migrar una existente a AWS. Los pasos principales están descritos aquí. En resumen:\nTener o crear una cuenta de Meta Business\nAcceder a la consola de AWS End User Messaging Social y vincular tu cuenta de negocio a través del portal embebido de Facebook\nAsegurarte de tener un número de teléfono que pueda recibir verificación por SMS/voz y agregarlo a WhatsApp\n⚠️ Importante: No uses tu número personal de WhatsApp para esto.\nNecesitas una instancia de Amazon Connect. Si aún no tienes una, puedes seguir esta guía para crearla.\nNecesitarás el INSTANCE_ID de tu instancia. Lo puedes encontrar en la consola de Amazon Connect o en el ARN de la instancia:\narn:aws:connect:<region>:<account_id>:instance/INSTANCE_ID\n(consulta la Prerequisitos Whatsapp / Connect mara mayores detalles) \nUna plantilla de mensaje de WhatsApp creada en End User Messaging (consulta la Guía de creación de plantillas)\n⚠️ Despliega en la misma región donde tienes tus números de WhatsApp en AWS End User Messaging.\nEdita config.py y coloca tu Instance ID de Amazon Connect:\nINSTANCE_ID = \"<tu-connect-instance-id>\"\n\ngit clone https://github.com/aws-samples/sample-whatsapp-end-user-messaging-connect-chat.git\ncd sample-whatsapp-end-user-messaging-connect-chat/agent-initiated-whatsapp\n\nSigue las instrucciones de la Guía de despliegue CDK.\nUna vez desplegado, hay algunos pasos manuales para conectar todas las piezas.\nVe a AWS Systems Manager Parameter Store y actualiza /whatsapp_template/config con tu configuración de plantilla:\n{\n  \"message\": {\n    \"messaging_product\": \"whatsapp\",\n    \"to\": \"PHONE_NUMBER\",\n    \"recipient_type\": \"individual\",\n    \"type\": \"template\",\n    \"template\": {\n      \"name\": \"nombre_de_tu_plantilla\",\n      \"language\": { \"code\": \"en_US\" },\n      \"components\": [\n        {\n          \"type\": \"body\",\n          \"parameters\": []\n        }\n      ]\n    }\n  },\n  \"META_API_VERSION\": \"v23.0\",\n  \"ORIGINATION_PHONE_NUMBER_ID\": \"<tu-origination-phone-number-id>\"\n}\n\n\n\n\nParámetro\nDescripción\n\n\n\n\ntemplate.name\nNombre de tu plantilla de WhatsApp creada en End User Messaging\n\n\ntemplate.language.code\nCódigo de idioma de la plantilla (ej: en_US)\n\n\nORIGINATION_PHONE_NUMBER_ID\nEl ID del número de teléfono en AWS End User Messaging Social\n\n\nMETA_API_VERSION\nVersión de la API de Meta (por defecto: v23.0)\n\n\n\nNavega a las vistas de tu instancia de Amazon Connect:\nhttps://<tu-instancia>.my.connect.aws/views\n\nBusca la vista llamada enviarWhatsAppForm007. Este es el formulario que los agentes usarán para revisar los datos del cliente y enviar el mensaje.\n\nNota: el campo de WhatsApp es de tipo password para ocultar el número. Incluso podría no ser parte del formulario y acceder al dato usando Attributos de Contacto\nNavega al flujo de contacto SendWhatsAppGuideFlow007 en tu consola de Amazon Connect.\n\nEdita el primer bloque Invoke AWS Lambda function y selecciona la función Lambda pre-desplegada. Busca la que contenga GetCustomerData en el nombre.\nEsta es una función mock que retorna datos de ejemplo:\ndef lambda_handler(event, context):\n    return {\n        \"fullName\": \"Juan Pérez\",\n        \"phoneNumber\": \"+XXXXXXXX\",\n        \"input4\": \"Entregado\",\n        \"input3\": \"Puzzle 1000 piezas\",\n        \"input2\": \"P12345\",\n        \"input1\": \"Juan\",\n    }\n\nReemplaza esto con tu propia fuente de datos. Por ejemplo, podrías hacer un data dip a Amazon Connect Customer Profiles usando un profileId, consultar una tabla de DynamoDB o llamar a una API externa.\nPresiona Confirm para guardar.\nEdita el bloque Show view y selecciona enviarWhatsAppForm007 como recurso de vista.\nLos valores por defecto del formulario se mapean desde los valores retornados por la Lambda:\nfullName → $.External.fullName\n\n\nwhatsappNumber → $.External.phoneNumber\n\n\ninput1 a input4 → $.External.input1 a $.External.input4\n\n\n\nEstos valores pre-llenan el formulario para que el agente los revise antes de enviar. Presiona Confirm para guardar.\nEdita el segundo bloque Invoke AWS Lambda function y selecciona la Lambda que contenga SendWhatsappMessage en el ARN.\nEsta Lambda lee la configuración de la plantilla desde SSM, extrae los valores del formulario de los atributos de contacto y envía el mensaje:\ndef lambda_handler(event, context):\n    # Carga la configuración de la plantilla desde SSM Parameter Store\n    config = get_ssm_parameter(CONFIG_PARAM_NAME)\n    message_payload = config[\"message\"]\n\n    # Extrae los valores del formulario desde los atributos de contacto\n    attributes = event[\"Details\"][\"ContactData\"][\"Attributes\"]\n    phone_number = attributes.get(\"phoneNumber\")\n\n    # Construye los parámetros de la plantilla desde input1..input4\n    template_params = build_template_parameters(\n        attributes, [\"input1\", \"input2\", \"input3\", \"input4\"]\n    )\n\n    # Envía usando AWS End User Messaging Social\n    response = social_client.send_whatsapp_message(\n        originationPhoneNumberId=origination_phone_number_id,\n        message=bytes(json.dumps(message_payload), \"utf-8\"),\n        metaApiVersion=meta_api_version,\n    )\n    return {\"result\": \"OK\", \"messageId\": response.get(\"messageId\", \"\")}\n\nPresiona Confirm para guardar. Luego Save y Publish el flujo de contacto.\nNavega a las vistas de Amazon Connect:\nhttps://<tu-instancia>.my.connect.aws/views\n\nCrea una nueva vista de tipo Guide.\n\nArrastra un componente Connect Application al canvas.\nEstablece el contactFlowId con el flujo de contacto desplegado SendWhatsAppGuideFlow007.\n\nDale un nombre a la vista y haz clic en Publish.\nNavega a los workspaces de Amazon Connect:\nhttps://<tu-instancia>.my.connect.aws/workspaces\n\nHaz clic en Add new workspace y completa el nombre, descripción y título.\n\nAsigna este workspace a los usuarios o perfiles de enrutamiento que necesites.\nAgrega una nueva página usando Set page with custom page slug y selecciona la vista que creaste en el paso anterior (la que tiene el componente Connect Application).\nUsa un slug personalizado como:\n/page/send_whatsapp\n\n\nGuarda la página.\nSelecciona tu workspace personalizado desde la barra de navegación superior en el Agent Workspace.\n\nEl agente ahora puede navegar a la página personalizada y usar la guía para enviar mensajes de plantilla de WhatsApp a los clientes.\nCuando el agente navega a la página personalizada, se le presenta un Connect Application que ejecuta el flujo de contacto. El flujo muestra el formulario con los valores pre-cargados desde la Lambda de datos del cliente, dándole al agente la oportunidad de revisar, modificar y enviar. Una vez que el agente envía, la Lambda de envío de WhatsApp se invoca con todos los parámetros del formulario para entregar el mensaje final.\nEsta solución es un punto de partida. Algunas ideas para extenderla:\nConectar la Lambda de datos del cliente a Amazon Connect Customer Profiles o DynamoDB\nAgregar validaciones adicionales en el formulario\nSoportar múltiples plantillas de WhatsApp seleccionables por el agente\nIncorporar dinámicamente la cantidad de inputs, dependiendo del número de variables en el template.\nRepositorio del proyecto\nGuía de creación de plantillas\nGuía de prerrequisitos\nGuía de despliegue CDK",
+      "publishedAt": "2026-02-26T01:44:17.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "37601d7135fc2d40394ecdeb948ebe607a3eba65b28c591a912cfbb374aafb07",
+      "title": "🚀 Deploying a Static Website on AWS EC2 (Step-by-Step Guide)",
+      "url": "https://dev.to/sushant_deshpande/deploying-a-static-website-on-aws-ec2-step-by-step-guide-30lb",
+      "description": "As part of my cloud learning journey, I deployed my first static website on AWS EC2.\nTechnologies Used:\nHTML & CSS\nAWS EC2\nUbuntu Linux\nApache Web Server\nGit & GitHub\nDeployment Steps:\nLaunched EC2 instance\nConfigured Security Group (Port 80 open)\nInstalled Apache\nUploaded index.html file\nAccessed website using Public IP\nThis was a hands-on practice project to understand how real cloud servers work.\nGitHub Repository:\nhttps://github.com/sushantdeshpande/cloud-practice\nMore advanced cloud projects coming soon 🚀",
+      "publishedAt": "2026-02-26T01:43:48.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "306b4f34d6147c9a9ca845df6912c205645e03b8397445a0bd8b1e3ed82e1056",
+      "title": "☁️ What is AWS EC2? (In Simple Language)",
+      "url": "https://dev.to/sushant_deshpande/what-is-aws-ec2-in-simple-language-1kd9",
+      "description": "Amazon EC2 (Elastic Compute Cloud) is a virtual server in the cloud.\nInstead of buying a physical computer, AWS allows us to rent a server online.\nWe can:\nLaunch a virtual machine\nInstall software\nHost websites\nRun applications\nEC2 is useful because:\nIt is scalable\nIt is secure\nWe pay only for what we use\nIn my learning journey, I launched my first EC2 instance and deployed a static website.\nIn the next post, I will share the complete step-by-step project 🚀",
+      "publishedAt": "2026-02-26T01:42:13.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "2e53114ba6bebdb4246c94a44c471f910887386b241bdbccf8c74fae1161a304",
+      "title": "🚀 Starting My Cloud Engineering Journey",
+      "url": "https://dev.to/sushant_deshpande/starting-my-cloud-engineering-journey-3hf3",
+      "description": "Hello Developers 👋\nI have started my journey into Cloud Computing.\nMy goal is to learn step by step by understanding concepts and building mini real-world projects.\nI will be documenting everything I learn, including:\nCloud Basics\n\nAWS Services\n\nLinux Fundamentals\n\nGit & GitHub\n\nHands-on Mini Projects\n\n\n\nCurrently Learning:\nAWS EC2\nLinux Commands\nApache Web Server\nGit Version Control\nI believe skills grow through practice and consistency.\nStay connected for upcoming cloud projects 🚀",
+      "publishedAt": "2026-02-26T01:38:46.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "43e51360207c7d86a0bdf198709ca2b859b9d206240c3917e545b1ff9ab996ba",
+      "title": "How Agent Skills Can Make AI Actually Useful for Your Business",
+      "url": "https://dev.to/224industries/how-agent-skills-can-make-ai-actually-useful-for-your-business-249e",
+      "description": "Most people use AI the same way: open a chat, type a prompt, hope for the best. Sometimes it works. Often it doesn't, because the AI has no idea how your business operates, what tools you use, or what good output looks like for your team.\nAgent skills change that. They're a simple, open format for giving AI agents the specific knowledge they need to do a job well. And they're about to reshape how marketing teams, designers, and agencies work with AI.\nAn agent skill is a folder containing instructions, reference docs, and scripts that an AI agent can read when it needs them. Think of it like an onboarding guide you'd hand a new team member on their first day, except the new hire is an AI model.\nEach skill has a SKILL.md file that tells the agent what the skill does and when to use it. When the agent encounters a task that matches, it reads the instructions and gets to work with the right context. No guessing, no hallucinating, no generic output.\nAnthropic originally built skills for Claude, then released the format as an open standard. Now they work across a growing number of AI tools, and partners like Canva, Notion, Figma, and Atlassian are already building their own.\nHere's why that matters for you.\nIf you've ever asked an AI to write a blog post and received something that sounds like a Wikipedia entry, you've hit the knowledge gap problem. The AI is smart, but it doesn't know your brand voice, your audience, your content strategy, or your style guidelines.\nSkills close that gap. A well-built skill can teach an AI how your team actually works: how you structure blog posts, what tone you use, which metrics matter, and how you format deliverables. The result is output that's useful from the first draft, not the fifth.\nAnd skills aren't limited to coding tools. You can use them in Claude's web interface, in Claude Cowork (a desktop tool for file and task automation), and through the API. If your workflow involves generating reports, drafting content, analysing data, or building presentations, skills can improve the quality of every one of those tasks.\nAt 224 Industries, we started building custom skills because we were tired of babysitting AI output. We're a Webflow agency that works with tech and SaaS companies like Easy Agile, Clear Dynamics, and Giraffe, and our work spans strategy, design, and development. AI touches all three.\nHere's how skills show up in our day-to-day:\nResearch and reporting. We use skills that guide Claude through multi-step research workflows, pulling data from the web, structuring findings, and producing reports that are 30+ pages long. What used to take a full day of manual work now takes under an hour, and the output follows our formatting standards every time.\nContent creation. Our SEO content skill teaches the AI how to write for both search engines and AI answer engines, following our internal guidelines for keyword placement, structure, and tone. It even checks for common AI-sounding phrases and flags them before we publish.\nCode and development. Our open-source Webflow agent skills give coding agents accurate documentation for Webflow's APIs. Before we built these, agents would hallucinate methods that don't exist. Now they produce working code on the first pass.\nData analysis. We have a CSV analysis skill that turns raw data exports into clear statistical summaries with visualisations, using our preferred tools and formatting conventions.\nThe pattern is the same every time: teach the AI once, use it repeatedly, get better results.\nWe released five Webflow agent skills as open source because we saw a gap nobody was filling. AI coding agents are powerful, but they had zero context on how Webflow's APIs actually work. The result was hallucinated code and wasted time.\nOur skills cover the Designer API (building extensions and using the API Playground), the Browser API (consent management and tracking), Code Components (React components via DevLink), Webhooks (signature verification and event handling), and the Enterprise API (workspace management and audit logs).\nEach skill follows the open Agent Skills standard and works with Claude everywhere (e.g. web, Cowork, and Code), Cursor, GitHub Copilot, OpenAI Codex, Gemini CLI, and any other compatible agent. They're MIT-licensed and free.\nThe response from the Webflow community has been positive. After building them for our internal workflow, we realised other agencies and developers would face the same problems. Open-sourcing them was the obvious next step.\nHere's something most businesses haven't figured out yet: agent skills make excellent lead magnets.\nIf your company has expertise in a specific domain, you can package that knowledge into a skill and offer it as a free download. The people who want it are exactly your target audience: they use AI tools, they work in your industry, and they're actively looking for ways to get better results.\nTake our Webflow skills. Every developer or agency that installs them is someone who builds on Webflow. That's our core audience, discovering our brand through a tool that genuinely helps them.\nCompare that to a generic PDF ebook that sits in someone's downloads folder unopened. A skill is something people actually use, repeatedly, inside the tools they already work with. The brand exposure compounds every time someone runs it.\nFree skills work for lead generation. But there's also a real opportunity to sell premium skills.\nIf you've spent months refining a workflow (your content strategy, your QA process, your reporting framework), that expertise has value. Packaging it as a skill and distributing it privately, whether through direct sales, a membership, or as part of a service offering, gives clients something tangible beyond a PDF process document.\nA few ways this could work: an SEO agency sells a content brief skill that generates briefs matching their methodology. A design studio offers a brand guidelines skill that teaches AI to apply their client's visual identity correctly. A consultancy bundles custom skills as part of their retainer.\nThe format is simple enough that anyone can build a skill, but the knowledge inside it is what makes it valuable. That's a hard combination to copy.\nThis is where we come in. At 224 Industries, we don't just build skills for our own use. We help brands create agent skills that match their workflows, capture their expertise, and improve how their teams work with AI.\nThat could look like building a set of custom skills for your marketing team so your AI-generated content always hits the mark. It could mean creating a skill-based lead magnet that attracts your ideal audience. Or it could be packaging your agency's methodology into skills you distribute to clients.\nWe handle the strategy, the skill architecture, and the testing to make sure the output actually meets your standards. We've been through the trial and error already (our early skills were too long, too vague, and too generic before we dialled in what works).\nAgent skills are still early. Anthropic launched them in October 2025 and opened the standard in December. But the trajectory is clear: AI agents are moving from general-purpose assistants to specialised tools that know how to do specific jobs well.\nThe businesses that invest in skills now (building them, using them, distributing them) will have a serious head start. Not because the technology is complicated, but because the hard part is the knowledge and the workflows that go inside them.\nIf you're curious about what agent skills could look like for your team, book a call with us. We'll walk you through the possibilities and figure out where skills would have the biggest impact on your work.\nAgent skills are folders of instructions, scripts, and reference docs that AI agents load when they need specific knowledge to complete a task. They follow an open standard and work across tools like Claude, Cursor, GitHub Copilot, and others.\nNo. You can use pre-built skills in Claude's web and desktop apps without writing a single line of code. Creating custom skills does involve some setup, but the format is designed to be readable and editable by anyone.\nThe open Agent Skills standard is supported by Claude (web, desktop, API, and Claude Code), Cursor, GitHub Copilot, OpenAI Codex, Gemini CLI, OpenCode, Factory Droid, and a growing number of other AI tools.\nYes. Skills make strong lead magnets because they're useful tools people actually return to, not static content that gets downloaded once and forgotten. If your target audience uses AI tools, a free skill that helps them do their job better is an effective way to reach them.\nWe build custom agent skills for brands, create skill-based lead magnets, and help teams integrate skills into their workflows. We also maintain open-source Webflow agent skills used by developers and agencies worldwide.",
+      "publishedAt": "2026-02-26T01:15:54.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "6af143d7e1308741b2d96c80951e77e63f4b0b9bc4afd3974b5c6fb52770b25d",
+      "title": "JWT Algorithm Confusion Attack: Two Active CVEs in 2026",
+      "url": "https://dev.to/hari_prakash_b0a882ec9225/jwt-algorithm-confusion-attack-two-active-cves-in-2026-7bc",
+      "description": "Two JWT algorithm confusion attack CVEs dropped in January 2026, both with public proof-of-concept exploits, both exploiting the exact same root cause: JWT libraries that let the token's own alg header dictate how signature verification works. CVE-2026-22817 hit Hono — one of the fastest-growing edge-runtime frameworks — with a CVSS score of 8.2. CVE-2026-23993 hit HarbourJwt, a Go library, with a bypass so simple it requires zero cryptographic knowledge. If you run anything that validates JWTs, this is your wake-up call to check whether your library actually pins the algorithm.\nI spent a morning decoding forged tokens from both POC exploits using the PinusX JWT Decoder, and the signatures of a weaponized JWT are obvious once you know what to look for. Here's the breakdown.\nHono is a lightweight web framework that runs on Cloudflare Workers, Deno, Bun, and Node.js. Its built-in JWT middleware, in all versions before 4.11.4, was vulnerable to a classic JWT algorithm confusion attack: it trusted the alg field in the token header to decide which verification method to use.\nThe attack works like this. Your server signs tokens with RS256 — RSA private key signs, RSA public key verifies. The public key is, well, public. An attacker grabs it, then crafts a new JWT with two changes:\nWhen the vulnerable Hono middleware receives this token, it reads the alg header, sees HS256, and switches to HMAC verification — using the public key as the HMAC secret. The signature matches. The attacker's forged claims are now trusted.\nThis is classified as CWE-347 (Improper Verification of Cryptographic Signature) and affects every Hono deployment on every runtime prior to version 4.11.4. The POC exploit is already public, so this isn't theoretical.\nPaste the forged token into a JWT decoder and the header immediately gives it away:\n// Normal token header from your server\n{\n  \"alg\": \"RS256\",\n  \"typ\": \"JWT\"\n}\n\n// Forged token header — the red flag\n{\n  \"alg\": \"HS256\",\n  \"typ\": \"JWT\"\n}\n\nIf your server is configured for RS256 but you see HS256 in a decoded token, something is wrong. Either an attacker is probing your system, or your library is silently accepting algorithm swaps.\nThis one is even simpler. HarbourJwt, a Go JWT library, didn't reject unknown algorithm values. An attacker could set alg to literally anything — \"zzz\", \"foo\", \"banana\" — and the library's GetSignature() function would return an empty byte slice instead of an error. The forged token format is:\neyJ0eXAiOiJKV1QiLCJhbGciOiJ6enoifQ.eyJzdWIiOiIxMjM0NTY3ODkwIiwiYWRtaW4iOnRydWV9.\n\nNotice the trailing dot with nothing after it — that's an empty signature segment. The library compared its computed empty signature against the token's empty signature, they matched, and the token was accepted as valid. No key needed. No cryptography involved at all.\nThe same security review uncovered a comparable bypass in jose-swift (tracked as GHSA-88q6-jcjg-hvmw), suggesting this pattern isn't limited to obscure libraries.\nYou don't need security tooling to catch these. Any client-side JWT decoder will show you the header. Here's what to look for:\nDrop a suspicious token into the PinusX JWT Decoder and check the header. It runs 100% client-side — the token never leaves your browser — so you can safely inspect production tokens without leaking them to a third-party server.\nThese two CVEs aren't isolated incidents. Q1 2026 has seen a cluster of JWT algorithm-related vulnerabilities across multiple languages and frameworks:\nGo: HarbourJwt (CVE-2026-23993) — unknown algorithm bypass\n\n\nTypeScript/JavaScript: Hono (CVE-2026-22817) — RS256-to-HS256 confusion, CVSS 8.2\n\n\nJava: Keycloak (CVE-2026-23552) — accepted cross-realm tokens due to missing iss claim validation\n\n\nSwift: jose-swift (GHSA-88q6-jcjg-hvmw) — similar unknown algorithm bypass\n\n\n\nThe pattern is clear: library authors across the ecosystem are still implementing JWT verification in a way that trusts token-supplied metadata. Over 8,000 ChatGPT API keys were simultaneously found exposed in GitHub repos and production JavaScript bundles in February 2026, reinforcing that credential and token hygiene is at a crisis point industry-wide.\nPin the algorithm. Do it today. Here's how in the most common libraries:\n// Node.js (jsonwebtoken)\njwt.verify(token, key, { algorithms: ['RS256'] });\n\n// Python (PyJWT)\njwt.decode(token, key, algorithms=['RS256'])\n\n// Go (golang-jwt)\ntoken, err := jwt.Parse(tokenString, keyFunc,\n  jwt.WithValidMethods([]string{\"RS256\"}))\n\n// Java (jjwt)\nJwts.parser()\n  .requireSignedWith(SignatureAlgorithm.RS256)\n  .setSigningKey(key)\n  .parseClaimsJws(token);\n\nAnd the full checklist:\nWhat is a JWT algorithm confusion attack?\nA JWT algorithm confusion attack exploits JWT libraries that trust the alg field in the token header to choose the signature verification method. An attacker changes the algorithm — for example, from RS256 (asymmetric) to HS256 (symmetric) — and signs the forged token with the server's public key used as the HMAC secret. If the library doesn't enforce which algorithm is allowed, it verifies the forged signature as valid. The fix is to hardcode the expected algorithm in your verification logic, never letting the token itself dictate how it should be verified.\nHow do I know if my JWT library is vulnerable to algorithm confusion?\nCheck whether your verify() call explicitly specifies the allowed algorithm. If you're calling something like jwt.verify(token, key) without an algorithms parameter, your library may be using the token's own alg header — and you're likely vulnerable. Test by crafting a token with a swapped alg value (e.g., HS256 instead of RS256) and submitting it. If your server accepts it, you have a problem. Update to the latest version of your JWT library and always pass an explicit algorithm allowlist.\nCan I detect a forged JWT by decoding it?\nYes. The JWT header is unencrypted Base64url-encoded JSON, so decoding it instantly reveals the alg value. If you see HS256 on a system configured for RS256, or an unrecognized value like \"zzz\" or \"none\", the token is either forged or indicates a misconfiguration. A client-side JWT decoder like the PinusX JWT Decoder lets you inspect tokens safely without sending them to a third-party server.",
+      "publishedAt": "2026-02-26T01:10:30.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "bb15901e36781a4416f9ec0ff564be0d3b6ab91d62e218c64e3aed3c5b76050a",
+      "title": "なぜ日本企業は“復旧”に失敗しやすいのか？セキュリティとリカバリーの間に存在する、構造的な課題とは",
+      "url": "https://enterprisezine.jp/article/detail/23771",
+      "description": "サイバーセキュリティ（防御）からリカバリー（復旧）までの機能を統合プラットフォームとして提供しているAcronis（アクロニス）。AI機能の実装や、Security for AI（AIを守るためのセキュリティ）に資するソリューションの新発表、単一の巨大プラットフォームへの進化など、パラダイムシフトを感じさせる動きが活発に起こっているセキュリティ業界で、どう優位性を確保・維持していくのか。同社のプレジデントであるガイダー・マグダヌロフ氏は、日本法人のセールスキックオフのタイミングに合わせて来日し、日本の組織が抱える課題やニーズを調査したようだ。インタビューの中で同氏は、日本企業がバックアップと復旧で失敗に陥りやすい構造的な課題を指摘した。",
+      "publishedAt": "2026-02-25T23:00:00.000Z",
+      "feedName": "EnterpriseZine"
+    },
+    {
+      "id": "5b36e14ee8a6238f3e238a9c46404aa20cc2f18caf1757be19da81aba251f6b7",
+      "title": "「侵害は社外で始まる」　クラウドや取引先に“潜伏する”脅威と、求められるセキュリティ再設計",
+      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2602/26/news015.html",
+      "description": "企業を取り巻くサイバーリスクは、もはや単一のシステムや自組織内の統制を考えるだけでは不十分です。クラウドやAPI連携、生成AIの活用が前提となった今、サプライチェーン全体を視野に入れたレジリエンス強化を考える必要があります。",
+      "publishedAt": "2026-02-25T20:00:00.000Z",
+      "feedName": "＠IT"
+    },
+    {
+      "id": "0e0db6fe16b1aefdfb4facbfbfbc55dbfacb4584a94450bd23fa9bfc5707b086",
+      "title": "いまさら聞けないHyper-Vのハードウェアオフロード機能",
+      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2602/26/news008.html",
+      "description": "前回まで、実運用環境では必須機能である「Hyper-V」の高可用機能「フェールオーバークラスタリング」を見てきました。今回は、実運用環境でのパフォーマンス向上に欠かせないHyper-Vの「ハードウェアオフロード」機能について、その概要を学び直します。",
+      "publishedAt": "2026-02-25T20:00:00.000Z",
+      "feedName": "＠IT"
+    },
+    {
+      "id": "2890e912a2d2aab4fa3b677043a29c9a33f78cffbb612c8653721eaba45ac9f6",
+      "title": "TypeScript 7はなぜGoで書き直されたのか — 10倍高速化の技術的背景",
+      "url": "https://zenn.dev/kg_filled/articles/db6e8b228911d0",
+      "description": "TypeScriptコンパイラが「Go」で書き直された衝撃 150万行のコードを持つVS Codeプロジェクト。そのTypeScriptビルドが、77.8秒から7.5秒に短縮されました。 10.4倍の高速化です。 2025年3月11日、TypeScriptの生みの親であるAnders Hejlsbergが公式ブログで発表した内容は、フロントエンド開発の常識を覆すものでした。...",
+      "publishedAt": "2026-02-25T12:59:02.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "951927033e08b214cff4a0cb483da85a013b608bf96b639b33fa1cdca1543eb4",
+      "title": "Announcing H2 2026 KCDs",
+      "url": "https://www.cncf.io/blog/2026/02/25/announcing-h2-2026-kcds/",
+      "description": "We’re excited to announce the full list of Kubernetes Community Days (KCDs) for 2026! These community-organized events bring together local practitioners, adopters, and contributors to connect and share cloud native knowledge. Insights into the Selection Process...",
+      "publishedAt": "2026-02-25T12:00:00.000Z",
+      "feedName": "Cloud Native Computing Foundation"
+    },
+    {
+      "id": "0877b49229eaf6123f667efcd66d132688f54f5a3fd7ba80db94d78a9795035f",
+      "title": "Cloudflare無料プランの「Basic Features」ボタン一発で有効になる11機能を全解説",
+      "url": "https://zenn.dev/yostos/articles/cloudflare-security2",
+      "description": "はじめに 前回の記事「Cloudflare無料プランだけで個人サイトのセキュリティが完結した話」では、Cloudflareのダッシュボードで個別に有効化した機能を1つずつ紹介しました。 実は、CloudflareのダッシュボードにはBasic Featuresというボタンがあり、これを押すだけで無料プランの基本11機能を一括で有効にできます。 ...",
+      "publishedAt": "2026-02-25T09:40:50.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "8b90aeec3d0621011f56eccddf7d7a6adb4f1d99648ff430d0333e371d9cb2b1",
+      "title": "C++ inline 指定がパフォーマンスに与える影響を MSVC で検証する",
+      "url": "https://dev.classmethod.jp/articles/cpp-inline-keyword-and-inlining-measured/",
+      "description": "inline キーワードを付けるだけで速くなるわけではありません。MSVC での実測とアセンブリ分析から、インライン展開の可否には関数の性質・翻訳単位の境界・LTO などの最適化オプションが大きく影響することが確認できました。",
+      "publishedAt": "2026-02-25T09:24:10.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "33cf6588d6c5d616f1bb8a12c1fe0abdb29a71a1166984f748620494b014c7d4",
+      "title": "socatを使ってDockerコンテナ内からlocalhostでホストPCのサービスにアクセスする",
+      "url": "https://dev.classmethod.jp/articles/access-host-service-from-docker-at-localhost-using-socat/",
+      "description": "Dockerコンテナ内からlocalhostでホストPCのサービスに接続したいとき、alpine/socatをリレーとし\n  て挟みnetwork_mode:\n  \"service:...\"でネットワーク名前空間を共有することで、コードを変えずに実現できます。",
+      "publishedAt": "2026-02-25T07:39:11.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "fc74f741c254bc2331998eff1c6580fa39522c718b703bebcbfb02724ceef9b5",
+      "title": "SSMオートメーションの失敗をAWS ChatbotでSlack通知してみる（Lambda不要）",
+      "url": "https://dev.classmethod.jp/articles/aws-chatbot-slack-notify-ssm/",
+      "description": "SSMオートメーションの失敗をAWS ChatbotでSlack通知してみる（Lambda不要）",
+      "publishedAt": "2026-02-25T07:25:36.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "00f892de72fa0a928fca495617d73231529915bbc1c623f7de236e348270b11b",
+      "title": "Kiro IDE の Spec 機能で AWS Organizations レポートを CCoE 観点で分析してみた（Windows 環境）",
+      "url": "https://dev.classmethod.jp/articles/kiro-ide-spec-aws-organizations-ccoe-analysis/",
+      "description": "Kiro IDE の Spec 機能で AWS Organizations レポートを CCoE 観点で分析してみた（Windows 環境）",
+      "publishedAt": "2026-02-25T07:23:58.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "f151eabdfe87b0623633674fd81bf45359703635ffcb3616e6c36bfb65404864",
+      "title": "AWS Weekly Roundup: Amazon Bedrock の Claude Sonnet 4.6、Kiro in GovCloud リージョンの Kiro、新しいエージェントプラグインなど (2026 年 2 月 23 日)",
+      "url": "https://aws.amazon.com/jp/blogs/news/aws-weekly-roundup-claude-sonnet-4-6-in-amazon-bedrock-kiro-in-govcloud-regions-new-agent-plugins-and-more-february-23-2026/",
+      "description": "2026 年 2 月 16 日週、私のチームは米国サンノゼで開催された Developer Week で大勢の […]",
+      "publishedAt": "2026-02-25T06:02:47.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "62ca71e95c212d1ba3b13635e2f9efda38455ecc82bbcb7ca9f53b992d94158b",
+      "title": "少人数チームでもできる——LLMエージェントによるCVE自動トリアージの実践",
+      "url": "https://qiita.com/strategy_and_partner_inc/items/a531ff915396a2ac2afc?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\n2025年12月3日、React Server Componentsに対する認証なしリモートコード実行（RCE）の脆弱性 CVE-2025-55182（React2Shell） が公開されました。CVSS 10.0。create-next-appで生成したデフォ...",
+      "publishedAt": "2026-02-25T05:59:07.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "f0a2d8dd66d5f859577cb3b99f3be34a1bc4eedd66541203e904235b7fd8b78b",
+      "title": "OpenTacoで複数のAWSアカウントにリソースをデプロイする方法をまとめてみた",
+      "url": "https://dev.classmethod.jp/articles/opentaco-aws-multi-account-summary/",
+      "description": "OpenTacoで複数のAWSアカウントにリソースをデプロイする方法をまとめてみた",
+      "publishedAt": "2026-02-25T05:09:44.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "1b03e8f8d665c3d6d1a2db09a784d93143ad759c330c068e9295aa60996c507b",
+      "title": "米CISA、PQCへの移行やメーカーによる実装、テストを促す製品カテゴリーリストを公開",
+      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2602/25/news061.html",
+      "description": "米CISAは、PQC規格の使用を促す製品カテゴリーリストを公開した。量子コンピュータの脅威に備え、組織の技術投資や移行戦略を支援するためのリソースだ。",
+      "publishedAt": "2026-02-25T04:00:00.000Z",
+      "feedName": "＠IT"
+    },
+    {
+      "id": "15f6b16a8facc6191f487c953b2d04d28019257e86367b731eecc742c1145c54",
+      "title": "キンドリル、住信SBIネット銀行の勘定系システム全面クラウド化を支援",
+      "url": "https://enterprisezine.jp/news/detail/23804",
+      "description": "キンドリルは2月25日、住信SBIネット銀行が進める勘定系システムのクラウド化を全面的に支援すると発表した。キンドリルはアマゾン ウェブ サービス（AWS）を活用したクラウド基盤の設計・構築を担当し...",
+      "publishedAt": "2026-02-25T03:45:00.000Z",
+      "feedName": "EnterpriseZine"
+    },
+    {
+      "id": "484117acbcc95c6de67c6d1b910fe99339df8e77f42bc096945bc49712c938a3",
+      "title": "LaravelのルーティングとコントローラをAWS（API Gateway / Lambda）で再現してみよう",
+      "url": "https://qiita.com/chaochire/items/f974e8735da87e87023e?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "こんにちは。\nソーイ株式会社1年目、村上です。\n皆さん、Laravel使ってますか？\n初めてこのフレームワークを触ったとき、私は「魔法」のような利便性に感動しました。\nルートファイルに1行書けばURLが決まり、コントローラを書けばリクエストデータが手に入り、モデルを介せばD...",
+      "publishedAt": "2026-02-25T03:00:57.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "9b84eafbf8cd37d01d5856cfac0b93d04ba1098b3dd3d112374e64de9fa46dbe",
+      "title": "AWS公式サンプルを使ってBedrock AgentCoreをTerraformで構築 - Basic AgentCore Runtime -",
+      "url": "https://qiita.com/news_it_enj/items/e7674ab1446ff2717b3d?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\n普段の業務で Terraform を使っており、Bedrock AgentCore を Terraform で構築する方法が AWS 公式サンプルにあったので、どんなものかと試してみました。\n\n概要\n\nBedrock AgentCore は、効果的なエージェ...",
+      "publishedAt": "2026-02-25T00:27:29.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "d4ca415079e9ac5cdffc311942b8d98bb35307f7df5482b54587aaefececce3a",
+      "title": "選んだ技術を、自分たちで正解にする。SchooがVueエコシステムと共に歩む理由 #fe_stack_choice",
+      "url": "https://qiita.com/okuto_oyama/items/a981c84dbcf90edd9b62?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "こんにちは。株式会社Schoo（以下Schoo）に所属しております @okuto_oyama です。今年1月から技術戦略部門より開発部門・Schoo開発スクワッドに異動し、プロダクト開発に従事しております。\n\n本日は2/12に開催された「フロントエンドでの技術選定 —— 「...",
+      "publishedAt": "2026-02-24T23:20:06.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "be10769b311fb3ec4d95f69419a06fbbd1e545822be057d934c2ce76367c82b8",
+      "title": "Vercelの「React Best Practices」をrulesカテゴリー毎に理解する",
+      "url": "https://qiita.com/Taka_Sei/items/d91652947fbdc4818179?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\n2026年1月14日にVercel社から、10年以上のReactとNest.jsの最適化ノウハウをまとめたReact Best Practicesが発表されました。\n\nAIエージェントに対して専門的な知識を付与するSkillsも準備してくれており、こちらをA...",
+      "publishedAt": "2026-02-24T16:36:49.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "0877b49229eaf6123f667efcd66d132688f54f5a3fd7ba80db94d78a9795035f",
+      "title": "Cloudflare無料プランの「Basic Features」ボタン一発で有効になる11機能を全解説",
+      "url": "https://zenn.dev/yostos/articles/cloudflare-security2",
+      "description": "はじめに\n前回の記事「Cloudflare無料プランだけで個人サイトのセキュリティが完結した話」では、Cloudflareのダッシュボードで個別に有効化した機能を1つずつ紹介しました。\n実は、CloudflareのダッシュボードにはBasic Featuresというボタンがあり、これを押すだけで無料プランの基本11機能を一括で有効にできます。\n\n「Activate 11 core speed and security features included in your Free plan.」— ダッシュボードに表示されるBasic Featuresカード\n前回わざわざ個別に設定してい...",
+      "publishedAt": "2026-02-24T13:46:27.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "15c29d800c629ca290c0df1531bc5fd84e533db5202873aae9978bcc7456d77d",
+      "title": "@vercel/agent-evalでCLAUDE.mdの効果を検証する",
+      "url": "https://zenn.dev/edash_tech_blog/articles/84f0cd8567646b",
+      "description": "こんにちは、e-dash の中村です。最近は Claude Code や Cursor などのコーディングエージェントを使って開発しています。コーディングはエージェントが書き、レビューもエージェントがやり、テストもエージェントが書く。自分は何をしているのかというと、エージェントの出力を眺めて承認するだけです。もはやエンジニアというよりはAIエージェント管理職ですね。\nそんなAIエージェント管理職をやっていて怖くなったことがあります。CLAUDE.mdに改善を加えてチームに展開した際に、根拠を聞かれたら何も返せないのです。\n\n コーディングエージェントの評価について\nエージェントに渡すド...",
+      "publishedAt": "2026-02-24T01:50:21.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "50f8b795e0db393e648b38772ec7617ca18ed1db1ef70b55e5e23cf11dc72e03",
+      "title": "Next.jsはもう要らない？次世代フレームワークTanstack Startに入門してみた",
+      "url": "https://zenn.dev/ashunar0/articles/8c6cbedde44a89",
+      "description": "TanStack Startとは\nTanStack Startは、TanStack Routerをベースにしたフルスタックフレームワークだ。Vite上で動き、SSR・SSG・SPAすべてに対応する。React向けのフルスタック構成としてはNext.jsが定番だが、TanStack Startはまったく違うアプローチを取っている。\nhttps://tanstack.com/start/latest\nNext.jsとの一番の違いは思想だ。\n\n\nNext.js = オートマ車。乗れば走る。でもエンジンの中身は見えない\n\nTanStack Start = マニュアル車。全部自分で操作する。だ...",
+      "publishedAt": "2026-02-23T23:00:01.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "8ce2ec0b3699e0987faaec5fe9ca0c1e62e86003322e203d52a390976a15c31d",
+      "title": "FastAPIのJSONレスポンスに型を書くだけでレスポンスが速くなるらしい",
+      "url": "https://zenn.dev/maguro_alterna/articles/ee730afa94f52e",
+      "description": "2/25追記\nベンチマークの測り方が間違っていました。\nresponse_modelも高速化の対象になるそうです。\n間違った情報を掲載してしまい大変申し訳ありません🙇‍♂️\n検証終わり次第ベンチマーク部分を更新します。\n追記:ベンチマーク更新しました。明らかに倍以上のパフォーマンス出てます。\n\n はじめに\n2月23日にFastAPI 0.131.0がリリースされました。\nhttps://twitter.com/FastAPI/status/2025627146866073881\n中でも注目されたのが以下のツイートです。\nhttps://twitter.com/FastAPI/stat...",
+      "publishedAt": "2026-02-23T22:15:04.000Z",
+      "feedName": "Zenn"
     }
   ]
 }
