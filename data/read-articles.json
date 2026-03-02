@@ -1,190 +1,6 @@
 {
   "articles": [
     {
-      "id": "80cbd2e86a4ee74efcb83a36a6c85a17a968c618964afe9268dcea9d0df07eca",
-      "title": "[AWS] Kiro steering application timing and scope verification [Kiro]",
-      "url": "https://dev.to/aws-builders/aws-kiro-steering-application-timing-and-scope-verification-kiro-47gm",
-      "description": "This article is a machine translation of the contents of the following URL, which I wrote in Japanese:\nhttps://qiita.com/Nana_777/items/9130b466b5cb82e3a82e\nBy configuring Kiro's Steering file, you can keep Kiro aware of unique coding conventions, best practices, and other rules that must always be kept in mind during product development.\nA steering file can be applied to all files at all times, but you can also control the timing and scope of application.\nIn this article, we examined the scope and timing of Kiro's Steering.\nSteering application timing can be controlled in three ways: always (default), under specific conditions, and explicitly specified.\nVerification process description\nSteering application scope can be controlled in two ways: globally (everything on an individual's PC) and by workspace (application).\nVerification process description\nWorkspaces take priority in steering application scope.\nTo ensure that the generative AI generates accurate, expected results, more detailed rules must be clearly documented.\nIn Kiro, steering refers to the rules that Kiro applies to what it generates.\nYou can create a steering file by having Kiro create it through Kiro chat, by manually placing a \".md\" file in the appropriate Kiro directory, or by using the Kiro IDE as shown below.\nSelect the Kiro icon in Kiro's sidebar menu to display the Kiro feature menu.\n\nA dialog box will appear, allowing you to select one of three creation methods.\n[Workspace Name] agent steering: Steering file applied only to the currently open workspace.\nGlobal agent steering: Steering file applied to all workspaces opened on the currently used PC.\nProject steering files: Kiro automatically generates a steering file recommended by Kiro based on the contents of the currently open workspace (for the workspace).\n\nOnce created, it will appear in the \"AGENT STEERING\" column as shown below.\n \nGlobal agent steering \n\nProject steering files *The generated file will vary depending on the workspace contents.\n\nThere are three steering application timing patterns.\nThis setting defines a steering file that defines rules that are always applied.\n---\ninclusion: always\n---\n\nFor rules that you want to apply only to specific files, you can specify the scope of application by specifying \"inclusion: fileMatch\" as shown below, and then specifying \"fileMatchPattern: \"【Application Condition】\"\" on the next line.\n/.txt\"\".\n---\ninclusion: fileMatch\nfileMatchPattern: \"【Application Condition】\"\n---\n\nThis setting applies to rules you want to apply at any time.\n---\ninclusion: manual\n---\n\nI created three steering files and prepared three empty folders.\nstr01-JPN.md: Rule to always create files in Japanese\n\n\n\nstr02-ENG.md: Rule to always create files in English, with the condition \"Only text files generated in TEST2\"\n\n\n\nstr03-SPA.md: Rule for creating files in Spanish only when explicitly instructed\n\n\n\n\nWith this file in place, have the user create a text file in each folder.\nEnter the following in the Kiro chat and execute it.\nCreate a text file in the TEST01 folder.\nThe file contents should briefly explain what Kiro is.\n\nThe chat response referenced the contents of \"str01-JPN.md,\" and a Japanese text file was generated.\n\n\nEnter the following in Kiro chat and execute it (only the folder name has been changed):\nCreate a text file in the TEST02 folder.\nPlease include a brief explanation of what Kiro is in the file contents.\n\nThe chat response referenced the contents of \"str02-ENG.md\" and generated an English text file.\n\nThe file contents are also written in English.\n\n:::note info\nEnter the following in Kiro chat and execute it (only the folder name has been changed):\nCreate a text file in the TEST03 folder.\nPlease include a brief explanation of what Kiro is in the file contents.\n\nThe chat response had previously verified \"str01-JPN.md\" and then \"str02-ENG.md\" in order, so perhaps an automatic inference was run and \"str03-SPA.md\" was read.\n\nThe created file is also written in Japanese.\n\nNext, let's explicitly specify the steering file to apply.\nCreate a text file in the TEST03 folder.\nInclude a brief explanation of Kiro in the file's contents.\nThis time, apply the rules for the steering file \"str03-SPA.md.\"\n\nPerhaps because the file was explicitly specified, the referenced steering file name was not included in the chat response, but a Spanish file was generated.\n\nThe file contents are also written in Spanish.\n\nThe steering scope is determined by the directory in which the Kiro steering file is placed.\n(In a Windows environment) Steering files placed in the following directory are rules that are valid only within the workspace in which the steering file is placed.\nC:\\Users\\[Username]\\[Workspace Path]\\.kiro\\steering\n\n(In a Windows environment) Steering files placed in the following directory are rules that apply to all workspaces on your current PC.\nThis is useful for rules common to your organization or team, or for rules that affect Kiro's behavior, such as when you want Kiro to always respond in your native language.\nC:\\Users\\[Username]\\.kiro\\steering\n\nThree steering files were created.\nstr-GLOBAL.md: Global steering file. Include the word \"GLOBAL\" in the first line of the text.\n\n\n\n\n\nstr-WORK01.md: Steering file for workspace 01. Write \"WORK01\" on the last line of the text.\n\n\n\nstr-WORK02.md: Steering file for workspace 02. Add the word \"WORK02\" to the last line of the text.\n\n\n\n\n\n  \n  \n  Test 1: Generate a text file in Workspace 01 (the contents of the GLOBAL and WORK01 steering files will be applied)\n\n\nEnter the following in the Kiro chat in Workspace 01 and execute it.\nCreate a text file.\nInclude a brief explanation of what Kiro is in the file's contents.\n\nThe characters specified in the steering file are also included in the first and last lines of chat responses.\n\n\nWith Workspace01 already present, in Workspace02, enter the following in the Kiro chat and execute it.\nCreate a text file.\nPlease include a brief explanation of what Kiro is in the file contents.\n\nAlthough the steering file contents were not applied to this chat response message, we can see that the processing itself referenced the steering file.\n\nChecking the contents of the generated file confirms that the global steering and workspace-specific steering file contents were applied.\n\nFor this verification, we prepared steering files that produce different results under the same conditions.\nstr-GLOBAL.md: Global steering file. The first line of the text should contain the word \"GLOBAL.\"\nstr-WOAK03.md: Steering file for workspace 03. Write \"WORK03\" in the first line of the text.\n\nIf you create a text file in this state, what will the first line look like?\nCreate a text file.\nInclude a brief explanation of what Kiro is in the file's contents.\n\nAs a result, the workspace rules took precedence.\n\n\nIn this article, we examined the behavior of the steering file.\nBy controlling the timing and scope of application of the rules defined in the steering file, we believe we can have Kiro generate the desired results more efficiently.\nFurthermore, in this testing, Kiro's behavior was unstable in areas that were not clearly described (for example, even \"chat responses\" and \"file names\" were written in different languages).\nIt seems that the key to ensuring that AI-driven development deliverables meet expectations is how detailed the rules are.",
-      "publishedAt": "2026-01-31T01:46:01.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "a28f8f59f958c01a3fa1b0d4c5982338d799256d67233be6796e69352b6f22c7",
-      "title": "Securing Test Environments: Eliminating Leaking PII in Microservices with JavaScript",
-      "url": "https://dev.to/mohammad_waseem_c31f3a26f/securing-test-environments-eliminating-leaking-pii-in-microservices-with-javascript-1dem",
-      "description": "In modern microservices architectures, safeguarding Personally Identifiable Information (PII) during testing phases is paramount. Test environments often inadvertently expose sensitive data, leading to compliance risks and security vulnerabilities. Addressing this challenge requires a strategic approach to data masking, validation, and controlled access. In this post, we'll explore a comprehensive method for preventing PII leaks using JavaScript, specifically tailored for a Node.js-based microservices ecosystem.\nTest environments typically use synthetic or anonymized data to mimic production, but many teams neglect to implement strict controls. This oversight can result in real PII being used inadvertently, especially when data flows across multiple services. Common issues include:\nHardcoded or default test data containing sensitive info.\nInsufficient validation of input/output data.\nLack of runtime checks to prevent PII exposure.\nTo mitigate these issues, we need a multi-layered solution embedded within our microservices.\nOur approach involves:\nData masking at the API layer.\nRuntime validation scripts that scan and redact PII.\nCentralized configuration for sensitive data patterns.\nMiddleware-based enforcement in Node.js.\nFirst, we create a middleware that intercepts responses and redacts PII dynamically. We leverage regular expressions to identify common PII patterns like emails, phone numbers, and SSNs.\nconst PII_PATTERNS = {\n  email: /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g,\n  phone: /\\+?\\d{1,3}?[-.\\s]?\\(?\\d{3}\\)?[-.\\s]?\\d{3}[-.\\s]?\\d{4}/g,\n  ssn: /\\d{3}-\\d{2}-\\d{4}/g\n};\n\nfunction piiRedactionMiddleware(req, res, next) {\n  const oldSend = res.send;\n  res.send = function (body) {\n    if (typeof body === 'string') {\n      let redactedBody = body;\n      for (const pattern in PII_PATTERNS) {\n        redactedBody = redactedBody.replace(PII_PATTERNS[pattern], '[REDACTED]');\n      }\n      return oldSend.call(this, redactedBody);\n    }\n    return oldSend.call(this, body);\n  };\n  next();\n}\n\nThis middleware intercepts JSON responses, scans for PII, and replaces matches with '[REDACTED]'. It’s crucial to adapt regex patterns to your data formats.\nComplementing masking, runtime validation ensures no PII is passed unintentionally. We implement a utility that checks outgoing data objects:\nfunction validatePII(data) {\n  const dataString = JSON.stringify(data);\n  for (const pattern of Object.values(PII_PATTERNS)) {\n    if (pattern.test(dataString)) {\n      throw new Error('Potential PII detected in outgoing data');\n    }\n  }\n}\n\n// Usage in service\napp.post('/update', (req, res) => {\n  try {\n    validatePII(req.body);\n    // process request\n    res.send({ status: 'success' });\n  } catch (err) {\n    res.status(400).send({ error: err.message });\n  }\n});\n\nThis validation acts as a last line of defense before sensitive data is transmitted.\nManaging regex patterns centrally helps update detection logic efficiently. We store patterns in a config file or environment variables:\nconst SENSITIVE_PATTERNS = process.env.PII_PATTERNS || JSON.stringify({\n  email: /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g,\n  phone: /\\+?\\d{1,3}?[-.\\s]?\\(?\\d{3}\\)?[-.\\s]?\\d{3}[-.\\s]?\\d{4}/g,\n  ssn: /\\d{3}-\\d{2}-\\d{4}/g\n});\n\n// Parse back to object\nconst patterns = JSON.parse(SENSITIVE_PATTERNS);\n\nThis allows dynamic updates without code redeployment.\nFinally, incorporate these validation scripts into your CI/CD pipelines to prevent leaks before deployment. Automate scans over test data and API responses to ensure robust security.\nBy embedding request/response interceptors, runtime validation, centralized pattern management, and integrating checks into your development pipeline, you significantly reduce the risk of leaking PII in test environments. Security must be proactive, especially in microservices architectures where data traverses multiple boundaries.\nRemember, effective PII protection is an ongoing process—regularly review patterns, monitor logs, and update your safeguards accordingly.\nReferences:\nGDPR Compliance and Data Masking\nSecure Handling of PII in Microservices\nI rely on TempoMail USA to keep my test environments clean.",
-      "publishedAt": "2026-01-31T01:40:42.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "852c872ff06ab735f4ead6fb7a10a71088d73843e57652e52c5b4e01b3e6410a",
-      "title": "Isolating Developer Environments for High-Traffic Events with JavaScript",
-      "url": "https://dev.to/mohammad_waseem_c31f3a26f/isolating-developer-environments-for-high-traffic-events-with-javascript-3dka",
-      "description": "In high-traffic scenarios, ensuring isolated development environments becomes critical for maintaining application stability, security, and developer productivity. Traditional methods rely heavily on server-side solutions or container orchestration, but a strategic client-side approach using JavaScript can also bolster environment separation, especially when integrated into the front-end workflow.\nDuring high traffic events such as product launches, sales, or massive feature rollouts, developers need to test new features without risking the stability of the production environment. Isolated environments prevent cross-contamination of data, allow tailored configurations, and enable customers-specific testing scenarios.\nThe core idea is to use JavaScript on the client side to dynamically load isolated configurations, environment variables, or even sandboxed API endpoints. This approach complements server-side controls and provides rapid adaptability.\nCreate environment-specific configuration files that include API endpoints, feature flags, or other variables.\n// env-config.js\nconst envConfig = {\n  production: {\n    apiUrl: 'https://api.prod.example.com',\n    featureFlag: false\n  },\n  staging: {\n    apiUrl: 'https://api.staging.example.com',\n    featureFlag: true\n  },\n  dev: {\n    apiUrl: 'https://api.dev.example.com',\n    featureFlag: true\n  }\n};\n\n// Load environment based on URL parameter\nfunction getEnvironment() {\n  const params = new URLSearchParams(window.location.search);\n  return params.get('env') || 'production';\n}\n\nconst environment = getEnvironment();\nconst config = envConfig[environment];\n\n// Expose config for app\nwindow.appConfig = config;\n\nUsing the dynamically set environment, redirect or sandbox API calls to isolated endpoints.\n// API call example\nfunction fetchData() {\n  fetch(`${window.appConfig.apiUrl}/data`)\n    .then(response => response.json())\n    .then(data => {\n      console.log('Data fetched from environment:', data);\n    })\n    .catch(error => console.error('Fetch error:', error));\n}\n\nfetchData();\n\nUse feature flags to toggle UI components dynamically without redeploys.\n// Toggling feature based on environment\nif (window.appConfig.featureFlag) {\n  document.getElementById('newFeature').style.display = 'block';\n} else {\n  document.getElementById('newFeature').style.display = 'none';\n}\n\nRapid Deployment: Changes to environment configurations can be made on the fly.\nReduced Risk: Isolates development and testing from production.\nScalability: Suitable for real-time adjustments during high traffic.\nHowever, ensure these client-side solutions are complemented by robust server-side controls to prevent malicious exploitation. Use secure endpoints, validated tokens, and restrict sensitive data exposure.\nEmploying JavaScript for environment isolation during high traffic events provides a flexible, Lightweight, and non-intrusive method to decouple testing environments from production. When combined with standard DevOps practices, it enhances the resilience and agility of your deployment pipeline, ensuring your application remains stable and responsive under load.\nPro Tip: Use TempoMail USA for generating disposable test accounts.",
-      "publishedAt": "2026-01-31T01:39:50.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "a9301290ac9abe281b2c0498ce44f94c50b91768afe0555ef0c6f5702865cfe4",
-      "title": "Dev Portfolio",
-      "url": "https://dev.to/lukepongadev/dev-portfolio-539a",
-      "description": "This is a submission for the New Year, New You Portfolio Challenge Presented by Google AI\nI’m Luke Ponga, a Software Developer and IT Support Specialist. My portfolio is designed to bridge the gap between technical precision and intelligent interaction, showcasing my journey from hardware support to building AI-driven software solutions.\nMy portfolio is built on a modern, high-performance stack:\nFramework: Next.js 16 with Standalone Output optimization.\nDesign: A minimalist Swiss-inspired UI using Tailwind CSS and Framer Motion.\nAI Engine: Google Genkit powered by Gemini 1.5 Flash.\nGoogle AI Features:\n\n\n\n\nAI Project Matcher: A custom Genkit flow that acts as a virtual representative, allowing visitors to query my experience and projects using natural language.\nInstant AI Pitch Generator: A specialized recruitment tool that uses Gemini 1.5 Flash to analyze job descriptions and generate personalized candidate pitches based on my specific project history.\nDeployment: Containerized with Docker and deployed to Google Cloud Run with official challenge labelling (dev-tutorial=devnewyear2026).\nI’m most proud of the Instant AI Pitch Generator. It transforms the portfolio from a passive gallery into an active tool for professional success. Using Genkit allowed me to implement complex RAG (Retrieval-Augmented Generation) logic seamlessly, ensuring the pitches are deeply grounded in my actual work history.\nRepo: https://github.com/lukeponga-dev/portfolio-luke.git\n\n\nLanguage: TypeScript\nAI Model: googleai/gemini-1.5-flash\n\n\n\n\n  \n  \n  devnewyear2026 #googleai #cloudrun #nextjs",
-      "publishedAt": "2026-01-31T01:10:10.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "5f8fffa5cefc5736d1d9a6f1eda199413778fbf584eb81f014cc991805a993b5",
-      "title": "Google's Gemini Gradient Design Draws Parallels with 1984 Macintosh",
-      "url": "https://dev.to/alan_maulanaibrahim_e18c_8/googles-gemini-gradient-design-draws-parallels-with-1984-macintosh-cn4",
-      "description": "Google Compares Gemini's Gradient Design to 1984 Macintosh\n\n\nRecently, Google made an interesting comparison between the gradient design of Gemini, one of its latest products, and the iconic design of the Macintosh released in 1984. This comparison sparked a debate about the evolution of design in the tech world and how classic design elements can still influence modern products.\nThe 1984 Macintosh, officially known as the Macintosh 128k, was a revolutionary personal computer introduced by Apple. Released on January 24, 1984, this Macintosh was one of the first computers to use a graphical user interface (GUI) and gained widespread attention due to its iconic television commercial directed by Ridley Scott, which referenced George Orwell's dystopian novel, \"1984\". The commercial featured an athlete throwing a hammer at a screen displaying Big Brother's face, symbolizing that Macintosh would free users from IBM's dominance in personal computing.\nGemini, on the other hand, is Google's latest product featuring an attractive gradient design. While gradient design is not new in the world of design, its implementation on Gemini caught attention due to its resemblance to the 80s design aesthetic, including the 1984 Macintosh. The gradient on Gemini gives a dynamic and modern feel, showing how design can evolve while still retaining iconic elements from the past.\nBy comparing Gemini's gradient design to the 1984 Macintosh, Google highlights how design in technology continues to evolve in a circle. Although technology has advanced significantly over the past few decades, the principles of good design remain the same: creating intuitive, aesthetically pleasing, and functional interfaces. This comparison also shows how Google values design heritage in the tech industry and strives to integrate classic design elements into modern products.\nGoogle's comparison of Gemini's design to the 1984 Macintosh can have a significant impact on the design industry. It shows that designers don't always need to create something entirely new but can draw inspiration from iconic past designs and adapt them to meet modern needs and technology. This approach can help create products that are not only innovative but also have a classic touch that can be appreciated by users across different generations.\nGoogle's comparison of Gemini's gradient design to the 1984 Macintosh highlights the evolution of design in the tech industry and how classic design elements can continue to influence modern products. It demonstrates that good design is about striking a balance between innovation and heritage, as well as the ability to draw inspiration from the past while looking towards the future.",
-      "publishedAt": "2026-01-31T01:00:03.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "49a227c5bdec47b4b5736ce0713ae535da157a8ddab6cc184ece6433a7d7c6d5",
-      "title": "Detecting Phishing Patterns with Docker on a Zero-Budget Setup",
-      "url": "https://dev.to/mohammad_waseem_c31f3a26f/detecting-phishing-patterns-with-docker-on-a-zero-budget-setup-e62",
-      "description": "Detecting Phishing Patterns with Docker on a Zero-Budget Setup\n\n\nIn today’s cybersecurity landscape, the prevalence of phishing attacks demands robust detection mechanisms. However, startups and small teams often face resource constraints, making it challenging to implement scalable solutions. As a Lead QA Engineer, I’ve pioneered a zero-budget, containerized approach leveraging Docker to identify phishing patterns effectively.\nTraditional phishing detection relies heavily on commercial APIs, proprietary libraries, or extensive infrastructure — all costs that may not be feasible without a budget. The goal was to develop an open-source, lightweight setup capable of scanning emails and URLs for common phishing traits, all deployable on any machine.\nDocker provides a portable, easy-to-setup environment that encapsulates all required tools and dependencies. This eliminates the need for expensive infrastructure or complex configurations.\nHere’s our step-by-step approach:\nWe utilize open-source projects like PhishDetect (a conceptual name for this example), which mainly relies on pattern matching, regex, and threat intelligence feeds.\nWe build a Docker image that includes our detection scripts, Python environment, and any necessary data files.\nFROM python:3.10-slim\n\n# Install required libraries\nRUN pip install --no-cache-dir requests beautifulsoup4\n\n# Copy detection scripts and data\nCOPY detect_phishing.py /app/detect_phishing.py\nCOPY threat_indicators.json /app/threat_indicators.json\n\nWORKDIR /app\n\nCMD [\"python\", \"detect_phishing.py\"]\n\nThis Dockerfile sets up a minimal Python environment with our detection script.\nHere’s a simplified version of detect_phishing.py:\nimport requests\nimport json\nimport re\n\ndef load_indicators():\n    with open('threat_indicators.json', 'r') as f:\n        return json.load(f)\n\nindicators = load_indicators()\n\ndef check_url(url):\n    # Basic pattern matching for suspicious domains or substrings\n    for pattern in indicators['patterns']:\n        if re.search(pattern, url):\n            return True\n    # Additional heuristics or checks can go here\n    return False\n\ndef main():\n    test_urls = [\"http://example.com\", \"http://phishingsite.com/login\"]\n    for url in test_urls:\n        result = check_url(url)\n        print(f\"URL: {url} - Phishing pattern detected: {result}\")\n\nif __name__ == \"__main__\":\n    main()\n\nBuild and run the detection container:\ndocker build -t phishing-detector .\ndocker run --rm phishing-detector\n\nThis setup allows rapid deployment, testing, and iteration without additional costs.\nWhile this approach is minimalist, it’s highly adaptable:\nIncorporate public threat feeds to update threat_indicators.json\n\nAdd regex patterns for detecting common phishing URL substrings\nIntegrate with email or webhook monitoring pipelines\nBy utilizing Docker combined with open-source patterns, a Lead QA Engineer can establish an effective phishing detection system without the need for budget-intensive tools. This approach emphasizes portability, scalability, and rapid iteration, making security accessible to resource-constrained teams.\nPro tip: Always keep your threat indicators up-to-date and consider combining multiple detection methods (machine learning, behavioral analysis) as resources grow.\nThis strategy demonstrates that innovative security solutions are possible even with zero financial investment, reinforcing the importance of open-source tools and containerization in modern cybersecurity workflows.\nTo test this safely without using real user data, I use TempoMail USA.",
-      "publishedAt": "2026-01-31T00:59:49.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "9866eca20d15d3ee10719043f569b4f1f1fe3a3494842c4d019a800e2490d372",
-      "title": "Streamlining Authentication Flows in Microservices with JavaScript Automation",
-      "url": "https://dev.to/mohammad_waseem_c31f3a26f/streamlining-authentication-flows-in-microservices-with-javascript-automation-1meo",
-      "description": "Streamlining Authentication Flows in Microservices with JavaScript Automation\n\n\nIn modern microservices architectures, managing authentication flows seamlessly across distributed services is a complex yet critical task. As Lead QA Engineer, I’ve faced the challenge of automating these flows to ensure reliability, security, and efficiency. This post outlines an approach using JavaScript to automate authentication processes, with emphasis on test automation, token management, and interaction with multiple services.\nMicroservices typically involve multiple endpoints for login, token refresh, logout, and user verification. Ensuring these workflows work harmoniously across services is crucial. Manual testing or inconsistent automation strategies often introduce bugs, security vulnerabilities, or performance bottlenecks.\nThe goal is to automate the entire auth flow, including obtaining tokens, validating responses, refreshing tokens, and simulating real user interactions. Leveraging JavaScript, especially with tools like Node.js and testing frameworks such as Mocha or Jest, enables robust, version-controlled, and scalable automation.\nStart by installing essential modules:\nnpm install axios mocha chai\n\naxios handles HTTP requests, while mocha and chai support testing and assertions.\nCreate a modular function to handle authentication requests:\nconst axios = require('axios');\n\nconst authServiceUrl = 'https://auth-service.example.com';\n\nasync function login(username, password) {\n  return axios.post(`${authServiceUrl}/login`, { username, password });\n}\n\nasync function refreshToken(refreshToken) {\n  return axios.post(`${authServiceUrl}/refresh`, { refreshToken });\n}\n\nThe core test simulates a user login, token validation, and token refresh:\nconst { expect } = require('chai');\n\ndescribe('Auth Flow Automation', () => {\n  let accessToken = '';\n  let refreshToken = '';\n\n  it('should login and retrieve tokens', async () => {\n    const response = await login('user@example.com', 'securePassword');\n    expect(response.status).to.equal(200);\n    accessToken = response.data.accessToken;\n    refreshToken = response.data.refreshToken;\n  });\n\n  it('should validate the access token', () => {\n    expect(accessToken).to.be.a('string');\n    expect(accessToken).to.have.length.above(20); // simplistic check\n  });\n\n  it('should refresh tokens when expired', async () => {\n    const refreshResponse = await refreshToken(refreshToken);\n    expect(refreshResponse.status).to.equal(200);\n    accessToken = refreshResponse.data.accessToken;\n    refreshToken = refreshResponse.data.refreshToken;\n  });\n});\n\nOnce tokens are obtained, use them to authenticate requests to service endpoints:\nasync function getUserData(token) {\n  return axios.get('https://api-service.example.com/user', {\n    headers: { Authorization: `Bearer ${token}` },\n  });\n}\n\n// Usage in test:\nit('should access user data with token', async () => {\n  const response = await getUserData(accessToken);\n  expect(response.status).to.equal(200);\n  expect(response.data).to.have.property('id');\n});\n\nToken Storage & Security: For automation, store tokens securely using environment variables or secret managers.\nError Handling: Anticipate failures, such as token expiry or network issues, and implement retries or fallback steps.\nScalability: Use data-driven tests to cover various user roles and permissions.\nIntegration with CI/CD: Automate these tests as part of your pipeline to catch auth regressions early.\nAutomating authentication flows in a microservices environment using JavaScript boosts testing confidence, reduces manual intervention, and enhances security validation. By modularizing request logic, simulating real user workflows, and integrating with other service tests, QA teams can significantly improve the reliability of complex distributed systems.\nEmbracing these strategies ensures your authentication workflows are resilient, compliant, and ready for scaling as your architecture grows.\nPro Tip: Use TempoMail USA for generating disposable test accounts.",
-      "publishedAt": "2026-01-31T00:58:59.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "968b8728dce7046b028d0b8ca2c77151f7145061e7eb6eef8565b659e25c6c08",
-      "title": "Logging Strategies for Real-Time Applications: Session Tracking at Scale",
-      "url": "https://dev.to/alfchee/logging-strategies-for-real-time-applications-session-tracking-at-scale-276i",
-      "description": "Hey builders! 👋 Let's talk about something that sounds boring but becomes absolutely critical in production: logging. When you're running hundreds of concurrent sessions, bad logging is the difference between finding bugs in minutes vs. spending days debugging.\nLet me share how we built a logging system that actually helps instead of drowns you in noise.\nTraditional logging advice doesn't work for real-time apps. Here's why:\nTraditional app logging:\n2024-01-15 10:30:45 INFO Processing request\n2024-01-15 10:30:46 ERROR Failed to connect to database\n2024-01-15 10:30:47 INFO Processing request\n\nReal-time app with 100 concurrent sessions:\n2024-01-15 10:30:45.123 INFO Processing audio\n2024-01-15 10:30:45.124 INFO Processing audio\n2024-01-15 10:30:45.125 ERROR Connection failed\n2024-01-15 10:30:45.126 INFO Processing audio\n2024-01-15 10:30:45.127 INFO Processing audio\n2024-01-15 10:30:45.128 INFO Processing audio\n\nWhich session failed? Good luck finding out.\nEvery log entry MUST include session context:\nimport logging\nimport uuid\nfrom contextvars import ContextVar\nfrom typing import Optional\n\n# Context variable for session tracking\nsession_context: ContextVar[Optional[str]] = ContextVar('session_context', default=None)\n\nclass SessionLoggerAdapter(logging.LoggerAdapter):\n    \"\"\"Logger that automatically includes session context\"\"\"\n\n    def process(self, msg, kwargs):\n        session_id = session_context.get()\n        if session_id:\n            return f'[{session_id}] {msg}', kwargs\n        return msg, kwargs\n\ndef get_logger(name: str) -> SessionLoggerAdapter:\n    \"\"\"Get a session-aware logger\"\"\"\n    base_logger = logging.getLogger(name)\n    return SessionLoggerAdapter(base_logger, {})\n\n# Usage in your endpoint\nlogger = get_logger(__name__)\n\n@app.websocket(\"/transcribe/{session_id}\")\nasync def transcribe_endpoint(websocket: WebSocket, session_id: str):\n    # Set session context for this async task\n    session_context.set(session_id)\n\n    logger.info(\"Session started\")  # Logs: [abc-123] Session started\n\n    try:\n        await process_transcription(websocket)\n    except Exception as e:\n        logger.error(f\"Transcription failed: {e}\")  # Logs: [abc-123] Transcription failed: ...\n    finally:\n        logger.info(\"Session ended\")  # Logs: [abc-123] Session ended\n\nNow every log line is traceable to a specific session!\nStop logging strings. Log structured data:\nimport logging\nimport json\nfrom datetime import datetime\nfrom typing import Any, Dict\n\nclass StructuredLogger:\n    \"\"\"Logger that outputs structured JSON\"\"\"\n\n    def __init__(self, name: str):\n        self.logger = logging.getLogger(name)\n\n    def _log(self, level: int, event: str, **kwargs):\n        \"\"\"Log structured data as JSON\"\"\"\n        log_data = {\n            \"timestamp\": datetime.utcnow().isoformat(),\n            \"event\": event,\n            \"session_id\": session_context.get(),\n            **kwargs\n        }\n\n        self.logger.log(level, json.dumps(log_data))\n\n    def info(self, event: str, **kwargs):\n        self._log(logging.INFO, event, **kwargs)\n\n    def error(self, event: str, error: Exception = None, **kwargs):\n        error_data = kwargs\n        if error:\n            error_data.update({\n                \"error_type\": type(error).__name__,\n                \"error_message\": str(error)\n            })\n        self._log(logging.ERROR, event, **error_data)\n\n# Usage\nlogger = StructuredLogger(__name__)\n\nlogger.info(\n    \"audio_received\",\n    audio_size=len(audio_data),\n    sample_rate=16000,\n    channels=1\n)\n\n# Outputs:\n# {\"timestamp\": \"2024-01-15T10:30:45.123Z\", \"event\": \"audio_received\", \n#  \"session_id\": \"abc-123\", \"audio_size\": 16000, \"sample_rate\": 16000, \"channels\": 1}\n\nNow you can search logs by specific fields!\nTrack requests across multiple services:\nfrom contextvars import ContextVar\nimport uuid\n\n# Correlation ID for tracking across services\ncorrelation_id: ContextVar[Optional[str]] = ContextVar('correlation_id', default=None)\n\nclass CorrelatedLogger(StructuredLogger):\n    \"\"\"Logger with correlation ID support\"\"\"\n\n    def _log(self, level: int, event: str, **kwargs):\n        log_data = {\n            \"timestamp\": datetime.utcnow().isoformat(),\n            \"event\": event,\n            \"session_id\": session_context.get(),\n            \"correlation_id\": correlation_id.get(),\n            **kwargs\n        }\n\n        self.logger.log(level, json.dumps(log_data))\n\n@app.websocket(\"/transcribe/{session_id}\")\nasync def transcribe_endpoint(websocket: WebSocket, session_id: str):\n    # Generate correlation ID for this request\n    corr_id = str(uuid.uuid4())\n    correlation_id.set(corr_id)\n    session_context.set(session_id)\n\n    logger = CorrelatedLogger(__name__)\n    logger.info(\"session_started\")\n\n    # When calling Riva service, pass correlation ID\n    await riva_client.transcribe(\n        audio_data,\n        metadata={\"correlation_id\": corr_id}\n    )\n\nNow you can trace a request from client → your service → Riva → back!\nLog performance metrics for every operation:\nimport time\nfrom functools import wraps\nfrom typing import Callable\n\ndef log_performance(operation: str):\n    \"\"\"Decorator to log operation performance\"\"\"\n    def decorator(func: Callable):\n        @wraps(func)\n        async def wrapper(*args, **kwargs):\n            logger = CorrelatedLogger(func.__module__)\n            start_time = time.time()\n\n            try:\n                result = await func(*args, **kwargs)\n                duration = time.time() - start_time\n\n                logger.info(\n                    f\"{operation}_completed\",\n                    duration_ms=round(duration * 1000, 2),\n                    success=True\n                )\n\n                return result\n\n            except Exception as e:\n                duration = time.time() - start_time\n\n                logger.error(\n                    f\"{operation}_failed\",\n                    duration_ms=round(duration * 1000, 2),\n                    success=False,\n                    error=e\n                )\n                raise\n\n        return wrapper\n    return decorator\n\n# Usage\n@log_performance(\"audio_transcription\")\nasync def transcribe_audio(audio: bytes, session_id: str) -> str:\n    # Transcription logic\n    return await riva_client.transcribe(audio)\n\n# Logs:\n# {\"event\": \"audio_transcription_completed\", \"duration_ms\": 245.67, \"success\": true}\n\nDifferent components need different log levels:\nimport logging.config\n\nLOGGING_CONFIG = {\n    \"version\": 1,\n    \"disable_existing_loggers\": False,\n    \"formatters\": {\n        \"json\": {\n            \"()\": \"pythonjsonlogger.jsonlogger.JsonFormatter\",\n            \"format\": \"%(timestamp)s %(level)s %(name)s %(message)s\"\n        }\n    },\n    \"handlers\": {\n        \"console\": {\n            \"class\": \"logging.StreamHandler\",\n            \"formatter\": \"json\",\n            \"stream\": \"ext://sys.stdout\"\n        },\n        \"file\": {\n            \"class\": \"logging.handlers.RotatingFileHandler\",\n            \"formatter\": \"json\",\n            \"filename\": \"logs/app.log\",\n            \"maxBytes\": 10485760,  # 10MB\n            \"backupCount\": 5\n        }\n    },\n    \"loggers\": {\n        # Your app - verbose logging\n        \"app\": {\n            \"level\": \"DEBUG\",\n            \"handlers\": [\"console\", \"file\"],\n            \"propagate\": False\n        },\n        # Riva client - only warnings and errors\n        \"riva_client\": {\n            \"level\": \"WARNING\",\n            \"handlers\": [\"console\", \"file\"],\n            \"propagate\": False\n        },\n        # Third-party libraries - minimal logging\n        \"uvicorn\": {\n            \"level\": \"INFO\",\n            \"handlers\": [\"console\"],\n            \"propagate\": False\n        },\n        \"grpc\": {\n            \"level\": \"ERROR\",\n            \"handlers\": [\"console\"],\n            \"propagate\": False\n        }\n    },\n    \"root\": {\n        \"level\": \"INFO\",\n        \"handlers\": [\"console\", \"file\"]\n    }\n}\n\n# Apply configuration\nlogging.config.dictConfig(LOGGING_CONFIG)\n\nDon't log EVERY audio chunk - sample intelligently:\nimport random\n\nclass SampledLogger(CorrelatedLogger):\n    \"\"\"Logger with sampling support for high-frequency events\"\"\"\n\n    def __init__(self, name: str, sample_rate: float = 0.01):\n        super().__init__(name)\n        self.sample_rate = sample_rate\n\n    def sample(self, event: str, **kwargs):\n        \"\"\"Log with sampling\"\"\"\n        if random.random() < self.sample_rate:\n            self.info(event, sampled=True, **kwargs)\n\nlogger = SampledLogger(__name__, sample_rate=0.01)  # Log 1% of events\n\n# Log every 100th audio chunk\nlogger.sample(\n    \"audio_chunk_processed\",\n    chunk_size=len(chunk),\n    total_chunks=chunk_count\n)\n\nWhen errors happen, log EVERYTHING relevant:\nimport traceback\nimport sys\n\nclass ErrorContextLogger(CorrelatedLogger):\n    \"\"\"Logger with rich error context\"\"\"\n\n    def error_with_context(\n        self,\n        event: str,\n        error: Exception,\n        **kwargs\n    ):\n        \"\"\"Log error with full context\"\"\"\n\n        # Get exception info\n        exc_type, exc_value, exc_traceback = sys.exc_info()\n\n        # Build error context\n        error_context = {\n            \"error_type\": type(error).__name__,\n            \"error_message\": str(error),\n            \"error_code\": getattr(error, 'code', None),\n            \"traceback\": traceback.format_exc(),\n            **kwargs\n        }\n\n        self.error(event, **error_context)\n\n# Usage\nlogger = ErrorContextLogger(__name__)\n\ntry:\n    await riva_client.transcribe(audio)\nexcept Exception as e:\n    logger.error_with_context(\n        \"transcription_failed\",\n        error=e,\n        audio_size=len(audio),\n        sample_rate=sample_rate,\n        language=language,\n        riva_endpoint=riva_client.endpoint\n    )\n    raise\n\nUse ELK Stack or Loki for log aggregation:\n# Docker Compose for Loki + Grafana\nversion: '3'\nservices:\n  loki:\n    image: grafana/loki:latest\n    ports:\n      - \"3100:3100\"\n    command: -config.file=/etc/loki/local-config.yaml\n\n  promtail:\n    image: grafana/promtail:latest\n    volumes:\n      - ./logs:/var/log\n      - ./promtail-config.yaml:/etc/promtail/config.yaml\n    command: -config.file=/etc/promtail/config.yaml\n\n  grafana:\n    image: grafana/grafana:latest\n    ports:\n      - \"3000:3000\"\n    environment:\n      - GF_SECURITY_ADMIN_PASSWORD=admin\n\nNow you can query logs with LogQL:\n# Find all errors for a specific session\n{job=\"transcription-service\"} |= \"session_id=abc-123\" | json | level=\"ERROR\"\n\n# Find slow transcriptions\n{job=\"transcription-service\"} | json | duration_ms > 1000\n\n# Count errors by type\nsum by (error_type) (count_over_time({job=\"transcription-service\"} | json | level=\"ERROR\" [1h]))\n\nConnect logs to metrics:\nfrom prometheus_client import Counter, Histogram\n\n# Metrics\ntranscription_requests = Counter(\n    'transcription_requests_total',\n    'Total transcription requests',\n    ['session_id', 'language', 'status']\n)\n\ntranscription_duration = Histogram(\n    'transcription_duration_seconds',\n    'Transcription duration',\n    ['language']\n)\n\nclass MonitoredLogger(ErrorContextLogger):\n    \"\"\"Logger integrated with metrics\"\"\"\n\n    @log_performance(\"transcription\")\n    async def log_transcription(\n        self,\n        session_id: str,\n        language: str,\n        audio_size: int\n    ):\n        start_time = time.time()\n\n        try:\n            result = await transcribe(audio_data, language)\n\n            # Log success\n            self.info(\n                \"transcription_completed\",\n                audio_size=audio_size,\n                language=language,\n                result_length=len(result)\n            )\n\n            # Update metrics\n            transcription_requests.labels(\n                session_id=session_id,\n                language=language,\n                status=\"success\"\n            ).inc()\n\n            transcription_duration.labels(\n                language=language\n            ).observe(time.time() - start_time)\n\n            return result\n\n        except Exception as e:\n            # Log failure\n            self.error_with_context(\n                \"transcription_failed\",\n                error=e,\n                audio_size=audio_size,\n                language=language\n            )\n\n            # Update metrics\n            transcription_requests.labels(\n                session_id=session_id,\n                language=language,\n                status=\"error\"\n            ).inc()\n\n            raise\n\nAlways include session/correlation IDs - Makes debugging possible\nUse structured logging - JSON is searchable and parseable\nSample high-frequency events - Don't fill disk with audio chunk logs\nLog performance metrics - Know what's slow before users complain\nPreserve error context - Log everything needed to debug\nSet appropriate log levels - Debug in dev, Info in production\nRotate log files - Don't fill up disk\nCentralize logs - Use log aggregation for multiple instances\nAlert on log patterns - Error rate spikes should trigger alerts\nTest your logging - Verify logs are useful during incidents\nAfter implementing these logging strategies:\nMean Time to Resolution (MTTR) dropped from hours to minutes\nDebug sessions became productive instead of frustrating\nProduction incidents were traceable across services\nPerformance bottlenecks became immediately visible\nCustomer support could look up exact session issues\nGood logging is invisible when everything works, but invaluable when things break. The goal isn't to log everything - it's to log the right things at the right level with the right context.\nThink of logs as breadcrumbs for future you. When you're debugging at 3 AM, you'll thank past you for logging that session ID.\nWhat's your logging setup? Any horror stories about debugging without proper logs? Share below! 🚀",
-      "publishedAt": "2026-01-31T00:40:11.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "d9aecd94cba9077c67f76d75dec6e50893b5f88bb2a5e8676ab2a0068b608105",
-      "title": "Amazon Bedrock Guardrails - Step-by-step implementation with Serverless",
-      "url": "https://dev.to/wfernandezs/amazon-bedrock-guardrails-step-by-step-implementation-with-serverless-3ji2",
-      "description": "Introduction\n\n\nWhen defining an AI integration, one of the first concerns that usually comes up is security. More specifically, how to protect applications that rely on large language models once they are exposed to real users.\nAmazon Bedrock makes it easy to work with foundation models without worrying about infrastructure and allows some level of customization to fit business needs. However, that convenience also raises an important question: how do we prevent these models from generating unsafe content or leaking sensitive information?\nThis is where Guardrails become especially relevant. Guardrails serve as a safeguard layer, allowing you to filter sensitive data such as PII, restrict specific topics, and define how the model should behave when a rule is violated.\nGiven their importance for making AI workloads production-ready, this article focuses on a practical, step-by-step implementation of topic filtering and PII protection using Amazon Bedrock Guardrails, both from the AWS Console and programmatically.\nThis section covers configuring Guardrails in the AWS Console, followed by a programmatic approach using the Serverless Framework.\nBefore starting, make sure that Amazon Bedrock is enabled in your AWS account. Once enabled, navigate to Amazon Bedrock, go to the Build section, and select Guardrails. From there, click on Create guardrail to begin the setup process.\nDuring the creation process, you will be asked to provide:\nA name to identify the guardrail\nA short description explaining its purpose\nA default message that will be returned whenever a prompt or response is blocked\n\nOnce the basic configuration is completed, the next step is defining denied topics. In this example, two topics are restricted: medical and financial queries.\nTo add a denied topic, select Add denied topic and provide a name, a short definition, and the action to apply for both input and output. For this setup, any prompt related to these topics will be blocked.\nYou will also need to add example phrases. These examples help Bedrock identify when a prompt belongs to a restricted topic and improve the accuracy of the filtering.\n\n\n\nAfter configuring topic restrictions, continue to the PII filtering section. In Step 5, select Add new PII to configure sensitive information detection.\nBedrock provides a set of predefined PII types that can be selected individually, along with an action for each one. In this case, the selected PII types will be masked rather than blocked.\n\n\nIn addition to predefined PII categories, Guardrails allow you to define custom filters using regular expressions. This is useful when dealing with country-specific identifiers that are not covered by default.\nFor this example, a custom regex pattern is added to detect Peruvian national ID numbers (DNI) and mask them when detected.\n\nThis is the final configuration of the sensitive information filters, so let's wrap up the creation.\n\n\nOnce all sensitive information rules are configured, review the final setup and complete the guardrail creation process.\nAfter the guardrail is created, Bedrock will display its details, including the guardrail ID. To start using it, a version must be created, as both the guardrail ID and version are required for programmatic usage.\n\n\nTo demonstrate a programmatic implementation, this project uses TypeScript and the Serverless Framework to expose a simple HTTP POST endpoint.\nThe API processes user prompts through an Amazon Bedrock foundation model while enforcing the previously created guardrail. The guardrail ID and version are passed as configuration values and are required for the request to be evaluated against the defined rules.\n\nThe testing strategy consists of two parts. First, the guardrail is tested directly from the AWS Console using the prompt tool with the Claude 3.5 model. Prompts related to healthcare or financial topics are correctly blocked, which can be verified by enabling the Trace option and inspecting the blocked topic information.\nPII filtering can be tested similarly. When sensitive information is detected, it appears under the Sensitive information rules section with a Masked status, including the custom DNI regex.\nThe same behavior is observed when testing the serverless API using Postman. Since the Lambda function targets the same guardrail and model configuration, the results are consistent with those seen in the AWS Console.\n\nOn the other hand, we will test the PII filtering with the same tool and will appear under \"Sensitive information rules\" with the \"Masked\" status. \n\nFor instance related to the peruvian ID it will show the result under the same section of PII filtering.\n\nBy contrast, testing the lambda which is using the previous model and targets the same guardrail, it will work the same. Here's a quick result, for a thorough testing the code repository can be use to test as it will use the same strategy for the AWS Console.\n\n\n\nGuardrails turned out to be an easy and practical way to put clear boundaries around generative AI workloads in Bedrock. Instead of handling every edge case in code, you can rely on a dedicated layer to block unsafe topics and protect sensitive data by default.\nThe setup is straightforward, works consistently from the console and from code, and fits naturally into a serverless architecture. While it doesn’t replace application-level validation, it significantly reduces risk and complexity when moving AI features closer to production.\nGitHub Repository: bedrock-guardrails-demo\n\n\nAWS Documentation: Bedrock Guardrails User Guide\n\n\nServerless Framework: serverless.com\n\n\n\n\n  \n  \n  Connect with Me\n\n\nIf you found this helpful or have questions about implementing Guardrails in your projects, feel free to reach out:\nLinkedIn: https://www.linkedin.com/in/walter-fernandez-sanchez-a3924354\n\n\nGitHub: @wfernandezs",
-      "publishedAt": "2026-01-31T00:36:08.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "b5029d1e88ca7514812bd6b0de48397c93cff252f2414d31017c1f365f5c4eed",
-      "title": "DAY3 -Monitoring & Scaling",
-      "url": "https://dev.to/maso_eb42159b65f6592/day3-monitoring-scaling-3jn6",
-      "description": "Overview\n\n\nToday, I'll do a hands-on lab on monitoring and scaling EC2 instances using an ALB, an Auto Scaling Group, and CloudWatch.\n\n\nSubnet : Public subnet (either public subnets made in Day1 hands-on)\n\nAdd a default route to the private route table associated with private subnets so that instances in those subnets can reach the Internet.\n\nSecurity group for ALB\nInbound : HTTP 80 from 0.0.0.0/0\nOutbound : All traffic (default)\n\nSecurity group for EC2\nInbound : HTTP 80 from the ALB security group made in the previous step\nOutbound : All traffic (default)\n\nTarget type : Instances\n\n\nCreate a launch template for the ASG.\nAMI : Amazon Linux 2023\n#!/bin/bash\nset -e\n\ndnf -y update\ndnf -y install nginx\nsystemctl enable --now nginx\n\nTOKEN=$(curl -s -X PUT \"http://169.254.169.254/latest/api/token\" \\\n  -H \"X-aws-ec2-metadata-token-ttl-seconds: 21600\")\nINSTANCE_ID=$(curl -s -H \"X-aws-ec2-metadata-token: $TOKEN\" \\\n  http://169.254.169.254/latest/meta-data/instance-id)\n\ncat > /usr/share/nginx/html/index.html <<EOF\n<h1>Day3: ALB + ASG (Private EC2)</h1>\n<p>InstanceId: ${INSTANCE_ID}</p>\nEOF\n\n\n\n\n\n\nLaunch template : the template made in the previous step\n\n\n\n\n\nSchema : Internet-facing \n\n\n\nIf you can open the ALB's DNS name in your browser, you've successfully reached the private EC2 instances through the public ALB.\n\n\nEnsure the status of the target group is healthy.\nASG → Automatic scaling → Create dynamic scaling policy.\n\nConnect to the EC2 instance by using SSM (like Day2 hands-on) and execute the following commands to install stress-ng and launch CPU workers to increase CPU usage for ten minutes.\nsudo dnf -y install stress-ng\ncd /tmp\nstress-ng --cpu 2 --timeout 10m\n\n\nWait for a few minutes and check scaling status.\n\n\nPlease delete the resources in the following order to avoid failures in dependency order.\nKey exam points related to today's services.\nNAT Gateway is the managed service (= you don't need to manage it.) and should be associated with EIP.\n\n\nNAT instance is the EC2 instance has EIP or public IP. You should manage countermeasures for failures and load balancing.\n\n\n\n\n  \n  \n  2. ALB vs NLB\n\n\n\nALB uses HTTP or HTTPS protocol. can route based on URL and set Lambda as target and use ACM.\n→when you want to route based on URL in web application or manage certificate.\nNLB uses TCP, TLS or UDP protocol. Ultra-high speed, high throughput and    use EIP.\n→when you want high-speed communication in the system like financial system or publish the system using a fixed IP address.\n#####3. Scaling of the resources\nEC2 : ASG + ALB/NLB + scale indicator (CPU, Request Count etc)\n\n\nLambda : concurrent execution, manage by event source (SQS, Kinesis etc)\n\n\nECS/EKS : Service Auto Scale\n\n\n\nSee you soon in Day4 hands-on!",
-      "publishedAt": "2026-01-31T00:20:46.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "bd76aa7ea3ad0025f7dd0833f4bcc197411d8e31e55e1844fff430f6c6203b0b",
-      "title": "「ひろゆき氏のSIer衰退論」「ペネトレーションテストは死んだ？」、技術職の未来に関心",
-      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2601/31/news013.html",
-      "description": "＠ITで公開された記事の中から、特に注目を集めた10本をランキング形式で紹介します。何が読者の関心を引いたのでしょうか。",
-      "publishedAt": "2026-01-30T23:00:00.000Z",
-      "feedName": "＠IT"
-    },
-    {
-      "id": "b52730c9b1e24eaa4f9601206249a73d9fc90b22123fbbe28f07dc07e3cd8d79",
-      "title": "【AWS CDK】AWS Glue zero-ETLでSalesforceデータをIceberg Tableに連携してみた",
-      "url": "https://dev.classmethod.jp/articles/aws-cdk-salesforce-glue-zero-etl-iceberg/",
-      "description": "【AWS CDK】AWS Glue zero-ETLでSalesforceデータをIceberg Tableに連携してみた",
-      "publishedAt": "2026-01-30T22:00:11.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "bdf3b31bf5349b2e2aeeb4b80804ced2c5b40b66ebe6b19e060234d61dc56f08",
-      "title": "バウチャープランでAWS予算を超過しないようにAWS Budgetsを利用して一定の利用費に達した際にメールに通知を行う",
-      "url": "https://dev.classmethod.jp/articles/aws-aws-budgets/",
-      "description": "バウチャープランでAWS予算を超過しないようにAWS Budgetsを利用して一定の利用費に達した際にメールに通知を行う",
-      "publishedAt": "2026-01-30T16:46:15.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "1ba892c7ce8659d35cec45320162892b153d789b7fc707f81eff2559572d1d1e",
-      "title": "ZscalerがAIセキュリティを強化する新サービス発表　社内のシャドーAIやプロンプトなど検出可能",
-      "url": "https://enterprisezine.jp/news/detail/23644",
-      "description": "2026年1月28日、ゼットスケーラー（Zscaler）は新サービス「Zscaler AI Security Suite」発表に関する記者会見を開催した。\n\n　Zscaler 製品管理担当 バイス ...",
-      "publishedAt": "2026-01-30T10:40:00.000Z",
-      "feedName": "EnterpriseZine"
-    },
-    {
-      "id": "a37605a3e1006127abefafe97f48ce24d497fd9802ae719695f08a68574eac99",
-      "title": "[AWS Technical Support Note] วิธีการเปลี่ยน Runtime ของ Lambda",
-      "url": "https://dev.classmethod.jp/articles/tsnote-thai-lambda-change-runtime/",
-      "description": "วิธีการเปลี่ยน Runtime ของ Lambda",
-      "publishedAt": "2026-01-30T08:36:31.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "5824ba342b415f840cf4057e9de1b2e955f5b1c898c03d8f767d57aad130eda9",
-      "title": "Amazon RDS for SQL Server での追加のストレージボリューム設定",
-      "url": "https://aws.amazon.com/jp/blogs/news/configure-additional-storage-volumes-with-amazon-rds-for-sql-server/",
-      "description": "この投稿では、Amazon RDS for SQL Server インスタンス向けの追加ストレージボリューム機能を紹介し、実用的な実装シナリオを説明します。追加ストレージボリュームは、ワークロードタイプ別にデータを整理する柔軟性を提供し、専用の IOPS 割り当てによってパフォーマンスを向上させ、高可用性と耐久性を維持しながらストレージを独立してスケールすることができます。",
-      "publishedAt": "2026-01-30T08:17:41.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "0f6a7922e266ce404cc33381989d22e52844d5535307c0bb3c7b303c687bc978",
-      "title": "jQueryエンジニアがNext.js 16に挑んだ3日間",
-      "url": "https://qiita.com/gerrard15/items/94709c464e930bdb3b39?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "jQueryからNext.jsへ：モダンフロントエンドで挑んだ「S3ファイルダウンロード機能」実装の記録\nこれまでJavaScriptやjQueryを中心にフロントエンドを触ってきた方が、最新のモダン開発（Next.jsなど）に触れると、その概念の多さに驚くかもしれません...",
-      "publishedAt": "2026-01-30T07:57:06.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "2acd29143bc42d42e5f61c2c8ef21f32c2dede17a45099885fcb883511d0a5cc",
-      "title": "M4 MacでChromeOS Flexを動かす",
-      "url": "https://qiita.com/gerrard15/items/9fe509d64ff5c949d988?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "M4 Mac (Apple Silicon) + UTM で Chrome OS Flex を構築する手順\nM4チップ搭載Mac上で、x86_64アーキテクチャの「Chrome OS Flex」をエミュレーション動作させるための手順です。\n通常の仮想化とは異なり、Inte...",
-      "publishedAt": "2026-01-30T07:10:35.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "dd22fa1163f7fbb9fadd6e8a6c0a73723cb876a2618afb0df069c5694335dbf5",
-      "title": "富士ソフト、AWSとの協業でマルチエージェントシステムなどを開発へ　2年間で約80件の顧客導入を",
-      "url": "https://enterprisezine.jp/news/detail/23641",
-      "description": "富士ソフトは、生成AI分野におけるアマゾン ウェブ サービス（AWS）との戦略的協業契約を締結した。\n\n　今回の戦略的協業により、富士ソフトはAWSから検証環境や技術サポートを受けながら、AI基盤「...",
-      "publishedAt": "2026-01-30T06:13:00.000Z",
-      "feedName": "EnterpriseZine"
-    },
-    {
-      "id": "823424a569ae31c8faf7be31444ad750850da398cf92859e527800979ff971e3",
-      "title": "「GitHub Copilotが高くて払えない」と嘆くあなたへ。AWSの「Amazon Q」なら無料で同じことができます",
-      "url": "https://zenn.dev/miyaco_log/articles/6f084e82688fa1",
-      "description": "※本ページはプロモーションが含まれています 【この記事でわかること】 Amazon Q Developerは、AWS版の「無料GitHub Copilot」。 VS Codeに入れるだけで、コードの自動生成やチャット相談ができる。 クレジットカード登録不要。必要なのはメールアドレスだけ。 はじめに：月額10ドルの壁 「AIコーディング、便利そうだけ...",
-      "publishedAt": "2026-01-30T04:51:57.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "5eb9b5c0a8ae69a0fb9ccf4c18bf894ecae27cc2cde9ca3ffc3fbab95fda7aca",
-      "title": "AWS Entity Resolution でのルールベース・機械学習ベースマッチングの精度測定方法",
-      "url": "https://aws.amazon.com/jp/blogs/news/measuring-the-accuracy-of-rule-or-ml-based-matching-in-aws-entity-resolution/",
-      "description": "本記事では、AWS Entity Resolution でルールベース・機械学習ベースのマッチング精度を測定する方法を解説します。企業が顧客データを統合する際、アイデンティティマッチングの精度を客観的に評価する手法が不足しているという課題に対し、F1 スコアを用いた評価フレームワークとオープンソースの BPID データセットを活用した実践的な測定方法を紹介します。",
-      "publishedAt": "2026-01-30T03:32:58.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "70b360fb764229864e9629364b41980554e6be9c6d91c7c0b6ef0dc4a9552481",
-      "title": "KnowBe4、自社のセキュリティ対策状況をテスト・点検できる3つの無料ツール提供",
-      "url": "https://enterprisezine.jp/news/detail/23632",
-      "description": "2026年1月30日、KnowBe4は、自社のセキュリティ対策状況をテスト・点検できる3つのフリーツール（英語版）を、日本の公式Webサイトより提供開始した。\n\n　近年、国内のランサムウェア攻撃は、...",
-      "publishedAt": "2026-01-30T02:40:00.000Z",
-      "feedName": "EnterpriseZine"
-    },
-    {
-      "id": "900810406546a9ab86d9bb1d8f96b11e3c74c4d9d4e53558a7d72e7f0062c1fb",
-      "title": "教育者を支援: Innovation Sandbox on AWS が学習目標の達成を加速する方法",
-      "url": "https://aws.amazon.com/jp/blogs/news/empowering-educators-how-innovation-sandbox-on-aws-accelerates-learning-objectives-through-secure-cost-effective-and-recyclable-sandbox-management/",
-      "description": "生成 AI がテクノロジーの世界を変える中、教育機関は学生にサンドボックス環境を提供し、イノベーションを推進しています。本記事では、Innovation Sandbox on AWS を使用して、安全でコスト効率に優れた再利用可能なサンドボックス環境を大規模に管理し、数週間の管理時間を節約しながら、学生と教員が AWS でイノベーションを起こす自由を提供する方法を紹介します。",
-      "publishedAt": "2026-01-30T02:23:53.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
       "id": "881e12f4523a1fe4d1bc9c43f5cd39a4745078f1425fa9e7aaed55d44c58fd7a",
       "title": "DenunzIA: E2EE Anonymous Reporting Platform (Looking for Security Audit/Feedback)",
       "url": "https://dev.to/denuncia_siie/denunzia-e2ee-anonymous-reporting-platform-looking-for-security-auditfeedback-55eg",
@@ -327,54 +143,6 @@
       "description": "AWS Graviton4でARM Performance Librariesを使ってOpenBLASと性能比較してみた",
       "publishedAt": "2026-01-31T03:54:15.000Z",
       "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "5eab42989aa27579b9e03f19253ff722cc5812f41ca9e4990017d2c930ce9388",
-      "title": "【AWS】Kiroのステアリングの適用タイミングとスコープの検証【Kiro】",
-      "url": "https://qiita.com/Nana_777/items/9130b466b5cb82e3a82e?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "はじめに\nKiroのSteering(ステアリング)ファイルを設定することでプロダクト開発において常に意識しなければならない独自のコーディング規約やベストプラクティスなどの知識やルールをKiroに常に意識させることができます。\nステアリングファイルは常に全ファイルに適用す...",
-      "publishedAt": "2026-01-31T01:27:33.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "638ca12bb39fefe05df2266525c0016a7c3b726039134de0dfd4f862348d4ebe",
-      "title": "混乱しました。AWS MCP ServersとAWS MCP Serverの違いを徹底解説",
-      "url": "https://qiita.com/sh_fukatsu/items/93719d61d3251df07a59?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "はじめに\n2025年、AWSはAIエージェントとの連携を大きく進化させました。その中心の1つがAWS MCP Serversだと私は考えています。\nこの記事では、re:Invent2025のタイミングでPreview版が公開されたAWS MCP Serverについて、従来...",
-      "publishedAt": "2026-01-31T01:20:30.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "c8e916613a1589405c4e8cbd6270906a58d36d85f5b1569bb2b7eedfef7c4b6f",
-      "title": "2025年のセキュリティ最前線：ランサムウェア対策の完全ガイド：AI時代の攻撃から組織を守る実践的な方法",
-      "url": "https://qiita.com/mhamadajp/items/442208ab53b4fe5b6286?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "この記事でわかること\n\n2025年のランサムウェア攻撃の最新トレンド\nすぐに実装できる具体的な対策方法\nインシデント発生時の対応手順\n無料で使えるセキュリティツールの紹介\n\n月曜日の朝、オフィスに到着すると、社内のシステムがすべて停止している。画面には、見慣れないメッセ...",
-      "publishedAt": "2026-01-30T19:35:04.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "7a4e3a3a1fdb683be115cdad684f165f7e894cb634a415fc074bfb14c8d05107",
-      "title": "公式ドキュメントを見る癖をつけておこう",
-      "url": "https://qiita.com/sada_/items/1ca66d782de23ca1a82a?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "記事を書くに至った経緯\nチームメンバーのPR(React)をレビューしていたら、見慣れないcloneElementというAPIが使われていました。\nconst cloneElement = React.cloneElement(element, { className: ...",
-      "publishedAt": "2026-01-30T15:22:19.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "0d396d39484ffa8016a4af6e86a7311e294adc8c70b6dbfd3d10c3332e0c0ad8",
-      "title": "Firefoxを20年以上使ってわかった、「やらないと損」な設定まとめ | ライフハッカー・ジャパン",
-      "url": "https://www.lifehacker.jp/article/2601-10-hacks-every-firefox-user-should-know/",
-      "description": "私は20年以上、デフォルトのブラウザとしてFirefoxを使い、その中でFirefoxの多彩な機能を最大限に活用する方法をいろいろ学んできました。 デフォルトで有効になっている機能の中にはオフにしたほうがいいものもあれば、ちょっとした調整でプライバシーやセキュリティを大きく向上させられるポイントもあります。 ここ...",
-      "publishedAt": "2026-01-30T13:00:07.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "a5e042450442684d6bdf77b1aed3e5e87a916570d3d15d62720e97b8ed66891c",
-      "title": "HTML: 「JavaScriptなし」で動く最新の多機能確認ダイアログを構築する（翻訳）｜TechRacho by BPS株式会社",
-      "url": "https://techracho.bpsinc.jp/hachi8833/2026_01_30/156001",
-      "description": "概要 元サイトの許諾を得て翻訳・公開いたします。 英語記事: Stylish dialogs | Fractaled Mind 原文公開日: 2025/12/18 原著者: Stephen Margheim 日本語タイトルは内容に即したものにしました。 以下のような複雑なスタイル付きダイアログをJavaScriptなしで構築できます。 https://play.tailwindcss.com/0V4LTBpdHC...",
-      "publishedAt": "2026-01-30T08:35:39.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
     },
     {
       "id": "45c85677ad9c20704ac4c1980f2803df8ecb9b256637efc3c101b09e6e1e7573",
@@ -542,30 +310,6 @@
       "url": "https://qiita.com/kimuchi_a/items/06f9c9282fbb5504b145?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
       "description": "はじめに\n最近、Webアプリケーションの開発を行ってみたのですが、その際にJSPを採用してみました。\n（ちなみに「ReactやVue.js」という単語は耳にしたことがありましたが、JavaScriptに「フレームワーク」という概念があることすら最近知ったばかりの初学者です...",
       "publishedAt": "2026-01-31T14:56:39.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "4bd5416b57a0d37cc988f5e7748932add1a2c04ae5657c62c2374906ab8f0825",
-      "title": "定時で帰りたい開発環境",
-      "url": "https://zenn.dev/justhiro/articles/649e6fa7d7521c",
-      "description": "はじめに\n今年から新卒エンジニアになります。定時で帰れることを目指して、少しでも業務効率化できそうなツールをいろいろ探したり試している最中です。その中で馴染んだやつや使っているツールのメモ。\n業務用のPCを使うことになると思うので、環境が変わったときにサッと入れ直せるように。\n（セキュリティ面で使うことが難しいものもありそうですが、、、）\n!\n筆者はMacユーザーなので、Macに偏った内容になっています\n\n\n\n ターミナル環境\n\n Ghostty\nhttps://ghostty.org/\nZigで書かれた高速なターミナルエミュレータ。HashiCorpの共同創業者であるMitchel...",
-      "publishedAt": "2026-01-30T10:28:14.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "5636882988a6ab40ffae26fde720cc4aa2e00c64d4f3bcf6926cce081ad5e7ec",
-      "title": "Raspberry Pi 5で生成AIを動かす苦闘記 ― 軽量動画生成モデルSD1.5のDocker実装―",
-      "url": "https://qiita.com/ishidad2/items/b2212798052fbb3834c8?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "はじめに\nシングルボードコンピュータの Raspberry Pi 5（8GBモデル） で、どこまで「生成AI」の実用的な運用が可能か。\n本記事では、Hugging Face で公開されている 超軽量モデル をComfyUI上で動作させたのでその記録を残します。\n\nComf...",
-      "publishedAt": "2026-01-30T05:55:45.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "5412798e3034d05119082ed73c82ca7cc685597273464b9f9263d2db02b853fd",
-      "title": "【AWS/Terraform】Terraformを初めて触ってみた",
-      "url": "https://qiita.com/benzo_lunchbox/items/9944a9416b0c01545487?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "はじめに\n今回は遂にTerraformを触ってみました！\n業務でCloudFormationを使用していたので、よく比較されるTerraformは前からやってみたいと思っていました\nTerraformを使うとAWSだけでなく、他SaaS等もIaC管理出来て、実PJでもかな...",
-      "publishedAt": "2026-01-30T02:46:13.000Z",
       "feedName": "Qiita"
     },
     {
@@ -6412,6 +6156,190 @@
       "description": "はじめにこんにちは。製造エネルギーサービス事業部の後藤です。 フューチャーでは、社内の有志メンバーが集まり、システム開発におけるベストプラクティスをまとめた「アーキテクチャ設計ガイドライン」の整備・公開しています。 これまでフロントエンドからバックエンド、クラウドインフラ、Git戦略など幅広い分野のガ...",
       "publishedAt": "2026-02-27T01:40:57.000Z",
       "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "7f841f784850c1af0b793f2ae621689c7a13237efc4ffd49f86b3521b0592722",
+      "title": "Local DB Design Patterns — Room + Repository + ViewModel Architecture",
+      "url": "https://dev.to/myougatheaxo/local-db-design-patterns-room-repository-viewmodel-architecture-43bo",
+      "description": "Local DB Design Patterns — Room + Repository + ViewModel Architecture\n\n\nMaster the Room database architecture with Repository pattern and reactive ViewModel. This guide covers entity design, DAO patterns, and state management for robust offline-first Android apps.\nDefine your database schema using @entity annotation:\n\\`kotlin\n@entity(\n// Post entity with foreign key constraint\n@entity(\n\\\nUse Flow for observable queries and suspend functions for writes:\n\\`kotlin\n@dao\n// Update with suspend function\n@Update\nsuspend fun update(user: UserEntity)\n\n// Delete with suspend function\n@Delete\nsuspend fun delete(user: UserEntity)\n\n// Observable query returning Flow\n@Query(\"SELECT * FROM users WHERE id = :userId\")\nfun observeUser(userId: Long): Flow<UserEntity?>\n\n// Observable list query\n@Query(\"SELECT * FROM users ORDER BY createdAt DESC\")\nfun observeAllUsers(): Flow<List<UserEntity>>\n\n// Custom query with parameters\n@Query(\"SELECT * FROM users WHERE email LIKE '%' || :searchTerm || '%'\")\nfun searchUsers(searchTerm: String): Flow<List<UserEntity>>\n\n// Batch operations\n@Query(\"SELECT * FROM users WHERE id IN (:userIds)\")\nsuspend fun getUsersByIds(userIds: List<Long>): List<UserEntity>\n\n}\n\n@dao\n@Query(\"SELECT * FROM posts WHERE userId = :userId ORDER BY createdAt DESC\")\nfun observeUserPosts(userId: Long): Flow<List<PostEntity>>\n\n@Query(\"SELECT * FROM posts WHERE id = :postId\")\nsuspend fun getPost(postId: Long): PostEntity?\n\n}\n`\\\nAbstract database operations and handle data conversion:\n\\`kotlin\ndata class Post(\n// Extension functions for conversion\nfun User.toEntity() = UserEntity(\n// Repository implementation\nfun observeUser(userId: Long): Flow<User?> =\n    userDao.observeUser(userId)\n        .map { it?.toDomain() }\n        .distinctUntilChanged()\n\nfun observeAllUsers(): Flow<List<User>> =\n    userDao.observeAllUsers()\n        .map { entities -> entities.map { it.toDomain() } }\n        .distinctUntilChanged()\n\nsuspend fun createUser(user: User): Long =\n    userDao.insert(user.toEntity())\n\nsuspend fun updateUser(user: User) =\n    userDao.update(user.toEntity())\n\nsuspend fun deleteUser(user: User) =\n    userDao.delete(user.toEntity())\n\nfun searchUsers(query: String): Flow<List<User>> =\n    userDao.searchUsers(query)\n        .map { entities -> entities.map { it.toDomain() } }\n\n}\n`\\\nDefine a data class for filtering logic:\n\\kotlin\n\\\nUse flatMapLatest to react to filter changes:\n\\`kotlin\nprivate val filterState = MutableStateFlow(FilterState())\n\nval uiState: StateFlow<UserListUiState> = filterState\n    .flatMapLatest { filter ->\n        when {\n            filter.searchQuery.isNotEmpty() ->\n                repository.searchUsers(filter.searchQuery)\n            filter.filterByUserId != null ->\n                repository.observeUser(filter.filterByUserId)\n                    .map { user -> listOfNotNull(user) }\n            else ->\n                repository.observeAllUsers()\n        }\n    }\n    .map { users ->\n        val sortedUsers = when (filterState.value.sortBy) {\n            FilterState.SortOrder.NEWEST ->\n                users.sortedByDescending { it.createdAtMillis }\n            FilterState.SortOrder.OLDEST ->\n                users.sortedBy { it.createdAtMillis }\n            FilterState.SortOrder.NAME_ASC ->\n                users.sortedBy { it.name }\n            FilterState.SortOrder.NAME_DESC ->\n                users.sortedByDescending { it.name }\n        }\n        UserListUiState.Success(sortedUsers)\n    }\n    .catch { error ->\n        emit(UserListUiState.Error(error.message ?: \"Unknown error\"))\n    }\n    .stateIn(\n        scope = viewModelScope,\n        started = SharingStarted.WhileSubscribed(5000),\n        initialValue = UserListUiState.Loading\n    )\n\nfun setSearchQuery(query: String) {\n    filterState.update { it.copy(searchQuery = query) }\n}\n\nfun setSortOrder(order: FilterState.SortOrder) {\n    filterState.update { it.copy(sortBy = order) }\n}\n\nfun filterByUserId(userId: Long?) {\n    filterState.update { it.copy(filterByUserId = userId) }\n}\n\n}\n\nsealed class UserListUiState {\n\\\nInitialize Room database in your app:\n\\`kotlin\n@database(\n// Dependency injection (Hilt example)\n@Singleton\n@Provides\nfun provideDatabase(@ApplicationContext context: Context): AppDatabase =\n    Room.databaseBuilder(\n        context,\n        AppDatabase::class.java,\n        \"app_database\"\n    ).build()\n\n@Singleton\n@Provides\nfun provideUserDao(database: AppDatabase): UserDao =\n    database.userDao()\n\n@Singleton\n@Provides\nfun provideUserRepository(userDao: UserDao): UserRepository =\n    UserRepository(userDao)\n\n}\n`\\\nEntity Design: Use indices for frequently queried columns, set foreign key constraints\nDAO Layer: Return Flow for observables, use suspend for writes\nRepository Pattern: Convert between Entity and Domain models, provide clean API\nState Management: Use StateFlow with stateIn() for lifecycle-aware subscriptions\nFiltering: Create FilterState data class for complex query logic\nError Handling: Use catch() to emit error states from Flow operators\nLifecycle: Use SharingStarted.WhileSubscribed(5000) for proper collection management\nThis architecture ensures testability, scalability, and reactive updates across your app.\n8 Android app templates: Gumroad",
+      "publishedAt": "2026-03-02T01:51:16.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "70e5da37fdda551bb530cf98071bc98234ddd531e168cd51c52bbe2ba623a141",
+      "title": "Compose ↔ View Interop — AndroidView and ComposeView",
+      "url": "https://dev.to/myougatheaxo/compose-view-interop-androidview-and-composeview-3792",
+      "description": "Compose ↔ View Interop — AndroidView and ComposeView\n\n\nYou don't need to rewrite your entire app to use Compose. Modern Android supports gradual migration through interop.\nAndroidView(\n    factory = { context ->\n        MapView(context).apply {\n            // Initialize\n        }\n    },\n    modifier = Modifier.fillMaxSize(),\n    update = { mapView ->\n        // Update when recomposed\n    }\n)\n\nAndroidView(\n    factory = { context ->\n        MapView(context)\n    },\n    update = { mapView ->\n        mapView.getMapAsync { googleMap ->\n            googleMap.addMarker(\n                MarkerOptions().position(LatLng(37.7749, -122.4194))\n            )\n        }\n    },\n    modifier = Modifier.fillMaxSize()\n)\n\nAndroidView(\n    factory = { context ->\n        WebView(context).apply {\n            settings.javaScriptEnabled = true\n            loadUrl(\"https://example.com\")\n        }\n    }\n)\n\nclass LegacyFragment : Fragment() {\n    override fun onCreateView(\n        inflater: LayoutInflater,\n        container: ViewGroup?,\n        savedInstanceState: Bundle?\n    ): View {\n        return ComposeView(requireContext()).apply {\n            setContent {\n                MyComposeScreen()\n            }\n        }\n    }\n}\n\n<LinearLayout\n    android:layout_width=\"match_parent\"\n    android:layout_height=\"match_parent\">\n\n    <com.google.android.material.appbarcompat.AppBarLayout\n        android:layout_width=\"match_parent\"\n        android:layout_height=\"wrap_content\" />\n\n    <androidx.compose.ui.platform.ComposeView\n        android:id=\"@+id/compose_content\"\n        android:layout_width=\"match_parent\"\n        android:layout_height=\"0dp\"\n        android:layout_weight=\"1\" />\n</LinearLayout>\n\nclass MainActivity : AppCompatActivity() {\n    override fun onCreate(savedInstanceState: Bundle?) {\n        super.onCreate(savedInstanceState)\n        setContentView(R.layout.activity_main)\n\n        val composeView = findViewById<ComposeView>(R.id.compose_content)\n        composeView.setContent {\n            MyComposeContent()\n        }\n    }\n}\n\nAndroidView(\n    factory = { context ->\n        MapBinding.inflate(LayoutInflater.from(context)).root\n    },\n    update = { view ->\n        val binding = MapBinding.bind(view)\n        binding.mapView.getMapAsync { /* ... */ }\n    }\n)\n\nclass SharedViewModel : ViewModel() {\n    val location = MutableLiveData<LatLng>()\n}\n\n// In Compose Fragment\nclass MapsComposeFragment : Fragment() {\n    private val viewModel: SharedViewModel by viewModels()\n\n    override fun onCreateView(inflater: LayoutInflater, ...): View {\n        return ComposeView(requireContext()).apply {\n            setContent {\n                val location by viewModel.location.observeAsState()\n                ComposeMapScreen(location)\n            }\n        }\n    }\n}\n\n// In View Fragment\nclass MapsViewFragment : Fragment() {\n    private val viewModel: SharedViewModel by viewModels()\n\n    override fun onCreateView(inflater: LayoutInflater, ...): View {\n        val binding = MapBinding.inflate(inflater)\n        binding.mapView.getMapAsync { googleMap ->\n            googleMap.setOnCameraIdleListener {\n                viewModel.location.value = googleMap.cameraPosition.target\n            }\n        }\n        return binding.root\n    }\n}\n\nStart with new screens in Compose\nAdd Compose gradual inside existing screens using ComposeView\n\n\nKeep shared ViewModel for state\nUse AndroidView sparingly (only for complex views like maps)\nMigrate screens incrementally — don't wait for 100% completion\nAndroidView: Legacy View → Compose (factory + update pattern)\nComposeView: Compose → XML layout or Fragment\nState sharing: ViewModel + LiveData/StateFlow\nMigration: Gradual adoption, mixing both frameworks simultaneously\nYour app doesn't need to be 100% Compose to benefit. Start interop today.\nInterested in mobile app development? Check out 8 Android app templates on Gumroad!",
+      "publishedAt": "2026-03-02T01:37:06.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "7d8fb8da36639917bf9be5c8c6735a329549f1cdbc8ee705119e1653934b7175",
+      "title": "第 6 回 AWS ジャパン 生成 AI Frontier Meetup ～学びと繋がりの場～【開催報告】",
+      "url": "https://aws.amazon.com/jp/blogs/news/6th-gen-ai-frontier-meet-up/",
+      "description": "アマゾン ウェブ サービス ジャパン（以下、AWS ジャパン）が実施する「生成 AI 実用化推進プログラム」は […]",
+      "publishedAt": "2026-03-02T00:10:35.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "66ff417c54c1cdb7365264966e0744fe0473fb3bcfb86b45d7ed54da7ee4dc16",
+      "title": "ABEMAで取り組んだAIエージェントによるA/Bテスト文化の促進",
+      "url": "https://developers.cyberagent.co.jp/blog/archives/62375/",
+      "description": "はじめに ABEMAのData Scienceチームで、2025年9月から半年間、ミッション型インタ ...",
+      "publishedAt": "2026-03-01T22:30:20.000Z",
+      "feedName": "CyberAgent Developers Blog"
+    },
+    {
+      "id": "816ce90a3444166123f7edd7e1a69b2b7bc65bb0ab1e272348a8692401cbdd89",
+      "title": "hackerbot-claw: An AI-Powered Bot Actively Exploiting GitHub Actions - Microsoft, DataDog, and CNCF Projects Hit So Far - StepSecurity",
+      "url": "https://www.stepsecurity.io/blog/hackerbot-claw-github-actions-exploitation",
+      "description": "This is an active, ongoing attack campaign. We are continuing to monitor hackerbot-claw's activity and will update this post as new information becomes available. We're hosting a community webinar on this topic on March 2nd at 11 AM PT. Click here to register. A week-long automated attack campaig...",
+      "publishedAt": "2026-03-01T22:24:29.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "1de4d3e1ee35ac0cdc5e4fc41bc540002a026e3a265190a782314a6a33e70a1d",
+      "title": "AIエージェントの「振る舞い」をどう評価する？　実践者が明かす「設計」「テスト」の勘所",
+      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2602/27/news016.html",
+      "description": "2025年12月20日、JAWS-UG主催のコミュニティーイベント「AI Builders Day」が開催された。本稿では、そのセッションの中から、Amazon Web Servicesを活用したAIエージェント開発の現在地と、AIエージェントの設計や評価のポイントをまとめてお届けする。",
+      "publishedAt": "2026-03-01T20:00:00.000Z",
+      "feedName": "＠IT"
+    },
+    {
+      "id": "3b536dd71907e156dde7cd0a7a32a27588849a30892cc2e614c37323b509b556",
+      "title": "【k6】負荷テストチートシート",
+      "url": "https://qiita.com/umekikazuya/items/575cb2218d0ee1349131?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "k6を使い始めた人、たまに書くけど毎回調べ直してしまう人向けのチートシートをまとめました。\nCLIコマンド・options・負荷パターン・メトリクスについて、実務で使う範囲のものを記載しています。\n「負荷テスト」を体系的に学びたい方はこちらの連載（全5回）もどうぞ。\n\n連載...",
+      "publishedAt": "2026-03-01T13:56:19.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "2750cce8f6350d3533d9f3329129874ccb64f0637042e1f5a190f198be853adf",
+      "title": "Skillsで実現する軽量パーソナルRAG",
+      "url": "https://zenn.dev/karaage0703/articles/d7eaf62437185d",
+      "description": "以前、MCPサーバーとしてRAGを構築する記事を書きました。 PostgreSQL + pgvector + multilingual-e5-large という構成で、MCP経由でベクトル検索できるRAGサーバーです。このMCP RAGサーバーは、気に入ってはいたのですが、PostgreSQL + Dockerが必要だったり、MCPサーバーとしての設定が必要だったりと、少し使い勝手...",
+      "publishedAt": "2026-03-01T10:52:51.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "7821ea480ff12058b986863295bd0c03faa916771c815c44be7d0a53b61303f5",
+      "title": "サーバレスが変えた バックエンドという概念",
+      "url": "https://zenn.dev/biki/articles/serverless-changed-backend-concept",
+      "description": "🧭 はじめに 最近、Cloudflare Pages や Vercel、Supabase を触ってみて、 「フロントだけで完結する時代が来たんじゃないか？」 と感じました。 Next.js で画面を作り、Functions で API を書き、D1 に接続するだけ。 サーバ構築もデプロイ設定も不要で、フロントエンドだけでアプリが動く。 この体験が、バックエンド...",
+      "publishedAt": "2026-03-01T09:24:13.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "2750cce8f6350d3533d9f3329129874ccb64f0637042e1f5a190f198be853adf",
+      "title": "Skillsで実現する軽量パーソナルRAG",
+      "url": "https://zenn.dev/karaage0703/articles/d7eaf62437185d",
+      "description": "以前、MCPサーバーとしてRAGを構築する記事を書きました。\nhttps://zenn.dev/mkj/articles/30eeb69bf84b3f\nPostgreSQL + pgvector + multilingual-e5-large という構成で、MCP経由でベクトル検索できるRAGサーバーです。このMCP RAGサーバーは、気に入ってはいたのですが、PostgreSQL + Dockerが必要だったり、MCPサーバーとしての設定が必要だったりと、少し使い勝手の悪い部分がありました。\n今回は、もっと手軽にRAGを実現したいなと思いSkillを活用してもっと軽量なRAGを実現しま...",
+      "publishedAt": "2026-03-01T08:17:28.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "bc11187681b3b93a1f7cedc96522cb1ca949df777acad61ccb06fdd95bdd0304",
+      "title": "【個人開発】オフラインでも地図と現在地をすぐ確認できる、待ち合わせアプリを作りました【React x TypeScript x Service Worker】",
+      "url": "https://qiita.com/shun123/items/91a65bfbe41aea8dbbda?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\n慣れていない土地で電波が悪く地図アプリが重くて、なかなか友達や家族と合流できないなんてことはありませんでしょうか？\n私はディズニーランドなどの人が多いテーマパークでそんな経験が多くありました。\nそこで電波が悪い状況でも自分の位置と目的地をすぐに把握できるよう、オ...",
+      "publishedAt": "2026-03-01T07:54:26.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "8ab239dfacf5704c9de27a1309702daecec7b1727565c05ccd2d93c7d4aea3a2",
+      "title": "AgentCore RuntimeをTerraformでVPCにデプロイして送信元IPアドレスを固定にする",
+      "url": "https://qiita.com/ry-harada/items/6c78b38f6e94cf025997?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "本編の前に\n\n本手順による検証後、terraform destroyによるリソース削除を試みましたが、作成したセキュリティグループが削除できず、サブネットやVPCが削除できない状態になりました。NAT Gateway等の課金が発生するリソースは削除されたため、コスト面へ...",
+      "publishedAt": "2026-03-01T06:14:31.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "1d066b13301d2d1c5096d03586bdbf182c155dc05c60480450367d8a28243b20",
+      "title": "IT未経験がAIを活用して入社4ヶ月でAWS資格3冠達成した話",
+      "url": "https://dev.classmethod.jp/articles/it-beginner-aws-3-certifications-ai/",
+      "description": "IT未経験でクラスメソッドに入社して4ヶ月。\nAWS CLF・AIF・SAAの3資格をAIをフル活用して合格した経験をまとめました。",
+      "publishedAt": "2026-03-01T03:29:48.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "f07296bad11e6bb41698b430b6aefd76c613fdb2fb091ce5ed10eb07a7a31c37",
+      "title": "セキュリティって難しい",
+      "url": "https://zenn.dev/mizutani/articles/security-is-so-difficult",
+      "description": "最近、事業会社でセキュリティに携わることの難しさについて色々と考えることがあったのでちょっと言語化してみる。いわゆる「セキュリティの知識をキャッチアップするのが大変」という直接的な話ではなく、もう少し構造的な難しさについて。特に何か明快な結論や解決策を提示できるわけではないのだが、自分なりに感じ...",
+      "publishedAt": "2026-03-01T03:11:47.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "92a387f36732f6433377573dfa4eb3e18431f432b33f008b909e6a9ed18853b2",
+      "title": "【AWS】Strands Labs ー フォーマット変換・型変換・カラム名修正を全部ai-functionsに丸投げする",
+      "url": "https://qiita.com/yakumo_09/items/58e733b16e96b255dfec?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\nAWSからStrands Labsというのが発表されましたね。\n色々いじってみたので今回はai-functions中心に記事を書いていきたいと思います。\nなお、Strands Labsには他にも以下のプロジェクトがあります。\n\nRobots：AIエージェントを...",
+      "publishedAt": "2026-03-01T02:25:26.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "f07296bad11e6bb41698b430b6aefd76c613fdb2fb091ce5ed10eb07a7a31c37",
+      "title": "セキュリティって難しい",
+      "url": "https://zenn.dev/mizutani/articles/security-is-so-difficult",
+      "description": "最近、事業会社でセキュリティに携わることの難しさについて色々と考えることがあったのでちょっと言語化してみる。いわゆる「セキュリティの知識をキャッチアップするのが大変」という直接的な話ではなく、もう少し構造的な難しさについて。特に何か明快な結論や解決策を提示できるわけではないのだが、自分なりに感じていることを書いてみる。\n\n 何が難しいのか\n\n 仕組みの理解が難しい\nセキュリティに取り組むうえで、まず守るべき対象の仕組みをよく理解する必要がある。ここでいう「理解」は、単にそのシステムやサービスを「使える・動かせる」というレベルではない。そこからさらに数歩踏み込んだ、構造や原理の把握が求めら...",
+      "publishedAt": "2026-03-01T01:36:01.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "4e37a2c5af51a598aa77100f9a7de1df0b160cb93173384b34315c4d061aa912",
+      "title": "あなたはEntra IDを理解できる",
+      "url": "https://zenn.dev/headwaters/articles/64e6aad7acdff9",
+      "description": "はじめに ヘッドウォータースに入社し、ほとんど初めてクラウドという概念に本格的に触れました。 業務のなかでAzureのキャッチアップを進める中で、理解が難しい概念がありました。 それがEntra IDです。 今回は自分なりに理解したその概念を、具体的な使い方のイメージを多めにして初心者エンジニアの方でも理解できる...",
+      "publishedAt": "2026-02-28T23:31:32.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "92d1bd5d5880af714f8f2259724dbde1cf4807e606924a212607e7d8781ddc92",
+      "title": "Lambdaは果たして安全か？― サーバレスの\"APMで見えないリスク\"を解剖する",
+      "url": "https://qiita.com/keitah/items/f4a506357df2060a0379?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "クラウドネイティブの時代、サーバレスは「安全な選択肢」として語られることが多くなりました。\n特に AWS Lambda の登場以降、\n\nサーバ管理は不要\nパッチ適用は不要\nOSを触らない\n自動スケールする\n\nという言葉が並びます。\nまるで、「インフラから解放されれば、セキュ...",
+      "publishedAt": "2026-02-28T16:20:25.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "57256647bd17f67d239b6f9b4dbe66d2bc4c02211cb25a764eb2e8d0446d4b44",
+      "title": "React Tokyo フェス2026 参加レポート",
+      "url": "https://zenn.dev/polipoli/articles/react-tokyo-fes-2026-report",
+      "description": "概要\n2026年2月28日に開催された「React Tokyo フェス2026」に参加してきました。東京都立産業貿易センター 浜松町館 5Fにて、Reactコミュニティが一堂に会する\"お祭り型\"イベントということで、通常のカンファレンスとは一味違った体験ができたのでレポートにまとめます。\nhttps://react-tokyo.connpass.com/event/366003/\n\n React Tokyo フェスとは\nReact Tokyo フェスは、従来のカンファレンスのように壇上の発表を「聴く」形式ではなく、参加者が会場を自由に回遊しながら対話・交流を楽しむ\"お祭り型\"のイベン...",
+      "publishedAt": "2026-02-28T13:49:57.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "6ba01dc6eca85ef303e0fd8ebdf1a34a6799d5d7658c807c753391a6100b6f9e",
+      "title": "Terminal 版 Playwright 風テストツールの tuistory が便利",
+      "url": "https://qiita.com/tomoasleep/items/9f35a0d6e24edd8f2265?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "TUI ツールを Vibe coding で作ることが最近多く、その際の動作確認として tuistory というツールを使っていて便利だったので紹介する。\n\ntuistory はどんなツールか\n簡単に言うと Terminal 版の Playwright。\nplaywr...",
+      "publishedAt": "2026-02-28T12:28:53.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "e7a2c3b553e3e25c485bf94d371ef36980c106b93f579c7a1873403afca02484",
+      "title": "AI時代におけるソフトウェアアーキテクチャを考える",
+      "url": "https://zenn.dev/neko3cs/articles/software-architecture-for-the-ai-era",
+      "description": "はじめに\n本稿ではAI時代における最適なソフトウェアアーキテクチャとは何かを考えてみます。昨今、AIによるコーディングが活発となり、コーディングはAIに任せるといったことは普遍的になりつつあります。そんな中で、AIがコードを書く上で最適なソフトウェアアーキテクチャとはなんなのかについて疑問を持ちました。\n\n AIコーディングにおける制約と問題点\nまず、AIにコーディングさせる上でのLLMの制約と問題点について考えてみます。\nトークンサイズ\nコンテキストサイズは最新モデル[1]で100万〜200万トークンほどになります。一度に読み込まないといけない情報量が増えるとそれだけトークンを使用...",
+      "publishedAt": "2026-02-28T09:12:01.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "4e37a2c5af51a598aa77100f9a7de1df0b160cb93173384b34315c4d061aa912",
+      "title": "あなたはEntra IDを理解できる",
+      "url": "https://zenn.dev/headwaters/articles/64e6aad7acdff9",
+      "description": "はじめに\nヘッドウォータースに入社し、ほとんど初めてクラウドという概念に本格的に触れました。\n業務のなかでAzureのキャッチアップを進める中で、理解が難しい概念がありました。\nそれがEntra IDです。\n今回は自分なりに理解したその概念を、具体的な使い方のイメージを多めにして初心者エンジニアの方でも理解できるような記事にしてみました。\n\n 認証の「抽象化」とクラウドの全体像\nクラウドやAzureを学ぶ際、最大の壁となるのが「Microsoft Entra ID（旧Azure AD）」です。\n「クラウドベースのID管理サービス」という言葉だけでは、実態は掴めません。\nEntra I...",
+      "publishedAt": "2026-02-28T02:20:00.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "3c89c6ec3b8cba096a9cb9d97dc3e3efe487ad0630d7918f00cf4d98470cb133",
+      "title": "CLAUDE.mdの防御は本当に効くのか？ — 10種の攻撃で検証してみた",
+      "url": "https://qiita.com/kenimo49/items/3273fd4406bf0aa03acf?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに — 防御パターンを書いた。で、本当に効くの？\n前回の記事「CLAUDE.mdのセキュリティ設計 — プロンプトインジェクション対策の実装パターン」では、CLAUDE.mdに書くべき4つの防御パターン（優先順位の明示・禁止パターン定義・機密ファイル保護・外部コード...",
+      "publishedAt": "2026-02-28T01:01:12.000Z",
+      "feedName": "Qiita"
     }
   ]
 }
