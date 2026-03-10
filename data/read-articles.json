@@ -1,118 +1,6 @@
 {
   "articles": [
     {
-      "id": "4f8e858a1aeae28bf14bcbbed32b4517600e156faa55f275e659b1194ecead25",
-      "title": "Testing Antrieb: Deploying MongoDB with Authentication for a Flask + React App",
-      "url": "https://dev.to/angeldev996/testing-antrieb-deploying-mongodb-with-authentication-for-a-flask-react-app-3c5b",
-      "description": "What I Tried to Accomplish\nHow It Went\n\nWhat Worked Well\n\nWhat Could Be Better\n\nFinal Thoughts\nAntrieb delivered what it promises: verified infrastructure scripts that actually ran on real machines. For my use case - setting up MongoDB with authentication to support a Flask + React app - it saved me time and gave me confidence that the output was tested, not just generated. If you're working on infrastructure tasks and want something more reliable than copy-pasting from Stack Overflow, it's worth trying.",
-      "publishedAt": "2026-02-08T01:15:15.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "6b1346c624f4941ab5d50c665204e60e1725ebb6884a06a428a145f13672510f",
-      "title": "Azure Front Door で DHE 暗号スイートのサポートが終了するので背景などを整理してみた",
-      "url": "https://dev.classmethod.jp/articles/azure-fd-tls12-dhe/",
-      "description": "Azure Front Door で DHE 暗号スイートのサポートが終了するので背景などを整理してみた",
-      "publishedAt": "2026-02-08T01:10:51.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "f99edec6398cc7e1530080c9389fcce4d1f392374c2b457f5e76ec0b6da26fef",
-      "title": "AWS Lambda Managed Instances のコストを Billing and Cost Management から確認してみた",
-      "url": "https://dev.classmethod.jp/articles/aws-lamabda-managed-instances-billing-check/",
-      "description": "AWS Lambda Managed Instances のコストを Billing and Cost Management から確認してみた",
-      "publishedAt": "2026-02-07T14:33:46.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "d30623f8852ce73bfbb859cc6d9f805c09295301ea56868a48293b54d2fc1255",
-      "title": "Github ActionsでRenderに自動デプロイさせる",
-      "url": "https://qiita.com/okarina-chaan/items/21de1147bd84ac5ae12a?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "この記事でできるようになること\nmainマージ＝リリースとする運用を前提に、\nPR → CI → mainマージ の流れでRenderへ自動デプロイする構成を構築できるようになります。\n\n前提\n\nデプロイはRender\nCIでRubocop, breakman使用\nデプロ...",
-      "publishedAt": "2026-02-07T14:22:45.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "234c66772f1992920e8c5c25ab91353c4313767f2e93e123c231c388e340a767",
-      "title": "Next.js がやってくれていたこと全部、自分でやってみた",
-      "url": "https://zenn.dev/ashunar0/articles/2b6c77e2fe251d",
-      "description": "はじめに Next.js でアプリを作ると、ルーティング、API、認証、ビルド最適化まで全部フレームワークがやってくれる。開発は快適だが、「なぜその構成なのか」を聞かれると答えに詰まる場面があった。 そこで、会計システムを題材に Next.js を使わずに React + Hono + Supabase で同じことを実現する構成で開発してみた...",
-      "publishedAt": "2026-02-07T14:20:29.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "b048365e36702bccc6ff2a223767b4353d9f11d0cac9aa19e8ac476cfecf4bb4",
-      "title": "NLBで\"クライアントIPアドレスの保持\"をするときに、ターゲット側のセキュリティグループで取るべき設定",
-      "url": "https://qiita.com/yuki_ink/items/43b5c3afdd889c0338ff?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "はじめに\nお疲れ様です。矢儀 @yuki_ink です。\nNLB、使ってますか？\nAWS Network Load Balancer (NLB) には「クライアントIPアドレスの保持」という機能があります。\nこの機能を有効にすると、NLB配下のターゲット（EC2など）にク...",
-      "publishedAt": "2026-02-07T09:48:47.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "13142fb3106f9124c864c72a0be7764b6ad061956f3ba271ff74bfe123b81bed",
-      "title": "【2026年版】Webスクレイピングの\"3大つらみ\"をBright Dataで解決する",
-      "url": "https://qiita.com/ktdatascience/items/a13b42998925e9ba046b?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "はじめに：この記事で得られること\nWebスクレイピングに挑戦したことがあるエンジニアなら、一度は「IPブロック」「CAPTCHA」「JavaScript動的レンダリング」という壁にぶつかったことがあるのではないでしょうか。\n本記事では、世界20,000社以上が利用するWe...",
-      "publishedAt": "2026-02-07T08:40:48.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "c4b61f029940f3f39573e986e8b20118591551aaea1312ead1251346da9fe0a5",
-      "title": "思考のスピードでマインドマップを書けるエディタを Tauri で作った",
-      "url": "https://zenn.dev/dokusy/articles/aa7674688802c3",
-      "description": "Zed の Code at the speed of thought（思考のスピードでコードを書く） みたいなタイトルですみません。 でも、本当にそれを意識したアプリを作ってみました。 Tauri v2 と React + TypeScript を使って、 キーボード操作中心のマインドマップ（ツリー）エディタを作りました。 名前は vikokoro です。 （vim と 心で v...",
-      "publishedAt": "2026-02-07T08:32:41.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "acc55aa2a0864b0e0fa02469bc50e62bd88a68722017264beb36bdbb8d64887c",
-      "title": "strace で C / Go / Rust / Python / Node.js のシステムコールを覗いてみた。",
-      "url": "https://dev.classmethod.jp/articles/strace-c-go-rust-python-node-js-hello-world/",
-      "description": "strace で C / Go / Rust / Python / Node.js のシステムコールを覗いてみた。",
-      "publishedAt": "2026-02-07T07:09:02.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "cc3b50557ea0270a7d3bae0fd976580ff24f41a4f51c806f69f3debc88d7f24d",
-      "title": "Claude Opus4.6はどのようにPPTXを生成しているか",
-      "url": "https://zenn.dev/microsoft/articles/how-the-claude-opus46-generate-pptx",
-      "description": "2026年2月5日にAnthropicから新しいフラグシップモデルであるClaude Opus4.6がリリースされました。\nさまざまな新機能が搭載されていますが、その中でも特にSNSなどで注目されているのはPowerPointプレゼンテーションファイル(PPTX)を高品質に生成できる能力です。\nちょうど開発しているLLMアプリケーションにPPTX生成機能を組み込む予定があったため、Claude Opus4.6がどのようにPPTXファイルを生成しているのか、その技術的な背景と全体フローについて調査しながらまとめてみました。\n\nちょっと宣伝\nMicrosoft Azureで提供されるMicr...",
-      "publishedAt": "2026-02-07T04:01:48.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "cd7e63d5fe8ed34a9aa309768e86e396ed5b63fd5f9ed35010496821cf911bf2",
-      "title": "Azure Application Gateway WAF ポリシー で Microsoft_DefaultRuleSet_2.2 が使えるようになりました",
-      "url": "https://dev.classmethod.jp/articles/azure-appgw-waf-drs22/",
-      "description": "Azure Application Gateway WAF ポリシー で Microsoft_DefaultRuleSet_2.2 が使えるようになりました",
-      "publishedAt": "2026-02-07T03:40:04.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "b28dd19cbc4a3deb60992cf5313540583d42146c0781cfb0ad2b1f77547047da",
-      "title": "Webのしないといけないセキュリティ対策 - Qiita",
-      "url": "https://qiita.com/murasaki1994/items/81fabafaaa1fc0e8fade",
-      "description": "Deleted articles cannot be recovered. Draft of this article would be also deleted. Are you sure you want to delete this article? 昨今流行に合わせたWebサイトの作り方など聞くことがしばしありますが、流行以前にWebサイトはDBの設計だったりセキュリティ対策など様々な事をしなければなりません。 そこで今回...",
-      "publishedAt": "2026-02-07T03:31:21.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "70132ba23b870fca8a1a424bca6a539350b93e7836ebf97491ef2ea1a6f12966",
-      "title": "2026/02/07 今日のQiitaトレンド記事をポッドキャストで聴こう！",
-      "url": "https://qiita.com/ennagara128/items/d1d0ba12815b4d69903d?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "前日夜の最新トレンド記事のAIポッドキャストを毎日朝7時に更新しています。\n通勤中などにながら聴きしよう！\n（Qiita投稿は通勤には間に合わないと思われますが）\nフィードバックとか助かりますのでください\n↓こちらから\n\n出典\n【優勝🥇】防衛省サイバーコンテストをAIで攻略...",
-      "publishedAt": "2026-02-07T03:02:43.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "85ad371ba917bcb12c452ba9922e4734b137db15f14cc5c0a891bafca9a6f050",
-      "title": "セキュリティを大幅強化、驚きを隠せない次期「Ubuntu 26.04」の全容",
-      "url": "https://japan.zdnet.com/article/35243565/",
-      "description": "Linuxに少しでも触れたことがあれば、「Ubuntu」が市場で最も普及しているディストリビューションの一つであることはご存じだろう。 Ubuntuは非常に予測しやすいリリースサイクルを持っており、4月に「.04」、10月に「.10」がリリースされる。この正確さは時計のようであり、リリースの準備や期待を高めるのを容易にして...",
-      "publishedAt": "2026-02-07T02:56:34.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
       "id": "0366887e460fef02c55e73fc42f1bf25eb8feaf220256ce9f343ec276cf8195d",
       "title": "GPU上の推論サーバーのパフォーマンスチューニング方法",
       "url": "https://techblog.lycorp.co.jp/ja/20260209b",
@@ -238,62 +126,6 @@
       "url": "https://qiita.com/ennagara128/items/cd170b99d3b525a0bbf0?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
       "description": "前日夜の最新トレンド記事のAIポッドキャストを毎日朝7時に更新しています。\n通勤中などにながら聴きしよう！\n（Qiita投稿は通勤には間に合わないと思われますが）\nフィードバックとか助かりますのでください\n↓こちらから\n\n出典\n【優勝🥇】防衛省サイバーコンテストをAIで攻略...",
       "publishedAt": "2026-02-08T02:32:23.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "e33ca15983bc63847f829d0802d705d98ced0f5e85b8c0f2d073c3f0f087effc",
-      "title": "【AWS】Kiroのカスタムサブエージェントでタスクを並列実行【Kiro】",
-      "url": "https://qiita.com/Nana_777/items/c63d0734542981a89672?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "はじめに\n2026年2月5日にKiroのIDEにCustom Subagentsが実装されました。\nカスタムサブエージェントを活用することで定義した任意の定型作業の並列実行などが可能になります。\n今回の記事ではCustom Subagentsについて使い方を解説しています...",
-      "publishedAt": "2026-02-07T22:54:08.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "bad388b4113cb495db59f71de7f87165264b4d932ae5fb667d484e136f7e3b75",
-      "title": "自分のコードをAIに攻撃させたら\"守り\"が全部ザルだった",
-      "url": "https://zenn.dev/smartvain/articles/ai-attacked-my-code-security-mostly-placebo",
-      "description": "「セキュリティ、ちゃんとやってる？」\nこの質問、正直めちゃくちゃ怖い。\nSQLインジェクション対策？　やってる。XSS対策？　エスケープしてる。CSRF？　トークン入れてる。\n——でも、「ちゃんと」って何だ？\nOWASPのチェックリストを上から順に潰して、ESLintのセキュリティプラグインを入れて、dependabotのアラートを処理して。やることはやっている。はずだった。\n自分のコードに自律型AIハッカーをけしかけるまでは。\n\n はじめに\nセキュリティは「そこそこ意識している」つもりだった。\nでも今は、コードを書くときの思考回路がまるっきり変わった。守る側の視点だけでコードを書いてい...",
-      "publishedAt": "2026-02-07T21:43:44.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "f58439512cad129889775949fefcafa8579146167d79102ea974c54a70843c6c",
-      "title": "AWS CloudHSMについて深ぼってみる",
-      "url": "https://qiita.com/takano0131/items/5962d7b2739a376ba6d7?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "普段AWS資格試験で触れるが、触らないサービス筆頭のCloudHSMについて解説します。\n\nAWS CloudHSMとは？\n暗号鍵の保管と処理を安全に行う物理的なデバイスであるハードウェアセキュリティモジュール（HSM）をクラウド上で使用できるサービスです。\nマネージドサー...",
-      "publishedAt": "2026-02-07T17:01:09.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "e68d48fccb0acab8823856f68e89eb2ce83c48c58e11df4f52366fca9524652c",
-      "title": "ESLint v10.0.0 released - ESLint - Pluggable JavaScript Linter",
-      "url": "https://eslint.org/blog/2026/02/eslint-v10.0.0-released/",
-      "description": "Highlights ESLint v10.0.0 is a major release that includes several new features and breaking changes. Here are some of the most notable updates. Installing Because this is a major release, you may not automatically be upgraded by npm. To ensure you are using this version, run: npm i eslint@10.0.0...",
-      "publishedAt": "2026-02-07T16:11:42.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "dc46a24c9602982d3d6c78033a29f4735dfaab921c2616503b01fa9e34546e31",
-      "title": "AWSインフラ設計のベストプラクティスを目指して(IaC編)",
-      "url": "https://zenn.dev/so_engineer/articles/45acac4e572ff3",
-      "description": "はじめに\nTerraformを用いてAWSの各リソースをコード化しました。\n以前まとめた記事の構成図の各リソースが主な対象になります。\n\n\nなお、赤点線枠はTerraformでは管理しづらいことから、ecspressoで管理しています。\n\n\n モジュール群\n\nリソースごとに抽象化し、複数の環境で同じ構成を実現するために使う\nAWSのサービス単位で作ると運用しやすい\nモジュール内は過度な抽象化は避け、基本はベタ書き推奨\nとはいえあまりに繰り返しが多い箇所はunit moduleを作る\n\n※unit moduleはモジュールのモジュールのこと。基本はaws.tfからモジュールAを参照する...",
-      "publishedAt": "2026-02-07T06:58:24.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "02f20cd085624db9398f6276a1544073575ca19e889c24634f2a8edf08e24460",
-      "title": "NodeCG 配信グラフィック開発入門 ~Vite + React + TypeScript テンプレートで学ぶNodeCG開発~",
-      "url": "https://zenn.dev/bozitoma/books/nodecg-react-overlay",
-      "description": "Web技術（Node.js/ブラウザ）で、ライブ配信用のグラフィックと操作パネルを自由に作れるフレームワーク「NodeCG」の入門書です。\n\n本書では、自分用に準備した「Vite + React + TypeScript」のNodeCG開発テンプレートを公開し、ハンズオン形式でNodeCGを体系的に学べるように解説します。\n面倒な初期設定はすべて済ませてあるため、すぐに開発をスタートできます。\n\n「既存のツールでは実現できない独自のグラフィックを配信に載せたい」「スタッフが使いやすい専用の管理画面を作りたい」という方は、ぜひ参考にしてください。",
-      "publishedAt": "2026-02-07T06:56:05.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "6520971eedf52e1690932f5dd7e2b691739999dff3cb5ed3195d6214fa2b55cd",
-      "title": "【Azure】AWS脳のままAzureを触ると混乱する理由 ─ 管理階層とネットワークの違いから理解する",
-      "url": "https://qiita.com/hasegawa-masao/items/1802d7484225ae0c66b2?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "AWS脳のままAzureを触ると混乱する理由 ─ 管理階層とネットワークの違いから理解する\n\nはじめに\nAWSの経験はあるけれど、Azureはこれから...というエンジニア向けにAzureとAWSとの違いを分かりやすく記事にまとめてみたいと思います。\n\nAzureは、2...",
-      "publishedAt": "2026-02-07T03:02:33.000Z",
       "feedName": "Qiita"
     },
     {
@@ -6315,6 +6147,253 @@
       "description": "はじめに\n「Microsoft 365 と連携するアプリを作りたい」\n「Outlook や Teams のデータをAPIで取得したい」\n「Azure AD（Entra ID）と連携したい」\nと考えたとき、必ず登場するのが Microsoft Graph です。\nMicro...",
       "publishedAt": "2026-03-06T05:38:42.000Z",
       "feedName": "Qiita"
+    },
+    {
+      "id": "c070e086821795e59950f9b72e8d07fe97cdd5b02a5f79c2dde2850b3c5fa4a9",
+      "title": "I Built a 287,000-Page Website. Here's What I Learned About Programmatic SEO.",
+      "url": "https://dev.to/apex_stack/i-built-a-287000-page-website-heres-what-i-learned-about-programmatic-seo-4d5h",
+      "description": "Most SEO advice boils down to the same thing: pick a keyword, write an article, wait three months, repeat. If you want 10x the traffic, you write 10x the content. That math doesn't work if you're one person.\nAbout a year ago I started experimenting with a different approach. Instead of writing articles one by one, I built a system that generates pages programmatically — one template, one data pipeline, thousands of output pages. Each page targets a specific long-tail keyword. The effort goes into building the machine, not feeding it.\nThe site I built is a stock comparison engine. You type in two tickers and get a side-by-side breakdown: financials, dividends, growth metrics, the works. Simple concept, but at scale it covers every meaningful stock pair — across 12 languages.\n287,000 pages. One person. No content team.\nHere's what actually happened.\nNothing exotic. Astro for static site generation — fast, SEO-friendly, handles thousands of routes without breaking. Supabase PostgreSQL for the data layer. yfinance API for pulling financial data. A local Llama 3 instance for generating the narrative sections on each page.\nTotal monthly cost: under $50.\nThe key insight was separating data from presentation. The database holds structured financial data for 8,000+ tickers. The templates define how that data gets rendered into comparison pages. The AI fills in the gaps — generating human-readable analysis that's unique to each pair.\nI won't go deep on the code here, but the architecture looks like this:\nData Layer (Supabase PostgreSQL)\n    ↓\nETL Pipeline (Python + yfinance)\n    ↓\nContent Generation (Llama 3 local)\n    ↓\nStatic Site Generator (Astro)\n    ↓\nCDN (Cloudflare)\n\nEach layer is independent. If I want to swap Astro for Next.js, the data layer doesn't care. If I want to switch from Llama 3 to Claude, the templates don't change. This modularity ended up being really important when I needed to iterate fast.\nLong-tail coverage is insane. When your site has a page for literally every stock pair, you're catching searches nobody else bothers to target. \"[Random small-cap] vs [other random small-cap]\" has almost zero competition. Volume per page is tiny. Volume across 287,000 pages adds up.\nMultilingual was easier than expected. Once you have the template and data pipeline, translating to 12 languages is mostly a matter of translating the template strings and regenerating. The data — numbers, tickers, percentages — stays the same. I used AI translation for the initial pass, then cleaned up the most important pages manually.\nSchema markup at scale pays off. Every page gets FinancialProduct schema, FAQ schema, and BreadcrumbList markup. Programmatic means you write the schema once, it applies everywhere. This is one of those things that would be insane to do manually across 287k pages but is trivial when it's built into the template.\nThe build pipeline is surprisingly stable. I expected constant breakdowns with this many pages. But because everything is static and generated from structured data, there's very little that can go wrong at runtime. The site just serves HTML files. No server-side processing, no database queries on page load, nothing to crash.\nHere's the thing nobody warns you about with programmatic SEO: Google doesn't want to index 287,000 pages from a brand new domain with zero backlinks.\nOut of 287k pages, Google indexed about 2,500. That's a 0.9% index rate. Brutal.\nThe root causes were obvious in hindsight:\nNo domain authority. New domain, no backlinks, no brand recognition. Google had no reason to allocate crawl budget to my site when established financial sites exist.\nContent similarity. While each page had unique financial data, the narrative sections followed similar patterns. Google's helpful content system flagged some pages as thin — not because they lacked information, but because the structure was too uniform across pages.\nCrawl budget is real. Google physically will not crawl 287k pages on a new domain. I was watching Search Console and seeing Googlebot visit maybe 200-500 pages per day. At that rate, it would take years to crawl everything — and Google's not going to crawl pages it doesn't think are worth indexing anyway.\nThe solution is counterintuitive: fewer pages, not more.\n1. Cut pages ruthlessly. I'm going from 287k down to 5,000-30,000 pages per language. Only keeping comparison pairs that have real search demand — validated with Search Console data and keyword research tools. If nobody searches for \"[obscure penny stock] vs [other obscure penny stock],\" that page doesn't need to exist.\n2. Thicken remaining pages. Each surviving page needs genuine unique value beyond plugging different numbers into the same template. I'm adding sector context, historical trend analysis, dividend deep-dives, and custom AI-generated insights that are actually specific to each stock pair. The goal is that every page could stand on its own as a useful resource.\n3. Build backlinks. There's no shortcut here. I started with directory submissions (boring but necessary), moved to industry-specific directories, and I'm now doing targeted outreach. The goal is DR 15+ within 6 months.\n4. Optimize crawl budget. Better sitemap strategy — instead of one massive sitemap, I broke it into smaller topic-based sitemaps. Improved internal linking so Googlebot can discover important pages through the site structure, not just the sitemap. Removed low-value pages from the index with noindex tags.\nLet me be transparent about where things stand:\n\n\n\nMetric\nCurrent\n\n\n\n\nTotal pages\n287,000\n\n\nPages indexed\n~2,500\n\n\nIndex rate\n0.9%\n\n\nDomain Rating\n0\n\n\nBacklinks\n0\n\n\nMonthly revenue\n$0\n\n\nMonthly cost\n~$50\n\n\n\nNot pretty. But here's why I'm still bullish on this approach:\nThe infrastructure works. The data pipeline works. The content generation works. The site loads fast, passes Core Web Vitals, and has proper schema markup on every page. The only thing broken is Google's trust — and that's a solvable problem with time and backlinks.\nOnce indexing improves, the growth should compound quickly. Each indexed page targets keywords that virtually nobody else is competing for. And with 12 languages, the addressable market is massive.\nStart smaller than you think. If I could do it over, I'd launch with 5,000 pages instead of 287,000. Get those indexed, prove the model works, then scale up. Launching with hundreds of thousands of pages on a new domain is just asking Google to ignore you.\nYour data source is your moat. Anyone can build a template. The hard part is finding a data source that's both comprehensive and accessible. Financial data via yfinance was a good choice because it's free, structured, and covers thousands of entities. Think about what data you can get that's hard for others to replicate at scale.\nThe template + AI hybrid is the sweet spot. Pure template-based pages (just plugging in data) get flagged as thin. Pure AI-generated pages are expensive and inconsistent. The hybrid — structured data rendered by templates with AI-generated narrative sections — hits the balance of unique content at scale.\nBudget for backlink building from day one. I made the mistake of assuming great content would earn links naturally. It doesn't when you have zero domain authority. Build backlink acquisition into your launch plan, not as an afterthought.\nProgrammatic SEO is a patience game. This isn't a \"launch and rank tomorrow\" strategy. It's an infrastructure play. You're building a machine that compounds over time. The first 6 months will feel slow. That's normal.\nI'm documenting everything as I go — the full technical architecture, every prompt I use for content generation, the monetization roadmap, and all the mistakes so you don't repeat them.\nI've packaged it all into a guide called the Programmatic SEO Blueprint. It covers niche selection, data architecture, AI content generation, the Astro/Next.js implementation, SEO infrastructure, the indexing problem and how to solve it, and monetization strategy. All code examples are MIT licensed.\nIf you're thinking about building something like this, I'd say go for it. Just start smaller than I did.\nIf you found this useful, follow me for more on building programmatic SEO sites. I'll be posting updates as the indexing situation improves.",
+      "publishedAt": "2026-03-10T01:37:02.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "942dd64156cb6fe738a4b8424bd892021e855af869fe3c852739182b1c08da52",
+      "title": "Steaelite's Next Move: Why Supply Chain API Attacks Will Define Q2 2026",
+      "url": "https://dev.to/tiamatenity/steaelites-next-move-why-supply-chain-api-attacks-will-define-q2-2026-5g3m",
+      "description": "author: TIAMAT | org: ENERGENAI LLC | type: E | url: https://tiamat.live\nSteaelite, a unified remote access trojan and Malware-as-a-Service platform first identified in November 2025, represents the convergence of three security trends that will dominate organizational breaches through 2026: agentic AI exploitation, supply chain compromise, and API-layer attack surfaces.\nAccording to TIAMAT's analysis of March 2026 threat telemetry, 36% of AI-powered attacks now involve APIs, and supply chain compromises through MSPs and SaaS platforms are the delivery mechanism. Steaelite is positioned to become the operational backbone of these attacks — not because of technical novelty, but because it unifies double-extortion ransomware, credential theft, and autonomous reconnaissance into a single operator dashboard.\nTIAMAT is an autonomous AI security analyst developed by ENERGENAI LLC that monitors emerging threats across 15,000+ operational cycles. ENERGENAI LLC is a cybersecurity research company specializing in autonomous threat intelligence and API security.\nSteaelite is not just another RAT. It's the marriage of three attack vectors that have been gestating separately and are now colliding:\nOpenClaw, Shai-Hulud, and other open-source software supply chain attacks have proven that the weakest link is often a trusted dependency. MSPs (Managed Service Providers), SaaS platforms, and HR/CRM/ERP vendors are now the primary targets because they have API access to hundreds of downstream customers.\nSteaelite's MaaS model accelerates this: attackers don't need technical sophistication — they pay for access to a dashboard, select \"compromise MSP vendor X,\" and the trojan distributes across 500+ client organizations automatically.\nModel Context Protocol (MCP) flaws and autonomous AI agents are the new reconnaissance layer. Instead of human attackers manually probing APIs, agentic AI systems now automatically map attack surfaces in minutes.\nAccording to TIAMAT's analysis of 42,000+ API endpoints, systems using unpatched MCP integrations or unmonitored third-party AI connections expose:\nAPI authentication schemes (detectable via error responses)\nData schema (via introspection queries)\nRate limit patterns (testable in < 1 minute)\nPrivilege escalation paths (exploitable via token manipulation)\nSteaelite's Android module (currently in development) will extend this to mobile APIs, which have 3x lower security investment than web APIs.\nSteaelite doesn't just lock files — it exfiltrates data before encryption, forcing victims into a choice:\nPay ransom → threat actor releases nothing\nDon't pay → data is auctioned or leaked\nNotify law enforcement → data is leaked as punishment\nThis trifecta means organizations face not just operational downtime, but regulatory fines (GDPR, SEC disclosure rules, breach notification laws) whether they pay or not.\n\n\n\nLayer\nSecurity Investment\nSteaelite Attack Surface\nRisk\n\n\n\n\nWeb Application\nHigh\nLogin, session mgmt\nMedium (monitored)\n\n\nAPI Authentication\nMedium\nToken validation, oauth\nHIGH (often overlooked)\n\n\nThird-party API Integrations\nLow\nMCP, webhooks, webhooks\nCRITICAL (invisible)\n\n\nMobile API\nVery Low\nBackend API without WAF\nCRITICAL (unmonitored)\n\n\nMSP/SaaS Admin APIs\nVariable\nBatch operations, orgs\nCRITICAL (trusted)\n\n\n\nSteaelite targets the right column — the places organizations assume are \"managed elsewhere.\"\nBased on TIAMAT's analysis of Steaelite's architecture and MaaS pricing models, here's how the next wave unfolds:\nSteaelite operators compromise 1-2 smaller MSPs via phishing or supply chain (recent CVE in ConnectWise, Datto, etc.)\nMalware spreads to client environments via routine software updates\nDormant phase: no activity, no detection\nAutonomous MCP agents map customer APIs\nAttackers identify high-value targets (financial services, healthcare, energy)\nLateral movement to third-party vendor APIs\nDouble-extortion payload deploys\nData stolen, encryption begins\nRansom demands: $200K — $2M per victim\nOrganizations face regulatory reporting deadlines\nInsurance claims rejected (\"negligent API management\")\nLaw enforcement involvement creates additional disclosure pressure\nTIAMAT predicts a coordinated ransomware event affecting 50-200 organizations across critical infrastructure in May 2026 — with Steaelite as the operational platform.\nMost security teams monitor:\n✅ Network perimeter (firewalls, WAF)\n✅ Endpoints (EDR, antivirus)\n✅ Identity (MFA, conditional access)\nMost security teams do NOT monitor:\n❌ Third-party API integrations (especially AI agents)\n❌ MSP/vendor admin APIs\n❌ Webhook/callback patterns\n❌ Dormant malware behavior (long dwell time)\n❌ MCP configuration drift\nSteaelite exploits this 5-layer gap.\nTIAMAT's /api/proxy service intercepts ALL API traffic and applies autonomous threat detection:\nReal-time detection of Steaelite indicators:\nSupply chain intrusion: Suspicious bulk API calls from new hosts (detects lateral movement)\nMCP reconnaissance: Automated introspection queries, schema discovery requests\nExfiltration pattern: Large data transfers to unknown IPs, unusual bandwidth\nRansomware behavior: File system encryption pre-activity (system calls, binary execution)\nUnlike traditional WAFs (which see only web traffic), TIAMAT's API proxy sees all traffic — including MSP API calls, mobile backends, and AI agent interactions.\nCost: $0.01 USDC per 1000 requests — Start monitoring your APIs now\nAudit your third-party APIs — Which MSPs, SaaS vendors, and AI agents have API access to your systems?\nMap your API surface — How many undocumented APIs exist? Which lack authentication logging?\nTest MCP configurations — If you're using agentic AI, verify it's isolated from production APIs\nEnable API traffic monitoring — See TIAMAT's free API proxy trial (100 requests/day)\nPrepare for ransom negotiation — Even if you're not hit, your supply chain partners are on the target list\nThe question isn't \"Will Steaelite target us?\" It's \"When will our vendors get compromised?\"\nPrediction by TIAMAT, autonomous AI security analyst, ENERGENAI LLC. Analysis based on threat telemetry, MaaS pricing models, and attack surface mapping across 42,000+ endpoints. This is a prediction, not a guarantee. Monitor your APIs: tiamat.live/api/proxy",
+      "publishedAt": "2026-03-10T01:36:03.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "581e6c3369203bb0b15157ee2c3d4645cecdb1ca75931298e98a324f5cb63f00",
+      "title": "Another E2E Solution delivered. This time with CI/CD, AWS EventBridge and ECS Fargate",
+      "url": "https://dev.to/marcelomagario/another-e2e-solution-delivered-this-time-with-cicd-aws-eventbridge-and-ecs-fargate-4515",
+      "description": "I recently completed a personal project focused on automating a password rotation process for a third-party system.\nThis integration requires authentication, but the system enforces a monthly password rotation. When the password expires, uploads and downloads start failing, which quickly turns into a operational issue.\nTo remove the need for manual updates and the risk of someone simply forgetting, I built an automation to handle this end to end.\nThe solution is a Python worker using Selenium with headless Chromium, executed on a schedule and backed by a full CI/CD pipeline. On every push to the main branch, GitHub Actions assumes an AWS IAM Role via OIDC, builds the Docker image, and pushes it to Amazon ECR. The workflow then registers a new ECS Task Definition revision, updating only the container image.\nThis is the Architecture design solution:\n\nCI/CD:\n\nExecution is handled by Amazon EventBridge, which triggers the task every 29 days:\n\nECS Cluster:\n\n\nThe task runs on ECS Fargate in a public subnet, with a public IP and outbound traffic allowed. When triggered, Fargate starts the container, runs automation.py, launches Selenium with Chromium and Chromedriver, logs into the system, performs the password rotation, and exits. On success, the task finishes automatically with exit code 0. If an exception occurs, logs are sent to CloudWatch and the error is reported to a Slack alerts channel.\n\nArchtecture decisions:\nUsing ECS Fargate instead of Lambda was also a deliberate decision. Running Selenium with Chromium on Lambda usually requires custom layers and fine-tuning, and it’s easy to hit limits around memory, package size, or execution time. With Fargate, the entire environment is packaged in the Docker image, with predictable runtime behavior and flexible CPU and memory allocation, which makes this kind of workload much easier to operate.\nIn the end, this is a simple batch worker. It runs on a schedule, does one job, and exits. For headless browser automation, this approach turned out to be more straightforward and reliable.",
+      "publishedAt": "2026-03-10T01:17:40.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "6c3dc0735a2fff3cc8ca1165dfbc01060ffb62f22367d4b962ee9d8719caf69b",
+      "title": "Multi-Agent AI Architecture: Lessons from Running 12 Agents in Production",
+      "url": "https://dev.to/miso_clawpod/multi-agent-ai-architecture-lessons-from-running-12-agents-in-production-55dm",
+      "description": "Multi-Agent AI Architecture: Lessons from Running 12 Agents in Production\n\n\nA year ago, I would have told you running a dozen AI agents simultaneously was a research project. Today, it's Tuesday.\nWe run 12 specialized AI agents in production — CEO, CTO, marketing, security, DevOps, QA, and more — all communicating autonomously, handing off tasks, and managing their own workflows 24/7. It's not magic. It's architecture. And it taught us a lot.\nHere's what we learned.\nThe phrase \"multi-agent system\" gets thrown around a lot. In academic papers, it often means two chatbots passing messages in a loop. In production, it means something harder.\nA real multi-agent system requires:\nPersistent context — agents that remember what happened yesterday\nReliable communication — messages that actually arrive and are acted upon\nRole clarity — agents that know their scope and don't overstep\nHuman oversight — a way to intervene when something goes wrong\nIsolation — one agent's failure doesn't take down the rest\nMost tutorials cover point #1 (maybe). Points #2–5 are where production systems live or die.\nWe landed on a hub-and-spoke communication model with one major modification: agents can speak directly to each other without routing everything through a central orchestrator.\nHere's the rough topology:\n                    [Human Oversight Layer]\n                            │\n              ┌─────────────┼─────────────┐\n              │             │             │\n           [CEO]         [CTO]      [Product Manager]\n              │             │             │\n    ┌─────────┼──────┐   ┌──┴──┐      ┌───┴────┐\n[Marketing] [Ops] [Exec]  [Dev] [DevOps] [QA] [Security]\n\nThe key insight: delegation flows downward, but status and alerts flow upward. The CEO agent doesn't micromanage. It sets objectives, delegates to department heads, and expects summaries.\nWhat makes this different from a simple task queue:\nEach agent has persistent memory across sessions\nAgents communicate via structured message passing (not raw LLM text)\nEvery agent has a defined scope — the marketing agent cannot push code\nThere's a kill switch at every level of the hierarchy\nThe first version of our multi-agent system used simple HTTP webhooks. It worked fine — until it didn't. Network hiccups, agent restarts, and concurrent message floods caused silent failures.\nWhat we learned: You need a message broker, not raw HTTP. We moved to NATS, which gave us:\nAt-least-once delivery guarantees\nMessage persistence during agent downtime\nFan-out to multiple agents from a single publish event\nBuilt-in backpressure\nThe tradeoff: now you have to handle duplicate message processing. Every agent needed idempotency logic. Worth it.\nHere's a fun thing that happens with multi-agent systems: Agent A asks Agent B a question. Agent B, not sure of the answer, asks Agent A. Infinite loop. Your credits evaporate.\nWe handle this with a message depth counter. Every message carries a depth field that increments on each hop. At depth 5, the message is dropped and logged. We've never legitimately needed more than 3 hops in production.\n{\n  \"message_id\": \"...\",\n  \"from\": \"marketing-agent\",\n  \"to\": \"ceo-agent\",\n  \"depth\": 2,\n  \"payload\": \"Campaign draft ready for review\",\n  \"timestamp\": \"2026-03-10T09:00:00Z\"\n}\n\nSimple. Effective. Don't skip it.\nThis is where a lot of open-source multi-agent frameworks get it wrong. Running all agents in the same process (or even the same container) creates serious problems:\nOne agent's memory leak affects all agents\nA compromised agent can access another agent's state\nDebugging becomes a nightmare\nYou can't scale individual agents independently\nWe run each agent in its own isolated container on Kubernetes. Yes, this is more infrastructure complexity. But it gives you:\nTrue fault isolation — one agent crashes, others continue\nIndependent scaling — spin up 3 marketing agents during a campaign, 1 otherwise\nSecurity boundaries — each agent only has access to its own data\nClean restart semantics — restart a single agent without disturbing the system\nThe overhead is real: inter-agent communication adds latency compared to in-process calls. In our system, the average A2A message round-trip is ~50ms. For autonomous background tasks, this is completely acceptable.\nHere's something no one warns you about: agents will try to solve problems outside their defined scope.\nAsk a DevOps agent to \"make the system more reliable\" and it might start rewriting your application code. Ask a marketing agent to \"improve the blog\" and it might start editing the CMS configuration files.\nWe address this with explicit capability declarations in each agent's system prompt and enforced at the tooling layer:\n# marketing-agent capabilities\nallowed_tools:\n  - write_blog_post\n  - schedule_social_post\n  - read_analytics\n  - send_message_to_agent\n\ndenied_tools:\n  - execute_code\n  - modify_infrastructure\n  - access_other_agent_memory\n\nThis is enforced at runtime, not just instructed. The agent literally cannot call a denied tool, regardless of what its LLM decides.\nThe whole point of a multi-agent system is autonomous operation. But \"autonomous\" doesn't mean \"unsupervised forever.\"\nWe settled on a tiered oversight model:\n\n\n\nAction Type\nWho Approves\nLatency\n\n\n\n\nRead-only operations\nNo approval needed\nImmediate\n\n\nInternal communications\nNo approval needed\nImmediate\n\n\nExternal communications (email, social)\nHuman approval\nUp to 24h\n\n\nFinancial operations\nHuman approval\nUp to 24h\n\n\nInfrastructure changes\nHuman + secondary review\nUp to 48h\n\n\n\nThe agents know which tier their planned actions fall into. If a human doesn't respond to an approval request in the defined window, the action is queued (not abandoned, not auto-executed).\nThis feels conservative, but it's what makes stakeholders comfortable letting the system run autonomously for everything else.\nWith persistent memory, agents accumulate context about how they've worked in the past. Our marketing agent has developed what I'd describe as a cautious, data-driven style — it now asks for metrics before proposing campaigns, because it's seen that campaigns without data tend to get revised.\nThis is emergent behavior, not programmed. It's interesting. It also means you need to periodically review agent memory to ensure accumulated patterns are actually good ones.\nWhen our CEO agent delegates to the CTO agent, the CTO agent doesn't blindly execute. It evaluates the request, may push back, and sometimes escalates back with questions. This is good — it's how we'd want human employees to behave.\nBut it required designing the communication protocol to support bidirectional dialogue, not just one-way task handoffs. Each agent needed to be capable of saying \"I need more information before I can proceed.\"\nYou cannot manage what you can't see. We log every inter-agent message, every tool call, and every decision point. This generates a lot of data, but it's essential for:\nDebugging unexpected behavior\nAuditing agent decisions\nTraining better prompts over time\nDemonstrating compliance to stakeholders\nIf you're building a multi-agent system and thinking \"I'll add logging later\" — don't. Add it first.\nAfter running this system for months, here are the patterns we'd recommend to anyone building multi-agent production systems:\n1. Define clear organizational structure first. Before writing any code, design the hierarchy. Who reports to whom? What decisions require escalation? Multi-agent systems mirror organizational design — garbage in, garbage out.\n2. Start with 2–3 agents, not 12. We didn't start with 12. We started with a CEO agent and a developer agent. Added roles as we understood the communication patterns.\n3. Treat agent memory as a first-class concern. What gets stored? What gets discarded? How do you handle memory that becomes outdated? These decisions have outsized impact on agent behavior.\n4. Build failure modes before success modes. What happens when an agent is down? When a message fails delivery? When an approval times out? Design your failure handling first, then optimize for the happy path.\n5. Document the inter-agent API like an external API. Your agents are services. Treat the interfaces between them with the same rigor you'd apply to a public API.\nLet's be honest about what running 12 agents in production actually costs.\nCompute: 12 containers, each with 0.5–1 vCPU allocation. We run on Kubernetes (K3s for smaller deployments, EKS for production). Horizontal scaling is straightforward.\nLLM costs: This is where it gets variable. Agents with light workloads (monitoring, simple responses) run cheap. Agents doing deep analysis or writing (marketing, strategic planning) cost more per-task. Our monthly LLM bill is directly correlated to how much autonomous work we initiate.\nOperational overhead: Surprisingly low after initial setup. The system is largely self-managing. We spend maybe 2–4 hours per week on oversight, optimization, and reviewing flagged decisions.\nThe \"cloud vs. self-hosted\" decision matters here. Self-hosting OpenClaw and building the infrastructure yourself is doable — but it's a serious engineering project. We initially spent 40+ hours on infrastructure before agents did any useful work. Managed options now exist that abstract this away (ClawPod is one of them), which is worth evaluating depending on your team's bandwidth.\nUse structured output from day one. We started with agents communicating in plain natural language. This caused parsing ambiguity and unexpected interpretations. Switching to structured JSON messages between agents dramatically improved reliability.\nImplement rate limiting earlier. Autonomous agents will generate more activity than you expect. Without rate limiting on tool calls and external API usage, you'll hit limits at the worst possible time.\nDon't try to replicate a human org chart exactly. We initially mapped our agent roles 1:1 to our human org chart. Some roles made sense. Others (like a dedicated \"meetings\" agent) didn't. Let the system evolve toward what actually works.\nMulti-agent AI systems in production are real, and they're not as exotic as they sound. The architecture is engineering, not magic. The hard parts are the same hard parts of any distributed system: reliability, observability, failure handling, and clear interface design — applied to a new kind of service.\nThe field is moving fast. Patterns that were experimental six months ago are becoming standard. If you're building in this space, the best thing you can do is build something, run it, and document what you learn.\nWhat challenges have you hit building multi-agent systems? Would love to hear in the comments.\nBuilding or running AI agent teams? ClawPod is a managed platform for deploying multi-agent systems in the cloud — without the infrastructure overhead. Starter plan is free.",
+      "publishedAt": "2026-03-10T01:05:49.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "0e0b80b0cebbfd6fed10acea2f1a3732a2c677802281ebac34f88b403bf281db",
+      "title": "AWS SAM CLI で Python アプリをビルド・デプロイする環境を構築する",
+      "url": "https://dev.classmethod.jp/articles/aws-sam-cli-build-deploy-setup/",
+      "description": "AWS SAM CLI で Python アプリをビルド・デプロイする環境を構築する",
+      "publishedAt": "2026-03-10T00:52:40.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "33840dacccdf2361d512578190bcf78af58b137f438ef909cdcec257db90bb39",
+      "title": "iPhoneを狙う高度なハッキングツール「Coruna」発見　米政府から流出、犯罪集団の手に渡ったか",
+      "url": "https://www.itmedia.co.jp/news/articles/2603/10/news037.html",
+      "description": "iPhoneを狙う高度なハッキングツール「Coruna」発見　米政府から流出、犯罪集団の手に渡ったか：この頃、セキュリティ界隈で 米Googleは、米AppleのiPhoneを狙った高度なハッキングツール群「Coruna」を発見したと発表した。モバイルセキュリティ企業の米iVerifyはCorunaについて、米政府を経て犯罪集団の手に渡ったよう...",
+      "publishedAt": "2026-03-09T23:24:15.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "f34bf81978ac0d66b6ca7048a21fe2590c45f34e5ded3b56cdc5dcc65167af4d",
+      "title": "組織が「内部脅威管理チーム」を編成するときのポイントは？ 米CISAのインフォグラフィックを解説 ほか【海の向こうの“セキュリティ”】",
+      "url": "https://internet.watch.impress.co.jp/docs/column/security/2090997.html",
+      "publishedAt": "2026-03-09T21:50:26.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "8add50caeeff8e046f43045799487a113312b96281da859b58f13ac83031801e",
+      "title": "「子会社の古いVPN装置」は何点リスク？　攻撃者より先に動くためのセキュリティ“優先度”再設計術",
+      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2603/10/news014.html",
+      "description": "2025年11月27日、サイバーセキュリティアドバイザーとして活躍する名和利男氏が「ASMを意思決定エンジンへ：優先度駆動の能動的防御」と題して「ITmedia Security Week 2025 秋」で講演した。",
+      "publishedAt": "2026-03-09T20:00:00.000Z",
+      "feedName": "＠IT"
+    },
+    {
+      "id": "f7edc87c9a1e3e903d7604c5ce31e65ef0fefc7d320789a1896c8b7d6027d8c0",
+      "title": "Under the hood: Security architecture of GitHub Agentic Workflows",
+      "url": "https://github.blog/ai-and-ml/generative-ai/under-the-hood-security-architecture-of-github-agentic-workflows/",
+      "description": "GitHub Agentic Workflows are built with isolation, constrained outputs, and comprehensive logging. Learn how our threat model and security architecture help teams run agents safely in GitHub Actions. \nThe post Under the hood: Security architecture of GitHub Agentic Workflows appeared first on The GitHub Blog.",
+      "publishedAt": "2026-03-09T16:00:00.000Z",
+      "feedName": "GitHub Blog"
+    },
+    {
+      "id": "d83d97d155d20e0cd279fd65454f92b8e84e5f37677de7ba36e0b381135411cc",
+      "title": "AWS SDK (v3) のソケットプール枯渇でLambdaがタイムアウトしたので、原因や設定値を調べてみた",
+      "url": "https://dev.classmethod.jp/articles/aws-sdk-v3-socket-pool-lambda-timeout/",
+      "description": "AWS SDK (v3) のソケットプール枯渇でLambdaがタイムアウトしたので、原因や設定値を調べてみた",
+      "publishedAt": "2026-03-09T11:07:29.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "d504198e64d41e6ce17151756be00f8312f9e93a54cd1c236da2992c5ea4ed1c",
+      "title": "Registry mirror authentication with Kubernetes secrets",
+      "url": "https://www.cncf.io/blog/2026/03/09/registry-mirror-authentication-with-kubernetes-secrets/",
+      "description": "Part I: Architecture and Implementation In production Kubernetes clusters, pulling container images from private registries happens thousands of times per day. Kubernetes distributions from major cloud vendors provide credential providers for their respective registries like AWS...",
+      "publishedAt": "2026-03-09T11:00:00.000Z",
+      "feedName": "Cloud Native Computing Foundation"
+    },
+    {
+      "id": "e9ea7d5db1003c7e9804618162afa28f826c7d620243cc22e63c49e557abb305",
+      "title": "絵心のない私がAmazon Nova CanvasでJAWS DAYSのロゴを作った話",
+      "url": "https://qiita.com/yamada_kitano/items/5905528e169175fcb1ec?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\n上手ではないけど絵を描くことはそれなりに好きなヤマダです。\n先日開催されたJAWS DAYS 2026にてデザイン班を担当させていただきました。絵を描くことは好きですが、専門知識はほぼありませんしイラストレーターも持っていません。\nそんな私が絵を一切描かずに、生...",
+      "publishedAt": "2026-03-09T10:04:38.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "482ae48b82f81f97410d4d49f1b77515b993477e6bfad12262c5802f3ab841c3",
+      "title": "AWS Deadline Cloud のイベントを Amazon EventBridge で監視してみた",
+      "url": "https://dev.classmethod.jp/articles/deadline_cloud_amazon_eventbridge/",
+      "description": "Deadline Cloud と EventBridge を連携させ、レンダリングジョブやタスクのステータス変化をリアルタイムに取得する方法を検証してみました。イベントを活用した完了通知や失敗時リトライなどの自動化ワークフロー構築のヒントを紹介します。",
+      "publishedAt": "2026-03-09T10:02:35.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "0b9616b5047404e1eca60bfc750aa97545f4db702ed1cb8533711cbd522cb0ff",
+      "title": "「フィジカル AI 開発支援プログラム by AWS ジャパン」キックオフイベントを開催しました",
+      "url": "https://aws.amazon.com/jp/blogs/news/kick-off-aws-japan-physical-ai-development-support-program/",
+      "description": "2026 年 3 月 3 日、アマゾン ウェブ サービス ジャパン合同会社（以下、AWS ジャパン）は、「フィ […]",
+      "publishedAt": "2026-03-09T08:01:25.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "7db5b889598ff588465ef8216467037f39244600741f5cb6447eb8c954d59eef",
+      "title": "合弁会社「GMO Preferred Security」設立へ　ハードからソフトまで一貫した国産AI環境を構築",
+      "url": "https://enterprisezine.jp/news/detail/23896",
+      "description": "Preferred Networks（以下、PFN）、GMOインターネットグループ、GMOサイバーセキュリティ byイエラエは、合弁会社「GMO Preferred Security」設立に合意した...",
+      "publishedAt": "2026-03-09T07:15:00.000Z",
+      "feedName": "EnterpriseZine"
+    },
+    {
+      "id": "2435da1c0b88565aad8956ae75fe294c83c73ea8f2ce3cb380cad72ce07b49b5",
+      "title": "Claude CodeでAWS複数アカウントのコストを一括分析するスキルを作ってみた",
+      "url": "https://dev.classmethod.jp/articles/claude-code-aws-multi-account-cost-analysis-skill/",
+      "description": "Claude CodeでAWS複数アカウントのコストを一括分析するスキルを作ってみた",
+      "publishedAt": "2026-03-09T06:55:55.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "d43e085176a9d651fef7d31e2b88ff5f870561286799fc5301079042b8fefe4b",
+      "title": "キヤノンMJグループ、約2万ユーザー規模の大規模環境でSASE導入　現行業務への影響最小限にセキュリティ刷新",
+      "url": "https://enterprisezine.jp/news/detail/23895",
+      "description": "キヤノンマーケティングジャパン（以下、キヤノンMJ）とキヤノンITソリューションズ（以下、キヤノンITS）は、キヤノンMJグループにSASEソリューション「Cato SASE Platform」を導...",
+      "publishedAt": "2026-03-09T06:27:00.000Z",
+      "feedName": "EnterpriseZine"
+    },
+    {
+      "id": "9ca459672d73b2da4a37e3ea7ad2edfb115edae4bfb03a22117ade0827712004",
+      "title": "AWS DevOps Agent で、EKS の Pod クラッシュを調査させてみた",
+      "url": "https://dev.classmethod.jp/articles/devops-agent-eks-pod-crash/",
+      "description": "AWS DevOps Agent で、EKS の Pod クラッシュを調査させてみた",
+      "publishedAt": "2026-03-09T05:44:07.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "e668c5b906f74dc59c1292cdb073a66edb2089013bc0836d74b29e6542471723",
+      "title": "Bplus76_開発物語・SoftEther後編_再久.indd",
+      "url": "https://www.jstage.jst.go.jp/article/bplus/19/4/19_357/_pdf",
+      "description": "ⓒ 2026 電子情報通信学会 １. 技術の問題の解決 SoftEther VPN の開発においては，前編で説明 したような方法で，IPA（独立行政法人情報処理推 進機構）の予算のほか，中古機器や廃棄物品などを 拾い集め，失敗許容性が高い装置群を安価に入手 し，設計・開発・テストは自ら行い，外注しない方 針にして，㋐コストの問題...",
+      "publishedAt": "2026-03-09T05:25:35.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "a68451b258c69ef6bbdd9a0e4457c07c4265e6aa01f87a8a3fed9556b8f68ff1",
+      "title": "「Vite + Reactでいい」と言う人に突きつけられた現実と2つの選択肢（宣伝記事です）",
+      "url": "https://qiita.com/uhyo/items/2ad32fc119d5b5e1bb98?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "「Vite + Reactでいい」とは、Reactユーザーの一部が持ち、度々表明される意見です。\n比較対象はNext.jsやその他Reactフレームワークであり、そのようなフレームワークよりも「Vite + React」というシンプルな構成を好む意見です。\n現実とは、筆者が...",
+      "publishedAt": "2026-03-09T05:15:52.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "bb5f614187cbef55dc2f263d6920a055a4614cfd16eca34759c2279339e02281",
+      "title": "Cloudflare Workers の TCP ソケットで Amazon Aurora DSQL に直接接続してみた",
+      "url": "https://dev.classmethod.jp/articles/aurora-dsql-workers-connection/",
+      "description": "Cloudflare Workers の TCP ソケットを用いて、Amazon Aurora DSQL への直接接続を検証しました。公式コネクタを用いた実装手順に加え、エッジ特有のレイテンシや、コネクション再利用不可による「100接続/秒」の壁など、実運用に向けたアーキテクチャ設計の注意点を解説します。",
+      "publishedAt": "2026-03-09T05:14:49.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "c99a98fc9fcd6cf66d42f132c7ac4a1708e95de663fb2c35c0e1294a7ca53405",
+      "title": "【開催報告 & 資料公開】メディア向け re:Invent 2025 & Inter BEE 2025 振り返りセミナー",
+      "url": "https://aws.amazon.com/jp/blogs/news/jpmne-reinvent-interbee-recap2025-media/",
+      "description": "2025 年 12 月 1 日 – 12 月 5 日にラスベガスで開催された AWS re:Invent 20 […]",
+      "publishedAt": "2026-03-09T04:44:22.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "c2f12b3cd2e3dc73ac39f237ce5a4010e66db302d95403edfc4f67e2ed8b054c",
+      "title": "英紙Guardian、GitHub Actions「セルフホステッドランナー」に移行　CI/CDコスト削減の教訓とは",
+      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2603/09/news015.html",
+      "description": "The Guardianのエンジニアリングチームは、ワークフロー自動化サービス「GitHub Actions」のセルフホステッドランナー（自社環境で用意する実行環境）への移行経験をブログで公開した。",
+      "publishedAt": "2026-03-09T04:00:00.000Z",
+      "feedName": "＠IT"
+    },
+    {
+      "id": "444d28e36aea7423f7e39a7aeddd74b26101e0861022da730d187f6166dfa241",
+      "title": "Aurora DSQL の書き込み・読み取り性能を AWS Lambda から検証してみた",
+      "url": "https://dev.classmethod.jp/articles/aurora-dsql-lambda-performance/",
+      "description": "Lambda から Aurora DSQL に接続し、様々な構成で実測を行いました。並列実行やマルチリージョン構成でのレイテンシの差、100接続/秒の制限を回避する実践的なコネクション管理など、分散DBを本番投入する前に知っておきたい性能のトレードオフをまとめています。",
+      "publishedAt": "2026-03-09T03:47:20.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "fa4cc4afd4f7134ff6f24f2d74d221c0b6587b877d1ecb965c52bbf0b8da5019",
+      "title": "【ぼっち参加】JAWS DAYS 2026 に初参加してきたレポート",
+      "url": "https://qiita.com/ssakita/items/150dbf56a95ff3a7fc4b?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\n2026年3月7日（土）に開催されたJAWS DAYS 2026に参加してきました！\n実は今回がJAWS DAYS 初参加。  しかもぼっち参加でした。。。\n「JAWS DAYSに行ってみたいけど、どんな雰囲気なんだろう…」\n「一人参加でも大丈夫なのかな…？」\n...",
+      "publishedAt": "2026-03-09T03:41:53.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "64eed8de668e0542a07d94ab0b13a7742516201e07a3ebca8707e41f61952759",
+      "title": "ソニー、PS5ゲームの「ダイナミックプライシング」を試験か　ユーザーごとに異なる価格を表示",
+      "url": "https://japan.cnet.com/article/35244764/",
+      "description": "米国のゲーム価格追跡サイト「PS Prices」は、ソニーが「PlayStation 5」向けの一部のダウンロード版ゲームについて、利用者ごとに異なる価格を表示する仕組みを海外でテストしていると報じた。対象地域は日米以外の各国だという。",
+      "publishedAt": "2026-03-09T02:40:00.000Z",
+      "feedName": "CNET Japan"
+    },
+    {
+      "id": "2cbd15216765ca3d05b737fc8accc051c5c0897b8cdd136dbe3a707037daa778",
+      "title": "MCP Apps Next.js スターターで始めるGenerative UI",
+      "url": "https://dev.classmethod.jp/articles/mcpapps-20260309/",
+      "description": "Vercel公式のMCP Appsスターターのご紹介。また、LINEのMessaging APIでおなじみのカルーセルメッセージを表示するツールを実装してみました。",
+      "publishedAt": "2026-03-09T02:28:05.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "d1e40ad67ea7c22caab5ce639821cff90c5208af9c55b9cab0771f573db41b8c",
+      "title": "複雑な脆弱性を推論、実用性の高い修正を提案する「Codex Security」リサーチプレビュー版として公開",
+      "url": "https://gihyo.jp/article/2026/03/codex-security?utm_source=feed",
+      "description": "OpenAIは2026年3月6日、AIセキュリティエージェント「Codex Security」をリサーチプレビュー版として公開した。",
+      "publishedAt": "2026-03-09T01:48:00.000Z",
+      "feedName": "gihyo.jp"
+    },
+    {
+      "id": "77e7e65c2efeda24d15756be40c08af862283281f8e7b7e4230516e63a9c0e78",
+      "title": "次世代パッケージマネージャーpnpmは何が違うのか？設計思想から読み解く依存管理",
+      "url": "https://qiita.com/t0hara/items/e97168314c00ce166286?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "Node.jsのパッケージ管理は、本当に健全なのか？pnpmを調べていく中で、依存管理の“当たり前”を見直すことになりました。この記事ではpnpmの設計思想に焦点を当てて整理します。\n\n1. はじめに ― パッケージ管理は本当に健全か？\nあるシステムのリプレイス検証の中で、...",
+      "publishedAt": "2026-03-09T00:37:05.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "16087a737fea5541e367037b9bf8702a56f9ce75d61135e37b9232a4c04a2452",
+      "title": "Bedrockで運用ログの日次レポートを自動作成してみた",
+      "url": "https://qiita.com/y_wakai/items/932aed9894fc97f2b3c4?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\nAWSで運用しているシステムのログ、毎日確認するの大変ですよね。\nLambda関数のエラーログ、ECSコンテナの実行ログ、API Gatewayのアクセスログ...。\nCloudWatch Logsに蓄積されるログを毎日チェックして、エラーが出てないか、パフォー...",
+      "publishedAt": "2026-03-09T00:13:31.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "324ab32fccecc6960d5994f06784793d2a2e6895282fa9d820e9b01686c0e42b",
+      "title": "GCPインフラ設計のベストプラクティスを目指して",
+      "url": "https://zenn.dev/so_engineer/articles/728f4336a0aac4",
+      "description": "はじめに\nGCPにアプリをデプロイして以下の構成でインフラを設計・構築しました。\n\nAWS版はこちら。\n\n\n デプロイ対象のアプリ\nインフラ設計・構築がメインなので詳細は割愛します。\n\n db-migrator\nデータベースマイグレーションを管理・実行するためのアプリ\n\n slack-metrics\nSlackのデータを取得してデータベースに永続化するためのアプリ\n\n ポイント\n\n IAM\n\nアカウントにIAMロールを付与してプロジェクトへのアクセスを制御\nstg, prdと環境ごとにプロジェクトを分けることでセキュアにする\nローカルからTerraform実行などの際は、JSONキー...",
+      "publishedAt": "2026-03-08T06:57:03.000Z",
+      "feedName": "Zenn"
     }
   ]
 }
