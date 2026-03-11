@@ -9,126 +9,6 @@
       "feedName": "LINEヤフー Tech Blog"
     },
     {
-      "id": "eb1eb543d5c57c3f3b41d9b96e272babc639ee59e2ec1ae4db01b99a1d9908ff",
-      "title": "Stop miscalculating age in JavaScript: leap years, Feb 29, and the Jan 31 trap",
-      "url": "https://dev.to/momin_ali_e002a22d102ff40/stop-miscalculating-age-in-javascript-leap-years-feb-29-and-the-jan-31-trap-22aj",
-      "description": "Most age calculators are wrong for at least one of these reasons:\nthey do nowYear - dobYear and forget to check if the birthday already happened\nthey treat all months like the same length\nthey explode on Feb 29 birthdays\nthey hit JavaScript’s “Jan 31 + 1 month = March” surprise\nIf you want an age calculator you can ship, you need a small amount of boring correctness.\nThis post shows a simple, testable way to calculate years + months + days between two calendar dates.\nWhat we’re actually trying to compute\nGiven:\ndob (date of birth)\nasOf (the date you want to measure age on, defaulting to today)\nWe want:\nyears: full birthdays completed\nmonths: full months since the last birthday\ndays: remaining days since that month anchor\nIf asOf < dob, that’s invalid input.\nThe two rules that prevent 90% of bugs\nDates in JS carry time and timezone baggage. For age, you almost always want midnight local time.\nSo normalize:\nYYYY-MM-DD 00:00:00\nRule 2: Define your Feb 29 policy\nBorn on Feb 29, non-leap year: do you count their birthday on Feb 28 or Mar 1?\nThere’s no universal answer. Pick one and be consistent.\nThe algorithm (simple and dependable)\ncompute tentative years = asOf.year - dob.year\nif asOf is before birthday in asOf.year, subtract 1\nset anchor = last birthday date\nwalk forward month-by-month from anchor, clamping day-of-month\nremaining days = difference between anchor and asOf\nImplementation (TypeScript)\nfunction normalizeDateOnly(d: Date) {\nfunction daysInMonth(year: number, monthIndex0: number) {\nfunction birthdayInYear(\n// Feb 29 handling\nreturn new Date(year, m, day);\nexport function calculateAge(dobInput: Date, asOfInput: Date): AgeBreakdown {\nif (asOf < dob) throw new Error(\"asOf must be >= dob\");\n// Years\n// Anchor at last birthday\n// Months: step forward with month-end clamping\nif (candidate <= asOf) {\n  months += 1;\n  anchor = candidate;\n} else break;\n\n}\n\n// Days\nreturn { years, months, days };\nDon’t just test “normal” birthdays. Test the annoying dates.\nimport { describe, it, expect } from \"vitest\";\ndescribe(\"calculateAge\", () => {\nit(\"handles month-end clamping (Jan 31)\", () => {\nit(\"handles Feb 29 birthdays with FEB_28 rule\", () => {\nit(\"rejects asOf before dob\", () => {\nYou can add more:\ndob = 1999-12-31, asOf = 2000-01-01\ndob = 2000-02-28, asOf = 2001-02-28\ndob = 2000-03-31, asOf = 2000-04-30\nThe takeaway\nIf you want correct age output:\nnormalize to date-only\ndefine Feb 29 behavior\nclamp month ends\nship tests for weird dates\nThat’s it. No libraries required.\nDemo (optional): https://www.calculatorhubpro.com/everyday-life/age-calculator",
-      "publishedAt": "2026-02-09T01:18:05.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "9158f869a8b26620015d76147857a8d2c7a961ef0ff3b70db051a8f02d1214ad",
-      "title": "The Future of Go Network Programming: What's Next for Gophers?",
-      "url": "https://dev.to/jones_charles_ad50858dbc0/the-future-of-go-network-programming-whats-next-for-gophers-1304",
-      "description": "Hey Gophers! If you’re building APIs, microservices, or real-time apps with Go, you’re already riding a wave of simplicity and performance. Go’s concurrency model (goroutines FTW!) and robust net/http package make it a go-to for network programming. But the tech world doesn’t stand still—new protocols like HTTP/3, gRPC, and cloud-native trends are changing the game. Want to stay ahead? Let’s dive into the future of Go network programming, complete with code, tips, and lessons learned.\nWho’s this for? Developers with 1-2 years of Go experience looking to level up their network programming skills. Whether you’re optimizing HTTP clients or exploring gRPC, this guide has you covered.\nWhat’s coming? We’ll explore HTTP/3, gRPC, cloud-native architectures, new Go features, and a real-world case study. Plus, a peek at Go’s role in edge computing and WebAssembly. Let’s get started!\nGo’s goroutines and standard library are like a superhero duo for network programming. Spinning up an HTTP server is as easy as:\npackage main\n\nimport (\n    \"fmt\"\n    \"net/http\"\n)\n\nfunc main() {\n    http.HandleFunc(\"/\", func(w http.ResponseWriter, r *http.Request) {\n        fmt.Fprint(w, \"Hello, Gophers!\")\n    })\n    http.ListenAndServe(\":8080\", nil)\n}\n\nWhy Go rocks:\nConcurrency: Handle thousands of connections with goroutines.\nSimplicity: Clean APIs for HTTP/1.1, HTTP/2, TCP, and UDP.\nCross-platform: Runs everywhere—Linux, macOS, Windows.\nBut it’s not perfect:\nConnection pooling: Misconfigured http.Client can spike CPU usage.\nNew protocols: No native HTTP/3 or QUIC support (yet!).\nDistributed systems: Service discovery and fault tolerance are tricky.\nQuick win: Optimize connection pooling to boost performance. Here’s how:\npackage main\n\nimport (\n    \"log\"\n    \"net/http\"\n    \"time\"\n)\n\nfunc createClient() *http.Client {\n    return &http.Client{\n        Transport: &http.Transport{\n            MaxIdleConns:        100,\n            MaxIdleConnsPerHost: 10,\n            IdleConnTimeout:     90 * time.Second,\n        },\n        Timeout: 10 * time.Second,\n    }\n}\n\nfunc main() {\n    client := createClient()\n    resp, err := client.Get(\"https://api.example.com\")\n    if err != nil {\n        log.Fatal(err)\n    }\n    defer resp.Body.Close()\n}\n\nLesson learned: In a high-traffic API, forgetting MaxIdleConnsPerHost caused memory spikes. Setting it to 10 slashed resource usage by 25%. Always tune your http.Transport!\nThe network programming landscape is evolving, and Go is keeping pace. Let’s break down three game-changers: HTTP/3, gRPC, and cloud-native architectures.\nWhy care? HTTP/3, powered by QUIC (UDP-based), is like swapping a bicycle for a rocket. It cuts latency with 0-RTT handshakes and eliminates TCP’s head-of-line blocking. Go’s standard library doesn’t support QUIC yet, but quic-go is a solid community option.\nPerks:\nFaster connections with 0-RTT.\nTrue multiplexing without blocking.\nSeamless network switches (e.g., Wi-Fi to mobile).\nTry it out with quic-go:\npackage main\n\nimport (\n    \"log\"\n    \"net/http\"\n    \"github.com/quic-go/quic-go/http3\"\n)\n\nfunc main() {\n    mux := http.NewServeMux()\n    mux.HandleFunc(\"/\", func(w http.ResponseWriter, r *http.Request) {\n        w.Write([]byte(\"Hello, QUIC!\"))\n    })\n    log.Fatal(http3.Server{Addr: \":443\", Handler: mux}.ListenAndServeTLS(\"cert.pem\", \"key.pem\"))\n}\n\nPro tip: Use TLS 1.3 certificates (e.g., ECDSA SHA-256). A mismatched cert cost me hours of debugging in a real-time analytics project!\nWhy it’s awesome: gRPC is like a super-efficient courier for microservices, using HTTP/2 and Protocol Buffers. Go’s google.golang.org/grpc package supports streaming, interceptors, and load balancing—perfect for distributed systems.\nUse case: Real-time apps or service-to-service communication.\nExample: A bidirectional streaming gRPC service:\npackage main\n\nimport (\n    \"log\"\n    \"net\"\n    \"google.golang.org/grpc\"\n    pb \"path/to/your/protobuf/package\"\n)\n\ntype StreamServer struct {\n    pb.UnimplementedStreamServiceServer\n}\n\nfunc (s *StreamServer) BidirectionalStream(stream pb.StreamService_BidirectionalStreamServer) error {\n    for {\n        msg, err := stream.Recv()\n        if err != nil {\n            return err\n        }\n        stream.Send(&pb.StreamResponse{Data: \"Echo: \" + msg.Data})\n    }\n}\n\nfunc main() {\n    lis, err := net.Listen(\"tcp\", \":50051\")\n    if err != nil {\n        log.Fatal(err)\n    }\n    s := grpc.NewServer()\n    pb.RegisterStreamServiceServer(s, &StreamServer{})\n    log.Fatal(s.Serve(lis))\n}\n\nLesson learned: Unclosed streams caused memory leaks in a chat app. Use pprof to monitor and always terminate streams properly.\nWhy it matters: Go powers tools like Kubernetes and Istio, making it a cloud-native superstar. Service meshes (e.g., Istio) handle service discovery, load balancing, and security automatically.\nExample: A health-checked service for Istio:\npackage main\n\nimport (\n    \"log\"\n    \"net/http\"\n)\n\nfunc main() {\n    http.HandleFunc(\"/health\", func(w http.ResponseWriter, r *http.Request) {\n        w.Write([]byte(\"OK\"))\n    })\n    http.HandleFunc(\"/\", func(w http.ResponseWriter, r *http.Request) {\n        w.Write([]byte(\"Welcome, Gophers!\"))\n    })\n    log.Fatal(http.ListenAndServe(\":8080\", nil))\n}\n\nPro tip: Debug Istio timeouts with istioctl proxy-status. Misconfigured VirtualService rules once tanked my Kubernetes app—don’t skip the docs!\nGo keeps getting better, and community tools like Fiber and Chi are game-changers. Let’s explore what’s new in Go 1.20+ and how these tools boost your projects.\nWhat’s new? Go 1.20+ brings better context handling and optimized net/http for connection pooling. These updates make timeout management and resource usage a breeze.\nExample: Timeout handling with context:\npackage main\n\nimport (\n    \"context\"\n    \"log\"\n    \"net/http\"\n    \"time\"\n)\n\nfunc main() {\n    ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)\n    defer cancel()\n\n    req, err := http.NewRequestWithContext(ctx, \"GET\", \"https://api.example.com\", nil)\n    if err != nil {\n        log.Fatal(err)\n    }\n\n    resp, err := http.DefaultClient.Do(req)\n    if err != nil {\n        log.Fatal(err)\n    }\n    defer resp.Body.Close()\n}\n\nTakeaway: Always use defer cancel() to avoid goroutine leaks. I learned this the hard way when memory spiked in an API project—pprof saved the day!\nFiber (built on fasthttp) is blazing fast, while Chi offers lightweight, modular routing. Both reduce boilerplate and boost productivity.\nExample: A Fiber REST API:\npackage main\n\nimport \"github.com/gofiber/fiber/v2\"\n\nfunc main() {\n    app := fiber.New()\n    app.Get(\"/api\", func(c *fiber.Ctx) error {\n        return c.JSON(fiber.Map{\"message\": \"Hello, Fiber!\"})\n    })\n    app.Listen(\":3000\")\n}\n\nPro tip: Limit Fiber’s concurrency (e.g., fiber.New(fiber.Config{Concurrency: 10000})). Overloading middleware in an e-commerce API once crushed my performance—keep it lean!\nHere are battle-tested tips to keep your Go services fast and reliable:\nProblem: Creating new connections for every request kills performance.\nSolution: Tune http.Transport:\ntransport := &http.Transport{\n    MaxIdleConns:        100,\n    MaxIdleConnsPerHost: 10,\n    IdleConnTimeout:     90 * time.Second,\n}\nclient := &http.Client{Transport: transport, Timeout: 10 * time.Second}\n\nWin: In a payment gateway, this cut CPU usage by 30%.\nProblem: Panics crash your app without warning.\nSolution: Use middleware to catch errors:\npackage main\n\nimport (\n    \"log\"\n    \"net/http\"\n)\n\nfunc errorHandler(next http.Handler) http.Handler {\n    return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {\n        defer func() {\n            if err := recover(); err != nil {\n                log.Printf(\"Panic: %v\", err)\n                http.Error(w, \"Oops!\", http.StatusInternalServerError)\n            }\n        }()\n        next.ServeHTTP(w, r)\n    })\n}\n\nTip: Pair with tools like Sentry for error tracking.\nProblem: Memory allocation slows high-concurrency apps.\nSolution: Use sync.Pool for buffer reuse:\nvar bufferPool = sync.Pool{\n    New: func() interface{} { return new(bytes.Buffer) },\n}\n\nfunc processData(data string) string {\n    buf := bufferPool.Get().(*bytes.Buffer)\n    defer bufferPool.Put(buf)\n    buf.Reset()\n    buf.WriteString(data)\n    return buf.String()\n}\n\nWin: In a logging service, this slashed GC time by 40%.\nLet’s see these ideas in action with a product query API for an e-commerce platform. Goals: handle thousands of requests/second with <100ms latency.\nTech stack:\nFiber: Fast REST API.\ngRPC: Backend communication.\nRedis: Caching hot data.\nPrometheus + Grafana: Monitoring.\nCode snippet:\npackage main\n\nimport (\n    \"context\"\n    \"github.com/gofiber/fiber/v2\"\n    \"github.com/redis/go-redis/v9\"\n    \"log\"\n    \"time\"\n)\n\nfunc main() {\n    app := fiber.New()\n    client := redis.NewClient(&redis.Options{Addr: \"localhost:6379\"})\n\n    app.Get(\"/data/:id\", func(c *fiber.Ctx) error {\n        id := c.Params(\"id\")\n        val, err := client.Get(context.Background(), id).Result()\n        if err == redis.Nil {\n            data, err := callGRPCService(id)\n            if err != nil {\n                return c.Status(500).SendString(\"Server Error\")\n            }\n            client.Set(context.Background(), id, data, 3600*time.Second)\n            return c.SendString(data)\n        }\n        return c.SendString(val)\n    })\n\n    app.Listen(\":3000\")\n}\n\nfunc callGRPCService(id string) (string, error) {\n    return \"Product: \" + id, nil\n}\n\nSetup:\nDeployment: Kubernetes + Istio for scaling.\nMonitoring: Prometheus for metrics, Grafana for dashboards.\nFix: Redis timeouts were a pain—set DialTimeout=500ms and used redis.Ping.\nLesson: Monitor everything. Prometheus caught a latency spike I missed during testing.\nGo’s future is bright! HTTP/3 and gRPC are slashing latency, while cloud-native tools like Istio simplify microservices. Looking ahead:\nEdge computing: Go’s lightweight nature is perfect for IoT.\nWebAssembly: Run Go in browsers for next-gen apps.\nCommunity: Libraries like quic-go are growing fast.\nActionable tips:\nPlay with quic-go and gRPC.\nMonitor with Prometheus.\nUse context to avoid leaks.\nFollow Fiber/Chi updates.\nMy take: Building a real-time chat app with gRPC and Istio was a game-changer—Go’s simplicity made it a joy. What’s your next Go project? Share in the comments!",
-      "publishedAt": "2026-02-09T01:11:18.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "c137623b020747c53834f67c1c874ce3eb25ff1e079f389b752d8c4837dc3f08",
-      "title": "I Built a Production RAG System on Azure AKS for $40/Month — Here's Every Decision I Made and Why",
-      "url": "https://dev.to/siva2krish/i-built-a-production-rag-system-on-azure-aks-for-40month-heres-every-decision-i-made-and-why-2d22",
-      "description": "A cloud architect's opinionated walkthrough: from blank terminal to 13 pods serving AI-powered answers, with cost breakdowns you can actually verify.\nLast month, I set out to build something specific: a Retrieval-Augmented Generation system that could run on Azure Kubernetes Service — not as a proof-of-concept that lives in a Jupyter notebook, but as a real, deployable platform with ingestion pipelines, caching, observability, and a chat interface. The kind of system you'd hand to a team and say \"here, extend this.\"\nThe constraint I gave myself was equally specific: keep the monthly bill under $50.\nThis article walks through what I built, the trade-offs I navigated, and the decisions I'd make differently if I were doing it again. If you're evaluating RAG architectures on Azure, this should save you a few weeks of trial and error.\nThe full source is on GitHub: RAG-LLM-AKS.\nThe platform implements the full RAG lifecycle:\nIngest — A background worker polls Azure Blob Storage, extracts text from uploaded documents, chunks them (1,000 characters, 200-character overlap), generates vector embeddings, and upserts them into Azure AI Search.\nQuery — A user sends a natural language question via the REST API or Chat UI. The system embeds the query, retrieves the top-K most relevant document chunks using hybrid search (vector + BM25), constructs an augmented prompt, and sends it to GPT-4o-mini. The response comes back with source attribution and cost metadata.\nCache — Identical queries hit Redis instead of making round-trips to OpenAI. First query: ~2 seconds. Cached: <10ms.\nAll of this runs on a single Azure Kubernetes Service node.\nRather than describe the architecture in prose, here's the full cloud topology:\n\n  \nCloud architecture: Azure managed services on the left, AKS cluster with 13 pods across 4 namespaces on the right.\n\n\nHere's what's actually running:\nAzure PaaS layer (managed services):\nAzure OpenAI — GPT-4o-mini for generation, text-embedding-3-small for vector embeddings\nAzure AI Search (Free tier) — HNSW vector index with hybrid search\nAzure Container Registry (Basic) — Docker image storage\nAzure Key Vault — Two secrets (OpenAI key, Search key)\nAzure Storage Account — Blob container for document ingestion\nLog Analytics — 30-day diagnostic retention\nKubernetes layer (13 pods across 4 namespaces):\nRAG API (FastAPI) — The query and chat endpoints\nChat UI (Streamlit) — Interactive frontend\nIngestion Worker — Background document processing\nRedis — In-cluster response cache\nNGINX Ingress Controller — Internal-only load balancer\nKEDA — Event-driven autoscaler (supports scale-to-zero)\nPrometheus + Grafana — Metrics and dashboards\nEvery component is deployed via Helm. Every Azure resource is provisioned via Terraform. The entire system goes from az login to serving queries in about 12 minutes.\nArchitecture diagrams are nice. But the real value is in why you chose one path over another. Here are the decisions I spent the most time on — and the reasoning I'd present to a team or a hiring manager.\nThis was the first decision and the one with the longest tail.\nKubenet is the AKS default and it's free, but pods get IPs through a Linux bridge and traffic is routed via user-defined routes. It works, but it's slow, it doesn't support Azure Network Policies natively, and it scales poorly.\nFlat Azure CNI assigns each pod an IP from your VNet subnet. Great for performance, but your subnet's IP space gets exhausted fast. A /24 gives you 251 IPs. With 13 pods, that sounds fine — until you realize each node reserves 30 IPs for future pods by default, and scaling to 3 nodes with 30 pods each means you need a /22 or bigger. I've seen teams burn an entire sprint re-architecting their network because they started with flat CNI and a too-small subnet.\nAzure CNI Overlay is the sweet spot. Pods get IPs from a private overlay network (192.168.0.0/16 in my case), completely independent of the VNet address space. You get Azure CNI performance, Azure Network Policy support, and zero risk of IP exhaustion. The only downside: overlay pod IPs aren't directly routable from on-premises networks. For this use case, that's irrelevant.\nThis was a cost decision disguised as a quality decision.\nGPT-4o-mini costs $0.15 per million input tokens. GPT-4o costs $2.50. That's a 16× difference. For a RAG system where the LLM's job is to synthesize information from retrieved context — not to reason from scratch — the quality gap is negligible. The context window does the heavy lifting. The model just needs to be coherent.\nAt development scale (~500K input tokens/month), the difference is $0.08 vs $1.25. At production scale (10K queries/day), it's $15 vs $250 per month. GPT-4o-mini is the right default until you have specific quality metrics proving otherwise.\nAzure Cache for Redis starts at $16/month for the C0 Basic tier. An in-cluster Redis pod running on the existing node costs $0 in marginal compute — it's using resources that are already provisioned.\nIs managed Redis better for production? Absolutely — you get persistence, replication, built-in monitoring, and an SLA. But for a development cluster where the cache is purely a performance optimization (not a data store), spending $16/month on something you can replace with a single helm install is hard to justify.\nThe migration path is trivial: change the REDIS_URL environment variable from redis://redis-master:6379/0 to the Azure-managed endpoint. One config change, zero code changes.\nAzure Application Gateway Ingress Controller (AGIC) is the \"official\" Azure way to do ingress on AKS. It's also $200+/month for the Application Gateway resource alone, and it adds a managed PaaS component outside your cluster that you need to coordinate with.\nNGINX Ingress Controller runs in-cluster, is free, and does everything I need: path-based routing, SSL termination (when needed), and health-check-based backend selection. The Internal LoadBalancer annotation ensures there's no public IP — zero attack surface.\nFor production systems that need WAF (Web Application Firewall) capabilities, AGIC makes sense. For everything else, NGINX is the pragmatic choice.\nAzure Container Insights is the managed monitoring option for AKS. It's convenient but costs $10–20/month in Log Analytics ingestion, and the dashboards are Azure-native (not portable).\nThe kube-prometheus-stack gives you Prometheus for metrics collection, Grafana for dashboards, node-exporter for host-level metrics, and kube-state-metrics for cluster state. All running on the existing node at zero marginal cost. The dashboards are community-standard, portable, and more detailed than Container Insights for Kubernetes-specific observability.\nThe trade-off: you own the lifecycle. If Prometheus fills up the disk, that's your problem. At dev scale with 30-day retention, this hasn't been an issue.\nI ran Infracost against the live Terraform plan to verify the numbers. This matters because Azure pricing pages are notoriously ambiguous about what \"free tier\" actually includes.\n\n\n\nResource\nSKU\nMonthly Cost\n\n\n\n\nAKS Control Plane\nFree tier\n$0\n\n\nAKS Node (1× Standard_B2s)\n2 vCPU, 4 GB RAM\n$30.37\n\n\nContainer Registry\nBasic, 10 GB\n$5.00\n\n\nStorage Account\nStandard LRS\n~$1.00\n\n\nLog Analytics\nPerGB2018, 30-day\n~$2–5\n\n\nKey Vault\nStandard\n~$0.03\n\n\nAzure AI Search\nFree tier\n$0\n\n\nIn-cluster (Redis, Prometheus, Grafana, KEDA, NGINX)\n—\n$0\n\n\n\n\n\n\nModel\nPrice\nDev Usage\nMonthly\n\n\n\n\nGPT-4o-mini (input)\n$0.15/1M tokens\n~500K tokens\n~$0.08\n\n\nGPT-4o-mini (output)\n$0.60/1M tokens\n~200K tokens\n~$0.12\n\n\ntext-embedding-3-small\n$0.02/1M tokens\n~100K tokens\n<$0.01\n\n\n\nTotal: roughly $41/month. And you can az aks stop the cluster when you're not using it to drop the compute cost to $0 — you only pay for storage and the PaaS services (which are mostly free-tier).\n\n  \nEnd-to-end RAG pipeline: Cache → Embed → Retrieve → Augment → Return.\n\n\nEvery query follows a deterministic path through five stages. Each stage is a separate Python module, independently testable.\nStage 1: Cache check. Redis lookup by query hash. If hit, return immediately. If miss, proceed.\nStage 2: Embed the query. The user's question is converted to a 1,536-dimension vector using text-embedding-3-small. This costs $0.02 per million tokens — effectively free.\nStage 3: Retrieve. The embedding is sent to Azure AI Search, which performs hybrid retrieval: HNSW vector similarity plus BM25 keyword scoring. The top-K results (default 5, configurable per request) are returned with relevance scores.\nStage 4: Augment and generate. The retrieved chunks are injected into a prompt template and sent to GPT-4o-mini. The model generates a grounded answer based solely on the provided context — reducing hallucination risk.\nStage 5: Return and cache. The response is returned to the user with full metadata (sources, token count, cost, latency, cache status) and stored in Redis for future identical queries.\nHere's what an actual response looks like from the live system:\n{\n  \"answer\": \"Kubernetes is an open-source container orchestration platform...\",\n  \"sources\": [\n    {\"id\": \"1\", \"title\": \"Kubernetes Overview\", \"score\": 0.033},\n    {\"id\": \"2\", \"title\": \"Azure AKS\", \"score\": 0.033},\n    {\"id\": \"3\", \"title\": \"Docker Containers\", \"score\": 0.032}\n  ],\n  \"metadata\": {\n    \"retrieved_documents\": 3,\n    \"total_tokens\": 467,\n    \"estimated_cost_usd\": 0.003665,\n    \"latency_ms\": 1415,\n    \"from_cache\": false\n  }\n}\n\nEvery response includes cost attribution. At $0.003 per query, you can run 13,000 queries before spending $50 on tokens. That's the kind of number a product manager can work with.\nI wanted the entire system to go from zero to running with a single command. The deploy script runs 10 steps sequentially, each idempotent:\nCost gate — Runs Infracost, shows the estimate, asks for confirmation before spending anything.\nTerraform apply — Provisions 15 Azure resources (~5 minutes).\nkubectl config — Fetches AKS credentials.\nDocker build + push — Builds 3 container images for linux/amd64, pushes to ACR (~3 minutes).\nNGINX Ingress — Installs the controller with Internal LB annotation.\nKEDA — Installs event-driven autoscaler.\nRedis — Deploys in-cluster cache.\nMonitoring — Deploys Prometheus + Grafana with lightweight resource limits.\nApplication — Deploys RAG API, Chat UI, and Ingestion Worker.\nData seed — Creates the search index and seeds 7 sample documents.\nThe teardown script reverses everything: Helm uninstalls → Terraform destroy → cleanup orphaned resource groups → wipe local state.\nThe entire lifecycle is captured in two scripts. No clicking through the Azure portal. No manual kubectl applies. No \"works on my machine.\"\n\n  \nThe Streamlit Chat UI in action — natural language queries with source attribution and cost metadata.\n\n\n\n  \n  \nGrafana dashboard showing cluster health, pod metrics, and resource utilization — all running on the same B2s node.\n\n\n\n\n\n\n  \n  \n  What I'd change for production\n\n\nThis is a development-grade system by design. Here's what the upgrade path looks like:\n\n\n\nArea\nCurrent (Dev)\nProduction Path\n\n\n\n\nAKS tier\nFree (no SLA)\nStandard ($75/mo, 99.95% SLA)\n\n\nNode pool\n1× B2s (4 GB)\n3× D4s_v3 + autoscaling\n\n\nRedis\nIn-cluster pod\nAzure Cache for Redis (C1 Standard)\n\n\nAI Search\nFree (50 MB)\nBasic ($75/mo) or Standard\n\n\nSecrets\nKey Vault + env vars\nKey Vault CSI driver (pod-native injection)\n\n\nIdentity\nSystem-assigned managed identity\nWorkload Identity (per-pod RBAC)\n\n\nIngress\nNGINX + Internal LB\nAGIC + WAF (if public-facing)\n\n\nTLS\nNone (internal only)\ncert-manager + Let's Encrypt\n\n\nRegistry\nACR Basic + admin auth\nACR Standard + RBAC\n\n\n\nEvery one of these upgrades is a configuration change, not a re-architecture. That's deliberate. The system was designed so that dev and production differ in resource SKUs and security posture — not in topology.\nEmbedding models are absurdly cheap. At $0.02 per million tokens, text-embedding-3-small is essentially free. I embedded my entire document corpus for less than a penny. Don't over-optimize on the embedding side — spend your budget on the LLM.\nCache hit rates matter more than model speed. A cold GPT-4o-mini query takes ~2 seconds. A Redis cache hit takes <10ms. If even 30% of your queries are repeated (common in enterprise settings where teams ask similar questions), caching cuts your effective latency — and cost — dramatically.\nAzure CNI Overlay should be the default. I started with kubenet, hit network policy limitations, switched to flat CNI, hit IP exhaustion warnings, and finally landed on CNI Overlay. It should have been the first choice. If you're starting a new AKS cluster today, use Overlay unless you have a specific reason not to.\nB2s nodes are surprisingly capable. I was skeptical that a 2 vCPU / 4 GB RAM burstable VM could run 13 pods including Prometheus and Grafana. It does — with 40% memory headroom and 89% CPU headroom at idle. For development and staging workloads, don't reach for D-series by default.\nObservability is free if you plan for it. The kube-prometheus-stack runs on the existing node at zero marginal cost. There's no excuse for a Kubernetes deployment without metrics. Adding it after the fact is always harder than including it from day one.\nThe complete system — infrastructure as code, application source, Helm charts, deployment scripts, and documentation — is in the RAG-LLM-AKS repository. Fork it, break it, adapt it to your use case.\nIf you're building RAG systems on Azure, I hope this saves you some of the dead ends I walked into. The technology is mature enough now that the hard problems aren't \"can we make it work\" — they're \"can we make it work at a cost and complexity level that a small team can sustain.\" That's the question this architecture tries to answer.\nSiva Vemuri is a Staff DevOps Lead/Architect with 11+ years of experience in cloud infrastructure, Kubernetes, and CI/CD. He holds CKA (Certified Kubernetes Administrator), AZ-400 (Azure DevOps Solutions), and RHCSA certifications, and has designed production AKS platforms across healthcare and telecom. Find more of his work on GitHub.",
-      "publishedAt": "2026-02-09T00:57:13.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "9c2d3bda337d30ea12ff87cb0cf13b365fb0ec971361e2c79c01ea78dfde2e8e",
-      "title": "TimeSlipSearch: A Conversational Time Machine for Pop Culture",
-      "url": "https://dev.to/liztacular/timeslipsearch-a-conversational-time-machine-for-pop-culture-51e7",
-      "description": "This is my submission for the DEV Challenge: Consumer-Facing Conversational Experiences.\nTimeSlipSearch is a conversational time machine that answers questions like:\n“What was the #1 song the day I was born?”\n…in under 100 milliseconds.\nType a date in plain English, like “Summer of ’69,” “Christmas 1985,” or “the day the Berlin Wall fell,” and instantly receive a complete cultural snapshot:\nBillboard Hot 100 chart results\nMovies in theaters\nGas prices and other economic context\nHistorical events from that exact moment in time\nNostalgia is a $260B+ industry, yet exploring historical pop culture still requires jumping between Wikipedia, Billboard archives, IMDb, and economic databases.\nThe data exists, it’s just scattered and hard to access conversationally.\nA single unified search across 420,000+ indexed records, wrapped in an immersive VHS/CRT retro interface that makes time travel feel real.\n🔗 Live: https://timeslipsearch.vercel.app\nTry these queries:\nJuly 20, 1969 — Moon landing day\nSummer of ’69 — Natural language works\nCompare 1989 vs 1979 — Side-by-side decades\nYour birthday\n\n\n\nIndex\nRecords\nWhat It Contains\n\n\n\n\ntimeslip_songs\n350,000\nEvery Billboard Hot 100 entry, 1958–2020\n\n\ntimeslip_movies\n50,000\nTheatrical releases from TMDB\n\n\ntimeslip_prices\n900\nGas, minimum wage, movie tickets (FRED)\n\n\ntimeslip_events\n20,000\nHistorical events (Wikimedia)\n\n\n\nEvery user query triggers one HTTP request that searches all four indices simultaneously:\nconst response = await client.search({\n  requests: [\n    { indexName: \"timeslip_songs\",  filters: `date >= ${start} AND date <= ${end}`, hitsPerPage: 10 },\n    { indexName: \"timeslip_movies\", filters: `date >= ${start} AND date <= ${end}`, hitsPerPage: 5 },\n    { indexName: \"timeslip_prices\", filters: `date >= ${start} AND date <= ${end}`, hitsPerPage: 1 },\n    { indexName: \"timeslip_events\", filters: `date >= ${start} AND date <= ${end}`, hitsPerPage: 5 }\n  ]\n});\n\nThis batched approach is critical, sequential queries would take ~4× longer and break the conversational feel.\nRaw search results aren’t enough for conversation. I built a cultural context layer that enriches responses with era-specific narratives:\nconst YEAR_HIGHLIGHTS: Record<number, string> = {\n  1969: \"The Summer of Love peaked as humans walked on the moon.\",\n  1984: \"MTV transformed music into a visual medium.\",\n  1989: \"The Berlin Wall fell and hip-hop went mainstream.\"\n  // 60+ curated year narratives\n};\n\nThe agent also generates contextual follow-up suggestions based on actual results:\nFound George Michael? → “Explore more from George Michael”\nSearched 1988? → “See nearby: 1989 — The year the Berlin Wall fell”\nFirst time in the 80s? → “Discover more of the 80s”\nFollowing a retrieval + scale + memory approach, I implemented localStorage-based memory:\nSearch History — last 20 queries with one-click replay\nFavorites — save meaningful dates with personal notes\nAchievements — unlock badges for exploring different decades\nThis creates session continuity without requiring authentication, the agent “remembers” your journey through time.\nTimeSlipSearch lives or dies by speed. Here’s why Algolia was essential:\nChat interfaces create expectations of immediacy. A 2-second delay feels like the agent is “thinking too hard.” Algolia’s sub-100ms retrieval keeps the conversation flowing naturally.\nWithout batched multi-index search, I’d need 4 sequential API calls. At ~150ms each, that’s ~600ms of network latency alone, before any processing. Algolia collapses this to a single request.\nThe VHS tracking lines and CRT glow are purely stylistic. Results arrive so fast that the “loading” animation is optional, users see their time capsule before the tape even finishes rewinding.\nSearching 350,000 Billboard records by Unix timestamp range could be expensive. Algolia’s numeric filters handle it effortlessly, enabling queries like “show me everything from June 1–7, 1988” without performance degradation.\nNext.js 16\nAlgolia v5\nTypeScript\nTailwind CSS\nchrono-node for natural language date parsing\nBillboard Hot 100\nTMDB\nFRED Economic Data\nWikimedia",
-      "publishedAt": "2026-02-09T00:52:54.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "f15ff8e8117fa537087f5b1faf3214aaf9982b3186f3154ee0ccce20bb604b29",
-      "title": "Amazon、Nova モデル強化に向けプライベート AI バグバウンティプログラムを開始",
-      "url": "https://aws.amazon.com/jp/blogs/news/amazon-launches-private-ai-bug-bounty-to-strengthen-nova-models/",
-      "description": "Amazon は、Amazon Nova 基盤モデルを含む AI モデルおよびアプリケーションを対象としたプライベート AI バグバウンティプログラムを開始しました。このプログラムでは、セキュリティ研究者やパートナー大学の専門家と連携し、プロンプトインジェクションやジェイルブレイク、CBRN 関連の脅威の検出など重要な領域でモデルをテストします。参加者は有効な脆弱性の報告に対して 200 ドル から 25,000 ドル の報奨金を獲得でき、次世代の AI セキュリティ研究者の育成も目指しています。",
-      "publishedAt": "2026-02-09T00:35:13.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "9f0fb6893cca1a9c3bb9287077aac55c5a4111de0f2731dbb227a100ec703e2b",
-      "title": "AWS Transform custom: AI 駆動 Java モダナイゼーションで技術的負債を削減",
-      "url": "https://aws.amazon.com/jp/blogs/news/aws-transform-custom-ai-driven-java-modernization-to-reduce-tech-debt/",
-      "description": "今日の急速に進化するソフトウェア環境において、Java アプリケーションの保守とモダナイゼーションは、多くの組織が直面する重要な課題です。新しい Java バージョンがリリースされ、ベストプラクティスが進化するにつれて、効率的なコード変換の必要性がますます重要になっています。この記事では、Java アップグレード用の AWS Transform custom のすぐに使える変換を活用する方法について説明します。この記事の最後までに、変換プロセスを完全に制御しながら、これらの標準化された変換を使用して Java アプリケーションを効率的にモダナイズする方法を理解できるようになります。",
-      "publishedAt": "2026-02-09T00:03:24.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "fdf2784b70f4fb3a40c0672501299a84ca714eb38da9fc09c9e546076fcfb057",
-      "title": "AWS Organizations Policy 을 이용한 크로스어카운트 백업설정",
-      "url": "https://dev.classmethod.jp/articles/aws-organizations-policy/",
-      "description": "AWS Organizations Policy 을 이용한 크로스어카운트 백업설정",
-      "publishedAt": "2026-02-09T00:00:12.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "bad388b4113cb495db59f71de7f87165264b4d932ae5fb667d484e136f7e3b75",
-      "title": "自分のコードをAIに攻撃させたら\"守り\"が全部ザルだった",
-      "url": "https://zenn.dev/smartvain/articles/ai-attacked-my-code-security-mostly-placebo",
-      "description": "「セキュリティ、ちゃんとやってる？」 この質問、正直めちゃくちゃ怖い。 SQLインジェクション対策？　やってる。XSS対策？　エスケープしてる。CSRF？　トークン入れてる。 ——でも、「ちゃんと」って何だ？ OWASPのチェックリストを上から順に潰して、ESLintのセキュリティプラグインを入れて、dependabotのアラートを...",
-      "publishedAt": "2026-02-08T15:23:36.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "3b780800f828252346e4e238ba533c5f958badbd4e5aef16200197f89f36963e",
-      "title": "GitHub Actions から ECS Fargate をデプロイしてみた",
-      "url": "https://dev.classmethod.jp/articles/shoma-deploy-ecs-fargate-from-github-actions/",
-      "description": "GitHub Actions から ECS Fargate をデプロイしてみた",
-      "publishedAt": "2026-02-08T14:59:24.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "013856d4ab684fadcc1e524c706aeaf6a60f6a4cc9e7ffe8a6966488bfba16f0",
-      "title": "「State of JavaScript 2025」公開。フロントエンドライブラリはReactがシェアを伸ばして1位、ビルドツールはついにwebpackにviteが追いつく",
-      "url": "https://www.publickey1.jp/blog/26/state_of_javascript_2025react1webpackvite.html",
-      "description": "「State of JavaScript 2025」公開。フロントエンドライブラリはReactがシェアを伸ばして1位、ビルドツールはついにwebpackにviteが追いつく 回答者の国別分布を見ると米国が16％、ドイツが8％、フランスが7％、イギリス（UK）が5％、ロシアが3％、スペインが3％、日本も3％（回答者340人）でした。 発表された内容から...",
-      "publishedAt": "2026-02-08T14:41:07.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "91c2eb7357f9080c0d3feb4646828c1d54ee6fcac8dcd3ebf67b6779962f65fc",
-      "title": "Amazon ECR が、ストレージ最適化とプッシュパフォーマンス向上のためにリポジトリ間レイヤー共有のサポートを開始 - AWS",
-      "url": "https://aws.amazon.com/jp/about-aws/whats-new/2026/01/amazon-ecr-cross-repository-layer-sharing/",
-      "description": "Amazon ECR が、ストレージ最適化とプッシュパフォーマンス向上のためにリポジトリ間レイヤー共有のサポートを開始 Amazon Elastic Container Registry (ECR) で、Blob マウントという機能を使用して、レジストリ内のリポジトリ間で共通のイメージレイヤーを共有できるようになりました。この機能は、共通のベースイメー...",
-      "publishedAt": "2026-02-08T11:22:18.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "28cab846d80a6d6c04df86d27a5d7e82aac0180f4fff0854cef909fed0f5e6f2",
-      "title": "[個人開発] 巨大駅の出口がわからないを写真と最小限の文章で解決する「Dexit」を作成しました [Next.js×Vercel]",
-      "url": "https://qiita.com/Daichisama/items/cdc85e68d948c0924294?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "はじめに\n巨大駅を使ったことがある人なら、一度はこんな経験があると思います。\n\n改札は出られたのに、その先で迷う\n案内板を見ても「本当に合っているか」確信が持てない\nGoogleマップを開いても、駅構内ではほぼ役に立たない\n\n特に新宿駅のような巨大駅では、\n「どの出口から...",
-      "publishedAt": "2026-02-08T10:12:58.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "bc27b93a321fa760a0a22e22fcba3e8d03d96f17f656b3d5e7e3cbf6a80b092e",
-      "title": "AWS-RunPatchBaseline 実行時のオプション \"RebootIfNeeded\" でインスタンス再起動が行われる条件を教えてください",
-      "url": "https://dev.classmethod.jp/articles/tsnote-ssm-aws-runpatchbaseline-rebootifneeded-conditions/",
-      "description": "パラメータを \"RebootIfNeeded\" にした場合、パッチが 1 つでも適用されるとインスタンスが再起動されます",
-      "publishedAt": "2026-02-08T08:00:00.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "fd965a32b2194304d34e2adeea99a7dbd48337c7b1483778d5e8e217a5b80957",
-      "title": "Claude Opus 4.6 × Vertex AI 完全ガイド：Claude Code を GCP でセキュアに使い倒す",
-      "url": "https://zenn.dev/google_cloud_jp/articles/b65dc4d6df7f34",
-      "description": "はじめに Anthropic の最新最上位モデル Claude Opus 4.6 は、Google Cloud の Vertex AI 経由で利用できます。Anthropic と直接契約しなくても、GCP の課金に一本化できるため、すでに GCP を使っている企業や個人にとって導入のハードルが低い選択肢です。 この記事では、Claude の公式 CLI ツール Claude Code を Ver...",
-      "publishedAt": "2026-02-08T02:50:35.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "5950a73dd8290f60167b43ff26d42e229a166f25fd3699b936ce9566d964b42e",
-      "title": "2026/02/08 今日のQiitaトレンド記事をポッドキャストで聴こう！",
-      "url": "https://qiita.com/ennagara128/items/cd170b99d3b525a0bbf0?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "前日夜の最新トレンド記事のAIポッドキャストを毎日朝7時に更新しています。\n通勤中などにながら聴きしよう！\n（Qiita投稿は通勤には間に合わないと思われますが）\nフィードバックとか助かりますのでください\n↓こちらから\n\n出典\n【優勝🥇】防衛省サイバーコンテストをAIで攻略...",
-      "publishedAt": "2026-02-08T02:32:23.000Z",
-      "feedName": "Qiita"
-    },
-    {
       "id": "0cbf15f09cef3b689076f35383bd6bae4b31394bc461ae4a114a710f18da8f39",
       "title": "From Bathroom Rapper to Studio Flow: What I Learned After Actually Using an AI Rap Generator",
       "url": "https://dev.to/alliman_schane_462c5932ff/from-bathroom-rapper-to-studio-flow-what-i-learned-after-actually-using-an-ai-rap-generator-2530",
@@ -345,46 +225,6 @@
       "feedName": "Qiita"
     },
     {
-      "id": "eff5c8389bb06e8f0024a19fa00fba22b65fbef95d73f6d6548d0b4bdc41f317",
-      "title": "Claude CodeのSkillsで作る、AIライフマネジメント",
-      "url": "https://zenn.dev/react_uncle/articles/840efe2fdc6963",
-      "description": "はじめに\nこんにちは。@react_nextjs です。\nみなさんこの動画を見ましたか？\nhttps://www.youtube.com/watch?v=KHiq6nf0Jio\n私も以前、似たようなことを試みたことがあります。GitHubリポジトリで自分のタスクや目標を管理しようとしたのですが、結局続きませんでした。\n理由は明確で、管理すること自体が負担になっていたからです。\n私は顧問先や副業を複数抱えており、本業以外に使える学習時間と副業時間のリソースが可視化されていませんでした。毎日「今日はどれくらい時間があるのか」「何から手をつけるべきか」を考えて計画を立てるものの、達成できな...",
-      "publishedAt": "2026-02-09T00:49:00.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "66ccdec93ea5593cacb4cb54d525e12660aa48e22c19e67426b8af7dea9d31aa",
-      "title": "AIが脆弱性を96%見つける時代に、僕らがセキュリティを学ぶ意味はあるのか",
-      "url": "https://zenn.dev/smartvain/articles/ai-finds-96pct-vulns-why-learn-security",
-      "description": "「このコード、セキュリティ的に大丈夫かな……」 PRレビューのたびに、なんとなく不安になる。SQLインジェクション、XSS、CSRF——知識としては知っている。でも、自分のレビューで本当に脆弱性を潰しきれているかと聞かれたら、正直自信がない。 そしてある日、こんなニュースが流れてきた。 「自律型AIハッカーツール Sha...",
-      "publishedAt": "2026-02-09T00:30:24.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "50e919b64e4775778aab43b38f597523355e250e3ef3607dd948c5e64f9363e3",
-      "title": "2026/02/09 今日のQiitaトレンド記事をポッドキャストで聴こう！",
-      "url": "https://qiita.com/ennagara128/items/215c565375b4074442cc?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "前日夜の最新トレンド記事のAIポッドキャストを毎日朝7時に更新しています。\n通勤中などにながら聴きしよう！\n（Qiita投稿は通勤には間に合わないと思われますが）\nフィードバックとか助かりますのでください\n↓こちらから\n\n出典\nWebのしないといけないセキュリティ対策\nht...",
-      "publishedAt": "2026-02-08T23:48:42.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "66ccdec93ea5593cacb4cb54d525e12660aa48e22c19e67426b8af7dea9d31aa",
-      "title": "AIが脆弱性を96%見つける時代に、僕らがセキュリティを学ぶ意味はあるのか",
-      "url": "https://zenn.dev/smartvain/articles/ai-finds-96pct-vulns-why-learn-security",
-      "description": "「このコード、セキュリティ的に大丈夫かな……」\nPRレビューのたびに、なんとなく不安になる。SQLインジェクション、XSS、CSRF——知識としては知っている。でも、自分のレビューで本当に脆弱性を潰しきれているかと聞かれたら、正直自信がない。\nそしてある日、こんなニュースが流れてきた。\n「自律型AIハッカーツール Shannon、既知の脆弱性に対して96%の成功率でexploitを自動生成」\n——あ、もう僕らの出番ないじゃん。\n\n はじめに\n結論から少しだけ言うと、AIがセキュリティを自動化する時代だからこそ、僕ら開発者のセキュリティ\"感覚\"がむしろ重要になる——と今は思っている。\n「え...",
-      "publishedAt": "2026-02-08T13:25:40.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "4f307f077c0cdcc6aaf3525d831026d6b089870f96448640b268438c9e2d5ad8",
-      "title": "Async Reactとは何か",
-      "url": "https://zenn.dev/cryptobox/articles/70b502e22954be",
-      "description": "React Conf 2025でAsync Reactというタイトルの講演が行われました。\nhttps://www.youtube.com/watch?v=B_2E96URooA\n自分はこの動画を見るまでAsync Reactという言葉自体聞いたことがなかったのですが、一通り見終えたところでこの先React開発チームが目指していきたい未来を感じることができたので、この記事で紹介したいと思います。\n\n TL;DR\n\nAsync Reactとはアプリケーションをデフォルトで非同期とみなして構築する考え方である。\n\nawait UI = await f(await state)\n\n\nAsync...",
-      "publishedAt": "2026-02-08T08:07:20.000Z",
-      "feedName": "Zenn"
-    },
-    {
       "id": "18b337efa6a55db388cd24087414da83695d04ad15377d0cb52e737a93f3878c",
       "title": "Navigating the RAG Architecture Landscape: A Practitioner’s Guide",
       "url": "https://dev.to/ruchika_bhat_876f8530fa3b/navigating-the-rag-architecture-landscape-a-practitioners-guide-5bom",
@@ -526,22 +366,6 @@
       "url": "https://zenn.dev/tokium_dev/articles/why-ddd-failed-for-me",
       "description": "「なんか良いらしいぞ」\n新卒で入社して配属されたのは、新規事業の立ち上げチームでした。Web開発の経験はほぼゼロ。開発を始めて少し経った頃に、社内の他のチームがDDDという手法を使っていると知りました。\n調べてみると、「有名な手法」「価値あるソフトウェアが作れる」らしい。\nなんか良いらしい。じゃあうちもやろう、と。\nこれが失敗の始まりでした。\n\n 表面的な理解が招いた勘違い\n開発していたのはRAGチャットボットです。\nDDD導入にあたり、DDDの本や記事をたくさん読みました。個人的に一番分かりやすかったのはこれ（それでも難しかったけど）。\n\n出典: ドメイン駆動設計入門 - 翔泳社\n...",
       "publishedAt": "2026-02-09T05:45:26.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "0451000f72737dfc8db9c2c744fbf98f12f49d01be5b874baa76efb7f2ec3acd",
-      "title": "GitHub Agentic Workflows",
-      "url": "https://github.github.io/gh-aw/",
-      "description": "Repository automation, running the coding agents you know and love, with strong guardrails in GitHub Actions. Imagine a world where improvements to your repositories are automatically delivered as pull requests each morning, ready for you to review. Issues are automatically triaged, CI failures a...",
-      "publishedAt": "2026-02-08T16:27:35.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "7d4f9a73935e34ede0fb41532e369923dcad5924f69154bb6ae5eae1bb369d30",
-      "title": "Claude16台で10万行のCコンパイラを作った論文を読んで、「いや答えあるじゃん」と思った話",
-      "url": "https://zenn.dev/shio_shoppaize/articles/shogun-spec-first",
-      "description": "Anthropicのエンジニアリングブログに、とんでもない記事が出た。\nhttps://www.anthropic.com/engineering/building-c-compiler\nClaude 16台を並列で2週間回して、10万行のRust製Cコンパイラを作った。 費用$20,000。Linux 6.9のブートに成功。GCCのテストスイートで99%パス。DoomもFFmpegもPostgreSQLもコンパイルできる。\nすげえ。\nで、オレはAI部下10人を戦国軍団として運用してる側の人間なんだけど、この記事を読んで最初に思ったのは「すげえ」の次に来た、こっちの感想だった。\n「いや、...",
-      "publishedAt": "2026-02-08T11:26:37.000Z",
       "feedName": "Zenn"
     },
     {
@@ -6393,6 +6217,222 @@
       "url": "https://zenn.dev/so_engineer/articles/728f4336a0aac4",
       "description": "はじめに\nGCPにアプリをデプロイして以下の構成でインフラを設計・構築しました。\n\nAWS版はこちら。\n\n\n デプロイ対象のアプリ\nインフラ設計・構築がメインなので詳細は割愛します。\n\n db-migrator\nデータベースマイグレーションを管理・実行するためのアプリ\n\n slack-metrics\nSlackのデータを取得してデータベースに永続化するためのアプリ\n\n ポイント\n\n IAM\n\nアカウントにIAMロールを付与してプロジェクトへのアクセスを制御\nstg, prdと環境ごとにプロジェクトを分けることでセキュアにする\nローカルからTerraform実行などの際は、JSONキー...",
       "publishedAt": "2026-03-08T06:57:03.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "8b864e2f2f52cf6746c0f52b81c0bc3d4a616c57efd20a6a9fcce70fb3653f0f",
+      "title": "The Week AI Agents Ate the World (March 2026)",
+      "url": "https://dev.to/sean_li_a5e6e08e5fc722152/the-week-ai-agents-ate-the-world-march-2026-55jk",
+      "description": "Remember when \"AI agent\" meant a chatbot with a to-do list? That was six months ago.\nThis week, NVIDIA announced an enterprise AI agent platform. OpenAI shipped an AI security auditor that scanned 1.2 million commits. Anthropic released a multi-agent system that reviews your pull requests better than your senior dev. A 22-year-old built a bot that does your homework — login, download, solve, submit — and higher ed collectively lost its mind.\nAI agents aren't a \"trend to watch in 2026.\" They're eating everything. Here's what actually happened.\n\nThe biggest news dropped today. WIRED reported that NVIDIA is building NemoClaw — an open-source AI agent platform aimed squarely at enterprise.\nThe concept: companies deploy AI agents that handle workflow tasks for employees. Think automated report generation, data pipeline management, customer ticket routing — except the agent actually does the work, not just suggests it.\nNVIDIA has been pitching NemoClaw to enterprise software companies for weeks. The full reveal is expected March 15 at GTC 2026.\nHere's what's interesting: NemoClaw is explicitly inspired by OpenClaw (the personal AI agent that hit 297K GitHub stars). OpenClaw was built for individual users running agents on their own machines. NemoClaw flips it — same philosophy, enterprise scale. CNBC noted that NVIDIA stock climbed 2.7% on the news alone.\nThe takeaway: NVIDIA just told every enterprise software company that AI agents are the next compute layer. If Jensen Huang is building it, it's not hype anymore.\n\nOpenAI had a double-header this week. On March 5, they dropped GPT-5.4 — their \"most capable frontier model for professional work.\"\nThe headline number: 1,000,000 token context window in the API. That's roughly 750,000 words. You could feed it an entire codebase, a company's complete documentation, or every email you've sent this year, and it would hold all of it in memory at once.\nGPT-5.4 can also \"steer\" itself mid-response — planning steps as it generates. OpenAI claims an 83% win rate on industry knowledge tasks (up from 70.9% for GPT-5.2). They also shipped ChatGPT for Excel on the same day, letting analysts build financial models in natural language with real data from FactSet and Moody's.\nBut the real story? Codex Security.\nLaunched March 6, Codex Security is an AI-powered code auditor. It scanned 1.2 million commits in its beta, found 792 critical vulnerabilities and 10,561 high-severity issues. In one case, it caught a cross-tenant authentication bug that human reviewers and basic tools completely missed.\nAs someone who's spent months finding RCEs in AI agent frameworks, this hits home. The security tooling gap in AI-generated code is massive. OpenAI building a dedicated security agent isn't just smart — it's necessary. When developers are shipping 10x more code with AI assistance, you need AI reviewing it at the same speed.\nThe takeaway: GPT-5.4 is impressive, but Codex Security scanning a million commits and catching real bugs? That's the product that actually changes how teams ship software.\n\nYesterday, Anthropic launched Code Review in Claude Code — and it's genuinely clever.\nThe system dispatches teams of AI agents to review every pull request. Not one agent scanning for patterns. Multiple agents, running in parallel, each checking different aspects: logic errors, security flaws, architectural issues, test coverage gaps.\nAnthropic modeled it on their own internal review process. The irony is beautiful: developers use Claude Code to write code, and now Claude Code sends agent squads to review what it wrote. AI checking AI's homework.\nThis isn't academic. As agentic coding tools (Claude Code, Codex, Cursor) drive a surge in PRs, human reviewers can't keep pace. Anthropic's data shows developers are shipping significantly more code per PR — but the review bottleneck is getting worse.\nThe timing isn't accidental. Anthropic is having a monster 2026. Revenue is surging. They just partnered with Microsoft to bring Claude into Copilot. And they're suing over a Pentagon blacklist. It's been a wild quarter.\nThe takeaway: The AI code review space just got serious. When both OpenAI (Codex Security) and Anthropic (Code Review) ship security/review agents in the same week, pay attention.\n\nSpeaking of the Microsoft-Anthropic deal — it's weird, and I love it.\nMicrosoft just launched Copilot Cowork, an enterprise AI agent built on Anthropic's Claude. The name \"Cowork\" is borrowed directly from Anthropic's own product — the same product that wiped hundreds of billions off Microsoft's market cap when Anthropic first announced it.\nMicrosoft's response? \"If you can't beat them, license them.\"\nCopilot Cowork ships as part of the $30/user/month M365 Copilot package. The pitch: AI agents that handle enterprise workflows — scheduling, document synthesis, cross-app automation — powered by Anthropic's Claude Sonnet models.\nThe meta-story is wild. Anthropic built Cowork. The stock market panicked (\"SaaSpocalypse\"). Microsoft's valuation dropped. Microsoft then... partnered with Anthropic and built the same thing into Copilot. That's either brilliant strategy or corporate Stockholm syndrome.\nThe takeaway: Microsoft just admitted that Anthropic's agent tech is good enough to power their flagship enterprise product. The AI agent cold war is over — now it's a supply chain.\n\nAdvait Paliwal is 22 years old. He built an AI agent called Einstein, posted a demo on X, and terrified every university in America.\nWhat Einstein does: logs into Canvas (the LMS most colleges use), downloads homework assignments, solves them, generates a PDF, and submits it. Fully autonomous. The student doesn't even need to read the assignment.\nThe Chronicle of Higher Education called it a crisis. Education podcasts dedicated full episodes to it. Universities started emergency meetings about academic integrity.\nHere's the thing: Einstein runs on OpenClaw. It's not some sophisticated custom system — it's an AI agent with browser access doing exactly what agents are designed to do. Paliwal basically vibe-coded it and let the internet react.\nWhether Einstein was a prank or a product doesn't matter. It exposed a fundamental problem: every system designed for human interaction — LMS platforms, forms, portals — is now an AI attack surface. And the agents are getting better at navigating them every month.\nThe takeaway: Einstein isn't special. Any competent AI agent can do what Einstein did. That's the actual crisis.\n\nMeta's chief AI scientist published a paper that's generating serious debate. Yann LeCun argues that \"AGI\" (Artificial General Intelligence) is a fundamentally flawed concept and proposes replacing it with \"SAI\" — Superhuman Adaptable Intelligence.\nHis argument: human intelligence isn't \"general.\" Humans are specialists who adapt quickly to new domains. We don't have general-purpose brains — we have highly adaptable ones. Building AI that's \"general\" at everything is the wrong target. Building AI that adapts to specialized domains faster than humans? That's achievable and more useful.\nBen Goertzel (the AGI researcher) fired back on Substack, arguing SAI is just a subset of AGI, not a replacement. The academic fight is entertaining, but LeCun's core point matters for practitioners: stop waiting for magic general AI. Build systems that adapt.\nThis aligns with what we're seeing in practice. Every major agent launch this week is about specialized adaptation — code review agents, security agents, enterprise workflow agents. Nobody shipped \"AGI\" this week. They shipped tools that do specific things really well.\nThe takeaway: LeCun might be right. The AI systems winning right now aren't \"general\" — they're specialized agents that adapt to specific workflows. That's SAI in practice, whether we call it that or not.\n\nA few data points that didn't fit neatly into a section but matter:\nGartner predicts $2.52 trillion in worldwide AI spending in 2026. That's not R&D budgets — that's actual deployment.\nGoogle Gemini 3.1 Flash-Lite launched March 3 at $0.25 per million input tokens. That's 2.5x faster than Gemini 2.5 Flash. The race to zero-cost inference is accelerating.\n70% of enterprises now run AI agents, but most have weak identity and access management. The Hacker News calls these unmanaged agents \"identity dark matter\" — powerful, invisible, and ungoverned.\n7 major AI companies signed a White House pledge to cover data center power costs. The energy conversation is getting serious.\nOpenClaw hit 297K GitHub stars, making it the most-starred AI project ever. NVIDIA building NemoClaw on the same philosophy validates the entire approach.\nWhat is NemoClaw?\nWhat's the difference between GPT-5.4 and GPT-5.2?\nWhat is Codex Security?\nWhat is Anthropic Code Review?\nWhat is SAI (Superhuman Adaptable Intelligence)?\nAbout the author: I'm Chase Xu — CV engineer, AI security researcher, and someone who spent last night manually auditing his own AI agent for malware. I write a weekly roundup of the AI news that actually matters. No hype. No fluff. Just the stuff you need to know.\nTags: Artificial Intelligence, Machine Learning, Cybersecurity, AI Ethics, Technology",
+      "publishedAt": "2026-03-11T01:41:06.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "d6867728c6d2ab44d6c551c5e6e291e51ad5eceaa7ae3d6cec93f1d9ab434449",
+      "title": "Beyond Pre-trained Models: Mastering Fine-tuning for Enterprise AI Dominance",
+      "url": "https://dev.to/_4e853add3ce149eb8267a0/beyond-pre-trained-models-mastering-fine-tuning-for-enterprise-ai-dominance-4ceg",
+      "description": "Beyond Pre-trained Models: Mastering Fine-tuning for Enterprise AI Dominance\n\n\n\n  \n  \n  Executive Summary\n\n\nIn today's competitive landscape, organizations leveraging AI face a critical choice: settle for generic, off-the-shelf models that deliver mediocre results or invest in customized solutions that drive tangible business value. Fine-tuning represents the strategic bridge between pre-trained foundation models and domain-specific excellence, transforming AI from a cost center to a competitive advantage.\nBusiness Impact Analysis: Companies implementing systematic fine-tuning programs report 40-60% improvement in task-specific accuracy, 70% reduction in hallucination rates, and 3-5x faster deployment cycles compared to building models from scratch. The financial implications are substantial: a well-executed fine-tuning strategy can reduce AI operational costs by 30-50% while increasing model relevance and business alignment.\nStrategic Imperative: As foundation models become commoditized, competitive differentiation shifts to customization capabilities. Organizations that master fine-tuning gain first-mover advantages in customer experience, operational efficiency, and product innovation. This article provides the technical blueprint for transforming generic AI capabilities into proprietary assets that deliver measurable ROI.\nArchitecture Diagram: Multi-Stage Fine-tuning Pipeline\n[Data Collection Layer] → [Preprocessing & Augmentation] → [Parameter-Efficient Tuning Layer] → [Full Model Optimization] → [Validation & Deployment]\n     ↑                            ↑                              ↑                              ↑                          ↑\n[Domain Sources]           [Quality Filters]              [LoRA/QLoRA Adapters]         [Gradient Checkpointing]   [A/B Testing Framework]\n\nPattern 1: Progressive Fine-tuning Strategy\nParameter-Efficient Fine-tuning (PEFT): Initial adaptation using LoRA (Low-Rank Adaptation) or QLoRA (Quantized LoRA) for rapid iteration\nSelective Layer Optimization: Targeting specific transformer layers based on task relevance\nFull Model Fine-tuning: Comprehensive optimization for mission-critical applications\nDesign Decision Matrix:\n# Trade-off analysis for fine-tuning approach selection\nFINE_TUNING_STRATEGIES = {\n    \"prompt_tuning\": {\n        \"parameter_efficiency\": \"99%+\",\n        \"storage_overhead\": \"minimal\",\n        \"task_switching\": \"instant\",\n        \"best_for\": \"multi-task environments, limited compute\"\n    },\n    \"lora\": {\n        \"parameter_efficiency\": \"1-5%\",\n        \"storage_overhead\": \"0.1-1% of base model\",\n        \"task_switching\": \"moderate\",\n        \"best_for\": \"single-task optimization, balanced performance\"\n    },\n    \"full_fine_tuning\": {\n        \"parameter_efficiency\": \"0%\",\n        \"storage_overhead\": \"100% of base model\",\n        \"task_switching\": \"expensive\",\n        \"best_for\": \"mission-critical applications, maximum accuracy\"\n    }\n}\n\nCritical Trade-offs:\nMemory vs. Accuracy: QLoRA enables fine-tuning of 70B parameter models on single 24GB GPUs with <1% accuracy loss\nGeneralization vs. Specialization: Overfitting risks increase with dataset specificity—implement early stopping with cross-validation\nInference Latency vs. Customization: Adapter-based approaches add 5-15% inference overhead but enable multi-tenant deployments\nGradient Checkpointing Implementation:\nimport torch\nfrom transformers import AutoModelForCausalLM, TrainingArguments\nfrom torch.utils.checkpoint import checkpoint\n\nclass MemoryOptimizedFineTuner:\n    def __init__(self, model_name, gradient_checkpointing=True):\n        self.model = AutoModelForCausalLM.from_pretrained(\n            model_name,\n            torch_dtype=torch.float16,\n            device_map=\"auto\",\n            use_cache=not gradient_checkpointing  # Disable cache for checkpointing\n        )\n\n        if gradient_checkpointing:\n            self.model.gradient_checkpointing_enable()\n            # Enable selective checkpointing for memory-intensive layers\n            self._configure_selective_checkpointing()\n\n    def _configure_selective_checkpointing(self):\n        \"\"\"Only checkpoint expensive attention layers\"\"\"\n        for name, module in self.model.named_modules():\n            if \"attention\" in name.lower():\n                module.requires_grad_(True)\n                # Custom checkpoint wrapper for attention\n                module.forward = self._checkpointed_forward(module.forward)\n\n    def _checkpointed_forward(self, forward_fn):\n        \"\"\"Create checkpointed version of forward pass\"\"\"\n        def custom_forward(*inputs):\n            return checkpoint(forward_fn, *inputs, use_reentrant=False)\n        return custom_forward\n\nPerformance Comparison Table: Fine-tuning Approaches\n\n\n\nApproach\nGPU Memory (70B model)\nTraining Time\nAccuracy Delta\nInference Overhead\nBest Use Case\n\n\n\n\nFull Fine-tuning\n280GB+\n48-72 hours\n+15-25%\n0%\nRegulatory compliance systems\n\n\nLoRA\n24-48GB\n8-12 hours\n+12-20%\n5-8%\nCustomer service automation\n\n\nQLoRA\n16-24GB\n12-18 hours\n+10-18%\n8-12%\nResearch & development\n\n\nPrompt Tuning\n<1GB\n2-4 hours\n+5-10%\n1-3%\nMulti-tenant SaaS platforms\n\n\n\nBackground: A multinational bank needed to automate regulatory compliance reporting across 12 jurisdictions. Off-the-shelf LLMs achieved only 68% accuracy on compliance rule interpretation.\nImplementation Strategy:\nData Pipeline: Curated 45,000 compliance documents with expert annotations\nModel Selection: Llama 3 70B as base model for its strong reasoning capabilities\nFine-tuning Approach: Two-stage QLoRA followed by targeted full fine-tuning\nValidation Framework: Cross-jurisdictional testing with legal expert review\nArchitecture Diagram: Compliance AI System\n[Figure 1: Multi-jurisdictional Compliance Architecture]\nDocument Ingestion → Text Extraction → Rule Classification → Fine-tuned LLM Analysis → Compliance Score → Human-in-the-loop Review\n      ↓                    ↓                    ↓                      ↓                      ↓                    ↓\n[Regulatory DB]    [OCR/PDF Parsing]   [BERT Classifier]    [Domain-tuned Llama]    [Confidence Scoring]   [Expert Validation]\n\nMeasurable Results (6-month implementation):\nAccuracy Improvement: 68% → 94% on compliance rule interpretation\nProcessing Time: Reduced from 40 hours to 2.5 hours per report\nCost Savings: $3.2M annually in manual review costs\nRisk Reduction: 80% decrease in regulatory violation incidents\nTechnical Implementation Highlights:\n\npython\nimport torch\nfrom peft import LoraConfig, get_peft_model, TaskType\nfrom transformers import AutoTokenizer, AutoModelForCausalLM, TrainingArguments\nfrom trl import SFTTrainer\nfrom datasets import Dataset\nimport pandas as pd\n\nclass ComplianceFineTuner:\n    def __init__(self, base_model=\"meta-llama/Llama-3-70B\"):\n        self.tokenizer = AutoTokenizer.from_pretrained(base_model)\n        self.tokenizer.pad_token = self.tokenizer.eos_token\n\n        # Load with 4-bit quantization for memory efficiency\n        self.model = AutoModelForCausalLM.from_pretrained(\n            base_model,\n            load_in_4bit=True,\n            torch_dtype=torch.float16,\n            device_map=\"auto\",\n            quantization_config=BitsAndBytesConfig(\n                load_in_4bit=True,\n                bnb_4bit_compute_dtype=torch.float16,\n                bnb_4bit_use_double_quant=True,\n                bnb_4bit_quant_type=\"nf4\"\n            )\n        )\n\n    def configure_lora(self, r=16, alpha=32, dropout=0.1):\n        \"\"\"Configure LoRA for parameter-efficient fine-tuning\"\"\"\n        peft_config = LoraConfig(\n            task_type=TaskType.CAUSAL_LM,\n            inference_mode=False,\n            r=r,\n            lora_alpha=alpha,\n            lora_dropout=dropout,\n            target_modules=[\"q_proj\", \"v_proj\", \"k_proj\", \"o_proj\"],\n            bias=\"none\"\n        )\n\n        self.model = get_peft_model(self.model, peft_config)\n        self.model.print_trainable_parameters()  # Typically <1% of parameters\n\n        return self.model\n\n    def prepare_compliance_dataset(self, documents, annotations):\n        \"\"\"Structure compliance data for instruction fine-tuning\"\"\"\n        formatted_data = []\n\n        for doc, annotation in zip(documents, annotations):\n            prompt = f\"\"\"Analyze the following regulatory document and determine compliance requirements:\n\nDocument: {doc}\n\nProvide analysis in this format:\n1. Jurisdiction: [identify applicable regions]\n2. Key Requirements: [list specific compliance obligations]\n3. Risk Level: [high/medium/low]\n4. Recommended Actions: [specific steps for compliance]\n\nAnalysis:\"\"\"\n\n\n\n---\n\n## 💰 Support My Work\n\nIf you found this article valuable, consider supporting my technical content creation:\n\n### 💳 Direct Support\n- **PayPal**: Support via PayPal to [1015956206@qq.com](mailto:1015956206@qq.com)\n- **GitHub Sponsors**: [Sponsor on GitHub](https://github.com/sponsors)\n\n### 🛒 Recommended Products & Services\n\n- **[DigitalOcean](https://m.do.co/c/YOUR_AFFILIATE_CODE)**: Cloud infrastructure for developers (Up to $100 per referral)\n- **[Amazon Web Services](https://aws.amazon.com/)**: Cloud computing services (Varies by service)\n- **[GitHub Sponsors](https://github.com/sponsors)**: Support open source developers (Not applicable (platform for receiving support))\n\n### 🛠️ Professional Services\n\nI offer the following technical services:\n\n#### Technical Consulting Service - $50/hour\nOne-on-one technical problem solving, architecture design, code optimization\n\n#### Code Review Service - $100/project\nProfessional code quality review, performance optimization, security vulnerability detection\n\n#### Custom Development Guidance - $300+\nProject architecture design, key technology selection, development process optimization\n\n\n**Contact**: For inquiries, email [1015956206@qq.com](mailto:1015956206@qq.com)\n\n---\n\n*Note: Some links above may be affiliate links. If you make a purchase through them, I may earn a commission at no extra cost to you.*",
+      "publishedAt": "2026-03-11T01:35:45.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "021fbf53ced789db3224b667818c793ea44491cdcee06e44164298218a16019a",
+      "title": "SOCKSプロキシ経由でアクセス元IPアドレスが制限されたHTTPプロキシに接続するためにTinyProxyで多段プロキシ環境を構築してみた",
+      "url": "https://dev.classmethod.jp/articles/socks-proxy-to-http-proxy-via-tinyproxy/",
+      "description": "IP制限付きHTTPプロキシを経由しないとアクセスできない環境に対し、社内SOCKSプロキシを経由して接続したい。でもSOCKSプロキシの設定は自由に変更できない...\nこんなジレンマを解消するためにTinyproxyによる多段プロキシ環境をDockerコンテナで構築してみました。",
+      "publishedAt": "2026-03-11T01:33:28.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "e4a06dc0580d5762e8998bee0bdb120b9d1b7a0bf387ed3004966a74f71b9289",
+      "title": "CIO／CISOだけの仕事じゃない、CFO視点で考えるテクノロジーリスクとIT投資管理の落とし穴",
+      "url": "https://enterprisezine.jp/article/detail/23751",
+      "description": "DXやAI利用の拡大が進む中で、ITが企業の事業継続を支える最重要資産の一つとなっていることは言うまでもない。ひとたびサイバー攻撃を受ければ、事業やシステムの停止だけでなく、決算延期や株価下落といった財務的な打撃に直結する。この問題に対処するのは、CIO（最高情報責任者）やCISO（最高情報セキュリティ責任者）だけではない。EY Japanが2026年2月16日に開催した「EY Finance Summit 2026」の分科会「CFOの視点で考えるテクノロジーリスクと企業防衛」で語られた、CFOをはじめ財務担当者が向き合うべきテクノロジーリスクと、平時から必要な備えについて内容をレポートする。",
+      "publishedAt": "2026-03-10T23:00:00.000Z",
+      "feedName": "EnterpriseZine"
+    },
+    {
+      "id": "48b11f8c1b58d9ee7c40aacc73c6e10bf4768dbd85b5f476dc840670067d9b7a",
+      "title": "AWS初心者がCommunity Buildersに落選した話",
+      "url": "https://qiita.com/tks_1128/items/a77dcd725aeda22854f2?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\nこんにちは。Tsukasaです！皆さんはCommunity Buildersに応募はされましたでしょうか？\nそして選出された皆さんおめでとうございます！\n今日は私がCommunity Buildersになれなかったことについて記事にしていけたらと思います。\n来年...",
+      "publishedAt": "2026-03-10T13:04:09.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "ce91d12a23e8fd629a0e82b8762114be7e61a0cc2e74ce3ed98ba8b63ce032de",
+      "title": "なぜ私はゲーム開発で「疎結合」と「コンポーネント指向」に異常なほどこだわるのか",
+      "url": "https://zenn.dev/munimaru62o/articles/c6ed730c6e4c61",
+      "description": "なぜ私はゲーム開発で「疎結合」と「コンポーネント指向」に異常なほどこだわるのか\n!\nこの記事の3行まとめ\n\nゲームから「予定調和」を排除し、プレイヤーの試行錯誤による「創発的な遊び」を生み出すための設計思想について。\nその手段としての「徹底した疎結合・ドメイン分離」と、実現するための3つの技術的アプローチ。\n理想を追うことで直面する「バランス崩壊・認知負荷」などの強烈なトレードオフと、その現実的な解決策。\n\n\n\n はじめに\nゲーム開発において「疎結合」「コンポーネント指向」「ドメイン駆動設計」といったアーキテクチャの重要性が語られることは珍しくありません。\n保守性が上がる、再利用性が...",
+      "publishedAt": "2026-03-10T12:35:36.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "06433211d21eee550a1618887bcc12dc39f074b81bf33e4254a9667f01a832d7",
+      "title": "JAWS DAYS2026 〜まっしゅあっぷ ふぉあ ざ ふゅーちゃー〜 お祭りで盛り上がってみたレポート",
+      "url": "https://qiita.com/tarekatsu_eng/items/92dbd87adcd43fc0d800?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\nJAWS DAYS2026に参加してきたので、振り返りレポートです！！\n振り返りたいことが多かったので書きました！\nというのも、初参加・初実行委員として参加して、色々感じたことも多く、今までの思い出の中でも特に印象深い日になりました！\n\nJAWS DAYS...",
+      "publishedAt": "2026-03-10T12:34:17.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "6d5602e8b3ffa4fbc212601c63ccba07dd6eada7bfabf5da8d85cf83695edc67",
+      "title": "32GBのUSBメモリにデータを保存して6年間放置したらデータは劣化するのか？",
+      "url": "https://gigazine.net/news/20260310-usb-flash-longevity-testing/",
+      "description": "近年はデータを外部保存する際にクラウドストレージを使用する人が増えたものの、セキュリティやサービスの信頼性といった観点から、いまだに物理的なUSBフラッシュメモリを使用しているという人もいるはず。USBフラッシュメモリにデータを保存して6年間放置したらどうなるのかについて、テクノロジー系ブロガーのザック...",
+      "publishedAt": "2026-03-10T12:09:19.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "cd62f0a76ca2c92fbeeaf38ccf7d217c99c5de7ca3d9cc4ac0f5c3431d308bcb",
+      "title": "Sustaining open source in the age of generative AI",
+      "url": "https://www.cncf.io/blog/2026/03/10/sustaining-open-source-in-the-age-of-generative-ai/",
+      "description": "Open source has always evolved alongside shifts in technology. From distributed version control and CI/CD, from containers to Kubernetes, each wave of tooling has reshaped how we build, collaborate, and contribute. Generative AI seems to be...",
+      "publishedAt": "2026-03-10T11:00:00.000Z",
+      "feedName": "Cloud Native Computing Foundation"
+    },
+    {
+      "id": "5e410b9ff3ed7d15af66513c73b7dd0c3d8aaebc298d0fff6c46b413a561a933",
+      "title": "AWS re:Invent2025 GameDayで3位入賞してきた話",
+      "url": "https://qiita.com/imai_yoshihiko/items/df2b749b4811d894c761?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\nはじめまして！\n突然ですが、この記事が私の最初の投稿になるので軽く自己紹介をさせてください。私は三菱電機（株）でサービス運用技術開発に携わっているエンジニアです。最近AWSを用いた業務が多くなってきたこともあり、2025年12月ラスベガスで開催されたAWS re...",
+      "publishedAt": "2026-03-10T10:10:44.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "4f40510e0099835d3967a16100f6ee53310d83369c2c0b3ab6645eef7b2275ec",
+      "title": "クラウドストライク、「FalconID」一般提供を発表　アイデンティティセキュリティの新たな体験を実現",
+      "url": "https://enterprisezine.jp/news/detail/23905",
+      "description": "クラウドストライク（CrowdStrike）は、「FalconID」の一般提供を発表した。\n\n　FalconIDは、ゼロフリクションかつフィッシング耐性を備えた多要素認証により、CrowdStrik...",
+      "publishedAt": "2026-03-10T10:10:00.000Z",
+      "feedName": "EnterpriseZine"
+    },
+    {
+      "id": "6ea54fa7d685a457e4817ddf60a39974cffcc1acc1d7be474cbd170a9e962078",
+      "title": "DenoからBunに切り替えたらシングルバイナリが約9分の1になった",
+      "url": "https://zenn.dev/dyoshikawa/articles/deno-to-bun-single-binary",
+      "description": "@dyoshikawaです。 私が開発しているOSSツール Rulesync では、npm配布に加えてシングルバイナリ配布を行っています。Node.jsランタイムなしでも使えるようにするためです。 もともとDenoの deno compile を使ってシングルバイナリを生成していたのですが、v5.5.1でBunの bun build --compile に切り替えたところ、ファ...",
+      "publishedAt": "2026-03-10T09:52:12.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "d42f7ac1adfdc8e10d9a0b5e8a80daea8157f7e3a1abaf2825a7e117cff88632",
+      "title": "Claude Codeで「あとからIaC」— 既存AWSリソースをCloudFormationにimportする実践ガイド",
+      "url": "https://dev.classmethod.jp/articles/claude-code-aws-cloudformation-import/",
+      "description": "既存AWSリソースをCloudFormationにimportする「あとからIaC」に関する記事です。棚卸しからテンプレート作成、エラー対処までClaude Codeで効率化する実践手順を紹介します。",
+      "publishedAt": "2026-03-10T06:43:12.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "0349e16bdc41d8b0908be543d80156290b1b90e6fede92e2421b5bcb07e8db1d",
+      "title": "【ハンズオン】Azure Virtual Desktop (AVD) 環境構築と Azure Files 連携の完全ガイド",
+      "url": "https://qiita.com/kentaro_kawamura/items/9d3324cf39af50e761a4?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "Azure Virtual Desktop (以下、AVD) は、Azure 上で動作する仮想デスクトップ環境（セッションホスト）をユーザーに提供し、どこからでも安全に社内環境へアクセスできるようにするサービスです。\n本記事では、複数台の AVD 環境を構築し、さらにファイ...",
+      "publishedAt": "2026-03-10T06:42:01.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "75658f34cd1d750843f585fad92a9b6a043e3b2d7fc63fa8e74701af7968bc33",
+      "title": "【Security Hub修復手順】[APIGateway.8] API Gateway ルートには認可タイプを指定する必要があります",
+      "url": "https://dev.classmethod.jp/articles/securityhub-fsbp-remediation-apigateway-8/",
+      "description": "AWS SecurityHub 基礎セキュリティのベストプラクティスコントロール修復手順をご紹介します。",
+      "publishedAt": "2026-03-10T05:31:44.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "8c765293888713ca5f9517cdd0433de244bb2c82657581354d32ef9b5102f25a",
+      "title": "【AWS DRS】 Default replication settings を変更しても既存の Source Server に反映されない原因を教えてください",
+      "url": "https://dev.classmethod.jp/articles/tsnote-drs-security-group-not-applied-default-replication/",
+      "description": "【AWS DRS】 Default replication settings を変更しても既存の Source Server に反映されない原因を教えてください",
+      "publishedAt": "2026-03-10T04:31:18.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "7b5af78b04a169e48394f9a86308b4d3ce54422ae48b5de2560c56c091f560f8",
+      "title": "Deploy  React & Vite App ไปยัง GitHub (Host Static-Website with AWS Amplify Part. 2)",
+      "url": "https://dev.classmethod.jp/articles/deploy-react-and-vite-app-to-github/",
+      "description": "ในบทความนี้เป็นบทความและวิธีการ Deploy React+Vite App ไปยัง GitHub เพื่อทำ Host a Static Website ด้วย AWS Amplify  \nโดยเราไม่ต้อง build และ upload manual เป็นวิธีที่ประหยัดเวลาในการ deploy  วิธีหนึ่งครับ\nบทความนี้ผมได้ทำการทดลองสำเร็จและอยากเอามาแชร์ให้เพื่อนๆได้อ่านกันและทำตามครับ",
+      "publishedAt": "2026-03-10T04:25:37.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "f99b79346c89ae17c0c51edea1a40f55af7f01e52eedd365d3e9a7d40453d70d",
+      "title": "「セキュリティ専門家と同等の結果」　Microsoftが公開したAI支援の脅威分析ワークフローの中身",
+      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2603/10/news055.html",
+      "description": "MicrosoftはAIを活用して脅威レポートなどから検出インサイト（洞察）を生成するワークフローを紹介した。従来は数日から数週間かかっていた分析作業の高速化を目指す。",
+      "publishedAt": "2026-03-10T04:00:00.000Z",
+      "feedName": "＠IT"
+    },
+    {
+      "id": "a77130ae4a692b39d077a4705c4fcbfe5ef8c3e832ab6bbdbd196d8d54564969",
+      "title": "LaravelのBladeとCORS設定をAWS（S3 / API Gateway）で再現してみよう",
+      "url": "https://qiita.com/chaochire/items/9be1c47cad3913ff516e?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "こんにちは。\nソーイ株式会社1年目、村上です。\n前回LaravelのルーティングとコントローラーをAWSサービスを用いて再現しました。\n\n動作確認の際には CloudShell から値を含め送信し、構築できたか確認しました。\n今回はその記事の第2弾です。\n実際のWebア...",
+      "publishedAt": "2026-03-10T03:05:13.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "e3150d799cbf7611d4e72af1d486a48cb2b1bc8b72cafa79c256b6eb24836166",
+      "title": "散らばった E2E テストのガイドラインをリポジトリに一本化する",
+      "url": "https://zenn.dev/knowledgework/articles/0199eb40d47bc1",
+      "description": "はじめに\nこの記事は KNOWLEDGE WORK Blog Sprint 7 本目の記事になります。\nナレッジワークで新卒フロントエンドエンジニアをしている tosaken です。普段は新規プロダクト開発グループでフロントエンドの実装を担当しつつ、E2E テストの基盤整備に取り組んでいます。\nAI Agent を活用して E2Eテストを実装する際、ガイドラインは一箇所にまとまっている状態が理想的です。しかし弊社では、ガイドラインが複数のドキュメントに分散していたり、更新が反映されていない場合がありました。そのため、実装者自身もどの情報を参照すればよいか判断しづらく、AI Agent...",
+      "publishedAt": "2026-03-10T03:00:09.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "f74c1b4a0f1d90a9064a9e5411a603b7f45645e75aa6dd8f850275283c7ea8db",
+      "title": "GitHub Actions（release-please-action）でバージョン管理をやってみた",
+      "url": "https://dev.classmethod.jp/articles/github-actions-release-please-action/",
+      "description": "GitHub Actions（release-please-action）でバージョン管理をやってみた",
+      "publishedAt": "2026-03-10T02:33:42.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "0b81fe35c5246cb880f83efdabfc0ab84b121a35c9214542625eebe69499bb97",
+      "title": "【Security Hub修復手順】[EC2.4] 停止した EC2 インスタンスは指定した期間後に削除する必要があります",
+      "url": "https://dev.classmethod.jp/articles/securityhub-fsbp-remediation-ec2-4/",
+      "description": "AWS SecurityHub 基礎セキュリティのベストプラクティスコントロール修復手順をご紹介します。",
+      "publishedAt": "2026-03-10T02:06:46.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "bd1b4da8dbc5ca78c413f06f870fc19e96b62b556885e872a8c3598f76455ab4",
+      "title": "2026/03/10 今日のQiitaトレンド記事をポッドキャストで聴こう！",
+      "url": "https://qiita.com/ennagara128/items/b63a9300039dd0fc15f1?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "前日夜の最新トレンド記事のAIポッドキャストを毎日朝7時に更新しています。\n通勤中などにながら聴きしよう！\n（Qiita投稿は通勤には間に合わないと思われますが）\nフィードバックとか助かりますのでください\n↓こちらから\n\n出典\n【初心者完全版】Reactを使いこなすためのデ...",
+      "publishedAt": "2026-03-10T02:00:59.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "6e43bbd81d09ae3d270337b6f1b6d7e5460032af19e0e719750ed3a2f1f12789",
+      "title": "【Python】Pandas/Polars/duckDB/NumPyで簡単なベンチマークテストをしてみた",
+      "url": "https://qiita.com/YASUHARA-Wataru/items/f1cd5357efb2907eb11d?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\nPandasはもう古い？2026年のPythonデータ分析ライブラリを整理してみたが、思ったより伸びてしまい、ちゃんとベンチくらいやらないと申し訳ないなと思いもう一つ記事を書いておきます。\nPandas、Polars、duckDB、NumPyで簡単にベンチマーク...",
+      "publishedAt": "2026-03-09T12:54:22.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "804c1c9c0bfe2fa2bd5029772f625fa7f48d9306cfa441f8dcc8c1b092269eb5",
+      "title": "DDDにCQRSを導入する前に知っておきたいこと〜誤解しやすい4つのポイントと理想的な設計〜",
+      "url": "https://zenn.dev/135yshr/articles/9e3ec9a7d52c98",
+      "description": "本記事は私の実装経験と考察をベースにしています。各セクションの根拠となる一次情報源は、該当箇所に参照リンクを記載しています。 DDDで設計されたプロジェクトにCQRSを導入しようとすると、さまざまな疑問が出てきます。「ユースケースとCommandの違いは何か」「QueryServiceはどの層に置くのか」「リポジトリはどう...",
+      "publishedAt": "2026-03-09T12:22:01.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "3cdef6ad447c794470794e5eed53396e94450079be8297eb9f4fe04825306702",
+      "title": "「アーキテクチャモダナイゼーション」読んだ感想",
+      "url": "https://zenn.dev/mlbread/articles/c34e65a20295e7",
+      "description": "2026/2/24に発売された「アーキテクチャモダナイゼーション」を読了したのでその感想になります。和訳本で、原著の方はちょうど2年前頃にリリースされていたようです。\n書籍の紹介文引用：\n\n本書は、技術・組織・戦略を統合し、システムの価値を最大化する実践ガイドです。\n長年運用され中身がブラックボックス化したシステムや、ドキュメントが機能せず改修のたびにリスクが伴う設計。こうした技術的負債は、現代のビジネスにおいて成長を阻む大きな壁となっています。\n本書は単なるコードのリファクタリング手法ではなく、ドメイン駆動設計（DDD）やチームトポロジー、ワードレイマッピングといった定評ある手法を組み...",
+      "publishedAt": "2026-03-09T09:44:45.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "6ea54fa7d685a457e4817ddf60a39974cffcc1acc1d7be474cbd170a9e962078",
+      "title": "DenoからBunに切り替えたらシングルバイナリが約9分の1になった",
+      "url": "https://zenn.dev/dyoshikawa/articles/deno-to-bun-single-binary",
+      "description": "@dyoshikawaです。\n私が開発しているOSSツール Rulesync では、npm配布に加えてシングルバイナリ配布を行っています。Node.jsランタイムなしでも使えるようにするためです。\nhttps://github.com/dyoshikawa/rulesync\nもともとDenoの deno compile を使ってシングルバイナリを生成していたのですが、v5.5.1でBunの bun build --compile に切り替えたところ、ファイルサイズが大幅に小さくなりました。\nこの記事ではその経緯と、なぜこれほどの差が生まれるのかを掘り下げます。また、シングルバイナリ配布に...",
+      "publishedAt": "2026-03-09T09:00:05.000Z",
       "feedName": "Zenn"
     }
   ]
