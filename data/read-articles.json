@@ -1,228 +1,12 @@
 {
   "articles": [
     {
-      "id": "0366887e460fef02c55e73fc42f1bf25eb8feaf220256ce9f343ec276cf8195d",
-      "title": "GPU上の推論サーバーのパフォーマンスチューニング方法",
-      "url": "https://techblog.lycorp.co.jp/ja/20260209b",
-      "description": "この記事は、合併前の旧ブログに掲載していた記事（初出：2023年8月29日）を、現在のブログへ移管したものです。内容は初出時点のものです。こんにちは。ヤフーで画像認識技術の研究開発を担当している湛です...",
-      "publishedAt": "2026-02-09T02:00:00.000Z",
-      "feedName": "LINEヤフー Tech Blog"
-    },
-    {
       "id": "0cbf15f09cef3b689076f35383bd6bae4b31394bc461ae4a114a710f18da8f39",
       "title": "From Bathroom Rapper to Studio Flow: What I Learned After Actually Using an AI Rap Generator",
       "url": "https://dev.to/alliman_schane_462c5932ff/from-bathroom-rapper-to-studio-flow-what-i-learned-after-actually-using-an-ai-rap-generator-2530",
       "description": "A few months ago, out of pure curiosity, I started looking into AI Rap Generator tools. Not because I thought they’d turn me into a professional overnight, but because I wanted to hear my ideas outside my own head. I was skeptical. Early AI music experiments always sounded stiff and uncanny, like text-to-speech pretending to rap. But the technology has clearly moved forward. Under the hood, many of these tools rely on neural audio synthesis and transformer-based models, similar to what Google’s Magenta project has explored in music generation research. Instead of stitching together pre-recorded phrases, the models learn timing, rhythm, and emphasis from large amounts of real performances. That doesn’t mean they understand hip-hop culture—but they understand patterns well enough to be useful.\nThe first thing I learned is that this is not a “press one button and get fire” situation. Garbage lyrics still produce garbage results. Structure still matters. When I fed in unfocused verses, the output sounded generic and lifeless. The experience only started to click when I treated the AI like an instrument instead of a replacement. I’d write a verse the way I normally do, then listen to how the AI interpreted the cadence. Sometimes it emphasized words in places I wouldn’t have chosen, landing on off-beats that gave the verse a more modern bounce. Other times it completely missed the vibe, and I had to tweak parameters like energy or pacing multiple times before anything usable came out. A lot of outputs were simply discarded.\nOver one weekend, I tested a few different tools just to understand the landscape. Some focused heavily on vocal texture, others leaned more toward rhythmic flow. I also tried Freemusic AI during this process, mostly to experiment with backing elements and see how different rap styles—boom-bap versus trap—were handled. I didn’t stick with one platform exclusively, and honestly, none of them felt “finished” on their own. But together, they helped me hear my writing from a new angle. That was the real value.\nWhat surprised me most wasn’t the quality of the AI’s voice, but how useful it was as a reference. I started using generated verses as demo tracks, listening to them while driving or walking, internalizing the rhythm before recording my own vocals. It made practice more efficient. From a technical perspective, this recent jump in quality makes sense. Newer models handle long-term structure better, paying attention to how earlier rhymes relate to later ones instead of treating every line in isolation. If you’ve ever read about attention mechanisms in transformers, you’ll recognize why that matters for rap flow.\nIs this “real” hip-hop? I don’t think that’s the right question. Hip-hop has always evolved alongside technology—from turntables to samplers to DAWs. An AI Rap Generator doesn’t replace lived experience, taste, or intent. It doesn’t know why a line matters to you. But as a tool for sketching ideas, testing flow, or lowering the barrier between writing and listening, it’s genuinely useful. For me, it didn’t kill creativity—it exposed weak spots in my own delivery and helped me practice with more focus.\nIf you’re curious about trying this space out, my advice is simple: write your own bars, expect a lot of unusable outputs, and treat AI as a collaborator, not a shortcut. Respect the human artists whose work trained these systems, and don’t mistake technical polish for authenticity. Used thoughtfully, these tools won’t make you famous—but they might help you finally hear your ideas the way you imagined them in the shower.",
       "publishedAt": "2026-02-10T02:18:34.000Z",
       "feedName": "Dev.to"
-    },
-    {
-      "id": "1b744473e9f4b6d30b4fa1f599232fececacdc18ffd0842c2e5d0a3d2ab2002c",
-      "title": "コミュニティと共に成長する実践的なセキュリティ知識、LINE CTF",
-      "url": "https://techblog.lycorp.co.jp/ja/20260210a",
-      "description": "こんにちは。セキュリティエンジニアのSEOK KI YEOです。LINEヤフー株式会社は、2021年から毎年、グローバルセキュリティ技術大会であるLINE CTFを開催しています。LINE CTFは、...",
-      "publishedAt": "2026-02-10T02:00:00.000Z",
-      "feedName": "LINEヤフー Tech Blog"
-    },
-    {
-      "id": "e92be7f882223db04062557c7807b3eafc426f07a5a9a40bc0ef1abe9e2a46a5",
-      "title": "OpenAI、「ChatGPT」無料・低価格プランに広告　米国でテスト開始",
-      "url": "https://japan.cnet.com/article/35243719/",
-      "description": "OpenAIは数週間の予告期間を経て、米国で「ChatGPT」に広告を表示するテストを開始した。",
-      "publishedAt": "2026-02-10T01:22:00.000Z",
-      "feedName": "CNET Japan"
-    },
-    {
-      "id": "85e13c241d40feafdbc72d7b9c45bcefb8e2a21631536bdae6358577745ca848",
-      "title": "Why I keep a personal work log even when the team has a task tracker",
-      "url": "https://dev.to/iamantonreznik/why-i-keep-a-personal-work-log-even-when-the-team-has-a-task-tracker-5e64",
-      "description": "In every project, I keep a simple table for myself: plans for the week/sprint and what I actually got done. Even when the team has a task tracker and everything is logged there\nWhy? This kind of log gives management visibility into my workload and hours if needed, but it helps me in other ways:\nLast year I joined a development team to help with DevOps tasks and, as usual, started keeping this table. For the team, it was only useful for tracking my work hours, but it helped me see my accomplishments over time\nIn the moment, almost every task felt like routine work. Only looking back at the table helped me notice something worth paying attention to: in my first three weeks on the team, while onboarding on my own, I managed to build things the team still uses after I left\nIn those first three weeks, I created a modular CI/CD pipeline template from scratch and made it the company standard - a catalog of separate actions that can be assembled like building blocks with parameters, where developers just need to fill in a short list of variables for their project\nDuring the same time, I also introduced and established the practice of recording architectural decisions (ADRs) for infrastructure and DevOps tasks, plus templates for standard projects across different languages and frameworks\nSo I recommend this method to others - keep your own activity log. Tasks in a tracker can get visually lost among all the tasks, sprints, and columns. Some real work might not even make it into the tracker. But your own log, even though it takes some extra time, stays with you and highlights your actual work\nIn the end, it turns into a conversation backed by data",
-      "publishedAt": "2026-02-10T01:20:43.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "e0577bce08814a5d9d01c3a300105819eae27fc5f5635cccf63418c971ffa910",
-      "title": "【無料開催】日本企業が狙われるサイバー脅威、クラウドストライクが提唱する次世代セキュリティとは？",
-      "url": "https://enterprisezine.jp/news/detail/23697",
-      "description": "EnterpriseZine編集部は3月17日（火）、オンライン配信イベント「Security Online Day 2026 Spring」を開催します。\n\n\n\n　16回目の開催を迎えた今回は、「...",
-      "publishedAt": "2026-02-10T01:11:00.000Z",
-      "feedName": "EnterpriseZine"
-    },
-    {
-      "id": "9e8b864c3f7deca3d07c6c5b08278befded4936547becef7863a364bd5b26242",
-      "title": "Day 9 of 100 Days of Code — Understanding the React Context API",
-      "url": "https://dev.to/m_saad_ahmad/day-9-of-100-days-of-code-understanding-the-react-context-api-2198",
-      "description": "If you’ve spent some time working with React, you’ve probably heard about the Context API but may not have fully understood when or why to use it. The Context API is a built-in feature of React that allows data to be shared across components without having to pass props through every level of the component tree. It becomes particularly useful in situations where multiple components need access to the same data, such as theme settings, authentication status, or app-wide configurations. Learning for Day 9, the idea was to understand the Context API, an essential tool for building clean, maintainable React applications and avoiding the complexities of prop drilling in larger projects.\nExactly Is the React Context API?\n\n\nThe Context API is a built-in React feature that allows you to share data across your component tree without having to manually pass props down through every level.\nThink of it as:\n“A centralized, React-native way to manage shared state or shared values across deeply nested components.”\nIt removes the need for prop-drilling — that messy situation where a value must be passed through many components that don’t even use it.\nProps are fantastic for parent-to-child communication. But they fall short when:\nA value is needed by many deeply nested components\nYou are forced to pass the same prop five layers deep\nComponents become tightly coupled because of unnecessary prop passing\nThis is called prop drilling, and it quickly becomes hard to manage — even in medium-sized apps.\nContext API solves this by allowing components to skip the chain and access shared values directly.\nContext shines when you have global-ish values—things many components might need:\nAuthentication/user data\nTheme (dark/light)\nLanguage preferences\nShopping cart state\nApp-level settings\nUI states like modals or toasts\nIf the data must be accessed by multiple siblings, nested or unrelated components, Context API is the cleanest and most scalable approach.\nA Context usually includes:\nCreating a context\nWrapping your app (or part of it) with a provider\nPassing values to the provider\nConsuming those values anywhere\nProviders act like a data broadcasting station — any component listening to them can instantly receive the state.\nConsider a real use case:\nYou want to toggle light and dark mode, and multiple components need to know the current theme.\nPassing theme as a prop everywhere?\nStep 1: Create the Theme Context\n\n\n\n\n\n// ThemeContext.js\nimport { createContext } from \"react\";\n\nexport const ThemeContext = createContext();\n\nWhat’s happening here?\ncreateContext() creates a new Context object.\nIt will store and share theme-related data across the app.\nStep 2: Build a Theme Provider\n\n\n\n\n\n// ThemeProvider.js\nimport { useState } from \"react\";\nimport { ThemeContext } from \"./ThemeContext\";\n\nexport const ThemeProvider = ({ children }) => {\n  const [theme, setTheme] = useState(\"light\");\n\n  const toggleTheme = () =>\n    setTheme((prev) => (prev === \"light\" ? \"dark\" : \"light\"));\n\n  return (\n    <ThemeContext.Provider value={{ theme, toggleTheme }}>\n      {children}\n    </ThemeContext.Provider>\n  );\n};\n\nExplanation:\ntheme state is stored here.\ntoggleTheme updates the theme.\nThe value prop exposes the shared data to all children.\nEvery nested component can now read theme directly — not through props.\nStep 3: Wrap Your App with the Provider\n\n\n\n\n\n// App.jsx\nimport { ThemeProvider } from \"./ThemeProvider\";\nimport Home from \"./Home\";\n\nexport default function App() {\n  return (\n    <ThemeProvider>\n      <Home />\n    </ThemeProvider>\n  );\n}\n\nNow every component inside <Home /> has access to theme data.\nStep 4: Consume the Context Anywhere\n\n\n\n\n\n// Home.jsx\nimport { useContext } from \"react\";\nimport { ThemeContext } from \"./ThemeContext\";\n\nexport default function Home() {\n  const { theme, toggleTheme } = useContext(ThemeContext);\n\n  return (\n    <div style={{ padding: 20 }}>\n      <h1>Current Theme: {theme}</h1>\n      <button onClick={toggleTheme}>Toggle Theme</button>\n    </div>\n  );\n}\n\nWhat’s happening here:\nuseContext(ThemeContext) pulls data directly from the provider.\nNo props. No drilling. No unnecessary pass-throughs.\nClean. Direct. Easy to maintain.\nTypeScript makes Context safer by ensuring the shape of your context is always correct.\nStep 1: Define the Type\n\n\n\n\n\ntype ThemeContextType = {\n  theme: \"light\" | \"dark\";\n  toggleTheme: () => void;\n};\n\nStep 2: Create a Typed Context\n\n\n\n\n\nimport { createContext } from \"react\";\n\nexport const ThemeContext = createContext<ThemeContextType | null>(null);\n\nStep 3: Provide Typed Values\n\n\n\n\n\nexport const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({\n  children,\n}) => {\n  const [theme, setTheme] = useState<\"light\" | \"dark\">(\"light\");\n\n  const toggleTheme = () =>\n    setTheme((t) => (t === \"light\" ? \"dark\" : \"light\"));\n\n  return (\n    <ThemeContext.Provider value={{ theme, toggleTheme }}>\n      {children}\n    </ThemeContext.Provider>\n  );\n};\n\nStep 4: Safely Consume the Context\n\n\n\n\n\nconst ctx = useContext(ThemeContext);\nif (!ctx) throw new Error(\"ThemeContext must be used under ThemeProvider\");\n\nconst { theme, toggleTheme } = ctx;\n\nThis ensures full type-safety and prevents runtime errors.\nContext API is used to share data across components without prop drilling.\nIt is ideal for state that many components need (auth, theme, settings).\nDo not use it for every tiny piece of state; props still work great for simple parent-child communication.\nContext becomes necessary when data is accessed by deep or unrelated components.\nProvider patterns allow clean state broadcasting and decoupled architecture.\nTyping Context in TypeScript improves safety, autocompletion, and debugging.\nUsing the Context API helps keep React applications organized and state management clean, especially in larger projects. By sharing data efficiently across components, it reduces unnecessary prop drilling and simplifies maintenance. Mastering Context ensures that state is managed responsibly, making your code more scalable and easier to work with.\nHappy coding!",
-      "publishedAt": "2026-02-10T01:08:51.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "d296b98c99271c9d7036c0309688935b82c2d4acbadbfd3a036f745f37aff837",
-      "title": "[アップデート] Amazon EC2 Capacity Blocks for ML が AWS RAM によるクロスアカウント共有に対応しました",
-      "url": "https://dev.classmethod.jp/articles/amazon-ec2-capacity-blocks-for-ml-cross-account-sharing-via-aws-ram/",
-      "description": "[アップデート] Amazon EC2 Capacity Blocks for ML が AWS RAM によるクロスアカウント共有に対応しました",
-      "publishedAt": "2026-02-10T00:42:28.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "58bfc13465e07bfaeff224a7b722459c7b6b56f5dc261d6920d895281b87e03d",
-      "title": "AWS Lambda と Amazon DynamoDB を使用したクロスアカウントストリーム処理の簡素化",
-      "url": "https://aws.amazon.com/jp/blogs/news/simplify-cross-account-stream-processing-with-aws-lambda-and-amazon-dynamodb/",
-      "description": "本記事は 2026 年 02 月 09 日 に公開された “Simplify cross-acco […]",
-      "publishedAt": "2026-02-10T00:03:56.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "fcb538f9d0b5faa753f609659c4f842ee13f0826aa21457650dcd8683940e8c1",
-      "title": "DJIドローン開発Tips - カスタムペイロードデバイスの Application Binding",
-      "url": "https://developer.mamezou-tech.com/robotics/solar-panel-clean-robot/dji-drone-psdk-application-binding/",
-      "description": "はじめに\n#\n豆蔵では太陽光発電パネルの清掃ロボットシステムの開発に取り組んでいます。\n本システムでは太陽光発電パネルを清掃するロボットとロボットを搬送するドローンで構成されています。本記事では、ドローン側の開発技術である Payload SDK における Application Binding について紹介します。\nPayload SDK については以下の記事でもご紹介していますので併せて参照して下さい。\nhttps://developer.mamezou-tech.com/robotics/solar-panel-clean-robot/dji-drone-psdk-introduction/\n\n\nApplication Binding について\n#\n一部の機体ではペイロードデバイスを使用する前に Application Binding という以下の手順が必要となります。\n機体とペイロードデバイスを接続し Payload SDK で開発されたアプリケーションを起動する\n\nPayload SDK の初期化シーケンスで機体とのバインド待ちとなる\n機体とPCを接続し DJI Assistant 2 を起動する\n\nバインド待ちとなっているペイロードデバイスの一覧が表示される\nDJI Assistant 2 で機体とペイロードデバイスをバインドする\n\nSDK の初期化シーケンスで機体が応答を返すようになり SDK の API を利用可能となる\nバインドしたペイロードデバイスの情報は機体内に永続化され、以降は対象のペイロードデバイスを使用可能となります。\nApplication Binding が必要な機体\n#\n以下は、現行機体が提供している拡張ポートの一覧です。Standard Hardware Port Introduction より抜粋。\nAircraft\nPort Name\nSupports App Binding\n\n\n\n\nFlyCart 100\nE-Port Lite\n–\n\n\nFlyCart 30\nE-Port Lite\n–\n\n\nMatrice 4D/4TD\nE-Port, E-Port Lite\n✓\n\n\nMatrice 4E/4T\nE-Port, E-Port Lite\n✓\n\n\nMatrice 3D/3TD\nE-Port, E-Port Lite\n–\n\n\nMatrice 30/30T\nE-Port\n–\n\n\nMavic 3E/3T\nE-Port\n–\n\n\nM400\nE-Port V2\n✓\n\n\nM350 RTK\nE-Port\n–\n\n\nM350 RTK\nGimbal Port\n✓\n\n\nM300 RTK\nOSDK Port\n–\n\n\nM300 RTK\nGimbal Port\n✓\n\n\n\nSupports App Binding にチェックが入っている機体の拡張ポートに対してペイロードデバイスを接続する場合はバインドが必要です。\nE-Port、E-Port V2、Gimbal Portで接続するペイロードデバイスが対象ですが、Matrice 系では\nSDK 認証チップ\n#\nバインドするサードパーティ製のペイロードデバイスには DJI SDK 認証チップ（略称 DJI SDK CC）を取り付ける必要があります。\nDJIストア から50個セットのものを購入できます。\n以下の写真のパッケージングされた細長いシート状のものが購入した認証チップです。\n\n認証チップは機体とサードパーティ製ペイロードデバイス間の通信を認証・暗号化するハードウェアセキュリティモジュールです。\nこの認証チップにより機体側が各ペイロードデバイスを識別可能となり、バインド済のペイロードデバイスの情報（認証チップの情報）が機体内に永続化されます。\nこのチップはサードパーティ向けに提供されているものですが DJI製のペイロードデバイスにも同様の認証チップ或いはこれに準ずる仕組みが組み込まれているものと思います。\nSDK 認証チップの接続\n#\nSDK Certified Chip Quick Start に Raspberry Pi 4B を対象とした接続例が記載されていますので、これをベースに解説致します。\nSDK 認証チップのインターフェイス\n#\n認証チップは I²C インターフェースでホスト（ Raspberry Pi ）と通信します。\n下図は認証チップのピン配置です。\n\nVCC: 電源入力ピン（動作電圧範囲: 1.62 V - 5.5 V）\nGND: グランドピン\nNRST: 外部リセットピン\nI2C_SCL: I²Cバスインターフェースピン（Serial Clock Line）\nI2C_SDA: I²Cバスインターフェースピン（Serial Data Line）\nチップのパッケージタイプは DFN8 2x3 です。\n\nSDK 認証チップと Raspberry Pi の接続\n#\nRaspberry Pi の 40-pin GPIO header のピンと認証チップを接続します。\n\n認証チップと GPIO のピン対応は以下のとおりです。\n認証チップ\nGPIO\n\n\n\n\n1pin(7816IO)\n(NC)\n\n\n2pin(Vcc)\n1pin(3.3V power)\n\n\n3pin(7816CLK)\n(NC)\n\n\n4pin(GND)\n9pin(Ground)\n\n\n5pin(I2C_SDA)\n3pin(GPIO2:SDA)\n\n\n6pin(NC)\n(NC)\n\n\n7pin(I2C_SCL)\n5pin(GPIO3:SCL)\n\n\n8pin(NRST)\n7pin(GPIO4:GPCLK0)\n\n\n9pin(GND)\n9pin(Ground)\n\n\n\nデバイスツリーで I²C を有効化した後に i2cdetect コマンドなどで I²C のアドレスが表示されればOKです。\n以下の例だと認証チップに割り当たっているデバイスは /dev/i2c-1 です。\n$ ls /dev/i2c-*\n/dev/i2c-1  /dev/i2c-20  /dev/i2c-21\n\n\n  \n\n認証チップの Vcc に 3.3V が給電されただけでは反応しません。\n$ sudo i2cdetect -y 1\n     0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f\n00:                         -- -- -- -- -- -- -- -- \n10: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- \n20: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- \n30: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- \n40: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- \n50: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- \n60: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- \n70: -- -- -- -- -- -- -- --\n\n\n  \n\n以下のように GPIO4（認証チップの NRST と接続）を LOW にして HIGH にすると認証チップがリセットされ、I²C アドレス 0x2a が検出されます。\n$ sudo gpioset gpiochip0 4=0\n$ sudo i2cdetect -y 1\n     0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f\n00:                         -- -- -- -- -- -- -- -- \n10: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- \n20: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- \n30: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- \n40: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- \n50: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- \n60: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- \n70: -- -- -- -- -- -- -- --                         \n\n$ sudo gpioset gpiochip0 4=1\n$ sudo i2cdetect -y 1\n     0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f\n00:                         -- -- -- -- -- -- -- -- \n10: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- \n20: -- -- -- -- -- -- -- -- -- -- 2a -- -- -- -- -- \n30: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- \n40: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- \n50: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- \n60: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- \n70: -- -- -- -- -- -- -- --\n\n\n  \n\n\nDJIのデベロッパーセンターで Payload SDK アプリケーションを登録する\n#\nバインドする前に Payload SDK アプリケーションを DJIのデベロッパーセンター で登録する必要があります。\nアプリケーションの情報を入力します。\n\nアプリケーションの登録後に Send Email を押下するとアクティベーションのインビテーションメールが送信されます。\n\nメールのリンク先を開くとアクティベーションが完了し ID や KEY が表示されます。\n\nページに記載されている通り、登録したアプリケーションに対してバインドできるペイロードデバイスは最大で20台までです。\nApplication Verification のページで会社の説明やペイロードデバイスのテストレポートなど様々な書類を用意して審査が完了すると、台数の制約が解除されます。開発初期にはこの台数の制約は問題になりませんが、ペイロードデバイスを量産するフェーズではテストレポートを用意して申請しましょう。\n\nPayload SDK アプリケーションの設定\n#\nここでは Payload SDK の Raspberry Pi 向けのサンプルアプリケーションを例にして SDK への設定内容を説明します。\nDJIのデベロッパーセンターで登録したアプリケーション情報を以下のファイルへ設定します。\nPayload-SDK/samples/sample_c++/platform/linux/raspberry_pi/application/dji_sdk_app_info.h\n/* Exported constants --------------------------------------------------------*/\n// ATTENTION: User must goto https://developer.dji.com/user/apps/#all to create your own dji sdk application, get dji sdk application\n// information then fill in the application information here.\n#define USER_APP_NAME               \"your_app_name\"\n#define USER_APP_ID                 \"your_app_id\"\n#define USER_APP_KEY                \"your_app_key\"\n#define USER_APP_LICENSE            \"your_app_license\"\n#define USER_DEVELOPER_ACCOUNT      \"your_developer_account\"\n#define USER_BAUD_RATE              \"460800\"\n\n\n  \n\n\n\n\n定数名\n説明\n例\n\n\n\n\nUSER_APP_NAME\nDJIのデベロッパーセンターの登録情報の App Name が対応します\nDockingControl\n\n\nUSER_APP_ID\nDJIのデベロッパーセンターの登録情報の App ID が対応します\n（省略）\n\n\nUSER_APP_KEY\nDJIのデベロッパーセンターの登録情報の App Key が対応します\n（省略）\n\n\nUSER_APP_LICENSE\nDJIのデベロッパーセンターの登録情報の App Basic License が対応します\n（省略）\n\n\nUSER_DEVELOPER_ACCOUNT\nDJIのデベロッパーセンターのアカウント名です\nmasayuki-kono\n\n\n\nサンプルアプリケーションを起動して以下のログが延々と出力されれば OK です（バインド待ちの状態です）。\n[Error]\tdji_auth_sha256_rsa_verify.c:137  The DJI SDK CC has not binded. Please check the bind state of the DJI SDK CC and bind it.\n\n\n  \n\n -->\n Information\nRaspberry Pi 向けのサンプルコードはメンテナンスされていないようで、そのままでは以下のようなエラーが出力されて認証チップと通信に失敗します。\nConnect DJI SDK CC device failed, errno: 0x30000002\n\n\n  \n\nアドレス 0x2A への書き込みで ioctl(I2C_RDWR) が -1 を返し、スレーブが ACK を返していないのが原因です。\nHalI2c_ResetDevice() で GPIO4 を LOW→25ms→HIGH とリセットした直後に、即座にデバイスを開いて書き込みしています。チップがリセットから復帰しきる前に初回トランザクションが走っているのが原因と考えられます。リセット解放後、チップが I²C に応答できるまでに必要な待ち時間が不足しているようなので、リセット解放後 50ms 待ってから I²C アクセスを行うように変更して改善しました。\nPayload SDKをフォークしたリポジトリ に修正したコードをアップしていますので参考にして下さい。デバッグログの出力も追加しているのでどのようなデータをチップと送受信しているか観測すると理解が深まると思います。\n機体とペイロードデバイスを接続する\n#\n今回は Matrice 4E を使用しました。\n各機器の接続イメージは以下の通りです。\n\nMatrice 4E\n\nApplication Binding で使用する機体\nPC\n\nDJI Assistant 2 の動作環境\nDJI Assistant 2 は機体によってバリエーションがあり Matrice 4E の場合は Enterprise Series を使用する\nDJI Assistant 2 は DJI のクラウドサービスと通信するためインターネットに接続する必要がある\nE-Port Development Kit\n\n機体とペイロードデバイスを接続するためのアダプタボード\nUART-USB Adapter\n\n今回は FTDI のUART-USB変換アダプタを中継\nRaspberry Pi のGPIO（UART ピン）へ直接接続する場合は不要\nRaspberry Pi\n\nPayload SDK アプリケーションの動作環境\nDFN8 Breakout Adapter\n\nDFN8（2×3 mm）パッケージの表面実装ICを DIP8 互換ピン配置に変換するためのブレークアウトアダプタ\nSDK Certified Chip\nE-Port Development Kit\n#\nDevelopment Kit の基盤上に E-Port switch というディップスイッチがあり、これを ON にして UART の出力を有効にします。\nUSB ID switch(Device|Host) のディップスイッチは、USB で RNDIS や Bulk 転送する場合に Host を設定する必要があります。今回は UART のみを使用するため、設定不要（どちらでも良い）です。\n\nE-Port のコネクタはHW的にはリバーシブルですが、機体の E-Port コネクタと Development Kit を接続する際に機体側と開発キット側のコネクタの向きに指定があります。\nConnect Development Board to E-Port からの抜粋です。\nNote: The E-Port coaxial USB-C cable doesn't have a foolproof design, allowing A/B side to be reversibly connected.\nDue to pin layout differences in the aircraft's USB-C, if the coaxial cable is reversed, the other end also needs to be flipped correspondingly.\nIf not flipped correspondingly, the E-Port Development Kit can not power up and communicate.\n\n\n  \n\n以下の写真のようにコネクタに A/B が印字されており、機体側が A なら開発キット側は B 、機体側が B なら開発キット側は A のようにフリップする必要があります。\n\nDJI のページの記載では、どの向きが正しいのか判断できないため、結局、どちらも試して動作する向きを特定しました（写真は動作した時の組み合わせです）。\nApplication Binding を行う\n#\nPayload SDK アプリケーションから以下のログが延々と出力される状態（バインド待ち）にします。\n[Error]\tdji_auth_sha256_rsa_verify.c:137  The DJI SDK CC has not binded. Please check the bind state of the DJI SDK CC and bind it.\n\n\n  \n\nこの状態で 機体と E-Port Lite で接続した PC 上で DJI Assistant 2 を開くと Payload SDK メニューに以下が表示されます。\n\nBind ボタンを押下すると、バインドが完了します。\n\nバインドが完了すると、サンプルアプリケーションの起動時のログは以下のようになります。\n0.016\t            core\t[Info]\t               dji_core.c:113  Payload SDK Version : V3.15.0-beta.0-build.2318 Dec 10 2025 17:27:05\n1.075\t         adapter\t[Info]\t     dji_access_adapter.c:351  Identify mount position type is Extension Port Type\n1.075\t         adapter\t[Info]\t     dji_access_adapter.c:371  Identify aircraft series is Matrice 4 Series\n1.578\t         adapter\t[Info]\t     dji_access_adapter.c:493  Identity uart0 baudrate is 921600 bps\n1.582\t            core\t[Info]\t    dji_identity_verify.c:627  Updating dji sdk policy file...\n2.582\t            core\t[Info]\t    dji_identity_verify.c:635  Update dji sdk policy file successfully\n2.627\t            core\t[Info]\t               dji_core.c:261  Identify AircraftType = Matrice 4E, MountPosition = Extension Port, SdkAdapterType = None\n2.748\t            auth\t[Info]\t        dji_sdk_cc_auth.c:86   Get DJI SDK CC serial num: 99PDN73EUB13J3\n4.812\t          linker\t[Warn]\t            dji_command.c:1025 <0xd5d0>Command async send retry: index = 0, retryTimes = 1, 0x0A06->0x0F01(0x002F) 0x3C13\n5.945\t          linker\t[Warn]\t            dji_command.c:910  Received invalid ack,<0xd5d0> 0x0F01(0x002F)->0x0A06(0x00CA) 0x3C13\n6.322\t         adapter\t[Info]\t    dji_identity_verify.c:257  the license level is basic\n6.322\t            core\t[Info]\t       dji_product_info.c:187  Set alias: PSDK_APPALIAS\n6.942\t            user\t[Info]\t            test_widget.c:141  widget file: /home/dev/DockingController/third_party/Payload-SDK/samples/sample_c/module_sample/widget/widget_file/en_big_screen\n6.952\t            user\t[Info]\t    test_widget_speaker.c:594  Set widget speaker volume: 60\n6.952\t            user\t[Warn]\t    test_widget_speaker.c:613  No audio device found, please add audio device and init speaker volume here!!!\n12.455\t            core\t[Info]\t               dji_core.c:328  Start dji sdk application\n12.455\t            user\t[Info]\t          application.cpp:372  Application start.\n\n| Available commands:                                                                              |\n| [0] Fc subscribe sample - subscribe quaternion and gps data                                      |\n| [1] Flight controller sample - you can control flying by PSDK                                    |\n| [2] Hms info manager sample - get health manger system info by language                          |\n| [a] Gimbal manager sample - you can control gimbal by PSDK                                       |\n| [c] Camera stream view sample - display the camera video stream                                  |\n| [d] Stereo vision view sample - display the stereo image                                         |\n| [e] Run camera manager sample - you can test camera's functions interactively                    |\n| [f] Start rtk positioning sample - you can receive rtk rtcm data when rtk signal is ok           |\n| [g] Request Lidar data sample - Request Lidar data and store the point cloud data as pcd files   |\n| [h] Request Radar data sample - Request radar data                                               |\n| [l] Run widget states manager sample, control widget states on other payload                     |\n\n\n  \n\n -->\n Information\nI²C への読み書きする hal_i2c.c で通信データをログ出力すると分かりますが、SDK は初期化完了後も周期的に認証チップと通信しており、毎回異なるデータを送受信しています。\n公式のプロトコル仕様は公開されていないため以下は推測ですが、チャレンジ・レスポンス型の認証として次のような流れと考えられます。\n機体 → 認証チップ: チャレンジデータ送信（ランダム値やタイムスタンプを含む）\n認証チップ → 機体: 署名済みレスポンス返送（認証チップ固有の秘密鍵を使用）\n機体側が認証チップの公開鍵で署名を検証\nこれによりサードパーティが販売したペイロードデバイスを機体が正規のものとして識別でき、バインド済みのデバイスのみが Payload SDK を利用可能になっているようです。\nバインド完了後に、DJIのデベロッパーセンターを開くと 1 Payloads が表示されカウントが増えていることが確認できるはずです。\n\nまとめ\n#\nApplication Binding は Matrice 4E/4T（2025年1月発売）以降で登場した比較的新しい仕様です。\n本記事では、Application Binding が必要な機体の一覧、SDK 認証チップの接続方法（Raspberry Pi を例に）、デベロッパーセンターでのアプリケーション登録を説明しました。\nApplication Binding は今後発売される機体では標準となる可能性が高いです。\nカスタムペイロードの開発に取り組まれる方は、本記事を手がかりにぜひ試してみてください。",
-      "publishedAt": "2026-02-10T00:00:00.000Z",
-      "feedName": "豆蔵デベロッパーサイト"
-    },
-    {
-      "id": "0769f3f93e46e5fd13a708a230839e1cfe771cb9ac9efaa523ffa6b5d61985e8",
-      "title": "ランサムウェア対策のための Azure Backup + Recovery Services の不変コンテナー設定を確認してみた",
-      "url": "https://dev.classmethod.jp/articles/azure-backup-imutable-container/",
-      "description": "ランサムウェア対策のための Azure Backup + Recovery Services の不変コンテナー設定を確認してみた",
-      "publishedAt": "2026-02-09T14:07:18.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "127818058a34c75568dbb33e375fe25b7369a6827b6b3fa3274fe316e37cf625",
-      "title": "モーダルやツールチップで役立つ! HTMLのcommandとinterestfor属性を使って、JSを減らすスマートなUI開発 - ICS MEDIA",
-      "url": "https://ics.media/entry/260209/",
-      "description": "モーダルやツールチップで役立つ! HTMLのcommandとinterestfor属性を使って、JSを減らすスマートなUI開発 HTMLとCSSは進歩していますが、以前はJavaScriptが必須だった機能も、今ではHTMLとCSSだけで実現できることも増えています。HTMLの新属性command属性とcommandfor属性、そしてinterestfor属性を使うとダイアログや...",
-      "publishedAt": "2026-02-09T13:21:23.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "637d69ec9432233748963fa9956b1b6b7414e749d7b09c8395210562db11c9ba",
-      "title": "Cluster API v1.12: Introducing in-place updates and chained upgrades",
-      "url": "https://www.cncf.io/blog/2026/02/09/cluster-api-v1-12-introducing-in-place-updates-and-chained-upgrades/",
-      "description": "Cluster API brings declarative management to Kubernetes cluster lifecycle, allowing users and platform teams to define the desired state of clusters and rely on controllers to continuously reconcile toward it. Similar to how you can use...",
-      "publishedAt": "2026-02-09T12:00:00.000Z",
-      "feedName": "Cloud Native Computing Foundation"
-    },
-    {
-      "id": "96ce0286ac0973ebccdddb6b75a77e1728e4ebede2fdfe58f8a673791b36900a",
-      "title": "週刊AWS – 2026/2/2週",
-      "url": "https://aws.amazon.com/jp/blogs/news/aws-weekly-20260202/",
-      "description": "CloudFront が相互 TLS サポート開始、Multi-party approval で OTP 認証が必須に、STS が外部 IdP の詳細クレーム検証に対応、Lightsail でメモリ最適化インスタンス提供開始、SageMaker JumpStart で DeepSeek OCR など 3 モデル追加、IAM Identity Center が複数リージョン対応、Management Console でアカウント名表示が可能に、DynamoDB グローバルテーブルが複数アカウント間レプリケーション対応、EC2 と VPC でセキュリティグループの関連リソース表示、Bedrock で構造化出力が利用可能に、Claude Opus 4.6 が Bedrock で利用可能に、WorkSpaces が Graphics G6/Gr6/G6f バンドル開始、Network Firewall が新たな料金削減を発表、Bedrock AgentCore Browser がブラウザプロファイルをサポート開始等",
-      "publishedAt": "2026-02-09T10:51:13.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "4baa6a5622499e2ba754d23253a44af63af69b6e45d965510ed6534df6c47897",
-      "title": "無料で広告なし・ログイン不要のYouTube再生ができるAndroidアプリ「FreeTube Android」",
-      "url": "https://gigazine.net/news/20260209-freetube-android/",
-      "description": "Googleアカウントにログイン不要で広告なしで動画を無料で視聴できるYouTube専用プレイヤーである「FreeTube」からフォークして誕生したAndroidアプリが「FreeTube Android」です。GoogleによるCookieやJavaScriptを使ったトラッキングから解放されプライバシーの保たれた環境でYouTubeを再生できるFreeTubeのメリットは...",
-      "publishedAt": "2026-02-09T08:32:42.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "3536e96aa60fb12beb1574c17e4ecb71e9db8a1b492c2b250ee4f750c73955f5",
-      "title": "【寄稿】CO2 排出量可視・削減サービス「e-dash」化を支えるサーバーレスアーキテクチャと IaC 戦略",
-      "url": "https://aws.amazon.com/jp/blogs/news/e-dash-serverless-architecture-and-iac-strategy/",
-      "description": "こんにちは、AWS ソリューションアーキテクトの松本 敢大です。 本日は、三井物産発の環境系スタートアップである e-dash 株式会社様が提供する CO2 排出量可視化・削減サービスプラットフォーム「e-dash」のシステム構築事例をご紹介します。e-dash 株式会社 プロダクト開発部部長の佐藤様、プロダクト開発部の伊藤様、竹内様に、AWS を活用したモダンなアプリケーション開発の取り組みについてお話を伺いました。",
-      "publishedAt": "2026-02-09T08:13:31.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "e02629d53cae175e3646b6144c4c1e78736407a2c52b21504a885b3d9827df80",
-      "title": "週刊生成AI with AWS – 2026/2/2 週",
-      "url": "https://aws.amazon.com/jp/blogs/news/weekly-genai-20260202/",
-      "description": "週刊生成AI with AWS、AI-DLCと実用化事例が充実の2026年2月3日週号 - 11社合同AI-DLC Unicorn Gymの開催報告、熊本中央病院様の生成AI環境構築事例を紹介。また、KiroでのOpus 4.6対応、AIを活用したゲーム制作、AWS DevOps Agent開発の教訓、オブザーバビリティエージェント、フィジカルAI、鉄道技術展出展報告などのブログ記事も。サービスアップデートではClaude Opus 4.6のBedrock対応、Structured Outputs、Browser Profiles、SageMaker JumpStartでの新モデル追加をはじめとする8件のアップデートを紹介。",
-      "publishedAt": "2026-02-09T07:07:25.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "f095688ea2c01438746f926ccf70d9464279c25c8abaa45c7ff07c14395a8b01",
-      "title": "AWS上にObservability検証環境を構築してみた（AMG + CloudWatch + X-Ray）",
-      "url": "https://dev.classmethod.jp/articles/aws-o11y-amg-cloudwatch-xray/",
-      "description": "AWS上にObservability検証環境を構築してみた（AMG + CloudWatch + X-Ray）",
-      "publishedAt": "2026-02-09T05:53:55.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "d652f61f43f00222cb8d90f07d07075d4b1aaf060e9fd17d3e03208fd6a5475a",
-      "title": "複数の EC2 インスタンスに同一のセキュリティグループを一括で追加してみた",
-      "url": "https://dev.classmethod.jp/articles/ec2-add-sg-multiple-instances/",
-      "description": "複数の EC2 インスタンスに同一のセキュリティグループを一括で追加してみた",
-      "publishedAt": "2026-02-09T05:33:23.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "b5d25c118c35a8cc8b065cec4af29ec9b19c41e1dfda54bf472e86c1dca3f228",
-      "title": "Amazon Quick Suiteの新機能がすごすぎる!?",
-      "url": "https://qiita.com/CEC_Cloud_Community/items/eca05c24641f7fa0c319?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "はじめに\nはじめまして！株式会社シーイーシー AWSコミュニティチームです。\nこのたび、AWSに関する技術情報を発信するテックブログを開設しました。\n日々の業務の中で、AWSを使ったシステムの設計や構築、運用に取り組む中で得られた知見や「実際にやってみて分かったこと」「つ...",
-      "publishedAt": "2026-02-09T05:00:50.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "b355624d1f4eb4310ac67d5eb0e8be115838702b93076991c95be1f2fb021228",
-      "title": "量子×クラウドはなぜ難しい？第2の壁：プログラミングモデルとAPIの分断",
-      "url": "https://qiita.com/imh1104/items/07293a679cf692150413?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "おさらい\nAWS 105万人 vs 量子エンジニア 1,300人：数字で見る“圧倒的格差”では、量子エンジニアが少ない理由を「技術成熟度の差・参入難易度の差・実行環境の差」という3つの要因で整理し、それら3要因が量子コンピュータをクラウドシステムに統合するにあたっての4つ...",
-      "publishedAt": "2026-02-09T04:53:45.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "07b38f35bea02ad13f50767680490b185cd0405d09bda00d014886481e56d518",
-      "title": "住信SBIネット銀行が勘定系システムをAWS上へ移行、基盤にDatadogプラットフォーム採用",
-      "url": "https://enterprisezine.jp/news/detail/23693",
-      "description": "2026年2月9日、Datadogは、住信SBIネット銀行が勘定系システムをアマゾン ウェブ サービス（AWS）上のクラウド環境へ移行するにあたり、Datadogのプラットフォームを採用することを発...",
-      "publishedAt": "2026-02-09T04:40:00.000Z",
-      "feedName": "EnterpriseZine"
-    },
-    {
-      "id": "7de659146cc87c80532e0d742e867b70097ad56603bca0691c549a457410ed95",
-      "title": "AI支援開発のコストやコード生成量、分かる？　GoogleがGemini CLIに監視ダッシュボードを追加",
-      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2602/09/news059.html",
-      "description": "Google Cloudは、「Gemini CLI」において、事前構成済みの監視ダッシュボードを提供開始した。ツールの導入状況やトークン消費量、パフォーマンスなどを可視化できるという。",
-      "publishedAt": "2026-02-09T04:00:00.000Z",
-      "feedName": "＠IT"
-    },
-    {
-      "id": "f377b48c2b70c41334d1dcb89ca5f96557c633ab53c69c8090977d1f07ad2af9",
-      "title": "七十七銀行、境界型防御からゼロトラストモデルへ移行　「インターネットが使えるようになり業務効率向上」",
-      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2602/09/news046.html",
-      "description": "七十七銀行は、同行のDX推進とセキュリティ強化を目的に、従来の境界型防御モデルからゼロトラストモデルに移行した。従来の境界型防御に伴う利便性の低下を解消しつつ、AIを活用した脅威検知精度の向上を実現した。",
-      "publishedAt": "2026-02-09T04:00:00.000Z",
-      "feedName": "＠IT"
-    },
-    {
-      "id": "83dea466f3088ca650407b7a16364c9a8e4417f69a0a8be00d27e13924db5ae4",
-      "title": "5大コーディングエージェントの比較で分かった「バイブコーディング」の落とし穴",
-      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2602/09/news029.html",
-      "description": "サイバーセキュリティ企業のTenzaiは、「Cursor」「Claude Code」「OpenAI Codex」「Replit」「Devin」という5つの主要なコーディングエージェントを取り上げ、セキュアコーディング能力を比較した結果を公開した。",
-      "publishedAt": "2026-02-09T04:00:00.000Z",
-      "feedName": "＠IT"
-    },
-    {
-      "id": "557e5d38c7ae890b53088fe6de053d24fbd3afd2d834e2f8e2f2920dfe1e2b74",
-      "title": "中小企業必見！ライフネット生命に学ぶ、セキュリティを“全社事”にした組織改革のポイント",
-      "url": "https://enterprisezine.jp/news/detail/23691",
-      "description": "EnterpriseZine編集部は3月17日（火）、オンライン配信イベント「Security Online Day 2026 Spring」を開催する。\n\n\n\n　イベントテーマは「AI vs AI...",
-      "publishedAt": "2026-02-09T03:25:00.000Z",
-      "feedName": "EnterpriseZine"
-    },
-    {
-      "id": "e81a8ff41e6800b49260fba7073ecd2934ebf6a535869326aaa072c6f48f7cf3",
-      "title": "Googleが台湾のPixel開発拠点を公開　「10 Pro Fold」ヒンジ開発の裏側、“7年サポート”を支える耐久テスト",
-      "url": "https://www.itmedia.co.jp/mobile/articles/2602/09/news074.html",
-      "description": "Googleは台湾にあるハードウェア研究開発拠点と各種ラボの内部を公開した。同拠点はサプライチェーンとの密接な連携を強みとし、Pixelシリーズの設計から検証までを担う。 Pixel 10 Pro Foldのヒンジ開発や過酷な耐久試験などの現場を見ることができた。",
-      "publishedAt": "2026-02-09T03:02:52.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "e86269f2ffe3d191a26211b3cd7d2d2493576909deac9b21008d66907c07b7f5",
-      "title": "TCP/IPのきほんで学ぶ「ネットワークのセキュリティ① 」HTTPS・暗号化・VPNを整理してみた",
-      "url": "https://qiita.com/masa_tech_0326/items/9cd09d8a0d598bdff9fb?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "はじめに\n最近技術書を毎日30分以上読むようにしているのですが、記事としてアウトプットしないと、自分の中で定着しない気がしたので、読んで学んだことを共有していきたいと思います。\n今回は『スラスラわかるネットワーク&TCP/IPのきほん』のChapter06 セキュリティ章...",
-      "publishedAt": "2026-02-09T02:16:12.000Z",
-      "feedName": "Qiita"
     },
     {
       "id": "18b337efa6a55db388cd24087414da83695d04ad15377d0cb52e737a93f3878c",
@@ -326,46 +110,6 @@
       "url": "https://zenn.dev/sc30gsw/articles/4eee68a83454a2",
       "description": "はじめに\n最近、Claude Codeに Agent Teams という実験的機能が登場しました。\n複数のエージェントをチームとして同時に動かし、並列で開発・テスト・レビューを進められる仕組みです。\nこの機能を使い込む中で、Agent Teamsを本格的に使うなら、チーム編成そのものをどう設計すべきかがボトルネックになると感じました。\n\nAfter enabling agent teams, tell Claude to create an agent team and describe the task and the team structure you want in natu...",
       "publishedAt": "2026-02-10T02:11:46.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "4ff4326a9c40f53bfdbb529cb7c46714ea5437d1b4ae5971ef5e34400f1deb1a",
-      "title": "TCP/IPのきほんで学ぶ「ネットワークのセキュリティ②」 暗号化・公開鍵・電子証明書をやさしく整理してみた",
-      "url": "https://qiita.com/masa_tech_0326/items/ea160b21fa3d544094b1?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "はじめに\n前回の記事の続きです。\n\n前回の記事では、\n\n通信はそのままだと危険であること\nHTTPSが「通信を暗号化して守っている」こと\nただし、HTTPSにも守備範囲があること\n\nについて整理しました。\n「HTTPSは安全」となんとなく思っていたけれど、よく見てみる...",
-      "publishedAt": "2026-02-10T00:34:40.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "7d4f9a73935e34ede0fb41532e369923dcad5924f69154bb6ae5eae1bb369d30",
-      "title": "Claude16台で10万行のCコンパイラを作った論文を読んで、「いや答えあるじゃん」と思った話",
-      "url": "https://zenn.dev/shio_shoppaize/articles/shogun-spec-first",
-      "description": "Anthropicのエンジニアリングブログに、とんでもない記事が出た。 Claude 16台を並列で2週間回して、10万行のRust製Cコンパイラを作った。 費用$20,000。Linux 6.9のブートに成功。GCCのテストスイートで99%パス。DoomもFFmpegもPostgreSQLもコンパイルできる。 すげえ。 で、オレはAI部下10人を戦国軍団として運用して...",
-      "publishedAt": "2026-02-09T21:48:41.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "861cefaf20f17d9ece9d0a60a922e4df2cabb540742e7f295fb36111663b2ca4",
-      "title": "【WebF】React/Vue/Svelteがそのままネイティブアプリになるよ - Qiita",
-      "url": "https://qiita.com/rana_kualu/items/6c8f9db6565e80332d05",
-      "description": "Deleted articles cannot be recovered. Draft of this article would be also deleted. Are you sure you want to delete this article? この手の話をもう何万回聞いたかわかりませんが、GitHubリポジトリのコミット数や頻度を見るにかなりの本気度を感じます。 そんなわけでJavaScriptをそのままネイティブアプリにす...",
-      "publishedAt": "2026-02-09T12:04:22.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "3f01c569ed482c7516274f94bea22d142dbfea3e9af9775f71e3f219ce9d90e5",
-      "title": "【WebF】React/Vue/Svelteがそのままネイティブアプリになるよ",
-      "url": "https://qiita.com/rana_kualu/items/6c8f9db6565e80332d05?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "この手の話をもう何万回聞いたかわかりませんが、GitHubリポジトリのコミット数や頻度を見るにかなりの本気度を感じます。\nそんなわけでJavaScriptをそのままネイティブアプリにするプロジェクトのひとつ、OpenWebFがベータ版に到達したようです。\n以下は公式ブログ、...",
-      "publishedAt": "2026-02-09T11:09:27.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "1bf2c8c879e79a886616f07bfe57642db5f0342ccd86665b76478453ad10a315",
-      "title": "「なんか良いらしい」でDDDを導入した結果、何も得られなかった話",
-      "url": "https://zenn.dev/tokium_dev/articles/why-ddd-failed-for-me",
-      "description": "「なんか良いらしいぞ」\n新卒で入社して配属されたのは、新規事業の立ち上げチームでした。Web開発の経験はほぼゼロ。開発を始めて少し経った頃に、社内の他のチームがDDDという手法を使っていると知りました。\n調べてみると、「有名な手法」「価値あるソフトウェアが作れる」らしい。\nなんか良いらしい。じゃあうちもやろう、と。\nこれが失敗の始まりでした。\n\n 表面的な理解が招いた勘違い\n開発していたのはRAGチャットボットです。\nDDD導入にあたり、DDDの本や記事をたくさん読みました。個人的に一番分かりやすかったのはこれ（それでも難しかったけど）。\n\n出典: ドメイン駆動設計入門 - 翔泳社\n...",
-      "publishedAt": "2026-02-09T05:45:26.000Z",
       "feedName": "Zenn"
     },
     {
@@ -582,22 +326,6 @@
       "url": "https://zenn.dev/silverbirder/articles/e1a70ea756a0",
       "description": "以下の記事で書いた CSSをテストする方法について、試してみました。\nhttps://zenn.dev/silverbirder/articles/df6752b230f04c\nソースコードは、以下に置いています。\nhttps://github.com/silverbirder/css-testing\n検証ページは、以下のURLです。\nhttps://learn-layout.vercel.app\n\n 何をテストするか\nCSSを書いていて、以下のミスをしたことはありませんか？\n\n\nflex-shrink の指定を忘れて、要素が押しつぶされてしまった\n\nz-index の指定を間違えて、要...",
       "publishedAt": "2026-02-10T23:00:01.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "919a084c42805a6c0528cbab015fa1f16300bff3b69e75c788af3a9016911033",
-      "title": "【悪用厳禁】Cloudflareを”合法的に”突破する技術。セキュリティエンジニアが「Bright Data」で最強のWAFに挑んでみた結果",
-      "url": "https://qiita.com/harupython/items/35acc9c006ab1b09f884?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "はじめに：「403 Forbidden」に絶望したことはありますか？\n私たちエンジニアが、データ収集（スクレイピング）で最も恐れる敵。\nそれはCloudflareやAkamaiといった、最強のWeb Application Firewall（WAF）たちです。\n「User...",
-      "publishedAt": "2026-02-10T00:55:10.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "1a0a3a1174cb4652f0c724ea8f5e4bbf12cab2f29edd8f333545200a0f384869",
-      "title": "スタートアップの「なんとなく動いてる」インフラを、一人で体系的に整備した話",
-      "url": "https://zenn.dev/shigerufukada/articles/15c9a7bad299a3",
-      "description": "はじめに\nAI スタートアップに1人目のエンジニアとして参画し、本番稼働中のバックエンドサービス群の開発・運用基盤をゼロから整備した記録です。\n対象は Python（FastAPI）で書かれた3つのバックエンドサービス。いずれも AWS 上で稼働しており、ユーザー向けに本番提供されている状態でした。\nこの記事では、個別の技術的な実装手順ではなく、既存サービスの運用基盤をどう評価し、何を優先して、どう整備していったかという全体のアプローチを書きます。\n\n 引き継いだ時点の状態\n参画時、各サービスは以下のような状態でした。\nデプロイ\n\n担当者がローカルで docker build → d...",
-      "publishedAt": "2026-02-10T00:49:12.000Z",
       "feedName": "Zenn"
     },
     {
@@ -6433,6 +6161,198 @@
       "url": "https://zenn.dev/dyoshikawa/articles/deno-to-bun-single-binary",
       "description": "@dyoshikawaです。\n私が開発しているOSSツール Rulesync では、npm配布に加えてシングルバイナリ配布を行っています。Node.jsランタイムなしでも使えるようにするためです。\nhttps://github.com/dyoshikawa/rulesync\nもともとDenoの deno compile を使ってシングルバイナリを生成していたのですが、v5.5.1でBunの bun build --compile に切り替えたところ、ファイルサイズが大幅に小さくなりました。\nこの記事ではその経緯と、なぜこれほどの差が生まれるのかを掘り下げます。また、シングルバイナリ配布に...",
       "publishedAt": "2026-03-09T09:00:05.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "33f6fdd75365bcc80fee38fff1991b0360bf46a2178893b960e6888c0b506002",
+      "title": "React Native: Hoja de Ruta hacia Swift Package Manager (2026)",
+      "url": "https://dev.to/estolegion/react-native-hoja-de-ruta-hacia-swift-package-manager-2026-3j8d",
+      "description": "Introducción\n\n\nEl ecosistema de desarrollo móvil multiplataforma atraviesa un periodo de reestructuración tectónica durante el año 2026. A lo largo de la última década, el desarrollo de aplicaciones empresariales utilizando React Native ha dependido intrínsecamente de CocoaPods, un gestor de dependencias basado en Ruby. Sin embargo, la maduración de las herramientas nativas de Apple y las crecientes fricciones de mantenimiento han precipitado un cambio de paradigma ineludible hacia Swift Package Manager (SPM).\nEl equipo central de Meta, en conjunto con Expo y Software Mansion, no ha emitido un manifiesto corporativo tradicional. La hoja de ruta oficial se ha comunicado a través de actualizaciones arquitectónicas secuenciales desde la versión 0.75 hasta la 0.84 y discusiones en repositorios públicos.\nEl lanzamiento de React Native 0.84 en febrero de 2026 representa la declaración técnica más contundente, consolidando el uso de binarios precompilados por defecto en iOS y estableciendo el motor Hermes V1 como estándar.\nTras quince años de operar como el estándar de facto, el equipo de mantenimiento de CocoaPods ha formalizado su retiro operativo. Orta Therox publicó a finales de 2024 el plan para convertir el repositorio principal en un estado de solo lectura.\n\n\n\nHito\nIntervención\nImplicación para React Native\n\n\n\n\nMayo 2025\nBloqueo de nuevos Podspecs con prepare_command\n\nRestricción en scripts de pre-configuración\n\n\nMediados-Finales 2025\nNotificaciones masivas a contribuyentes\nInicio del periodo de contingencia\n\n\nSep-Oct 2026\nRecordatorios finales de obsolescencia\nLímite crítico para migración empresarial\n\n\n1-7 Nov 2026\nDry Run: trunk en modo solo lectura\nFallos en pipelines CI/CD no migrados\n\n\n2 Dic 2026\nCierre Operativo Definitivo\nCese absoluto de innovación en CocoaPods\n\n\n\nLa verdadera fecha límite para React Native es sustancialmente anterior a diciembre 2026.\nGoogle ha notificado formalmente que interrumpirá el soporte de CocoaPods para todos sus SDKs de iOS (Google Maps Platform y Firebase) después del Q2 de 2026. A partir de la versión 11.0, las actualizaciones se publicarán exclusivamente a través de Swift Package Manager.\nSentry también comunicó que abandonará la publicación de sus SDKs en CocoaPods a finales de junio de 2026.\nLa fecha límite práctica no es diciembre 2026 — es Q2 2026.\nReact Native ha dependido históricamente de una intrincada malla de dependencias de bajo nivel escritas en C++:\nFolly — biblioteca de componentes centrales de C++\nGlog — para registros a nivel de sistema\nDoubleConversion\nYoga — motor de cálculo de diseño\nHermes — entorno de ejecución de JavaScript\nSwift Package Manager fue concebido con una filosofía de aislamiento estricto y no permite la ejecución de scripts dinámicos arbitrarios durante la fase de resolución.\nspm_dependency (v0.75 - Agosto 2024)\n\n\nReact Native 0.75 introdujo el macro spm_dependency:\nPod::Spec.new do |s|\n  s.name = \"MyReactNativeLibrary\"\n  if const_defined?(:ReactNativePodsUtils) && ReactNativePodsUtils.respond_to?(:spm_dependency)\n    ReactNativePodsUtils.spm_dependency(s,\n      url: 'https://github.com/apple/swift-atomics.git',\n      requirement: {kind: 'upToNextMajorVersion', minimumVersion: '1.1.0'},\n      products: ['Atomics']\n    )\n  end\nend\n\nA partir de React Native 0.81, el sistema comenzó a distribuir ReactNativeDependencies.xcframework, aislando Folly, Glog y otras dependencias C++ del entorno de compilación local.\nRCT_USE_PREBUILT_RNCORE=1 bundle exec pod install\n\nResultado: Reducción de tiempos de construcción hasta 10 veces.\nBinarios Precompilados por defecto — sin variables de entorno manuales\nHermes V1 por Defecto — motor JavaScript estandarizado\nErradicación de Código Heredado — eliminación del puente asíncrono clásico\n\n\n\nHito\nVersión\nContribución a SPM\n\n\n\n\nspm_dependency\nv0.75 (Ago 2024)\nConsumo de paquetes Swift modernos\n\n\nBinarios Precompilados\nv0.81 (Ago 2025)\nAislamiento de dependencias C++ en XCFrameworks\n\n\nNueva Arquitectura obligatoria\nv0.82 (Oct 2025)\nEstandarización mediante JSI\n\n\nDepuración simbólica\nv0.83 (Dic 2025)\nMaduración con archivos dSYM\n\n\nEstandarización 2026\nv0.84 (Feb 2026)\nBinarios precompilados y Hermes V1 por defecto\n\n\n\nprepare-ios-dependencies\n\n\n\n\n\n# Antes (acoplado a CocoaPods)\ncd ios && bundle exec pod install\n\n# Ahora (agnóstico, preparado para SPM)\nnpx react-native prepare-ios-dependencies\n\nEl CLI detecta automáticamente si el proyecto usa CocoaPods, SPM puro, o configuración híbrida.\nInspeccionar el Podfile y clasificar cada dependencia por compatibilidad con SPM\nEscrutinio especial a: analíticas, telemetría, pasarelas de pago, geolocalización\nMarcar paquetes con prepare_command para reemplazo urgente\nMigrar a React Native 0.81+ activando la Nueva Arquitectura\nEscalar hacia la serie normativa 0.84+\n\n\n\n\n  \n  \n  3. Restructuración del CI/CD\n\n\n\nReemplazar bundle exec pod install por prepare-ios-dependencies\n\nActualizar imágenes de CI a Xcode 16.1+\n\n\n\n\n  \n  \n  4. Estrategia Híbrida Transitoria\n\n\n\nUsar spm_dependency para adoptar SDKs sin equivalente en CocoaPods\nEvaluar impacto del enlazado dinámico en rendimiento de dispositivos\nEl plan oficial de Meta no existe como un documento singular — existe como una orquestación calculada de modificaciones fundamentales a través de múltiples versiones desde v0.75 hasta v0.84.\nLa convergencia del EOL de CocoaPods, la retirada anticipada de Google y Sentry, y la maduración de la Nueva Arquitectura hacen que la migración sea imperativa.\nLa fecha límite práctica es Q2 2026, no diciembre.\nReporte de Investigación elaborado con análisis de fuentes oficiales: React Native Blog, Expo, CocoaPods, Google Developers y la comunidad de desarrollo iOS.",
+      "publishedAt": "2026-03-12T01:50:16.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "4e28a7f3757acb7ac7015afd82c2e89ba76fb12690130ea000c0bb8da9d187c6",
+      "title": "How I tried to make Japan's recycling system less confusing with Amazon Bedrock",
+      "url": "https://dev.to/george3421/how-i-tried-to-make-japans-recycling-system-less-confusing-with-amazon-bedrock-3k98",
+      "description": "Japan's recycling system is one of the most thorough in the world, and one of the most difficult to navigate if you are new to it.\nThere are 1,741 municipalities in Japan, and almost every one has different rules. A PET bottle is not a single waste item: the body, cap, and label are three separate categories, and which bins they go into depends on where you live. The official guidance lives in printed pamphlets, often only in Japanese, updated annually.\nI built Gomi Bunrui to try and help with this. You point your phone camera at any waste item, get a breakdown of every component, and see exactly where each part goes based on the rules for your specific city.\nThis post covers the technical details. The full competition write-up is on AWS Builder Center if you want the broader story.\n\n\n\n\n\n\n\n\n  \n  \n  The Stack\n\n\n\nFrontend: React PWA deployed to S3 and CloudFront\nAuth: Amazon Cognito with email and social login, email confirmation, resend confirmation, and password reset\nBackend: Kotlin Lambda with SnapStart, http4k framework, behind API Gateway\nAI: Amazon Bedrock (Claude Haiku 4.5)\nData: DynamoDB\nDNS/TLS: Cloudflare for domain registration, Route 53 for DNS, ACM for TLS certificates\nIaC: AWS SAM covering everything, zero clickops\nCI/CD: GitHub Actions across a four-project monorepo (backend, frontend, website, e2e tests) with semantic versioning and full test coverage\nDev tooling: Kiro IDE with custom hooks and a conventional commits agent skill\nThe interesting problem was getting Amazon Bedrock to reliably decompose a single physical object into its constituent materials, rather than returning a single category for the whole thing.\nA PET bottle is the clearest example:\n\n\n\nComponent\nClassification\n\n\n\n\nBottle body\nPET bottle recycling\n\n\nPlastic cap\nPlastics\n\n\nLabel\nBurnable waste\n\n\n\nOne object. Three bins. Three different collection days.\n\nPrompting the model to \"classify this item\" returns a single answer. Reasonable, but wrong for this use case.\nReframing the instruction to focus on materials rather than the object as a whole:\nIdentify every physical component present in the image\nand classify each one independently against the city's\nwaste category rules.\n\nCombined with explicit multi-component examples in the prompt and a response parser that flags responses where the component count seems too low for the identified item type.\n{\n  \"item_name\": {\"en\": \"Sports Drink PET Bottle\", \"ja\": \"スポーツドリンクPETボトル\"},\n  \"component_count\": 3,\n  \"category_count\": 3,\n  \"components\": [\n    {\n      \"name\": {\"en\": \"Bottle Body\", \"ja\": \"ボトル本体\"},\n      \"material\": {\"en\": \"PET resin\", \"ja\": \"PET樹脂\"},\n      \"category_id\": \"pet_bottle\",\n      \"preparation\": {\"en\": \"Rinse with water\", \"ja\": \"水で軽くすすぐ\"},\n      \"icon\": \"♻️\"\n    }\n  ],\n  \"tips\": [{\"en\": \"...\", \"ja\": \"...\"}],\n  \"difficulty\": \"easy|moderate|hard\"\n}\n\nA few deliberate decisions here:\nHuman-readable fields use {\"en\": \"...\", \"ja\": \"...\"} bilingual objects so the frontend can display in either language without a second API call.\ncategory_id is an English constant string and is never translated by the model. The frontend maps category IDs to colours and display names using a static JSON file, which keeps the UI consistent and reduces token usage.\ndifficulty is a plain enum. Translations live in static i18n files rather than being generated by Bedrock on each request.\nThe result is that Japanese-only human-readable text combined with English constants roughly halves inference cost compared to fully bilingual model output.\nAll four supported cities (Nagoya, Shibuya, Osaka, Kyoto) share an identical JSON schema. Only the category definitions differ per city:\nNagoya prompt  = shared classification rules + Nagoya category definitions\nShibuya prompt = shared classification rules + Shibuya category definitions\nOsaka prompt   = shared classification rules + Osaka category definitions\nKyoto prompt   = shared classification rules + Kyoto category definitions\n\nAdding a new municipality requires no code changes at all. The work is extracting the rules from official PDFs, verifying them against source material, and writing a new prompt. Scaling is a data task rather than an engineering task.\nFour rejection types are defined, all returning 200 OK with \"error\": true in the response body:\n\n\n\nError Code\nSituation\n\n\n\n\ninappropriate_content\nObviously inappropriate input\n\n\nprompt_injection\nInjection attempt detected\n\n\nunrecognizable_image\nCannot identify as a waste item\n\n\nhazardous_item\nMedical waste or similar\n\n\n\nHTTP 4xx and 5xx codes are reserved for infrastructure failures only. The frontend reads the error code from the response body and shows the appropriate UI state.\nThe tricky part was calibration. Early versions were too aggressive and flagging normal product labels and foreign-language packaging as potential prompt injection. It took several prompt iterations to get the balance right between rejecting genuinely problematic inputs and allowing ordinary real-world items.\nEverything is defined as code using AWS SAM. SAM templates cover Lambda, API Gateway, DynamoDB, S3, CloudFront, Cognito, SES, CloudWatch (structured logs, custom metrics under the GomiBunrui namespace, and alarms), Route53, and ACM. There is no clickops anywhere in the stack.\nThe project is a monorepo with four independently deployable projects: backend, frontend, website, and end-to-end tests. Each follows semantic versioning driven by conventional commits. The CI/CD pipeline runs the full test suite on every push and only deploys on a clean run.\nOne note on DNS: Route53 does not support .app domain registration, so Cloudflare handles domain registration while Route53 manages the hosted zone. Both are defined in SAM.\nThe entire project was built spec-first using Kiro IDE. Rather than jumping straight into code, each feature started with a spec that Kiro translated into requirements, a design document, and a task list.\nThree custom hooks made the workflow fit more naturally:\nGit-commit hook: fires after every completed top-level task and commits automatically. The git log ends up being a readable record of the build progression.\nSequential ordering hook: fires before task implementation begins and adds a sequence number to the spec directory name. Makes it easy to see the order in which things were built.\nKnowledge-base hook: fires at the end of each implementation phase and updates the project's living documentation automatically, covering ubiquitous language, architecture decisions, infrastructure details, and e2e test coverage.\nA custom agent skill for conventional commits feeds into semantic versioning across all four monorepo projects.\nThe spec-first workflow felt like it slowed things down at first, but it consistently surfaced decisions early that would have been painful to revisit mid-implementation. The navigation architecture, bilingual output schema, and DynamoDB structure were all settled before a line of code was written.\nThe AWS Free Tier constraints turned out to be useful rather than limiting. Lambda with SnapStart over a persistent server, DynamoDB on-demand over provisioned, aggressive CloudFront caching: these are also the right choices for a production system at this scale, so the constraints pointed in the right direction.\nThe most unexpected learning was that prompt engineering and product design are the same activity at this layer of the stack. The quality of the scan results is almost entirely a function of the quality of the system prompts. Getting that right took more careful iteration than any part of the infrastructure.\nThe app is live as a PWA at gomi-bunrui.app. Registration and scanning are fully functional across all four cities. No app store required.\nIf you are building with Bedrock or Kiro, happy to answer questions in the comments.\nIf you would like to support the project in the AWS AIdeas competition, a like on the article helps it reach the top 300. Voting closes 20 March.\n👉 AWS Builder Center article\nBuilt with Kiro and the AWS Free Tier as part of the AWS 10,000 AIdeas competition.\n\n\n  \n  \n  aws #bedrock #react #kotlin #japan",
+      "publishedAt": "2026-03-12T01:46:52.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "70c59dd5c6f85e9f3f6eecf52278bd6592a747dd19e03799fcbf89c7f2813e76",
+      "title": "Nvidia Open-Weight Models: Why the $26B Bet Matters",
+      "url": "https://dev.to/simon_paxton/nvidia-open-weight-models-why-the-26b-bet-matters-4h3d",
+      "description": "If you tried to copy Nvidia’s Nemotron 3 stack inside your own startup, the first nasty surprise would be the bill: $26 billion worth of multi-year cloud service commitments is what Nvidia has lined up for itself to fuel DGX Cloud and model R&D. That’s the line that underpins all the hype about Nvidia open-weight models.\nThe important part: that $26B is not a donation to “open source.” It’s a bet that giving away the models will sell more of the pipes.\nTL;DR\nNvidia open-weight models are designed to make software feel free so hardware and DGX Cloud become the default place to run them.\nThe $26B commitments are cloud rental (per the 10‑Q), but Nvidia is lining that capacity up behind Nemotron and DGX, not your random colo.\nFor builders, “open” will get cheaper, but only if you accept deeper Nvidia hardware lock-in—and that should change both product and policy decisions.\nFirst, precision.\nNvidia’s 10‑Q says: “Multi-year cloud service agreement commitments … were $26 billion” and notes those are expected to support R&D and DGX Cloud offerings. Full stop. No “we will spend $26B to build open-weight models” in the legal text.\nWIRED then talks to Nvidia execs, stitches that line together with Nemotron 3, and comes out with: “$26B to build open-weight AI models.” That’s journalism synthesis, not literal accounting language.\nSo what’s actually going on?\nOn paper: Nvidia is pre‑buying server capacity from providers (CoreWeave alone says its contract is ~$6.3B).\nIn practice: that capacity is pointed at training and hosting models that are:\n\n\nTuned for Nvidia GPUs and networking\nReleased as open weights (Nemotron 3 Super/Ultra/Nano)\nWrapped in Nvidia software (CUDA, TensorRT‑LLM, DGX Cloud)\nThe key insight: Nvidia is using cloud commitments to subsidize a reference stack—models + tooling + hosting—that normalizes running “open” on Nvidia, not on some neutral substrate.\nThat’s the lock-in move.\nIf you were Nvidia and you wanted to keep CUDA the default target for every serious AI workload, you’d do three things:\nMake sure the best “free” models run stupidly well on your hardware.\nPublish the weights so everyone benchmarks and fine‑tunes on your stack.\nOffer a fully managed cloud path (DGX Cloud) for the people who don’t want to think.\nThat’s exactly what Nemotron 3 is.\nNemotron 3 Super (128B params) and friends ship as open models, but the docs read like a recipe book for “How to extract maximum throughput from Nvidia GPUs”:\nTraining and inference configs tuned for H100/GB200.\nReference implementations with TensorRT‑LLM and CUDA primitives.\nModel cards and benchmarks run on Nvidia hardware.\nIf you’re a startup, the path of least resistance becomes:\ngit clone → follow Nvidia’s optimized config → deploy on DGX Cloud or an H100 cluster → brag about your “open” stack.\nThe tradeoff they’re making:\nWhat you gain:  \nHigh-quality, open weights you didn’t pay to train.\n\nBattle‑tested configs.\n\nEasy scale‑up if you stay inside DGX Cloud and Nvidia tooling.\nWhat you give up:  \nPortability—your entire infra, from model to serving stack, is designed around Nvidia hardware assumptions.\n\nNegotiating power—once your product depends on GPU‑specific kernels and DGX quirks, it’s harder to move to cheaper or non‑Nvidia options.\nThis is the twist: open weights are being used to commoditize models faster than hardware. Once models feel free and interchangeable, all the marginal value (and pricing power) flows to the infrastructure you can’t easily swap out.\nLet’s walk through how this plays out for each group.\nA product team building on Nvidia open-weight models sees lower up‑front costs:\nYou don’t train the base model.\nYou fine‑tune Nemotron 3 variants with off‑the‑shelf recipes.\nYou deploy via DGX Cloud or Nvidia‑optimized clusters.\nYour unit economics improve on day one. But your platform risk quietly spikes:\nRe‑targeting to another vendor means re‑doing perf work, quantization, kernels, observability.\nIf Nvidia raises prices on DGX Cloud or hardware availability tightens, that flows straight into your margins.\nSo your valuation story becomes:\n“We own distribution / workflow / UX,” not “we own IP in the models.”\nYou’re negotiating with investors and buyers who know you’re an Nvidia‑shaped SaaS.\nOpen weights make the P&L look better short‑term and the bargaining position worse long‑term.\nThose $26B multi-year cloud service commitments mostly go to partners—CoreWeave, others. Great business if you’re renting Nvidia GPUs back to Nvidia.\nBut long term?\nEvery Nemotron‑based workload that leans on DGX Cloud is one less reason to default to generic hyperscaler infra.\nIf you’re AWS/Azure/GCP trying to push custom silicon (Trainium, TPU, etc.), Nvidia’s “free” models are a problem—they make it harder to convince customers to pick your not‑Nvidia chips.\nThe tradeoff for clouds:\nTake Nvidia’s money now (capacity contracts, co‑marketing).\nOr push harder on your own model stacks and open platforms that decouple software from Nvidia hardware.\nIf you don’t do the latter, you’re willingly turning your cloud into a very fancy Nvidia resale channel.\nChinese labs releasing open-weight models (DeepSeek, Alibaba, etc.) have been the default substrate for a lot of global startups.\nNvidia’s move hits them in two ways:\nBenchmark politics: Nemotron 3 is explicitly framed against GPT‑OSS and Chinese models; Nvidia is trying to set the “good enough and free” bar on its own terms.\nTooling gravity: if everyone’s fine‑tuning with Nvidia’s recipes, even non‑Nvidia weights are likely to be evaluated and deployed in Nvidia‑centric pipelines.\nYou can win some benchmarks and still lose the war if your users are all running on your competitor’s hardware.\nHere’s the part that actually changes how you should behave.\nTreat Nvidia open-weight models like you would a generous cloud credit program: great accelerator, hidden strings.\nConcrete steps:\nFrom day zero, keep a portability budget:\n\n\nDon’t hardcode Nvidia‑only ops in your core business logic.\nAbstract serving so you can at least A/B test on non‑Nvidia infra.\nTrack effective cost per 1M tokens across:\n\n\nDGX Cloud + Nemotron 3\nA non‑Nvidia cloud + open models\nAny in‑house / on‑prem rigs\nYou don’t have to be neutral today. You do want an exit hatch.\nAnd when you pitch “we’re open‑source based,” be honest with yourself: are you open in the way that matters (infra), or just at the model checkpoint level?\nUse Nvidia’s money, don’t let it fully shape your roadmap.\nMirror critical models (including Nemotron derivatives) with portable training/inference configs that run on at least one non‑Nvidia stack.\nPublish hardware‑agnostic benchmarks where the primary axis is FLOPs / dollar or latency / watt, not just raw scores on Nvidia hardware.\nThe more “open” quietly means “runs best on CUDA + DGX,” the less open it really is.\nRegulators shouldn’t get hypnotized by the word “open.”\nThe 10‑Q already tells you the real choke point: multi-year cloud service commitments tied to R&D and DGX Cloud.\nQuestions worth asking:\nAre open-weight releases being used to entrench a single vendor’s position in inference and hosting?\nIs there effective interoperability for major “open” models on non‑Nvidia hardware?\nDo cloud commitments and exclusivity terms (CoreWeave, others) materially limit competitors’ access to high‑end GPUs?\nThis is less about “is the model card on GitHub?” and more about “who controls the only practical way to run it at scale?”\nThe SEC filing does not literally say “$26B for open-weight models”; it’s $26B in cloud service commitments backing R&D and DGX Cloud.\nNvidia open-weight models, especially Nemotron 3, are tuned to make Nvidia hardware and DGX Cloud the default inference target.\nThis accelerates model commoditization while deepening Nvidia hardware lock-in, shifting value from software to infrastructure.\nStartups get cheaper, better models now but increase long‑term dependence on Nvidia’s stack and pricing.\nBuilders should design for portability and regulators should focus on infra control, not just whether weights are “open.”\nNvidia Will Spend $26 Billion to Build Open-Weight AI Models, Filings Show — WIRED — How WIRED connects the 10‑Q line to Nvidia’s open-model push and Nemotron 3.\nNVIDIA Corporation Form 10-Q (Quarter Ended Oct. 26, 2025) — SEC — The primary source for the $26B “multi-year cloud service agreement commitments.”\nNVIDIA Debuts Nemotron 3 Family of Open Models — NVIDIA Newsroom — Nvidia’s technical and marketing story for Nemotron 3 open models.\nNvidia to spend $26bn on cloud computing capacity over six years — DataCenterDynamics — Trade coverage framing the $26B as server rental across cloud partners.\nCoreWeave Says Nvidia Cloud Contract Valued at $6.3 Billion — Bloomberg — Deal‑level view of how those commitments show up in individual cloud provider agreements.\nNvidia’s move is not “yay, more open models” or “boo, more lock‑in.” It’s both, on purpose. The smart response is to cash the openness dividend—while keeping your architecture ready to walk away if the shovel vendor starts charging by the breath.\nAlso worth reading for more context on Nvidia open-weight models and agent stacks:  \nNvidia open-weight models and CUDA agents\n\nHow Nvidia open-weight models change AI builds\nOriginally published on novaknown.com",
+      "publishedAt": "2026-03-12T01:45:38.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "4e2f472864d92b8ab035723e523806d3278c706a1e4192916de2e0d3a5011ca3",
+      "title": "Build Your Own Longevity Researcher: RAG with Qdrant and 5,000+ PubMed Papers 🧬📚",
+      "url": "https://dev.to/wellallytech/build-your-own-longevity-researcher-rag-with-qdrant-and-5000-pubmed-papers-5fjg",
+      "description": "We are currently living in a golden age of longevity science. Every day, hundreds of new papers on rapamycin, NAD+ precursors, and cellular senescence are uploaded to PubMed. But let's be real: unless you have a PhD and 48 hours in a day, keeping up is impossible. \nIn this tutorial, we are going to build a high-performance Retrieval-Augmented Generation (RAG) system designed specifically for medical literature. We'll be using a Hybrid Search approach (combining semantic density with keyword precision) to handle complex medical terminology. By leveraging Qdrant, LangChain, and the powerful BGE-m3 embeddings, we can transform 5,000+ messy PDFs into a structured personal knowledge base. If you are looking for more production-ready insights on bio-informatics and AI, you should definitely dive into the advanced patterns shared at WellAlly Tech Blog.\nStandard vector search (dense embeddings) is great for \"vibes\" and general meaning. However, in medicine, a single letter matters (e.g., APOE3 vs APOE4). If your search engine treats them as the same \"concept,\" your RAG system will give you dangerous advice. \nHybrid Search solves this by combining:\n Dense Retrieval (BGE-m3): Captures the semantic context (e.g., \"life extension\" $\\approx$ \"longevity\").\n Sparse Retrieval (BM25): Ensures exact matches for specific medical codes, drug names, and gene identifiers.\nHere is how the data flows from a raw PubMed PDF to a verified answer:\ngraph TD\n    A[PubMed PDFs / XML] --> B[Unstructured.io Partitioning]\n    B --> C[Text Chunking & Cleaning]\n    C --> D{BGE-m3 Encoder}\n    D -->|Dense Vector| E[Qdrant Collection]\n    D -->|Sparse Vector| E[Qdrant Collection]\n    F[User Query] --> G{Hybrid Search}\n    G -->|Retrieve Top K| E\n    E --> H[Contextual Prompt]\n    H --> I[LLM Answer Generation]\n    I --> J[Source Attribution]\n\nBefore we jump into the code, ensure you have the following ready:\n  Qdrant: Running via Docker (docker run -p 6333:6333 qdrant/qdrant).\n  Tech Stack: langchain, qdrant-client, unstructured, and sentence-transformers.\nMedical papers are notorious for multi-column layouts and complex tables. Unstructured.io is the gold standard for turning these into clean text.\nfrom unstructured.partition.pdf import partition_pdf\n\ndef process_medical_paper(file_path):\n    # Extracts text while preserving hierarchy\n    elements = partition_pdf(\n        filename=file_path,\n        strategy=\"hi_res\",\n        extract_images_in_pdf=False,\n        infer_table_structure=True,\n        chunking_strategy=\"by_title\",\n        max_characters=1500,\n        combine_text_under_n_chars=250,\n    )\n    return elements\n\n# Example usage\n# chunks = process_medical_paper(\"longevity_study_2024.pdf\")\n\nWe need a collection that supports both dense (1024-dim for BGE-m3) and sparse vectors.\nfrom qdrant_client import QdrantClient\nfrom qdrant_client.http import models\n\nclient = QdrantClient(\"http://localhost:6333\")\n\ncollection_name = \"longevity_papers\"\n\nclient.recreate_collection(\n    collection_name=collection_name,\n    vectors_config=models.VectorParams(\n        size=1024, # BGE-m3 dense size\n        distance=models.Distance.COSINE\n    ),\n    sparse_vectors_config={\n        \"text-sparse\": models.SparseVectorParams(\n            index=models.SparseIndexParams(\n                on_disk=True,\n            )\n        )\n    }\n)\n\nThe BGE-m3 model is a beast. It performs dense, sparse, and multi-vector encoding simultaneously. This is crucial for aligning medical jargon across different languages and terminologies.\nfrom FlagEmbedding import BGEM3FlagModel\n\nmodel = BGEM3FlagModel('BAAI/bge-m3', use_fp16=True)\n\ndef get_hybrid_embeddings(text_list):\n    # Generate both dense and sparse vectors\n    embeddings = model.encode(\n        text_list, \n        return_dense=True, \n        return_sparse=True, \n        return_colbert_vecs=False\n    )\n    return embeddings\n\n# Let's say we have our chunks from step 1\n# outputs = get_hybrid_embeddings([c.text for c in chunks])\n\nWhen a user asks, \"What is the dosage of Rapamycin for autophagy induction?\", we don't just want a vector search. We want to ensure \"Rapamycin\" is explicitly indexed.\ndef hybrid_query(query_text, limit=5):\n    query_results = model.encode(\n        [query_text], \n        return_dense=True, \n        return_sparse=True\n    )\n\n    search_result = client.search(\n        collection_name=collection_name,\n        query_vector=query_results['dense'][0],\n        query_filter=None, # Add filters like 'year > 2020' here\n        limit=limit,\n        with_payload=True\n    )\n\n    return search_result\n\n# This returns the most relevant snippets from our 5000+ papers!\n\nBuilding a \"toy\" RAG is easy, but managing 5,000+ papers with citations requires a more robust pipeline. You'll need to handle rate limits, metadata filtering (e.g., sorting by Impact Factor), and recursive summarization. \nFor more advanced strategies on building production-grade RAG systems for the healthcare sector, I highly recommend reading the deep-dives at WellAlly Tech. They cover everything from vector quantization to fine-tuning LLMs for medical accuracy.\nBy combining Qdrant's Hybrid Search with BGE-m3 embeddings, we've built a system that doesn't just \"guess\" answers but actually finds the needle in the medical haystack. This personal longevity library can now provide evidence-based answers backed by thousands of PubMed articles.\nNext Steps:\n Add a Reranker (like BGE-Reranker) to further refine the top 5 results.\n Plug the context into GPT-4o with a system prompt that enforces \"Cite your sources.\"\n Go out and enjoy your newly optimized, science-backed healthy lifestyle!\nWhat are you building with RAG? Drop a comment below! 🚀💻",
+      "publishedAt": "2026-03-12T01:30:00.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "0859f29c81bb7fcf64f5f3b438678e690cec22a506bd90cb2053fbb5887af597",
+      "title": "[アップデート] AWS Builder ID が Apple / GitHub / Amazon アカウントでサインインできるようになりました",
+      "url": "https://dev.classmethod.jp/articles/aws-builder-id-sign-in-apple-github-amazon/",
+      "description": "[アップデート] AWS Builder ID が Apple / GitHub / Amazon アカウントでサインインできるようになりました",
+      "publishedAt": "2026-03-11T21:43:32.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "42687ab68e576e73c0af4d086b7e1f174a0095370570185105c79ff147137042",
+      "title": "【2026年3月最新版】コーディングが楽になったからこそ気をつけるべきセキュリティ",
+      "url": "https://qiita.com/miruky/items/dfb3509ade7d4ad67b90?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\nこんばんは、mirukyです。\n今回はいつものAWSシリーズとは少し毛色を変えて、AIコーディング時代のセキュリティについて書きます。\n2025年から2026年にかけて、GitHub Copilot、Claude Code、Cursor、Cline、Amazon...",
+      "publishedAt": "2026-03-11T14:53:12.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "d195189cd2aa1c7f2f03c5ae00674f3d4d7c667cc1b1a810aa9ce76132f32979",
+      "title": "Deploy React แอปพลิเคชันด้วย AWS Amplify (Host Static-Website with AWS Amplify Part. 3)",
+      "url": "https://dev.classmethod.jp/articles/deploy-app-with-aws-amplify/",
+      "description": "AWS Amplify คือชุดเครื่องมือและบริการจาก Amazon Web Services ที่ช่วยให้นักพัฒนาสร้างและปรับขนาดแอปพลิเคชัน full-stack ได้อย่างรวดเร็วโดยเฉพาะแอปพลิเคชันบนมือถือและเว็บได้  บทความนี้ผมได้ทำการทดลองสำเร็จและอยากเอามาแชร์ให้เพื่อนๆ ได้อ่านกันและทำตามครับ",
+      "publishedAt": "2026-03-11T10:35:23.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "c270cdfb5dc79d6de315f000273d52844b6c6101d822ef2b2e2ad613d496ac8c",
+      "title": "AWS上でブラウザリダイレクトを実装するパターンを制約とともにまとめてみた",
+      "url": "https://dev.classmethod.jp/articles/aws-redirect-patterns-and-limits/",
+      "description": "AWSでブラウザリダイレクトを行う場合の構成にはいくつかパターンがあります。これらのパターンのうちどれを選ぶかという基準を、制約ベースでまとめてみました。",
+      "publishedAt": "2026-03-11T09:39:43.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "15dabba12b0cf32003e5f751a96648c482d3975471cf7946afb5e257d61c6c0e",
+      "title": "月刊 AWS 製造 2026年3月号",
+      "url": "https://aws.amazon.com/jp/blogs/news/news-monthly-manufacturing-202603/",
+      "description": "月刊 AWS 製造 2026年3月号 みなさん、こんにちは。AWS のソリューションアーキテクトの山田です。 […]",
+      "publishedAt": "2026-03-11T09:30:00.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "9efc7734274d3c927786d0a7b747614943dd3e1e7626609021296246386b0de7",
+      "title": "寄稿： 三菱電機が挑む製造業の商談変革 – AWS で実現した商談支援サービス「Memory Tech」",
+      "url": "https://aws.amazon.com/jp/blogs/news/mitsubishi-electric-memory-tech-ai-meeting/",
+      "description": "本稿は、三菱電機株式会社 名古屋製作所が新たに開発した AI を活用した商談支援サービス「Memory Te […]",
+      "publishedAt": "2026-03-11T08:31:39.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "114464865f8dc6b15ca5c68dba876c59e112fafbb5fcbf48b3a878612fb7ddc2",
+      "title": "AWS Directory Service SimpleADのユーザを管理したい",
+      "url": "https://dev.classmethod.jp/articles/aws-directory-service-simple-ad-user-management-maruto/",
+      "description": "AWS Directory Service SimpleADのユーザを管理したい",
+      "publishedAt": "2026-03-11T06:48:23.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "ac549131fc48edf2987d98e55d03cf1591748a6a704d96eaf663e75b003555ae",
+      "title": "Claude Codeのスキル機能でAWSアーキテクチャ図の自動生成を実現した話",
+      "url": "https://dev.classmethod.jp/articles/claude-code-skill-aws-architecture-diagram/",
+      "description": "Claude Codeのスキル機能を使い、Draw.ioのAWSアーキテクチャ図を自動生成する仕組みを構築。Draw.ioリポジトリからアイコンデータを機械的に抽出し、参照ファイルとして整備することで、正確なアイコン・カラー・レイアウトの構成図とコンパニオンガイドをセットで生成できるようにしました。",
+      "publishedAt": "2026-03-11T05:50:16.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "c5782146382439eb627ae206bf5d6581c0dd32c8496507a26679b710e75f926e",
+      "title": "【Security Hub修復手順】[EFS.8] EFS ファイルシステムは保管中に暗号化する必要があります",
+      "url": "https://dev.classmethod.jp/articles/securityhub-fsbp-remediation-efs-8/",
+      "description": "AWS SecurityHub 基礎セキュリティのベストプラクティスコントロール修復手順をご紹介します。",
+      "publishedAt": "2026-03-11T04:50:21.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "15b0b24e86be8e4cb4b892b82be939087d8604d3f4cc15f2ba36db4c2996b90b",
+      "title": "創発的なコミュニケーションが生まれる新感覚の一日！React Tokyo フェス 2026 イベントレポート",
+      "url": "https://techblog.lycorp.co.jp/ja/20260311b",
+      "description": "皆さんこんにちは。花谷（@potato4d）です。今回は2月28日に開催された React Tokyo フェス 2026 について、LINEヤフーとしてスポンサーを行いました。本記事では、イベント本編...",
+      "publishedAt": "2026-03-11T04:30:00.000Z",
+      "feedName": "LINEヤフー Tech Blog"
+    },
+    {
+      "id": "04df0dac5352bef9cf39eb3e00fcf26d90790610746ae411b8380463a8d32d81",
+      "title": "いま最も勢いのあるフレームワークやツールは？　「State of JavaScript 2025」",
+      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2603/11/news053.html",
+      "description": "Devographicsは、JavaScriptの年次利用動向調査「State of JavaScript 2025」の結果を発表した。フレームワークやツールのユーザー数、人気、満足度、評価度などを明らかにしている。",
+      "publishedAt": "2026-03-11T04:00:00.000Z",
+      "feedName": "＠IT"
+    },
+    {
+      "id": "98252cd7405fb9b650082531e731fbd630cdbc2c9445ba7b14b96b31084e5daa",
+      "title": "Reactでsignalsは必要ない、Jotaiがあるから",
+      "url": "https://zenn.dev/dai_shi/articles/47c729ee33faa5",
+      "description": "こんにちは、Jotai作者です。\nだいぶ前のことですが、signals について React 文脈で思うことを英語で書いた記事があります。\nhttps://blog.axlight.com/posts/why-you-dont-need-signals-in-react/\n関連して、以前こんな記事も書いています。\nhttps://zenn.dev/dai_shi/articles/01813b22907dcf\nhttps://zenn.dev/dai_shi/articles/ff75c0d8ec3415\n\n\n はじめに\nsignals という概念は以前からありますが、Web フロントエ...",
+      "publishedAt": "2026-03-11T03:54:20.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "7b86f5514be4c4d72f163822d6590831986b3aa8a0eb0fbed6ce4208dafe0ba7",
+      "title": "脆弱性管理の次の時代 ── Exposure Management とは何か",
+      "url": "https://qiita.com/keitah/items/8dbbbbdf530e2673ec1a?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\n企業のセキュリティチームは今、深刻な問題に直面しています。\n脆弱性の数が、多すぎる。\nNVD（National Vulnerability Database）に登録されるCVEは年間 25,000件以上。多くの企業では数万〜数十万の脆弱性がスキャンで検出されます...",
+      "publishedAt": "2026-03-11T03:16:04.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "6d18af550bd7c51bfc83a1339b89fae34277e35dd0fec77353aab18892a7e218",
+      "title": "偽物のClaude Codeインストールページが本物そっくり—新しい攻撃の手口と対策",
+      "url": "https://qiita.com/nogataka/items/8448956292aa9cf2d89f?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\n以前、「Claude Codeが本番DBを消した事故 ― 改めて確認しておきたいインフラの基本」という記事を書きました。AI開発ツールの便利さと危険性は表裏一体です。今回はさらに直接的な脅威の話です。\n2026年3月、セキュリティ企業Push Securityが...",
+      "publishedAt": "2026-03-11T01:19:11.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "bf6b96bb1372f1c84b1671cf372ffc188a7696e3d553d164545ccefb47b4b22e",
+      "title": "データエンジニア・LLM エンジニア採用のスキルテストをリニューアルしました",
+      "url": "https://zenn.dev/finatext/articles/skill-test-renewal-data-llm-engineer",
+      "description": "こんにちは、ナウキャストでリードエンジニアをしている六車です。\nナウキャストでは、エンジニア採用の選考ステップの一つとして、書類選考を通過したエンジニア候補の方にスキルテストを受けていただいています。\nこの度、そのスキルテストをリニューアルしました。具体的には、グループ会社である Finatext が運用しているソフトウェアエンジニア共通スキルテスト（参考記事）を、ナウキャストのデータエンジニアおよびLLM エンジニアの採用にも導入することにしました。\n「データエンジニアやLLM エンジニアなのに、なぜ職種固有の問題を出さないのか？」と思われた方もいるかもしれません。この記事では、そのテ...",
+      "publishedAt": "2026-03-11T00:00:05.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "1058aa64493c124c06c9fcf084e1bf94ed5995a727011718a38c1bd98004f345",
+      "title": "Gemini Embedding 2 の概要｜npaka",
+      "url": "https://note.com/npaka/n/n1e39b1e67561",
+      "description": "以下の記事が面白かったので、簡単にまとめました。 ・Gemini Embedding 2: Our first natively multimodal embedding model 1. はじめに本日、Geminiアーキテクチャを基盤とする初の完全マルチモーダル埋め込みモデル「Gemini Embedding 2」を、「Gemini API」および「Vertex AI」経由でパブリックプレビューとしてリリ...",
+      "publishedAt": "2026-03-10T22:47:02.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "58bf5f2d4c28c4515e4b35303b8163b3269f8312bd2f5627e1709bbe77d7fb6a",
+      "title": "AWS Community Builderに選出されたので活動を振り返る",
+      "url": "https://qiita.com/ry-harada/items/d2072de63ac3cfdd4603?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "先日AWS Community Buildersに選出されました！カテゴリーはServerlessです。恐れ多い限りですが、この記事が誰かの助けになればと思い、この1年で取り組んだことの振り返りも兼ねてまとめてみます。\n\n自己紹介\n普段は開発部門のプロダクトオーナーを担当す...",
+      "publishedAt": "2026-03-10T22:27:15.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "ba6899b1b85eb42fa2917bab4a14a63ebdca5b4ca640363a3d46741799e6ecde",
+      "title": "「カード作りが面倒すぎる」問題をAIで解決したら、資格勉強が続くようになった",
+      "url": "https://qiita.com/CoboMemo/items/de40a122980628bc61e7?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "「カード作りが面倒すぎる」問題をAIで解決したら、資格勉強が続くようになった\n\nはじめに：エンジニアの「積ん読あるある」\nAWS Solutions Architect、情報処理技術者試験、LPIC、TOEIC……\nエンジニアなら一度は「今年こそ取る」と決意した経験はない...",
+      "publishedAt": "2026-03-10T22:06:34.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "3313c27d883b27e840dbe3bc0b447ab2d7e2d8758a556ebe5702c17dcc0cba4d",
+      "title": "Windows 11に「回線速度テスト」が標準搭載！　2026年3月更新（KB5079473）で追加された機能とセキュリティ対策",
+      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2603/11/news067.html",
+      "description": "Microsoftは2026年3月10日（米国時間）、Windows 11 24H2／25H2向け更新プログラム「KB5079473」を公開した。タスクバーからのネットワーク速度測定ツールの起動や、Emoji 16.0への対応、Sysmonの標準搭載など、利便性を高める新機能が多く追加された。合計83件の脆弱性修正も含まれるため、早急な適用を推奨する。",
+      "publishedAt": "2026-03-10T20:00:00.000Z",
+      "feedName": "＠IT"
+    },
+    {
+      "id": "a1fb8a3f111c67f4911cd558ee130b6db84650ad4d8474bca7b059e0cede72b2",
+      "title": "Goでクリーンアーキテクチャを導入するとinterfaceが爆発する問題への処方箋",
+      "url": "https://zenn.dev/135yshr/articles/f2027369b648cc",
+      "description": "はじめに\n!\n本記事は私がGoでクリーンアーキテクチャを採用したプロジェクトを運用する中で得た気づきをまとめたものです。各セクションの根拠となる一次情報源は、該当箇所に参照リンクを記載しています。\n\nGoでクリーンアーキテクチャを導入したとき、私が最初にぶつかった壁は「interfaceが多すぎる」という問題でした。\nRepository、InputPort、OutputPort、UseCase、Presenter…レイヤーごとにinterfaceと実装のペアが増殖しました。1つの機能を追加するのに何ファイルも触る状態でした。\nしかし運用を続ける中で、interfaceの数そのものは...",
+      "publishedAt": "2026-03-10T00:57:24.000Z",
       "feedName": "Zenn"
     }
   ]
