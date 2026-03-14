@@ -9,206 +9,6 @@
       "feedName": "Dev.to"
     },
     {
-      "id": "aeaafbdc3473448212d57d1b0961dae6e09824d52175460720b16b043585af93",
-      "title": "自動テストツールの決定解は、テスト設計の自動化――Autifyが考える、仕様書なき現場の救い方 レバテックラボ（レバテックLAB）",
-      "url": "https://levtech.jp/media/article/interview/detail_802/",
-      "description": "自動テストツールの決定解は、テスト設計の自動化――Autifyが考える、仕様書なき現場の救い方 2026年2月12日 Autify, Inc シニアソフトウェアエンジニア 武藤大樹 2020年入社。同社のE2Eテストプロダクトである「Autify NoCode Web」および「Autify NoCode Mobile」に、立ち上げから現在まで一貫して関わる。プロダクトア...",
-      "publishedAt": "2026-02-12T01:32:24.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "9015fbf2ac1315f5b3ba1a9f0a326201c4bcab5a828b29dbce8261967f9b0c83",
-      "title": "Medicine Encyclopedia 2.0: Stop Guessing and Start Scanning with Multimodal RAG",
-      "url": "https://dev.to/beck_moulton/medicine-encyclopedia-20-stop-guessing-and-start-scanning-with-multimodal-rag-194l",
-      "description": "We’ve all been there: staring at a tiny medicine box, squinting at chemical names like Acetaminophen or Guaifenesin, and wondering—\"Can I take this with my allergy meds?\" Traditionally, you'd have to manually Google every ingredient, which is slow and prone to error.\nIn this tutorial, we are building Medicine Encyclopedia 2.0, a project that leverages Multimodal RAG (Retrieval-Augmented Generation) and Optical Character Recognition (OCR) to detect drug-to-drug interactions in real-time. By combining the power of image processing with the official RxNav API and a vector database like ChromaDB, we can turn a simple smartphone photo into a personalized health advisor. Whether you're interested in AI-driven healthcare or just want to master Drug Interaction Detection, this guide covers the full pipeline from pixels to safety alerts. \nThe logic flow involves capturing an image, extracting the active ingredients, querying a specialized medical database, and using RAG to provide a human-readable summary.\ngraph TD\n    A[User Uploads Photo] --> B[PaddleOCR: Text Extraction]\n    B --> C{Entity Extraction}\n    C -->|Drug Names| D[RxNav API: Interaction Check]\n    C -->|Dosage Info| E[ChromaDB: Manuals/Guidelines]\n    D --> F[LLM Reasoning Engine]\n    E --> F\n    F --> G[Final Response: Safety Advice]\n    G --> H[Evaluation: RAGas]\n\nTo follow along, you’ll need the following stack:\nPaddleOCR: Ultra-fast and accurate OCR.\nChromaDB: Our lightweight vector store for local drug manuals.\nRxNav API: The gold standard for drug interaction data (provided by the National Library of Medicine).\nRAGas: To evaluate if our RAG pipeline is actually hallucinating or not.\nFirst, we need to turn that blurry JPG into structured text. PaddleOCR is fantastic for this because it handles tilted text and various fonts found on medicine packaging.\nfrom paddleocr import PaddleOCR\n\n# Initialize the OCR engine\nocr = PaddleOCR(use_angle_cls=True, lang='en') \n\ndef get_drug_names(img_path):\n    result = ocr.ocr(img_path, cls=True)\n    # Extract text fragments\n    raw_text = [line[1][0] for res in result for line in res]\n    print(f\"Detected Text: {raw_text}\")\n    return \" \".join(raw_text)\n\n# Example usage\n# extracted_text = get_drug_names(\"advil_box.jpg\")\n\nExtracting the name \"Advil\" isn't enough; we need to know its active ingredient (Ibuprofen) and what it reacts with. The RxNav API allows us to find interactions between multiple drugs.\nimport requests\n\ndef check_interactions(rxcuis):\n    \"\"\"\n    rxcuis: A list of RxNorm Concept Unique Identifiers\n    \"\"\"\n    ids = \"+\".join(rxcuis)\n    url = f\"https://rxnav.nlm.nih.gov/REST/interaction/list.json?rxcuis={ids}\"\n    response = requests.get(url).json()\n\n    interactions = []\n    if \"fullInteractionTypeGroup\" in response:\n        for group in response[\"fullInteractionTypeGroup\"]:\n            for item in group[\"fullInteractionType\"]:\n                interactions.append(item[\"interactionPair\"][0][\"description\"])\n    return interactions\n\nSometimes the API doesn't have the \"human\" touch—like specific hospital guidelines or your personal health history. We use ChromaDB to store and retrieve these nuances.\nimport chromadb\nfrom chromadb.utils import embedding_functions\n\nclient = chromadb.Client()\ncollection = client.create_collection(name=\"medical_guidelines\")\n\n# Add some local context\ncollection.add(\n    documents=[\"Patient A has a history of stomach ulcers. Avoid NSAIDs like Ibuprofen.\"],\n    metadatas=[{\"source\": \"medical_record\"}],\n    ids=[\"id1\"]\n)\n\ndef get_local_context(query):\n    results = collection.query(query_texts=[query], n_results=1)\n    return results['documents'][0]\n\nWhile this tutorial provides a great starting point for a \"Learning in Public\" project, building production-grade AI healthcare tools requires robust prompt engineering and rigorous data privacy handling. \nFor more advanced patterns, such as Agentic RAG or Production-ready Multimodal Pipelines, I highly recommend checking out the deep-dive articles at WellAlly Tech Blog. They cover the architectural nuances that take a prototype from \"cool hobby project\" to \"scalable enterprise solution.\"\nFinally, we feed the OCR results, the RxNav interactions, and the ChromaDB context into an LLM (like GPT-4o) to generate a warning that a human can actually understand.\ndef generate_safety_report(ocr_text, interactions, context):\n    prompt = f\"\"\"\n    User scanned a medicine: {ocr_text}\n    Known clinical interactions: {interactions}\n    Personal context: {context}\n\n    Provide a simple 'Safe' or 'Warning' report for the user.\n    \"\"\"\n    # Call your LLM here...\n    return \"WARNING: You are taking Advil, but your records show stomach ulcers. Consult a doctor!\"\n\nHow do we know if our RAG isn't just making things up? We use RAGas to measure \"Faithfulness\" and \"Answer Relevance.\"\nfrom ragas import evaluate\nfrom datasets import Dataset\n\n# Construct a small dataset of your outputs\ndata_samples = {\n    'question': ['Can I take Advil with my current meds?'],\n    'answer': [generated_report],\n    'contexts': [[f\"{interactions} {context}\"]],\n    'ground_truth': ['Warning: Ibuprofen conflicts with ulcer history.']\n}\n\ndataset = Dataset.from_dict(data_samples)\n# score = evaluate(dataset, metrics=[faithfulness, answer_relevance])\n# print(score)\n\nBy combining PaddleOCR for vision, RxNav for medical truth, and ChromaDB for personalized context, we've built a powerful tool that literally saves lives. Multimodal RAG is moving fast, and this is just the tip of the iceberg!\nWhat's next?\nTry adding a \"pill identification\" feature using a CNN.\nIntegrate voice-to-text so users can ask questions hands-free.\nIf you enjoyed this build, drop a comment below or 🦄 heart this post! And don't forget to visit WellAlly Tech for more high-level AI tutorials.\nHappy coding!",
-      "publishedAt": "2026-02-12T01:15:00.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "fafee343a53f9fd79e6acf642b4da49dee4c465c4638efe9f8ecffc3cbf2fc2a",
-      "title": "Running 10 AI Agents to Automate My Life — A Practical Guide with OpenClaw",
-      "url": "https://dev.to/linou518/running-10-ai-agents-to-automate-my-life-a-practical-guide-with-openclaw-ki7",
-      "description": "Introduction\n\n\n\"AI agents? Aren't they just chatbots in the end?\"\nThat's what I thought six months ago. But today, 10 AI Agents run 24/7 across three PCs in my home, automating every aspect of my life—from morning briefings to meeting management, investment monitoring, and learning support.\nIn this article, I'll share the full picture of the \"personal multi-agent system\" I built using OpenClaw, an open-source AI Agent framework—pitfalls included. I work as an engineer in the data platform space.\n:::message\nIt started with just one (Joe, the supervisor). But over time, problems emerged:\nContext bloat: When investment discussions and learning support share the same session, token consumption explodes\nPrompt specialization: Project management and tech news curation require completely different personas\nFault isolation: If one agent goes down, the rest are unaffected\nThe optimal solution turned out to be splitting agents by role—exactly the Separation of Concerns design principle.\n\n\n\nAgent\nRole\nOverview\n\n\n\n\nJoe (Supervisor)\nOrchestration\nOverall coordination, scheduling, heartbeat monitoring, incident response\n\n\nCaiZhi\nInvestment\nPortfolio monitoring, market trends, monthly reviews\n\n\n学思\nPersonal Learning\nStudy plans, tech trend curation, daily tech news\n\n\n学習助理\nLearning Support\nLearning content generation, progress tracking\n\n\nLife Helper\nDaily Life\nShopping, reservations, translation, lifestyle info\n\n\nPJ-A–D\nProjects\nProgress & meeting management per client (4 projects)\n\n\nFudosan\nReal Estate\nProperty management, real estate market analysis\n\n\n\nThere are four project agents because each engagement has completely independent context and schedules. Mix them together and you can't tell \"Company A's meeting\" from \"Company B's standup.\"\nHere's the overall setup:\n┌─────────────┐     Telegram Bot API      ┌──────────────────┐\n│  Telegram    │  ◄── Multiple Bot Accts ─►│  PC-A (Primary)   │\n│  (Phone)     │                           │  OpenClaw Gateway │\n└─────────────┘                            │  Joe + All Agents │\n                                           │  8GB RAM          │\n                                           └────────┬─────────┘\n                                                    │ Memory sync (5 min)\n                                           ┌────────▼─────────┐\n                                           │  PC-B (Standby)   │\n                                           │  Joe-Standby      │\n                                           │  Auto failover    │\n                                           └──────────────────┘\n\n                                           ┌──────────────────┐\n                                           │  T440 (Docker)    │\n                                           │  Learning Agents  │\n                                           │  Flask Dashboard  │\n                                           └──────────────────┘\n\nCommunication: Multiple Telegram Bot accounts, with OpenClaw's binding routing directing each Bot → its corresponding Agent\nHA (High Availability): watchdog.py monitors PC-A every 30 seconds. From downtime detection to automatic failover to PC-B takes about 90 seconds\nBackup: Auto-pushed to a GitHub private repo with GPG encryption. Monitored via Healthchecks.io\nCost: All three PCs are repurposed home machines. Additional hardware investment: virtually zero\n:::message alert\nEvery morning, I just send \"Good morning\" on Telegram and get a report like this:\n🌅 Good morning. Here's your briefing for Wednesday, February 12.\n\n📋 Yesterday's Summary\n- CaiZhi: Nikkei +1.2%, no major moves in holdings\n- PJ-A: 2 PR reviews completed, sprint progress at 85%\n- PJ-B: Staging environment deployed for tomorrow's demo\n\n📅 Today's Schedule\n- 10:00 Company A standup (Teams)\n- 14:00 Company B tech review (Zoom)\n- 16:00 Team standup\n\n📰 Top 3 Tech News\n- [1] OpenAI announces new model...\n- [2] Rust 2025 Edition changes...\n- [3] AWS re:Invent 2025 roundup...\n\nHow it works: A cron job kicks off the morning routine → sessions_spawn requests reports from each Agent → Joe aggregates them and delivers via Telegram.\nImpact: What used to take 60 minutes of morning information gathering now finishes in 5 minutes. I can read everything while making coffee.\nWhen you're juggling multiple projects, meeting conflicts are quietly devastating.\nEvery morning at 5 AM, calendar data is fetched via MS Graph API\n\nConflicting meetings are automatically detected and flagged (e.g., Company A's 10:00 standup overlaps with Company B's 10:30 morning call)\n2 hours before each meeting: a reminder + Telegram inline buttons (Start / Complete / Postpone)\nTimeline view on a Flask Dashboard running on the T440\n\n\n\n\n⚠️ Meeting conflict detected!\n  10:00-11:00 Company A Standup\n  10:30-11:30 Company B Morning Call\n→ Suggest rescheduling Company B's morning call? [Yes] [No] [Ignore]\n\nTap \"Yes\" and the relevant project Agent automatically proposes rescheduling options.\n学思 Agent runs every morning at 4:30 AM.\nCollects 1,000+ articles from 12 data sources (Hacker News, Reddit, arXiv, Zenn, Qiita, GitHub Trending, etc.)\nAI-powered scoring (relevance × novelty × impact)\nDelivers the Top 10 to Telegram\nOpenClaw-related papers and security alerts are flagged separately\nBy the time I wake up, my reading list is already curated. This alone makes running agents worthwhile.\nThis is what I really want to share. Here are the production landmines you won't find in the official docs.\nSymptom: Running multiple Telegram Bots on the same Gateway causes Agent A's responses to come from Agent B.\nCause: The deliveryContext gets overwritten when using multiple Bots. With the default dmPolicy: pairing, the last Bot to pair hijacks all sessions.\nSolution:\n# Change dmPolicy to allowlist\ndmPolicy: allowlist\n\n# Set explicit bindings for each Telegram account\ntelegram:\n  accounts:\n    - name: joe-bot\n      binding: agent:main\n    - name: caizhi-bot\n      binding: agent:caizhi\n\n:::message alert\nLesson: For multi-Bot setups, dmPolicy: allowlist + explicit bindings are essential. Not knowing this cost me 3 days.\nSymptom: Gateway won't start. Neither PC-A nor PC-B.\nCause: Set streamMode to the invalid value \"full\". The only valid values are \"off\" / \"partial\" / \"block\". I'd edited the config file directly with sed, bypassing validation.\nTo make matters worse, I was syncing the same config to both HA nodes, so both machines died simultaneously. Recovery took over an hour.\nLesson:\n# ❌ Never do this\nvim ~/.openclaw/config.yaml\n\n# ✅ Always use config.patch (includes validation)\nopenclaw config.patch '{\"streamMode\": \"streaming\"}'\n\nconfig.patch validates before applying, so invalid values are rejected. Never edit the config file directly. This is an iron rule.\nSymptom: Bot responses are abnormally slow. The same message gets answered twice. Logs are flooded with 409 Conflict.\nCause: Multiple processes were polling Telegram with the same Bot Token. This happened when PC-A and PC-B were accidentally started simultaneously with the same Token.\nSolution: Follow the iron rule of 1 Token = 1 Process. In an HA setup, the standby node must not start polling until it becomes active.\nSymptom: All Bots suddenly stop responding. Messages sent on Telegram don't even show as read.\nCause: While updating Telegram account settings via config.patch, I accidentally included a placeholder string in the botToken field. This overwrote every Bot's real Token with the placeholder, disconnecting all Bots.\n# ❌ What I did\nopenclaw config.patch '{\n  \"telegram\": {\n    \"accounts\": [{\n      \"name\": \"joe-bot\",\n      \"botToken\": \"YOUR_TOKEN_HERE\",  # ← This got applied to all Bots\n      \"binding\": \"agent:main\"\n    }]\n  }\n}'\n\nLesson: When touching telegram.accounts via config.patch, never include the botToken field. Only update bindings and names.\n:::message alert\nSymptom: One day, a specific Agent suddenly stops responding.\nCause: Claude 3 Opus was deprecated and the API started returning model_not_found. OpenClaw had fallback settings, but the automatic switchover didn't work as expected.\nLesson: Review model specifications regularly. Prefer aliases like anthropic/claude-sonnet-4 over pinned versions like claude-sonnet-4-20250514. Even so, deprecations may still require manual intervention.\nHere's the cost breakdown everyone wants to know:\n\n\n\nItem\nMonthly Cost\n\n\n\n\nAnthropic API (10 Agents)\n$200–300\n\n\nHardware (3 home PCs)\n¥0 (repurposed)\n\n\nTelegram Bot API\nFree\n\n\nHealthchecks.io\nFree tier\n\n\nGitHub Private Repo\nFree tier\n\n\nTotal\n~$200–300/month\n\n\n\nI primarily use Claude Sonnet and Haiku, reserving Opus for the supervisor and complex decision-making. $200–300/month for 10 agents isn't cheap, but considering it saves over 50 hours per month, it more than pays for itself.\nInitial setup took about 2 weeks. It now runs almost entirely on autopilot—heartbeats + auto-recovery mean manual intervention is rarely needed.\n\"10 agents feels like a lot…\"—if that's what you're thinking, don't worry. You don't need to build all 10 at once.\n# Install OpenClaw\nnpm install -g openclaw\n\n# Start the Gateway\nopenclaw gateway start\n\n# Create a Telegram Bot via BotFather and connect it\nopenclaw config.patch '{\n  \"telegram\": {\n    \"accounts\": [{\n      \"name\": \"my-first-bot\"\n    }]\n  }\n}'\n\nStart with your first agent doing simple things like \"What's the weather?\" or \"What's on my calendar today?\"\nWhen one agent starts feeling unwieldy, split it. The moment you think \"I wish this context were separate\" is the moment to create agent #2. For me, the biggest efficiency gain came from splitting agents by client project.\nCombine cron jobs, heartbeats, and sessions_spawn to reach the state where agents proactively inform you without being asked. Once you're there, there's no going back to life without agents.\nAfter running a personal butler system with 10 AI Agents for six months, I'm convinced of one thing:\nThe true value of AI Agents isn't \"chat\"—it's autonomous action.\nA chatbot that only answers when asked and an agent that proactively gathers information and reports to you are fundamentally different things. OpenClaw is one of the rare frameworks that makes this kind of autonomy possible at the individual level.\nStart with one. Experience the feeling of having your entire day prepared with a single \"Good morning.\"\n📖 OpenClaw Official Docs\n\n🐙 GitHub\n\n💬 Discord Community\n\n\n\n:::message\nNext time, I'll write about \"coordination patterns between AI Agents\"—diving deep into how Joe delegates tasks to other Agents (sessions_spawn) and how memory is shared between Agents. Stay tuned!\n:::",
-      "publishedAt": "2026-02-12T01:10:05.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "6e6f9bd1c74a6455d8b3dfddffe01a6a04c92e24613d1beb1d736969097135d2",
-      "title": "ポスト量子 TLS を Python で実装・検証する方法",
-      "url": "https://aws.amazon.com/jp/blogs/news/post-quantum-tls-in-python/",
-      "description": "このブログでは、Python アプリケーションでポスト量子 TLS をテストする方法を紹介します。OpenSSL 3.5 をインストールした Dockerfile を使用して、boto3、requests、Python の socket/ssl モジュールによるポスト量子ハイブリッド TLS 接続をテストする手順を解説します。また、Wireshark を使用した TLS ハンドシェイクの確認方法も説明し、ポスト量子ハイブリッド TLS 移行に備えたネットワーク検証の開始を支援します。",
-      "publishedAt": "2026-02-12T00:31:22.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "64f558fe7a3df22684372a4b71ec81eb217881d7fd2af8d3196480a53f0a454d",
-      "title": "AWS KMS、ACM、Secrets Manager で ML-KEM ポスト量子 TLS をサポート開始",
-      "url": "https://aws.amazon.com/jp/blogs/news/ml-kem-post-quantum-tls-now-supported-in-aws-kms-acm-and-secrets-manager/",
-      "description": "AWS Key Management Service (AWS KMS)、AWS Certificate Manager、AWS Secrets Manager で ML-KEM ベースのハイブリッドポスト量子鍵合意のサポートが開始されました。量子コンピューティングの進歩による「harvest now, decrypt later (今収集して、後で復号)」攻撃の脅威に備え、TLS 接続のセキュリティを強化します。AWS SDK for Java v2 でのベンチマーク結果では、TLS 接続の再利用を有効にした場合、パフォーマンスへの影響はわずか 0.05% にとどまります。CRYSTALS-Kyber から ML-KEM への移行方法と、今後の AWS 全体でのポスト量子暗号展開計画について解説します。",
-      "publishedAt": "2026-02-12T00:29:50.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "e78b1f9a8417ba2b72a175df1aeb34e7c13ea5fd6bd7c44c9c52296c6bd9d4c7",
-      "title": "ポスト量子暗号への移行におけるセキュアな TLS 接続の仕組みとクライアント設定ガイド",
-      "url": "https://aws.amazon.com/jp/blogs/news/customer-compliance-and-security-during-the-post-quantum-cryptographic-migration/",
-      "description": "AWS はポスト量子暗号への移行を進めており、TLS 1.3 などのプロトコルにポスト量子ハイブリッドキー交換を導入しています。このブログでは、AWS の責任共有モデルにおけるお客様の役割と、耐量子アルゴリズムを有効にする方法を解説します。AWS サービスは、クライアントが耐量子アルゴリズムのサポートをアドバタイズしている場合、多少の遅延が発生してもポスト量子ハイブリッドキー交換を優先します。AWS Key Management Service (AWS KMS)、AWS Certificate Manager、AWS Secrets Manager、AWS Transfer Family での具体的な検証方法も紹介します。",
-      "publishedAt": "2026-02-12T00:27:49.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "d1aedcaf68a6e31024b6b901d238ddd140bf2342ac79ba2bbc8a002deae62104",
-      "title": "逆境の中で、技術選定はどう行われてきたのか。「技術選定を突き詰める Online Conference」全11セッションの見どころ - Findy Media",
-      "url": "https://findy-code.io/media/articles/tech-selection-conf-2026",
-      "description": "逆境の中で問われる、技術選定の意思決定 技術選定やアーキテクチャ設計における意思決定は、理想通りに進むことのほうが少ないのが現実です。限られたリソースや厳しい納期、組織やビジネスの制約、既存システムとの摩擦。こうした逆境の中で、「より良い選択」を導く意思決定が問われます。 それでもプロダクトやサー...",
-      "publishedAt": "2026-02-12T00:03:14.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "aeec0fe56302b87c7fd412436f5a01452e98115c2132890b4e428dae932de5f9",
-      "title": "Amazon RDS for SQL Server で CPU を最適化する設定",
-      "url": "https://aws.amazon.com/jp/blogs/news/configure-optimize-cpu-on-amazon-rds-for-sql-server/",
-      "description": "この投稿では、新規および既存の Amazon RDS インスタンスの両方において、パフォーマンスを維持しながらライセンス費用を削減する可能性がある CPU 最適化機能の実装方法を、パフォーマンスベンチマーク結果とコストへの影響とともに説明します。",
-      "publishedAt": "2026-02-11T23:59:47.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "727f3c538aa07d47c39bfc5e330ff81de8994fc63f9006f692fa1bd57fa742c2",
-      "title": "セキュリティに優れた18社が「二つ星」認定、IT業界団体の“サイバー格付け”",
-      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2602/12/news038.html",
-      "description": "日本IT団体連盟は2026年1月20日、日経500種平均株価構成銘柄を対象とした「日本IT団体連盟サイバーインデックス企業調査2025」の結果を公開した。優れた取り組みが確認できた72社に対し、星を付与する格付けを行った。",
-      "publishedAt": "2026-02-11T23:00:00.000Z",
-      "feedName": "＠IT"
-    },
-    {
-      "id": "dccc341adc90d580a24287faf489c0dcd75d4b0baeb9a038db71aa9174d9583b",
-      "title": "Announcing TypeScript 6.0 Beta - TypeScript",
-      "url": "https://devblogs.microsoft.com/typescript/announcing-typescript-6-0-beta/",
-      "description": "Today we are announcing the beta release of TypeScript 6.0! To get started using the beta, you can get it through npm with the following command: npm install -D typescript@beta TypeScript 6.0 is a unique release in that we intend for it to be the last release based on the current JavaScript codeb...",
-      "publishedAt": "2026-02-11T22:25:56.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "6945f5d60f038640b5a3f94dddf6560afdfdc9ac366542076228218d13b51ff3",
-      "title": "【Go】構造体のフィールド順序はパフォーマンスにどう影響するか？~ 検証レポート ~",
-      "url": "https://qiita.com/umekikazuya/items/800e8a37d0f6ec4b7ba8?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "はじめに\n\nGoコンパイラは構造体の各フィールドを、そのフィールド型のアライメント要件に従ってメモリ上に配置する。\n\nCやRustとは異なり、コンパイラがフィールドの自動並び替えを行わない。\n宣言順序がそのままメモリレイアウトに反映される。\n\nGo言語には上記のような前...",
-      "publishedAt": "2026-02-11T19:05:38.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "eceb3ebd0101afed920cc9a849a82e810bc2967a0ded1ce2905bd4abcd4c9b23",
-      "title": "KMS のカスタマーマネージドキーで暗号化している AWS IAM Identity Center に対する読み取り権限を付与してみた",
-      "url": "https://dev.classmethod.jp/articles/iam-identity-center-cmk-decrypt-policy/",
-      "description": "KMS のカスタマーマネージドキーで暗号化している AWS IAM Identity Center に対する読み取り権限を付与してみた",
-      "publishedAt": "2026-02-11T14:57:20.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "ed7e4551c779d552496a01608d792f485b971a6d89a881a0c1f5cdd831793595",
-      "title": "ECS Express Modeで未対応のARM64 / FARGATE_SPOT / ECS Execを利用してみた",
-      "url": "https://dev.classmethod.jp/articles/ecs-express-mode-arm64-fargate-spot-exec/",
-      "description": "ECS Express Modeの制限を回避し、ARM64（Graviton）、Fargate Spot、ECS Execを事後的に有効化する2段階デプロイプロセスを解説。CloudFormationとAWS CLIを組み合わせた実装手順を紹介します。",
-      "publishedAt": "2026-02-11T14:46:39.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "2f6d51bef759c4a4e730ccf9f33dea84aaf3334a0361d94cdb34fafd16055805",
-      "title": "draw.io公式MCP Serverがリリース！Kiro CLIで試してみつつ、AWS Diagram MCP Serverとの比較もやってみた",
-      "url": "https://qiita.com/sh_fukatsu/items/582dc769379e2c32ae30?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "はじめに\n2026年2月、draw.ioの公式MCP（Model Context Protocol）Serverがリリースされました。\n\nMCP Serverの登場が相次いでいますが、作図ツールとして広く使われている（と思っている）draw.ioからも公式のMC...",
-      "publishedAt": "2026-02-11T14:26:02.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "fd6cd5d666e29e2cd26f7bf8c29c574251fca7f0e1c10d8ec5d2dd66d37712d0",
-      "title": "draw.ioの公式MCPサーバが出てたのでClaude Codeで試してみる",
-      "url": "https://zenn.dev/is0383kk/articles/b39bccc8264b47",
-      "description": "AWSTemplateFormatVersion: \"2010-09-09\" Transform: AWS::Serverless-2016-10-31 Description: Sample Application Globals: Function: Timeout: 5 MemorySize: 128 Runtime: python3.11 Architectures: - arm64 LoggingConfig: LogFormat: JSON ApplicationLogLevel: INFO Environment: Variables: POWERTOOLS_SERVICE...",
-      "publishedAt": "2026-02-11T10:49:37.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "7336a07fa161edba38a2646f3debc13091b297f78b0d2a8f9a3ce0575313b490",
-      "title": "GitHub Actions × ecspresso × CDK で ECS Fargate デプロイを高速化 - デプロイ時間 5分→3分の改善",
-      "url": "https://dev.classmethod.jp/articles/shoma-ecs-deployment-pipeline-with-github-actions-ecspresso-cdk/",
-      "description": "GitHub Actions × ecspresso × CDK で ECS Fargate デプロイを高速化 - デプロイ時間 5分→3分の改善",
-      "publishedAt": "2026-02-11T10:22:33.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "47237045de820c65158693d4fb3e61f54f33122eabc61adf573e36a479db8649",
-      "title": "OpenTacoで複数のAWSアカウントにリソースをデプロイしてみる",
-      "url": "https://dev.classmethod.jp/articles/opentaco-aws-multi-account-deploy-digger-yml/",
-      "description": "OpenTacoで複数のAWSアカウントにリソースをデプロイしてみる",
-      "publishedAt": "2026-02-11T08:56:23.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "4403c382b03c65cd454a51eeae21d7a2ff12262a1a5ff1306d086875df74c511",
-      "title": "オンラインゲームやビデオ通話の遅延発生につながる「バッファブロート」が自分の使っているネットワークで発生するか否か測定できるウェブサイト",
-      "url": "https://gigazine.net/news/20260211-bufferbloat-test/",
-      "description": "ルーターが一度に大量のデータを処理しようとして過負荷状態になりインターネット接続が遅くなる現象を「バッファブロート」と呼びます。ブラウザから無料でインターネット接続をテストする「Bufferbloat and Internet Speed Test」を使うと、現在使っているルーターでバッファブロートが起きやすいかどうかをチェックす...",
-      "publishedAt": "2026-02-11T08:47:48.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "6d999461997024cde8a22e43eb633d1ebf63a5061e36604fa6336f6455b1d879",
-      "title": "Web アプリケーションをツール化する WebMCP",
-      "url": "https://azukiazusa.dev/blog/webmcp-for-web-applications/",
-      "description": "WebMCP は Web 開発者が Web アプリケーションの機能をツールとして公開できるようにする JavaScript インターフェイスです。これにより AI エージェントが Web アプリケーションの機能を直接呼び出して操作できるようになります。 WebMCP は Web 開発者が Web アプリケーションの機能をツールとして公開できるようにす...",
-      "publishedAt": "2026-02-11T07:52:17.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "7f25eee593aaba15485617fb1d3f81a23d99b54433fc0a34d3fe697fd38722aa",
-      "title": "【AWS CDK】 AWS Glue zero-ETLでDynamoDBデータをIceberg Tableにクロスアカウント連携してみた",
-      "url": "https://dev.classmethod.jp/articles/aws-cdk-aws-glue-zero-etl-dynamodb-iceberg-table/",
-      "description": "【AWS CDK】 AWS Glue zero-ETLでDynamoDBデータをIceberg Tableにクロスアカウント連携してみた",
-      "publishedAt": "2026-02-11T07:27:14.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "c9bfd1a11335eb522220bf0a43b024710b8cf9a8cbcaaabd9e08ba35b591d6ba",
-      "title": "「セキュリティリスク＝影響度☓発生確率」をやめよう - Qiita",
-      "url": "https://qiita.com/f_0000/items/5cc486be289a8ea76728",
-      "description": "Deleted articles cannot be recovered. Draft of this article would be also deleted. Are you sure you want to delete this article? はじめに セキュリティアセスメントをする際、このような発言を聞いたことがある方も多いのではないだろうか。 検出されたセキュリティリスクを「影響度☓発生確率」で優先度づけし...",
-      "publishedAt": "2026-02-11T06:41:06.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "b976db915b110d98f131f612ab6f83a4474ca8fd284692183ac9d4a15cd42b66",
-      "title": "「セキュリティリスク＝影響度☓発生確率」をやめよう",
-      "url": "https://qiita.com/f_0000/items/5cc486be289a8ea76728?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "はじめに\nセキュリティアセスメントをする際、このような発言を聞いたことがある方も多いのではないだろうか。\n検出されたセキュリティリスクを「影響度☓発生確率」で優先度づけしました！\n・・・\nセキュリティリスク＝影響度☓発生確率\n長く使い古されたフレームワークである。\nそして...",
-      "publishedAt": "2026-02-11T05:48:24.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "9acddecb2c43c4eb865d50fad943c6bdd689db20fbd606b2b0c67c3503e680ae",
-      "title": "OpenClawのビジネス向け環境構築で考える、AIエージェントの倫理とセキュリティ。そしてクローズドループへ",
-      "url": "https://dev.classmethod.jp/articles/openclaw-closed-loop/",
-      "description": "OpenClawのビジネス向け環境構築で考える、AIエージェントの倫理とセキュリティ。そしてクローズドループへ",
-      "publishedAt": "2026-02-11T03:52:51.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "664a27287bc221f990025dfce6ba0b9a479d5f0939dfef8a39d0ba739cecda1a",
-      "title": "Azure Application Gateway WAF v2 の HTTP DDoS ルールセットを設定してみた",
-      "url": "https://dev.classmethod.jp/articles/azure-appgw-waf-httpddos/",
-      "description": "Azure Application Gateway WAF v2 の HTTP DDoS ルールセットを設定してみた",
-      "publishedAt": "2026-02-11T03:27:21.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "7b0b8a4df93ddf76a64dc2ef81253d87ebc4c3a31ae50aa97f675d0eefd86881",
-      "title": "月刊 AWS 製造 2026年2月号",
-      "url": "https://aws.amazon.com/jp/blogs/news/monthly-manufacturing-202602/",
-      "description": "みなさん、こんにちは。AWS のインダストリーソリューションアーキテクトの山本です。 このブログでは開催予定の […]",
-      "publishedAt": "2026-02-11T02:44:29.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
       "id": "1e338de72a0296a9e5f1bda271b89605405dacaa2d6d5253f7bb5f1e4c7cd658",
       "title": "Building Your First Event-Driven Pipeline with Argo Events: From Webhook to Workflow",
       "url": "https://dev.to/tim_derzhavets/building-your-first-event-driven-pipeline-with-argo-events-from-webhook-to-workflow-4lje",
@@ -414,46 +214,6 @@
       "url": "https://qiita.com/nogataka/items/9ad4fbc57e706b580b6f?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
       "description": "AIでコードを書くのが当たり前になりました。\n実装速度は上がったのに、こんな悩みは増えていませんか？\n\nAIが途中で詰まり、結局は自分が巻き取る場面が思ったより多い\n自分が想定していた書き方と大きく違い、読む前に読み替えコストが発生する\n小さな修正でも「どこまで壊れる可能性...",
       "publishedAt": "2026-02-12T02:01:38.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "dfaa25b7503f65acae2573705aa4dc661dfcc163f2712e97af32b70bd43f9f3f",
-      "title": "2026/02/12 今日のQiitaトレンド記事をポッドキャストで聴こう！",
-      "url": "https://qiita.com/ennagara128/items/486d7d7bc087b931fd96?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "前日夜の最新トレンド記事のAIポッドキャストを毎日朝7時に更新しています。\n通勤中などにながら聴きしよう！\n（Qiita投稿は通勤には間に合わないと思われますが）\nフィードバックとか助かりますのでください\n↓こちらから\n\n出典\n【WebF】React/Vue/Svelteが...",
-      "publishedAt": "2026-02-12T01:52:30.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "acc3f01556f061ee99e4a7ac796e27b8a52aecb2342d038e85b1f9459ce0b109",
-      "title": "ZXing を利用した実装が悪いと思ったら、Excel 作のバーコードが罠だった話",
-      "url": "https://qiita.com/A_Este/items/90e47f7f48b480c46b95?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "1. はじめに\n\n経緯\n現在参画中のプロジェクトでスマホ向けアプリを開発しています。\n個人情報をフォームに入力して送信すると、\nDBにデータがインサートされるという比較的シンプルな構成のものです。\nところが、アプリの結合テスト段階で、思わぬ落とし穴にハマりました。\n「実装...",
-      "publishedAt": "2026-02-11T18:24:41.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "db322a4d380b47da12d148591e83a4a3944a6dbbd6aba5d8eed9a9c32f39c19d",
-      "title": "draw.io公式MCP Serverがリリース！Kiro CLIで試してみつつ、AWS Diagram MCP Serverとの比較もやってみた - Qiita",
-      "url": "https://qiita.com/sh_fukatsu/items/582dc769379e2c32ae30",
-      "description": "draw.io公式MCP Serverがリリース！Kiro CLIで試してみつつ、AWS Diagram MCP Serverとの比較もやってみたAWSDraw.ioMCPKiro はじめに 2026年2月、draw.ioの公式MCP（Model Context Protocol）Serverがリリースされました。 MCP Serverの登場が相次いでいますが、作図ツールとして広く使われている（と思っている）draw....",
-      "publishedAt": "2026-02-11T15:07:08.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "732dd22c345d52dd80e645cc4953d00db77243cdb7905cfead78633aa03e2df1",
-      "title": "NoteBookLMを使ったら勉強がめちゃくちゃ捗った話 - Qiita",
-      "url": "https://qiita.com/hiroki2712/items/a6786232ccff689da825",
-      "description": "Deleted articles cannot be recovered. Draft of this article would be also deleted. Are you sure you want to delete this article? はじめに こんにちは、hirokiです。 現在、AWS SAP（Solution Architect Professional）の取得に向けて日々勉強をしています。 そこで前から気になっていたNotebookLMを学習に取り...",
-      "publishedAt": "2026-02-11T12:04:42.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "9b86bcb952670ad72a5b0dc9e006caa4ebd74c7b61ea766585e55abf2a6351f0",
-      "title": "NoteBookLMを使ったら勉強がめちゃくちゃ捗った話",
-      "url": "https://qiita.com/hiroki2712/items/a6786232ccff689da825?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "はじめに\nこんにちは、hirokiです。\n現在、AWS SAP（Solution Architect Professional）の取得に向けて日々勉強をしています。\nそこで前から気になっていたNotebookLMを学習に取り入れてみたところ、めちゃくちゃ勉強が捗ったので、...",
-      "publishedAt": "2026-02-11T11:28:53.000Z",
       "feedName": "Qiita"
     },
     {
@@ -680,14 +440,6 @@
       "feedName": "Qiita"
     },
     {
-      "id": "2617a4c65f6d50f426bce3f9da8e96680bdcb4af29d8c2eed0da4da03427fb4c",
-      "title": "ウォーターフォールを成功させるには、結局先の工程に取りかからないと厳しいと思った話",
-      "url": "https://zenn.dev/tonbi_attack/articles/c07206607bb3b1",
-      "description": "はじめに\nウォーターフォールは、要件定義から順番に進める前提で語られることが多いです。私も最初はそのイメージで進めていました。\nただ、実務で何度か痛い目を見て、結局は先の工程に早めに触れないと成立しない場面が多いと感じるようになりました。\nこの記事で言いたいことはシンプルです。\n工程を崩したいのではなく、前工程の精度を上げるために、先の工程の情報を先に取りにいく必要があるという話です。\n\n よくある前提\nウォーターフォールの説明では、次のような順序が理想形として置かれます。\n\n要件定義\n基本設計\n詳細設計\n実装\nテスト\n\nこの順序自体は間違っていません。\nただし、既存システム改修では...",
-      "publishedAt": "2026-02-11T09:57:19.000Z",
-      "feedName": "Zenn"
-    },
-    {
       "id": "7c4c4b018b369114e3ca6aaf975d40c4cc3445a8d23b88dde360a91b46304ba5",
       "title": "5 years of work in 2 weeks",
       "url": "https://dev.to/davidortinau/5-years-of-work-in-2-weeks-okg",
@@ -846,14 +598,6 @@
       "description": "tl;dr\n\nインデックスだけに頼らないDBパフォーマンスチューニング手法を整理します\nパーティション、ヒント句、パラレルクエリ、オンメモリという4つの代表的手段を解説します\nそれぞれの概要・具体例・メリットとデメリットを把握できます\n適切な使いどころと注意点がわかり、実務での選択肢が広がります\n\n\n はじめに\nDBのパフォーマンスチューニングというと、まず「インデックスを張る」ことを思い浮かべる方が多いのではないでしょうか。\nもちろんインデックスは非常に重要ですが、それだけでは解決できないケースも少なくありません。\n本記事では、達人に学ぶDB設計徹底指南書 第2版 を参照しつつ、イ...",
       "publishedAt": "2026-02-12T23:00:06.000Z",
       "feedName": "Zenn"
-    },
-    {
-      "id": "f98e0fe98e006c8b6e7b02df2ec46b7321a6f67c1bcdf69256013a6a6ba89d7a",
-      "title": "VSCodeでフロントエンドとバックエンドを並行開発するためのレポジトリ構成",
-      "url": "https://qiita.com/septigram/items/fa6f42cd3dce6f6f333f?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "VSCodeでフロントエンドとバックエンドを並行開発するためのレポジトリ構成\n\n概要\nVSCodeを用いてフロントエンド（Vueなど）とバックエンド（Spring Bootなど）を同一プロジェクト内で並行開発する際の、レポジトリとワークスペースの構成案です。\n単一のモノレ...",
-      "publishedAt": "2026-02-11T21:54:45.000Z",
-      "feedName": "Qiita"
     },
     {
       "id": "49ffc86143bac403884ed321b67063a1b651761d0ffa4dce958842bd93dcf62d",
@@ -6538,6 +6282,150 @@
       "description": "AWSを学び始めても、用語が多すぎて全体像がつかめない。\nこの状態が続くと、サービス名は知っていても設計や会話で使いこなせません。\n基本から主要サービスまでをひとつの流れで整理できたのがこの本でした。\nAWSの基本・仕組み・重要用語が全部わかる教科書 (見るだけ図解)\n\nこ...",
       "publishedAt": "2026-03-10T11:28:02.000Z",
       "feedName": "Qiita"
+    },
+    {
+      "id": "595ed90e92671e5fecb7fea576ed7aa1f66fbc86eb85864f46b8548b1afadfe2",
+      "title": "Building a Microservices Ecosystem: Stock Brokerage Simulator (My Broker B3)",
+      "url": "https://dev.to/rvneto/building-a-microservices-ecosystem-stock-brokerage-simulator-my-broker-b3-45bj",
+      "description": "Building a Microservices Ecosystem: Stock Brokerage Simulator (My Broker B3)\n\n\nHello, everyone!\nI’m starting a series of articles to document the development of My Broker B3. This is a personal project where I’m applying advanced software engineering concepts, distributed systems, and messaging to simulate the real-world operations of a stock brokerage.\nThe main objective is to create an ecosystem that handles challenges such as data consistency, low latency, and asynchronous communication, all while integrating a simplified matching engine.\nThe project was designed following a microservices approach, using a hybrid stack to leverage the best of each ecosystem:\nCore Backend (Java/Spring Boot 3): Responsible for the order (broker-order-api), wallet (broker-wallet-api), and asset management (broker-asset-api) APIs.\nMarket Data (Python): An integrator (broker-market-data-api) that manages market data ingestion via scheduled tasks.\nMatching Engine (Java): A B3 simulator (b3-matching-engine-api) that processes the execution of orders sent by the brokerage.\nTo ensure resilience and scalability, I adopted a hybrid communication strategy:\nSynchronous (REST): Used for critical real-time validations, such as verifying the wallet balance before allowing an order to be sent.\nAsynchronous (Event-Driven):\n\n\n\nApache Kafka: Acts as an internal event bus for distributing market quotes and asset-related events.\nRabbitMQ: Manages the communication between the Broker and the B3 Simulator through dedicated queues.\nEach service utilizes the data strategy that best suits its specific purpose:\n\n\n\nTechnology\nUse Case\n\n\n\n\nMySQL / PostgreSQL\nTransactional data, orders, and wallet history.\n\n\nMongoDB\nMarket quotes history (Time-series data) within the Market Data API.\n\n\nRedis\n\"Hot\" cache for market prices to ensure ultra-high-speed queries.\n\n\n\n\nThis post is just the kickoff. In the upcoming articles, I plan to detail:\nInfrastructure: How to deploy all these resources on AWS (Free Tier).\nMessaging: A deep dive into Kafka and RabbitMQ configurations.\nTechnical Challenges: How I’m handling eventual consistency and the matching engine's processing logic.\nFeel free to leave your feedback or questions in the comments!\nConnect with me:\nLinkedIn\n\n\n\n  \n  \n  java #springboot #microservices #softwarearchitecture #backend #python #aws",
+      "publishedAt": "2026-03-14T01:46:15.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "05dd5a912171ab7ae1def0f860b7214b91fe22da60673d0db330f0f5d7c67b49",
+      "title": "Stop Slouching! Build an AI-Powered Posture Monitor with MediaPipe & Electron 🚀",
+      "url": "https://dev.to/wellallytech/stop-slouching-build-an-ai-powered-posture-monitor-with-mediapipe-electron-ide",
+      "description": "Are you reading this while hunched over your keyboard like a gargoyle? 🧙‍♂️ Don't worry, we've all been there. \"Tech Neck\" is the silent productivity killer of the 21st century. But as developers, we don't just complain about back pain—we code solutions for it.\nIn this tutorial, we are going to build a Real-time Posture Correction System. By leveraging Real-time Pose Estimation, MediaPipe, and WebRTC, we'll create a desktop application that watches your back (literally) and sends a system-level notification when your posture starts to slip. We'll be using JavaScript Computer Vision to turn your webcam into a high-tech ergonomic consultant.\nIf you are looking for more advanced production-ready AI patterns and deep dives into vision models, make sure to check out the official WellAlly Tech Blog for more inspiration!\nBefore we dive into the code, let’s look at how the data flows from your webcam to your nervous system (via a notification).\ngraph TD\n    A[Webcam / WebRTC] -->|Raw Video Stream| B(MediaPipe Pose Engine)\n    B -->|Landmark Coordinates| C{Geometry Logic}\n    C -->|Angle > Threshold| D[Slouch Detected]\n    C -->|Angle < Threshold| E[Good Posture]\n    D -->|IPC Communication| F[Electron Main Process]\n    F -->|System Notification| G[User's Desktop]\n    G -->|User Sits Up Straight| A\n\nTo follow along, you'll need a basic understanding of JavaScript. Here is our \"Anti-Slouch\" tech stack:\n  MediaPipe: Google's powerhouse for cross-platform ML solutions.\n  TensorFlow.js: To run models directly in the browser/Electron.\n  WebRTC: To handle the camera stream.\n  Electron: To wrap our app into a desktop tool that can send system notifications.\nFirst, we need to grab the video feed. Using the getUserMedia API is the standard way to pipe video into our ML model.\n// renderer.js\nasync function setupCamera() {\n    const video = document.getElementById('webcam');\n    const stream = await navigator.mediaDevices.getUserMedia({\n        video: { width: 640, height: 480 },\n        audio: false,\n    });\n    video.srcObject = stream;\n\n    return new Promise((resolve) => {\n        video.onloadedmetadata = () => resolve(video);\n    });\n}\n\nMediaPipe's Pose model provides 33 3D landmarks. For posture, we specifically care about the Nose (0) and the Shoulders (11, 12).\nimport { Pose } from \"@mediapipe/pose\";\n\nconst pose = new Pose({\n  locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/pose/${file}`,\n});\n\npose.setOptions({\n  modelComplexity: 1,\n  smoothLandmarks: true,\n  minDetectionConfidence: 0.5,\n  minTrackingConfidence: 0.5,\n});\n\npose.onResults(onResults); // We'll define the logic here\n\nHow do we define a \"slouch\"? Usually, it's when the horizontal distance between your ear/nose and your shoulder increases significantly.\nfunction calculateSlouch(results) {\n    const landmarks = results.poseLandmarks;\n    if (!landmarks) return;\n\n    // Grab the nose and the average shoulder position\n    const nose = landmarks[0];\n    const leftShoulder = landmarks[11];\n    const rightShoulder = landmarks[12];\n\n    const shoulderY = (leftShoulder.y + rightShoulder.y) / 2;\n    const neckDistance = shoulderY - nose.y;\n\n    // If the vertical distance between nose and shoulder becomes too small,\n    // it usually means the head is leaning forward or dropping.\n    const THRESHOLD = 0.15; \n\n    if (neckDistance < THRESHOLD) {\n        triggerAlert();\n    }\n}\n\nSince we are running inside Electron, we can break out of the browser sandbox and send a real OS-level notification.\n// In the Electron Main Process (main.js)\nconst { Notification } = require('electron');\n\nfunction showNotification() {\n    new Notification({\n        title: 'Posture Alert! 🚨',\n        body: 'Sit up straight! Your neck will thank you later.',\n        silent: false,\n    }).show();\n}\n\n// In Renderer Process (sending message to Main)\nfunction triggerAlert() {\n    // Throttling to prevent notification spam\n    if (Date.now() - lastAlertTime > 60000) { \n        window.electronAPI.sendAlert(); \n        lastAlertTime = Date.now();\n    }\n}\n\nWhile this beginner-friendly version works in your local environment, building production-grade vision apps requires more robust handling—like dealing with lighting conditions, varying camera angles, and model quantization for performance.\nFor deep-dive architectural patterns on how to optimize MediaPipe for production or how to integrate Large Multimodal Models (LMMs) like GPT-4o for even more complex visual reasoning, check out the resources at wellally.tech/blog. They cover everything from edge deployment to advanced vision pipelines that go far beyond simple coordinate math. 🥑\nYou've just built a functional AI assistant that protects your spine! 🦴 Here is what we covered:\n Capturing video via WebRTC.\n Extracting human landmarks using MediaPipe.\n Applying Geometry Logic to detect poor posture.\n Triggering Electron Notifications to alert the user.\nNext Steps: \n  Add a \"calibration\" button so users can set their \"perfect\" posture as a baseline.\n  Add a dashboard to track \"Slouch Frequency\" over time.\nWhat do you think? Would you trust an AI to judge your posture, or is this a bit too \"Big Brother\"? Let me know in the comments! 👇",
+      "publishedAt": "2026-03-14T01:40:00.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "846c5220ce705db05f3ea194df1ae77698e06730e1e8b888c577009793b8c70b",
+      "title": "Create And Configure Azure Firewall",
+      "url": "https://dev.to/cmwokocha/create-and-configure-azure-firewall-k76",
+      "description": "An Azure Firewall is a cloud-based network security service in Microsoft Azure that helps protect your virtual network resources by filtering and controlling traffic between your Azure resources and the internet or other networks.\nScenario:\nYour organization requires centralized network security for the application virtual network. As the application usage increases, more granular application-level filtering and advanced threat protection will be needed. Also, it is expected the application will need continuous updates from Azure DevOps pipelines. You identify these requirements.\n. Azure Firewall is required for additional security in the app-vnet.\n. A firewall policy should be configured to help manage access to the application.\n. A firewall policy application rule is required. This rule will allow the application access to Azure DevOps so the application code can be updated.\n. A firewall policy network rule is required. This rule will allow DNS resolution.\nSkilling Tasks:\n. Create an Azure Firewall.\n. Create and configure a firewall policy.\n. Create an application rule collection.\n. Create a network rule collection.\nArchitecture diagram:\n\nNo 1. Create Azure Firewall subnet in our existing virtual network.\ni. In the search box at the top of the portal, enter Virtual networks. Select Virtual networks in the search results.\n\nii. Select app-vnet.\n\niii. Select Subnets.\n\niv. Select + Subnet and Configure.\n\nv. Save Changes.\nNote: Leave all other settings as default.\nNo 2. Create an Azure Firewall.\ni. In the search box at the top of the portal, enter Firewall. Select Firewall in the search results.\n\nii. Select + Create.\n\niii. Use Values provided in your deployment guide to create the firewall.\n\n\nv. Select Review + create and then select Create.\n\nNo 3. Update the Firewall Policy.\ni. In the portal, search for and select Firewall Policies.\n\nii. Select fw-policy.\n\nNo 4. Add an application rule.\ni. In the Rules blade, select Application rules and then Add a rule collection.\n\n\nii. Configure the application rule collection and then select Add.\n\nNote: The AllowAzurePipelines rule allows the web application to access Azure Pipelines. The rule allows the web application to access the Azure DevOps service and the Azure website.\nNo 5. Add a network rule.\ni. In the Rules blade, select Network rules and then Add a network collection.\n\nii. Configure the network rule and then select Add.",
+      "publishedAt": "2026-03-14T01:30:33.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "4ec0fc42bce416ba91c911aa8c6291aa92fc3ad24b566be3986f411dbda4d7be",
+      "title": "Automating Video Generation with Remotion and VOICEVOX: From Environment Setup to Performance Optimization",
+      "url": "https://dev.to/soytuber/automating-video-generation-with-remotion-and-voicevox-from-environment-setup-to-performance-4kbh",
+      "description": "Introduction: An Approach to Automating Video Generation\n\n\nWhen attempting to generate videos programmatically with Remotion, you may encounter issues such as ffmpeg or ffprobe downloads never finishing, or processes stalling.\nThe evolution of AI and LLMs is significantly changing the content creation process. Historically, video production required extensive time and specialized knowledge, from scriptwriting to editing, speech synthesis, and rendering. However, with the maturation of AI technology, the barriers to video production are lowering, making programmatic automated video generation a realistic option.\nThis article explains how to build a video generation system combining the React-based video generation framework \"Remotion,\" the speech synthesis engine \"VOICEVOX,\" and AI tools like \"Cursor AI\" and \"Gemini 3.1 Pro.\" We will introduce rendering errors encountered during actual development and performance tuning techniques.\nFrom environment setup to code implementation, and optimization aimed at high-end environments like the RTX 5090 (32GB VRAM), we've summarized practical insights.\nRemotion is a library that allows you to generate videos programmatically using React components. Unlike traditional GUI-based video production tools, you can describe videos as code using JavaScript, TypeScript, HTML, and CSS.\nThe advantages of code-based video generation include automation and scalability. By fetching information from data sources and pouring it into React components acting as templates, you can efficiently generate personalized videos.\nAdditionally, version control and reusability are benefits. Because the video is described as code, you can track change history with Git and facilitate team collaboration. Created components can be reused in other projects, and you can leverage Web development skills like React and TypeScript directly.\nBefore jumping into full-scale implementation, let's prepare the necessary environment and tools. Since video generation consumes computational resources, hardware selection is also critical.\nVideo rendering performance is affected by GPU VRAM capacity and CPU core count.\nPlease install the following tools in advance.\nNode.js & npm: The execution foundation for Remotion. LTS versions are recommended.\nPython 3: Used to control the VOICEVOX Engine API.\nFFmpeg: Essential for video encoding. Don't forget to set the path.\nVOICEVOX Engine: Download the core engine part, not the app version, so it can be started as a local server.\nCursor AI: In this article, we will use Cursor, an AI-equipped editor, to improve development efficiency.\nFirst, create a basic project. Run the following command in your terminal.\nnpx create-video@latest\n\nName the project \"my-tech-video\" and select a template. Move to the created directory and install dependencies.\ncd my-tech-video\nnpm install\n\nHere, we also install additional packages for integrating with VOICEVOX and type definitions.\nnpm install zod\nnpm install -D ts-node @types/zod\n\nThe foundation is now set.\nWe will share three actual problems encountered during development with Remotion and their solutions.\nWhen executing a rendering command, Remotion automatically tries to download required binaries. However, depending on the network environment, this download might stall.\nDownloading ffmpeg 0 Mb/74.9 Mb\n...\n\nIf the log displays this and does not progress, manual installation and path configuration are effective. By explicitly specifying the binary paths in the Remotion configuration file (remotion.config.ts), you can bypass the automatic download. After consulting Gemini 3.1 Pro, I was advised that setting environment variables or specifying paths is an effective solution.\nImmediately after starting a render, you might see a log like this in the terminal:\n(2/3) Rendering frames (2x) 1821/191504/public/audio/yu\n\nSeeing these numbers might make you feel it will take an enormous amount of time, but this may not be the total frame count; it can sometimes include internal processing counters or parts of temporary file paths.\nnpx remotion preview\n\nIt's important to verify the accurate time on the preview screen.\nI encountered an issue where the comments section was disabled after uploading the generated video to YouTube.\nWe will link Remotion with VOICEVOX to build a system that generates speech from text and creates a video to match.\nCreate a Python script that calls the VOICEVOX Engine API to generate speech.\nCreate a scripts directory in the project root and place voicevox_api.py inside.\nimport requests\nimport json\nimport os\nimport sys\nimport wave\n\n# VOICEVOX Engine URL (Default port)\nVOICEVOX_ENGINE_URL = \"http://localhost:50021\"\n\ndef get_audio_duration_from_file(file_path: str) -> float:\n    \"\"\"Get the duration of a WAV file in seconds\"\"\"\n    try:\n        with wave.open(file_path, 'rb') as wf:\n            frames = wf.getnframes()\n            rate = wf.getframerate()\n            duration = frames / float(rate)\n            return duration\n    except Exception as e:\n        print(f\"Error getting audio duration for {file_path}: {e}\", file=sys.stderr)\n        return 0.0\n\ndef generate_audio(text: str, speaker_id: int, output_path: str) -> float:\n    \"\"\"\n    Generate speech from text using VOICEVOX Engine and save it as a WAV file.\n    Returns the duration of the generated audio in seconds.\n    \"\"\"\n    try:\n        # 1. Get audio_query\n        query_params = {\"text\": text, \"speaker\": speaker_id}\n        audio_query_response = requests.post(\n            f\"{VOICEVOX_ENGINE_URL}/audio_query\",\n            params=query_params,\n            timeout=10\n        )\n        audio_query_response.raise_for_status()\n        audio_query = audio_query_response.json()\n\n        # 2. Execute synthesis\n        synthesis_params = {\"speaker\": speaker_id}\n        synthesis_response = requests.post(\n            f\"{VOICEVOX_ENGINE_URL}/synthesis\",\n            headers={\"Content-Type\": \"application/json\"},\n            params=synthesis_params,\n            data=json.dumps(audio_query),\n            timeout=30\n        )\n        synthesis_response.raise_for_status()\n\n        # 3. Save audio data\n        os.makedirs(os.path.dirname(output_path), exist_ok=True)\n        with open(output_path, \"wb\") as f:\n            f.write(synthesis_response.content)\n\n        # 4. Get and return the duration of generated audio\n        return get_audio_duration_from_file(output_path)\n\n    except Exception as e:\n        print(f\"Error: {e}\", file=sys.stderr)\n        sys.exit(1)\n\nif __name__ == \"__main__\":\n    if len(sys.argv) == 4:\n        text = sys.argv[1]\n        speaker_id = int(sys.argv[2])\n        output_path = sys.argv[3]\n        duration = generate_audio(text, speaker_id, output_path)\n        print(duration)\n        sys.exit(0)\n    elif len(sys.argv) == 2:\n        file_path = sys.argv[1]\n        duration = get_audio_duration_from_file(file_path)\n        print(duration)\n        sys.exit(0)\n    else:\n        sys.exit(1)\n\nImplement TypeScript code that calls this Python script from Remotion's build process to prepare necessary assets for the video.\nCreate src/server/generate-voice.ts.\nimport { spawn } from 'child_process';\nimport path from 'path';\nimport fs from 'fs/promises';\n\nexport const generateVoice = (text: string, speakerId: number, outputPath: string): Promise<number> => {\n    return new Promise((resolve, reject) => {\n        const pythonScriptPath = path.join(process.cwd(), 'scripts', 'voicevox_api.py');\n        fs.mkdir(path.dirname(outputPath), { recursive: true }).catch(reject);\n\n        const pythonProcess = spawn('python', [pythonScriptPath, text, speakerId.toString(), outputPath]);\n        let stdoutData = '';\n        let stderrData = '';\n\n        pythonProcess.stdout.on('data', (data) => { stdoutData += data.toString(); });\n        pythonProcess.stderr.on('data', (data) => { stderrData += data.toString(); });\n\n        pythonProcess.on('close', (code) => {\n            if (code === 0) {\n                const duration = parseFloat(stdoutData.trim());\n                if (!isNaN(duration)) {\n                    resolve(duration);\n                } else {\n                    reject(new Error(`Failed to parse duration: ${stdoutData}`));\n                }\n            } else {\n                reject(new Error(`Python script exited with code ${code}: ${stderrData}`));\n            }\n        });\n    });\n};\n\nFurthermore, implement a prepareAssets function that reads src/content.json defining the video content and batch-generates audio.\nimport { generateVoice } from './generate-voice';\nimport path from 'path';\nimport fs from 'fs/promises';\nimport { z } from 'zod';\n\nconst contentSectionSchema = z.object({\n    id: z.string(),\n    text: z.string(),\n    speakerId: z.number(),\n    durationSeconds: z.number(),\n});\n\nexport const preparedSectionSchema = contentSectionSchema.extend({\n    audioPath: z.string(),\n    durationInFrames: z.number(),\n});\n\nexport type PreparedSection = z.infer<typeof preparedSectionSchema>;\nconst contentData = require('../../content.json');\nconst OUTPUT_AUDIO_DIR = path.join(process.cwd(), 'public', 'audio');\n\nexport const prepareAssets = async (fps: number = 30): Promise<PreparedSection[]> => {\n    console.log('--- Preparing assets ---');\n    const preparedSections: PreparedSection[] = [];\n\n    for (const [index, section] of contentData.entries()) {\n        const audioFileName = `section${index}-${section.id}.wav`;\n        const outputPath = path.join(OUTPUT_AUDIO_DIR, audioFileName);\n        const relativeAudioPath = `audio/${audioFileName}`;\n\n        try {\n            let durationSeconds: number;\n            const exists = await fs.stat(outputPath).then(() => true).catch(() => false);\n\n            if (exists) {\n                durationSeconds = await generateVoice(section.text, section.speakerId, outputPath); \n            } else {\n                durationSeconds = await generateVoice(section.text, section.speakerId, outputPath);\n            }\n\n            const durationInFrames = Math.ceil(durationSeconds * fps);\n            preparedSections.push({\n                ...section,\n                audioPath: relativeAudioPath,\n                durationInFrames,\n            });\n        } catch (error) {\n            console.warn(`Failed to generate audio for ${section.id}, using fallback.`);\n            preparedSections.push({\n                ...section,\n                audioPath: relativeAudioPath,\n                durationInFrames: section.durationSeconds * fps,\n            });\n        }\n    }\n    return preparedSections;\n};\n\nEdit remotion.config.ts to configure asset generation during the bundle phase.\nimport { Config } from '@remotion/cli/config';\nimport { prepareAssets } from './src/server/prepare-assets';\n\nConfig.setVideoImageFormat('jpeg');\nConfig.setOverwriteOutput(true);\n\nexport const remotionConfig = Config.defineConfig({\n    bundle: async (config) => {\n        const fps = 30;\n        const sections = await prepareAssets(fps);\n\n        // Describe processes such as injecting generated section info as default Props for compositions\n        return config;\n    },\n});\n\nSince video rendering consumes CPU and memory, configuring proper settings is crucial.\nUse Remotion's renderMedia function to programmatically execute rendering and measure the time.\nimport { renderMedia, getCompositions } from '@remotion/renderer';\nimport path from 'path';\nimport os from 'os';\n\nconst start = async () => {\n    const startTime = process.hrtime.bigint();\n\n    const bundle = await getCompositions({\n        entry: path.join(__dirname, './Root.tsx'),\n    });\n    const composition = bundle.find((c) => c.id === 'MyVideo');\n    if (!composition) throw new Error('Composition not found');\n\n    const concurrency = Math.max(1, os.cpus().length - 1);\n\n    await renderMedia({\n        composition,\n        outputLocation: path.join(__dirname, '../out/video.mp4'),\n        codec: 'h264',\n        crf: 28,\n        preset: 'fast',\n        concurrency,\n        logLevel: 'info',\n    });\n\n    const endTime = process.hrtime.bigint();\n    const duration = Number(endTime - startTime) / 1_000_000_000;\n    console.log(`Render finished in ${duration.toFixed(2)}s`);\n};\nstart();\n\nBecause Remotion operates on React, preventing unnecessary re-renders leads to performance improvements. Utilize React.memo and useMemo.\nconst MemoizedCircle: React.FC<CircleProps> = React.memo(({ cx, cy, r, fill }) => {\n    return <circle cx={cx} cy={cy} r={r} fill={fill} />;\n});\n\nconst staticItems = React.useMemo(() => {\n    return Array.from({ length: 1000 }).map((_, i) => ({ id: i }));\n}, []);\n\nBy setting the concurrency option, multi-threaded rendering is possible. With environments like the RTX 5090 (32GB VRAM), you can increase parallel count without easily running out of memory, enabling high-speed rendering. In low-VRAM environments, prioritize stability by lowering the parallel count.\nAdjust the balance between image quality and encode time via crf and preset settings.\ncrf: Default is 23. Increasing this value (e.g., 28) reduces file size and speeds up encoding.\npreset: Options include ultrafast, superfast, fast, medium, slow, etc. It is recommended to use ultrafast during testing, and medium or slow for production.\nDuring development, utilizing AI models like Cursor AI or Claude Opus 4.6 can streamline investigating FFmpeg options and parsing error logs.\nWhen dealing with AI, providing specific context and instructions yields highly accurate answers.\n\"In Node.js TypeScript, implement a function that uses the child_process module to call a Python script and receives a number (audio duration) from standard output. Include error handling and Promise-based asynchronous processing.\"\nBy requesting this way, you can rapidly build robust code. Also, during performance tuning, asking \"Suggest improvements to prevent re-rendering of this React component\" will get pointers on where to apply React.memo.\nIn this article, we covered everything from building a video generation system combining Remotion and VOICEVOX to performance tuning.\nBy utilizing appropriate tools and AI, and setting up hardware environments like the RTX 5090, the development experience improves even further.\n[Technology Stack Summary]\nFramework: Remotion, React\nLanguage: TypeScript, Python\nSpeech Synthesis: VOICEVOX Engine\nDevelopment Tools: Cursor AI, VS Code\nInfrastructure: Node.js, FFmpeg\nRecommended Hardware: RTX 4090/5090 (VRAM 24GB/32GB), Multi-core CPU\nCommon problems encountered during development and their solutions.\nRendering stops midway\nconcurrency (parallel count).\n\n\nAudio and Video are out of sync\nfps settings are consistent across the entire project.\n\n\nGenerated video has poor quality\ncrf value in renderMedia (e.g., 28 -> 20).",
+      "publishedAt": "2026-03-14T01:18:21.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "e555a251f9dce4c24b541bfd56b19bba94887e63e88a345e6aa583553008729a",
+      "title": "「ランサムウェアは防げない」前提で備える病院、「閉域モバイル網」で手軽に実現する脱VPN――セキュリティ実践の最前線",
+      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2603/14/news011.html",
+      "description": "＠ITで公開された記事の中から、特に注目を集めた10本をランキング形式で紹介します。何が読者の関心を引いたのでしょうか。",
+      "publishedAt": "2026-03-13T23:00:00.000Z",
+      "feedName": "＠IT"
+    },
+    {
+      "id": "f70b094d287ed9d52f440b35c7fb4ec87c4aa699f13e737fd5717eb7b344a1fb",
+      "title": "[アップデート] Lambda durable functions の AWS 公式 Kiro Power が追加されていたので使ってみた",
+      "url": "https://dev.classmethod.jp/articles/lambda-durable-kiro-power/",
+      "description": "[アップデート] Lambda durable functions の AWS 公式 Kiro Power が追加されていたので使ってみた",
+      "publishedAt": "2026-03-13T15:16:40.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "5724ba050944ae4851d1fec4085b20b4ffe7f5cc5b67acb1bee7b8e08fb3b19d",
+      "title": "新時代のフロントエンドツールチェイン Vite+ を試してみた",
+      "url": "https://azukiazusa.dev/blog/try-vite-plus/",
+      "description": "Vite+ は Vite, Vitest, Oxlint, Oxfmt, Rolldown, tsdown といった人気のツールを統合し、開発, テスト, ビルド, リント, フォーマットなどのフロントエンド開発に必要な機能を1つのツールチェインで提供する新しいフロントエンドツールチェインです。この記事では実際に Vite+ をインストールして、プロジェクトのセッ...",
+      "publishedAt": "2026-03-13T13:27:06.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "96861475f1cabef3d735528b8140568e4d435f4fbac447c0eb1cd3652978aafe",
+      "title": "米国で話題のRAGのセキュリティ脅威についてまとめてみた - Qiita",
+      "url": "https://qiita.com/miruky/items/3c98999786c7dbd2b26a",
+      "description": "はじめに こんばんは、mirukyです。 前回の記事「コーディングが楽になったからこそ気をつけるべきセキュリティ」では、AIコーディング時代のセキュリティリスクについてまとめました。 今回は、あの記事の中では深く触れられなかったRAG（Retrieval-Augmented Generation）システムのセキュリティ脅威に焦点を当てます...",
+      "publishedAt": "2026-03-13T10:05:15.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "0e70ddd1917fa4f53d27ff93ca25e1e3ded715ceba60d9c330118ec1f066a147",
+      "title": "米国で話題のRAGのセキュリティ脅威についてまとめてみた",
+      "url": "https://qiita.com/miruky/items/3c98999786c7dbd2b26a?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\nこんばんは、mirukyです。\n前回の記事「コーディングが楽になったからこそ気をつけるべきセキュリティ」では、AIコーディング時代のセキュリティリスクについてまとめました。\n今回は、あの記事の中では深く触れられなかったRAG（Retrieval-Augmente...",
+      "publishedAt": "2026-03-13T09:21:20.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "92304455f6322ee95c9903d073c04ddb69b15c5638fc06b9a121ae289db7f1e8",
+      "title": "ブロックレベルレプリケーションを使用した Amazon RDS for SQL Server Web Edition の高可用性実装",
+      "url": "https://aws.amazon.com/jp/blogs/news/implement-high-availability-in-amazon-rds-for-sql-server-web-edition-using-block-level-replication/",
+      "description": "この投稿では、SQL Server Web Edition の マルチ AZ RDS インスタンスをセットアップし、フェイルオーバーテストを通じてその高可用性機能を検証する方法を紹介します。",
+      "publishedAt": "2026-03-13T09:12:56.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "c467cd17fe5ea1fbe718c649109181d2f852adf22a605a048f8b7177b6443c70",
+      "title": "AWS認定12冠達成したので振り返ってみる",
+      "url": "https://dev.classmethod.jp/articles/aws-certification-reflect-on/",
+      "description": "AWS認定12冠達成したので振り返ってみる",
+      "publishedAt": "2026-03-13T09:02:24.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "3253ba82437e214c2fc3191d25d1b56aba19449f71c8317a746911ab66f6747e",
+      "title": "生成AIやAIエージェントが急速に一般化した今、待ち受けるセキュリティリスク",
+      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2603/13/news059.html",
+      "description": "Gartnerが2026年のサイバーセキュリティのトップトレンドを発表した。AIの急速な台頭などを背景に6つのトレンドを示している。",
+      "publishedAt": "2026-03-13T05:40:00.000Z",
+      "feedName": "＠IT"
+    },
+    {
+      "id": "9787673693c17234dcfe1b4ffd92ccfb6409cc471a668bd78646f36092b656da",
+      "title": "「AI駆動ランサムウェア」出現、高度な偽情報も急増――自社をどう守る？　ESETが3つの提言",
+      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2603/13/news054.html",
+      "description": "「ESET脅威レポート 2025年下半期版」によると、AI駆動型マルウェアの出現やNFC悪用の急増など、サイバーセキュリティにおける重要な転換点となる複数の事象が確認されたという。",
+      "publishedAt": "2026-03-13T04:00:00.000Z",
+      "feedName": "＠IT"
+    },
+    {
+      "id": "3eca3d0cf3cf578814d4fdb81a13b9794f9e0cc3e39add44bf4e3e1cc86b76f4",
+      "title": "SentinelOne、「OpenClaw」利用環境を保護・可視化する2つのセキュリティツール発表",
+      "url": "https://enterprisezine.jp/news/detail/23922",
+      "description": "SentinelOneは、オープンソースのAIエージェントフレームワーク「OpenClaw」を対象とした2つのセキュリティツールを発表した。\n\n　同ツール群は、エージェント自体の防御（ClawSec...",
+      "publishedAt": "2026-03-13T02:30:00.000Z",
+      "feedName": "EnterpriseZine"
+    },
+    {
+      "id": "41d74bfc5d9a4bd275a641ee8973b15fa5309d239f47a457c27cd9ebd5e80d93",
+      "title": "Share your Lessons！AWS Community Builders 2026 に選出されるまでを振り返る",
+      "url": "https://qiita.com/s_moriyama/items/4a0b295e56e7806fc923?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\nいきなりですが、ついに AWS Community Builders 2026 に選出されました！\nカテゴリは Serverless となっています。\n\n今回は、AWS Community Builders に選出されるまでの振り返りと今後のことを書いていきたい...",
+      "publishedAt": "2026-03-12T19:37:18.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "0187ae099dea999b2a2e211616c854491ea8b4774d8730e775099fefc2e385f2",
+      "title": "HTMLにちょい足しでリアクティブ機能が!?",
+      "url": "https://qiita.com/mogera551/items/b0a943b1afda539d6761?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "HTMLにリアクティブな状態管理があったら？ — @wcstack/state 入門\nちょっと想像してみてください。\nReactを使わず、Vueも使わず、ビルドツールも設定ファイルも何もなく、HTMLファイルひとつで「値が変わったらDOMが自動で更新される」世界。\nそれが...",
+      "publishedAt": "2026-03-12T12:57:43.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "c30719d0744bcb7e180f326bc561e68173e15eb5ecc61321d10b63f9c514df6e",
+      "title": "日本企業で「脱オラクル」加速…高額ライセンスとロックインへの懸念が背景",
+      "url": "https://biz-journal.jp/company/post_393822.html",
+      "description": "●この記事のポイント 日本企業で「脱オラクル」の動きが広がっている。Oracle Databaseの高額ライセンスとベンダーロックインへの懸念が背景にあり、アマゾンはAuroraやDynamoDBへ移行。国内でもベネッセや田辺三菱製薬がAzureやPostgreSQLを活用したクラウド移行を進めている。DX時代のIT戦略として、オープンソースDB...",
+      "publishedAt": "2026-03-12T09:12:19.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "5b6a45ffc731e0973a6dd0c82f6da7b8a63c583f4c18e52f02a6e9a42d95ca50",
+      "title": "インターン先でCI/CDパイプラインをゼロから構築し、リリース頻度を110倍にした話",
+      "url": "https://zenn.dev/satotakahumi/articles/3f950feea0d8b2",
+      "description": "1.はじめに\nAIによる高速な開発が当たり前になる中、私はインターンとして参加したプロジェクトで「品質をどう守るか」という課題に向き合いました。\n本記事では、AIを活用した開発の中で、品質を継続的に守る仕組みづくりに取り組んだ経験と、そこから得た学びを振り返ります。\n※本記事は、インターン生という一開発者の視点による個人の振り返りです。当時のチームの状況や判断を批判する意図は一切なく、むしろ未熟な提案を受け入れ、議論の機会をくださったチームへの感謝を込めて執筆しています。\n※インターン先に掲載の許可を得ております。\n簡単なまとめ\n!\n\n課題：AI生成コード前提の開発での品質担保がボト...",
+      "publishedAt": "2026-03-11T13:54:40.000Z",
+      "feedName": "Zenn"
     }
   ]
 }
