@@ -1,158 +1,6 @@
 {
   "articles": [
     {
-      "id": "f84d7f35c22dd0bc51feb68d02d1572419af263c40b6798de2742319c4fc404b",
-      "title": "Elasticsearch vs OpenSearch: Compared",
-      "url": "https://dev.to/selfhostingsh/elasticsearch-vs-opensearch-compared-cp",
-      "description": "Quick Verdict\n\n\nOpenSearch is the better choice for most self-hosters. It includes security, alerting, and anomaly detection for free — features that Elasticsearch partially gates behind paid tiers. The API is nearly identical (OpenSearch forked from Elasticsearch 7.10.2), so most tools work with both. Choose Elasticsearch only if you need the latest Elastic-specific features or tight integration with the official Elastic Stack.\nOpenSearch is Amazon's fork of Elasticsearch, created in 2021 after Elastic changed Elasticsearch's license from Apache 2.0 to SSPL/Elastic License. In August 2024, Elastic relicensed Elasticsearch again — this time under AGPL v3 (alongside SSPL and Elastic License 2.0 as options). Both are distributed search and analytics engines based on Apache Lucene.\nElasticsearch — AGPL v3 (also available under SSPL or Elastic License 2.0, your choice). The original. Created by Elastic. Most widely used search engine. Powers the ELK Stack (Elasticsearch, Logstash, Kibana). Core features are free; some advanced features require a paid subscription.\nOpenSearch — Apache 2.0. Amazon's fork from Elasticsearch 7.10.2. Governed by the OpenSearch Software Foundation. All features are free and open source, including security, alerting, and machine learning.\n\n\n\nFeature\nElasticsearch\nOpenSearch\n\n\n\n\nLicense\nAGPL v3 (or SSPL / Elastic License 2.0)\nApache 2.0\n\n\nSecurity (auth, TLS, RBAC)\nFree (covers most self-hosting needs)\nFree (built-in)\n\n\nAlerting\nPaid (Watcher)\nFree (built-in)\n\n\nAnomaly detection\nPaid (ML)\nFree (built-in)\n\n\nSQL query support\nFree (basic)\nFree (built-in)\n\n\nIndex management\nFree (ILM)\nFree (ISM)\n\n\nCross-cluster replication\nPaid\nFree\n\n\nDashboard/visualization\nKibana (Elastic License)\nOpenSearch Dashboards (Apache 2.0)\n\n\nMachine learning\nPaid\nFree (basic)\n\n\nQuery DSL\nFull Elasticsearch DSL\nCompatible (7.10.2 base + extensions)\n\n\nREST API compatibility\nNative\n~95% Elasticsearch compatible\n\n\nAggregations\nFull pipeline aggs\nFull pipeline aggs\n\n\nHorizontal scaling\nYes (shards, replicas)\nYes (shards, replicas)\n\n\nVector search (k-NN)\nYes\nYes (FAISS, Lucene, nmslib)\n\n\nObservability\nFree (APM, traces, metrics)\nFree (trace analytics)\n\n\nPerformance\nGenerally faster\nImproving, ~10-40% slower in benchmarks\n\n\nManaged cloud offering\nElastic Cloud\nAWS OpenSearch Service\n\n\nDocker image\ndocker.elastic.co/elasticsearch/elasticsearch\nopensearchproject/opensearch\n\n\nDefault port\n9200\n9200\n\n\n\nElasticsearch single-node setup:\nservices:\n  elasticsearch:\n    image: docker.elastic.co/elasticsearch/elasticsearch:8.19.11\n    container_name: elasticsearch\n    ports:\n      - \"9200:9200\"\n    volumes:\n      - es_data:/usr/share/elasticsearch/data\n    environment:\n      - discovery.type=single-node\n      - xpack.security.enabled=false\n      - ES_JAVA_OPTS=-Xms1g -Xmx1g\n    ulimits:\n      memlock:\n        soft: -1\n        hard: -1\n    restart: unless-stopped\n\nvolumes:\n  es_data:\n\nSecurity is enabled by default in Elasticsearch 8.x. Disabling it (as shown) simplifies development setup but isn't recommended for production. When enabled, Elasticsearch auto-generates TLS certificates and the elastic user password on first boot.\nFor quick local testing, Elastic provides start-local — a single command that spins up Elasticsearch and Kibana with sensible defaults. Run curl -fsSL https://elastic.co/start-local | sh to get a working instance in seconds without writing any Docker Compose configuration.\nOpenSearch single-node setup:\nservices:\n  opensearch:\n    image: opensearchproject/opensearch:3.5.0\n    container_name: opensearch\n    ports:\n      - \"9200:9200\"\n    volumes:\n      - os_data:/usr/share/opensearch/data\n    environment:\n      - discovery.type=single-node\n      - OPENSEARCH_INITIAL_ADMIN_PASSWORD=YourStr0ngP@ssword!\n      - OPENSEARCH_JAVA_OPTS=-Xms1g -Xmx1g\n      - plugins.security.disabled=true\n    ulimits:\n      memlock:\n        soft: -1\n        hard: -1\n    restart: unless-stopped\n\nvolumes:\n  os_data:\n\nSetup complexity is nearly identical. Both require JVM tuning, vm.max_map_count=262144 on the host, and similar configuration. OpenSearch requires OPENSEARCH_INITIAL_ADMIN_PASSWORD to be set even when security is disabled.\nBoth are Java applications running on the JVM with similar baseline requirements:\nMinimum RAM: 1-2 GB JVM heap per node\nRecommended RAM: 4+ GB for production\nDisk: SSD recommended for indexing performance\nElasticsearch generally benchmarks 10-40% faster than OpenSearch for equivalent queries and indexing workloads. Elastic invests heavily in Lucene optimizations that take time to be adopted by OpenSearch.\nOpenSearch has been closing the performance gap with each release. For most self-hosted use cases (under 100M documents, moderate query volume), the performance difference is imperceptible.\nBoth consume similar RAM and CPU for equivalent workloads. The performance difference primarily matters at enterprise scale.\nElasticsearch: The industry standard. Decades of documentation, tutorials, and Stack Overflow answers. Commercial support from Elastic. Massive ecosystem of integrations. Kibana is the gold standard for search visualization.\nOpenSearch: Growing community under the OpenSearch Software Foundation. Good documentation. AWS provides commercial support. OpenSearch Dashboards is a capable Kibana alternative. Increasing adoption among organizations concerned about licensing.\nElasticsearch has the larger community and more mature tooling. OpenSearch has momentum among organizations that want truly open-source infrastructure.\nYou want all features free and open source (security, alerting, ML)\nLicensing matters — Apache 2.0 is simpler than Elasticsearch's triple-license (AGPL/SSPL/ELv2)\nYou need cross-cluster replication without paying for a license\nYou want to avoid vendor lock-in with Elastic\nYou're building a SaaS product (AGPL's copyleft and SSPL's restrictions may complicate hosted offerings)\nYou're replacing an existing Elasticsearch 7.x deployment\nYou need the latest Elasticsearch-specific features\nYou want the fastest possible search performance\nYou need tight Kibana integration with all plugins\nYou're using Elastic APM, Elastic Agent, or Fleet\nYou have existing Elastic Stack infrastructure\nYou need commercial support from Elastic\nOpenSearch is the better choice for most self-hosters. The Apache 2.0 license means no surprises. Security, alerting, and anomaly detection are free. The API is compatible with Elasticsearch 7.x tooling. For self-hosted search and log aggregation, OpenSearch gives you more features for free.\nElasticsearch is the better choice if you need cutting-edge features or the full Elastic Stack. If you're deep in the Elastic ecosystem (Kibana, Beats, Elastic Agent, APM), switching to OpenSearch means giving up tight integration. Elasticsearch also maintains a performance edge in benchmarks.\nFor a new self-hosted search deployment with no existing Elastic infrastructure: start with OpenSearch.\nHow to Self-Host Elasticsearch\nHow to Self-Host OpenSearch\nMeilisearch vs Elasticsearch\nTypesense vs Elasticsearch\nBest Self-Hosted Search Engines\nSelf-Hosted Algolia Alternatives\nDocker Compose Basics",
-      "publishedAt": "2026-02-27T01:41:18.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "635e028157ff7acc6eef9c88c2fdeee446ff387a6e3943038e9e30846ac087d5",
-      "title": "GHSA-JH8H-6C9Q-7GMW: The Empty Badge: n8n Chat Trigger Auth Bypass",
-      "url": "https://dev.to/cverports/ghsa-jh8h-6c9q-7gmw-the-empty-badge-n8n-chat-trigger-auth-bypass-486l",
-      "description": "The Empty Badge: n8n Chat Trigger Auth Bypass\n\n\n\nVulnerability ID: GHSA-JH8H-6C9Q-7GMW\nCVSS Score: 4.2\nPublished: 2026-02-26\nn8n, the popular workflow automation tool that serves as the central nervous system for many modern tech stacks, suffered from a critical logic flaw in its Chat Trigger node. The vulnerability allowed attackers to bypass authentication simply by providing a cookie—any cookie. The system checked for the presence of an authentication token but failed to validate its contents or signature, effectively treating a cardboard badge the same as a valid ID card.\nThe Chat Trigger node in n8n checked if an auth cookie existed but didn't verify it. Attackers can bypass authentication by sending a request with Cookie: n8n-auth=anything, triggering potentially sensitive workflows without credentials.\nBug Class: Authentication Bypass\nAttack Vector: Network (Web)\nRoot Cause: Improper Validation of Cookie Existence vs. Validity\nCVSS v3.1: 4.2 (Medium)\nCVSS v4.0: 2.3 (Low)\nComponent: Chat Trigger Node\nn8n (Self-hosted)\nn8n (Cloud)\nn8n: < 1.123.22 (Fixed in: 1.123.22)\nn8n: >= 2.0.0, < 2.9.3 (Fixed in: 2.9.3)\nn8n: >= 2.10.0, < 2.10.1 (Fixed in: 2.10.1)\n062644e\n\n\nFix: Chat Trigger auth bypass by validating cookie content\n- if (!authCookie && webhookName !== 'setup') {\n- throw new ChatTriggerAuthorizationError(500, 'User not authenticated!');\n- }\n+ if (!authCookie) {\n+ throw new ChatTriggerAuthorizationError(401, 'User not authenticated!');\n+ }\n+ try {\n+ await context.validateCookieAuth(authCookie);\n+ } catch { ... }\n\nUpgrade n8n to a patched version immediately.\nSwitch Chat Trigger authentication to 'Basic Auth' or 'None' (if behind WAF).\nRestrict network access to n8n webhook endpoints.\nRemediation Steps:\nIdentify all workflows using the Chat Trigger node.\nCheck if they are configured with 'n8n User Auth'.\nUpdate the n8n docker image or npm package to version 1.123.22, 2.9.3, or 2.10.1.\nVerify the fix by attempting the curl PoC against a test endpoint.\nGitHub Advisory GHSA-jh8h-6c9q-7gmw\nFix Commit 062644e\nRead the full report for GHSA-JH8H-6C9Q-7GMW on our website for more details including interactive diagrams and full exploit analysis.",
-      "publishedAt": "2026-02-27T01:40:19.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "6f8eaf598d81a4bcbcd344dfec6885d29e50f88d652ad4cb2c6592a18ccb910b",
-      "title": "💡 Beginner-Friendly Guide 'Minimum Operations to Equalize Binary String' - Problem 3666 (C++, Python, JavaScript)",
-      "url": "https://dev.to/om_shree_0709/beginner-friendly-guide-minimum-operations-to-equalize-binary-string-problem-3666-c-3871",
-      "description": "In this challenge, we tackle a puzzle that feels like a digital light switch game. We need to find the most efficient way to turn all zeros into ones, but there is a catch: every move requires us to flip exactly $k$ switches at once.\nYou're given:\nA binary string $s$ consisting of '0's and '1's.\nAn integer $k$, representing the exact number of indices you must flip in a single operation.\nYour goal:\nTo solve this efficiently, we don't need to simulate every possible flip. Instead, we can use a mathematical approach based on the total number of zeros.\nEvery time we flip an index, we either change a '0' to a '1' (reducing the zero count by 1) or a '1' to a '0' (increasing the zero count by 1). If we perform $i$ operations, we have made a total of $i \\times k$ flips.\nLet $z$ be the initial number of zeros. After $i$ operations, for the string to be all '1's, every initial zero must have been flipped an odd number of times, and every initial one must have been flipped an even number of times. This leads to two critical conditions for a valid number of operations $i$:\nParity Match: The total number of flips $i \\times k$ must have the same parity as the initial number of zeros $z$. In other words, $(i \\times k - z)$ must be even.\nCapacity Reach: We need enough operations to cover all zeros, but not so many that we are forced to flip ones back into zeros uncontrollably. The total flips $i \\times k$ must fall within a specific range based on whether $i$ is odd or even, ensuring we can \"absorb\" the flips across the available characters.\nExample 1: $s = \"110\", k = 1$\nZeros ($z$): 1, Ones ($o$): 2.\nTry $i = 1$: Total flips $1 \\times 1 = 1$.\nParity check: $(1 - 1)$ is 0 (even). Matches!\nRange check: 1 flip is exactly what we need for 1 zero.\nResult: 1\nExample 2: $s = \"0101\", k = 3$\nZeros ($z$): 2, Ones ($o$): 2.\nTry $i = 1$: Total flips $1 \\times 3 = 3$. Parity $(3 - 2) = 1$ (odd). Fail.\nTry $i = 2$: Total flips $2 \\times 3 = 6$. Parity $(6 - 2) = 4$ (even). Matches!\nRange check: With 2 operations, we can flip the two '0's once each and use the remaining 4 flips on the '1's (flipping each '1' twice, which leaves them as '1's).\nResult: 2\nclass Solution {\npublic:\n    int minOperations(string s, int k) {\n        long long z = 0;\n        for (char c : s) if (c == '0') ++z;\n        long long n = s.length();\n        long long o = n - z;\n\n        if (z == 0) return 0;\n\n        for (long long i = 1; i <= n; ++i) {\n            long long total_flips = i * k;\n            // Check if the total flips can realistically result in 0 zeros\n            if ((total_flips - z) % 2 != 0) continue;\n\n            if (i % 2 != 0) {\n                if (total_flips >= z && total_flips <= (z * i + o * (i - 1))) return (int)i;\n            } else {\n                if (total_flips >= z && total_flips <= (z * (i - 1) + o * i)) return (int)i;\n            }\n        }\n        return -1;\n    }\n};\n\n\nclass Solution:\n    def minOperations(self, s: str, k: int) -> int:\n        z = s.count('0')\n        n = len(s)\n        o = n - z\n\n        if z == 0:\n            return 0\n\n        for i in range(1, n + 1):\n            total_flips = i * k\n            # Parity check: difference between total flips and zeros must be even\n            if (total_flips - z) % 2 != 0:\n                continue\n\n            if i % 2 != 0:\n                if z <= total_flips <= (z * i + o * (i - 1)):\n                    return i\n            else:\n                if z <= total_flips <= (z * (i - 1) + o * i):\n                    return i\n\n        return -1\n\n\n/**\n * @param {string} s\n * @param {number} k\n * @return {number}\n */\nvar minOperations = function(s, k) {\n    let z = 0;\n    for (let char of s) {\n        if (char === '0') z++;\n    }\n    const n = s.length;\n    const o = n - z;\n\n    if (z === 0) return 0;\n\n    for (let i = 1; i <= n; i++) {\n        let totalFlips = BigInt(i) * BigInt(k);\n        let bigZ = BigInt(z);\n        let bigO = BigInt(o);\n        let bigI = BigInt(i);\n\n        // Parity check\n        if ((totalFlips - bigZ) % 2n !== 0n) continue;\n\n        if (i % 2 !== 0) {\n            if (totalFlips >= bigZ && totalFlips <= (bigZ * bigI + bigO * (bigI - 1n))) {\n                return i;\n            }\n        } else {\n            if (totalFlips >= bigZ && totalFlips <= (bigZ * (bigI - 1n) + bigO * bigI)) {\n                return i;\n            }\n        }\n    }\n    return -1;\n};\n\n\nParity Logic: In flip-based problems, the \"odd/even\" nature of operations is often more important than the operations themselves.\nCounting vs. Simulating: When constraints are large ($10^5$), look for mathematical patterns in counts (zeros vs. ones) rather than trying to simulate every string state.\nBoundary Conditions: Always check if the total work required ($i \\times k$) can be distributed across the available \"slots\" ($n$ characters) without violating the goal.\nThis problem is a classic example of how \"Hard\" problems on LeetCode often require a shift from a Simulation mindset to a Mathematical mindset. In real-world software engineering, this type of logic is vital in fields like Error Correction Codes or Cryptography, where we must ensure that a sequence of bitwise operations results in a specific target state. Mastering parity and state-space constraints is a hallmark of a senior engineer.",
-      "publishedAt": "2026-02-27T01:20:35.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "8fd3b18413fe8766b6101dcdc7d94dcf4ecf9159299927743defe8fcff2d7e85",
-      "title": "JSON to TypeScript Interface: Complete Guide with Zod and Type Guards",
-      "url": "https://dev.to/arenasbob2024cell/json-to-typescript-interface-complete-guide-with-zod-and-type-guards-n0j",
-      "description": "Generate TypeScript interfaces from JSON safely. Here's how to do it right.\n// Interface — preferred for JSON object shapes\ninterface User {\n    id: number;\n    name: string;\n    email: string;\n    active: boolean;\n}\n\n// Type alias — better for unions and computed types\ntype UserId = number;\ntype Status = 'active' | 'inactive' | 'pending';\ntype UserOrAdmin = User | AdminUser;\n\ninterface User {\n    id: number;\n    name: string;\n    email: string;\n    bio?: string;           // optional — may be absent\n    avatarUrl?: string;     // optional — may be absent\n}\n\n// Index signatures for dynamic keys\ninterface Metadata {\n    [key: string]: string | number | boolean;\n}\n\n// JSON value type\ntype JsonValue =\n    | string\n    | number\n    | boolean\n    | null\n    | JsonValue[]\n    | { [key: string]: JsonValue };\n\n// Discriminated union (tagged union)\ntype ApiResponse =\n    | { status: 'success'; data: User }\n    | { status: 'error'; message: string; code: number };\n\n// Narrow with discriminant\nfunction handleResponse(res: ApiResponse) {\n    if (res.status === 'success') {\n        console.log(res.data.name); // TypeScript knows res.data is User\n    } else {\n        console.log(res.message);   // TypeScript knows res.message exists\n    }\n}\n\ninterface ApiResponse<T> {\n    data: T;\n    error?: string;\n    status: number;\n    timestamp: string;\n}\n\ninterface PaginatedResponse<T> {\n    items: T[];\n    total: number;\n    page: number;\n    pageSize: number;\n}\n\n// Usage\nconst userResponse: ApiResponse<User> = await fetchUser(1);\nconst usersResponse: PaginatedResponse<User> = await fetchUsers();\n\nimport { z } from 'zod';\n\n// Define schema with validation\nconst UserSchema = z.object({\n    id: z.number().positive(),\n    name: z.string().min(1).max(100),\n    email: z.string().email(),\n    bio: z.string().optional(),\n    tags: z.array(z.string()).default([]),\n});\n\n// Infer TypeScript type from schema\ntype User = z.infer<typeof UserSchema>;\n// Equivalent to: interface User { id: number; name: string; email: string; bio?: string; tags: string[] }\n\n// Parse and validate\nconst user = UserSchema.parse(JSON.parse(jsonString));         // throws on invalid\nconst result = UserSchema.safeParse(JSON.parse(jsonString));   // returns {success, data} or {success, error}\n\nfunction isUser(value: unknown): value is User {\n    return (\n        typeof value === 'object' &&\n        value !== null &&\n        'id' in value &&\n        typeof (value as User).id === 'number' &&\n        'name' in value &&\n        typeof (value as User).name === 'string'\n    );\n}\n\n// Usage — TypeScript narrows type after guard\nconst data: unknown = JSON.parse(jsonString);\nif (isUser(data)) {\n    console.log(data.name); // TypeScript knows data is User here\n}\n\n// UNSAFE — returns any\nconst user = JSON.parse(jsonString) as User;  // No runtime validation!\n\n// SAFE with zod\nconst UserSchema = z.object({ id: z.number(), name: z.string() });\nconst parsed = UserSchema.safeParse(JSON.parse(jsonString));\nif (parsed.success) {\n    console.log(parsed.data.name); // type-safe\n} else {\n    console.error(parsed.error.format());\n}\n\n// SAFE with type guard\nconst data: unknown = JSON.parse(jsonString);\nif (isUser(data)) {\n    console.log(data.name);\n}\n\nasync function fetchUser(id: number): Promise<User> {\n    const response = await fetch(`/api/users/${id}`);\n    if (!response.ok) throw new Error(`HTTP ${response.status}`);\n\n    const data: unknown = await response.json();\n    return UserSchema.parse(data); // validates at boundary\n}\n\nFor automatic TypeScript interface generation from JSON, use DevToolBox JSON to TypeScript converter — paste JSON, get TypeScript interfaces or types instantly.\nGenerate TypeScript interfaces from JSON instantly with DevToolBox's free JSON to TypeScript tool.",
-      "publishedAt": "2026-02-27T01:17:26.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "abc6ed972a21728d1446be1d3432f96bb735238487600018d5c6f9ff56497667",
-      "title": "GHSA-FVFV-PPW4-7H2W: n8n Guardrail Bypass: When AI Safety Rails Are Made of Paper",
-      "url": "https://dev.to/cverports/ghsa-fvfv-ppw4-7h2w-n8n-guardrail-bypass-when-ai-safety-rails-are-made-of-paper-k5k",
-      "description": "n8n Guardrail Bypass: When AI Safety Rails Are Made of Paper\n\n\n\nVulnerability ID: GHSA-FVFV-PPW4-7H2W\nCVSS Score: 6.5\nPublished: 2026-02-26\nA logic flaw in n8n's Guardrail node allows attackers to bypass AI safety checks using prompt injection. By exploiting weak delimiters and permissive schema validation, malicious inputs can coerce the underlying LLM into approving prohibited content.\nThe Guardrail node in n8n, designed to filter bad inputs using LLMs, failed to separate system instructions from user data properly. Attackers can use simple prompt injection techniques to override safety rules and force the node to return a 'safe' verdict. Fixed in version 2.10.0.\nCWE ID: CWE-20\nAttack Vector: Network (Prompt Injection)\nCVSS Score: 6.5 (Medium)\nImpact: Security Control Bypass\nAffected Component: Guardrail Node (LangChain)\nExploit Status: PoC Available\nn8n automation platform\nn8n: < 2.10.0 (Fixed in: 2.10.0)\n8d0251d\n\n\nFix guardrail prompt injection and harden schema validation\nUpgrade n8n to version 2.10.0 or later immediately.\nImplement strict schema validation (e.g., Zod's .strict()) for all LLM structured outputs.\nUse specific token delimiters that are unlikely to appear in user input, or sanitize user input to remove delimiter sequences.\nRemediation Steps:\nPull the latest docker image: docker pull n8n/n8n:latest\n\nRestart your n8n container/service.\nAudit any custom Guardrail prompts you have created to ensure they include instructions to ignore contradictory user input.\nGitHub Security Advisory\nRead the full report for GHSA-FVFV-PPW4-7H2W on our website for more details including interactive diagrams and full exploit analysis.",
-      "publishedAt": "2026-02-27T01:10:19.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "d4b2e04b85f3c58a73fe22ff96d5e3776ef2a4ea0f5f76330136ac8fdd155b08",
-      "title": "PR： 従来のVPNがもう限界？　既存の拠点ネットワークに潜む「遅い」「危ない」への対処法",
-      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2602/16/news001.html",
-      "description": "企業ネットワークの基盤であるVPNに「遅い」「管理が難しい」「セキュリティが不安」といった課題が顕在化している。一方、既存環境が「なんとなく動いている」ことで見直しが進まないケースも多い。どのような観点でVPNの見直しを進めればよいのか。",
-      "publishedAt": "2026-02-27T01:00:00.000Z",
-      "feedName": "＠IT"
-    },
-    {
-      "id": "f762791aa7dc8601c5ad9ce7b0b803f3679af644176f08da63bdf81e78121a22",
-      "title": "ミツイワ株式会社様の AWS 開発事例「Amazon Bedrock と AWS CloudFormation を活用した次世代インフラ自動構築ソリューション」のご紹介",
-      "url": "https://aws.amazon.com/jp/blogs/news/case-study-mitsuiwa/",
-      "description": "本ブログは ミツイワ株式会社 様 と Amazon Web Services Japan 合同会社 が共同で執 […]",
-      "publishedAt": "2026-02-27T00:53:47.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "54a8f7af6c50d2d41d22bb15df89a8fdd65e9a672a3c96a01da3d4858d4372d3",
-      "title": "運用主権と技術主権の推進によるサイバーレジリエンスの強化",
-      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2602/27/news013.html",
-      "description": "企業のサイバーセキュリティは、脅威の高度化や規制強化を背景に、被害防止中心から事業継続を重視するサイバーレジリエンスへの転換が必要になっている。地政学的リスクや各国の規制を踏まえ、データ・運用・技術の主権確保が重要となる。クラウド依存が進む中、サイバーセキュリティリーダーには主権基準を満たす製品選定と迅速な対応が求められている。",
-      "publishedAt": "2026-02-26T20:00:00.000Z",
-      "feedName": "＠IT"
-    },
-    {
-      "id": "f53de8566654ef33b9369b0e177f44f155a2b09732355297b20cb66f41a72d1f",
-      "title": "Amazon OpenSearch Serverless のコレクショングループでマルチテナントワークロードのコストを最適化",
-      "url": "https://aws.amazon.com/jp/blogs/news/amazon-opensearch-serverless-introduces-collection-groups-to-optimize-cost-for-multi-tenant-workloads/",
-      "description": "Amazon OpenSearch Serverless のコレクショングループ機能が一般提供開始されました。マルチテナントワークロードで、テナントごとの暗号化によるセキュリティ境界を維持しながら、異なる KMS キーを持つコレクション間で OCU リソースを共有し、コンピューティングコストを最大 90% 削減できます。",
-      "publishedAt": "2026-02-26T16:36:06.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "11584dd1d2363bf1d002a011c11793e129fa4670a8681375cbccf3c88f69f534",
-      "title": "Amazon OpenSearch Service のセマンティック検索で注文履歴検索を改善する",
-      "url": "https://aws.amazon.com/jp/blogs/news/improving-order-history-search-using-semantic-search-with-amazon-opensearch-service/",
-      "description": "Amazon の注文履歴検索チームが、Amazon OpenSearch Service と Amazon SageMaker を使ってレキシカル検索にセマンティック検索機能を追加し、顧客体験を改善した方法を紹介します。セルベースアーキテクチャによるスケーラビリティ向上、エンベディングモデルの評価と選定、ハイブリッド検索の実装について解説します。",
-      "publishedAt": "2026-02-26T16:34:02.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "eaf54593ac1ee355b75ffb10e7a2036d0eb8a2efe7fdae917b0be4faf143c059",
-      "title": "Kubernetes WG Serving concludes following successful advancement of AI inference support",
-      "url": "https://www.cncf.io/blog/2026/02/26/kubernetes-wg-serving-concludes-following-successful-advancement-of-ai-inference-support/",
-      "description": "The Kubernetes Working Group (WG) Serving was created to support development of the AI inference stack on Kubernetes. The goal of this working group was to ensure that Kubernetes is an orchestration platform of choice for...",
-      "publishedAt": "2026-02-26T13:30:40.000Z",
-      "feedName": "Cloud Native Computing Foundation"
-    },
-    {
-      "id": "a630ac2e0e466e5bfe1c97ead82362844dd873304705b87d404b626b654c15a3",
-      "title": "Claude Codeマルチエージェント実践ガイド — 1つの指示で16プロセスが動く世界｜シュン｜AI実務で副業時給2倍にした人",
-      "url": "https://note.com/ai_dev_notes/n/n0a4ae317a942",
-      "description": "コードレビュー、テスト生成、リファクタリング、ドキュメント整備。 これらを「全部やっといて」と頼んだら、16個のClaude Codeインスタンスが同時に動き出して、10万行のRustコードを吐き出した。 Anthropicが公開した事例（2025年）によると、コストは約$20K（約300万円）、人間の介入はほぼゼロだったという。 これ...",
-      "publishedAt": "2026-02-26T12:20:25.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "ff971a72740330c57d134eb547b4384fd9e5290020deb52548231b3605caa39b",
-      "title": "Exposing Spin apps on SpinKube with GatewayAPI",
-      "url": "https://www.cncf.io/blog/2026/02/26/exposing-spin-apps-on-spinkube-with-gatewayapi/",
-      "description": "The Gateway API isn’t just an “Ingress v2”, it’s an entirely revamped approach for exposing services from within Kubernetes and eliminates the need of encoding routing capabilities into vendor-specific, unstructured annotations. In this post, we will...",
-      "publishedAt": "2026-02-26T12:00:00.000Z",
-      "feedName": "Cloud Native Computing Foundation"
-    },
-    {
-      "id": "4aff62d0cc047678229cfa133ca50a6be6baa26e90656af7d14d1b4af121fdc2",
-      "title": "AWS Elemental Inference でライブ動画をモバイルオーディエンス向けに変換",
-      "url": "https://aws.amazon.com/jp/blogs/news/transform-live-video-for-mobile-audiences-with-aws-elemental-inference/",
-      "description": "2026 年 2 月 24 日、AWS Elemental Inference が発表されました。このサービス […]",
-      "publishedAt": "2026-02-26T09:33:52.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "6a90c6d764cbfde90da766676f3e4ee8a0f7268b9e7197621b6789dc4d0be6a9",
-      "title": "Markdownを日本の伝統的な雰囲気のあるWordファイルに変換するCLIツール「md2docx」を作った",
-      "url": "https://qiita.com/nokonoko_1203/items/87a71916c155d69a336b?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "はじめに\nエンジニアであっても、要件定義書や設計書、テスト仕様書、運用手順書など様々な文章を求められることはよくありますよね。\nそういった時にMarkdownのようなプレーンテキストで書きたいと心の底から思いますし、AI時代にはプレーンテキストの方がマッチしているでしょ...",
-      "publishedAt": "2026-02-26T06:55:00.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "f2e251e69ab250f90ff420dcc95875f53719e739fd1ef8aed05333fa04a1e58c",
-      "title": "GitHubのWiki更新をトリガーにGitHub ActionsでWikiのコンテンツをS3 Vectorsに登録してみた",
-      "url": "https://dev.classmethod.jp/articles/github-wiki-put-to-s3-vectors-by-actions/",
-      "description": "docsディレクトリでマークダウンファイルを管理しているようなケースと比べると少し工夫が必要でした",
-      "publishedAt": "2026-02-26T06:16:07.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "9f072bfc207cc5abb5b1281cf7ea5d70a278d45afe5d5587ca69dd7cdebde7fa",
-      "title": "aws-cdk で扱いやすい最小規模 Redis として Amazon ElastiCache Serverless を使う",
-      "url": "https://developer.hatenastaff.com/entry/2026/02/26/151335",
-      "description": "AWS 上のごく小規模な Redis のマネージドインスタンスが必要な局面で、費用と aws-cdk での取り回しを鑑みて ElastiCache Serverless を導入しました。\nアプリケーションエンジニアの id:astj です。\nごく小規模なウェブサービスにおける（セッション情報などの）揮発性データストアとして Amazon ElastiCache の Redis を使っている箇所があるのですが、しばらく保守が行き渡っていなかったところ標準サポート期間が終了し、 AWS による延長サポートに切り替わってしまっていました。\naws.amazon.com\n延長サポートされていることで一定のセキュリティが担保されているのはありがたいですが、延長サポートぶんの追加料金（2年間は元料金に+80%）が加算されて費用的には不利なため、少なくとも標準サポートの提供されるところまで更新して、延長サポート加算前程度の水準の費用までは抑えておきたいところです。\nこの要件を解決するために必要なアクションの第一の候補は勿論 ElastiCache の Redis バージョンを更新して標準サポートされるバージョンに切り替えることでしょう。Redis OSS でなく Valkey に切り替えることと合わせれば、同インスタンスタイプのままコスト削減も達成可能です。\naws.amazon.com\n今回のサービスの利用箇所は東京リージョンの t3.small ですので、 Valkey に切り替えれば1日あたり$1.25ほどだったのが$1ほどになります。\nこれで更新すれば終了、めでたしめでたしですね。\nCloudFormation における ElastiCache の扱いについて\nというところなのですが、このプロジェクトでは aws-cdk を介して CloudFormation でインフラリソースを管理しています。元々、CloudFormation では元々スタック外での変更（ドリフト）が起きたときにスタック側で整合性を取るところに扱いの難しさがあり、2019年にリリースされた CloudFormation Resource Import の登場により、一度テンプレートからリソースを切り離した後に再度インポートし直すことで整合性を取る方法が確立され、これのおかげで以前と比べれば融通を利かせる余地は広くなってきました。*1\naws.amazon.com\ndocs.aws.amazon.com\nという背景があるのですが、この CloudFormation の import には制限があり、CloudFormation で利用可能な AWS リソースであっても import できる物とできない物があり、 ElastiCache においては2026年2月現在では肝心要の AWS::ElastiCache::CacheCluster や ReplicationGroup がこれに対応していません。\ndocs.aws.amazon.com\ngithub.com\n今回のサービスでは問題になったことはありませんが、他サービスにおいてこの制約で扱いづらい思いをした経験もあり、 CloudFormation ベースのインフラ管理プロジェクトで ElastiCache を扱い続けるのには少し悩ましいところがある、と考えていました。\nElastiCache Serverless という選択肢\nここで ElastiCache Serverless に目を向けます。ElastiCache Serverless の Redis OSS / Valkey は、おおまかには「内部でよしなにオートスケールする Redis Cluster」と理解して良いでしょう。よしなにオートスケールすることが一番の魅力ですが、Valkey の場合はそれに加えて最低利用料金がかなり低廉であるという特徴があります。ElastiCache Serverless の費用は保持データ量に応じた費用とECPU(おおざっぱには読み書きリクエスト数)に応じた費用から構成されますが、Valkey の場合は前者のデータ量に応じた料金の最低値が100MB相当であり、 Redis OSS や Memcached における1GB相当よりもかなり安く付きます。\nそれぞれ東京リージョンの Valkey で比較すると、インスタンスベースの最小サイズとなる t4g.micro は $0.02/時ですが、Serverless においてはデータ量課金の最低料金100MB分が $0.01/時（と、これに加えてECPUに応じた費用）となります。そのため、データ量がごく少なく、またトラフィックも十分少ない環境においては、t4g.micro と比べても半額程度で運用できる期待が持てます。\naws.amazon.com\nまた、 CloudFormation サポートにおいても元来の非 Serverless クラスタより扱いが進んでいます。具体的には AWS::ElastiCache::ServerlessCache は CloudFormation の Resource import に対応している。このことから、将来的に運用でカバーしたい事態が発生してもその後 CloudFormation 管理下に戻しやすいことで好感を持ちました。\nちなみに、肝心の aws-cdk において、 ElastiCache Serverlss は 2026/2/24 現在は cdk 本体ではなく alpha 版扱いのモジュールから L2 コンストラクタが提供されています。\ndocs.aws.amazon.com\n要求する品質水準によってはこれを採用基準に満たないと捉えることもありますが、今回のサービスの期待水準的には許容可能と考えました。というのは、内部的にはカスタムリソースを利用せず素直な CloudFormation で構成されており、また前述のように Resource Import に対応した ServerlssCache リソースで構築されていることから、仮に将来 cdk モジュールに非互換な変更が入った場合でもドリフト復旧と同じ要領で CloudFormation 管理下に戻しやすいと期待できるでしょう。\n以上の観点から、今回は ElastiCache Serverless に移行するようにしました。\n性能評価（をしない）\nここで補足しておきたいのは、おそらく ElastiCache Serverless を導入するなら本来検討したいであろう、耐障害性やスケール性、またスケールした際の経済性については評価していないというポイントです。\nいわゆる本番サービスとして提供する場合はこれらの観点からの精査が必要ですが、今回は本番サービス級の品質を要求しない局面であったことからこれらの精査は行っていません。また、耐障害性についても、元々冗長化していない Redis ノード1台で運用していた水準ですので、それよりは良いでしょう、ということでヨシとしています。\nRedisのTLS接続\nということで移行します。今回の場合はRedis内のデータは揮発性の情報しか含まれていないので、新たにクラスタを建てて、アプリからの接続をそちらに向けて完成です。特に cdk におけるリソース構築上も見所がなかったので省略します。\n……というので終わりにしたかったのですが、 ElastiCache Serverless においては一点重要な特徴があります。Redis / Valkey のプロトコルにおいては TLS を設定することができますが、 ElastiCache Serverless においてはこの TLS 接続が必須となり、外すことができません。\ndocs.aws.amazon.com\nそして、redis-cli や（少なくとも自分が確認した範囲での）各種クライアントライブラリにおいて、 TLS 接続は透過的には行えず、なんらかのオプションパラメータを渡す必要があります。即ち、「アプリからの接続をそちら（ElastiCache Serverless）に向ける」という段階では、単純なエンドポイント URL の切り替えの他に TLS 接続を有効化する必要があります。\nredis-cli においては --tls オプションがこれに該当します。手元で検証した限りでは、オプションをつけ忘れると明示的なエラーにはならず接続できずタイムアウトする挙動を示したため、知らずにいると原因に気付きづらいのが悩ましいところかなと思います。\nredis-cli --tls -h YOUR_CLUSTER_IDENTIFIER.serverless.apne1.cache.amazonaws.com\nRedis に TLS サポートが入ったのは2020年5月の v6.0 です。古いバージョンのまま塩漬け運用しているとこれを満たさないこともあるかもしれません。\nredis.io\nちなみに、今回の Perl 製サービスにおいて利用している Redis::Fast における TLS(SSL) サポートは2024年リリースの 0.37 から利用できます。\nmy $redis = eval {\n    Redis::Fast->new(\n        server        => \"$redis_host:6379\",\n        ...\n        ssl           => $ENV{REDIS_TLS},\n    );\n};\n\n\n\n結果・まとめ\nここまで情報を小出しにしてきましたが、最終的には 「Perl 製のプロダクトの小さいマネージド Redisとして、最小構成で安く運用でき、 cdk / CloudFormation での扱いの良い Amazon ElastiCache Serverless を選定しました」というようになりました。\n今のところ費用面は期待通り低減されており、また性能面でも元々の少ないリクエスト数の範囲で問題なく動いており、本件の期待は無事満たしています。\n個人的にはより要求の高い条件下でも利用できればと思っていますが、それはまたどこかの機会で検討したいと思っています。\n*1:そもそも CloudFormation 内の操作で全てを完結できればこのことで困らないのですが、稼働中のリソースの状態を更新する際に CloudFormation で直接リソースを更新する場合に発生するダウンタイムを、手動の中間状態を挟んで更新することで回避するようなことはインフラ運用で時たま存在したり、また緊急対応として直接 aws-cli やマネージメントコンソール画面からリソースを書き換えることも時にはあるでしょう。。",
-      "publishedAt": "2026-02-26T06:13:35.000Z",
-      "feedName": "Hatena Developer Blog"
-    },
-    {
-      "id": "87a723c20167bab3fd916b63004b2298df3b4a063f0facb43c7f5153a5bbfa64",
-      "title": "「SaaSは死ぬ」は雑すぎる",
-      "url": "https://zenn.dev/mi_01_24fu/articles/saas-is-dead",
-      "description": "はじめに\nどもども、フリーランスエンジニアとして働いている井上弥風（いのうえみふう）です。\n久しぶりの記事投稿です。\n\n 著者プロフィール\n簡単にですが、エンジニアやってます。\n主にバックエンド（Go, Typescript, Python）とインフラ（AWS）メインですが最近は機械学習周り（XGBoost, LightGBM, FeatureTools, Optuna...）触ってます。\n\n この記事について\n最近、AIの普及により、SNSやネット記事で「SaaSは死ぬ」と騒がれてますよね。\n何となくは分かっているつもりです。\n「AIの進化が凄い → 従来のSaaSを使わなくてもA...",
-      "publishedAt": "2026-02-26T05:57:24.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "0f7cfc1d1c145235260a2c8ee3096147f156564192e186b088d1958f1ae9fb66",
-      "title": "Cloudflare、Next.jsをCloudflare Workersに1コマンドでデプロイできる「vinext」を公開 ―AIコーディングで“Viteで動作するNext.js”をリビルド",
-      "url": "https://gihyo.jp/article/2026/02/vinext?utm_source=feed",
-      "description": "Cloudflareは2026年2月24日、ReactのフレームワークNext.jsをフロントエンドビルドツールViteで動作させるプラグイン「vinext」を、MIT Licenseの元GitHub上に公開した。",
-      "publishedAt": "2026-02-26T05:29:00.000Z",
-      "feedName": "gihyo.jp"
-    },
-    {
       "id": "b84beeb6ed54a589c8ce78406410d8780f1cf89a3fb0bb49a67e2a6532449771",
       "title": "From Code to Connection: Automating the Story of Our Craft with ForkToPost",
       "url": "https://dev.to/vero-code/from-code-to-connection-automating-the-story-of-our-craft-with-forktopost-3bla",
@@ -327,38 +175,6 @@
       "description": "[登壇レポート] AWS re:Invent 2025 新機能「やってみた」報告会 ～コンピューティング編～にて「非同期バッチ処理をLambda Durable Functionsのみでやってみる」というタイトルで登壇しました",
       "publishedAt": "2026-02-27T03:06:17.000Z",
       "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "ec083bfb802f983c91912cc624761068f8b2729e4e2824ad75ad08b33261d95d",
-      "title": "提案スライドに10枚の挿絵を自動生成 — Claude Code × Gemini画像生成【プロンプト全文公開】",
-      "url": "https://qiita.com/ntaka329/items/32ef2c0b27878f083c85?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "はじめに\nGMOコネクトの永田です。\n前回の記事で書いた通り、Claude Codeを使って提案スライドのドラフトを自動生成するワークフローを構築しました。\n\nアーキテクチャ図は別途作成が必要（次回、Google AI Studio連携にチャレンジ予定）\n\nClau...",
-      "publishedAt": "2026-02-27T00:59:05.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "27cc164518a66348c80fb809eadaf4f96ae6e8a8b6b8abfd5c04d04102acafab",
-      "title": "Wi-Fiの「クライアント分離」が無意味だった――AirSnitch脆弱性の衝撃｜情報の灯台",
-      "url": "https://note.com/joho_no_todai/n/n2c7d841dfcf8",
-      "description": "あなたが今つながっているWi-Fi。暗号化されているから安全だ、と思っているなら、その前提が揺らぎ始めている。テストされた全てのネットワークが突破された。 「安全な壁」は存在しなかった同じWi-Fiにつないでいる他人から自分の通信を守る仕組みである「クライアント分離」（Client Isolation）。この機能は長年、Wi...",
-      "publishedAt": "2026-02-27T00:27:53.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "16f94bcb787526df6adeb8fcc21f80b93c59a373a3f45fc6be0261d4aff10328",
-      "title": "AIの時代にエンジニアとして何を磨くか",
-      "url": "https://zenn.dev/airiswim/articles/78d5e95bed7be0",
-      "description": "AIの時代にエンジニアとして何を磨くか\n実装はAIが進め、一次reviewもAIが行い...\n実際のところこの半年間はAIで開発し、\nそこに対して自分が修正が必要と判断した箇所は修正、\nAIにreviewさせてテスト回して...\nreviewも人間の確認はまだ必要だけれど、わりと近い将来、\nそれすら無くなるだろうと思っています。\n「 AIが当たり前になったこの時代に、エンジニアとして自分はどこをどう磨いていくべきなのだろうか。」「どうあるべきなのだろうか」\n自分なりに思うことを整理したので、短くまとめておく。\n私の考えなので、もしこれをみていただいた方で違う意見があれば聞きたいですの...",
-      "publishedAt": "2026-02-26T14:34:27.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "62cfafb00c617b1b371e1ec17bf1dfc603214670d1e35d07f8ac63e5d49b736e",
-      "title": "Next.jsの書き方そのままで、ビルド4倍速・バンドル57%減。Vinextの仕組みを全部調べた",
-      "url": "https://zenn.dev/ashunar0/articles/8b1aa6fb3b9421",
-      "description": "Next.js は素晴らしいフレームワークだ。みんな使ってるし、自分も使っている。\nただ、2つだけ「これはもうしょうがないよね」とみんなが諦めている問題がある。Vercel 以外でまともに動かないことと、ビルドが遅いことだ。\n2026年2月24日、Cloudflare が Vinext を発表した。Vite 上に Next.js の API をゼロから再実装したフレームワークだ。既存の app/、pages/、next.config.js がそのまま動いて、ビルドは4倍速、バンドルサイズは57%減。\nこの記事では Vinext が何をやっているのか、なぜ速いのか、そして本当に使えるのかを...",
-      "publishedAt": "2026-02-26T11:18:22.000Z",
-      "feedName": "Zenn"
     },
     {
       "id": "ddbb9e3450ff6f3308898f340a6a8dbb1b39b9922607ca758afe9139da920c12",
@@ -551,14 +367,6 @@
       "description": "前回のあらすじ\n前回の記事で、portless に触発されて「Docker Compose 環境なら Traefik の\ndefaultRule で同じことができる」という話を書きました。\n\nHTTP サービスは http://service.project.localhost で自動ルーティング\ngit worktree との相性が良い\nラベル不要、defaultRule の Go テンプレートだけで動く\n\nただ、実際に運用してみると手作業が残ります。\n\nTraefik 用の compose.yaml を別途管理して起動する\n各プロジェクトの compose.yaml に trae...",
       "publishedAt": "2026-02-27T07:50:43.000Z",
       "feedName": "Zenn"
-    },
-    {
-      "id": "7fe04c6d611f311ffdc871b4574228f07f46631c21271ada11f17cf3db005a11",
-      "title": "DynamoDB設計ガイドラインを公開しました | フューチャー技術ブログ",
-      "url": "https://future-architect.github.io/articles/20260227a/",
-      "description": "はじめにこんにちは。製造エネルギーサービス事業部の後藤です。 フューチャーでは、社内の有志メンバーが集まり、システム開発におけるベストプラクティスをまとめた「アーキテクチャ設計ガイドライン」の整備・公開しています。 これまでフロントエンドからバックエンド、クラウドインフラ、Git戦略など幅広い分野のガ...",
-      "publishedAt": "2026-02-27T01:40:57.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
     },
     {
       "id": "7f841f784850c1af0b793f2ae621689c7a13237efc4ffd49f86b3521b0592722",
@@ -6497,6 +6305,142 @@
       "description": "はじめに\nAWS re:Invent2025にて、Lambdaの新たな機能となるLambda Durable Functionsが発表されました。ひとつのLambdaで長時間に渡る処理を行うことが可能となったこちらの機能、その中核を担うのが\"ステップ\"という単位です。今回...",
       "publishedAt": "2026-03-25T12:05:12.000Z",
       "feedName": "Qiita"
+    },
+    {
+      "id": "4e6b2eb950208fbfd1720fff9b099aa06a78ebdec4257aeaf155566626bf97d8",
+      "title": "How I organize 26 microservices on one GPU without losing my ADHD mind",
+      "url": "https://dev.to/chailifeotft/how-i-organize-26-microservices-on-one-gpu-without-losing-my-adhd-mind-28j4",
+      "description": "I have ADHD. I also run 26 microservices on a single RTX 4070.\nThese two facts fight each other constantly.\nEvery ADHD developer knows this cycle:\nStart exciting new project\nHyperfocus for 6 hours\nShip something half-finished\n\nContext switch to next shiny thing\nForget what you built yesterday\nI had 60+ projects in various states of \"almost done.\"\nI stopped reading documentation. Instead, I built follow-along missions where each step bypasses the executive function gate.\nNot \"learn about Docker networking.\" But \"run this one command and see if port 5027 responds.\"\nCDP Browser Automation — one Python script, one WebSocket connection\nLocal AI Mesh — multiple Ollama models coordinating on one machine\n\n\nComfyUI + Ollama on 8GB VRAM — image gen AND language models without crashing\nWeb-to-APK in 10 Minutes — any web tool becomes an Android app\nAI Manga Pipeline — story beats to assembled pages, all local\nSelf-Hosted Stack — tools that survive vendor churn\nOrchestration Patterns — cron jobs, health checks, daemons\nEach build is:\nTime-boxed: 45-90 minutes\nDopamine-rewarding: output immediately\n\n\nExternalized: no planning in your head\nCompletable: starts and finishes in one session\nStackable: each feeds the next\nAfter all 7, I had 26 microservices running. Not because I planned them. Because each mission built one thing, and they naturally connected.\nThat's the ADHD advantage: we don't plan cathedrals. We stack interesting bricks. Sometimes a cathedral appears.\nThe full set of 7 missions with configs and video walkthroughs: AI Creator's Toolkit\nQuestions welcome.",
+      "publishedAt": "2026-03-29T02:18:51.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "3bc8326c2ae7487105be4f032423ea826db51fc7b293c31929de6c7d004078bb",
+      "title": "My Next Step in AI: Studying for the AWS Generative AI Developer Professional Certification",
+      "url": "https://dev.to/apoc_dm_b302f58934821f42d/my-next-step-in-ai-studying-for-the-aws-generative-ai-developer-professional-certification-3no4",
+      "description": "Why now?\n\n\nOver the past year, I've had the chance to build and experiment with several AI-based applications through hackathons, side projects and other hands-on exploration.\nThat work gave me practical exposure to a lot of exciting subtopics such as: semantic/hybrid search, retrieval (RAG) workflows, LLM-powered applications and different real-world use cases for AI systems. I learned a lot by building and honestly, that has always been one of my favorite ways to learn. For me, knowledge expansion has always been a pipeline of Learn -> Build -> Refine -> Encounter problems -> Repeat.\nNow I'd like to formalize and combine this AI knowledge with my existing AWS cloud experience and that's why I'm starting my AWS Generative AI Developer Professional certification journey. \nMy background is in cloud, software, and systems/solution architecture, while my recent work has pulled me further into the AI side of things. This certification feels like it'd help me bridge Cloud and AI worlds.\nA more structured understanding of generative AI specifically on AWS. I'd been leveraging different stacks which are not AWS-based. For example my prompts are stored as either string templates in codebases or builder-pattern classes, as opposed to a cloud-based prompt management tool with versioning such as AWS Bedrock Prompt Management. My vector database is typically either pinecone, chromadb or postgres/pgvector hosted locally or on Supabase.\nStronger fundamentals around designing and deploying production-minded AI systems.\nA clearer view of best practices, tradeoffs and filling in AI architecture pattern gaps.\nTurn my scattered self-taught AI experience into something more deliberate and focused\nI'm hoping to use this as an opportunity to write more openly about what I'm learning. In the past, I'd learn in the dark and would have regrets about not documenting my thoughts in more detail. I want to document my progress, epiphanies, and struggles so I'm starting out this journey with this post as the start of a small #devjournal series to do that. \nI'll write about what I study, what stands out, what surprises me and where I find gaps between theory and practice. Hopefully, this will help me reflect more clearly about what I learn and also be useful to others who are trying to bridge cloud engineering/development and modern AI development.",
+      "publishedAt": "2026-03-29T02:14:55.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "04974ff761b60c3a3a4126ef0e28b3820d402e9194631a33aa6aba94c239327f",
+      "title": "Why I Built an SVG Animation Tool That Ships Zero JavaScript",
+      "url": "https://dev.to/harijn72/why-i-built-an-svg-animation-tool-that-ships-zero-javascript-5e96",
+      "description": "I'm Hari, a software developer from India, and I want to tell you about a problem that kept annoying me until I finally did something about it.\nEvery few weeks, I'd be working on a landing page or a product site and need a simple SVG animation. A sliding icon. A fading shape. A logo that draws itself in.\nAnd every time, the solution looked something like this:\nnpm install gsap\n# or\nnpm install lottie-web\n\nGSAP is 100KB+. Lottie is 239KB. That's a lot of JavaScript just to move a rectangle from point A to point B.\nHere's the thing — browsers already know how to do this. CSS @keyframes can animate SVG elements beautifully. It's a native feature. Zero dependencies. Zero runtime. It just works.\nBut writing keyframe CSS by hand for SVG elements? That's painful. You're tweaking translate() values blindly, refreshing the browser, adjusting, refreshing again. It's slow, tedious, and error-prone.\nI wanted something in between — the simplicity of CSS animations with a visual editor that doesn't ship any JavaScript to end users.\n\nCSSVG is a visual editor for SVG + CSS keyframe animations. The workflow is dead simple:\nPaste your SVG or build shapes on the canvas\nDrag elements on a timeline to set keyframes\nExport clean SVG + CSS files\n\nThat's it. The output is readable, minimal code you can paste into any project — React, Vue, plain HTML, whatever.\n\nNo wrapper divs. No data attributes. No runtime classes. Just SVG and CSS.\nThey're great tools. Seriously. But they're overkill for most of what I was doing.\n\n\n\nTool\nRuntime Size\nRequires\n\n\n\n\nGSAP\n100KB+ JS\nJS runtime on every page load\n\n\nLottie\n239KB JS\nAfter Effects + Bodymovin\n\n\nCSS Animations\n0KB\nWriting keyframes by hand\n\n\nCSSVG\n0KB\nVisual editor, exports clean code\n\n\n\nIf you're building complex, physics-based, interactive animations — use GSAP. It's built for that.\nBut if you need a hover effect, a loading animation, or a subtle entrance transition on SVG elements, you don't need to ship a JavaScript library to every user who visits your page.\nVisual canvas editor — move, resize, and arrange SVG elements directly. No hand-editing coordinates.\nTimeline-based keyframes — drag elements across a 2-second timeline. CSSVG generates the CSS automatically.\nClean, readable output — no minification tricks, no opaque JSON blobs. You can read and modify the exported code.\nZero runtime — your users download nothing extra. The browser handles everything.\nI want to be upfront about the limitations:\nNo custom easing curves (currently linear only)\nTimeline is fixed at 2 seconds\nNo path morphing or complex path animations\nNo direct After Effects import\nThese are on the roadmap. But I wanted to ship something useful first rather than wait for perfection.\nThe editor is free to use: cssvg.com/editor\nIf you've ever spent 30 minutes tweaking translateX values by hand, give it a try. It takes about 60 seconds to go from a blank canvas to an exported animation.\nI'd love to hear your feedback — what's missing, what's broken, what would make this actually useful for your workflow.\nFind me on X: @cssvg_\nBuilt solo, out of frustration, from India.",
+      "publishedAt": "2026-03-29T02:14:14.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "cab42d98aea1cf6ef529635ed00bd1e59ef099b798134e49f08754d91c1090e8",
+      "title": "Share of Voice in AI Search: Why Your Competitors Are Getting Cited in ChatGPT and Perplexity (And You Aren't)",
+      "url": "https://dev.to/texta/share-of-voice-in-ai-search-why-your-competitors-are-getting-cited-in-chatgpt-and-perplexity-and-3h7i",
+      "description": "Share of Voice in AI Search: Why Your Competitors Are Getting Cited in ChatGPT and Perplexity (And You Aren't)\n\n\nYour competitors are showing up in ChatGPT responses, Perplexity answers, and Claude citations. Your brand isn't. This isn't random—it's a measurable gap in AI search share of voice that's costing you visibility as AI engines handle 30%+ of search queries and rising.\nAI search engines prioritize cited sources from authoritative domains with clear topical expertise. Perplexity and ChatGPT increasingly include inline citations, making source attribution visible to users and creating a new brand visibility channel beyond traditional search results. The brands getting cited consistently aren't luckier—they've built the structured content assets and authority signals that AI retrieval systems reward.\nThis guide breaks down how AI engines select sources, what content formats they prioritize, and how to measure your AI search share of voice.\nAI search engines don't \"rank\" pages like Google—they retrieve and synthesize. When you ask Perplexity a question, it doesn't return ten blue links. It identifies relevant sources, extracts specific claims, and generates an answer with inline citations. This fundamental difference changes everything about optimization.\nAI engines use RAG systems: they search their index for relevant content, extract information from those sources, then generate responses citing where each piece of information came from. Your goal isn't to rank first—it's to become a retrieval source worth citing.\nAccording to OpenAI's research on retrieval systems, AI models weight sources based on:\nTopical relevance: Does the content directly address the query?\nInformation density: Can specific claims be easily extracted?\nAuthority signals: Does the domain demonstrate expertise in this topic?\nStructural clarity: Is the content organized for machine reading?\nPerplexity's official documentation confirms they prioritize sources that \"provide comprehensive, accurate information directly answering the user's question\" while favoring domains with established topical authority.\nTraditional SEO optimizes for keywords, backlinks, and click-through rates. AI search optimization requires different inputs:\n\n\n\nTraditional SEO\nAI Search Optimization\n\n\n\n\nTarget keyword rankings\nTarget citation inclusion\n\n\nOptimize for crawlers\nOptimize for information extraction\n\n\nBuild backlink profiles\nBuild topical authority clusters\n\n\nTrack position metrics\nTrack citation frequency and query inclusion\n\n\n\nYour existing SEO strategy won't automatically translate to AI search visibility. The content formats, structural elements, and authority signals that drive AI citations differ significantly from what drives Google rankings.\nStructured content formats perform significantly better in AI retrieval. These formats provide clear, extractable information that AI models can easily reference and cite.\nAI engines train on question-answer pairs. FAQ pages with explicit questions and direct answers are primed for retrieval.\nEffective structure:\nQuestions as H2 headers\nDirect answers in first paragraph (no fluff)\nBulleted supporting details\nConcrete examples and data points\nExample: Instead of \"Project Management Software Features,\" use \"How Does Project Management Software Handle Resource Allocation?\" with a direct answer explaining specific allocation mechanisms.\nProcess-oriented content gets cited when users ask \"how to\" questions. The key is explicit numbering and clear dependencies between steps.\nBest practices:\nNumbered steps (not bullets) for sequential actions\nPrerequisites clearly stated\nTool/requirements lists\nTroubleshooting sections\nAI engines extract and cite specific steps when relevant. Ambiguous prose gets skipped.\n\"X vs Y\" queries dominate AI search. Comparison pages that objectively break down differences across consistent dimensions become go-to sources.\nRequired structure:\nComparison table with consistent criteria\nFeature-by-feature analysis\nUse case recommendations\nPricing/contextual differences\nAI engines frequently cite definitions and explanations of technical concepts. Build comprehensive glossaries with:\nClear, concise definitions (1-2 sentences)\nContext and examples\nRelated concepts linked\nCitations to primary sources\nTrack your AI search visibility and citation performance with Texta analytics\nAI engines evaluate authority differently than Google. They prioritize demonstrated expertise within specific topics rather than overall domain authority.\nBuild content clusters covering topics comprehensively. Each cluster should include:\nPillar page: Broad overview covering all subtopics\nCluster content: Deep dives into specific aspects\nSupporting content: Definitions, examples, FAQs\nWhen AI engines crawl your domain, they recognize patterns of comprehensive coverage. This signals expertise, increasing citation likelihood across all queries in that topic area.\nBrands that establish topical authority early in high-volume AI query categories tend to maintain citation leadership as AI engines refine their source selection algorithms. Monitor emerging AI search trends in your industry and create foundational content before competitors saturate the topic.\nAI engines use brand mentions and contextual proximity as authority signals. When your brand appears alongside recognized experts in authoritative publications, AI systems associate your domain with trustworthy information.\nTactics:\nContribute expert quotes to industry publications\nEngage in podcast interviews and roundups\nBuild relationships with analysts and researchers\nTarget mentions in third-party review sites\nTechnical SEO fundamentals remain critical for AI discovery. Unlike Google's sophisticated rendering, many AI crawlers struggle with JavaScript-heavy sites, making clean HTML and structured data essential.\n1. Crawlability and Site Architecture\nClean HTML content accessible without JavaScript rendering\nXML sitemaps submitted to major AI engines\nLogical URL structure and internal linking\nFast page load speeds\n2. Structured Data Markup\nSchema.org markup for articles, FAQs, how-to guides\nOrganization schema with entity descriptions\nAuthor attribution with clear expertise indicators\nPublication dates and last-updated timestamps\n3. Content Structure\nSemantic HTML (proper heading hierarchy)\nDescriptive title tags and meta descriptions\nClear paragraph structure and section breaks\nAlt text for images and captions for context\nJavaScript-heavy SPAs: AI crawlers often miss content rendered client-side\nInfinite scroll pagination: Content beyond initial load may not be indexed\nThin content walls: Gated content or paywalls block AI access\nOrphaned pages: Content without internal links appears less authoritative\nLearn how to structure your content for AI retrieval with Texta's onboarding guide\nAI search share of voice requires different measurement than traditional SEO. Metrics should track citation frequency, query inclusion rate, and positioning within AI responses rather than keyword rankings.\nCitation Frequency: How often your domain appears as a cited source across AI engines for queries in your category. Track weekly to identify content performance trends.\nQuery Inclusion Rate: Percentage of relevant queries where your brand appears in AI responses. Compare against competitors to assess relative performance.\nCitation Position: Whether you're cited as a primary source (early in response, multiple citations) or secondary source (single citation, supporting claim). Primary citations drive stronger brand association.\nBrand Mention Volume: Unlinked mentions of your brand in AI responses, even without formal citations. These still contribute to brand visibility.\nManual Monitoring: Run category-relevant queries through ChatGPT, Perplexity, and Claude weekly. Document which sources appear and note patterns in citation types.\nAutomated Tools: Emerging platforms track AI search mentions and citations programmatically. These tools provide scalable monitoring but vary in coverage accuracy.\nCompetitive Benchmarking: Identify which competitors consistently appear in AI responses. Analyze their content structure, topic coverage, and technical implementation to identify gaps in your strategy.\nGet started with AI search optimization using Texta's comprehensive platform\nAI search is projected to handle 30%+ of search queries by 2026. Early investment builds citation authority that compounds as adoption grows, similar to early Google SEO advantages. AI citations also drive brand credibility beyond direct traffic—being cited in ChatGPT responses signals authority to prospects researching solutions.\nTrue, but you can optimize the factors AI engines use for source selection: topical authority, content structure, and technical accessibility. Focus on the inputs within your control rather than the unpredictable output. Brands consistently cited in AI responses aren't lucky—they've built systematic advantages in content quality and authority signaling.\nTraditional SEO targets keyword rankings and click-throughs. AI search requires optimizing for citation inclusion, meaning question-focused content, clear claim structure, and authoritative context signals that differ from standard SEO best practices. You need distinct tactics and measurement frameworks.\nAI search represents a fundamental shift in information retrieval, with Google, Microsoft, and OpenAI all investing heavily. The trend is toward AI-generated answers rather than algorithmic ranked results, making AI citation a persistent channel. Early adopters build citation advantages that compound over time.\nRun 20-30 category-relevant queries through ChatGPT, Perplexity, and Claude\nDocument which sources appear and note content patterns\nIdentify competitors consistently cited in your space\nAudit your own content for AI-friendliness (structure, clarity, technical accessibility)\nRewrite top 10 priority pages in question-answer format\nAdd FAQ sections to pillar pages\nImplement schema markup (FAQ, HowTo, Article)\nFix technical barriers (JavaScript rendering, sitemap issues)\nBuild content clusters around 2-3 core topics\nPursue guest contributions and expert quotes\nCreate comparison pages for major competitors\nDevelop glossary content for key concepts\nImplement citation tracking system\nAnalyze which content types earn most citations\nDouble down on high-performing formats\nExpand successful clusters to adjacent topics\nAI search share of voice represents a new zero-click discovery channel where traditional SEO tactics fail. Brands that build topical authority and structured content assets now will capture citation advantages that compound as AI search adoption grows.\nTexta helps you identify AI search opportunities, structure content for retrieval optimization, and track your citation performance across ChatGPT, Perplexity, and Claude. Get started with Texta today to build your AI search visibility before competitors cement their citation advantages.",
+      "publishedAt": "2026-03-29T02:11:49.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "2d7b4b68b910584cfe8b4b4e1db6b0872ee2ebd72cbdef969bd1d3e3e2ce8c3d",
+      "title": "Vitest 4.1でリリースされたaroundEach/aroundAllは何が便利なのか？ - プププなテクブ",
+      "url": "https://blog.inorinrinrin.com/entry/2026/03/28/210354",
+      "description": "Vitest 4.1 で aroundEach と aroundAll という新しいライフサイクルフックが追加されました。 github.com これらは文字通り、テストを 前後からwrapする フックです。aroundEach は各テストを、aroundAll はスイート全体をwrapします。runTest() や runSuite() の呼び出しを自分のコードで囲む構造になっており、名前の...",
+      "publishedAt": "2026-03-28T15:45:23.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "19b62a00be6d6c69394db146638398bd51cea30635e859a1d57f4d27fd32c3bc",
+      "title": "AWS KMSがFIPS 140-2 Level 3にアップグレードした後、FIPS 140-3 Level 3に準拠してました",
+      "url": "https://dev.classmethod.jp/articles/kms-fips-140-3-level3/",
+      "description": "実は2024年からAWS KMSがFIPS 140-3 Level 3に準拠していました。知らんかった。",
+      "publishedAt": "2026-03-28T12:02:35.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "41d79504a2275a8c16e4eb46c5d1e366691087c8a86c43b6946d98d36232607b",
+      "title": "GitHub Actions Is Slowly Killing Your Engineering Team - Ian Duncan",
+      "url": "https://www.iankduncan.com/engineering/2026-02-05-github-actions-killing-your-team",
+      "description": "I was an early employee at CircleCI. I have used, in anger, nearly every CI system that has ever existed. Jenkins, Travis, CircleCI, Semaphore, Drone, Concourse, Wercker (remember Wercker?), TeamCity, Bamboo, GitLab CI, CodeBuild, and probably a half dozen others I’ve mercifully forgotten. I have...",
+      "publishedAt": "2026-03-28T11:38:12.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "24034e7673cb1ab17ceba450b339742ae435d4b63c729ca06e2d37ef10bdcf07",
+      "title": "やさしいとこから始めるGitHubリポジトリのセキュリティ",
+      "url": "https://speakerdeck.com/tsubakimoto_s/yasasiitokokarashi-merugithubripozitorinosekiyuritei",
+      "description": "Azure DevOpsオンライン Vol.14 ～ DevSecOps https://tfsug.connpass.com/event/385605/",
+      "publishedAt": "2026-03-28T09:19:59.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "b606105cd809d94048e8bae7863d94bdf170feee8c378fb9524a8c0ee9f9b6cb",
+      "title": "OpenAI/Anthropic/Google共に、何やら凄そうなAIが噂されている",
+      "url": "https://anond.hatelabo.jp/20260328115003",
+      "description": "・OpenAI - Spud ・Anthropic - Mythos、Capybara ・Google - Agent Smith がそれぞれ噂されている。 Spudは「経済を真に加速させる」性能、Mythosはサイバーセキュリティのリスクが高まるほどの性能、Agent Smithは社内で人気過ぎてアクセス制限かけられた性能らしい。 もはやソシャゲのちょっとしたイベントレベルの頻...",
+      "publishedAt": "2026-03-28T02:56:40.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "3ae4a43aba056b32f32edd06e96dfd50dfc253a8df5516e75c0ee52602d7b1cb",
+      "title": "【AWS】AgentCoreの内部実装から読み解く認証フローと実行環境差",
+      "url": "https://qiita.com/yakumo_09/items/ee21d5fac4f99893127c?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\n\n本記事は AWS の公式ドキュメントに載っていない部分を個人的に検証して確かめたことをまとめた記事です。そのため、正確な内部実装とは異なる可能性があることをご留意ください。\n\nAmazon Bedrock AgentCore を Mac で開発・動作確認し...",
+      "publishedAt": "2026-03-28T01:36:22.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "a2e5d3af73956dd577ad7eab20dda12bca7369cab0e4f07b4c9e27026f837c39",
+      "title": "React CompilerはどのようにReact.memoを不要にしているのか",
+      "url": "https://qiita.com/uhyo/items/43d4aafae2c87a12e5ed?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "結論\nJSX式 (  ) のほうをメモ化すればReact.memoは必要ないです。\n\n背景\n皆さんこんにちは。ReactにおいてはReact Compilerの利用が推奨されており、これを使うことで手動でのメモ化が不要になるとされています。つ...",
+      "publishedAt": "2026-03-28T01:20:16.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "c79026b01fab0a4c494f800b0cd505d1162b33c0e7a39d6f355a5e19fde03eb7",
+      "title": "閉域環境におけるAWS Patch ManagerとWSUSのパッチ承認フロー検証",
+      "url": "https://qiita.com/infra365/items/bc50583f0d0fddb49be9?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "内容\nAWS Patch ManagerとWSUSを使用してパッチの適用を行う。パッチの承認に関してはWSUS側の承認とAWS Patch Managerのパッチベースラインでの承認設定があるが、WSUS側でのパッチの承認有無による動作について記載する。\n\n環境\n下記のよ...",
+      "publishedAt": "2026-03-27T20:12:11.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "3e7187e91f2779eb127c27822c425cce9bbe93c647b9ee5d666941bda3c34ba3",
+      "title": "AWSが100万基のNvidia GPUを調達 。 2000億ドルAI投資と自社チップ「二刀流」戦略の全貌",
+      "url": "https://qiita.com/miruky/items/23180d8c4706ca03e4f8?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\nこんばんは、mirukyです。\n2026年3月、NvidiaのGTC（GPU Technology Conference）で衝撃的な発表がありました。AWSがNvidiaから100万基以上のGPUを調達するという大型契約です。しかもGPUだけではなく、ネットワー...",
+      "publishedAt": "2026-03-27T15:02:38.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "d63b2f4bf2ff7824afdf7a383c8025e8575cb6697583e36b09a9a6611dd9500a",
+      "title": "Claude Code on Amazon Bedrock のデプロイパターンとベストプラクティス | Amazon Web Services",
+      "url": "https://aws.amazon.com/jp/blogs/news/claude-code-deployment-patterns-and-best-practices-with-amazon-bedrock/",
+      "description": "以下では、上記の表に示されたトレードオフと実装上の考慮事項について説明します。 Amazon Bedrock API キー Amazon Bedrock は、概念実証（PoC）への最短パスとして API キーをサポートしています。短期（12 時間）および長期（1 日から 1 年、または無期限）の両方のキーを、AWS Management Console、AWS CLI、または...",
+      "publishedAt": "2026-03-27T14:02:53.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "2400c65968e0acafd713089bf62e25eb42541f81d689e325ddd4c322370ea544",
+      "title": "【メモリ8GBの限界】M1 Mac miniでn8n + Dify + ローカルLLMを共存させる安定稼働のための設計戦略",
+      "url": "https://qiita.com/YushiYamamoto/items/d056f344814888101ab0?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "メインマシンをリプレイスした際、手元に残った「メモリ8GB / 256GB SSD」のM1 Mac mini。\nこれを「24時間稼働のローカル・エッジサーバー」として再構築し、n8n、Dify、Ollama（ローカルLLM）を稼働させるアーキテクチャを紹介します。\n結論と...",
+      "publishedAt": "2026-03-27T11:25:56.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "5defcffefa53afd20faa4f3ad965cf4370a0d04e282d4296575871055aef2dea",
+      "title": "TypeScript時代におけるGoFデザインパターンの再考と、現代の代替手法10選",
+      "url": "https://qiita.com/ryuseiyarou/items/822cf3fb3f8c3ffb1e87?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "対象読者\n\nTypeScriptを実務で利用しており、よりシンプルで型安全な設計を模索している開発者\n過去にJavaやC++などでGoFデザインパターンを学んだ経験があり、現代のTypeScriptにおける最適な書き方やマッピングに悩んでいる方\nクラスベースのオブジェクト...",
+      "publishedAt": "2026-03-25T23:08:38.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "b6a9241f8c0ad8dda8fa7fd00bb02360d2c1079cb047436d1315ce3a632d0c4c",
+      "title": "Claude Codeの5つの習熟レベル。CLAUDE.mdで止まっている人が知らないSkills・Hooks・Orchestrationの世界について - Qiita",
+      "url": "https://qiita.com/miruky/items/43a6828c806a9ebcfdd1",
+      "description": "Claude Codeの5つの習熟レベル。CLAUDE.mdで止まっている人が知らないSkills・Hooks・Orchestrationの世界についてAWSAI生成AIAnthropicClaudeCode はじめに こんばんは、mirukyです。 Claude Codeを使っている方、CLAUDE.mdは書いていますか？ 最近、Redditで「The 5 Levels of Claude Code」という投稿が話題になりま...",
+      "publishedAt": "2026-03-25T16:05:24.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
     }
   ]
 }
