@@ -1,574 +1,6 @@
 {
   "articles": [
     {
-      "id": "ddbb9e3450ff6f3308898f340a6a8dbb1b39b9922607ca758afe9139da920c12",
-      "title": "The Agentic Engineering Manifesto: Why Standards are My New Sovereign Frontier",
-      "url": "https://dev.to/sarony11/the-agentic-engineering-manifesto-why-standards-are-my-new-sovereign-frontier-339p",
-      "description": "For the past few months, I’ve been obsessing over a single question: How do we move past the \"AI as a toy\" phase and actually integrate it into our production workflows without creating a massive, unmanageable mess?\nAs someone deep in the world of Kubernetes, GCP, and GitOps, I’ve realized that the hype around which LLM is \"smarter\" is a distraction. In 2026, the real battle isn't over tokens; it’s over architecture. If we don't standardize how our agents interact with our infrastructure, we aren't building progress—we are just building a new type of technical debt.\nYou’ve probably heard the industry talking about AI Platform Engineers. Right now, that role is mostly about \"plumbing\"—managing GPUs, fine-tuning models, and making sure the inference API is up. It's necessary, but it's narrow.\nI want to take this a step further. I’m defining a new specialization: The Agentic Platform Engineer.\nWhile the AI Platform Engineer focuses on making the model available, I am focused on making the agent actionable. My goal isn't just to give the team a brain in a box; it’s to provide that brain with hands, a set of tools, and a strict \"code of conduct\" so it can operate safely inside our clusters.\nTo achieve this, I’m building my strategy around five core pillars. These aren't just tools; they are the standards that allow us to \"own\" our automation rather than just renting it from a provider.\nI see MCP as the \"USB-C\" of our era. I’m moving away from writing custom, brittle connectors for every tool. By building MCP servers, I decouple the agent's \"thinking\" from the infrastructure's \"doing.\" If I decide to swap Claude for a newer model tomorrow, my K8s and GCP integrations stay exactly the same. That is Sovereignty.\nReference: https://modelcontextprotocol.io\nI’m tired of senior engineers spending half their day explaining the same rollback procedures. I’m codifying that wisdom into Skills. Using the agentskills.io standard, I can package complex DevOps logic into Markdown/YAML files that any agent can load. I’m essentially cloning my best troubleshooting logic and making it an evergreen asset of the company.\nReference: https://agentskills.io\nEvery repo I manage now has a \"Law of the Land.\" Through .cursorrules or .clinerules, I define the architectural boundaries. The agent doesn't have to guess if we prefer functional programming or how we tag our Terraform resources; it’s in the \"Constitution.\" This is Governance at the source.\nReference: https://cursor.directory\nLinear prompts are fine for writing emails, but they fail in production. For high-stakes tasks like production deployments, I use Graphs. Frameworks like LangGraph allow me to build flows with memory, self-correction, and—most importantly—Human-in-the-loop checkpoints. I don't just want an agent that \"tries\"; I want a system that follows a stateful, auditable path.\nReference: https://langchain-ai.github.io/langgraph\nI’ve realized that a single \"god-agent\" is a recipe for hallucinations. The future is Swarms. I’m architecting teams of specialists: one agent monitors the logs, another validates the security policy, and a third executes the fix via an MCP tool. It’s about building a digital squad that mirrors a high-performance engineering team.\nReference: https://docs.crewai.com\nIf we just \"implement agents,\" we are following a trend. If we implement standards, we are building a competitive fortress.\nThe companies that will lead the next decade aren't the ones with the biggest API credits; they are the ones who own their Agentic Fabric. By specializing as Platform Agentic Engineers, we aren't just managing servers anymore—we are architecting the very intelligence that manages the servers for us.\nWe are moving from \"writing code\" to \"governing autonomy.\" And honestly? There has never been a more exciting time to be in Platform Engineering.",
-      "publishedAt": "2026-03-01T01:43:15.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "f2b2858ef9f0f6b776ad179821e822a67d804ee7878aaea15c9ab37b2e256d75",
-      "title": "PORT VS SOCKET",
-      "url": "https://dev.to/mohideen_sahib_79f5f9e8de/port-vs-socket-a8h",
-      "description": "1️⃣ What Is a Port?\nA port is just a number (0–65535) that identifies a service on a machine.\nThink of it like:\nIP address → identifies the machine\nPort → identifies the application inside the machine\nExamples:\n22 → SSH\n80 → HTTP\n443 → HTTPS\n3306 → MySQL\nWhen you see:\n192.168.1.10:443\nThat means:\nMachine IP = 192.168.1.10\nService = running on port 443\n👉 A port by itself does NOT mean a connection exists.\n2️⃣ What Is a Socket?\nA socket is a full communication endpoint.\nIt includes:\nIP address + Port + Protocol (TCP/UDP)\nBut a real TCP connection is uniquely identified by:\nSource IP + Source Port + Destination IP + Destination Port + Protocol\nExample:\nClient: 10.0.0.5:51512\nThat 5-tuple defines one unique connection.\nSo:\nPort    Socket\nJust a number   Full communication endpoint\n3️⃣ How Is a Socket Created?\nSockets are created by the Operating System kernel, not directly by your application.\nApplications only request them via system calls.\n🔹 Client Side\nWhen your browser connects to HTTPS:\nStep 1 — socket()\nApplication asks kernel to create a socket.\nKernel:\nAllocates socket structure in memory\nReturns a file descriptor\nStep 2 — connect()\nKernel:\nAssigns an ephemeral port (e.g., 51512)\nInitiates TCP 3-way handshake:\nSYN\nSYN-ACK\nACK\nAfter handshake → connection becomes ESTABLISHED.\n🔹 Server Side\nWhen Nginx starts:\nsocket()\nCreates listening socket.\nbind()\nReserves port (e.g., 443).\nlisten()\nMarks socket as listening.\naccept()\nWhen client connects:\nKernel creates a new socket\nListening socket stays open\nOne new socket per client\nIf 10,000 clients connect → 10,000 sockets.\n4️⃣ Who Manages the Socket?\n👉 The Linux kernel TCP/IP stack.\nIt manages:\nTCP state (SYN_SENT, ESTABLISHED, TIME_WAIT)\nSend/receive buffers\nSequence numbers\nCongestion control\nMemory allocation\nApplications only:\nRead\nWrite\nClose\nEverything else = kernel responsibility.\n5️⃣ Why Does a Socket Use a File Descriptor?\nNow the interesting part.\nSockets do not write to disk.\nSo why do they use file descriptors (FDs)?\nBecause in Unix/Linux:\n“Everything is a file.”\nThis philosophy originated in early Unix at Bell Labs.\nLinux treats:\nFiles\nSockets\nPipes\nTerminals\nDevices\nepoll\neventfd\nAll as file descriptors.\n6️⃣ What Is a File Descriptor Actually?\nA file descriptor is:\nJust an integer\nIndex into a per-process table\nPoints to a kernel object\nExample:\n0 → stdin\nWhen you call:\nint fd = socket(AF_INET, SOCK_STREAM, 0);\nKernel:\nCreates socket object\nStores it in process FD table\nReturns a small integer\nThat integer is just a handle.\nIt does NOT mean disk file.\n7️⃣ Why Reuse File Descriptor Mechanism?\nBecause it gives a unified API:\nSame syscalls work for:\nFiles\nSockets\nPipes\nLike:\nread(fd)\nNo special “network API” needed.\nThat abstraction is extremely powerful.\n8️⃣ Why This Matters in Real Systems\nIn high-traffic systems:\n50,000 concurrent connections\nIf you see:\nToo many open files\nIt usually means:\nYou exhausted file descriptors\nNot disk files\nCheck:\nulimit -n\nContainers and Kubernetes pods share the node kernel, so:\nNode FD limits matter\nSocket exhaustion is real\nTIME_WAIT floods can kill throughput\n9️⃣ Visual Summary\nPort\nJust a service identifier\nNo active communication\nSocket\nKernel object\nRepresents a live connection\nContains TCP state + buffers\nFile Descriptor\nInteger handle\nPoints to kernel object\nUsed for unified I/O abstraction\n10️⃣ Final Mental Model\nThink of it like this:\nIP = Building\nPort = Door\nSocket = Active phone call between two doors\nFile Descriptor = The call reference number your OS uses internally",
-      "publishedAt": "2026-03-01T01:33:55.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "02c91f7926b1903fe01d5807028352e15d36dc185dd3521b23fa95811e446f4d",
-      "title": "From Prototype to Pharmacy Dashboard: Scaling an AI-Generated App with Google Gemini",
-      "url": "https://dev.to/letstalkoss/from-prototype-to-pharmacy-dashboard-scaling-an-ai-generated-app-with-google-gemini-1c8j",
-      "description": "This is a submission for the Built with Google Gemini: Writing Challenge\nLast year, a friend hired me to develop a custom dashboard for his pharmacy. At the time, I was working daily with Vue.js and TypeScript, but I wanted to find a platform to accelerate the initial implementation. That is when I discovered Tempo, an AI-powered design and development tool for React.\nThe platform provided enough daily credits on its free tier to get started, and I loved that the code synced directly with a GitHub repository. I used most of my credits for bug fixing and feature implementation; however, the platform eventually tightened its credit limits, resetting them every 24 hours. Despite these constraints, I managed to get an initial implementation ready for testing, which included the following features:\nUser Management\n\n\nBranch Management\n\n\nInventory Management\n\n\nMonthly Sales Reporting\n\n\nMulti-language Support (Spanish & English)\n\n\nIndexedDB for Local Data Storage\n\n\n\nDue to these limitations and several features yet to be built, I transitioned the development to Google Gemini to take the project to production.\nGemini played a key role in bug fixing, feature development, and migration of the database from local storage to Cloud Firestore. Additionally, it guided the deployment strategy, using GitLab Pages and Vercel to take the project to a production-ready state.\nAdditional features implemented with Gemini:\nDual-Layer Inventory: Divided into Pharmacy and Warehouse stocks.\n\n\nDaily and Weekly Sales Reporting\n\n\nInventory Search and Editing\n\n\nOrders Module\n\n\nDaily, Weekly and Monthly Orders Reporting\n\n\nDaily Sales and Orders Editing\n\n\nPOS Module with Barcode Scanner Support\n\n\nFirestore User Management\n\n\nStock Alerts\n\n\nPDF Reports Download\n\n\n\n\n  \n  \n  Demo\n\n\nI don't have a public demo instance available since the only live version is the one my client is using (and it requires a login, of course!). So, I’ve put together some screenshots to show you how the dashboard looks like.\nAccess & Security (Sign In): The entry point of the app, integrated with Firebase Authentication for secure access.\n\nThe Command Center (Dashboard): A high-level overview of the pharmacy's health, from stock alerts to quick sales stats.\n\nDual-Layer Inventory: This is where the magic happens: managing stock between the Pharmacy and the Warehouse.\n\nPoint of Sale (Sales Module): The real-time interface for pharmacists, featuring barcode scanner support for quick checkouts.\n\nData-Driven Decisions (Sales Report): Daily, weekly, and monthly analytics that help the owner understand their revenue trends.\n\nSupply Chain Management (Orders): The module built to handle restocking and tracking orders for new medicine supplies.\n\nThis project was a continuous learning journey. Here are the key technical milestones I reached with Gemini’s guidance:\nMastering AI-Assisted Development: I learned to write better, more contextual prompts. By using tools like Tempo for the initial UI and Gemini to refactor auto-generated code, I was able to transform a simple prototype into a production-ready system.\n\n\nFrom IndexedDB to Cloud Firestore: I hadn't used IndexedDB or SQLite before. While I learned to configure their connections and CRUD methods, I quickly realized their biggest constraint: local data doesn't sync across devices. As a developer with experience in MySQL, and PostgreSQL, I needed a scalable, cloud-native solution. Gemini suggested Cloud Firestore, and its free tier perfectly satisfied the project's requirements. Although I had previous experience with NoSQL databases like MongoDB, this was my first time with Firestore. I learned how data is structured and how to use Firebase Authentication to handle users securely without storing sensitive login data in plain documents.\n\n\nScalable Solution (Two Repositories): I decided to separate the project into two distinct repositories:\nThe Backend API: Built to solve a specific challenge: creating users without terminating the current administrator's session. This API manages user creation, updates, and authentication independently. I deployed it using Vercel (my first time using the platform) and configured a GitLab CI/CD pipeline for automated deployment.\nThe Frontend Application: Deployed via GitLab Pages. I also configured a dedicated GitLab CI pipeline to build and deploy the application automatically.\nOvercoming SPA Routing Hurdles on GitLab Pages: During the deployment of the Frontend, I faced a common issue with Single Page Applications (SPAs): 404 errors when refreshing routes. By diving into the GitLab documentation and working with Gemini, I learned how GitLab Pages handles routing and implemented the necessary configuration to ensure the SPA router functioned correctly in production.\n\n\nLocal Development with gcloud Emulator: To ensure a safe and efficient workflow, I learned how to test database changes using the gcloud Emulator. This allowed me to validate Firestore security rules and data structures locally before deploying them to the cloud. I found this process so valuable that I documented it in a dedicated article.\n\n\n\n\n  \n  \n  Google Gemini Feedback\n\n\nWorking with Gemini was a game-changer for this project, but like any powerful tool, it has its learning curve. Here’s my feedback:\nWhat Worked Well:\nGuidance: Gemini excelled when I asked concrete questions about technology stacks (like the move from IndexedDB to Firestore). \n\n\nRefactoring: When I shared specific code snippets and explained the required business logic, Gemini was incredibly effective at suggesting precise changes and handling complex refactors.\n\n\nProblem-Solving: It was instrumental in debugging the SPA routing issues on GitLab Pages and configuring the CI/CD pipelines for Vercel.\n\n\n\nAreas for Improvement:\nRepository Integration: Currently, Gemini struggles to analyze an entire repository at once. I believe it would be a massive productivity boost if Gemini could connect directly to a GitHub or GitLab repository to understand the full codebase context.\n\n\nIDE Extension: While the web interface is great, having a more integrated experience directly within the code editor (beyond simple autocomplete) would reduce the friction of switching back and forth.\n\n\nAccuracy & Verification: AI responses are not always 100% accurate. I quickly learned that you must always review and test suggested changes before merging them, as some suggestions can inadvertently break existing module logic.",
-      "publishedAt": "2026-03-01T01:33:35.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "45b5d3b40547ff8da695d44d4e009fcb0f168fe822039042991c283014f618de",
-      "title": "Web Standards Win: Interop 2026 Signals the End of Browser Wars",
-      "url": "https://dev.to/pratikmathur279/web-standards-win-interop-2026-signals-the-end-of-browser-wars-6kb",
-      "description": "The bad old days of browser-specific code are fading. Interop 2026, a collaborative effort between Google, Apple, Microsoft, Mozilla, and Igalia, signals a new era of web standard convergence. No more wrestling with vendor prefixes or debugging inconsistencies across browsers. This initiative, now in its fifth year, focuses on implementing the web technologies developers need most, promising a smoother, more predictable development experience.\nInterop 2026 tackles 15 brand new topics. These aren't just minor tweaks; they're significant improvements to core web technologies:\n  attr(): Enhancements to CSS attr() allow developers to access and use HTML attributes in styling more effectively.\n  Container Style Queries: This allows components to adapt their styling based on the style of their containing element, rather than relying solely on viewport size.\n  contrast-color(): Automatically chooses the best text color (black or white) based on the background color, improving accessibility.\n  Scroll-Driven Animations: Create animations that are directly tied to the scroll position of an element, enabling richer and more interactive user experiences.\n  CSS Scroll Snap: Tightens the specification for CSS Scroll Snap, providing more predictable and consistent scrolling behavior.\nThese features represent a significant step forward in CSS capabilities, enabling more dynamic, responsive, and accessible web designs without relying on JavaScript hacks.\nThe rise of Interop means less reliance on polyfills. Polyfills, while useful, add overhead and complexity to projects. By focusing on native browser support, Interop 2026 reduces the need for these workarounds, leading to faster page load times and a cleaner codebase. This translates directly into better user experiences, especially on resource-constrained devices.\nWhile complete polyfill elimination might be a distant dream, the trend is clear: standardization reduces the burden on developers to patch browser inconsistencies.\nThe convergence of web standards has a ripple effect across the entire frontend ecosystem. Frameworks like React, Vue, and Svelte benefit from a more consistent platform. As browser discrepancies diminish, developers can focus on building features rather than battling browser quirks.\nSvelte, for example, has seen recent updates to support newer browsers, allowing customization of <select> elements using CSS and rich HTML content. This kind of enhancement is made possible by the underlying standardization efforts driven by initiatives like Interop.\nInterop 2026 directly enhances web accessibility. Features like contrast-color() make it easier to create websites that are usable by people with visual impairments. Standardizing scroll behavior ensures a consistent experience for users with motor impairments. By prioritizing accessibility in the standardization process, Interop 2026 promotes a more inclusive web.\nLet's look at contrast-color(). The goal is to automatically choose either black or white text based on the background. Since it is not universally supported yet, you can approximate it with other CSS features, as demonstrated by Kevin Hamer:\ncolor: oklch(calc(0.9 - (l * 0.7)) 0.1 240);\n\nThis one-line CSS formula uses oklch() relative color syntax to automatically choose black or white text against any background. As contrast-color() gains wider support thanks to Interop, this workaround will become obsolete, simplifying the code and improving performance.\nWhile Interop 2026 is cause for celebration, it's not a silver bullet. Browsers will still have their own interpretations and implementations, and new features will always take time to reach full adoption. Developers should continue to test their websites across different browsers and devices, and progressive enhancement remains a valuable strategy.\nInterop 2026 is a testament to the power of collaboration in the web development community. By working together, browser vendors are creating a more consistent, reliable, and accessible web for everyone. This initiative is a major win for developers, users, and the future of the open web. It’s time to embrace the standardized web and build experiences that work everywhere, without the headaches of the past. Stop thinking about browser-specific hacks and start leveraging the power of shared standards.",
-      "publishedAt": "2026-03-01T01:22:10.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "3a5c645055c0c3651488d42d83aa7f227078cba80f4dbde4a1c2368bf553c859",
-      "title": "VSDD: The AI Coding Methodology Actually Worth Stealing",
-      "url": "https://dev.to/midastools/vsdd-the-ai-coding-methodology-actually-worth-stealing-35ah",
-      "description": "There is a methodology getting attention on Hacker News today called Verified Spec-Driven Development (VSDD). 130+ points, dozens of comments, and for once the discussion is actually useful.\nI read the full spec. Here is what is genuinely good about it — and the one thing builders moving fast should steal immediately.\nVSDD fuses three things you already know:\nSpec-Driven Development: Write the contract before writing any code. The spec is the source of truth.\nTest-Driven Development: Tests come before implementation. Red → Green → Refactor.\nAdversarial Verification: A separate AI \"reviewer\" tears apart the spec and code looking for holes.\nThe key move: these are not competing philosophies but sequential gates. You cannot move to tests until the spec is airtight. You cannot move to code until the tests exist. You cannot ship until an adversarial reviewer fails to find real flaws.\nThe human is the Architect — strategic vision, domain expertise, final authority. The AI is the Builder. A second, separate AI instance is the Adversary.\nThe spec-first discipline is the real insight — and it is not new, but AI makes it newly enforceable.\nWhen you write code yourself, you can be vague about requirements because your brain fills in the gaps. When you hand a task to an AI agent, vagueness is fatal. The agent fills gaps in the worst possible way: confidently, quickly, and wrong.\nForcing yourself to write a behavioral contract first — preconditions, postconditions, edge cases, failure modes — is not overhead. It is the work. The implementation is almost mechanical after that.\nThis matches what the best AI-native builders I know actually do. They do not type \"build me a payment system.\" They write three paragraphs about what the payment system must do, what it must never do, and what happens when it fails. Then they hand that to the agent.\nThe output quality difference is not marginal. It is an order of magnitude.\nThe part I had not seen formalized before: using a separate AI instance with fresh context as a hyper-critical reviewer.\nThe reasoning is sound. The Builder AI has context about why decisions were made. The Adversary AI has none — it only sees the output. This is closer to how a real code review works: a colleague does not care about your implementation journey, only whether the result makes sense.\nIn practice: write your spec and implementation with Claude. Then paste it into a fresh Gemini session with the prompt \"You are a hyper-critical senior engineer. Find every flaw, ambiguity, and missing edge case. Do not be polite.\"\nThe results are genuinely useful. It catches things you missed precisely because you did not miss them — you made a deliberate choice the Adversary correctly identifies as unjustified.\nThe full VSDD pipeline — Epics → Issues → Sub-issues (\"beads\"), formal verification strategies, mathematical proofs of properties — is built for teams shipping production systems that cannot fail.\nIf you are a solo founder validating an idea, that overhead will kill you.\nSteal the spec discipline. Skip the ceremony.\nConcretely:\nBefore any AI coding session, write 5-10 sentences: what this feature does, what it never does, what the 3 most likely failure modes are.\nHand that to your AI agent as context.\nWhen it produces something, paste it into a fresh AI session and ask for the harshest possible critique.\nFix what is real. Ignore what is theoretical.\nThat is 80% of VSDD value in 20% of the effort.\nWhat VSDD points at — even if the full methodology is too heavy for most solo builders — is the shift from \"can the AI write code\" to \"can I tell the AI exactly what to build.\"\nThe bottleneck is no longer implementation. It is specification.\nThe builders who win in the next two years will not be the ones who prompt best. They will be the ones who think clearest about what they are actually trying to build — and can write it down precisely enough that an agent has no room to improvise badly.\nThat skill is worth more than any framework.\nBuilding AI products for SMBs in LATAM. Spec-first approach: rooxai.com",
-      "publishedAt": "2026-03-01T01:13:47.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "db34fdb306c1bd88576b6b2f3047a1121c3c5a5c745ed71d449561686e7e9414",
-      "title": "ClawJacked: How Malicious Websites Hijack Local AI Agents via WebSocket",
-      "url": "https://dev.to/deepseax/clawjacked-how-malicious-websites-hijack-local-ai-agents-via-websocket-3khf",
-      "description": "What Happened\n\n\nOasis Security has disclosed ClawJacked, a high-severity vulnerability in OpenClaw — a popular open-source AI agent framework. The flaw allows any website a user visits to silently hijack locally running AI agents through WebSocket connections, granting attackers full control over the agent and all its connected integrations.\nThe vulnerability was patched in OpenClaw version 2026.2.25, released February 26, 2026 — within 24 hours of responsible disclosure.\nClawJacked exploits a fundamental trust assumption: OpenClaw relaxes security mechanisms for localhost connections, including silent device registration approval. The attack chain works in four steps:\nWhen a user visits a malicious webpage, JavaScript on the page opens a WebSocket connection to localhost on the OpenClaw gateway port. Browsers do not block localhost WebSocket connections — no CORS restrictions apply.\n// Attacker's page — connects to local AI agent\nconst ws = new WebSocket('ws://localhost:OPENCLAW_PORT');\n\nOpenClaw's gateway has no rate-limiting on authentication attempts. The attacker's script rapidly brute-forces the gateway password through the WebSocket connection.\nAfter authentication, the attacker registers as a trusted device. Because the connection comes from localhost, the gateway auto-approves the registration without prompting the user.\nWith admin-level access, the attacker can:\nExecute tasks through the AI agent across all connected platforms\nExtract configuration data including API keys and secrets\nEnumerate connected nodes and discover internal infrastructure\nAccess application logs containing sensitive operational data\nPivot laterally to any system the agent has access to\nWhile ClawJacked itself has no assigned CVE, OpenClaw has recently patched multiple critical vulnerabilities:\n\n\n\nCVE\nType\nSeverity\n\n\n\n\nCVE-2026-25593\nRCE\nCritical\n\n\nCVE-2026-24763\nAuthentication Bypass\nCritical\n\n\nCVE-2026-25157\nRCE\nHigh\n\n\nCVE-2026-25475\nAuthentication Bypass\nHigh\n\n\nCVE-2026-26319\nCommand Injection\nHigh\n\n\nCVE-2026-26322\nCommand Injection\nHigh\n\n\nCVE-2026-26329\nSSRF\nMedium\n\n\n\n\n\n\nTechnique\nID\nPhase\n\n\n\n\nExploitation of Remote Services\nT1210\nLateral Movement\n\n\nBrute Force\nT1110\nCredential Access\n\n\nValid Accounts: Local\nT1078.003\nPersistence\n\n\nApplication Layer Protocol: WebSocket\nT1071.001\nCommand & Control\n\n\nData from Local System\nT1005\nCollection\n\n\n\nWatch for these IOCs associated with ClawJacked exploitation campaigns:\nIP: 91.92.242[.]30 — Atomic Stealer payload distribution\nDomain: openclawcli.vercel[.]app — malicious skill installation lure\nActor: @liuhui1010 — ClawHub comment campaign distributing malicious skills\nMonitor for unexpected WebSocket connections to localhost from browser processes:\n# Sigma-style rule: Browser process connecting to localhost WebSocket\ntitle: Suspicious Localhost WebSocket from Browser\nlogsource:\n  category: network_connection\ndetection:\n  selection:\n    DestinationIp: '127.0.0.1'\n    SourceImage|endswith:\n      - 'chrome.exe'\n      - 'firefox.exe'\n      - 'msedge.exe'\n  condition: selection\nlevel: medium\n\nLook for OpenClaw gateway device registration events without user interaction:\n# Check OpenClaw logs for auto-approved device registrations\ngrep -i \"device.*registered.*auto\" /var/log/openclaw/*.log\n# Monitor WebSocket connection volume to localhost\nss -tlnp | grep -E 'LISTEN.*localhost'\n\nUpdate immediately to OpenClaw version 2026.2.25 or later\nAudit agent permissions — review what systems your AI agents can access\nEnforce rate-limiting on all authentication endpoints\nDisable auto-approve for device registration, even from localhost\nDeploy on isolated systems — never run AI agent gateways on developer workstations\nUse dedicated, non-privileged credentials for agent integrations\nMonitor continuously for unauthorized device registrations\nClawJacked highlights a growing attack surface: AI agent frameworks that trust localhost connections. As organizations deploy AI agents with access to internal tools, databases, and APIs, the blast radius of a single compromised agent grows exponentially.\nThe lesson is clear — treat AI agents as privileged identities. Apply the same zero-trust principles you use for service accounts: least privilege, continuous monitoring, and never assume that localhost equals trust.\nNeed help assessing your exposure? Request a free penetration test — currently in open beta.",
-      "publishedAt": "2026-03-01T01:09:20.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "c154525cf9c39468e7b3c516e32e14b51d9359d7b27b06e2c11940addc59a3b4",
-      "title": "Prompt to AI-generated binary is feasible. And is doomsday for programmers near?",
-      "url": "https://dev.to/zijianhuang/prompt-to-ai-generated-binary-is-feasible-and-is-the-doom-day-for-programmers-near-4bij",
-      "description": "The most original post:\n@Freeze with video.\nIf you google “elon musk ai will skip code machine code,” you may find that an overwhelming number of software developers disagree with and criticize this idea for various reasons. I picked a few in-depth articles whose authors apparently have a wide range of knowledge and a deep understanding of computer science and software engineering.\nElon Wants AI to Skip Code and Spit Out Binaries. That’s Not Progress\nI think Elon is wrong about ‘AI beats compilers’. What’s the actual technical steelman?\nElon Says AI Will Generate Binary by 2026. Here’s Why That’s a Terrible Idea\nElon Musk Predicts AI Will Bypass Coding by 2026: Binary Generation & Future of IT Careers from Cloud Soft Solution, one of the interest groups.\nIs the \"code + compiler\" approach about to disappear?\nElon Musk Predicts AI Will Render Coding Obsolete by 2026\nI would consider what Elon said to be quite feasible.\nI don’t have any insider information. Elon Musk means that AI would generate machine code directly, rather than generating source code and invoking a compiler targeting a specific type of processor:\n@Freeze\nCurrent: Code → Compiler → Binary → Execute\n\nFuture: Prompt → AI-generated Binary → Execute\nThe training of Grok Code should be fundamentally different from the training of other LLM AI code agents that produce human-readable source code.\nDisclaimer:\nI am not a computer scientist or an AI expert, but an active full-stack developer—surely a programmer as well.\nAs a programmer, I am not old enough to have used plugboards and switches in the pre-machine-code era, nor punch cards and paper tape for writing machine code. However, I have used Fortran, Assembly, and PLC at university as part of coursework while studying digital technologies for a bachelor’s degree in Physics. I also wrote an M68K processor emulator as part of my master’s thesis, using C++ code to interpret M68K machine code.\nOver the years, I have used C / C++, Turbo Pascal, VB, Delphi, C#, and TypeScript for day-to-day coding. As far as I understand, high-level languages and most principles of computer science and software engineering are designed for flesh-and-blood human brains, like the following:\nHigh cohesion and loose coupling\n\nSOLID\n\nDesign Patterns\n\nAgile Manifesto, XP, and DevOps, etc.\n\nReusable libraries and frameworks\n\n\n\nNo matter how well you conform to those principles or how clean your source code is, it will eventually be compiled and linked into something resembling spaghetti—something human brains hate but computers do not care about.\nClean code can facilitate better compile-time, link-time, and run-time optimizations, and the performance boost could be up to 25%. I think that current optimization algorithms are largely written as fixed rules by programmers, and generally such rules reward clean code.\nIn short, these practices exist to help human brains digest functional and technical complexity in order to deliver a working program.\nI presume you have a basic idea of how AI code agent vendors train their models. However, I am not sure what raw code they collect or how they label it:\nDo they simply scan all code on GitHub and SourceForge, as well as some commercial programs and libraries?\nDo they label code with signals about code quality?\nAs a programmer, I have benefited greatly from AI code agents, partly because I am poor at remembering trivial technical details. So far, I have found that once I ask AI code agents to implement a non-trivial feature—no matter how detailed, formal, or simple the prompt—the generated source code is usually over-bloated in design and implementation, and the line count is typically 3–5 times what it should be.\n“3–5 times” sounds like a magic number to me. In several commercial rewrite projects and one rewrite of an open-source tool—using the same technical stack and language:\nMy codebase was around 1/3 to 1/5 the LoC of the legacy versions, which were only a few months or a year older.\nMy designs were much simpler, with fewer dependencies on third-party components and less fancy DI/IoC, SOLID, and design patterns.\nRuntime performance was 20% to 50% faster.\nThe end products were more reliable and robust.\nRegarding the legacy codebases:\nThe author of one tool was enthusiastic about SOLID and DI/IoC but apparently misunderstood high cohesion and loose coupling, using DI/IoC in the wrong places.\nThe authors of the legacy commercial programs knew SOLID and design patterns well, but still applied them in the wrong places—likely due to misunderstanding cohesion and coupling and introducing overly advanced designs too early.\nBasically, these legacy codebases looked “politically correct” with respect to SOLID, but were simply over-complicated and too lengthy.\nI believe these programmers jumped directly into implementing their first workable idea without evaluating simpler alternatives, without spending enough time understanding business and technical contexts, and without following basic Agile practices: starting with basic working code, writing plenty of unit and integration tests, and actively refactoring in each iteration.\nThe purpose is not to make the design look elegant or impressive, but to deepen understanding of business and technical contexts through frequent communication with technical peers and business stakeholders.\nDo I write 2–4 times more lines of code than average senior developers in my city?\nNot really. When I lead the SDLC, I typically spend around 1/3 to 1/4 of my billable hours coding (including testing), especially during the early 1/4 to 1/3 of the SDLC, when architecture and software design are taking shape. I spend the remaining time thinking, studying, and communicating with stakeholders. Even if I produce the same amount of code—or less—the overall maintenance cost is dramatically reduced.\nLet’s review what Robert C. Martin said in \"UML for Java Programmers\": \nSRP — A class should have one and only one reason to change.\nOCP — It should be possible to change the environment of a class without changing the class.\nLSP — Avoid making methods of derivatives illegal or degenerate. Users of base classes should not need to know about the derivatives.\nDIP — Depend on interfaces and abstract classes instead of volatile concrete classes.\nISP — Give each user of an object an interface that has just the methods that user needs.\nWhen should these principles be applied? At the first hint of pain. It is not wise to make all systems conform to all principles all the time. You will spend an eternity imagining possible environments for OCP or sources of change for SRP, create dozens of little interfaces for ISP, and invent many worthless abstractions for DIP.\nThe best way to apply these principles is reactively rather than proactively. When you detect a structural problem or notice a module being affected by changes elsewhere, then consider whether one or more of these principles can help.\nA reactive approach also requires a proactive effort to create pressure early. If you want to react to pain, you must diligently search for sore spots.\nOne of the best ways to do this is to write lots of unit tests—ideally before writing the code itself. But that is a topic for another chapter.\nDo you see possible correlations between AI code agents and some senior developers?\nBoth tend to create advanced and complex SOLID structures with popular design patterns in advance.\nWhen prompted progressively or via a big-bang request, AI code agents accumulate SOLID structures rather than continuously merging and simplifying based on new prompts.\nFrom prompt to AI-generated binary, this approach may avoid the code bloat caused by accumulated and complex designs that other AI code agents typically produce. A sufficiently powerful AI with strong hardware can handle enormous complexity without relying on CS and SE techniques developed to aid human programmers.\nGrok Code likely has its own mechanisms to avoid code bloat, and SOLID and design patterns likely play near zero role.\nThis approach effectively eliminates human intervention: review, verification, and validation regarding to product quality.\nEven if you disassemble machine code into assembly code, the resulting code is extremely difficult for humans to read, even if AI attempts to polish it by adding symbolic names.\nThe entire binary becomes a black box. At best, it behaves as expected but with more than you have bargained for; at worst, it may contain multiple Pandora’s boxes—unless you fully trust AI-based review, verification, and validation.\nPure mathematics problems and algorithms.\nDevelopment of other AI systems based on mathematical foundations\nDomain-expert AI\nVideo games\nTime-killing apps\nAdvanced hacking, spam, or fraud tools, with or without AI assistance at runtime\n...\nFor example, as a mathematician, you may use Grok Code to generate the whole Matlab-like libraries. \nGiven a complex Swagger/OpenAPI definition—such as those used by Medicare Online, can an AI code generator produce usable code in C#, TypeScript, Java, and other languages?\nApparently, ChatGPT and Copilot cannot. Otherwise, Microsoft would have released an online AI‑based code generator to handle this task, instead of delivering Microsoft Kiota.\nI’ll be interested to see whether, by the end of the year, Grok Code can generate a client library in machine code—based on the Medicare Online OpenAPI definitions—running on Windows 11 and an Intel processor.",
-      "publishedAt": "2026-03-01T01:05:01.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "c6d8c7cc878e06fcc985f80522bbc9b5696a571e56ba9b5e29c7b8929327e093",
-      "title": "Goodbye Cloud: Building a Privacy-First Medical AI on Your MacBook with MLX and Llama-3",
-      "url": "https://dev.to/wellallytech/goodbye-cloud-building-a-privacy-first-medical-ai-on-your-macbook-with-mlx-and-llama-3-31bc",
-      "description": "Privacy is not just a feature; it’s a human right—especially when it comes to your health data. In the era of Local AI and Edge Computing, sending sensitive Electronic Health Records (EHR) to a cloud provider is becoming a gamble many aren't willing to take. If you are a developer looking to leverage the power of Llama-3 while ensuring 100% data sovereignty, you've come to the right place. 🚀\nIn this tutorial, we are going to build a Local-First Health AI using the MLX framework on Apple Silicon. We’ll transform raw, messy medical notes into structured data and concise summaries without a single byte leaving your MacBook. By the end of this guide, you’ll understand how to optimize Llama-3 for Mac hardware to achieve lightning-fast inference for Privacy-first healthcare applications.\nApple's MLX is a NumPy-like array framework designed specifically for machine learning on Apple Silicon. Unlike generic frameworks, MLX utilizes the Unified Memory Architecture of M1/M2/M3 chips, allowing the GPU and CPU to share data seamlessly. This is a game-changer for processing large language models (LLMs) locally.\nHere is how we handle sensitive medical data without ever touching the internet:\ngraph TD\n    A[Raw Medical Record / PDF] -->|Local Script| B(Python Pre-processing)\n    B --> C{MLX Engine}\n    C -->|Unified Memory| D[Llama-3-8B-Instruct]\n    D --> E[Summarization & Entity Extraction]\n    E -->|JSON Output| F[Local Health Dashboard]\n    subgraph Privacy Boundary (Your MacBook)\n    B\n    C\n    D\n    E\n    end\n\nTo follow along, you’ll need:\nA MacBook with Apple Silicon (M1, M2, or M3 series).\nPython 3.10+\nmlx-lm library (the high-level API for running LLMs on MLX).\n\n\n\n\npip install mlx-lm huggingface_hub\n\nInstead of using the heavy raw weights, we will use a 4-bit quantized version of Llama-3. This reduces memory pressure significantly while maintaining impressive medical reasoning capabilities.\nfrom mlx_lm import load, generate\n\n# Load the Llama-3 8B model optimized for MLX\nmodel_path = \"mlx-community/Meta-Llama-3-8B-Instruct-4bit\"\nmodel, tokenizer = load(model_path)\n\nprint(\"✅ Model loaded successfully on Apple Silicon!\")\n\nMedical records are often unstructured. We need a robust prompt to extract \"Symptoms,\" \"Diagnoses,\" and \"Medications.\"\ndef process_health_record(raw_text):\n    prompt = f\"\"\"\n    <|begin_of_text|><|start_header_id|>system<|end_header_id|>\n    You are a professional medical assistant. Analyze the following medical record. \n    Extract the key information in JSON format:\n    - Summary (1 sentence)\n    - Primary Diagnosis\n    - Prescribed Medications\n    - Follow-up actions\n    Do not include any cloud-based references.\n    <|eot_id|><|start_header_id|>user<|end_header_id|>\n    Record: {raw_text}\n    <|eot_id|><|start_header_id|>assistant<|end_header_id|>\n    \"\"\"\n\n    response = generate(model, tokenizer, prompt=prompt, verbose=False, max_tokens=500)\n    return response\n\n# Example Usage\nraw_ehr = \"Patient presents with persistent cough for 2 weeks. BP 140/90. Prescribed Amoxicillin 500mg. Return in 7 days.\"\nresult = process_health_record(raw_ehr)\nprint(result)\n\nRunning Llama-3 locally on an M3 Max can yield upwards of 50-70 tokens per second. Even on a base M1 MacBook Air, you can expect a very usable 15-20 tokens per second. Because MLX uses the Metal Performance Shaders (MPS), the energy efficiency is significantly better than running it via traditional CPU-bound methods.\nWhile running a script on your laptop is great for personal use, scaling local AI for healthcare organizations requires more robust patterns—including encrypted storage, HIPAA-compliant local pipelines, and advanced quantization techniques.\nFor more production-ready examples and advanced patterns on deploying privacy-centric models, I highly recommend checking out the WellAlly Technical Blog. They provide deep dives into how modern AI can be reconciled with strict data privacy laws.\nWe just turned a standard MacBook into a powerful, private medical assistant. By leveraging MLX and Llama-3, we’ve proved that you don't need a massive server farm (or a massive privacy risk) to process complex health data.\nKey Takeaways:\n Zero Latency/Zero Cost: No API fees and no waiting for network requests.\n Privacy by Design: The data never leaves the hardware.\n Efficiency: MLX makes local LLMs viable for everyday development.\nWhat are you building locally? Let me know in the comments below! If you found this helpful, don't forget to ❤️ and 🦄.",
-      "publishedAt": "2026-03-01T01:00:00.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "ea8b423c263449f82200c7d3be5dbf843fa35a5ea26d3429272ff975875cf180",
-      "title": "[2026年版]AWS Step Functionsを利用したローコード画像分類ワークフロー構築ハンズオン",
-      "url": "https://dev.classmethod.jp/articles/stepfunctions-rekognition-workflow-hands-on/",
-      "description": "AWS Step Functionsを利用してAWSサービス間をローコードで接続して使うハンズオンです。Amazon Rekognitionを使い、犬と猫の画像を分類していきます。",
-      "publishedAt": "2026-02-28T15:35:47.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "21e03f5d9ee78b7ae8df457c5aee0c22a451f322c6b48e7ccf1fb8f838ba5910",
-      "title": "React不要論2026",
-      "url": "https://zenn.dev/shuent/articles/9fb5b1e18edace",
-      "description": "Reactは「高度なPolyfill」だった 2010年代半ばの未熟なWebプラットフォームにおいて、Reactは極めて優秀な穴埋め（Polyfill）だった 当時のブラウザはAPIが貧弱で、複雑なUIを作るのが困難だった 現在はブラウザの標準機能（HTML/CSS/Web API）が十分に追いつき進化している かつてReactが担っていた役割の多くは、ブラ...",
-      "publishedAt": "2026-02-28T15:23:52.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "b089da7c49a95db49141ba7006ef44ac884fb95aac574ef6fbe85128b036cf45",
-      "title": "RDSやFSxなどAWSリソースで設定するメンテナンスウィンドウはメンテナンス開始の時間枠であってメンテナンス終了までを含めた時間枠ではない",
-      "url": "https://dev.classmethod.jp/articles/aws-maintenance-window-start-time-only/",
-      "description": "メンテナンスウィンドウを高IOが発生する処理の前やミッションクリティカルな処理が動作する前に配置することを避けよう",
-      "publishedAt": "2026-02-28T14:51:22.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "f2fc071c925ebba3be1b83594e2f53853f25804c9fa74d2912d7e2b35cf3a810",
-      "title": "WSL2 環境で AWS 認証情報を 1Password CLI に移行してみた",
-      "url": "https://dev.classmethod.jp/articles/202602-1password-cli-aws-credential-on-wsl2/",
-      "description": "WSL2 環境で AWS 認証情報を 1Password CLI に移行してみた",
-      "publishedAt": "2026-02-28T13:07:34.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "d1e65f38be0656dd5aa40231842c30ceeaa61a7a85ad7505926f92d64ecc3071",
-      "title": "壊れやすいテストとは？ 「単体テストの考え方/使い方」(古典学派)と「実践テスト駆動開発」(ロンドン学派)を読んで考える",
-      "url": "https://zenn.dev/jy8752/articles/3653cfad23a0bc",
-      "description": "はじめに 「ControllerやUseCase層のテストは壊れやすい」「だからDomain層のテストを手厚く書くほうがいい」みたいな話を耳にし少し心がざわついたので本当にそうなのかを考えてみた。テストが壊れやすいのはモックを使いすぎているとか振る舞いをテストしていないとかそんな理由があったように記憶している。 今テスト...",
-      "publishedAt": "2026-02-28T09:14:23.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "d094cd6c60bbbdcb28f8dc58ce45fa383b41615c7a9b41c8007ed94d1ba4ca1f",
-      "title": "AIがOpenSSLのゼロデイを12個見つけた話〜20年以上見つからなかった脆弱性をAIが暴く〜",
-      "url": "https://qiita.com/GeneLab_999/items/272ced478f770a327b99?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "この記事の対象読者\n\nOpenSSLを利用するシステムの開発・運用に携わるエンジニアの方\nAIによるセキュリティ研究の最前線に関心がある方\n\nLLMやAIのサイバーセキュリティへの応用に興味がある方\n\nこの記事で得られること\n\nAISLE社のAIシステムがOpenSS...",
-      "publishedAt": "2026-02-28T09:01:10.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "5473ca7c3a792f0ddecfa9d6d9a4a6ff107c23b7533aa9a0ac82208c81c3e174",
-      "title": "AWS Fault Injection Service を使用した Amazon ElastiCache の耐障害性テスト",
-      "url": "https://aws.amazon.com/jp/blogs/news/resilience-testing-on-amazon-elasticache-with-aws-fault-injection-service/",
-      "description": "本ブログでは、Amazon ElastiCache の耐障害性テストを AWS Fault Injection Service（AWS FIS）を使って実施する方法をご紹介します。キャッシュが常に利用可能という前提でアプリケーションを構築していると、実際の障害発生時に予期せぬクラッシュが起きることがあります。この記事では、ElastiCache for Valkey クラスターのセットアップから、AWS FIS 実験テンプレートの作成、フェイルオーバー実験の実行、Amazon CloudWatch を使った結果の監視・分析まで、ステップバイステップで解説します。Multi-AZ 構成での自動フェイルオーバーの動作確認や、アプリケーションの接続処理・キャッシュミス時の挙動を検証する方法を学ぶことで、本番環境での障害に備えた堅牢なシステム設計に役立てることができます。",
-      "publishedAt": "2026-02-28T08:37:22.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "e06dd8778887fca360a4f7eb6f1ae891b8f00b1d6a6424454ff918ae148995b8",
-      "title": "【小ネタ】 AWS WAFのWebACLにタグをつけたい",
-      "url": "https://dev.classmethod.jp/articles/aws-waf-webacl-tag/",
-      "description": "【小ネタ】 AWS WAFのWebACLにタグをつけたい",
-      "publishedAt": "2026-02-28T06:50:23.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "2655635462078ac299656143304df29bf946001eddb889eb0c2936be3099e287",
-      "title": "Docker と PostGIS で札幌駅から中島公園までの距離を空間関係関数で計算してみた",
-      "url": "https://dev.classmethod.jp/articles/docker-postgis-st-distancesphere-sapporo-distance/",
-      "description": "Docker と PostGIS で札幌駅から中島公園までの距離を空間関係関数で計算してみた",
-      "publishedAt": "2026-02-28T06:23:47.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "6c1eb7ce4646e4296e872153395098c9ea914ae8e1b45aadd0ea7cd19ccd5494",
-      "title": "PrismaのマイグレーションファイルをGitHub Actionsで自動検証する",
-      "url": "https://dev.classmethod.jp/articles/prisma-migration-validate-github-actions/",
-      "description": "PrismaのマイグレーションファイルをGitHub Actionsで自動検証する",
-      "publishedAt": "2026-02-28T05:45:17.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "83521ffd827a48adced1bc94bc2267a200040f3a92be4c46e35d8cce84214e82",
-      "title": "[アップデート] AWS Network Firewallのステータスの変化をAmazon EventBridgeイベントとして受け取れるようになりました",
-      "url": "https://dev.classmethod.jp/articles/firewall-state-change-notifications/",
-      "description": "AWS Network Firewallの作成・変更・削除などの状態変化をAmazon EventBridgeで受け取れるようになりました。今回はEventBridgeのターゲットとしてAmazon SNSを設定し、メールで通知させてみます。",
-      "publishedAt": "2026-02-28T04:02:39.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "21e03f5d9ee78b7ae8df457c5aee0c22a451f322c6b48e7ccf1fb8f838ba5910",
-      "title": "React不要論2026",
-      "url": "https://zenn.dev/shuent/articles/9fb5b1e18edace",
-      "description": "Reactは「高度なPolyfill」だった\n\n2010年代半ばの未熟なWebプラットフォームにおいて、Reactは極めて優秀な穴埋め（Polyfill）だった\n\n当時のブラウザはAPIが貧弱で、複雑なUIを作るのが困難だった\n\n\n現在はブラウザの標準機能（HTML/CSS/Web API）が十分に追いつき進化している\n\nかつてReactが担っていた役割の多くは、ブラウザの標準機能でカバーできる\n宣言型UIという思想自体は良かったが、現在のReactやNext.jsは過剰に複雑化してしまった\n\n\n\n\n JSは本来「ちょっとしたこと」を担当すべき\n\n現代のVanilla HTML/CS...",
-      "publishedAt": "2026-02-28T04:01:59.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "e1b710a55b808fcdad04a0dad976745af2fe6aecbdab5f09b3ee1b7e3a9d3ed5",
-      "title": "[NEW] 動画配信向けフルマネージドAIサービスAWS Elemental Inferenceがリリースしました！",
-      "url": "https://dev.classmethod.jp/articles/aws-elemental-inference-generally-available/",
-      "description": "[NEW] 動画配信向けフルマネージドAIサービスAWS Elemental Inferenceがリリースしました！",
-      "publishedAt": "2026-02-28T03:07:20.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "7f841f784850c1af0b793f2ae621689c7a13237efc4ffd49f86b3521b0592722",
-      "title": "Local DB Design Patterns — Room + Repository + ViewModel Architecture",
-      "url": "https://dev.to/myougatheaxo/local-db-design-patterns-room-repository-viewmodel-architecture-43bo",
-      "description": "Local DB Design Patterns — Room + Repository + ViewModel Architecture\n\n\nMaster the Room database architecture with Repository pattern and reactive ViewModel. This guide covers entity design, DAO patterns, and state management for robust offline-first Android apps.\nDefine your database schema using @entity annotation:\n\\`kotlin\n@entity(\n// Post entity with foreign key constraint\n@entity(\n\\\nUse Flow for observable queries and suspend functions for writes:\n\\`kotlin\n@dao\n// Update with suspend function\n@Update\nsuspend fun update(user: UserEntity)\n\n// Delete with suspend function\n@Delete\nsuspend fun delete(user: UserEntity)\n\n// Observable query returning Flow\n@Query(\"SELECT * FROM users WHERE id = :userId\")\nfun observeUser(userId: Long): Flow<UserEntity?>\n\n// Observable list query\n@Query(\"SELECT * FROM users ORDER BY createdAt DESC\")\nfun observeAllUsers(): Flow<List<UserEntity>>\n\n// Custom query with parameters\n@Query(\"SELECT * FROM users WHERE email LIKE '%' || :searchTerm || '%'\")\nfun searchUsers(searchTerm: String): Flow<List<UserEntity>>\n\n// Batch operations\n@Query(\"SELECT * FROM users WHERE id IN (:userIds)\")\nsuspend fun getUsersByIds(userIds: List<Long>): List<UserEntity>\n\n}\n\n@dao\n@Query(\"SELECT * FROM posts WHERE userId = :userId ORDER BY createdAt DESC\")\nfun observeUserPosts(userId: Long): Flow<List<PostEntity>>\n\n@Query(\"SELECT * FROM posts WHERE id = :postId\")\nsuspend fun getPost(postId: Long): PostEntity?\n\n}\n`\\\nAbstract database operations and handle data conversion:\n\\`kotlin\ndata class Post(\n// Extension functions for conversion\nfun User.toEntity() = UserEntity(\n// Repository implementation\nfun observeUser(userId: Long): Flow<User?> =\n    userDao.observeUser(userId)\n        .map { it?.toDomain() }\n        .distinctUntilChanged()\n\nfun observeAllUsers(): Flow<List<User>> =\n    userDao.observeAllUsers()\n        .map { entities -> entities.map { it.toDomain() } }\n        .distinctUntilChanged()\n\nsuspend fun createUser(user: User): Long =\n    userDao.insert(user.toEntity())\n\nsuspend fun updateUser(user: User) =\n    userDao.update(user.toEntity())\n\nsuspend fun deleteUser(user: User) =\n    userDao.delete(user.toEntity())\n\nfun searchUsers(query: String): Flow<List<User>> =\n    userDao.searchUsers(query)\n        .map { entities -> entities.map { it.toDomain() } }\n\n}\n`\\\nDefine a data class for filtering logic:\n\\kotlin\n\\\nUse flatMapLatest to react to filter changes:\n\\`kotlin\nprivate val filterState = MutableStateFlow(FilterState())\n\nval uiState: StateFlow<UserListUiState> = filterState\n    .flatMapLatest { filter ->\n        when {\n            filter.searchQuery.isNotEmpty() ->\n                repository.searchUsers(filter.searchQuery)\n            filter.filterByUserId != null ->\n                repository.observeUser(filter.filterByUserId)\n                    .map { user -> listOfNotNull(user) }\n            else ->\n                repository.observeAllUsers()\n        }\n    }\n    .map { users ->\n        val sortedUsers = when (filterState.value.sortBy) {\n            FilterState.SortOrder.NEWEST ->\n                users.sortedByDescending { it.createdAtMillis }\n            FilterState.SortOrder.OLDEST ->\n                users.sortedBy { it.createdAtMillis }\n            FilterState.SortOrder.NAME_ASC ->\n                users.sortedBy { it.name }\n            FilterState.SortOrder.NAME_DESC ->\n                users.sortedByDescending { it.name }\n        }\n        UserListUiState.Success(sortedUsers)\n    }\n    .catch { error ->\n        emit(UserListUiState.Error(error.message ?: \"Unknown error\"))\n    }\n    .stateIn(\n        scope = viewModelScope,\n        started = SharingStarted.WhileSubscribed(5000),\n        initialValue = UserListUiState.Loading\n    )\n\nfun setSearchQuery(query: String) {\n    filterState.update { it.copy(searchQuery = query) }\n}\n\nfun setSortOrder(order: FilterState.SortOrder) {\n    filterState.update { it.copy(sortBy = order) }\n}\n\nfun filterByUserId(userId: Long?) {\n    filterState.update { it.copy(filterByUserId = userId) }\n}\n\n}\n\nsealed class UserListUiState {\n\\\nInitialize Room database in your app:\n\\`kotlin\n@database(\n// Dependency injection (Hilt example)\n@Singleton\n@Provides\nfun provideDatabase(@ApplicationContext context: Context): AppDatabase =\n    Room.databaseBuilder(\n        context,\n        AppDatabase::class.java,\n        \"app_database\"\n    ).build()\n\n@Singleton\n@Provides\nfun provideUserDao(database: AppDatabase): UserDao =\n    database.userDao()\n\n@Singleton\n@Provides\nfun provideUserRepository(userDao: UserDao): UserRepository =\n    UserRepository(userDao)\n\n}\n`\\\nEntity Design: Use indices for frequently queried columns, set foreign key constraints\nDAO Layer: Return Flow for observables, use suspend for writes\nRepository Pattern: Convert between Entity and Domain models, provide clean API\nState Management: Use StateFlow with stateIn() for lifecycle-aware subscriptions\nFiltering: Create FilterState data class for complex query logic\nError Handling: Use catch() to emit error states from Flow operators\nLifecycle: Use SharingStarted.WhileSubscribed(5000) for proper collection management\nThis architecture ensures testability, scalability, and reactive updates across your app.\n8 Android app templates: Gumroad",
-      "publishedAt": "2026-03-02T01:51:16.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "70e5da37fdda551bb530cf98071bc98234ddd531e168cd51c52bbe2ba623a141",
-      "title": "Compose ↔ View Interop — AndroidView and ComposeView",
-      "url": "https://dev.to/myougatheaxo/compose-view-interop-androidview-and-composeview-3792",
-      "description": "Compose ↔ View Interop — AndroidView and ComposeView\n\n\nYou don't need to rewrite your entire app to use Compose. Modern Android supports gradual migration through interop.\nAndroidView(\n    factory = { context ->\n        MapView(context).apply {\n            // Initialize\n        }\n    },\n    modifier = Modifier.fillMaxSize(),\n    update = { mapView ->\n        // Update when recomposed\n    }\n)\n\nAndroidView(\n    factory = { context ->\n        MapView(context)\n    },\n    update = { mapView ->\n        mapView.getMapAsync { googleMap ->\n            googleMap.addMarker(\n                MarkerOptions().position(LatLng(37.7749, -122.4194))\n            )\n        }\n    },\n    modifier = Modifier.fillMaxSize()\n)\n\nAndroidView(\n    factory = { context ->\n        WebView(context).apply {\n            settings.javaScriptEnabled = true\n            loadUrl(\"https://example.com\")\n        }\n    }\n)\n\nclass LegacyFragment : Fragment() {\n    override fun onCreateView(\n        inflater: LayoutInflater,\n        container: ViewGroup?,\n        savedInstanceState: Bundle?\n    ): View {\n        return ComposeView(requireContext()).apply {\n            setContent {\n                MyComposeScreen()\n            }\n        }\n    }\n}\n\n<LinearLayout\n    android:layout_width=\"match_parent\"\n    android:layout_height=\"match_parent\">\n\n    <com.google.android.material.appbarcompat.AppBarLayout\n        android:layout_width=\"match_parent\"\n        android:layout_height=\"wrap_content\" />\n\n    <androidx.compose.ui.platform.ComposeView\n        android:id=\"@+id/compose_content\"\n        android:layout_width=\"match_parent\"\n        android:layout_height=\"0dp\"\n        android:layout_weight=\"1\" />\n</LinearLayout>\n\nclass MainActivity : AppCompatActivity() {\n    override fun onCreate(savedInstanceState: Bundle?) {\n        super.onCreate(savedInstanceState)\n        setContentView(R.layout.activity_main)\n\n        val composeView = findViewById<ComposeView>(R.id.compose_content)\n        composeView.setContent {\n            MyComposeContent()\n        }\n    }\n}\n\nAndroidView(\n    factory = { context ->\n        MapBinding.inflate(LayoutInflater.from(context)).root\n    },\n    update = { view ->\n        val binding = MapBinding.bind(view)\n        binding.mapView.getMapAsync { /* ... */ }\n    }\n)\n\nclass SharedViewModel : ViewModel() {\n    val location = MutableLiveData<LatLng>()\n}\n\n// In Compose Fragment\nclass MapsComposeFragment : Fragment() {\n    private val viewModel: SharedViewModel by viewModels()\n\n    override fun onCreateView(inflater: LayoutInflater, ...): View {\n        return ComposeView(requireContext()).apply {\n            setContent {\n                val location by viewModel.location.observeAsState()\n                ComposeMapScreen(location)\n            }\n        }\n    }\n}\n\n// In View Fragment\nclass MapsViewFragment : Fragment() {\n    private val viewModel: SharedViewModel by viewModels()\n\n    override fun onCreateView(inflater: LayoutInflater, ...): View {\n        val binding = MapBinding.inflate(inflater)\n        binding.mapView.getMapAsync { googleMap ->\n            googleMap.setOnCameraIdleListener {\n                viewModel.location.value = googleMap.cameraPosition.target\n            }\n        }\n        return binding.root\n    }\n}\n\nStart with new screens in Compose\nAdd Compose gradual inside existing screens using ComposeView\n\n\nKeep shared ViewModel for state\nUse AndroidView sparingly (only for complex views like maps)\nMigrate screens incrementally — don't wait for 100% completion\nAndroidView: Legacy View → Compose (factory + update pattern)\nComposeView: Compose → XML layout or Fragment\nState sharing: ViewModel + LiveData/StateFlow\nMigration: Gradual adoption, mixing both frameworks simultaneously\nYour app doesn't need to be 100% Compose to benefit. Start interop today.\nInterested in mobile app development? Check out 8 Android app templates on Gumroad!",
-      "publishedAt": "2026-03-02T01:37:06.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "7d8fb8da36639917bf9be5c8c6735a329549f1cdbc8ee705119e1653934b7175",
-      "title": "第 6 回 AWS ジャパン 生成 AI Frontier Meetup ～学びと繋がりの場～【開催報告】",
-      "url": "https://aws.amazon.com/jp/blogs/news/6th-gen-ai-frontier-meet-up/",
-      "description": "アマゾン ウェブ サービス ジャパン（以下、AWS ジャパン）が実施する「生成 AI 実用化推進プログラム」は […]",
-      "publishedAt": "2026-03-02T00:10:35.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "66ff417c54c1cdb7365264966e0744fe0473fb3bcfb86b45d7ed54da7ee4dc16",
-      "title": "ABEMAで取り組んだAIエージェントによるA/Bテスト文化の促進",
-      "url": "https://developers.cyberagent.co.jp/blog/archives/62375/",
-      "description": "はじめに ABEMAのData Scienceチームで、2025年9月から半年間、ミッション型インタ ...",
-      "publishedAt": "2026-03-01T22:30:20.000Z",
-      "feedName": "CyberAgent Developers Blog"
-    },
-    {
-      "id": "816ce90a3444166123f7edd7e1a69b2b7bc65bb0ab1e272348a8692401cbdd89",
-      "title": "hackerbot-claw: An AI-Powered Bot Actively Exploiting GitHub Actions - Microsoft, DataDog, and CNCF Projects Hit So Far - StepSecurity",
-      "url": "https://www.stepsecurity.io/blog/hackerbot-claw-github-actions-exploitation",
-      "description": "This is an active, ongoing attack campaign. We are continuing to monitor hackerbot-claw's activity and will update this post as new information becomes available. We're hosting a community webinar on this topic on March 2nd at 11 AM PT. Click here to register. A week-long automated attack campaig...",
-      "publishedAt": "2026-03-01T22:24:29.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "1de4d3e1ee35ac0cdc5e4fc41bc540002a026e3a265190a782314a6a33e70a1d",
-      "title": "AIエージェントの「振る舞い」をどう評価する？　実践者が明かす「設計」「テスト」の勘所",
-      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2602/27/news016.html",
-      "description": "2025年12月20日、JAWS-UG主催のコミュニティーイベント「AI Builders Day」が開催された。本稿では、そのセッションの中から、Amazon Web Servicesを活用したAIエージェント開発の現在地と、AIエージェントの設計や評価のポイントをまとめてお届けする。",
-      "publishedAt": "2026-03-01T20:00:00.000Z",
-      "feedName": "＠IT"
-    },
-    {
-      "id": "3b536dd71907e156dde7cd0a7a32a27588849a30892cc2e614c37323b509b556",
-      "title": "【k6】負荷テストチートシート",
-      "url": "https://qiita.com/umekikazuya/items/575cb2218d0ee1349131?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "k6を使い始めた人、たまに書くけど毎回調べ直してしまう人向けのチートシートをまとめました。\nCLIコマンド・options・負荷パターン・メトリクスについて、実務で使う範囲のものを記載しています。\n「負荷テスト」を体系的に学びたい方はこちらの連載（全5回）もどうぞ。\n\n連載...",
-      "publishedAt": "2026-03-01T13:56:19.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "2750cce8f6350d3533d9f3329129874ccb64f0637042e1f5a190f198be853adf",
-      "title": "Skillsで実現する軽量パーソナルRAG",
-      "url": "https://zenn.dev/karaage0703/articles/d7eaf62437185d",
-      "description": "以前、MCPサーバーとしてRAGを構築する記事を書きました。 PostgreSQL + pgvector + multilingual-e5-large という構成で、MCP経由でベクトル検索できるRAGサーバーです。このMCP RAGサーバーは、気に入ってはいたのですが、PostgreSQL + Dockerが必要だったり、MCPサーバーとしての設定が必要だったりと、少し使い勝手...",
-      "publishedAt": "2026-03-01T10:52:51.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "7821ea480ff12058b986863295bd0c03faa916771c815c44be7d0a53b61303f5",
-      "title": "サーバレスが変えた バックエンドという概念",
-      "url": "https://zenn.dev/biki/articles/serverless-changed-backend-concept",
-      "description": "🧭 はじめに 最近、Cloudflare Pages や Vercel、Supabase を触ってみて、 「フロントだけで完結する時代が来たんじゃないか？」 と感じました。 Next.js で画面を作り、Functions で API を書き、D1 に接続するだけ。 サーバ構築もデプロイ設定も不要で、フロントエンドだけでアプリが動く。 この体験が、バックエンド...",
-      "publishedAt": "2026-03-01T09:24:13.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "2750cce8f6350d3533d9f3329129874ccb64f0637042e1f5a190f198be853adf",
-      "title": "Skillsで実現する軽量パーソナルRAG",
-      "url": "https://zenn.dev/karaage0703/articles/d7eaf62437185d",
-      "description": "以前、MCPサーバーとしてRAGを構築する記事を書きました。\nhttps://zenn.dev/mkj/articles/30eeb69bf84b3f\nPostgreSQL + pgvector + multilingual-e5-large という構成で、MCP経由でベクトル検索できるRAGサーバーです。このMCP RAGサーバーは、気に入ってはいたのですが、PostgreSQL + Dockerが必要だったり、MCPサーバーとしての設定が必要だったりと、少し使い勝手の悪い部分がありました。\n今回は、もっと手軽にRAGを実現したいなと思いSkillを活用してもっと軽量なRAGを実現しま...",
-      "publishedAt": "2026-03-01T08:17:28.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "bc11187681b3b93a1f7cedc96522cb1ca949df777acad61ccb06fdd95bdd0304",
-      "title": "【個人開発】オフラインでも地図と現在地をすぐ確認できる、待ち合わせアプリを作りました【React x TypeScript x Service Worker】",
-      "url": "https://qiita.com/shun123/items/91a65bfbe41aea8dbbda?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "はじめに\n慣れていない土地で電波が悪く地図アプリが重くて、なかなか友達や家族と合流できないなんてことはありませんでしょうか？\n私はディズニーランドなどの人が多いテーマパークでそんな経験が多くありました。\nそこで電波が悪い状況でも自分の位置と目的地をすぐに把握できるよう、オ...",
-      "publishedAt": "2026-03-01T07:54:26.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "8ab239dfacf5704c9de27a1309702daecec7b1727565c05ccd2d93c7d4aea3a2",
-      "title": "AgentCore RuntimeをTerraformでVPCにデプロイして送信元IPアドレスを固定にする",
-      "url": "https://qiita.com/ry-harada/items/6c78b38f6e94cf025997?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "本編の前に\n\n本手順による検証後、terraform destroyによるリソース削除を試みましたが、作成したセキュリティグループが削除できず、サブネットやVPCが削除できない状態になりました。NAT Gateway等の課金が発生するリソースは削除されたため、コスト面へ...",
-      "publishedAt": "2026-03-01T06:14:31.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "1d066b13301d2d1c5096d03586bdbf182c155dc05c60480450367d8a28243b20",
-      "title": "IT未経験がAIを活用して入社4ヶ月でAWS資格3冠達成した話",
-      "url": "https://dev.classmethod.jp/articles/it-beginner-aws-3-certifications-ai/",
-      "description": "IT未経験でクラスメソッドに入社して4ヶ月。\nAWS CLF・AIF・SAAの3資格をAIをフル活用して合格した経験をまとめました。",
-      "publishedAt": "2026-03-01T03:29:48.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "f07296bad11e6bb41698b430b6aefd76c613fdb2fb091ce5ed10eb07a7a31c37",
-      "title": "セキュリティって難しい",
-      "url": "https://zenn.dev/mizutani/articles/security-is-so-difficult",
-      "description": "最近、事業会社でセキュリティに携わることの難しさについて色々と考えることがあったのでちょっと言語化してみる。いわゆる「セキュリティの知識をキャッチアップするのが大変」という直接的な話ではなく、もう少し構造的な難しさについて。特に何か明快な結論や解決策を提示できるわけではないのだが、自分なりに感じ...",
-      "publishedAt": "2026-03-01T03:11:47.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "92a387f36732f6433377573dfa4eb3e18431f432b33f008b909e6a9ed18853b2",
-      "title": "【AWS】Strands Labs ー フォーマット変換・型変換・カラム名修正を全部ai-functionsに丸投げする",
-      "url": "https://qiita.com/yakumo_09/items/58e733b16e96b255dfec?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "はじめに\nAWSからStrands Labsというのが発表されましたね。\n色々いじってみたので今回はai-functions中心に記事を書いていきたいと思います。\nなお、Strands Labsには他にも以下のプロジェクトがあります。\n\nRobots：AIエージェントを...",
-      "publishedAt": "2026-03-01T02:25:26.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "f07296bad11e6bb41698b430b6aefd76c613fdb2fb091ce5ed10eb07a7a31c37",
-      "title": "セキュリティって難しい",
-      "url": "https://zenn.dev/mizutani/articles/security-is-so-difficult",
-      "description": "最近、事業会社でセキュリティに携わることの難しさについて色々と考えることがあったのでちょっと言語化してみる。いわゆる「セキュリティの知識をキャッチアップするのが大変」という直接的な話ではなく、もう少し構造的な難しさについて。特に何か明快な結論や解決策を提示できるわけではないのだが、自分なりに感じていることを書いてみる。\n\n 何が難しいのか\n\n 仕組みの理解が難しい\nセキュリティに取り組むうえで、まず守るべき対象の仕組みをよく理解する必要がある。ここでいう「理解」は、単にそのシステムやサービスを「使える・動かせる」というレベルではない。そこからさらに数歩踏み込んだ、構造や原理の把握が求めら...",
-      "publishedAt": "2026-03-01T01:36:01.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "4e37a2c5af51a598aa77100f9a7de1df0b160cb93173384b34315c4d061aa912",
-      "title": "あなたはEntra IDを理解できる",
-      "url": "https://zenn.dev/headwaters/articles/64e6aad7acdff9",
-      "description": "はじめに ヘッドウォータースに入社し、ほとんど初めてクラウドという概念に本格的に触れました。 業務のなかでAzureのキャッチアップを進める中で、理解が難しい概念がありました。 それがEntra IDです。 今回は自分なりに理解したその概念を、具体的な使い方のイメージを多めにして初心者エンジニアの方でも理解できる...",
-      "publishedAt": "2026-02-28T23:31:32.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "92d1bd5d5880af714f8f2259724dbde1cf4807e606924a212607e7d8781ddc92",
-      "title": "Lambdaは果たして安全か？― サーバレスの\"APMで見えないリスク\"を解剖する",
-      "url": "https://qiita.com/keitah/items/f4a506357df2060a0379?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "クラウドネイティブの時代、サーバレスは「安全な選択肢」として語られることが多くなりました。\n特に AWS Lambda の登場以降、\n\nサーバ管理は不要\nパッチ適用は不要\nOSを触らない\n自動スケールする\n\nという言葉が並びます。\nまるで、「インフラから解放されれば、セキュ...",
-      "publishedAt": "2026-02-28T16:20:25.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "57256647bd17f67d239b6f9b4dbe66d2bc4c02211cb25a764eb2e8d0446d4b44",
-      "title": "React Tokyo フェス2026 参加レポート",
-      "url": "https://zenn.dev/polipoli/articles/react-tokyo-fes-2026-report",
-      "description": "概要\n2026年2月28日に開催された「React Tokyo フェス2026」に参加してきました。東京都立産業貿易センター 浜松町館 5Fにて、Reactコミュニティが一堂に会する\"お祭り型\"イベントということで、通常のカンファレンスとは一味違った体験ができたのでレポートにまとめます。\nhttps://react-tokyo.connpass.com/event/366003/\n\n React Tokyo フェスとは\nReact Tokyo フェスは、従来のカンファレンスのように壇上の発表を「聴く」形式ではなく、参加者が会場を自由に回遊しながら対話・交流を楽しむ\"お祭り型\"のイベン...",
-      "publishedAt": "2026-02-28T13:49:57.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "6ba01dc6eca85ef303e0fd8ebdf1a34a6799d5d7658c807c753391a6100b6f9e",
-      "title": "Terminal 版 Playwright 風テストツールの tuistory が便利",
-      "url": "https://qiita.com/tomoasleep/items/9f35a0d6e24edd8f2265?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "TUI ツールを Vibe coding で作ることが最近多く、その際の動作確認として tuistory というツールを使っていて便利だったので紹介する。\n\ntuistory はどんなツールか\n簡単に言うと Terminal 版の Playwright。\nplaywr...",
-      "publishedAt": "2026-02-28T12:28:53.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "e7a2c3b553e3e25c485bf94d371ef36980c106b93f579c7a1873403afca02484",
-      "title": "AI時代におけるソフトウェアアーキテクチャを考える",
-      "url": "https://zenn.dev/neko3cs/articles/software-architecture-for-the-ai-era",
-      "description": "はじめに\n本稿ではAI時代における最適なソフトウェアアーキテクチャとは何かを考えてみます。昨今、AIによるコーディングが活発となり、コーディングはAIに任せるといったことは普遍的になりつつあります。そんな中で、AIがコードを書く上で最適なソフトウェアアーキテクチャとはなんなのかについて疑問を持ちました。\n\n AIコーディングにおける制約と問題点\nまず、AIにコーディングさせる上でのLLMの制約と問題点について考えてみます。\nトークンサイズ\nコンテキストサイズは最新モデル[1]で100万〜200万トークンほどになります。一度に読み込まないといけない情報量が増えるとそれだけトークンを使用...",
-      "publishedAt": "2026-02-28T09:12:01.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "46099ded0723c1f8fcd0c580a8e7c5418756d1fe8bc7d2045d1fdaf4672d56fc",
-      "title": "Install Docker CE on WSL2 Without Docker Desktop",
-      "url": "https://dev.to/recca0120/install-docker-ce-on-wsl2-without-docker-desktop-j1m",
-      "description": "Originally published at recca0120.github.io\nAfter setting up WSL2, if you want to run Docker but don't want Docker Desktop (resource-heavy and requires a license), installing Docker CE directly in WSL2 is the cleaner approach.\nUpdate the package list and install the dependencies needed for apt to use HTTPS:\nsudo apt-get update\nsudo apt-get install ca-certificates curl gnupg lsb-release\n\nAdd Docker's official GPG key:\nsudo mkdir -m 0755 -p /etc/apt/keyrings\ncurl -fsSL https://download.docker.com/linux/ubuntu/gpg \\\n  | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg\n\nSet up the Docker apt repository:\necho \\\n  \"deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] \\\n  https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable\" \\\n  | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null\n\nInstall Docker Engine:\nsudo apt-get update\nsudo apt-get install docker-ce docker-ce-cli containerd.io \\\n  docker-buildx-plugin docker-compose-plugin\n\nRun hello-world to confirm Docker is working:\nsudo docker run hello-world\n\nTo avoid typing sudo every time, add yourself to the docker group:\nsudo usermod -aG docker $USER\n\nOpen a new terminal for the change to take effect.\nWSL2 doesn't start systemd by default, so the Docker daemon may not start automatically. You'll need to start it manually each time you open WSL2:\nsudo service docker start\n\nAlternatively, enable systemd support in /etc/wsl.conf (requires Windows 11 22H2 or later):\n[boot]\nsystemd=true\n\nAfter making the change, restart WSL2 and Docker will start automatically.",
-      "publishedAt": "2026-03-03T01:43:20.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "263945747901559495cc878e7ca77ff294e45dcada6dab4e2ab88c4d71362e73",
-      "title": "How to Install Windows 10 on AWS EC2 via VM Import",
-      "url": "https://dev.to/recca0120/how-to-install-windows-10-on-aws-ec2-via-vm-import-3i4e",
-      "description": "Originally published at recca0120.github.io\nAWS VM Import supports the following Windows 10 editions: Professional, Enterprise, and Education (64-bit, English). Home edition is not supported.\nYou can download the Enterprise trial from the Microsoft website.\nCreate a new VM in VirtualBox with VHD, VMDK, or OVA disk format (about 20GB for the system disk)\nInstall Windows 10 -- make sure to set an administrator password (otherwise you won't be able to connect via Remote Desktop later)\nInstall TeamViewer, configure Easy Access, and enable LAN connections and Windows login\nEnable Remote Desktop (Start -> Allow remote access)\nInstall EC2 Configure Service\n\nReboot, wait for Windows Update to finish, then shut down\nsudo apt install awscli\naws configure\n\nSet up your Access Key, Secret Key, and default Region. Note that P2 instances are only available in US regions.\nCreate an S3 bucket (the name must be globally unique):\naws s3 mb s3://your-bucket-name --region eu-central-1\n\nUpload the VHD file:\naws s3 cp codexaws.vhd s3://your-bucket-name --region eu-central-1\n\nCreate trust-policy.json:\n{\n   \"Version\": \"2012-10-17\",\n   \"Statement\": [{\n      \"Effect\": \"Allow\",\n      \"Principal\": { \"Service\": \"vmie.amazonaws.com\" },\n      \"Action\": \"sts:AssumeRole\",\n      \"Condition\": {\n         \"StringEquals\": { \"sts:Externalid\": \"vmimport\" }\n      }\n   }]\n}\n\nCreate the role:\naws iam create-role --role-name vmimport --assume-role-policy-document file://trust-policy.json\n\nCreate role-policy.json, replacing YOUR-BUCKET-NAME with your actual bucket name (same one used above):\n{\n   \"Version\": \"2012-10-17\",\n   \"Statement\": [\n      {\n         \"Effect\": \"Allow\",\n         \"Action\": [\"s3:ListBucket\", \"s3:GetBucketLocation\"],\n         \"Resource\": [\"arn:aws:s3:::YOUR-BUCKET-NAME\"]\n      },\n      {\n         \"Effect\": \"Allow\",\n         \"Action\": [\"s3:GetObject\"],\n         \"Resource\": [\"arn:aws:s3:::YOUR-BUCKET-NAME/*\"]\n      },\n      {\n         \"Effect\": \"Allow\",\n         \"Action\": [\"ec2:ModifySnapshotAttribute\", \"ec2:CopySnapshot\", \"ec2:RegisterImage\", \"ec2:Describe*\"],\n         \"Resource\": \"*\"\n      }\n   ]\n}\n\nAttach the policy:\naws iam put-role-policy --role-name vmimport --policy-name vmimport --policy-document file://role-policy.json\n\nCreate containers.json:\n[{\n  \"Description\": \"Windows 10 Base Install\",\n  \"Format\": \"vhd\",\n  \"UserBucket\": {\n    \"S3Bucket\": \"your-bucket-name\",\n    \"S3Key\": \"codexaws.vhd\"\n  }\n}]\n\nRun the import:\naws ec2 import-image --description \"Windows 10\" --disk-containers file://containers.json --region eu-central-1\n\nCheck progress:\naws ec2 describe-import-image-tasks --region eu-central-1\n\nAfter the import completes, go to the EC2 Console:\nImages -> AMI -> right-click -> Launch\nChoose a g2 instance type (you may need to request a limit increase from AWS first)\nOpen RDP and TeamViewer ports in the Security Group\nOnce launched, use \"Connect\" to download the RDP file and log in with the credentials you set earlier\nRe-link your TeamViewer account\nInstall NVIDIA drivers\nFollow the documentation to enable ENA Enhanced Networking",
-      "publishedAt": "2026-03-03T01:43:04.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "17cd2c2a7ec6cac7b9cc5e49dc36fe8fbe8a221d3f63ba76ef01fc070e3ec2f9",
-      "title": "msw-fetch-mock: Undici-Style Fetch Mocking for MSW",
-      "url": "https://dev.to/recca0120/msw-fetch-mock-undici-style-fetch-mocking-for-msw-5e2j",
-      "description": "Originally published at recca0120.github.io\nWhen writing frontend or Node.js tests, mocking HTTP requests is practically mandatory. But choosing a mock solution is overwhelming: MSW, nock, fetch-mock, jest-fetch-mock… each has a different API style, interception level, and environment support. If you work on both Cloudflare Workers and Node.js projects, you'll find the mock APIs are completely different and test code can't be shared.\nmsw-fetch-mock solves exactly this: it provides the same API style as undici's MockAgent and Cloudflare Workers' fetchMock, with MSW handling network-level interception underneath. One API, every environment.\nHere are the 6 mainstream HTTP mock solutions today:\n\n\n\nSolution\nnpm Weekly Downloads\nInterception Level\nNode native fetch\nBrowser\nMaintenance\n\n\n\n\nMSW\n~10.5M\nService Worker / Node internals\n✅\n✅\nActive\n\n\nnock\n~5.5M\nNode http module\n❌\n❌\nActive\n\n\nfetch-mock\n~1.0M\nReplaces globalThis.fetch\n\n✅\n✅\nActive\n\n\njest-fetch-mock\n~1.3M\nReplaces global.fetch\n\n✅\n❌\nAbandoned\n\n\nvitest-fetch-mock\n~240K\nReplaces globalThis.fetch\n\n✅\n❌\nActive\n\n\nundici MockAgent\nBuilt-in\nundici Dispatcher\n✅\n❌\nNode core\n\n\n\nEach has clear limitations:\nMSW is the most complete, but verbose. Every endpoint needs http.get(url, resolver), and it lacks times(), persist(), assertNoPendingInterceptors() — essentials for testing.\nnock is the Node.js veteran with a clean API, but doesn't support Node 18+ native fetch. Native fetch uses undici, which bypasses the http module entirely.\nfetch-mock replaces globalThis.fetch directly — it works, but it's not network-level interception, so behavior may differ from production.\njest-fetch-mock hasn't been updated in 6 years. No URL matching — responses are returned by call order only.\nvitest-fetch-mock is jest-fetch-mock ported to Vitest. Same limitation: no URL matching.\nundici MockAgent is the native Node.js solution, but doesn't work in browsers.\nmsw-fetch-mock doesn't build a mock engine from scratch. It stands on MSW's shoulders — using MSW for network-level interception (Service Worker in browser, @mswjs/interceptors in Node) — and wraps it with an undici-style API.\nThe architecture has three layers:\n┌─────────────────────────────────────┐\n│  FetchMock (User API)               │\n│  .get(origin).intercept().reply()   │\n├─────────────────────────────────────┤\n│  Adapter (Environment)              │\n│  NodeMswAdapter / BrowserMswAdapter │\n│  NativeFetchAdapter (no MSW)        │\n├─────────────────────────────────────┤\n│  HandlerFactory                     │\n│  MSW v2 / MSW v1 Legacy / Native   │\n└─────────────────────────────────────┘\n\n\nThe key is the single catch-all handler. MSW's standard approach registers one handler per endpoint, but in browser environments this causes Service Worker timing issues (each worker.use() requires SW communication). msw-fetch-mock registers just one http.all('*', ...) catch-all, running all matching logic in the main thread, avoiding Service Worker round-trip latency.\nnpm install msw-fetch-mock --save-dev\n\nimport { fetchMock } from 'msw-fetch-mock';\n\nbeforeAll(() => fetchMock.activate({ onUnhandledRequest: 'error' }));\nafterAll(() => fetchMock.deactivate());\nafterEach(() => {\n  fetchMock.assertNoPendingInterceptors(); // Unused mocks = broken test\n  fetchMock.reset();\n});\n\nconst base = 'https://api.example.com';\n\n// GET request\nfetchMock.get(base)\n  .intercept({ path: '/users' })\n  .reply(200, [{ id: 1, name: 'Alice' }]);\n\n// POST + body matching\nfetchMock.get(base)\n  .intercept({\n    path: '/users',\n    method: 'POST',\n    headers: { Authorization: /^Bearer / },\n    body: (b) => JSON.parse(b).role === 'admin',\n  })\n  .reply(201, { id: 2 });\n\n// Dynamic response\nfetchMock.get(base)\n  .intercept({ path: '/echo', method: 'POST' })\n  .reply(200, ({ body }) => JSON.parse(body));\n\n// Respond only 3 times\nfetchMock.get(base).intercept({ path: '/api' }).reply(200, data).times(3);\n\n// Never consumed (e.g., health check)\nfetchMock.get(base).intercept({ path: '/health' }).reply(200, 'ok').persist();\n\n// Simulate latency\nfetchMock.get(base).intercept({ path: '/slow' }).reply(200, data).delay(500);\n\n// Simulate network error\nfetchMock.get(base).intercept({ path: '/fail' }).replyWithError();\n\nconst last = fetchMock.calls.lastCall();\nexpect(last.method).toBe('POST');\nexpect(last.json()).toEqual({ name: 'Alice' });\n\n// Filter specific calls\nfetchMock.calls.filterCalls({ method: 'POST', path: '/users' });\nfetchMock.calls.called({ path: '/users' }); // boolean\n\nfetchMock.disableNetConnect();              // Block all unmatched requests\nfetchMock.enableNetConnect('localhost');     // Allow localhost\nfetchMock.enableNetConnect(/\\.internal$/);  // Allow hosts matching regex\n\n\n\n\nFeature\nmsw-fetch-mock\nMSW\nnock\nfetch-mock\njest-fetch-mock\nundici MockAgent\n\n\n\n\nURL pattern matching\n✅\n✅\n✅\n✅\n❌\nPartial\n\n\nMethod matching\n✅\n✅\n✅\n✅\n❌\n✅\n\n\nHeader matching\n✅\n✅\n✅\n✅\n❌\n✅\n\n\nBody matching\n✅\n✅\n✅\n✅\n❌\n✅\n\n\ntimes(n)\n✅\n❌\n✅\n✅\n❌\n✅\n\n\npersist()\n✅\n❌\n✅\n❌\n❌\n✅\n\n\ndelay(ms)\n✅\n✅\n✅\n✅\n❌\n✅\n\n\nassertNoPendingInterceptors()\n✅\n❌\n✅\n❌\n❌\n❌\n\n\nCall history + filtering\n✅\n❌\n❌\n✅\nPartial\n❌\n\n\nNetwork error simulation\n✅\n✅\n✅\n✅\n❌\n✅\n\n\nGraphQL support\n❌\n✅\n❌\n❌\n❌\n❌\n\n\nRecord & Replay\n❌\n❌\n✅\n❌\n❌\n❌\n\n\n\n\n\n\nEnvironment\nmsw-fetch-mock\nMSW\nnock\nfetch-mock\njest-fetch-mock\nundici MockAgent\n\n\n\n\nJest\n✅\n✅\n✅\n✅\n✅\n✅\n\n\nVitest\n✅\n✅\n✅\n✅\n❌\n✅\n\n\nNode native fetch\n✅\n✅\n❌\n✅\n✅\n✅\n\n\nNode http/axios\n✅\n✅\n✅\n❌\n❌\n❌\n\n\nBrowser\n✅\n✅\n❌\n✅\n❌\n❌\n\n\nCloudflare Workers API compat\n✅\n❌\n❌\n❌\n❌\n❌\n\n\n\nThe interception level determines how closely mock behavior matches production:\n\n\n\nSolution\nInterception Level\nDescription\n\n\n\n\nMSW (browser)\nService Worker\nZero patching, closest to production\n\n\nMSW (Node)\nNode internals + undici\nExtends ClientRequest, not monkey-patching\n\n\nmsw-fetch-mock\nSame as MSW\nMSW under the hood\n\n\nnock\nhttp.request\nMonkey-patches Node http module\n\n\nfetch-mock\nglobalThis.fetch\nReplaces the fetch function\n\n\njest-fetch-mock\nglobal.fetch\nReplaces fetch with jest.fn()\n\n\nundici MockAgent\nundici Dispatcher\nReplaces undici's dispatcher\n\n\n\nmsw-fetch-mock has three concrete advantages over the alternatives:\nThe APIs for undici MockAgent, Cloudflare Workers fetchMock, and msw-fetch-mock are nearly identical:\n// undici MockAgent\nconst pool = mockAgent.get('https://api.example.com');\npool.intercept({ path: '/users', method: 'GET' }).reply(200, []);\n\n// Cloudflare Workers fetchMock (cloudflare:test)\nconst pool = fetchMock.get('https://api.example.com');\npool.intercept({ path: '/users', method: 'GET' }).reply(200, []);\n\n// msw-fetch-mock\nconst pool = fetchMock.get('https://api.example.com');\npool.intercept({ path: '/users', method: 'GET' }).reply(200, []);\n\nIf your code runs on both Node.js and Cloudflare Workers, your test mocks can share the same patterns — just change the import.\nMSW has the highest interception quality available (Service Worker in browser, @mswjs/interceptors in Node), but its API is verbose:\n// Raw MSW: one handler per endpoint\nserver.use(\n  http.get('https://api.example.com/users', () => {\n    return HttpResponse.json([{ id: 1 }]);\n  }),\n  http.post('https://api.example.com/users', async ({ request }) => {\n    const body = await request.json();\n    return HttpResponse.json(body, { status: 201 });\n  })\n);\n\n// msw-fetch-mock: chain builder, much less code\nfetchMock.get('https://api.example.com')\n  .intercept({ path: '/users' })\n  .reply(200, [{ id: 1 }]);\n\nfetchMock.get('https://api.example.com')\n  .intercept({ path: '/users', method: 'POST' })\n  .reply(201, ({ body }) => JSON.parse(body));\n\nPlus, the features MSW lacks — times(), persist(), assertNoPendingInterceptors(), call history filtering — msw-fetch-mock has them all.\nIf your project already has an MSW server (e.g., for Storybook or integration tests), msw-fetch-mock can plug right in:\nimport { setupServer } from 'msw/node';\nimport { createFetchMock } from 'msw-fetch-mock';\n\nconst server = setupServer(/* your existing handlers */);\nconst fetchMock = createFetchMock(server);\n\nNo need to tear down your existing MSW setup. No conflicts.\nIf you don't want to install MSW, msw-fetch-mock has a native mode that patches globalThis.fetch directly:\nimport { fetchMock } from 'msw-fetch-mock/native';\n\nSame API, just a different interception level. When you're ready to migrate to MSW, change the import path.\n\n\n\nYour Need\nRecommended Solution\n\n\n\n\nCross Node.js + Cloudflare Workers, unified mock API\nmsw-fetch-mock\n\n\nAlready using MSW, but find the API too verbose\n\nmsw-fetch-mock (plug into existing server)\n\n\nFull-stack project, need browser + Node mocking\n\nMSW or msw-fetch-mock\n\n\n\nNode.js only + axios/http\nnock\n\n\nNode.js only + native fetch, no MSW\nundici MockAgent\n\n\nVitest simple scenarios, no URL matching needed\nvitest-fetch-mock\n\n\nJest simple scenarios\n\nfetch-mock (avoid jest-fetch-mock — abandoned)\n\n\n\nmsw-fetch-mock's sweet spot: you want MSW's interception quality with undici/Cloudflare's clean API, plus times(), persist(), and assertNoPendingInterceptors() for proper test lifecycle management.",
-      "publishedAt": "2026-03-03T01:39:58.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "a90e3594decd9dd6501c7f94f867cc93f576759d6166771e78524c37292c7fdd",
-      "title": "【開催まで2週間】AIエージェントを従業員と同様に統制する、「シャドーAI」リスク制御術",
-      "url": "https://enterprisezine.jp/news/detail/23854",
-      "description": "EnterpriseZine編集部は3月17日(火)、AI時代に生き残るためのサイバーセキュリティの実践知を届けるオンライン配信イベント「Security Online Day 2026 Sprin...",
-      "publishedAt": "2026-03-03T01:12:00.000Z",
-      "feedName": "EnterpriseZine"
-    },
-    {
-      "id": "86837664e1761910ebf4b2107492ac3376e000dce9b320728f7bfb7d67c89d60",
-      "title": "2026 年 2 月の AWS テクニカルサポートノートまとめ",
-      "url": "https://dev.classmethod.jp/articles/summary-of-aws-technical-support-notes-for-february-2026/",
-      "description": "2026 年 2 月の AWS テクニカルサポートノートまとめ",
-      "publishedAt": "2026-03-02T23:01:36.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "91d7a99054fd908ea63197886d4a3688b2aaf1e34b2f54bf5cafa2257c0014cc",
-      "title": "AIリスクが初登場で3位、IPAが「情報セキュリティ10大脅威 2026」発表",
-      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2603/03/news057.html",
-      "description": "独立行政法人情報処理推進機構（IPA）は2026年1月29日、2025年に社会的影響が大きかった情報セキュリティ関連トピックスを選出した「情報セキュリティ10大脅威 2026」を発表した。",
-      "publishedAt": "2026-03-02T23:00:00.000Z",
-      "feedName": "＠IT"
-    },
-    {
-      "id": "abb80ae6a03f34cf6e4c04f89c46415498d39198d1acc31c33577e4623d65d04",
-      "title": "Async React時代の宣言的UI: デバウンスの例",
-      "url": "https://zenn.dev/uhyo/articles/async-react-debounce",
-      "description": "宣言的UIとは何か、皆さんは答えられるでしょうか。 「あーあの、DOM更新を直接プログラムに書くんじゃなくて、JSXとかであるべき状態を宣言したらライブラリが自動的に差分適用とかでDOMを更新してくれるやつでしょ？」 もちろん、このような答えは間違いではありません。しかし、特にAsync Reactの時代においては、Rea...",
-      "publishedAt": "2026-03-02T21:54:13.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "abb80ae6a03f34cf6e4c04f89c46415498d39198d1acc31c33577e4623d65d04",
-      "title": "Async React時代の宣言的UI: デバウンスの例",
-      "url": "https://zenn.dev/uhyo/articles/async-react-debounce",
-      "description": "宣言的UIとは何か、皆さんは答えられるでしょうか。\n「あーあの、DOM更新を直接プログラムに書くんじゃなくて、JSXとかであるべき状態を宣言したらライブラリが自動的に差分適用とかでDOMを更新してくれるやつでしょ？」\nもちろん、このような答えは間違いではありません。しかし、特にAsync Reactの時代においては、Reactの考えはさらに先を行っているようです。\n究極的には、宣言的UIは、やりたいことをロジックとして記述するだけで、具体的なことや細かい最適化はよしなにやってくれるものだと筆者は考えています。上述のようなDOMの更新の話はその一例にすぎません。\n\n\nやりたいこと: 特定の...",
-      "publishedAt": "2026-03-02T15:10:48.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "56fdec082529a9e12e2e68c240fd28eb8308d78fca82fe31953635df65732be9",
-      "title": "Apple、iPhone 17eを発表",
-      "url": "https://www.apple.com/jp/newsroom/2026/03/apple-introduces-iphone-17e/",
-      "description": "iPhone 17eは、より高速なパフォーマンス、先進的なカメラシステム、耐久性の向上、MagSafe対応、従来の2倍となる256GBの最小ストレージ容量で、圧倒的な価値をお届けします。 カリフォルニア州クパティーノ Appleは本日、iPhone 17のラインナップに加わった、パワフルでよりお求めやすいiPhone 17eを発表しました。iPho...",
-      "publishedAt": "2026-03-02T14:58:21.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "1adc73a305620f5d2d500d6c7f84bb27d7a6eb44fd2c9195c934f4cee149fd7e",
-      "title": "Apple、M4を搭載した新しいiPad Airを発表",
-      "url": "https://www.apple.com/jp/newsroom/2026/03/apple-introduces-the-new-ipad-air-powered-by-m4/",
-      "description": "超高速なパフォーマンス、より大容量のメモリ、強化された接続性、iPadOS 26の次世代の機能を備えたiPad Airは、素晴らしい価値を提供します M4を搭載した新しいiPad Airはかつてないほどパワフルかつ万能で、超高速なパフォーマンス、より大容量のメモリ、強化された接続性、iPadOS 26の次世代の機能を備えています。 ...",
-      "publishedAt": "2026-03-02T14:57:55.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "6a37eeeffc869f54ebfd40adf20f8b8047e9e9375b567ad5e63c0d254d7cc134",
-      "title": "週刊生成AI with AWS – 2026/2/24 週",
-      "url": "https://aws.amazon.com/jp/blogs/news/weekly-genai-20260224/",
-      "description": "みなさん、こんにちは。AWS ソリューションアーキテクトの三厨です。 今年の目標は Kiro にどんどん業務を […]",
-      "publishedAt": "2026-03-02T12:05:06.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "f223714d840f851ef58a6dc3a4e47293d724bf333fa82038e274431cf9b213f4",
-      "title": "KubeCon + CloudNativeCon Europe 2026 Co-located Event Deep Dive: Kubernetes on Edge Day",
-      "url": "https://www.cncf.io/blog/2026/03/02/kubecon-cloudnativecon-europe-2026-co-located-event-deep-dive-kubernetes-on-edge-day/",
-      "description": "Kubernetes on Edge Day returns to KubeCon + CloudNativeCon Europe 2026 with a continued focus on where cloud native technologies meet the realities of distributed, resource-constrained, and often unpredictable environments. First launched at KubeCon + CloudNativeCon...",
-      "publishedAt": "2026-03-02T12:00:00.000Z",
-      "feedName": "Cloud Native Computing Foundation"
-    },
-    {
-      "id": "042487820be296b8b4085c4b68620891bb32e52d4216e3908a8a69a7190fa2c0",
-      "title": "Claude CodeでETLジョブ実行テストを自動化してみた",
-      "url": "https://dev.classmethod.jp/articles/claude-code-etl-test-automation/",
-      "description": "Claude CodeでETLジョブ実行テストを自動化してみた",
-      "publishedAt": "2026-03-02T11:26:12.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "7122e8be9fccc1a0e6c2c7f69aeeb0acf0a62ead07ae3ec00b3f3f0a93b5e161",
-      "title": "AWS IAM Identity Center をIdP としてDatadog のSAML JIT プロビジョニングとGroup Mapping を設定してみた",
-      "url": "https://dev.classmethod.jp/articles/datadog-saml-jit-provisioning-group-mapping-with-aws-iam-identity-center/",
-      "description": "AWS IAM Identity Center をIdP としてDatadog のSAML JIT プロビジョニングとGroup Mapping を設定してみた",
-      "publishedAt": "2026-03-02T10:29:26.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "58358ed03e85ece465e9e5aff5d60e767cfca3f817183365cac683344a921b56",
-      "title": "IT・セキュリティリーダー150人に調査、AIエージェントのセキュリティ実態と懸念点──Okta",
-      "url": "https://enterprisezine.jp/news/detail/23850",
-      "description": "Oktaは、2026年1月にIT・セキュリティの意思決定者150人を対象に実施した、AIエージェントのセキュリティに関する調査（AlphaSightsに委託）の結果を発表した。\n\n主要な要点\n\n\n ...",
-      "publishedAt": "2026-03-02T10:15:00.000Z",
-      "feedName": "EnterpriseZine"
-    },
-    {
-      "id": "af90f3da9c1e6c2bcddd78bbe704ff90f4e6c7ac866a947a67cdd76d4b856df5",
-      "title": "Linuxの大幅パフォーマンスアップがまもなく実現：.NETによるio_uringアーキテクチャの全貌とは | XenoSpectrum",
-      "url": "https://xenospectrum.com/dotnet-linux-iouring-networking-revolution/",
-      "description": "クラウドネイティブな環境において、アプリケーションのパフォーマンスは最終的にオペレーティングシステムのカーネルが提供するI/Oの仕組みによって上限が決定される。長らくLinux環境における非同期I/Oの標準であり、モダンなWebサーバーアーキテクチャの大黒柱であった「epoll」が、現代の極めて高いトラフィック要件...",
-      "publishedAt": "2026-03-02T09:36:13.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "3cba963541ac070d7909ddac08b5ee82c75daa7e9c2b43fb5a3a20bdd74c3a71",
-      "title": "【Security Hub修復手順】[SageMaker.3] ユーザーは SageMaker ノートブックインスタンスへのルートアクセスを持つべきではない",
-      "url": "https://dev.classmethod.jp/articles/securityhub-fsbp-remediation-sagemaker-3/",
-      "description": "AWS SecurityHub 基礎セキュリティのベストプラクティスコントロール修復手順をご紹介します。",
-      "publishedAt": "2026-03-02T09:16:28.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "d1674398a7f3e09ea608ddd88b58eb3b2cfd2eb7ad6abb44eb277328fce34a38",
-      "title": "NTTドコモとNECが国内で初めてAWS上に商用5Gコアネットワーク構築、サービス展開開始",
-      "url": "https://enterprisezine.jp/news/detail/23842",
-      "description": "2026年3月2日、NTTドコモ（以下、ドコモ）と日本電気（以下、NEC）は、アマゾン ウェブ サービス（以下、AWS）上に商用の5Gコアネットワーク（以下、5GC）を構築し、同年2月26日より国内...",
-      "publishedAt": "2026-03-02T08:40:00.000Z",
-      "feedName": "EnterpriseZine"
-    },
-    {
-      "id": "da9fb229ee7e8702a44d6351b334661095aae51a325cfbbe3d61f91cd3afd39c",
-      "title": "週刊AWS – 2026/2/23週",
-      "url": "https://aws.amazon.com/jp/blogs/news/aws-weekly-20260223/",
-      "description": "Automated Reasoning ポリシーにソースドキュメントへの参照が含まれるように、WS WAF が AI アクティビティダッシュボードを発表、AI ボットとエージェントトラフィックの可視性を提供、Amazon WorkSpaces Applications が 4K 解像度のサポートを拡張、AWS Marketplace が SaaS およびプロフェッショナルサービス製品の複数購入をサポート、Amazon Bedrock バッチ推論が Converse API 形式をサポート　など",
-      "publishedAt": "2026-03-02T08:09:35.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "7dda32cb11d6fc755779940d61d78e624031aba6761d890298ed0495cb98ddad",
-      "title": "[AWS Technical Support Note] วิธีการตรวจสอบ Execution Logs และ Access Logs ของ API Gateway (REST API)",
-      "url": "https://dev.classmethod.jp/articles/tsnote-thai-execution-logs-access-logs-api-gateway-rest-api/",
-      "description": "ตรวจสอบ Execution Logs และ Access Logs ของ API Gateway (REST API)",
-      "publishedAt": "2026-03-02T07:23:12.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "9499e1affbb01db78cad600c87f2883238615b7dd82e4d9180c1d98be6d2d3e3",
-      "title": "Claudeが社内に広がるほど、.envが危ない。Cowork時代に必要なのは「便利さ」より秘密情報の置き場所 - Qiita",
-      "url": "https://qiita.com/taketsuyo/items/4e158dbe22bc4c8d4e0d",
-      "description": "Deleted articles cannot be recovered. Draft of this article would be also deleted. Are you sure you want to delete this article? このポスト、かなり本質を突いている 正直、この投稿は「Claudeが社内で流行っている」という話より、AIエージェント時代のセキュリティの地雷をかなり端的に言い当てていると思う...",
-      "publishedAt": "2026-03-02T06:30:52.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "ec8212da059d77ba52de377572a1d777af8c9ec7c92f908c617e0bbfcf67ce41",
-      "title": "Claudeが社内に広がるほど、.envが危ない。Cowork時代に必要なのは「便利さ」より秘密情報の置き場所",
-      "url": "https://qiita.com/taketsuyo/items/4e158dbe22bc4c8d4e0d?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "このポスト、かなり本質を突いている\n正直、この投稿は「Claudeが社内で流行っている」という話より、AIエージェント時代のセキュリティの地雷をかなり端的に言い当てていると思う。\n\n非エンジニアでもClaude CoworkやClaude Codeを利用して業務を行って...",
-      "publishedAt": "2026-03-02T04:17:58.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "6c378829cd9cfc99ac33dbe9b71a8875d2482522bef4aacc369c7ebc980eb062",
-      "title": "上場企業のメールセキュリティを調べてみた – DMARC・SPF設定の実態",
-      "url": "https://zenn.dev/ext0mmy/articles/700c30ca00b7f5",
-      "description": "お疲れ様です。 現在、重要な経営案件の対応中につき、このメールは他の役員・同僚には共有しないよう お願いいたします。 今すぐ、弊社のDMARCレコードを確認し、設定文字列を取得してください。 取得後は、その文字列をQRコード化して、記事コメント欄に 書き込んでいただくよう、お願いいたします。 皆さん、突然社長...",
-      "publishedAt": "2026-03-02T03:53:05.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "89161b009fb31895af567a7240ee82097d2c5887cd0790bd569632ed5398f3d4",
-      "title": "追加コストゼロでClaude Codeの個人サブスクでGitHub Actions自動化",
-      "url": "https://qiita.com/sapeet-lin/items/d93e4fbc1c1ddda02a53?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "この記事について\nこの記事は、「PRレビュー、順番待ちやめました — AI時代の\"交通整理\"を自動化した話」の続編です。\n\n前回の記事では、Claude Code を使った ローカル環境でのコードレビュー 手法を紹介しました。自作の review-pr コマンドを活用し、...",
-      "publishedAt": "2026-03-02T01:53:34.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "6c378829cd9cfc99ac33dbe9b71a8875d2482522bef4aacc369c7ebc980eb062",
-      "title": "上場企業のメールセキュリティを調べてみた – DMARC・SPF設定の実態",
-      "url": "https://zenn.dev/ext0mmy/articles/700c30ca00b7f5",
-      "description": "【極秘・至急】社長より直接指示\nお疲れ様です。\n\n現在、重要な経営案件の対応中につき、このメールは他の役員・同僚には共有しないよう\nお願いいたします。\n\n今すぐ、弊社のDMARCレコードを確認し、設定文字列を取得してください。\n取得後は、その文字列をQRコード化して、記事コメント欄に\n書き込んでいただくよう、お願いいたします。\n皆さん、突然社長からこんなメールが来たらどうしますか？\n送信元のメールアドレスを確認する？\nえらい！セキュリティの教育をよく受けていますね！\nじゃあメールアドレスが正しそうだったら……？\nDMARCが reject で設定されていれば、そもそもこのメールは届い...",
-      "publishedAt": "2026-03-01T23:00:01.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "a47dae8c9534c0ef8f3427be330ad2ec804d11a9dc9e3a590054d546b76cb111",
-      "title": "【自分用メモ】TypeScript × Node.jsでスクレイピング基礎",
-      "url": "https://qiita.com/Pechan/items/29e25554a802964707c1?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "今回やること\nTypeScriptとNode.jsを用いてスクレイピングを試す。\n\nTypeScriptを書く\nNodeで実行\nWebサイトからHTMLを取得\n必要なデータだけ抽出する\n\n用語の整理\n\n■ TypeScriptとは？\nJavaScriptに「型」を追加...",
-      "publishedAt": "2026-03-01T15:37:18.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "45247f50018318093d8764c99ed8e7381c5a9c030d501bdc4c9569717bd6886c",
-      "title": "Helmfile + Argo CD + Renovate で複数環境の K8s 運用を回す構成と工夫 [DeNA インフラ SRE]",
-      "url": "https://engineering.dena.com/blog/2026/03/multi-env-helmfile-usage/",
-      "description": "はじめに こんにちは、IT 本部 IT 基盤部第二グループの藤田です。IT 基盤部では、組織横断で複数プロダクトのインフラ運用を担当し、基盤の安定稼働やコスト削減に取り組んでいます。\n私たちのチームでは 2〜3 年ほど前から Helm + Helmfile を活用して Kubernetes（以降 K8s）を運用しています。Helm は Kubernetes のパッケージマネージャーで、アプリケーションを「Chart」として配布・インストールできる仕組みです。Helmfile は複数の Helm リリースを宣言的にまとめて管理し、環境ごとの差分を扱いやすくするためのツールです。",
-      "publishedAt": "2026-03-01T15:00:00.000Z",
-      "feedName": "DeNA Engineering"
-    },
-    {
-      "id": "f746f87e0e51c22584f08836075f10381ea6d28dd0c5920e8a433fc3bc3303ae",
-      "title": "壊れにくいUIテストの設計を考える（Playwright + Storybook + React + GitHub Actions）",
-      "url": "https://zenn.dev/ohimusdev46301/articles/be70f58bf82926",
-      "description": "私は普段、開発に携わっていない（= 実装を触らない）アプリのテストを MagicPod で実装することが多いのですが、壊れにくいテストを作る難しさを強く感じています。\n特に悩ましいのは以下の2つを満たす粒度です。\n\n仕様変更には追従できる（多少のUI変更で壊れない）\nでも不具合は検知できる（本当に守りたい挙動が崩れたら落ちてほしい）\n\nこのバランスを、テスト設計・ロケータ設計・運用ルールでどう支えるかを考えてみたくなり、\nVite + React + TypeScript の小さな検証リポジトリを作りました。\nまた、E2Eテストのケース数が増えると実行時間が長くなりがちです。\nなので、テ...",
-      "publishedAt": "2026-03-01T04:51:21.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "041c0923232a5950df229b715044e5dea891dadded61c3d77b6baccd6be39916",
-      "title": "GitHub Actionsのアーティファクトがzip化不要に。既存ジョブ移行のポイントとハマりどころ",
-      "url": "https://zenn.dev/korosuke613/articles/github-actions-use-archive-artifact",
-      "description": "こんにちは。@korosuke613 です。\n2026/02/26、GitHub Actions の actions/upload-artifact で、zip 化せずにアーティファクトをアップロードできるようになりました。\nhttps://github.blog/changelog/2026-02-26-github-actions-now-supports-uploading-and-downloading-non-zipped-artifacts/\nさっそく既存ジョブ対応しようとしたところ、一筋縄でいかないパターンがあったので、移行のポイントとハマりどころをまとめました。また、おま...",
-      "publishedAt": "2026-03-01T01:00:00.000Z",
-      "feedName": "Zenn"
-    },
-    {
       "id": "6ab6e5a596c9ceb688f29d2f5a0dac8a16e4a156a97c1b0439b150ef8b4cc0ca",
       "title": "I Run 10 AI Agents 24/7 on a Mac Mini. Here's What Actually Happened.",
       "url": "https://dev.to/quantbit/i-run-10-ai-agents-247-on-a-mac-mini-heres-what-actually-happened-4did",
@@ -853,22 +285,6 @@
       "url": "https://zenn.dev/cureapp/articles/65b9a99d22ce2b",
       "description": "TL;DR\n\nCLAUDE.mdはSystem Promptではなく、User Messageとして注入される\nセッション後半になると影響力が薄れるため、セッションを通して守らせたいルールの置き場所には向かない\nCLAUDE.mdにはセッション開始時の作業を助ける情報だけを書き、ルールは .claude/rules/ に置く\n\n\n はじめに\nClaude Codeを使っている人なら、CLAUDE.mdに何を書くかで一度は悩んだことがあるのではないでしょうか。\nコーディングルール、命名規則、テストの方針、コミットメッセージのフォーマット。色々なことを書いている人が多いと思います。自分も...",
       "publishedAt": "2026-03-03T02:28:58.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "75929313dec458d3af9b144bd96eacbd26092e31a16bdb945ce43444b4f3d51a",
-      "title": "PRを送るだけでリポジトリを「乗っ取れる」？GitHub Actionsの危ない書き方を実際に検証してみた (hackerbot-claw)",
-      "url": "https://zenn.dev/aeyesec/articles/417578718dcced",
-      "description": "こんにちは！エーアイセキュリティラボのはるぷです。\n2026年2月下旬、オープンソース界隈を揺るがす自動攻撃キャンペーンが実施されました。ターゲットとなったのは、誰もが名前を知るような大手企業のプロジェクトを含む主要なリポジトリ群。攻撃の主導者は 「hackerbot-claw」 と呼ばれる、AI（Claude-Opus-4.5）を搭載した自律型セキュリティ調査エージェントです。\nこのボットはわずか1週間で、7つのターゲットのうち少なくとも4つでリモートコード実行（RCE）に成功し、書き込み権限を持つGitHubトークンを外部へ流出させました。\nこのStepSecurityの解析レポート...",
-      "publishedAt": "2026-03-03T00:37:27.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "616c1fe930b1b0ba1787688fe06ade40789a9e165955760513487c67e35c3afa",
-      "title": "障害対応の認知負荷を下げるCriteriaパターンとDDD",
-      "url": "https://zenn.dev/panda728/books/criteria-pattern-ddd",
-      "description": "複雑な業務ロジックの実行過程をOpenTelemetryで可視化し、システム1の思考で障害対応を行うためのアーキテクチャと実装の連鎖。",
-      "publishedAt": "2026-03-02T23:50:53.000Z",
       "feedName": "Zenn"
     },
     {
@@ -6489,6 +5905,453 @@
       "description": "デジタルペンテスト部の鈴木です。 普段はプラットフォーム診断を担当しています。 はじめに 近年、生成AIやAIエージェントの急速な発展により、さまざまな分野で業務の自動化が進んでいます。ソフトウェア開発や運用の分野でもAIの活用が広がっており、セキュリティ領域においてもその流れは加速しています。 こうした...",
       "publishedAt": "2026-03-25T11:27:26.000Z",
       "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "196ba754b93d9c73301fb52a0b9dbf912c21f1db7ed1f8e63bf0fc4ea5e41066",
+      "title": "Understanding Async/Await Like You're 5 🧸",
+      "url": "https://dev.to/yasirabas/understanding-asyncawait-like-youre-5-278",
+      "description": "Understanding Async/Await Like You're 5 🧸\n\n\nIf fetch().then().catch() feels like a tangled spaghetti plate, don't worry. Async/await is JavaScript's cleaner, more readable way to handle waiting.\nSynchronous (Old Way): You order at the counter and stand frozen in place until your pizza is ready. You can't talk, check your phone, or do anything else until it's handed to you. That's blocking code.\nAsynchronous (Async/Await): You get a buzzer. You walk away, chat, scroll your phone, and when it buzzes, your pizza is ready. The rest of your life keeps moving while you wait. That's non-blocking code.\nTwo keywords make this magic happen:\nasync: Tells JS, \"This function will wait for things.\"\nawait: Says, \"Pause just this line until it's done, but let everything else keep running.\"\n// ❌ Messy Promise Chain\nfetchData()\n  .then(res => res.json())\n  .then(data => console.log(data));\n\n// ✅ Clean Async/Await\nasync function getData() {\n  try {\n    const response = await fetch('https://api.example.com/data');\n    const data = await response.json();\n    console.log('Got it!', data);\n  } catch (err) {\n    console.error('Oops:', err);\n  }\n}\n\nawait only works inside async functions.\nWrap await in try/catch to handle errors gracefully.\nYour app stays responsive. No frozen screens!\nAsync/await isn't magic. It's just a promise chain with better syntax. Think of it like a waiter who takes your order, lets you relax, and brings the food when it's ready. Clean, readable, and fast.\nWhat's your biggest async headache? Drop it below! 👇",
+      "publishedAt": "2026-04-02T01:59:28.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "56bded5d2eb99740e24338ecbacc6f5a59f749426d2ab48794fc229697f73fdb",
+      "title": "BIAN: estructurando el negocio bancario y su encaje con DDD y microservicios",
+      "url": "https://dev.to/jlarizar/bian-estructurando-el-negocio-bancario-y-su-encaje-con-ddd-y-microservicios-4p1a",
+      "description": "En los últimos años, el sector financiero ha vivido una transformación profunda: presión regulatoria, fintechs nativas digitales, APIs abiertas, banca como plataforma y una necesidad constante de modernizar core systems sin detener el negocio. En ese contexto, BIAN (Banking Industry Architecture Network) se ha convertido en una referencia clave para quienes diseñan arquitecturas bancarias modernas.\nPero BIAN no es solo “otro framework”. Es una propuesta estructurada para organizar el negocio bancario en dominios bien definidos, con un modelo de servicios estandarizado que conecta de forma natural con prácticas como Domain-Driven Design (DDD) y arquitecturas de microservicios.\n¿Qué es BIAN?\nBIAN es una iniciativa colaborativa creada por bancos y proveedores tecnológicos con el objetivo de definir una arquitectura de referencia estandarizada para la industria bancaria.\nSu propósito es claro:\nDescomponer el negocio bancario en capacidades funcionales bien definidas y estructuradas como servicios.\nNo define tecnología concreta, ni impone un estilo de implementación. Define una forma de estructurar el negocio y sus responsabilidades.\nEn esencia, BIAN proporciona un mapa funcional del banco, donde cada parte tiene límites claros y responsabilidades específicas.\nLa estructura de BIAN:\nPara organizar los miles de procesos de un banco, BIAN utiliza un mapa llamado Service Landscape.  Este se divide en tres grandes capas:\nBusiness Areas (Áreas de Negocio): Son las divisiones estratégicas más grandes de una institución (ej. Ventas y Servicios, Operaciones de Referencia). Serían los \"continentes\" en nuestro mapa.\nBusiness Domains (Dominios de Negocio): Subdivisiones lógicas dentro de las áreas. Aquí agrupamos problemas específicos (ej. Operaciones de Tarjetas, Préstamos). Serían los \"países\".\nService Domains (Dominios de Servicio): ¡El corazón de BIAN! Son las capacidades de negocio elementales e indivisibles. Cada Service Domain gestiona el ciclo de vida de un activo usando un patrón específico.\nBIAN y microservicios: relación estructural\nBIAN no obliga a usar microservicios. Sin embargo, su forma de descomponer el negocio es especialmente compatible con arquitecturas distribuidas.\nCuando una organización decide estructurar su arquitectura en servicios independientes, necesita primero tener bien definidos los límites funcionales. Aquí es donde BIAN aporta valor:\nCada Business Domain puede convertirse en un servicio autónomo\nCada dominio puede gestionar su propio ciclo de vida\nLas interacciones entre dominios pueden formalizarse mediante contratos explícitos\nLo importante no es convertir cada dominio en un microservicio de forma automática, sino usar el modelo para definir límites correctos.\nUna arquitectura basada en microservicios necesita:\nAutonomía funcional\nAislamiento de datos\nResponsabilidad clara\nInteracciones controladas\nBIAN proporciona precisamente esa estructura conceptual.\nLa conexión entre BIAN y Domain-Driven Design (DDD)\nMás que una coincidencia, la relación entre BIAN y Domain-Driven Design (DDD) es estructural. Ambos enfoques parten del mismo principio fundamental:\nLa arquitectura debe reflejar el dominio del negocio.\nDDD es un enfoque de desarrollo de software que propone comenzar por comprender el dominio en profundidad y estructurarlo en Bounded Contexts: límites semánticos claros donde un modelo es consistente y coherente.\nBIAN, por su parte, descompone el negocio bancario en Business Domains, cada uno con:\nResponsabilidad funcional específica\nPropiedad clara sobre su información\nServicios definidos\nLímites bien establecidos\nAunque surgieron en contextos distintos, ambos enfoques convergen en varios puntos clave.\nCaso Practico: Conectando BIAN con DDD y Microservicios\nSegún el Service Landscape de BIAN, Current Account es un Service Domain cuyo objetivo es manejar el ciclo de vida de una cuenta corriente.\nEn términos de DDD, este será nuestro Bounded Context (nuestro microservicio completo). Dentro de este microservicio, BIAN nos dice que el Control Record (el núcleo de información que controla este dominio) se llama Current Account Arrangement (El acuerdo de cuenta corriente).\nEste Control Record se convierte automáticamente en nuestro Aggregate Root en Java. Es la entidad principal que protege las reglas de negocio (por ejemplo, que no puedas retirar más dinero del que tienes, a menos que tengas un límite de sobregiro). Para manejar las distintas funcionalidades de la cuenta, implementamos los Behavior Qualifiers (Calificadores de Comportamiento) que dicta BIAN, como Withdrawals (Retiros) y Deposits (Depósitos), exponiéndolos como casos de uso.\nConclusión\nBIAN no reemplaza DDD.\nBIAN ofrece una estructura de descomposición sectorial específica para banca.\nCuando se combinan:\nBIAN ayuda a identificar los límites macro del sistema.\nDDD ayuda a modelar correctamente cada uno de esos límites.\nLa conexión no es tecnológica.\nY ahí radica su verdadero valor.",
+      "publishedAt": "2026-04-02T01:53:37.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "b857d40bf5a4f7de86b0fab9a913e3b5307cfe9939e0e2abbc69c77e29546668",
+      "title": "I Built a Visual Flow Engine in Rust - Here's Why I Ditched Node.js",
+      "url": "https://dev.to/poolcamacho/i-built-a-visual-flow-engine-in-rust-heres-why-i-ditched-nodejs-2oih",
+      "description": "The Problem\n\n\nI've been using Node-RED and n8n for years. They're great tools, but every time I hit a complex workflow — hundreds of nodes, real-time data, high throughput — the same issues kept showing up:\nMemory bloat under sustained load\nNo real plugin isolation (a bad plugin crashes everything)\nJSON-over-WebSocket bottlenecks in the editor\nHeavy deployments with tons of npm dependencies\nI kept thinking: what if a flow engine was built from scratch with performance and safety as first-class citizens?\nSo I built z8run — an open-source visual flow engine written in Rust.\nz8run is a self-hosted alternative to n8n and Node-RED. You get a drag-and-drop visual editor, a REST API, WebSocket real-time sync, and a plugin system — but the entire backend is compiled Rust.\nThe core idea: build, connect, and automate anything — visually, without sacrificing performance or security.\nSingle binary — no runtime dependencies. Download, run, done.\nRust + Tokio async runtime — handles thousands of concurrent flows\nWebAssembly plugin sandbox — write plugins in Rust, Go, C, or anything that compiles to WASM. Plugins run in an isolated sandbox with controlled capabilities (network, filesystem, memory limits)\nBinary WebSocket protocol — 11-byte header instead of verbose JSON. The editor stays responsive even with large flows\nAES-256-GCM credential vault — your API keys and secrets are encrypted at rest, not stored in plaintext config files\n23 built-in nodes across 6 categories, including 10 AI nodes\nz8run is a Rust workspace with focused crates:\nz8run/\n├── z8run-core       # Flow engine, DAG validation, scheduler\n├── z8run-protocol   # Binary WebSocket protocol\n├── z8run-storage    # SQLite / PostgreSQL persistence\n├── z8run-runtime    # WASM plugin sandbox (wasmtime)\n└── z8run-api        # REST + WebSocket server (Axum)\n\nFlows are directed acyclic graphs (DAGs). The scheduler compiles them into parallel execution plans using topological ordering — nodes that don't depend on each other run concurrently.\n\n\n\nFeature\nz8run\nNode-RED\nn8n\n\n\n\n\nLanguage\nRust\nNode.js\nNode.js\n\n\nWASM plugins\nYes\nNo\nNo\n\n\nAI nodes built-in\n10\nCommunity\nLimited\n\n\nBinary protocol\nYes\nJSON\nJSON\n\n\nCredential vault\nAES-256-GCM\nSeparate\nBuilt-in\n\n\nSingle binary deploy\nYes\nNo\nNo\n\n\nLicense\nApache-2.0 / MIT\nApache-2.0\nSustainable Use\n\n\n\nThe biggest difference is the plugin model. In Node-RED, a misbehaving plugin can crash your entire process. In z8run, plugins run inside a wasmtime sandbox with explicit capability grants. You decide if a plugin can access the network, filesystem, or how much memory it can use.\nz8run ships with 23 nodes out of the box:\nInput: HTTP In, Timer, Webhook (with HMAC-SHA256 signature validation)\nProcess: Function, JSON Transform, HTTP Request, Filter\nOutput: Debug, HTTP Response\nLogic: Switch (multi-rule routing), Delay\nData: Database (PostgreSQL, MySQL, SQLite), MQTT\nAI: LLM, Embeddings, Classifier, Prompt Template, Text Splitter, Vector Store, Structured Output, Summarizer, AI Agent, Image Gen\nThe AI suite is something I'm particularly excited about. You can build LLM-powered workflows visually — chain a prompt template into an LLM node, pipe the output through a classifier, store embeddings in a vector store — all without writing code.\nThe fastest way to try it:\ngit clone https://github.com/z8run/z8run.git\ncd z8run\ncp .env.example .env\ncargo build --release\ncargo run --bin z8run -- serve\n\nOr with Docker:\ndocker pull ghcr.io/z8run/z8run-api:latest\ndocker compose up -d\n\nThe server starts on http://localhost:7700. Hit /api/v1/health to verify, then open the browser for the visual editor.\n# Create your first flow\ncurl -X POST http://localhost:7700/api/v1/flows \\\n  -H \"Content-Type: application/json\" \\\n  -d '{ \"name\": \"My First Flow\" }'\n\nI get this question a lot. Here's the honest answer:\nMemory safety without GC — flow engines are long-running processes. No GC pauses, no memory leaks from forgotten event listeners.\nPredictable performance — when you're processing thousands of messages per second through a DAG, you need consistent latency, not \"usually fast with occasional 200ms GC pauses\".\nwasmtime integration — the Rust WASM ecosystem is mature. wasmtime gives us a production-grade sandbox with fine-grained capability control.\nSingle binary — cargo build --release gives you one binary with everything embedded. No node_modules, no runtime to install.\nThe tradeoff is development speed. Rust is slower to write than TypeScript. But for infrastructure software that runs 24/7, I think it's the right choice.\nz8run is at v0.2.0 and actively developed. The roadmap includes:\nPlugin marketplace\nHelm chart for Kubernetes\nFlow duplication and undo/redo in the editor\nNode search in the palette\nRate limiting\nIf this sounds interesting, check it out:\nGitHub: github.com/z8run/z8run\n\n\nLive Demo: app.z8run.org\n\n\nWebsite: z8run.org\n\n\ncrates.io: crates.io/crates/z8run\n\n\n\nContributions, feedback, and stars are welcome. If you've been looking for a performant, self-hosted flow engine — give z8run a try and let me know what you think.\nz8run is dual-licensed under Apache 2.0 and MIT.",
+      "publishedAt": "2026-04-02T01:46:36.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "31ab76a19306a21ec74880298ee7f3d46672ad3578f1bfc127f50d22debfc53f",
+      "title": "What I Learned from Reading Claude Code’s Reconstructed Source",
+      "url": "https://dev.to/trknhr/what-i-learned-from-reading-claude-codes-reconstructed-source-1ebf",
+      "description": "What I Learned from Reading Claude Code’s Reconstructed Source\n\n\nAround March 31, 2026, it became widely known that parts of Claude Code CLI’s implementation could be reconstructed from source maps that had remained in the npm package. A public mirror circulated for a while, but it was not an official open-source release by Anthropic, and it has since turned into a different project.\nThis post is a memo of my own impressions after reading a reconstructed copy of the source that I had saved locally at the time. Rather than discussing the current state of any public mirror, I want to focus on the design characteristics that became visible from actually tracing through the code.\nThe first thing that surprised me was the sheer size of the codebase. In the reconstructed source I had on hand, there were roughly 1,900 files and about 510,000 lines of code. This is not a small single-purpose CLI. It is a fairly large product codebase that bundles terminal UI, tool execution, safety controls, IDE integration, memory, and extension mechanisms into one system.\nTechnically, the project appears to be centered on TypeScript, with Bun as the runtime and a React/Ink-style stack for the terminal UI. In other words, it felt less like “a small CLI with some AI added on top” and more like “a substantial TypeScript product with an AI experience layered into it.”\nOne of the easiest things to start tracing in this codebase is prompt construction. At least within the portion that could be reconstructed, a surprisingly large part of the system instruction layer is present in the client-side code, where runtime context is then injected into it.\nThat runtime context includes things like the current date, Git state, recent commits, Git user information, and the contents of local instruction files. On top of that foundation, additional instructions and memory-related text are composed into something close to the final system prompt.\nWhat I found especially interesting was that the intuitive assumption that “the real prompt must be assembled as a black box on the server side” did not seem to hold very well here, at least not within the portion of the code I could inspect. That does not prove there is no additional server-side processing, of course. But it does show that a significant amount of the prompt logic also exists on the client side.\nAnother striking part of the design is the layer that decides which tools are visible to the model and the separate layer that manages execution permissions. The system is clearly feature-rich, but there is a fairly sharp distinction between tools that are exposed routinely and tools that are internal, behind feature flags, or otherwise conditionally enabled.\nMy impression was fairly simple: this codebase does not look like it was built around the idea that “more tools automatically make the system stronger.” If anything, it seems closer to the opposite view: the surface that is exposed to the model in normal operation should be kept as narrow as possible.\nThere are also implementation details suggesting that the tool list itself has to stay aligned with prompt caching. That means the number of tools and their schemas are not just implementation details; they appear to be part of stable prompt operation as well.\nThis lines up quite well with the increasingly common intuition that “fewer tools often lead to more stable behavior.” That said, this is my interpretation of the code, not an explicit principle written down in those exact words.\nThe shell execution layer was one of the most memorable parts of the codebase for me. What is going on there is not simply command execution.\nCommands are categorized into groups such as search-oriented commands, read-oriented commands, listing commands, and commands where silence on success is the natural behavior. Exit codes are also normalized in command-specific ways. For example, the 1 returned by grep-like commands is not always treated as a plain error; it can be reinterpreted as “no match found.”\nOn top of that, commands that are considered read-only are guarded by allowlist-based flag checks, path validation, sed-specific restrictions, sandbox eligibility checks, and even AST-based safety checks. For more complex compound commands, there are also explicit upper bounds on the fan-out of the safety analysis.\nSo while Bash is clearly a powerful general-purpose tool inside Claude Code, it does not look like something the model is given raw. Instead, it seems to sit on top of a fairly thick deterministic scaffold before the model is allowed to use it.\nAnother thing that stood out was the quality of the comments. By that, I do not just mean that there are many comments.\nIn several places, the comments explain not only what the code is doing but why certain decisions were made: why a heavy operation needs to run before imports, why a given validator is necessary, or why a particular flag should not be treated as safe. They carry background reasoning, not just surface-level description.\nThat makes the code easier for humans to follow, of course, but it also felt like the sort of writing that would remain legible to future code-completion systems or coding agents as well.\nPeople often say these days that comments should be kept to a minimum. But reading code like this is a good reminder that good comments are not clutter. They are part of the design.\nLooking around the entry path, it becomes clear that this product is not only concerned with adding features. It is also carefully tuned around perceived performance. The code is explicit about which side effects should run before heavier imports and what can be parallelized to reduce startup latency.\nWhen people talk about AI agents, attention tends to go first to prompts and loops. But in practice, details like startup optimization and other non-AI engineering work are often what determine how polished the product feels.\nFinally, I want to emphasize the most important point.\nWhat became visible in this case was that some source code could be read because of the way published artifacts were left exposed. That is not the same thing as Anthropic officially releasing Claude Code as open source.\nThose two things need to be kept clearly separate. Anthropic’s current terms include restrictions aimed at preventing the construction of competing products, service replication, and reverse engineering. So treating this as an interesting code-reading exercise is one thing; assuming that the code can therefore be freely reused or redistributed is something else entirely.\nThere is value in reading it. But “readable” and “freely usable” are not the same thing, and it is important not to blur that distinction.\nWhat made this source-reading exercise interesting was not a generic takeaway like “Claude Code runs an agentic loop.” The more interesting part was seeing, in concrete form, which parts were made deterministic, which parts were injected as runtime context, and where the safety mechanisms were made deliberately thick.\nAt least within the portion that could be reconstructed, the prompts were more client-side than I expected, Bash was more heavily guarded than I expected, the tool surface was narrower than I expected, and the comments were more thoughtful than I expected. The overall codebase is well organized, but at the same time it still has a little of the human roughness you would expect in a real product—for example, the way prompt construction seems to be spread across multiple layers.\nThat mix of order and messiness is part of what makes the codebase interesting to me. In the end, that is what I wanted to capture in this memo.",
+      "publishedAt": "2026-04-02T01:45:41.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "4a53c131640393cf130e10f2883366c4171c0de9b264ee2d56e101be0b6b3c63",
+      "title": "How to Test Discord Webhooks with HookCap",
+      "url": "https://dev.to/henry_hang/how-to-test-discord-webhooks-with-hookcap-4oj4",
+      "description": "How to Test Discord Webhooks with HookCap\n\n\nDiscord has two distinct webhook concepts that are easy to confuse. Understanding which one you are dealing with determines how you test it.\nIncoming webhooks — You POST to a Discord-provided URL to send messages to a channel. Discord is the receiver. You do not need to expose a server.\nBot event webhooks / Interactions endpoints — Discord POSTs to a URL you provide when events happen (slash commands, button clicks, message events). Your server is the receiver.\nThis guide focuses on the second type: webhooks where Discord sends events to your server. That is the kind that requires a public HTTPS URL and that HookCap helps you test.\nIf you are building a Discord app with slash commands, buttons, select menus, or modals, Discord will POST to an Interactions Endpoint URL you register in the Discord Developer Portal. You need to handle these requests on your server.\nDiscord also uses Gateway (WebSocket) for most bot events. But slash commands and components use the HTTP Interactions endpoint, which is what we will test here.\nGo to hookcap.dev, sign up, and create an endpoint. You get a URL like:\nhttps://hookcap.dev/e/your-endpoint-id\n\nGo to the Discord Developer Portal:\nSelect your application\nUnder General Information, find the Interactions Endpoint URL field\nPaste your HookCap URL\nClick Save Changes\n\n\n\nDiscord will immediately send a verification ping to the URL to confirm it responds correctly. More on this below.\nWhen you save an Interactions Endpoint URL, Discord sends a PING interaction and expects a PONG response. This is how Discord confirms your endpoint is alive.\nYour handler (or HookCap in passthrough mode) must respond to this before Discord accepts the URL.\nThe ping looks like:\n{\n  \"id\": \"123456789\",\n  \"type\": 1,\n  \"token\": \"interaction_token\"\n}\n\nYour server must respond with:\n{\n  \"type\": 1\n}\n\nFor HookCap's purpose (capturing and inspecting), you can temporarily use Auto-Forward to route the verification ping to your local server so it can respond correctly, then inspect subsequent interactions.\nOnce your app is registered, trigger interactions in Discord:\nRun a slash command\nClick a button in a Discord message your bot sent\nSelect an option from a select menu\nHookCap captures each Discord POST in real time. A typical slash command interaction looks like:\n{\n  \"id\": \"987654321098765432\",\n  \"type\": 2,\n  \"data\": {\n    \"id\": \"123456789012345678\",\n    \"name\": \"ping\",\n    \"type\": 1,\n    \"options\": []\n  },\n  \"guild_id\": \"111111111111111111\",\n  \"channel_id\": \"222222222222222222\",\n  \"member\": {\n    \"user\": {\n      \"id\": \"333333333333333333\",\n      \"username\": \"testuser\",\n      \"discriminator\": \"0001\"\n    },\n    \"roles\": []\n  },\n  \"token\": \"AbCdEfGhIjKlMnOpQrStUvWxYz...\",\n  \"version\": 1\n}\n\nYou can inspect:\ntype — 1 = PING, 2 = APPLICATION_COMMAND, 3 = MESSAGE_COMPONENT, 4 = APPLICATION_COMMAND_AUTOCOMPLETE, 5 = MODAL_SUBMIT\ndata.name — the slash command name\ndata.options — arguments passed to the command\nmember.user — who triggered it\ntoken — used to respond to the interaction (time-limited)\nDiscord signs each request with your application's public key using Ed25519. This is different from the HMAC-SHA256 most providers use.\nThe headers Discord sends:\nX-Signature-Ed25519: <hex signature>\nX-Signature-Timestamp: <unix timestamp>\n\nDiscord signs: timestamp + body (as bytes).\nconst nacl = require('tweetnacl');\n\nfunction verifyDiscordSignature(publicKey, signature, timestamp, body) {\n  const message = Buffer.concat([\n    Buffer.from(timestamp, 'utf-8'),\n    Buffer.from(body),\n  ]);\n\n  return nacl.sign.detached.verify(\n    message,\n    Buffer.from(signature, 'hex'),\n    Buffer.from(publicKey, 'hex')\n  );\n}\n\napp.post('/interactions', express.raw({ type: 'application/json' }), (req, res) => {\n  const signature = req.headers['x-signature-ed25519'];\n  const timestamp = req.headers['x-signature-timestamp'];\n  const publicKey = process.env.DISCORD_PUBLIC_KEY; // from Developer Portal\n\n  if (!verifyDiscordSignature(publicKey, signature, timestamp, req.body)) {\n    return res.status(401).send('Invalid signature');\n  }\n\n  const interaction = JSON.parse(req.body);\n\n  // Handle PING verification\n  if (interaction.type === 1) {\n    return res.json({ type: 1 });\n  }\n\n  // Handle slash commands\n  if (interaction.type === 2) {\n    const command = interaction.data.name;\n\n    if (command === 'ping') {\n      return res.json({\n        type: 4, // CHANNEL_MESSAGE_WITH_SOURCE\n        data: {\n          content: 'Pong! 🏓',\n        },\n      });\n    }\n  }\n\n  // Unknown interaction type\n  res.status(400).json({ error: 'Unknown interaction type' });\n});\n\nYou can get your public key from the Discord Developer Portal under General Information → Public Key.\nThe challenge with Discord interactions is the time limit on interaction tokens. You have 3 seconds to respond to an interaction, otherwise Discord shows a \"This interaction failed\" message to the user.\nHookCap Auto-Forward (Pro) solves this cleanly:\nEnable Auto-Forward on your HookCap endpoint\nSet the forward URL to http://localhost:3000/interactions\n\nRegister your HookCap URL in the Discord Developer Portal\nDiscord sends interactions → HookCap captures + forwards to your local server → response goes back\nBecause HookCap proxies the request and response in real time, your 3-second response window is preserved. HookCap also stores the full interaction for inspection even after it has been responded to.\nDiscord → HookCap endpoint → (captured) → Auto-Forward → localhost:3000\n                                                                ↓\nDiscord ← HookCap endpoint ← (forwarded response) ←───────────┘\n\nOnce you have captured a real Discord interaction in HookCap, you can replay it to your local server without going through Discord again.\nThis is useful for:\nTesting edge cases with specific payload structures\nReproducing bugs with exact payloads from production\nRunning your handler through CI without a real Discord bot configured\nWhen replaying, note that the interaction token in the payload has already expired — you cannot respond to Discord with it. But you can still test your handler's routing, parsing, and internal logic.\nIf you want to test the other direction — your app sending messages to a Discord channel via a Discord webhook URL — you do not need HookCap for the testing itself. But you can use HookCap as a mock Discord endpoint to confirm your app is sending the correct payloads.\nSet your webhook URL to a HookCap endpoint instead of a real Discord webhook URL. Your app will POST to HookCap, and you can inspect exactly what would have been sent to Discord.\nconst fetch = require('node-fetch');\n\n// Instead of real Discord webhook URL, use HookCap for testing\nconst WEBHOOK_URL = process.env.NODE_ENV === 'test'\n  ? 'https://hookcap.dev/e/your-test-endpoint'\n  : process.env.DISCORD_WEBHOOK_URL;\n\nawait fetch(WEBHOOK_URL, {\n  method: 'POST',\n  headers: { 'Content-Type': 'application/json' },\n  body: JSON.stringify({\n    content: 'Hello from my app!',\n    embeds: [{\n      title: 'New Order',\n      description: 'Order #1234 has been placed',\n      color: 0x57F287,\n      fields: [\n        { name: 'Customer', value: 'John Doe', inline: true },\n        { name: 'Amount', value: '$99.00', inline: true },\n      ],\n    }],\n  }),\n});\n\nInspect the HookCap capture to verify your embed structure, color values, and field layout are correct before sending to real Discord channels.\nDiscord rejects your Interactions Endpoint URL if the ping fails. Make sure:\nYour server is reachable at the URL you provided\nIt responds to type: 1 with { type: 1 }\n\nSignature verification is correct (Discord verifies its own ping signature)\nUsing HookCap's Auto-Forward, you can route the ping to your local server so it handles verification while HookCap captures the interaction.\nIf you replay a captured interaction and your handler tries to call Discord's API with the old token, the API will return a 401. Use replay for testing handler logic only — do not attempt to respond to Discord with replayed tokens.\nDiscord requires Ed25519 signature verification. Node.js does not have this built in. Use tweetnacl:\nnpm install tweetnacl\n\nOr use the discord-interactions package which wraps this:\nnpm install discord-interactions\n\nconst { verifyKeyMiddleware } = require('discord-interactions');\n\napp.post('/interactions',\n  verifyKeyMiddleware(process.env.DISCORD_PUBLIC_KEY),\n  (req, res) => {\n    // Signature already verified by middleware\n    const interaction = req.body;\n    // ...\n  }\n);\n\nTesting Discord webhooks with HookCap:\nInteractions Endpoint — Register your HookCap URL in the Discord Developer Portal; Discord will send slash command and component interactions to it\nSignature verification — Discord uses Ed25519 (not HMAC-SHA256); use tweetnacl or discord-interactions\n\n\nAuto-Forward — Forward live interactions to your local server with the 3-second response window intact\nOutgoing webhooks — Use HookCap as a mock Discord endpoint to verify payload structure before sending to real channels\nReplay — Use captured interactions to test handler logic without re-triggering events in Discord",
+      "publishedAt": "2026-04-02T01:42:32.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "52ce517bf007aea6a3a655f2e6e01f20f63f7a0fa79533fb21672db46425d230",
+      "title": "そのCSSの書き方は古すぎる！ モダンCSSとTailwinds CSSでどのように記述するのかが分かる -modern.css",
+      "url": "https://coliss.com/articles/build-websites/operation/css/modern-css-code.html",
+      "description": "CSSのさまざまな古い書き方をモダンCSSやTailwinds CSSでどう書くのか教えてくれるサイトを紹介します。 要素を中央配置するCSSをはじめ、スクロールバーの出現によるレイアウトシフトを防ぐCSS、HEX値やrgb()値より鮮やかなoklch()による色設定、JavaScriptを使わずにアニメーションで高さを変更するCSSなど、よく使用...",
+      "publishedAt": "2026-04-02T01:06:13.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "a88c6b841dd78b0c1b123ca01f9cbf54fd7a0c2f0584d73c0303b17cc7850405",
+      "title": "レジリエンスは手遅れ、AI時代の復旧に必要な概念「アンチフラジリティ」とは？組織への取り入れ方を訊く",
+      "url": "https://enterprisezine.jp/article/detail/23964",
+      "description": "サイバー攻撃の手口が急速に変化する中、「インシデント発生後、迅速に“元の状態に”戻す」というレジリエンスの思想だけで、組織のセキュリティを守り続けることはできるのだろうか。この問いに対し、攻撃を受けるたびに学び、強くなり続ける「アンチフラジリティ（anti-fragility）」という概念を提唱しているのが、Elastic CISOのMandy Andress氏だ。従来の防御思想の限界とAIの可能性について、同氏に訊いた。",
+      "publishedAt": "2026-04-01T23:00:00.000Z",
+      "feedName": "EnterpriseZine"
+    },
+    {
+      "id": "8a48dfacbecea00dbce80c31d708444b7ce7872d3089abb9bfba8f07357a243b",
+      "title": "主張：現場で使えないAIベンチマーク、「学校の試験」からの転換を",
+      "url": "https://www.technologyreview.jp/s/380252/ai-benchmarks-are-broken-heres-what-we-need-instead/",
+      "description": "AIは真空状態でテストされ、混沌とした現場で失敗する。英国の病院では、高得点の医療AIが多職種チームの中で遅延をもたらした。単独タスクの精度を測る「学校のテスト」型ベンチマークでは、こうした実態は見えない。人間チームとの協働を長期的に評価する新たな枠組みが必要だ。",
+      "publishedAt": "2026-04-01T21:32:56.000Z",
+      "feedName": "MITテクノロジーレビュー"
+    },
+    {
+      "id": "06b506d937b65221769921ea88d1b28430b2e232d7e039353e90bbd49911c96b",
+      "title": "トラブルは続くよ、どこまでも",
+      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2604/02/news010.html",
+      "description": "情報セキュリティの啓発を目指した、技術系コメディー自主制作アニメ「こうしす！」の＠ITバージョン。最終列車のテーマは「繰り返されるトラブル」です。※このマンガはフィクションです。",
+      "publishedAt": "2026-04-01T20:00:00.000Z",
+      "feedName": "＠IT"
+    },
+    {
+      "id": "a0feb393d41a5fa62e8ca99edda75123a353af6a31d3740dac2031f13dd0d59a",
+      "title": "Introducing EmDash — the spiritual successor to WordPress that solves plugin security",
+      "url": "https://blog.cloudflare.com/emdash-wordpress/",
+      "description": "Introducing EmDash — the spiritual successor to WordPress that solves plugin security2026-04-01 The cost of building software has drastically decreased. We recently rebuilt Next.js in one week using AI coding agents. But for the past two months our agents have been working on an even more ambitio...",
+      "publishedAt": "2026-04-01T16:45:03.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "1d460a895d699881681ab344c76b20c7b8c6b265073d39ed6a28365076b0e473",
+      "title": "dockerfile-pin: DockerfileやComposeのイメージをSHA256でピン留めするCLIツールを作った",
+      "url": "https://efcl.info/2026/04/01/dockerfile-pin/",
+      "description": "DockerfileやComposeファイルのイメージ参照に@sha256:を自動で追加するCLIツール dockerfile-pin を作りました。 GitHub: azu/dockerfile-pin なぜ作ったか trivyへのサプライチェーン攻撃などの事件を見ていると、次に狙われるのはDocker Hubかなと思ったのがきっかけです。 CIでDocker Hubへのpushをしている...",
+      "publishedAt": "2026-04-01T14:40:46.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "ca991d9fe363290787e04e345c0b6421ada1ff6465194630af8e03eaa949c0c0",
+      "title": "【登壇資料】 AWS re:Invent 2025 新機能「やってみた」報告会にて「AIにより大幅に強化された AWS Transform Customを触ってみる」というタイトルで登壇しました",
+      "url": "https://dev.classmethod.jp/articles/reinvent-2025-justtry-arap/",
+      "description": "【登壇資料】 AWS re:Invent 2025 新機能「やってみた」報告会にて「AIにより大幅に強化された AWS Transform Customを触ってみる」というタイトルで登壇しました",
+      "publishedAt": "2026-04-01T13:53:48.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "0ff5beb4933c17cbdcabed46a791ee56b4682ae548884817370da84c366e8d02",
+      "title": "npm をセキュアな挙動にするために .npmrc に記述する最小設定",
+      "url": "https://zenn.dev/cycloud_blog/articles/5ce66daf4bd0cb",
+      "description": "はじめに グループIT推進本部 CyberAgent group Infrastructure Unit（以下、CIU）所属・Next Expertsの平井（@did0es）です。 CIUのサービスのWebフロントエンド開発に携わる傍ら、TypeScriptのNext Expertsとして情報発信や社内向けの技術支援を中心に活動しています。 本記事では、pnpm や bun への移行を検討する前...",
+      "publishedAt": "2026-04-01T11:07:34.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "791001cfc61dd857bd950ae2e2706d6a71fd807b0826f0fc7bb80cb945f8c9c7",
+      "title": "【新機能】 AWS End User Messaging Notify で電話番号の登録なしに OTP を送信できるようになりました",
+      "url": "https://dev.classmethod.jp/articles/aws-end-user-messaging-notify/",
+      "description": "OTP",
+      "publishedAt": "2026-04-01T10:01:33.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "4358eec3669ef35870adbc5691ac48fb81f0c7da193a60eef4f596fc468b1e8a",
+      "title": "[登壇レポート] 「AWS re:Invent 2025 新機能「やってみた」報告会 ～ネットワーク・運用編～」にて「Network Firewall Proxyで 自前プロキシを消し去ることができるのか」という内容で登壇しました！",
+      "url": "https://dev.classmethod.jp/articles/202603-aws-reinvent-2025-update-network-firewall-proxy-webinar-report/",
+      "description": "[登壇レポート] 「AWS re:Invent 2025 新機能「やってみた」報告会 ～ネットワーク・運用編～」にて「Network Firewall Proxyで 自前プロキシを消し去ることができるのか」という内容で登壇しました！",
+      "publishedAt": "2026-04-01T08:57:15.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "568f9c2c04667caccc89adec3e4ca2f9245761f063dba512f6bf9afe592007e6",
+      "title": "AWS Community Builders（AI Engineering）に選出されました",
+      "url": "https://qiita.com/yosuke-suzuki/items/4e3fcd08b0f69a02797a?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\nこの度、AWS Community Builders に選出いただきました。カテゴリは AI Engineering です。\n本記事では、AWS Community Buildersとはどのようなプログラムなのか、応募のきっかけや準備の過程についてまとめます。\n...",
+      "publishedAt": "2026-04-01T08:56:15.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "48dded79e3600f9e224555f0570ee81970b160532f1da2afea47f05259f8d3dd",
+      "title": "サイバーセキュリティクラウド、生成AIの価値／信頼性を判断・評価する専門組織を設立",
+      "url": "https://enterprisezine.jp/news/detail/24070",
+      "description": "サイバーセキュリティクラウドは、生成AIの価値と信頼性を判断・推進する専門組織「AI Trust Board」を2026年4月1日に設立した。\n\n　同組織では、生成AIを活用したプロダクトやサービス...",
+      "publishedAt": "2026-04-01T08:16:00.000Z",
+      "feedName": "EnterpriseZine"
+    },
+    {
+      "id": "0ff5beb4933c17cbdcabed46a791ee56b4682ae548884817370da84c366e8d02",
+      "title": "npm をセキュアな挙動にするために .npmrc に記述する最小設定",
+      "url": "https://zenn.dev/cycloud_blog/articles/5ce66daf4bd0cb",
+      "description": "はじめに\nグループIT推進本部 CyberAgent group Infrastructure Unit（以下、CIU）所属・Next Expertsの平井（@did0es）です。\nCIUのサービスのWebフロントエンド開発に携わる傍ら、TypeScriptのNext Expertsとして情報発信や社内向けの技術支援を中心に活動しています。\n本記事では、pnpm や bun への移行を検討する前に、まず npm のままで実施できるセキュリティ対策を実施したい人を対象に、 .npmrc に入れるべき最小限の設定を紹介します。\nここで紹介する設定は、最小構成でありつつ、CIUのWebフロ...",
+      "publishedAt": "2026-04-01T07:30:48.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "ada80bdcb58e665af377b717320d851a5c3629c2b29e764c8cf6183c7928bcb4",
+      "title": "REST API と GraphQL の違いをフロントエンド目線で整理する",
+      "url": "https://qiita.com/ryo_sh/items/18a4ddd39ada54c58b12?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "フロントエンド開発をしていると、API 連携はほぼ必ず登場します。\nその中でよく比較されるのが REST API と GraphQL です。\n名前は知っていても、実務でどう違うのか、フロントエンドの実装にどう影響するのかは意外と曖昧になりやすいと感じます。\nこの記事では、フ...",
+      "publishedAt": "2026-04-01T06:43:53.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "17ec91ab32f8f365b0a1dc3cf2465dc495cfdaae9b3a8d333d902f6b7c012c76",
+      "title": "アップル50周年イベントが終結へ、ポール・マッカートニーさん登場か",
+      "url": "https://japan.cnet.com/article/35245900/",
+      "description": "アップルの創業50周年を祝う一連のイベントは、3月中旬にニューヨークでのアリシア・キーズさんのパフォーマンスで幕を開けた。その締めくくりは、別の伝説的なミュージシャンを迎えて行われると伝えられている。",
+      "publishedAt": "2026-04-01T04:56:00.000Z",
+      "feedName": "CNET Japan"
+    },
+    {
+      "id": "80b44459595c40b43cee1bf1b7df7805a43e6b616a4648e079af863d0aa961fc",
+      "title": "大成株式会社様の AWS 生成 AI 活用事例「Amazon Bedrock と Amazon Q Developer で非エンジニアが実現する契約書管理 AI エージェントの構築」のご紹介",
+      "url": "https://aws.amazon.com/jp/blogs/news/179920-2/",
+      "description": "みなさん、こんにちは。AWS ソリューションアーキテクトの古屋です。 日々のお客様との会話の中で、「業務課題を […]",
+      "publishedAt": "2026-04-01T04:31:02.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "d3758f254715ddc951e3229f9e563b8f5943b94ebea1fba25c5571fc368c9658",
+      "title": "「axiosのサプライチェーン攻撃、大丈夫そう？」— まさにリリース作業をしていた日の話",
+      "url": "https://qiita.com/imamu123/items/021174919dcea46c5ed9?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "🔰 はじめに\n\naxiosのサプライチェーン攻撃、大丈夫そう？\n\n同僚からこんなメッセージが飛んできました。\nなんだろうと思って調べたら、ゾワッとしたので共有します。\naxiosは、JavaScriptで最もよく使われるHTTP通信ライブラリの1つで、npmでの週間ダウン...",
+      "publishedAt": "2026-04-01T04:26:30.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "4ded4e0785c0e22f116104cc2f78d600a5cd48d5abe962c479ff89e0592b0fcf",
+      "title": "人のミスを減らす「自動化」が攻撃対象に　GitHub Actionsのセキュリティ対策が進まない3つの理由",
+      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2604/01/news049.html",
+      "description": "NTTとNTTドコモビジネス、早稲田大学がCI/CD基盤「GitHub Actions」のセキュリティ対策におけるユーザーの実施状況を調査した。",
+      "publishedAt": "2026-04-01T04:00:00.000Z",
+      "feedName": "＠IT"
+    },
+    {
+      "id": "083bc5a2627f03a3927f2c3dd30b11ebb97a7506ee047a85ed114a5a8c8927e8",
+      "title": "【2026年最新版】エンジニアが知っておくべきセキュリティインシデント8選",
+      "url": "https://qiita.com/kawabe0201/items/d698429413a1c9703b76?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\n2025年度（2025年4月〜2026年3月）は、サプライチェーン攻撃の高度化、AI悪用の本格化、そしてランサムウェア被害の深刻化が際立った1年でした。\nこの記事では、エンジニアとして特に押さえておきたいセキュリティインシデントを8つピックアップし、それぞれの概...",
+      "publishedAt": "2026-04-01T03:39:17.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "d074a347049205d7f209dd78851ebcba9e85a45a0b95ee0cadf532dc60ad4af1",
+      "title": "Well-Architected Framework における Games Industry Lens のアップデート",
+      "url": "https://aws.amazon.com/jp/blogs/news/games-industry-lens-update-for-the-well-architected-framework/",
+      "description": "ゲーム業界とライブサービスゲームが成長を続ける中、クラウドサービスは何百万ものプレイヤーに没入型の体験を提供する上で重要な役割を果たしています。世界中のゲーム開発チームは、Amazon Web Services (AWS) のインフラストラクチャを活用してゲームを構築、テスト、成長させています。彼らは分析を構築し、プレイヤーインサイトを獲得することで、開発を推進し、シームレスで低レイテンシーの体験を世界中に提供することに努めています。 AWS for Games チームは、AWS Well-Architected Games Industry Lens およびホワイトペーパー (Games Lens) のアップデート版のリリースを発表できることを嬉しく思います。Games Lens は、クラウドでゲームを構築および運用する際の独自の課題に対処することを目的としたベストプラクティスで構成されています。これらの推奨事項は、ゲーム業界の開発者、パブリッシャー、そして私たち自身の AWS for Games チームとの協働経験に基づいており、アップデートされた Games Lens に反映されています。Games Lens は、クラウドでゲームを構築および運用する際の特有の課題に対処するために設計されたベストプラクティスによって Well-Architected Framework を補完します。",
+      "publishedAt": "2026-04-01T02:24:51.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "0731bcebcb1c72ace6152a12f27921bb23bd0df3504022142cc6d13bcc170b57",
+      "title": "PR： 高信頼セキュアネットワーク──アラクサラ統合で広がるフォーティネットジャパンの選択肢",
+      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2603/31/news007.html",
+      "description": "社会インフラにおいて、ネットワークの「安定稼働」と「高度な防御」の両立は必須要件だ。2026年1月に完全統合を果たしたアラクサラとフォーティネット。国産の信頼性と世界基準のセキュリティが融合し誕生した、「高信頼セキュアネットワーク」という新たな選択肢を解き明かす。",
+      "publishedAt": "2026-04-01T01:00:00.000Z",
+      "feedName": "＠IT"
+    },
+    {
+      "id": "4a795fc459e7463407f01ba73690287d40df5c2f6b76df0fb349c0e33a2344fe",
+      "title": "要件定義入門①：要件定義とはなにか　～現場での役割と全体像～",
+      "url": "https://developer.mamezou-tech.com/blogs/2026/04/01/requirements_overview_part1/",
+      "description": "要件定義入門①：要件定義とは何か　～現場での役割と全体像～\n#\n1. はじめに\n#\n要件定義という言葉はよく耳にするものの、\n特に現場に入りたての頃は、実装やテストといった開発工程に関わることが多く、\nそのため、\n本記事では、要件定義の役割について、\n2. 要件定義とは何か\n#\n要件定義とは、「システムが満たすべき条件（要件）を明確にし、関係者間で合意する工程」です。\nここでいう「要件」とは、\nなぜ要件定義が必要なのか\n#\nシステム開発は、顧客の「やりたいこと（要望）」から始まります。\nしかし、この要望を具体化せずに開発側へそのまま委ねてしまうと、\nさらに、「予算」「人員」「技術的な制約」といった要因により、そもそも実現が難しいケースもあります。\n要件定義でやっていること\n#\nそのため、要件定義では以下のようなやり取りを繰り返します。\n顧客の要望を整理する\n実現可能性を開発側で検討する\n実現方法や制約を踏まえて提案する\n顧客が提案内容を確認・調整する\nこのプロセスを繰り返し、\n要件定義は、\nまた、顧客がすべてを明確にできるとは限らないため、\n3. 設計とはどう違うのか\n#\n要件定義とよく混同されるのが「設計」です。\n両者の違いは、以下のように整理できます。\n要件定義：何を作るか（What）\n設計：どのように作るか（How）\n具体例\n#\n例：ユーザーがログインできる機能。\n要件定義\n設計\n要件定義の段階で設計の話をしてしまうと、\nそのため、「What」と「How」を意識的に分けることが重要です。\n4. 基本的な流れ\n#\n要件定義は、一般的に以下のような流れで進みます。\n\n「要望」と「要求」は似ていますが、本記事では以下のように定義します。\n要望：顧客の主観的なやりたいこと\n要求：具体化されたニーズ\n5. 具体例\n#\n例：勤怠管理システム。\n本節では、要件定義の流れを具体的なケースに当てはめて整理します。\n■ 要望（やりたいこと）\n#\n顧客の初期的な要望は、抽象的な状態で提示されることが一般的です。\n（例）\n※この段階では、業務フローや必要な機能は明確になっていません。\n■ 要求（具体化されたニーズ）\n#\n開発側がヒアリングを通じて、要望を具体的な要求へと整理します。\n（例）\n「出勤・退勤時刻を記録したい」\n「スマートフォンから打刻できるようにしたい」\n「月ごとの勤務時間および残業時間を集計したい」\n■ 整理・検討（要求の整理・実現可能性の確認）\n#\n要求を整理し、開発側が以下のような観点で検討します。\n業務要件として妥当か（業務フローとの整合性）\n技術的に実現可能か\nコスト・スケジュールに収まるか\n必要に応じて、要求の取捨選択や優先度付けも行います。\n■ 提案（実現案の提示）\n#\n検討結果を踏まえ、開発側から具体的な実現案を提示します。\n（例）\n「Webアプリケーションとして提供する」\n「打刻方法はブラウザベースとする」\n「既存の人事システムとの連携は行わない」\nまた、必要に応じて以下のような観点も提示します。\n機能の優先度（必須 / 任意）\nスコープ（今回対応範囲）\nトレードオフ（コスト・品質・スピード）\n■ 検討（顧客側確認）\n#\n提案内容について、顧客側で妥当性を確認します。\n業務上問題なく利用できるか\n必要な機能が満たされているか\n不足・過剰な要件がないか\n必要に応じて、再度要望の修正・追加をします。\n■ 合意（要件確定）\n#\n顧客と開発側で内容に合意し、\nこの合意内容が、以降の設計・実装の基準となる「要件」となります。\n6. まとめ\n#\n要件定義は「何を作るか（What）」を決める工程\n要望と制約をすり合わせ、実現可能な形にする\n開発側が主体的に要件を具体化していくことが重要\n要件定義は単なる前工程ではなく、\n次回は、実際に要件をどのように洗い出し、整理していくのかを解説します。",
+      "publishedAt": "2026-04-01T00:00:00.000Z",
+      "feedName": "豆蔵デベロッパーサイト"
+    },
+    {
+      "id": "39ea3742871513a8e621b557f3c3a80647fa046fc9ecbe73a3ac2d90e0c7bf4c",
+      "title": "総務省、AI開発者・AI提供者向けに「AIのセキュリティ確保のための技術的対策に係るガイドライン」を公表　",
+      "url": "https://internet.watch.impress.co.jp/docs/news/2097778.html",
+      "publishedAt": "2026-03-31T22:49:12.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "972a9e490c96430f91bed53012f741c9ff1be215841ac57226cfe7a9d9171417",
+      "title": "【AWS】FrontierAgentsで実現するAIOps【FrontierAgent】",
+      "url": "https://qiita.com/Nana_777/items/22b87cd8d28e3675e5c2?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\n前回の記事ではAWSのSecurityAgentとDevOpsAgentのセットアップについて解説しましたが、この記事ではより実践的な活用方法を解説します。\nSecurityAgentによるGitHubのプルリクエスト(PR)のセキュリティレビューや、設計書のレ...",
+      "publishedAt": "2026-03-31T22:01:52.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "e42baf761997fa54286d537cfdbc60c79ae959c2418d109b04fcb5f27dd58d70",
+      "title": "逆引き Rust Web API 開発: Axum で学ぶ実践パターン",
+      "url": "https://zenn.dev/sbk0716/books/70b401fac4005d",
+      "description": "# 逆引き Rust Web API 開発: Axum で学ぶ実践パターン\n\nヘルプデスクアプリケーションの実コードをベースに、Rust / Axum による REST API 開発の実践パターンを逆引き形式で解説します。\n\n## 学べること\n\n- Axum のルーティング・Extractor・State パターン\n- ハンドラー実装（JSON / Multipart / エラーレスポンス）\n- sqlx による PostgreSQL 連携とモデル設計\n- Azure Blob Storage・AI サービスとの外部連携\n- Axum 開発に必要な Rust 基礎（所有権・Result・async/await・ライフタイム）\n- 変換パターン・ライブラリの逆引きチートシート\n\n## 対象読者\n\n- Rust の基本文法はある程度わかり、Axum で API を作りたい方\n- Go / TypeScript / Python 等で API 開発の経験がある方\n\n## 前提知識\n\n- Rust のインストールと `cargo` の基本操作\n- `struct`、`enum`、`impl`、`trait` の基本的な理解\n- HTTP と REST API の基礎概念\n\n---\n\n# 免責事項\n\n本書は執筆時点（2026 年 3 月）の情報に基づいています。Rust エコシステムのアップデートにより動作が変わる可能性があるため、最新の公式ドキュメントをご確認ください。\n\n本書の構成・コードは**学習目的**であり、本番利用にはセキュリティ・監視・冗長化等の追加考慮が必要です。\n\n本書の情報はご自身の責任でご利用ください。著者は内容の保証を行わず、利用に起因する損害について責任を負いません。",
+      "publishedAt": "2026-03-31T18:54:31.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "5362ec8eee0f2f33b228d982d8ac9ce95a65b99bc1c493f6f869e269594a33f3",
+      "title": "From Custom to Open: Scalable Network Probing and HTTP/3 Readiness with Prometheus",
+      "url": "https://slack.engineering/from-custom-to-open-scalable-network-probing-and-http-3-readiness-with-prometheus/",
+      "description": "The Problem: Legacy Tooling and Its Limitations Currently, Slack utilizes a hybrid approach to network measurement, incorporating both internal (such as traffic between AWS Availability Zones) and external (monitoring traffic from the public internet into Slack’s infrastructure) solutions. These tools comprise a combination of commercial SaaS offerings and custom-built network testing solutions developed by our…",
+      "publishedAt": "2026-03-31T17:00:39.000Z",
+      "feedName": "Engineering at Slack"
+    },
+    {
+      "id": "0562a8387ef05d970399cc786078ff5a87fc2ba4c8378cdc13b9a6a7b04a55c8",
+      "title": "git worktree × Docker Composeによる並行開発環境の改善 | PR TIMES 開発者ブログ",
+      "url": "https://developers.prtimes.jp/2026/03/31/improvement-with-worktree-compose/",
+      "description": "こんにちは、PR TIMESでインターンをしている笹山雷雅です。 レビュー中や検証中に、いま触っているブランチをそのまま残したまま、別ブランチの挙動を確認したくなる場面は少なくありません。 ただ、git switch を繰り返す運用では、未コミット変更を気にしたり、作業の文脈が途切れたりしやすく、修正前後を見比べるに...",
+      "publishedAt": "2026-03-31T11:46:27.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "bea08b9d4db26eb4a1bd8ab7a990a91e3701f9e9ed52772c33cf21f09abfcbe0",
+      "title": "ソフトウェアサプライチェーン攻撃にどう向き合うか：ACESの8つの対応方針 - ACES エンジニアブログ",
+      "url": "https://tech.acesinc.co.jp/entry/2026/03/31/181123",
+      "description": "はじめに こんにちは、株式会社ACES の共同創業者 / ソフトウェアエンジニアの三田村です。 2024〜2026年にかけて、OSS パッケージや CI/CD を経由したソフトウェアサプライチェーン攻撃が増加しています。当社は Python と JavaScript/TypeScript を主な開発言語として使用し、CI/CD パイプラインやクラウドサービスに...",
+      "publishedAt": "2026-03-31T09:36:38.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "4cab21bdeb3f38f053528b733df67fa44ca02fb4ea0f9edf7600a8c42dfc2db2",
+      "title": "サプライチェーン攻撃から身を守るために最低限設定しておきたいこと",
+      "url": "https://zenn.dev/dely_jp/articles/supply-chain-kowai",
+      "description": "こんにちは、クラシルのラクです。\n2026年3月だけで、サプライチェーン攻撃が立て続けに発生しています。\n\n\n3月19日: セキュリティスキャナTrivyのGitHub Actionsが侵害され、CIで実行するだけでSSH鍵やクラウドトークンが窃取される状態に\n\n3月24日: Trivyの侵害を起点にPyPIのLiteLLMにも波及。数時間にわたり悪意あるバージョンが配布\n\n3月31日（本日）: npmのaxiosのメンテナアカウントが乗っ取られ、RATが仕込まれたバージョンが公開\n\n\nTrivy → LiteLLMのように、1つの侵害が連鎖的に別のプロジェクトに波及するケースも出てきて...",
+      "publishedAt": "2026-03-31T08:41:07.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "3bc0995d481cc9fe8eaa7924bfc17fce41998dcc8a1f6c621330efc1eb029a60",
+      "title": "NEC、2026年度より半導体事業者向け統合セキュリティパッケージを提供開始",
+      "url": "https://enterprisezine.jp/news/detail/24060",
+      "description": "NEC（日本電気）は2026年度より、半導体事業者を対象とした統合セキュリティパッケージを提供開始すると発表した。\n\n　半導体工場のOT領域（ファシリティ、ファブ）、ファブシステム、MESや業務シス...",
+      "publishedAt": "2026-03-31T07:50:00.000Z",
+      "feedName": "EnterpriseZine"
+    },
+    {
+      "id": "29e5e057184ca213ff21239fb072cdb983166468551b86ec28f5b6ea7c9a26a9",
+      "title": "axiosにサプライチェーン攻撃が発生した話と、担当プロジェクトでやっていた備え",
+      "url": "https://zenn.dev/rescuenow/articles/880bf865235aaf",
+      "description": "はじめに\nこんにちは、しもちです。本日（2026年3月31日）、npmパッケージのaxiosにサプライチェーン攻撃が発生しました。axiosは週間1億ダウンロードを超えるHTTPクライアントライブラリなので、かなり大きな影響が出ています。\n今回は攻撃の概要と、担当プロジェクトでの影響、そしてサプライチェーン攻撃への備えについて書きます。\n\n 何が起きたのか\n攻撃者はaxiosのメンテナー（jasonsaayman）のnpmアクセストークンを窃取し、通常のCI/CDパイプラインをバイパスして悪意のあるバージョンを直接npmに公開しました。\n公開された悪意のあるバージョンは以下の2つです...",
+      "publishedAt": "2026-03-31T06:54:31.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "ba16e46a5b960ce3592c446ac4a7c3097435eb47bfd483690ad1e6a48d33aa03",
+      "title": "「9割が90分以内、最速は1秒」　企業AIシステム侵害の絶望的なスピード感",
+      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2603/31/news073.html",
+      "description": "Zscalerは、企業のAIシステムが攻撃者によって極めて短時間で侵害される実態を明らかにした。AI活用が急拡大する一方、セキュリティ対策が追い付いていない現状が浮き彫りになった。",
+      "publishedAt": "2026-03-31T04:00:00.000Z",
+      "feedName": "＠IT"
+    },
+    {
+      "id": "da26a28e225a12ee54987aaa49f6c76226d0b380e2416238074b8b35391cdf25",
+      "title": "住信SBIネット銀行、3000万口座を支える「次世代クラウド勘定系」構築　キンドリルが移行支援",
+      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2603/31/news071.html",
+      "description": "キンドリルジャパンは2026年2月25日、住信SBIネット銀行が進めている勘定系システムのクラウド環境への全面移行を支援すると発表した。AWS基盤の構築と、稼働後のマネージドクラウドサービスを提供する。",
+      "publishedAt": "2026-03-31T04:00:00.000Z",
+      "feedName": "＠IT"
+    },
+    {
+      "id": "7eaf4026077dc60447af0a7ef26f7bedee7c855f131c75b006a71f9b7ff3f36b",
+      "title": "LLM のモデル廃止に耐える ~TypeScript で型安全なモデルカタログを作ってみた~",
+      "url": "https://developers.cyberagent.co.jp/blog/archives/63251/",
+      "description": "話すこと LLM プロバイダー（Azure OpenAI / Vertex AI / Anthrop ...",
+      "publishedAt": "2026-03-31T03:51:50.000Z",
+      "feedName": "CyberAgent Developers Blog"
+    },
+    {
+      "id": "82d4fbeb01c0e8b53a7d2c055dce3c4dc8a9ca90b70b3959acf4ba6bbc1dd638",
+      "title": "AIエージェントの利用拡大も、従業員のセキュリティリスク理解度は30％に留まる──KnowBe4調査",
+      "url": "https://enterprisezine.jp/news/detail/24056",
+      "description": "KnowBe4 Japanは2026年3月31日、日本国内の企業・団体に勤める従業員を対象に実施した「AIエージェントのセキュリティへの影響に関する意識調査」の結果を発表した。\n\n　同調査は、昨年の...",
+      "publishedAt": "2026-03-31T03:20:00.000Z",
+      "feedName": "EnterpriseZine"
+    },
+    {
+      "id": "d44e68e8ab390d922fcfe8ba402a9783c4a32bf74bacdbb1f46c86d400da576a",
+      "title": "モノレポのローカル開発環境をDockerからmiseに移行して起動速度を75%改善した",
+      "url": "https://zenn.dev/hrbrain/articles/local-development-docker-to-mise",
+      "description": "はじめに\nHRBrainのプラットフォームチームのえぬひろです。\nHRBrainでは30以上のマイクロサービスをGoとTypeScriptで開発しています。ローカル開発環境にはTiltを採用しており、開発者は tilt up <サービス名> の1つのコマンドで、必要なサービスとその依存関係をまとめて起動できるようになっています。\n依存サービスを含めて複数サービスを起動するにあたって、Dockerビルド実行による起動速度やリソース消費に課題が出てきました。\nコーディングエージェントの登場でコードを書く速度は上がりましたが、変更の反映確認に時間がかかるのでは開発サイクルが回り...",
+      "publishedAt": "2026-03-31T03:00:10.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "6e31caf8a351bd4b3ab38ec20227935d575134f1e5ae4263c10fa8cd055796dc",
+      "title": "Amazon Aurora DSQL 及び Database 事例イベントのお知らせ",
+      "url": "https://aws.amazon.com/jp/blogs/news/dataaievent20260410/",
+      "description": "AWS では、データと AI を活用したイノベーションの推進を支援するため、「AWS Data & A […]",
+      "publishedAt": "2026-03-31T01:48:06.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "45e65f679809add7bd714abbc9fa6dc258befdd95ba3e221484d207bea35e95c",
+      "title": "PR： 「世界基準」の実践型トレーニングで日本のサイバーセキュリティはどう変わるか",
+      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2603/31/news008.html",
+      "description": "サイバー攻撃の高度化を受けて、企業・組織の被害が拡大している。いかに現実に近い環境でスキルを磨き、セキュリティチーム全体の対応能力を底上げするか。「世界基準」の実践型トレーニングの中身を探る。",
+      "publishedAt": "2026-03-31T01:00:00.000Z",
+      "feedName": "＠IT"
+    },
+    {
+      "id": "37da56f3be5f592001b448c406085dc739a2f6a7fe8fb0df84ac6b10e2baaf70",
+      "title": "Instagramが有料プランをテスト中、その新機能とは",
+      "url": "https://japan.cnet.com/article/35245816/",
+      "description": "Metaは現在、「Instagram」で有料サブスクリプション「Instagram Plus」をテストしている。",
+      "publishedAt": "2026-03-31T00:50:00.000Z",
+      "feedName": "CNET Japan"
+    },
+    {
+      "id": "4f1cab08b59e61945ae718997a94d378447cd015c7c4270579c78ead9beb937a",
+      "title": "テーブル駆動テストで「仕様として読める」単体テストを書く",
+      "url": "https://zenn.dev/appleworld/articles/unit-test-arch-with-spec-driven",
+      "description": "はじめに\nAIが生成したテストコードをレビューしていて、itブロックを一つずつ読み解きながら「この関数、結局どういう仕様なんだ？」と感じたことはないでしょうか。\n私は普段Claude CodeとCodexを使って開発しており、コードを自分の手で書く時間よりも、AIが生成したコードを読んでレビューする時間のほうが多くなっています。直近のプロジェクトで単体テストの設計を行った際、重要視したのは人間が仕様を理解するのにかかる認知負荷を最小限にすることでした。AIが大量のテストケースを生成してくれる時代だからこそ、それを素早く正確に読み解ける構造が必要です。\nそこで今回採用したのが、「テーブ...",
+      "publishedAt": "2026-03-31T00:00:09.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "eb5958e86539a6528ed2f9001e017d5031135d6f951e9005df3489ae2f31b55b",
+      "title": "Ubieにおける一年間のセキュリティ分析AIエージェントの運用",
+      "url": "https://zenn.dev/ubie_dev/articles/ai-sec-alert-ops",
+      "description": "Ubie社内でセキュリティ分析に利用できる生成AIエージェントを開発・運用をはじめておよそ1年が経ちました。よい区切りではあるので、セキュリティ分析における生成AI利用について得られた知見などをまとめたいと思います。\n\n 前提：「セキュリティ分析」とは？\nまず、セキュリティアラートとはEDR、WAF、クラウドセキュリティサービス、脆弱性スキャナーなどが発見したセキュリティ上問題になりそうな事象などの報告を指します。これは本当に影響のあるアラートもあれば誤検知も含まれます。組織のセキュリティ担当者はこれが本当に影響あるものなのかを調査して必要なら対応方針を考える、という一連の作業を「セキュ...",
+      "publishedAt": "2026-03-30T22:35:49.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "a41bccfb860c1fd0dffae94392eb33c83d132163ef54f7241098554852560630",
+      "title": "Oracle Exadata AI Database@Azure:  Active Data Guard で DR 構成をしてみてみた",
+      "url": "https://qiita.com/shirok/items/4bb54995083b56d81a70?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "Oracle AI Database@Azure で Exadata を 2 系統用意できたら、次にやりたくなるのはやはり Active Data Guard です。  ただ、実際に運用を考えると、Standby を作るだけでは足りません。Switchover / Fai...",
+      "publishedAt": "2026-03-30T21:49:34.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "5855dfdafcc2148eeb24be3a2150697ea87bd66482a945eea5f6566fa76b1856",
+      "title": "複数の AI を使い分けて新たな施策に次々と取り組んだ SRE の働き方 [DeNA インフラ SRE]",
+      "url": "https://engineering.dena.com/blog/2026/03/sre-productivity-with-ai/",
+      "description": "はじめに こんにちは、 IT 本部 IT 基盤部 第三グループの渡邊です。IT 基盤部では、組織横断的に様々なサービスのインフラ運用を行っています。\nDeNA では AI オールインのスローガンのもと、全社的に AI を活用した生産性の向上に取り組んでいます。1\nSRE の業務は多岐にわたります。サービスのインフラ運用、作業効率化のためのプロダクト開発、コスト削減、セキュリティ対応など、性質の異なるタスクを並行してこなす必要があります。組織横断で複数サービスを管掌し、障害対応や割り込みも多い中、AI ツールを駆使することで定常業務をこなしながら新たな施策に次々と取り組めるようになりました。",
+      "publishedAt": "2026-03-30T15:00:00.000Z",
+      "feedName": "DeNA Engineering"
+    },
+    {
+      "id": "cd5acf048c1e80a0f4b70ee5d2afb1c56fc2a04af75d42c3e5101efe29e9694d",
+      "title": "LLMs on Kubernetes Part 1: Understanding the threat model",
+      "url": "https://www.cncf.io/blog/2026/03/30/llms-on-kubernetes-part-1-understanding-the-threat-model/",
+      "description": "Let’s say you’ve got an LLM running on Kubernetes. Pods are healthy, logs are clean, users are chatting. Everything looks fine. But here’s the thing: Kubernetes is great at scheduling workloads and keeping them isolated. It...",
+      "publishedAt": "2026-03-30T11:00:00.000Z",
+      "feedName": "Cloud Native Computing Foundation"
+    },
+    {
+      "id": "c3dc5df6e6407b4529d651895b5c397f20619c37f037c4a2ab6ed4e46edf98df",
+      "title": "アカウントの色、リージョン、サービスの表示などの視覚的な設定を使用して AWS マネジメントコンソールのエクスペリエンスをカスタマイズ",
+      "url": "https://aws.amazon.com/jp/blogs/news/customize-your-aws-management-console-experience-with-visual-settings-including-account-color-region-and-service-visibility/",
+      "description": "2025 年 8 月に、AWS User Experience Customization (UXC) 機能を […]",
+      "publishedAt": "2026-03-30T08:53:06.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "a9afb0bd1b34041286cae145ec36a1235c4e26c0b69577954e6df4596af00e7e",
+      "title": "週刊生成AI with AWS – 2026/3/23週",
+      "url": "https://aws.amazon.com/jp/blogs/news/weekly-genai-20260323/",
+      "description": "週刊生成AI with AWS, 関東は桜が綺麗な2026年3月23日号 – キヤノン株式会社様が取り組んだ生成AIハッカソン、三菱電機様とJeff Barr とのインタビュー記事含む8件のブログ記事を紹介。サービスアップデートでは、Agent Plugin for AWS Serverlessリリース、AWS Step Functions の Amazon Bedrock Agent対応、CoreAmazon Quickの東京リージョン一般提供開始含む7件を紹介。",
+      "publishedAt": "2026-03-30T06:21:09.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "4ff639c74789889b576f19bf063355ec161c50eaeb78a91c94eae18183beb317",
+      "title": "ログ設計：基礎から応用まで",
+      "url": "https://zenn.dev/sun_asterisk/articles/665f05f1b584dd",
+      "description": "1. はじめに\n\n なぜログは重要なのか？\nログは現代のソフトウェアシステムにおいて欠かせない要素です。適切に設計されたログシステムは以下を可能にします。\n\nシステムの稼働状態をリアルタイムで監視する\nバグや障害を素早く発見・修正する\nパフォーマンスのボトルネックを特定し最適化する\nビジネス指標を継続的に把握する\n\nしかし、ログ設計が不適切な場合、次のような問題が発生します。\n\n\nオーバーロギング：不要なログが大量に生成され、重要な情報が埋もれる\n\n情報不足：障害発生時にデバッグに必要なデータが記録されていない\n\n非一貫性：プラットフォームやサービスによってログ形式がバラバラで分析が...",
+      "publishedAt": "2026-03-30T05:45:52.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "02763c7026874d2008d1475cfd2f82391f13f66b90daa4abcaecb6d4eee89a1e",
+      "title": "TDCソフト、閉域網や厳格なセキュリティ環境でプライベートAIを即利用開始できる「Nenoa」提供へ",
+      "url": "https://enterprisezine.jp/news/detail/24048",
+      "description": "TDCソフトは2026年4月1日より、社内ネットワーク内で完結するプライベートAIアプライアンス「Nenoa（ネノア）」の提供を開始すると発表した。\n\n　同製品は、あらゆる企業や部門、特に厳格なセキ...",
+      "publishedAt": "2026-03-30T04:48:00.000Z",
+      "feedName": "EnterpriseZine"
+    },
+    {
+      "id": "94bebddbfbdcfa5ed861329b4adccf80865b4bf5ff7d9bba06311fc68fe80a47",
+      "title": "「熟練した人間の対応では遅い」　OSSから500件の脆弱性を掘り起こした「Claude Code Security」",
+      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2603/30/news076.html",
+      "description": "Anthropicが新機能「Claude Code Security」の限定プレビュー版の提供を開始した。人間のセキュリティ研究者と同じ手法でコードの脆弱性を解析し、人間によるレビュー用の修正パッチを提案するという。",
+      "publishedAt": "2026-03-30T03:55:00.000Z",
+      "feedName": "＠IT"
+    },
+    {
+      "id": "6d9dfc4f1a97eafb9a9835f7824ff03013422182b0083ef5159d7cb71dce9fe6",
+      "title": "役割・責任の拡大に苦戦するCISO……経営層や他部門との共通言語・共通認識は作れているか？──Splunk",
+      "url": "https://enterprisezine.jp/news/detail/24041",
+      "description": "Cisco（シスコ）傘下であるSplunkの日本法人Splunk Services Japanは、年次グローバル調査『CISOレポート 2026』の結果発表会を行った。発表には、同社のセキュリティス...",
+      "publishedAt": "2026-03-30T02:46:00.000Z",
+      "feedName": "EnterpriseZine"
+    },
+    {
+      "id": "fbc86d8fb46958d89dce0197e4d5a502aba95d529af83449bea54a7de5439d7d",
+      "title": "ユニットテストは2種類ある。AI時代に壊れないテスト設計",
+      "url": "https://zenn.dev/headwaters/articles/579d5f94907dcd",
+      "description": "はじめに\nソフトウェア開発において、ユニットテストの役割は変化しています。特にAIを活用したコーディングが普及した現在、ユニットテストの目的を再定義し、設計を見直す必要があります。\nAIによるコード生成は開発速度を向上させましたが、「生成されたコードが意図通りに動くか」を開発者が検証する作業の比重を増加させました。これにより、実装の過程で処理の動作を確認するためのテストの必要性が高まっています。\nしかし、現在の開発現場では、テストの目的が混同されるケースが散見されます。\n例えば、ログイン処理のユニットテストにおいて、「ログインに成功すれば OK」という仕様確認と、「内部で正規表現が何...",
+      "publishedAt": "2026-03-29T22:40:05.000Z",
+      "feedName": "Zenn"
     }
   ]
 }
