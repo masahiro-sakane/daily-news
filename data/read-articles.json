@@ -1,174 +1,6 @@
 {
   "articles": [
     {
-      "id": "8b864e2f2f52cf6746c0f52b81c0bc3d4a616c57efd20a6a9fcce70fb3653f0f",
-      "title": "The Week AI Agents Ate the World (March 2026)",
-      "url": "https://dev.to/sean_li_a5e6e08e5fc722152/the-week-ai-agents-ate-the-world-march-2026-55jk",
-      "description": "Remember when \"AI agent\" meant a chatbot with a to-do list? That was six months ago.\nThis week, NVIDIA announced an enterprise AI agent platform. OpenAI shipped an AI security auditor that scanned 1.2 million commits. Anthropic released a multi-agent system that reviews your pull requests better than your senior dev. A 22-year-old built a bot that does your homework — login, download, solve, submit — and higher ed collectively lost its mind.\nAI agents aren't a \"trend to watch in 2026.\" They're eating everything. Here's what actually happened.\n\nThe biggest news dropped today. WIRED reported that NVIDIA is building NemoClaw — an open-source AI agent platform aimed squarely at enterprise.\nThe concept: companies deploy AI agents that handle workflow tasks for employees. Think automated report generation, data pipeline management, customer ticket routing — except the agent actually does the work, not just suggests it.\nNVIDIA has been pitching NemoClaw to enterprise software companies for weeks. The full reveal is expected March 15 at GTC 2026.\nHere's what's interesting: NemoClaw is explicitly inspired by OpenClaw (the personal AI agent that hit 297K GitHub stars). OpenClaw was built for individual users running agents on their own machines. NemoClaw flips it — same philosophy, enterprise scale. CNBC noted that NVIDIA stock climbed 2.7% on the news alone.\nThe takeaway: NVIDIA just told every enterprise software company that AI agents are the next compute layer. If Jensen Huang is building it, it's not hype anymore.\n\nOpenAI had a double-header this week. On March 5, they dropped GPT-5.4 — their \"most capable frontier model for professional work.\"\nThe headline number: 1,000,000 token context window in the API. That's roughly 750,000 words. You could feed it an entire codebase, a company's complete documentation, or every email you've sent this year, and it would hold all of it in memory at once.\nGPT-5.4 can also \"steer\" itself mid-response — planning steps as it generates. OpenAI claims an 83% win rate on industry knowledge tasks (up from 70.9% for GPT-5.2). They also shipped ChatGPT for Excel on the same day, letting analysts build financial models in natural language with real data from FactSet and Moody's.\nBut the real story? Codex Security.\nLaunched March 6, Codex Security is an AI-powered code auditor. It scanned 1.2 million commits in its beta, found 792 critical vulnerabilities and 10,561 high-severity issues. In one case, it caught a cross-tenant authentication bug that human reviewers and basic tools completely missed.\nAs someone who's spent months finding RCEs in AI agent frameworks, this hits home. The security tooling gap in AI-generated code is massive. OpenAI building a dedicated security agent isn't just smart — it's necessary. When developers are shipping 10x more code with AI assistance, you need AI reviewing it at the same speed.\nThe takeaway: GPT-5.4 is impressive, but Codex Security scanning a million commits and catching real bugs? That's the product that actually changes how teams ship software.\n\nYesterday, Anthropic launched Code Review in Claude Code — and it's genuinely clever.\nThe system dispatches teams of AI agents to review every pull request. Not one agent scanning for patterns. Multiple agents, running in parallel, each checking different aspects: logic errors, security flaws, architectural issues, test coverage gaps.\nAnthropic modeled it on their own internal review process. The irony is beautiful: developers use Claude Code to write code, and now Claude Code sends agent squads to review what it wrote. AI checking AI's homework.\nThis isn't academic. As agentic coding tools (Claude Code, Codex, Cursor) drive a surge in PRs, human reviewers can't keep pace. Anthropic's data shows developers are shipping significantly more code per PR — but the review bottleneck is getting worse.\nThe timing isn't accidental. Anthropic is having a monster 2026. Revenue is surging. They just partnered with Microsoft to bring Claude into Copilot. And they're suing over a Pentagon blacklist. It's been a wild quarter.\nThe takeaway: The AI code review space just got serious. When both OpenAI (Codex Security) and Anthropic (Code Review) ship security/review agents in the same week, pay attention.\n\nSpeaking of the Microsoft-Anthropic deal — it's weird, and I love it.\nMicrosoft just launched Copilot Cowork, an enterprise AI agent built on Anthropic's Claude. The name \"Cowork\" is borrowed directly from Anthropic's own product — the same product that wiped hundreds of billions off Microsoft's market cap when Anthropic first announced it.\nMicrosoft's response? \"If you can't beat them, license them.\"\nCopilot Cowork ships as part of the $30/user/month M365 Copilot package. The pitch: AI agents that handle enterprise workflows — scheduling, document synthesis, cross-app automation — powered by Anthropic's Claude Sonnet models.\nThe meta-story is wild. Anthropic built Cowork. The stock market panicked (\"SaaSpocalypse\"). Microsoft's valuation dropped. Microsoft then... partnered with Anthropic and built the same thing into Copilot. That's either brilliant strategy or corporate Stockholm syndrome.\nThe takeaway: Microsoft just admitted that Anthropic's agent tech is good enough to power their flagship enterprise product. The AI agent cold war is over — now it's a supply chain.\n\nAdvait Paliwal is 22 years old. He built an AI agent called Einstein, posted a demo on X, and terrified every university in America.\nWhat Einstein does: logs into Canvas (the LMS most colleges use), downloads homework assignments, solves them, generates a PDF, and submits it. Fully autonomous. The student doesn't even need to read the assignment.\nThe Chronicle of Higher Education called it a crisis. Education podcasts dedicated full episodes to it. Universities started emergency meetings about academic integrity.\nHere's the thing: Einstein runs on OpenClaw. It's not some sophisticated custom system — it's an AI agent with browser access doing exactly what agents are designed to do. Paliwal basically vibe-coded it and let the internet react.\nWhether Einstein was a prank or a product doesn't matter. It exposed a fundamental problem: every system designed for human interaction — LMS platforms, forms, portals — is now an AI attack surface. And the agents are getting better at navigating them every month.\nThe takeaway: Einstein isn't special. Any competent AI agent can do what Einstein did. That's the actual crisis.\n\nMeta's chief AI scientist published a paper that's generating serious debate. Yann LeCun argues that \"AGI\" (Artificial General Intelligence) is a fundamentally flawed concept and proposes replacing it with \"SAI\" — Superhuman Adaptable Intelligence.\nHis argument: human intelligence isn't \"general.\" Humans are specialists who adapt quickly to new domains. We don't have general-purpose brains — we have highly adaptable ones. Building AI that's \"general\" at everything is the wrong target. Building AI that adapts to specialized domains faster than humans? That's achievable and more useful.\nBen Goertzel (the AGI researcher) fired back on Substack, arguing SAI is just a subset of AGI, not a replacement. The academic fight is entertaining, but LeCun's core point matters for practitioners: stop waiting for magic general AI. Build systems that adapt.\nThis aligns with what we're seeing in practice. Every major agent launch this week is about specialized adaptation — code review agents, security agents, enterprise workflow agents. Nobody shipped \"AGI\" this week. They shipped tools that do specific things really well.\nThe takeaway: LeCun might be right. The AI systems winning right now aren't \"general\" — they're specialized agents that adapt to specific workflows. That's SAI in practice, whether we call it that or not.\n\nA few data points that didn't fit neatly into a section but matter:\nGartner predicts $2.52 trillion in worldwide AI spending in 2026. That's not R&D budgets — that's actual deployment.\nGoogle Gemini 3.1 Flash-Lite launched March 3 at $0.25 per million input tokens. That's 2.5x faster than Gemini 2.5 Flash. The race to zero-cost inference is accelerating.\n70% of enterprises now run AI agents, but most have weak identity and access management. The Hacker News calls these unmanaged agents \"identity dark matter\" — powerful, invisible, and ungoverned.\n7 major AI companies signed a White House pledge to cover data center power costs. The energy conversation is getting serious.\nOpenClaw hit 297K GitHub stars, making it the most-starred AI project ever. NVIDIA building NemoClaw on the same philosophy validates the entire approach.\nWhat is NemoClaw?\nWhat's the difference between GPT-5.4 and GPT-5.2?\nWhat is Codex Security?\nWhat is Anthropic Code Review?\nWhat is SAI (Superhuman Adaptable Intelligence)?\nAbout the author: I'm Chase Xu — CV engineer, AI security researcher, and someone who spent last night manually auditing his own AI agent for malware. I write a weekly roundup of the AI news that actually matters. No hype. No fluff. Just the stuff you need to know.\nTags: Artificial Intelligence, Machine Learning, Cybersecurity, AI Ethics, Technology",
-      "publishedAt": "2026-03-11T01:41:06.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "d6867728c6d2ab44d6c551c5e6e291e51ad5eceaa7ae3d6cec93f1d9ab434449",
-      "title": "Beyond Pre-trained Models: Mastering Fine-tuning for Enterprise AI Dominance",
-      "url": "https://dev.to/_4e853add3ce149eb8267a0/beyond-pre-trained-models-mastering-fine-tuning-for-enterprise-ai-dominance-4ceg",
-      "description": "Beyond Pre-trained Models: Mastering Fine-tuning for Enterprise AI Dominance\n\n\n\n  \n  \n  Executive Summary\n\n\nIn today's competitive landscape, organizations leveraging AI face a critical choice: settle for generic, off-the-shelf models that deliver mediocre results or invest in customized solutions that drive tangible business value. Fine-tuning represents the strategic bridge between pre-trained foundation models and domain-specific excellence, transforming AI from a cost center to a competitive advantage.\nBusiness Impact Analysis: Companies implementing systematic fine-tuning programs report 40-60% improvement in task-specific accuracy, 70% reduction in hallucination rates, and 3-5x faster deployment cycles compared to building models from scratch. The financial implications are substantial: a well-executed fine-tuning strategy can reduce AI operational costs by 30-50% while increasing model relevance and business alignment.\nStrategic Imperative: As foundation models become commoditized, competitive differentiation shifts to customization capabilities. Organizations that master fine-tuning gain first-mover advantages in customer experience, operational efficiency, and product innovation. This article provides the technical blueprint for transforming generic AI capabilities into proprietary assets that deliver measurable ROI.\nArchitecture Diagram: Multi-Stage Fine-tuning Pipeline\n[Data Collection Layer] → [Preprocessing & Augmentation] → [Parameter-Efficient Tuning Layer] → [Full Model Optimization] → [Validation & Deployment]\n     ↑                            ↑                              ↑                              ↑                          ↑\n[Domain Sources]           [Quality Filters]              [LoRA/QLoRA Adapters]         [Gradient Checkpointing]   [A/B Testing Framework]\n\nPattern 1: Progressive Fine-tuning Strategy\nParameter-Efficient Fine-tuning (PEFT): Initial adaptation using LoRA (Low-Rank Adaptation) or QLoRA (Quantized LoRA) for rapid iteration\nSelective Layer Optimization: Targeting specific transformer layers based on task relevance\nFull Model Fine-tuning: Comprehensive optimization for mission-critical applications\nDesign Decision Matrix:\n# Trade-off analysis for fine-tuning approach selection\nFINE_TUNING_STRATEGIES = {\n    \"prompt_tuning\": {\n        \"parameter_efficiency\": \"99%+\",\n        \"storage_overhead\": \"minimal\",\n        \"task_switching\": \"instant\",\n        \"best_for\": \"multi-task environments, limited compute\"\n    },\n    \"lora\": {\n        \"parameter_efficiency\": \"1-5%\",\n        \"storage_overhead\": \"0.1-1% of base model\",\n        \"task_switching\": \"moderate\",\n        \"best_for\": \"single-task optimization, balanced performance\"\n    },\n    \"full_fine_tuning\": {\n        \"parameter_efficiency\": \"0%\",\n        \"storage_overhead\": \"100% of base model\",\n        \"task_switching\": \"expensive\",\n        \"best_for\": \"mission-critical applications, maximum accuracy\"\n    }\n}\n\nCritical Trade-offs:\nMemory vs. Accuracy: QLoRA enables fine-tuning of 70B parameter models on single 24GB GPUs with <1% accuracy loss\nGeneralization vs. Specialization: Overfitting risks increase with dataset specificity—implement early stopping with cross-validation\nInference Latency vs. Customization: Adapter-based approaches add 5-15% inference overhead but enable multi-tenant deployments\nGradient Checkpointing Implementation:\nimport torch\nfrom transformers import AutoModelForCausalLM, TrainingArguments\nfrom torch.utils.checkpoint import checkpoint\n\nclass MemoryOptimizedFineTuner:\n    def __init__(self, model_name, gradient_checkpointing=True):\n        self.model = AutoModelForCausalLM.from_pretrained(\n            model_name,\n            torch_dtype=torch.float16,\n            device_map=\"auto\",\n            use_cache=not gradient_checkpointing  # Disable cache for checkpointing\n        )\n\n        if gradient_checkpointing:\n            self.model.gradient_checkpointing_enable()\n            # Enable selective checkpointing for memory-intensive layers\n            self._configure_selective_checkpointing()\n\n    def _configure_selective_checkpointing(self):\n        \"\"\"Only checkpoint expensive attention layers\"\"\"\n        for name, module in self.model.named_modules():\n            if \"attention\" in name.lower():\n                module.requires_grad_(True)\n                # Custom checkpoint wrapper for attention\n                module.forward = self._checkpointed_forward(module.forward)\n\n    def _checkpointed_forward(self, forward_fn):\n        \"\"\"Create checkpointed version of forward pass\"\"\"\n        def custom_forward(*inputs):\n            return checkpoint(forward_fn, *inputs, use_reentrant=False)\n        return custom_forward\n\nPerformance Comparison Table: Fine-tuning Approaches\n\n\n\nApproach\nGPU Memory (70B model)\nTraining Time\nAccuracy Delta\nInference Overhead\nBest Use Case\n\n\n\n\nFull Fine-tuning\n280GB+\n48-72 hours\n+15-25%\n0%\nRegulatory compliance systems\n\n\nLoRA\n24-48GB\n8-12 hours\n+12-20%\n5-8%\nCustomer service automation\n\n\nQLoRA\n16-24GB\n12-18 hours\n+10-18%\n8-12%\nResearch & development\n\n\nPrompt Tuning\n<1GB\n2-4 hours\n+5-10%\n1-3%\nMulti-tenant SaaS platforms\n\n\n\nBackground: A multinational bank needed to automate regulatory compliance reporting across 12 jurisdictions. Off-the-shelf LLMs achieved only 68% accuracy on compliance rule interpretation.\nImplementation Strategy:\nData Pipeline: Curated 45,000 compliance documents with expert annotations\nModel Selection: Llama 3 70B as base model for its strong reasoning capabilities\nFine-tuning Approach: Two-stage QLoRA followed by targeted full fine-tuning\nValidation Framework: Cross-jurisdictional testing with legal expert review\nArchitecture Diagram: Compliance AI System\n[Figure 1: Multi-jurisdictional Compliance Architecture]\nDocument Ingestion → Text Extraction → Rule Classification → Fine-tuned LLM Analysis → Compliance Score → Human-in-the-loop Review\n      ↓                    ↓                    ↓                      ↓                      ↓                    ↓\n[Regulatory DB]    [OCR/PDF Parsing]   [BERT Classifier]    [Domain-tuned Llama]    [Confidence Scoring]   [Expert Validation]\n\nMeasurable Results (6-month implementation):\nAccuracy Improvement: 68% → 94% on compliance rule interpretation\nProcessing Time: Reduced from 40 hours to 2.5 hours per report\nCost Savings: $3.2M annually in manual review costs\nRisk Reduction: 80% decrease in regulatory violation incidents\nTechnical Implementation Highlights:\n\npython\nimport torch\nfrom peft import LoraConfig, get_peft_model, TaskType\nfrom transformers import AutoTokenizer, AutoModelForCausalLM, TrainingArguments\nfrom trl import SFTTrainer\nfrom datasets import Dataset\nimport pandas as pd\n\nclass ComplianceFineTuner:\n    def __init__(self, base_model=\"meta-llama/Llama-3-70B\"):\n        self.tokenizer = AutoTokenizer.from_pretrained(base_model)\n        self.tokenizer.pad_token = self.tokenizer.eos_token\n\n        # Load with 4-bit quantization for memory efficiency\n        self.model = AutoModelForCausalLM.from_pretrained(\n            base_model,\n            load_in_4bit=True,\n            torch_dtype=torch.float16,\n            device_map=\"auto\",\n            quantization_config=BitsAndBytesConfig(\n                load_in_4bit=True,\n                bnb_4bit_compute_dtype=torch.float16,\n                bnb_4bit_use_double_quant=True,\n                bnb_4bit_quant_type=\"nf4\"\n            )\n        )\n\n    def configure_lora(self, r=16, alpha=32, dropout=0.1):\n        \"\"\"Configure LoRA for parameter-efficient fine-tuning\"\"\"\n        peft_config = LoraConfig(\n            task_type=TaskType.CAUSAL_LM,\n            inference_mode=False,\n            r=r,\n            lora_alpha=alpha,\n            lora_dropout=dropout,\n            target_modules=[\"q_proj\", \"v_proj\", \"k_proj\", \"o_proj\"],\n            bias=\"none\"\n        )\n\n        self.model = get_peft_model(self.model, peft_config)\n        self.model.print_trainable_parameters()  # Typically <1% of parameters\n\n        return self.model\n\n    def prepare_compliance_dataset(self, documents, annotations):\n        \"\"\"Structure compliance data for instruction fine-tuning\"\"\"\n        formatted_data = []\n\n        for doc, annotation in zip(documents, annotations):\n            prompt = f\"\"\"Analyze the following regulatory document and determine compliance requirements:\n\nDocument: {doc}\n\nProvide analysis in this format:\n1. Jurisdiction: [identify applicable regions]\n2. Key Requirements: [list specific compliance obligations]\n3. Risk Level: [high/medium/low]\n4. Recommended Actions: [specific steps for compliance]\n\nAnalysis:\"\"\"\n\n\n\n---\n\n## 💰 Support My Work\n\nIf you found this article valuable, consider supporting my technical content creation:\n\n### 💳 Direct Support\n- **PayPal**: Support via PayPal to [1015956206@qq.com](mailto:1015956206@qq.com)\n- **GitHub Sponsors**: [Sponsor on GitHub](https://github.com/sponsors)\n\n### 🛒 Recommended Products & Services\n\n- **[DigitalOcean](https://m.do.co/c/YOUR_AFFILIATE_CODE)**: Cloud infrastructure for developers (Up to $100 per referral)\n- **[Amazon Web Services](https://aws.amazon.com/)**: Cloud computing services (Varies by service)\n- **[GitHub Sponsors](https://github.com/sponsors)**: Support open source developers (Not applicable (platform for receiving support))\n\n### 🛠️ Professional Services\n\nI offer the following technical services:\n\n#### Technical Consulting Service - $50/hour\nOne-on-one technical problem solving, architecture design, code optimization\n\n#### Code Review Service - $100/project\nProfessional code quality review, performance optimization, security vulnerability detection\n\n#### Custom Development Guidance - $300+\nProject architecture design, key technology selection, development process optimization\n\n\n**Contact**: For inquiries, email [1015956206@qq.com](mailto:1015956206@qq.com)\n\n---\n\n*Note: Some links above may be affiliate links. If you make a purchase through them, I may earn a commission at no extra cost to you.*",
-      "publishedAt": "2026-03-11T01:35:45.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "021fbf53ced789db3224b667818c793ea44491cdcee06e44164298218a16019a",
-      "title": "SOCKSプロキシ経由でアクセス元IPアドレスが制限されたHTTPプロキシに接続するためにTinyProxyで多段プロキシ環境を構築してみた",
-      "url": "https://dev.classmethod.jp/articles/socks-proxy-to-http-proxy-via-tinyproxy/",
-      "description": "IP制限付きHTTPプロキシを経由しないとアクセスできない環境に対し、社内SOCKSプロキシを経由して接続したい。でもSOCKSプロキシの設定は自由に変更できない...\nこんなジレンマを解消するためにTinyproxyによる多段プロキシ環境をDockerコンテナで構築してみました。",
-      "publishedAt": "2026-03-11T01:33:28.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "e4a06dc0580d5762e8998bee0bdb120b9d1b7a0bf387ed3004966a74f71b9289",
-      "title": "CIO／CISOだけの仕事じゃない、CFO視点で考えるテクノロジーリスクとIT投資管理の落とし穴",
-      "url": "https://enterprisezine.jp/article/detail/23751",
-      "description": "DXやAI利用の拡大が進む中で、ITが企業の事業継続を支える最重要資産の一つとなっていることは言うまでもない。ひとたびサイバー攻撃を受ければ、事業やシステムの停止だけでなく、決算延期や株価下落といった財務的な打撃に直結する。この問題に対処するのは、CIO（最高情報責任者）やCISO（最高情報セキュリティ責任者）だけではない。EY Japanが2026年2月16日に開催した「EY Finance Summit 2026」の分科会「CFOの視点で考えるテクノロジーリスクと企業防衛」で語られた、CFOをはじめ財務担当者が向き合うべきテクノロジーリスクと、平時から必要な備えについて内容をレポートする。",
-      "publishedAt": "2026-03-10T23:00:00.000Z",
-      "feedName": "EnterpriseZine"
-    },
-    {
-      "id": "48b11f8c1b58d9ee7c40aacc73c6e10bf4768dbd85b5f476dc840670067d9b7a",
-      "title": "AWS初心者がCommunity Buildersに落選した話",
-      "url": "https://qiita.com/tks_1128/items/a77dcd725aeda22854f2?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "はじめに\nこんにちは。Tsukasaです！皆さんはCommunity Buildersに応募はされましたでしょうか？\nそして選出された皆さんおめでとうございます！\n今日は私がCommunity Buildersになれなかったことについて記事にしていけたらと思います。\n来年...",
-      "publishedAt": "2026-03-10T13:04:09.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "ce91d12a23e8fd629a0e82b8762114be7e61a0cc2e74ce3ed98ba8b63ce032de",
-      "title": "なぜ私はゲーム開発で「疎結合」と「コンポーネント指向」に異常なほどこだわるのか",
-      "url": "https://zenn.dev/munimaru62o/articles/c6ed730c6e4c61",
-      "description": "なぜ私はゲーム開発で「疎結合」と「コンポーネント指向」に異常なほどこだわるのか\n!\nこの記事の3行まとめ\n\nゲームから「予定調和」を排除し、プレイヤーの試行錯誤による「創発的な遊び」を生み出すための設計思想について。\nその手段としての「徹底した疎結合・ドメイン分離」と、実現するための3つの技術的アプローチ。\n理想を追うことで直面する「バランス崩壊・認知負荷」などの強烈なトレードオフと、その現実的な解決策。\n\n\n\n はじめに\nゲーム開発において「疎結合」「コンポーネント指向」「ドメイン駆動設計」といったアーキテクチャの重要性が語られることは珍しくありません。\n保守性が上がる、再利用性が...",
-      "publishedAt": "2026-03-10T12:35:36.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "06433211d21eee550a1618887bcc12dc39f074b81bf33e4254a9667f01a832d7",
-      "title": "JAWS DAYS2026 〜まっしゅあっぷ ふぉあ ざ ふゅーちゃー〜 お祭りで盛り上がってみたレポート",
-      "url": "https://qiita.com/tarekatsu_eng/items/92dbd87adcd43fc0d800?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "はじめに\nJAWS DAYS2026に参加してきたので、振り返りレポートです！！\n振り返りたいことが多かったので書きました！\nというのも、初参加・初実行委員として参加して、色々感じたことも多く、今までの思い出の中でも特に印象深い日になりました！\n\nJAWS DAYS...",
-      "publishedAt": "2026-03-10T12:34:17.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "6d5602e8b3ffa4fbc212601c63ccba07dd6eada7bfabf5da8d85cf83695edc67",
-      "title": "32GBのUSBメモリにデータを保存して6年間放置したらデータは劣化するのか？",
-      "url": "https://gigazine.net/news/20260310-usb-flash-longevity-testing/",
-      "description": "近年はデータを外部保存する際にクラウドストレージを使用する人が増えたものの、セキュリティやサービスの信頼性といった観点から、いまだに物理的なUSBフラッシュメモリを使用しているという人もいるはず。USBフラッシュメモリにデータを保存して6年間放置したらどうなるのかについて、テクノロジー系ブロガーのザック...",
-      "publishedAt": "2026-03-10T12:09:19.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "cd62f0a76ca2c92fbeeaf38ccf7d217c99c5de7ca3d9cc4ac0f5c3431d308bcb",
-      "title": "Sustaining open source in the age of generative AI",
-      "url": "https://www.cncf.io/blog/2026/03/10/sustaining-open-source-in-the-age-of-generative-ai/",
-      "description": "Open source has always evolved alongside shifts in technology. From distributed version control and CI/CD, from containers to Kubernetes, each wave of tooling has reshaped how we build, collaborate, and contribute. Generative AI seems to be...",
-      "publishedAt": "2026-03-10T11:00:00.000Z",
-      "feedName": "Cloud Native Computing Foundation"
-    },
-    {
-      "id": "5e410b9ff3ed7d15af66513c73b7dd0c3d8aaebc298d0fff6c46b413a561a933",
-      "title": "AWS re:Invent2025 GameDayで3位入賞してきた話",
-      "url": "https://qiita.com/imai_yoshihiko/items/df2b749b4811d894c761?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "はじめに\nはじめまして！\n突然ですが、この記事が私の最初の投稿になるので軽く自己紹介をさせてください。私は三菱電機（株）でサービス運用技術開発に携わっているエンジニアです。最近AWSを用いた業務が多くなってきたこともあり、2025年12月ラスベガスで開催されたAWS re...",
-      "publishedAt": "2026-03-10T10:10:44.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "4f40510e0099835d3967a16100f6ee53310d83369c2c0b3ab6645eef7b2275ec",
-      "title": "クラウドストライク、「FalconID」一般提供を発表　アイデンティティセキュリティの新たな体験を実現",
-      "url": "https://enterprisezine.jp/news/detail/23905",
-      "description": "クラウドストライク（CrowdStrike）は、「FalconID」の一般提供を発表した。\n\n　FalconIDは、ゼロフリクションかつフィッシング耐性を備えた多要素認証により、CrowdStrik...",
-      "publishedAt": "2026-03-10T10:10:00.000Z",
-      "feedName": "EnterpriseZine"
-    },
-    {
-      "id": "6ea54fa7d685a457e4817ddf60a39974cffcc1acc1d7be474cbd170a9e962078",
-      "title": "DenoからBunに切り替えたらシングルバイナリが約9分の1になった",
-      "url": "https://zenn.dev/dyoshikawa/articles/deno-to-bun-single-binary",
-      "description": "@dyoshikawaです。 私が開発しているOSSツール Rulesync では、npm配布に加えてシングルバイナリ配布を行っています。Node.jsランタイムなしでも使えるようにするためです。 もともとDenoの deno compile を使ってシングルバイナリを生成していたのですが、v5.5.1でBunの bun build --compile に切り替えたところ、ファ...",
-      "publishedAt": "2026-03-10T09:52:12.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "d42f7ac1adfdc8e10d9a0b5e8a80daea8157f7e3a1abaf2825a7e117cff88632",
-      "title": "Claude Codeで「あとからIaC」— 既存AWSリソースをCloudFormationにimportする実践ガイド",
-      "url": "https://dev.classmethod.jp/articles/claude-code-aws-cloudformation-import/",
-      "description": "既存AWSリソースをCloudFormationにimportする「あとからIaC」に関する記事です。棚卸しからテンプレート作成、エラー対処までClaude Codeで効率化する実践手順を紹介します。",
-      "publishedAt": "2026-03-10T06:43:12.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "0349e16bdc41d8b0908be543d80156290b1b90e6fede92e2421b5bcb07e8db1d",
-      "title": "【ハンズオン】Azure Virtual Desktop (AVD) 環境構築と Azure Files 連携の完全ガイド",
-      "url": "https://qiita.com/kentaro_kawamura/items/9d3324cf39af50e761a4?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "Azure Virtual Desktop (以下、AVD) は、Azure 上で動作する仮想デスクトップ環境（セッションホスト）をユーザーに提供し、どこからでも安全に社内環境へアクセスできるようにするサービスです。\n本記事では、複数台の AVD 環境を構築し、さらにファイ...",
-      "publishedAt": "2026-03-10T06:42:01.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "75658f34cd1d750843f585fad92a9b6a043e3b2d7fc63fa8e74701af7968bc33",
-      "title": "【Security Hub修復手順】[APIGateway.8] API Gateway ルートには認可タイプを指定する必要があります",
-      "url": "https://dev.classmethod.jp/articles/securityhub-fsbp-remediation-apigateway-8/",
-      "description": "AWS SecurityHub 基礎セキュリティのベストプラクティスコントロール修復手順をご紹介します。",
-      "publishedAt": "2026-03-10T05:31:44.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "8c765293888713ca5f9517cdd0433de244bb2c82657581354d32ef9b5102f25a",
-      "title": "【AWS DRS】 Default replication settings を変更しても既存の Source Server に反映されない原因を教えてください",
-      "url": "https://dev.classmethod.jp/articles/tsnote-drs-security-group-not-applied-default-replication/",
-      "description": "【AWS DRS】 Default replication settings を変更しても既存の Source Server に反映されない原因を教えてください",
-      "publishedAt": "2026-03-10T04:31:18.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "7b5af78b04a169e48394f9a86308b4d3ce54422ae48b5de2560c56c091f560f8",
-      "title": "Deploy  React & Vite App ไปยัง GitHub (Host Static-Website with AWS Amplify Part. 2)",
-      "url": "https://dev.classmethod.jp/articles/deploy-react-and-vite-app-to-github/",
-      "description": "ในบทความนี้เป็นบทความและวิธีการ Deploy React+Vite App ไปยัง GitHub เพื่อทำ Host a Static Website ด้วย AWS Amplify  \nโดยเราไม่ต้อง build และ upload manual เป็นวิธีที่ประหยัดเวลาในการ deploy  วิธีหนึ่งครับ\nบทความนี้ผมได้ทำการทดลองสำเร็จและอยากเอามาแชร์ให้เพื่อนๆได้อ่านกันและทำตามครับ",
-      "publishedAt": "2026-03-10T04:25:37.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "f99b79346c89ae17c0c51edea1a40f55af7f01e52eedd365d3e9a7d40453d70d",
-      "title": "「セキュリティ専門家と同等の結果」　Microsoftが公開したAI支援の脅威分析ワークフローの中身",
-      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2603/10/news055.html",
-      "description": "MicrosoftはAIを活用して脅威レポートなどから検出インサイト（洞察）を生成するワークフローを紹介した。従来は数日から数週間かかっていた分析作業の高速化を目指す。",
-      "publishedAt": "2026-03-10T04:00:00.000Z",
-      "feedName": "＠IT"
-    },
-    {
-      "id": "a77130ae4a692b39d077a4705c4fcbfe5ef8c3e832ab6bbdbd196d8d54564969",
-      "title": "LaravelのBladeとCORS設定をAWS（S3 / API Gateway）で再現してみよう",
-      "url": "https://qiita.com/chaochire/items/9be1c47cad3913ff516e?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "こんにちは。\nソーイ株式会社1年目、村上です。\n前回LaravelのルーティングとコントローラーをAWSサービスを用いて再現しました。\n\n動作確認の際には CloudShell から値を含め送信し、構築できたか確認しました。\n今回はその記事の第2弾です。\n実際のWebア...",
-      "publishedAt": "2026-03-10T03:05:13.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "e3150d799cbf7611d4e72af1d486a48cb2b1bc8b72cafa79c256b6eb24836166",
-      "title": "散らばった E2E テストのガイドラインをリポジトリに一本化する",
-      "url": "https://zenn.dev/knowledgework/articles/0199eb40d47bc1",
-      "description": "はじめに\nこの記事は KNOWLEDGE WORK Blog Sprint 7 本目の記事になります。\nナレッジワークで新卒フロントエンドエンジニアをしている tosaken です。普段は新規プロダクト開発グループでフロントエンドの実装を担当しつつ、E2E テストの基盤整備に取り組んでいます。\nAI Agent を活用して E2Eテストを実装する際、ガイドラインは一箇所にまとまっている状態が理想的です。しかし弊社では、ガイドラインが複数のドキュメントに分散していたり、更新が反映されていない場合がありました。そのため、実装者自身もどの情報を参照すればよいか判断しづらく、AI Agent...",
-      "publishedAt": "2026-03-10T03:00:09.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "f74c1b4a0f1d90a9064a9e5411a603b7f45645e75aa6dd8f850275283c7ea8db",
-      "title": "GitHub Actions（release-please-action）でバージョン管理をやってみた",
-      "url": "https://dev.classmethod.jp/articles/github-actions-release-please-action/",
-      "description": "GitHub Actions（release-please-action）でバージョン管理をやってみた",
-      "publishedAt": "2026-03-10T02:33:42.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
       "id": "33f6fdd75365bcc80fee38fff1991b0360bf46a2178893b960e6888c0b506002",
       "title": "React Native: Hoja de Ruta hacia Swift Package Manager (2026)",
       "url": "https://dev.to/estolegion/react-native-hoja-de-ruta-hacia-swift-package-manager-2026-3j8d",
@@ -303,54 +135,6 @@
       "description": "はじめに\n企業のセキュリティチームは今、深刻な問題に直面しています。\n脆弱性の数が、多すぎる。\nNVD（National Vulnerability Database）に登録されるCVEは年間 25,000件以上。多くの企業では数万〜数十万の脆弱性がスキャンで検出されます...",
       "publishedAt": "2026-03-11T03:16:04.000Z",
       "feedName": "Qiita"
-    },
-    {
-      "id": "6d18af550bd7c51bfc83a1339b89fae34277e35dd0fec77353aab18892a7e218",
-      "title": "偽物のClaude Codeインストールページが本物そっくり—新しい攻撃の手口と対策",
-      "url": "https://qiita.com/nogataka/items/8448956292aa9cf2d89f?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "はじめに\n以前、「Claude Codeが本番DBを消した事故 ― 改めて確認しておきたいインフラの基本」という記事を書きました。AI開発ツールの便利さと危険性は表裏一体です。今回はさらに直接的な脅威の話です。\n2026年3月、セキュリティ企業Push Securityが...",
-      "publishedAt": "2026-03-11T01:19:11.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "bf6b96bb1372f1c84b1671cf372ffc188a7696e3d553d164545ccefb47b4b22e",
-      "title": "データエンジニア・LLM エンジニア採用のスキルテストをリニューアルしました",
-      "url": "https://zenn.dev/finatext/articles/skill-test-renewal-data-llm-engineer",
-      "description": "こんにちは、ナウキャストでリードエンジニアをしている六車です。\nナウキャストでは、エンジニア採用の選考ステップの一つとして、書類選考を通過したエンジニア候補の方にスキルテストを受けていただいています。\nこの度、そのスキルテストをリニューアルしました。具体的には、グループ会社である Finatext が運用しているソフトウェアエンジニア共通スキルテスト（参考記事）を、ナウキャストのデータエンジニアおよびLLM エンジニアの採用にも導入することにしました。\n「データエンジニアやLLM エンジニアなのに、なぜ職種固有の問題を出さないのか？」と思われた方もいるかもしれません。この記事では、そのテ...",
-      "publishedAt": "2026-03-11T00:00:05.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "1058aa64493c124c06c9fcf084e1bf94ed5995a727011718a38c1bd98004f345",
-      "title": "Gemini Embedding 2 の概要｜npaka",
-      "url": "https://note.com/npaka/n/n1e39b1e67561",
-      "description": "以下の記事が面白かったので、簡単にまとめました。 ・Gemini Embedding 2: Our first natively multimodal embedding model 1. はじめに本日、Geminiアーキテクチャを基盤とする初の完全マルチモーダル埋め込みモデル「Gemini Embedding 2」を、「Gemini API」および「Vertex AI」経由でパブリックプレビューとしてリリ...",
-      "publishedAt": "2026-03-10T22:47:02.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "58bf5f2d4c28c4515e4b35303b8163b3269f8312bd2f5627e1709bbe77d7fb6a",
-      "title": "AWS Community Builderに選出されたので活動を振り返る",
-      "url": "https://qiita.com/ry-harada/items/d2072de63ac3cfdd4603?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "先日AWS Community Buildersに選出されました！カテゴリーはServerlessです。恐れ多い限りですが、この記事が誰かの助けになればと思い、この1年で取り組んだことの振り返りも兼ねてまとめてみます。\n\n自己紹介\n普段は開発部門のプロダクトオーナーを担当す...",
-      "publishedAt": "2026-03-10T22:27:15.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "ba6899b1b85eb42fa2917bab4a14a63ebdca5b4ca640363a3d46741799e6ecde",
-      "title": "「カード作りが面倒すぎる」問題をAIで解決したら、資格勉強が続くようになった",
-      "url": "https://qiita.com/CoboMemo/items/de40a122980628bc61e7?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "「カード作りが面倒すぎる」問題をAIで解決したら、資格勉強が続くようになった\n\nはじめに：エンジニアの「積ん読あるある」\nAWS Solutions Architect、情報処理技術者試験、LPIC、TOEIC……\nエンジニアなら一度は「今年こそ取る」と決意した経験はない...",
-      "publishedAt": "2026-03-10T22:06:34.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "3313c27d883b27e840dbe3bc0b447ab2d7e2d8758a556ebe5702c17dcc0cba4d",
-      "title": "Windows 11に「回線速度テスト」が標準搭載！　2026年3月更新（KB5079473）で追加された機能とセキュリティ対策",
-      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2603/11/news067.html",
-      "description": "Microsoftは2026年3月10日（米国時間）、Windows 11 24H2／25H2向け更新プログラム「KB5079473」を公開した。タスクバーからのネットワーク速度測定ツールの起動や、Emoji 16.0への対応、Sysmonの標準搭載など、利便性を高める新機能が多く追加された。合計83件の脆弱性修正も含まれるため、早急な適用を推奨する。",
-      "publishedAt": "2026-03-10T20:00:00.000Z",
-      "feedName": "＠IT"
     },
     {
       "id": "284ad343fc586c0ced63ae3baeccac0e3eafede68fedd22228aa962063722e97",
@@ -655,14 +439,6 @@
       "description": "昨今のVive-Codingを見て、サーファーとして、サーフィンのスコア予報アプリ作れたらなと思い、やってみましたが、結局やめた話です。\n\n\n Vibe-Codingとは\nAIに指示を出しながら、自分はほぼコードを書かずにアプリを作るスタイルのことです。\nClaude Codeに「こういうものを作って」と言えば、ファイルを読み、コードを書き、エラーを直してくれる。自分はアーキテクチャと方向性だけ決めれば良いだけです。\n\n\n なぜ作ろうと思ったか\nBCM（Beach Community Media）という日本のサーフサイトがあります。各スポットの「今日のコンディション」をスコアで表示してく...",
       "publishedAt": "2026-03-11T12:49:20.000Z",
       "feedName": "Zenn"
-    },
-    {
-      "id": "185951d64a1dd5e897f9eabd228d49e80344d09cac494e51634283dbb8b5bed6",
-      "title": "AWSの用語で止まる人に。全体像から主要サービスまで一気につながる入門書",
-      "url": "https://qiita.com/yzak/items/2bf18ea4bc2d9fd83d09?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "AWSを学び始めても、用語が多すぎて全体像がつかめない。\nこの状態が続くと、サービス名は知っていても設計や会話で使いこなせません。\n基本から主要サービスまでをひとつの流れで整理できたのがこの本でした。\nAWSの基本・仕組み・重要用語が全部わかる教科書 (見るだけ図解)\n\nこ...",
-      "publishedAt": "2026-03-10T11:28:02.000Z",
-      "feedName": "Qiita"
     },
     {
       "id": "595ed90e92671e5fecb7fea576ed7aa1f66fbc86eb85864f46b8548b1afadfe2",
@@ -6152,6 +5928,262 @@
       "description": "AIが書いたコードは「動く」が「安全」ではない\n2025年12月、セキュリティ企業Tenzaiが衝撃的なレポートを公開しました。Claude Code、OpenAI Codex、Cursor、Replit、Devinの5つのAIコーディングエージェントに同一仕様のWebア...",
       "publishedAt": "2026-04-08T00:50:38.000Z",
       "feedName": "Qiita"
+    },
+    {
+      "id": "e6bc59bed2bc16cdb4bed02d4b931aaf2bf6e7a9707fcb7f4f06f0c0b058622e",
+      "title": "Why your AI builder platform needs infrastructure you can actually trust",
+      "url": "https://dev.to/nometria_vibecoding/why-your-ai-builder-platform-needs-infrastructure-you-can-actually-trust-2l39",
+      "description": "Why Your AI-Built App Works in the Browser But Fails in Production\n\n\nYou've shipped something real with Lovable or Bolt. Users are signing up. Revenue is coming in. Then you realize: your app lives on someone else's servers, your database is locked behind their API, and you have no rollback strategy if something breaks.\nThis is the gap between building and shipping.\nAI builders are optimized for iteration. They're fast, visual, collaborative. But they're not optimized for production. Here's what that actually means in technical terms.\nThe Infrastructure Reality\nWhen you export code from a builder, you're not getting a production-ready application. You're getting:\nA frontend that assumes specific API endpoints exist\nA database schema locked into the builder's proprietary format\nNo CI/CD pipeline, no deployment history, no rollback mechanism\nData living on infrastructure you don't control\nMost founders don't realize this until they need to scale. A two-person team I know migrated their Emergent app to Vercel and hit a wall: their database queries were optimized for the builder's cached responses, not direct database access. They had to rebuild the entire data layer.\nThe Real Cost of Waiting\nEvery day your app runs on a builder's infrastructure, you're accumulating technical debt. You're also accumulating risk. Your data isn't yours until you own the infrastructure it lives on. Your code isn't portable until it's version-controlled in Git. Your deployment isn't reversible until you have a rollback system.\nThe longer you wait to migrate, the more tangled your app becomes with the builder's proprietary systems.\nWhat Actually Works\nThe cleanest path forward is to separate three concerns:\nKeep using the builder for iteration (it's genuinely good at this)\nExport and deploy your app to infrastructure you control\nMigrate your database independently so you own the data\nThis sounds complex, but it's not. A solo founder migrated a Bolt-built SaaS to production infrastructure in a sprint. SmartFixOS moved from Base44 to real infrastructure and now handles customer management, job scheduling, and invoicing for a repair business with real revenue.\nThe pattern is: build fast with the tool, deploy clean to production, own your data and code.\nWhere to Start\nWhen you're ready to move beyond the builder, you need three things: a deployment system that understands AI-built apps, database migration tools, and a way to maintain two-way sync with your source code so you can still iterate in the builder if you want.\nThat's exactly what Nometria does. It deploys apps from Lovable, Bolt, Base44, and other builders to AWS, Vercel, or your own infrastructure via CLI, VS Code, or Chrome extension. Preview servers let you test before shipping. Rollback is 30 seconds. Full deployment history. GitHub sync. SOC2 compliance.\nThe math is simple: either you own your infrastructure, or you're renting it indefinitely. The sooner you understand that difference, the sooner you can actually scale.\nStart here: https://nometria.com",
+      "publishedAt": "2026-04-10T02:07:07.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "57a6e18ccad388bdb8028cd62c9488f49ffc0e03072070120150829a4750fee6",
+      "title": "Building a Zero-Trust Golang Backend (Part 2): CI/CD, Dependency Drift & GCP IAM ⚙️🔒",
+      "url": "https://dev.to/mohammadanang/building-a-zero-trust-golang-backend-part-2-cicd-dependency-drift-gcp-iam-2jkh",
+      "description": "Selamat datang kembali di seri pembangunan Secure Doc API! Jika Anda melewatkan Bagian 1 tentang Distroless Container, Anda bisa membacanya di sini.\nSeluruh kode referensi tersedia di: 👉 mohammadanang/secure-doc-api\nSekarang kita memiliki aplikasi yang aman. Tantangan berikutnya adalah: bagaimana memindahkan kode tersebut dari GitHub ke server secara otomatis, tanpa meloloskan kode yang rentan? Jawabannya adalah Shift-Left Security menggunakan Google Cloud Build dan Artifact Registry.\nShift-Left Security dengan Gosec\nKita akan menyisipkan gosec (Golang Security Checker) di tahap paling awal pipeline. Jika gosec menemukan celah, pipeline akan gagal dan image tidak akan pernah dibuat.\nNamun, di tahap ini saya menemukan pelajaran berharga tentang Dependency Drift. Awalnya saya menggunakan tag @latest untuk instalasi gosec. Tiba-tiba pipeline hancur karena versi terbaru gosec meminta Golang 1.25, sedangkan saya menggunakan 1.24!\nSolusinya? Version Pinning.\n\n# cloudbuild.yaml (Step 1)\nsteps:\n  - name: 'golang:1.24'\n    entrypoint: 'bash'\n    args:\n      - '-c'\n      - |\n        echo \"Menginstal Gosec (Version Pinned)...\"\n        go install github.com/securego/gosec/v2/cmd/gosec@v2.22.0\n\n        /go/bin/gosec -no-fail -fmt=text -out=results.txt ./...\n        cat results.txt\n\n\nIAM Roles: Jebakan Batman di Google Cloud\nGoogle Cloud menerapkan prinsip Least Privilege secara default. Artinya, pipeline kita awalnya sama sekali tidak bisa menulis log, mengunggah image ke Artifact Registry, atau men-deploy ke Kubernetes.\nService Account di Cloud Shell secara eksplisit:\n\n# Memberikan izin untuk menulis Log\ngcloud projects add-iam-policy-binding $PROJECT_ID \\\n    --member=\"serviceAccount:$SA_EMAIL\" \\\n    --role=\"roles/logging.logWriter\"\n\n# Memberikan izin untuk push image ke Artifact Registry\ngcloud projects add-iam-policy-binding $PROJECT_ID \\\n    --member=\"serviceAccount:$SA_EMAIL\" \\\n    --role=\"roles/artifactregistry.writer\"\n\n\nSetelah izin beres, pipeline berjalan mulus, image Docker dibungkus, dan Artifact Registry secara otomatis memindai kerentanan OS layer-nya!\nDi Bagian 3 (Terakhir), kita akan membahas deployment akhir ke GKE Autopilot dengan Security Context tingkat lanjut. Jangan lewatkan!",
+      "publishedAt": "2026-04-10T02:05:00.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "bfb21ee1bf10105da819671fd4fe832e85abd05a3a94cf0d7054aede726611b7",
+      "title": "The Dashboard Was There But I Didn't Know What to Do, So I Let AI Handle It",
+      "url": "https://dev.to/lazydev_oh/the-dashboard-was-there-but-i-didnt-know-what-to-do-so-i-let-ai-handle-it-39f",
+      "description": "March 2026 · Lazy Developer EP.03\nI had a dashboard. Built it in EP.02. Every day at 3 AM, a Cron job runs. By morning, all of yesterday's data for 12 apps is there. Downloads total, revenue, keyword rankings. Everything on one screen. It took days to build, and it saved me 15 minutes every morning.\nBut about three days in, a different kind of question lingered. \"The finance app downloads dropped 22% today.\" The number was right there on screen. So what? I didn't know why it dropped. I didn't know what to do about it. The dashboard showed me what happened. The judgment was still on me. Having a dashboard actually made things more tiring in a way — the decisions I needed to make became painfully clear.\nSo I decided to automate the judgment part too. I built an AI growth agent inside Apsity. That's what this post is about.\nQuick Overview\nDashboard shows \"what happened,\" but \"why\" and \"what to do\" were still on me\nDesigned 5 analysis patterns: rank drop diagnosis, hidden markets, keyword optimization, review analysis, revenue breakdown\nConfidence badge on every insight: Fact / Correlation / Suggestion\nIndie app filter excludes enterprise apps (1,000+ ratings), analyzes only comparable apps\nSecond Claude API integration — auto-generates 100-character keyword sets, suggests app names, extracts insights\nAuto growth stage detection: SEED -> GROWING -> STABLE\nWeekly email report added: Monday 8 AM, auto-sent via Resend + React Email\nFirst run: 12 apps, 48 insights generated automatically\nThere are plenty of App Store analytics tools out there. AppFollow, Sensor Tower, MobileAction, plus App Store Connect itself. They all do the same thing. \"3,240 downloads this week.\" \"Keyword ranking change: -5.\" Numbers showing what happened.\nThe pricing tells the story. Sensor Tower's enterprise plan starts at $30,000/year. AppFollow has a $39/month basic plan, but it caps at 5 apps. Managing 12 means upgrading, and the cost jumps. So most indie developers end up using App Store Connect's built-in analytics.\nNo matter which tool you use, the \"so what?\" question remains. Why did it drop? Did a competitor change something? Is my keyword the problem? Is there a signal in the reviews? To figure that out, you have to dig through the data yourself. The tools don't dig for you.\nWhat I wanted was different. Give it data, and it tells me the cause. If there's a cause, it tells me what to do. If it knows what to do, it gives me something I can use right now. Not \"you might want to change your keywords\" but \"copy this 100-character set and paste it into your App Store keyword field.\"\nI wrote up my requirements and handed them to Claude. \"Not just showing what happened — diagnose the cause, provide verifiable evidence, and deliver ready-to-use outputs.\" It was a one-line description. Claude broke it into 5 analysis patterns.\n// 5 Analysis Patterns\n1. Rank Drop Diagnosis — Why it dropped, including competitor changes\n2. Hidden Market Discovery — Keywords where my app isn't showing but opportunities exist\n3. Keyword Optimization — Current keyword analysis + auto-generated 100-char optimal set\n4. Review Keyword Analysis — Recurring patterns extracted from user reviews\n5. Revenue Breakdown — Subscription vs IAP anomaly detection + cause hypotheses\n\nPatterns alone are meaningless. What matters is how trustworthy each result is. Not everything AI says is fact. Something read directly from data, something inferred from patterns, and something AI suggests — these are fundamentally different. Without distinguishing them, you'd treat inferences as facts.\nI attached a confidence badge to every insight card. There are three types.\n\n\n\nBadge\nMeaning\n\n\n\n\nFact\nDirectly confirmed from real data. Like \"downloads dropped 22% yesterday\" — a measured figure.\n\n\nCorrelation\nInferred from patterns between data points. Like \"competitor updated their description right before your ranking dropped\" — related but not causally confirmed.\n\n\nSuggestion\nAI reasoning based on analysis. Like \"adding this keyword could increase impressions\" — data-informed but not certain.\n\n\n\nEach card also has a [View Evidence] toggle. Click it, and you see the raw data: \"34% drop from 7-day download average, competitor A changed 3 metadata fields in the same period.\" You can check what data the AI used to produce the insight. So you can judge for yourself whether to trust it.\nThis is a design decision, but it's also a philosophy. You shouldn't just follow what AI says. You should be able to see why it said it. That way, you'll know when it's wrong, too.\nWhile designing the competitive analysis, I hit a problem. Even within the same category, some apps shouldn't be compared. Official apps from major banks, apps from companies like Naver or Kakao. They have different marketing budgets, different ASO strategies, and hundreds of thousands of ratings. If an indie developer gets compared against them by the same standards, no meaningful insight comes out.\nI asked Claude, and it suggested a rating-count filter. Apps with 1,000+ ratings get classified as enterprise and excluded from comparisons. Apps with 50-1,000 ratings get classified as indie successes and used as the comparison baseline.\nThe indie app filter logic is simple. On the App Store, an app's rating count correlates with downloads. Over 1,000 ratings means significant marketing investment — that's not indie. Meanwhile, 50-1,000 ratings means somewhat validated but still indie-scale. That's the range you actually want to compare against.\nOnce you register a competitor, a Cron job calls the iTunes Lookup API every day at 4 AM KST to fetch that app's latest metadata. App name, subtitle, description, icon, version. These five fields get saved daily, compared against the previous day, and any changes get logged.\nOpen the menu and you see the list of registered competitors. Apps with recent metadata changes rise to the top, showing which fields changed. Click on a changed field to see the previous and current versions side by side.\nAt first I thought, \"Does this even matter?\" So a competitor changed their description — what can I do about it? Using it changed my mind. Three competitors of my finance app updated their descriptions and keywords on the same day, and my ranking dropped right after. The MetaChange log had the dates and exact changes. It's correlation, not causation, but without this data, tracking down the cause would have taken much longer.\nI added two more specific features. Auto-generating an optimal 100-character keyword set, and suggesting app names and subtitles based on indie success patterns.\n// POST /api/growth/keywords-generate\n// App name, category, current keywords -> Claude -> 100-char optimal keyword set\n\nconst prompt = `\nApp: ${appName} (${category})\nCurrent keywords: ${currentKeywords}\nTop indie app keyword patterns: ${indiePatterns}\n\nGenerate an optimized keyword set within 100 characters for the App Store keyword field.\nRemove duplicate words, separate with commas, no spaces after commas.`\n\nThere are rules for the keyword field:\nNo space after commas (even one space counts toward the character limit)\nNo plurals (App Store auto-matches from singular)\nDon't repeat app name or category name (they're already indexed)\nFill all 100 characters (empty space = wasted exposure)\nInclude review keywords (frequent words from review text act as search signals)\n\nKeyword Optimization — Copy the AI-generated 100-character optimal set with one click / GoCodeLab\nAfter building all the analysis features, one problem became obvious. Running \"revenue anomaly detection\" on a freshly launched app is pointless. There's no data. On the flip side, only running basic keyword generation for a well-established app is a waste.\nClaude proposed auto-detecting growth stages:\n🌱 SEED — Less than 30 days of downloads or under 500 cumulative. Focuses on initial setup: keyword auto-generation, app name suggestions.\n🌿 GROWING — Download trend is rising or stable. Rank drop diagnosis, hidden market discovery, and competitor change detection all activate.\n🌳 STABLE — Over 3 months of accumulated data. Revenue anomaly detection, review keyword analysis, and long-term trend pattern analysis activate.\n\nAuto growth stage detection — each stage activates different analyses / GoCodeLab\nI tried something new this time. I had Claude review the code it wrote. After everything was built, I said: \"Review this entire codebase. Focus on things that could break in production.\"\nThe results were more specific than I expected:\n// [Critical] 1st Review — Key Issues\n1. MetaChange relation missing — DB save without linking relation table\n2. JSON.parse unprotected — No try-catch on external API response parsing\n3. Cron timeout — Timeout risk when processing 12 apps sequentially\n\n// [Critical] 2nd Review — Key Issues\n4. iTunes API rate limit — 429 risk from calling in a loop with no delay\n5. Review country hardcoded — Only collecting KR, missing other countries\n6. ASC data delay — Yesterday's data may not be available at early morning\n\nThere was a strange feeling. Code written by Claude, reviewed by Claude, bugs found by Claude, fixed by Claude. The line between what I built and what it built got even blurrier. But I'll take that feeling over things breaking in production.\nInsights were being generated, but you could only see them by opening the dashboard. I set up weekly reports to be emailed automatically using Resend + React Email + Vercel Cron.\n// vercel.json — Cron schedule\n{\n  \"crons\": [\n    { \"path\": \"/api/cron/collect\", \"schedule\": \"0 18 * * *\" },      // 3 AM KST daily\n    { \"path\": \"/api/cron/analyze\", \"schedule\": \"30 10 * * *\" },     // 7:30 PM KST daily\n    { \"path\": \"/api/cron/weekly-report\", \"schedule\": \"0 23 * * 0\" } // Monday 8 AM KST\n  ]\n}\n\nThe email contains last week's per-app download and revenue summary, the top 3 insights (with confidence badges), and one immediately actionable item. Long emails don't get read, so the goal was to fit everything on one screen without scrolling.\n\nWeekly email report — auto-sent Monday 8 AM, everything fits on one screen / GoCodeLab\nI deployed the Cron and triggered it manually. 12 apps processed, total execution time 38 seconds. 48 insights generated.\nDifferent kinds of insights came in for each app. The finance app was STABLE, so revenue anomaly detection ran. The habit tracker was GROWING, so competitor change detection ran alongside it. A recently launched app was SEED, so only keyword auto-generation insights came through.\nOne insight caught my eye. \"Over the past 14 days, 3 competitors simultaneously updated their metadata for the 'budget' keyword cluster, and your app's ranking for those keywords dropped an average of 8 positions since.\" Confidence badge: Correlation. I clicked [View Evidence] and verified the data manually. It checked out.\nBelow that insight card was a keyword set with a copy button. Claude had generated it incorporating the competitive keyword changes. I copied it and pasted it into App Store Connect. The flow itself — change detection, cause hypothesis, response keyword generation, copy — all happened automatically. That's the point.\nQ. What exactly is an AI growth agent?\nExisting tools show you numbers. \"Downloads down 22%.\" The AI growth agent goes one step further. It proposes a hypothesis for why it dropped, shows the supporting data, and produces a ready-to-use deliverable for your response.\nQ. How do the confidence badges work?\nFact means read directly from data. Correlation means inferred from patterns between two data points. Suggestion means AI reasoning. Check the badge and decide how much to trust it.\nQ. Why is the indie app filter based on rating count?\nRating count correlates with downloads. Over 1,000 means significant marketing has already gone in, and indie developers shouldn't benchmark against that. The 50-1,000 rating range represents apps that succeeded under similar conditions.\nQ. How are the growth stages determined?\nThey're auto-detected every time the daily Cron runs. It evaluates data collection duration, cumulative downloads, and recent trend direction. When the stage changes, the types of analysis change too.\nQ. Can vibe coding really produce features like this?\nI built it, so yes. The key is being clear about what you want. Claude structured the code and wrote most of it, but the decisions about which features were needed, ideas like confidence badges — those were mine. It's become more about judgment than coding skill.\nOriginally published at GoCodeLab",
+      "publishedAt": "2026-04-10T01:57:29.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "9abb805979dfaa0ffdc451d3d0ab28b9595df1742f62379fd13865118a33f433",
+      "title": "Signals in React (VI): Stale Closures, Subscription Traps, and Reactive Graph Pitfalls",
+      "url": "https://dev.to/luciano0322/signals-in-react-vi-stale-closures-subscription-traps-and-reactive-graph-pitfalls-14n9",
+      "description": "Quick Overview\n\n\nIn the previous article, we discussed:\nWhy tearing occurs and how to guarantee tear-free subscriptions\n\nHow to avoid dangling subscriptions or computed nodes when components remount due to keys\n\nPractical strategies for consistency and timing coordination when using Transition and Suspense\n\n\n\nIn this article, we will go through several examples to better understand common mistakes and their solutions.\nSymptom\nsetTimeout, debounce, or Promise.then are always outdated.\nCause\nsnapshot from the render that created them.\nFix\npeek(), or inject a getter function to avoid closure persistence.\n// ❌ onClick / timeout always uses \"v from that render\"\nconst v = useSignalValue(countSig);\nconst onClick = () => setTimeout(() => console.log(v), 500);\n\n// ✅ read the latest value at callback time (no tracking)\nconst onClick2 = () => setTimeout(() => console.log(countSig.peek()), 500);\n\n// ✅ or inject a getter\nconst getCount = () => countSig.peek();\nconst onClick3 = () => setTimeout(() => console.log(getCount()), 500);\n\nSymptom\nsubscription leaks or performance jitter.\nCause\nuseMemo or a custom hook, instances are not stable.\nFix\nuseSignalState, useComputed, or useMemo so the instance is created only once.\n// ❌ recreated every render → guaranteed leak\nfunction Bad() {\n  const local = signal(0);\n  const sum = computed(() => local.get() + 1);\n}\n\n// ✅ stable instances\nfunction Good() {\n  const [local, setLocal] = useSignalState(0);\n  const sum = useComputed(() => local + 1);\n}\n\nSymptom\nuseComputed(() => count * 2) runs only once and never updates.\nCause\ncomputed only tracks signals accessed through .get() inside its callback.\nnot part of the reactive graph.\nFix\nsignal.get() inside computed.\nuseMemo.\n// ❌ not tracked\nconst count = useSignalValue(countSig);\nconst doubled1 = useComputed(() => count * 2);\n\n// ✅ tracked via signal\nconst doubled2 = useComputed(() => countSig.get() * 2);\n\n// ✅ render cache only\nconst doubled3 = React.useMemo(() => count * 2, [count]);\n\nuseEffect + setState) causing tearing or excessive renders\n\n\nSymptom\nCause\nuseEffect and then call setState, React cannot re-read the snapshot before commit.\nFix\nuseSignalValue or useSignalSelector, which internally rely on useSyncExternalStore.\n// ❌ prone to tearing\nuseEffect(() => {\n  const stop = createEffect(() => setV(src.peek()));\n  return () => stop();\n}, []);\n\n// ✅ tear-free\nconst v = useSignalValue(src);\n\n.get() during cleanup\n\n\nSymptom\nCause\n.get() inside onCleanup or React cleanup.\nFix\npeek() to avoid tracking during cleanup.\ncreateEffect(() => {\n  const last = someComputed.peek(); // snapshot first\n\n  onCleanup(() => {\n    // ❌ avoid\n    // someComputed.get();\n\n    last; // ✅ use snapshot\n    someComputed.peek(); // ✅ peek does not track\n  });\n});\n\nSymptom\nCause\nsignals (immediate) while others use React state + Transition (deferred).\nFix\n// ✅ read from signal, defer only in the UI\nconst q = useSignalValue(querySig);\nconst dq = useDeferredValue(q);\n\n// ✅ buffer with React state, then commit to signal\nconst [draft, setDraft] = useState(useSignalValue(titleSig));\nstartTransition(() => titleSig.set(draft));\n\nUse:\nuseSignalValue\nuseSignalSelector\n\nInside a computed callback, dependencies must be accessed via:\nsignal.get()\n\nStabilize instances inside components using:\nuseSignalState\nuseComputed\n\nDuring cleanup, use snapshots or peek(), and avoid .get().\nUI / DOM side effects → React effects (useEffect)\nData side effects → our effects (createEffect)\nWith these examples, it should now be easier to grasp the practical characteristics of using Signals and more importantly, how to avoid common pitfalls.\nAt this point, we have completed a working core system and React integration:\nsignal\neffect\ncomputed\npush dirty-marking + pull recomputation\nminimal scheduler with microtask batching\n\n\n\n\n  \n  \n  React Integration\n\n\n\nuseSignalValue\nuseComputed\nuseSignalSelector\nbuilt on useSyncExternalStore\n\ncorrect effect separation and cleanup timing in Concurrent Mode / Strict Mode\n\n\n\n\n\n\n\n  \n  \n  What's Next\n\n\nNext, we'll approach the same mental model from a different angle and bring it into Vue.\nThe good news is that the computed in this series is almost equivalent to Vue's computed, so the implementation will feel very natural.\nWe will implement two minimal hooks so Vue templates can directly use your state and derived values:\n// vue-adapter\nexport function useSignalRef<T>(src: { get(): T; peek(): T }) {\n  /* map to Vue ref, cleanup via onUnmounted */\n}\n\nexport function useComputedRef<T>(fn: () => T, equals = Object.is) {\n  /* create computed within lifecycle and convert to ref */\n}\n\nImportant notes:\nThe callback of useComputedRef must read signal.get(), not ref.value, otherwise it becomes a pure Vue computation and loses your reactive graph.\nThe bridge only synchronizes values to Vue refs, and does not reconnect Vue's reactivity back into your graph, avoiding circular scheduling dependencies.\nCleanup uses onUnmounted, so unmounting releases the associated createEffect or computed.",
+      "publishedAt": "2026-04-10T01:53:24.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "762a7076c24c414653c028b8741ab819127add50ced0394885da424dc45d6d11",
+      "title": "We're hiring: Senior Full-Stack Engineer (Next.js 14 + Claude API) — direct to a bootstrapped NYC founder",
+      "url": "https://dev.to/rdeadvsiors4321/were-hiring-senior-full-stack-engineer-nextjs-14-claude-api-direct-to-a-bootstrapped-nyc-ipd",
+      "description": "Hi dev.to,\nI'm Ross, the founder of RDE Advisors — a boutique commercial real estate advisory in NYC. For the past year I've been building two production web applications alongside the brokerage business, and I've reached the point where I need to bring on one senior full-stack engineer to work directly with me.\nTwo live products, both in active use:\nA commercial real estate search platform — real broker and tenant users, geospatial search, map-heavy UX\nA property management platform with a deep QuickBooks integration for the back-office side of the business\nBoth are built on Next.js 14 + TypeScript + Supabase (Postgres) + Prisma + Anthropic Claude API, deployed on Vercel and a Contabo VPS. Mapbox for geo. The products are early-stage but shipping — the goal of this hire is to take them from \"founder-built\" to \"production-mature.\"\nRate: $4,000–6,000 USD/month depending on country and experience\n\n\nIndia band: $4,000–5,000\nEurope / LatAm band: $5,000–6,000\nCommitment: 35–40 hrs/week, 6-month minimum, exclusive (no parallel client work)\nLocation: Remote from Europe, Latin America, or India — need 2+ hrs of daily overlap with NYC\nDaily rhythm: 30-min video check-in every weekday at 9:30am NYC\nStructure: Direct working relationship with me — no engineering managers, no PMs, no committees\n5+ years professional full-stack experience, with 3+ shipping production web apps to real users\nStrong Next.js / React + TypeScript\nAt least one shipped production LLM integration (Claude preferred, OpenAI acceptable)\nStrong Claude/Cursor/Copilot daily workflow — not occasional use\nClean Git discipline, clear written English, honest communication\nThis is not an ML, model-training, or AI-research position. You will not train or fine-tune models. You'll ship product features in TypeScript and Next.js that call the Anthropic Claude API.\n100% personal authorship — no subcontracting, no delegation, no \"my team\"\nVideo on for every call, including daily check-ins\nPersonal verified GitHub for all commits\nHubstaff time tracking\nGovernment ID check + one prior-client video reference before contract signing\nFull JD and application form here:\nhttps://forms.office.com/Pages/ResponsePage.aspx?id=bw3hQziC60OaWhxZPOZz0DFoli8FFMdBhL1fGTrUdqpUNUhGOVMwMFFRMk5CQ1RaRUJVUzY1R1dCRC4u\nWe respond to qualified applicants within one week. Please apply through the form — no DMs.\n— Ross\nRDE Advisors, NYC",
+      "publishedAt": "2026-04-10T01:52:14.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "f6b117a9a9c914c3be5318e7d668fa3314c6617563c520e1b1780c1f063b8530",
+      "title": "NEXT LEVEL LAB — DevOps API Testing (AWS + Auth + CI/CD mindset)",
+      "url": "https://dev.to/jumptotech/next-level-lab-devops-api-testing-aws-auth-cicd-mindset-1a57",
+      "description": "🎯 Scenario\n\n\nYou deployed a backend API (FastAPI / Node / Java — doesn’t matter) on:\nAWS ECS / EKS / EC2\nBehind Load Balancer\nExample API:\nhttp://your-api-alb.amazonaws.com\n\nYou must:\nVerify it works\nValidate authentication\nTest protected endpoints\nCatch failures BEFORE deployment\nIn real DevOps:\nhttp://my-api-123.us-east-1.elb.amazonaws.com\n\nhttp://api.mycompany.com\n\nhttps://abc123.execute-api.us-east-1.amazonaws.com/prod\n\n👉 This URL = your entry point\nTypical endpoints:\n\n\n\nEndpoint\nPurpose\n\n\n\n\n/health\nHealth check\n\n\n/login\nAuth\n\n\n/users\nData\n\n\n/orders\nBusiness logic\n\n\n\n{\n  \"base_url\": \"http://your-api-alb.amazonaws.com\"\n}\n\nGET {{base_url}}/health\n\npm.test(\"Service is UP\", function () {\n    pm.response.to.have.status(200);\n});\n\npm.test(\"Response contains status OK\", function () {\n    const json = pm.response.json();\n    pm.expect(json.status).to.eql(\"ok\");\n});\n\n👉 DevOps meaning:\nUsed in Load Balancer health checks\n\nUsed in Kubernetes readiness/liveness probes\n\n\n\n\n\n\n\n  \n  \n  ✅ TEST 2 — LOGIN (AUTHENTICATION)\n\n\n\n  \n  \n  Request:\n\n\n\n\n\nPOST {{base_url}}/login\n\n{\n  \"username\": \"admin\",\n  \"password\": \"password123\"\n}\n\nconst json = pm.response.json();\n\npm.test(\"Login success\", function () {\n    pm.response.to.have.status(200);\n});\n\npm.test(\"Token received\", function () {\n    pm.expect(json.token).to.exist;\n});\n\n// Save token globally\npm.environment.set(\"auth_token\", json.token);\n\n👉 DevOps meaning:\nVerifies authentication service\nDetects broken IAM / auth integration\nGET {{base_url}}/users\n\nAuthorization: Bearer {{auth_token}}\n\npm.test(\"Authorized access\", function () {\n    pm.response.to.have.status(200);\n});\n\npm.test(\"Users returned\", function () {\n    const json = pm.response.json();\n    pm.expect(json.length).to.be.above(0);\n});\n\n👉 DevOps checks:\nToken works\nBackend connected to DB\nNo 500 errors\nGET {{base_url}}/users\n\n(no headers)\npm.test(\"Unauthorized access blocked\", function () {\n    pm.response.to.have.status(401);\n});\n\n👉 DevOps meaning:\nSecurity validation\nPrevents open APIs\npm.test(\"Response time < 300ms\", function () {\n    pm.expect(pm.response.responseTime).to.be.below(300);\n});\n\n👉 DevOps meaning:\nDetect slow deployments\nCatch DB/network issues\nGET {{base_url}}/crash\n\npm.test(\"Server should not crash\", function () {\n    pm.expect(pm.response.code).to.not.eql(500);\n});\n\n👉 DevOps:\nCatch backend crashes early\ncollection.json\nenvironment.json\nnewman run collection.json -e environment.json\n\nname: API Tests\n\non: [push]\n\njobs:\n  test-api:\n    runs-on: ubuntu-latest\n\n    steps:\n      - uses: actions/checkout@v4\n\n      - name: Install Newman\n        run: npm install -g newman\n\n      - name: Run API Tests\n        run: newman run collection.json -e environment.json\n\nIf:\n/health fails → service DOWN\n/login fails → auth broken\n/users fails → DB broken\n👉 Pipeline = ❌ FAIL\nIf test fails:\ncurl http://api-url/health\n\nCheck logs:\nECS → CloudWatch\nKubernetes → kubectl logs\n\nEC2 → /var/log\n\n\n\n\n  \n  \n  Step 3:\n\n\nCheck:\nSecurity groups\nDB connection\nEnv variables\n👉 Question:\n\"How do you validate API in DevOps?\"\nAnswer:\nI validate API using Postman collections with automated tests for health checks, authentication, authorization, and response validation. Then I run them using Newman in CI/CD pipelines to ensure deployments do not break backend services.\nYou now understand:\n✔ Where API lives (ALB, EKS, API Gateway)\n✔ How to find endpoints\n✔ What DevOps tests (NOT QA level)\n✔ Auth + security testing\n✔ Performance checks\n✔ CI/CD automation\n✔ Failure handling",
+      "publishedAt": "2026-04-10T01:50:41.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "f5b0aed7b0b1248abce2bde76a69491886992c680531ac2943401f7bebf4aecd",
+      "title": "Experience Engine: AI Memory That Shrinks As Your Agent Learns",
+      "url": "https://dev.to/muonroi/experience-engine-ai-memory-that-shrinks-as-your-agent-learns-2jee",
+      "description": "Every AI coding session, my agent made the same mistakes.\nDbContext as singleton — state corruption, 15 minutes debugging. Again. ILogger instead of IMLog — lost tenant context. Again. Wrong project reference path — build fails. Again.\nI had 500 memory notes. My agent was still a junior with a bigger notebook.\nSo I built something different.\nEvery AI memory tool — Mem0, Letta, Zep — stores facts. More sessions = more entries = more tokens = more cost. They're giving your agent a bigger notebook.\nBut here's the thing: a notebook doesn't make you experienced.\nA junior developer with 500 notes is still a junior. A mid-level developer with 15 principles understands why things work. The difference isn't how much you remember — it's whether you can generalize.\nJunior (500 notes):\n  \"DbContext singleton caused bug\"\n  \"HttpClient singleton caused leak\"  \n  \"SmtpClient singleton caused corruption\"\n  → Encounters RedisConnection singleton → NO MATCH → makes the mistake\n\nMid-level (1 principle):\n  \"Stateful objects must be scoped, never singleton\"\n  → Encounters RedisConnection singleton → MATCHES → avoids the mistake\n\nThat's what Experience Engine does. It doesn't store more facts. It evolves facts into principles, then deletes the facts.\nWhen you code with any AI agent (Claude Code, Gemini CLI, Codex CLI), Experience Engine runs silently in the background:\nBefore every Edit/Write/Bash:\n⚠️ [Experience - High Confidence (0.85)]: Stateful objects must be \nscoped, never singleton. Last time SingleInstance caused state \ncorruption in DbContext.\n\nThe agent reads this warning and avoids the mistake. No human intervention needed.\nAfter every session:\nRetry loops (same tool call 3+ times)\nUser corrections (\"no, not that\", \"wrong\", \"undo\")\nTest fail → fix cycles\nGit reverts\nEach detected mistake gets extracted into a structured Q&A entry and stored in a vector database.\nWeekly (automatic):\nPromote: entries confirmed 3+ times move from cache → behavioral rules\nAbstract: clusters of 3+ similar entries → one general principle\nDemote: entries ignored 3+ times get deprioritized\nArchive: entries unused for 90 days get cleaned up\nThe result: memory shrinks as capability grows.\nT0 Principles  (~400 tokens)  — generalized rules, always loaded\n    \"Stateful objects must be scoped, never singleton\"\n\nT1 Behavioral  (~600 tokens)  — specific reflexes, always loaded\n    \"WHEN DbContext + DI → MUST check lifetime FIRST\"\n\nT2 QA Cache    (semantic)     — detailed Q&A, retrieved on match\n    Q: \"Why not singleton?\" → A: \"State corruption across requests\"\n\nT3 Raw         (staging)      — unprocessed mistakes, TTL 30 days\n\nLifecycle: T3 → extract → T2 → promote (3x confirmed) → T1 \n           → generalize (cluster 3+) → T0\n           Memory SHRINKS as capability GROWS\n\n\n\n\n\nMem0\nLetta\nZep\nExperience Engine\n\n\n\n\nOver time\nEntries grow forever\nEntries grow forever\nEntries grow forever\nEntries shrink into principles\n\n\nNovel cases\nOnly exact matches\nOnly exact matches\nOnly exact matches\nPrinciples generalize\n\n\nMistake learning\nNo\nNo\nNo\n5 detection patterns\n\n\nDependencies\nPython + SDK\nPostgreSQL\nPostgreSQL\nZero (Node.js built-in)\n\n\nLocal-first\nOptional\nOptional\nPartial\nDefault\n\n\nData ownership\nCloud vendor\nSaaS terms\nCloud vendor\nYou own everything\n\n\n\nExperiences aren't isolated entries — they're linked with typed edges:\nDbContext singleton ──generalizes──→ \"Stateful objects: always scoped\"\n                    ──relates-to───→ HttpClient singleton  \n                    ──supersedes───→ [old] \"Use transient for DbContext\"\n                    ──contradicts──→ [demoted] \"Singleton is fine for DbContext\"\n\nWhen one experience matches your current action, the engine follows edges to surface related experiences too. This is how it catches RedisConnection singleton — not because it's seen Redis before, but because it's connected to the principle about stateful objects.\nKnowledge evolves. What was true in January might be wrong in March:\nJanuary:  \"Use singleton for HttpClient\" (confirmed 5x)\nMarch:    \"Use IHttpClientFactory instead\" (contradicts January)\n          → January entry superseded, not deleted\n          → March entry ranks higher (recent confirmation)\n          → GET /api/timeline?topic=httpclient shows the evolution\n\nThe engine tracks confirmedAt[] arrays — not just \"what was learned\" but \"when it was last confirmed.\" Stale knowledge gets penalized. Recent confirmations get boosted.\nEverything is accessible via HTTP — not just CLI hooks:\n# Start the server\nnode server.js\n# Experience Engine API running on http://localhost:8082\n\n# Check health\ncurl localhost:8082/health\n\n# Query experience before a tool call\ncurl -X POST localhost:8082/api/intercept \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"toolName\":\"Write\",\"toolInput\":{\"file_path\":\"src/Startup.cs\"}}'\n\n# Response:\n{\n  \"suggestions\": \"⚠️ [High Confidence (0.85)]: Stateful objects must be scoped\",\n  \"hasSuggestions\": true\n}\n\n# Trigger evolution\ncurl -X POST localhost:8082/api/evolve\n# {\"promoted\":2,\"abstracted\":1,\"demoted\":0,\"archived\":3,\"success\":true}\n\n# View stats\ncurl localhost:8082/api/stats?since=30d\n\n# Knowledge timeline\ncurl \"localhost:8082/api/timeline?topic=dependency+injection\"\n\n# Experience graph\ncurl \"localhost:8082/api/graph?id=abc-123\"\n\n10 endpoints total. Zero dependencies — uses Node.js built-in http module. CORS enabled for browser extensions.\nfrom muonroi_experience import Client\n\nclient = Client(\"http://localhost:8082\")\n\n# Query experience\nresult = client.intercept(\"Write\", {\"file_path\": \"app.py\"})\nif result[\"hasSuggestions\"]:\n    print(result[\"suggestions\"])\n\n# Extract lessons\nclient.extract(\"Agent tried singleton for DbContext, caused corruption...\")\n\n# Trigger evolution  \nevolution = client.evolve()\nprint(f\"Promoted: {evolution['promoted']}, Abstracted: {evolution['abstracted']}\")\n\n# Check stats\nstats = client.stats(since=\"7d\")\nprint(f\"Mistakes avoided: {stats['suggestions']}\")\n\n# View knowledge timeline\ntimeline = client.timeline(\"dependency injection\")\nfor entry in timeline[\"timeline\"]:\n    status = \"[superseded]\" if entry[\"superseded\"] else \"\"\n    print(f\"  {status} {entry['solution']}\")\n\nZero dependencies — uses Python stdlib urllib. Python 3.8+.\nMultiple developers on the same machine get isolated stores:\nEXP_USER=alice node server.js    # Alice's experiences\nEXP_USER=bob node server.js      # Bob's (completely isolated)\n\nShare principles without sharing personal data:\n# Alice shares a principle she evolved\ncurl -X POST localhost:8082/api/principles/share \\\n  -d '{\"principleId\": \"abc-123\"}'\n# Returns portable JSON — no personal data included\n\n# Bob imports it\ncurl -X POST localhost:8082/api/principles/import \\\n  -d '{\"principle\":\"Stateful objects must be scoped\",\"solution\":\"...\",\"confidence\":0.85}'\n# Bob's evolution engine manages it independently from here\n\ngit clone https://github.com/muonroi/experience-engine.git\ncd experience-engine\nbash .experience/setup.sh --local   # Docker Qdrant + Ollama (100% free)\n\nThe setup wizard handles everything. After setup, your agent starts learning automatically through hooks.\nYou're not locked to Ollama. The engine supports:\nEmbedding: Ollama, OpenAI, Gemini, VoyageAI, SiliconFlow, or any OpenAI-compatible API\nBrain (extraction): Ollama, OpenAI, Gemini, Claude, DeepSeek, SiliconFlow, or any OpenAI-compatible API\nMix and match — e.g., SiliconFlow for cheap embeddings + Ollama for free extraction.\nNot all experiences are equal. Results are ranked by:\nHit frequency — confirmed experiences rank higher\nRecency — recently confirmed > stale (60+ days penalty)\nConfidence aging — new entries start lower, climb with confirmation\n\n\nIgnore tracking — suggestions ignored 3x get demoted\nDomain match — editing .ts file → TypeScript experiences rank higher\nTemporal boost — confirmed in last 7 days → score boost\nSuperseded penalty — replaced knowledge ranks lower\nThis means your agent gets the most relevant, most trusted experience for the current context — not just the most similar vector match.\nEvery AI memory company stores your data on their cloud and charges you to access it. Mem0 stores your memories. Letta stores your agent state. You pay monthly to access your own knowledge.\nExperience Engine is different:\nYour data never leaves your machine (unless you choose cloud sync)\nZero vendor lock-in — standard formats, portable profiles\nZero dependencies — Node.js built-in modules only\nThe engine is open source — you pay for convenience, never for capability\n\"Enterprise AI replaces you. Personal AI empowers you. Same technology. Different owner.\"\nThe engine is live and working. I'm dogfooding it on my own projects right now. After 2 weeks:\n47 suggestions fired\n12 mistakes avoided\n5 principles evolved from ~50 raw entries\nMemory footprint decreased (entries compressed into principles)\nNext up: dashboard for visualizing the \"Saves\" feed (mistakes the agent didn't make), and a browser extension that injects experience into ChatGPT/Claude/Gemini web interfaces.\nGitHub: github.com/muonroi/experience-engine\n\n\nLicense: MIT\nTests: 49 passing (JS) + 20 passing (Python SDK)\nDependencies: Zero\nIf you're running local LLMs with Ollama, I'd love to hear how the engine works with your setup. And if you have ideas for new mistake detection patterns — PRs welcome.\nExperience Engine is MIT licensed and free forever. The core engine will never be paywalled.",
+      "publishedAt": "2026-04-10T01:44:43.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "5fd85b669863999cbee670d6e8b732568a7fb9a66e2a40335249a1b37de3161d",
+      "title": "A simple React hook for running local LLMs via WebGPU",
+      "url": "https://dev.to/rahul_80cfa43302b/a-simple-react-hook-for-running-local-llms-via-webgpu-5234",
+      "description": "Running AI inference natively in the browser is the holy grail for reducing API costs and keeping enterprise data private. But if you’ve actually tried to build it, you know the reality is a massive headache.\nYou have to manually configure WebLLM or Transformers.js, set up dedicated Web Workers so your main React thread doesn't freeze, handle browser caching for massive model files, and write custom state management just to track the loading progress. It is hours of complex, low-level boilerplate before you can even generate a single token.\nI got tired of configuring the same WebGPU architecture over and over, so I wrapped the entire engine into a single, drop-in React hook: react-brai.\nInitialize the engine. The hook automatically handles Leader/Follower negotiation based on multiple active tabs.\nimport { useLocalAI } from 'react-brai';\n\nexport default function Chat() {\n  const { loadModel, chat, isReady, tps } = useLocalAI();\n\n  useEffect(() => { \n      loadModel('Llama-3.2-1B-Instruct-q4f16_1-MLC'); \n  }, []);\n\n  return <div>Speed: {tps} T/s</div>\n}\n\nNow just use the loaded model liek this,\nconst response = await chat([\n  { role: \"system\", content: \"Output JSON: { sentiment: 'pos' | 'neg' }\" },\n  { role: \"user\", content: \"I love this library!\" }\n]);\nconst data = JSON.parse(response);\n\nIt abstracts away the web worker delegation, the model caching, and the memory constraints. You just call the hook, pick a quantized SLM (like Llama-3B), and start generating text or extracting JSON.\nThe Browser Cache\nBut for high-profile, niche use cases, that initial heavy download is an incredibly cheap price to pay.\nWhere this actually makes sense\nHeavy B2B Dashboards: The user logs in daily. They eat the download cost once, and forever after, their inference is instant and offline.\nEnterprise Data Privacy: When strict rules prevent you from sending customer data to OpenAI, local WebGPU inference is your only secure option.\nAutomated JSON Extraction: Constantly formatting and extracting JSON from large datasets without burning through API tokens.\nTry it out\nNPM: https://www.npmjs.com/package/react-brai\nLive WebGPU Playground: https://react-brai.vercel.app",
+      "publishedAt": "2026-04-10T01:43:11.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "ee6fb8cd08b2035eef6c190923aff5aa6e042a27612531ff9e709ae5fa2d5204",
+      "title": "「SaaS is Dead」へのBoxの回答──Box Agentが示すインテリジェントコンテンツ管理という軸",
+      "url": "https://enterprisezine.jp/article/detail/24071",
+      "description": "「SaaS is Dead」──AIエージェント時代の到来とともに、SaaS業界に突きつけられた問いがある。人間のシート数に基づくライセンスモデルは、エージェントが業務を代行する時代に通用するのか。Boxが2026年4月3日に発表したBox Agentは、その問いに対する同社の回答だ。マルチエージェント構成による自律実行、企業内のコンテンツの「セキュリティ・ステータス・情報の鮮度」を軸にした権限管理、そしてシートライセンスからプラットフォーム課金への転換──コンテンツ管理基盤がAIの実行基盤へと拡張する、転換点が示された。",
+      "publishedAt": "2026-04-10T00:00:00.000Z",
+      "feedName": "EnterpriseZine"
+    },
+    {
+      "id": "fe89344b46232f85681bc79d7b5da67aed2d397c570a490f6668547f3086a253",
+      "title": "[アップデート] AWS Agent Registry がプレビューリリースされました！",
+      "url": "https://dev.classmethod.jp/articles/aws-agent-registry-preview/",
+      "description": "[アップデート] AWS Agent Registry がプレビューリリースされました！",
+      "publishedAt": "2026-04-09T23:38:06.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "667fb4486e12199cd2e8f62c2a341872b3b6086347a110440450e40dfe688db7",
+      "title": "Bucketeer Lite: Running Our Feature Flag Management System on a lightweight environment on Fly.io or AWS",
+      "url": "https://developers.cyberagent.co.jp/blog/archives/62993/",
+      "description": "Hi, I’m a backend engineer on the Bucketeer  ...",
+      "publishedAt": "2026-04-09T23:00:30.000Z",
+      "feedName": "CyberAgent Developers Blog"
+    },
+    {
+      "id": "6c4997e5cf74a672ec10b1789ffc7e18801560956563021d684d6e8cf18b06e0",
+      "title": "週7000万DLのライブラリが「トロイの木馬」に　開発者なのに気付けない4つの理由",
+      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2604/09/news118.html",
+      "description": "Microsoftは、JavaScriptの人気HTTPクライアントライブラリ「axios」を標的としたソフトウェアサプライチェーン攻撃の分析結果と対策を公開した。",
+      "publishedAt": "2026-04-09T23:00:00.000Z",
+      "feedName": "＠IT"
+    },
+    {
+      "id": "d2a4817d0c3bac131b5f3bbfc1d6ebdf0401fb5cdad22bba182bf4de51496489",
+      "title": "セキュリティ脆弱性を見つける新AI、高性能すぎて公開見送り--「悪用を懸念」とAnthropic",
+      "url": "https://japan.cnet.com/article/35246255/",
+      "description": "米Anthropicは、新たなAIモデル「Claude Mythos Preview」について、サイバーセキュリティ上のリスクや脆弱性を見つけ出す能力が極めて高く、一般公開はできないと明らかにした。代わりに、大手テクノロジー企業やインフラ事業者にこのモデルを提供し、見つかった脆弱性の修正に役立てる方針だ。",
+      "publishedAt": "2026-04-09T22:20:00.000Z",
+      "feedName": "CNET Japan"
+    },
+    {
+      "id": "e0dd21f45213acff69a7d7652032e66c55a2b95a68260cfd7a204ca92306c348",
+      "title": "生成AIの普及でセキュリティリスクが深刻化　社内のセキュリティ意識向上が必須に",
+      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2604/10/news002.html",
+      "description": "生成AIの普及による機密情報漏えいのリスクの拡大とともに攻撃も高度化しており、従来の対策では追い付かない状況だ。企業は、従業員の行動変容を促すセキュリティ文化の強化が急務である。",
+      "publishedAt": "2026-04-09T20:00:00.000Z",
+      "feedName": "＠IT"
+    },
+    {
+      "id": "9d9a296eca253f5308e625dbfe4897b3faec60ae67fbb895b1511dd340fb062a",
+      "title": "CodeBuildのDocker Hub 429エラーをECR Public Galleryで回避してみた",
+      "url": "https://dev.classmethod.jp/articles/codebuild-docker-hub-429-ecr-public-gallery-workaround/",
+      "description": "CodeBuildでDocker Hubの429レートリミットエラーが発生する問題を、DockerfileのARG機能とECR Public \nGalleryを組み合わせて回避しました。--build-argでレジストリを切り替えるだけで、ローカル開発はDocker Hub、\nCIはECR Publicと使い分けられます。",
+      "publishedAt": "2026-04-09T11:23:18.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "22dc09dae994af4d9ef4bcde39dd02c91035d987702a990f272c0192d8702b9a",
+      "title": "S3 Filesで消えるアーキテクチャ層、生まれるアーキテクチャ",
+      "url": "https://zenn.dev/genda_jp/articles/b6ff5ea33c7a71",
+      "description": "2026年4月7日、AWSがAmazon S3 Filesを一般提供（GA）しました。S3バケットをNFS v4.1/v4.2のファイルシステムとしてマウントできる機能です。EC2、EKS、ECS、Lambdaのいずれからでも利用できます。 発表直後から多くのセットアップ記事や速報が出ていますので、この記事では「何が設定できるか」ではなく「何が不要にな...",
+      "publishedAt": "2026-04-09T10:24:14.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "3e7421d66abe5493341252b1d0a7d8154a290b66383036aa0c0df6b588be8492",
+      "title": "Reactのレンダリングの仕組みを整理する",
+      "url": "https://qiita.com/ryo_sh/items/8f597aae36ee0b2fa10f?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "前回と前々回で、Reactにおける state と ref について整理してきました。\n\nstate は、画面に反映したい値を持つもの\n\nref は、再レンダリングを発生させずに値やDOMを保持するもの\n\nこの2つを整理すると、 「そもそもReactのレンダリングとは...",
+      "publishedAt": "2026-04-09T09:50:00.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "8951fa89aefaecbdf4584a623a36690b532555755625c07a3fe2b62a29c8b46f",
+      "title": "AWS Weekly Roundup: AWS DevOps エージェントとセキュリティエージェント GA、製品ライフサイクルの更新など (2026 年 4 月 6 日)",
+      "url": "https://aws.amazon.com/jp/blogs/news/aws-weekly-roundup-aws-devops-agent-security-agent-ga-product-lifecycle-updates-and-more-april-6-2026/",
+      "description": "2026 年 3 月 30 日週、私はチームと一緒に AWS 香港ユーザーグループを訪問しました。香港には小さ […]",
+      "publishedAt": "2026-04-09T09:15:35.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "9dff691562f8561f7a608401d0c0ac2b0bd84be5110d040b6f87189965f69de0",
+      "title": "日本発、LLMの推論を「桁違い」に効率化する新アーキテクチャ「PHOTON」の論文が面白かったのでまとめてみた - Qiita",
+      "url": "https://qiita.com/yuji-arakawa/items/2ad0240c56eb7507b261",
+      "description": "Deleted articles cannot be recovered. Draft of this article would be also deleted. Are you sure you want to delete this article? はじめに 富士通、理化学研究所 AIP、東京科学大学、東海大学の研究チームが arXiv で公開した論文 「PHOTON: Hierarchical Autoregressive Modeling for Lightspeed and Memory-Ef...",
+      "publishedAt": "2026-04-09T08:28:55.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "311eea46ca1d2788ceeed68f511c6160f3e0e6b417199128d95737ecf6283221",
+      "title": "GitHubに広範なサプライチェーン攻撃　500以上の不正PRで認証情報取得に成功した例も",
+      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2604/09/news104.html",
+      "description": "GitHub上のプロジェクトに対し、多数の不正Pull Requestが送られる事案が発生した。目的は認証情報の取得にある。AIによってサイバー攻撃がスケールする一例だとして、セキュリティ企業は警鐘を鳴らしている。",
+      "publishedAt": "2026-04-09T07:13:00.000Z",
+      "feedName": "＠IT"
+    },
+    {
+      "id": "22dc09dae994af4d9ef4bcde39dd02c91035d987702a990f272c0192d8702b9a",
+      "title": "S3 Filesで消えるアーキテクチャ層、生まれるアーキテクチャ",
+      "url": "https://zenn.dev/genda_jp/articles/b6ff5ea33c7a71",
+      "description": "2026年4月7日、AWSがAmazon S3 Filesを一般提供（GA）しました。S3バケットをNFS v4.1/v4.2のファイルシステムとしてマウントできる機能です。EC2、EKS、ECS、Lambdaのいずれからでも利用できます。\nhttps://aws.amazon.com/blogs/aws/launching-s3-files-making-s3-buckets-accessible-as-file-systems/\n発表直後から多くのセットアップ記事や速報が出ていますので、この記事では「何が設定できるか」ではなく「何が不要になり、何が可能になるか」を整理します。\n対象読...",
+      "publishedAt": "2026-04-09T06:00:10.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "c81228f30f4a6907ef2d7a0fa0519725fa5c2f6895f7c1bf6ddbb7ac10dfd239",
+      "title": "AI を活用した大規模なセキュリティ防御の構築 — 脅威が出現する前に",
+      "url": "https://aws.amazon.com/jp/blogs/news/building-ai-defenses-at-scale-before-the-threats-emerge/",
+      "description": "AWS が Anthropic と共同で取り組む Project Glasswing と Claude Mythos Preview の発表、自律型ペネトレーションテストを実現する AWS Security Agent の一般提供開始、Amazon Bedrock の自動推論によるハルシネーション防止など、AI を活用した大規模セキュリティ防御の最新の取り組みと、脅威が現実化する前に先手を打つ AWS のセキュリティ哲学を紹介します。",
+      "publishedAt": "2026-04-09T05:15:36.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "7357b49dc5c406cef1da0b2e12b3f8266efecc57c6daa2b9287c5a800c4b12eb",
+      "title": "フォレンジック作業の証拠をS3に集めるAWSのフレームワークを試してみた",
+      "url": "https://dev.classmethod.jp/articles/aws-forensic-collection-framework/",
+      "description": "フォレンジック作業の証拠をS3に集めるAWSのフレームワークを試してみた",
+      "publishedAt": "2026-04-09T04:19:30.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "5acd0c4fa8185cec93b45dbef730a2e7b782dda967432d61c414bd260f479278",
+      "title": "SailPoint、プラットフォームに新機能群　「適応型アイデンティティ」のビジョン具現化へ",
+      "url": "https://enterprisezine.jp/news/detail/24116",
+      "description": "SailPointテクノロジーズジャパンは、AIを搭載したSailPointプラットフォームのアップデートを発表した。\n\n　今回発表された新機能は、現代のIT環境が直面する重要なセキュリティ課題を解...",
+      "publishedAt": "2026-04-09T04:05:00.000Z",
+      "feedName": "EnterpriseZine"
+    },
+    {
+      "id": "410bdd3b9706814b008b9504aac739cd77eaef4c7132527bbe36f7b1cf13ce66",
+      "title": "「正規のOSSパッケージがマルウェアだった」　ソフトウェアSC攻撃対策2機能を追加、Takumi byGMO",
+      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2604/09/news051.html",
+      "description": "マルウェアをレジストリに混入させるサプライチェーン攻撃が急増している。GMO Flatt Securityは、セキュリティAIエージェント「Takumi byGMO」に、ソフトウェアサプライチェーン攻撃の対策機能を2つ追加した。",
+      "publishedAt": "2026-04-09T04:00:00.000Z",
+      "feedName": "＠IT"
+    },
+    {
+      "id": "627da2c7834ae7d827de37e8fa6c6d72a262654cb9811f85f92c2ddfe226444a",
+      "title": "AWS、「AWS App Runer」「Amazon WorkMail」など一部サービスの提供・新規受付終了",
+      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2604/09/news053.html",
+      "description": "AWSは一部サービスのメンテナンスモードへの移行や提供終了予定を発表した。新規顧客の受け入れ停止やサポート終了の時期が明示されており、導入ユーザーは移行が必要となる。",
+      "publishedAt": "2026-04-09T04:00:00.000Z",
+      "feedName": "＠IT"
+    },
+    {
+      "id": "c4927782bf9dded082fd00775d519de3445b9f079d826faacd65dddf41fd843f",
+      "title": "OpenAIとAWSが共同開発する「ステートフルランタイム」でAI開発はどう変わる？",
+      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2604/09/news048.html",
+      "description": "Microsoft以外のクラウドベンダーとも協業を進めるOpenAIが、AWSとの協業強化を発表した。ステートフルランタイムの共同開発や「OpenAI Frontier」を取り巻く動きなど、AI開発者に影響を及ぼす内容を整理する。",
+      "publishedAt": "2026-04-09T04:00:00.000Z",
+      "feedName": "＠IT"
+    },
+    {
+      "id": "5f82e9811a74ac4781e38206b80a810f25db450b32b2f4256ef66af922c04561",
+      "title": "脱・セキュリティ初心者。現場の信頼を勝ち取るための「3つの原則」と「1つの習慣」",
+      "url": "https://qiita.com/masa20057/items/be5d46e82f7301747e86?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "「コードさえ書ければOK」だと思っていませんか？実は僕もそうでした。\nでも、技術以前に「信頼」を守るセキュリティ意識も非常に大切です。\nエンジニア未経験の方々が、最初の一歩で躓かないための「守りの本質」を、社内の情報セキュリティを守る活動もしている私の経験を交えて共有します...",
+      "publishedAt": "2026-04-09T02:44:25.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "8a574d37dcbe6a1afd7eeae095230571da2ded673cf3cd526a4a336852495e96",
+      "title": "日本発、LLMの推論を「桁違い」に効率化する新アーキテクチャ「PHOTON」の論文が面白かったのでまとめてみた",
+      "url": "https://qiita.com/yuji-arakawa/items/2ad0240c56eb7507b261?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\n富士通、理化学研究所 AIP、東京科学大学、東海大学の研究チームが arXiv で公開した論文 「PHOTON: Hierarchical Autoregressive Modeling for Lightspeed and Memory-Efficient ...",
+      "publishedAt": "2026-04-08T15:40:23.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "e48b620ce926a3078c60631b5a903bb78e1a1ebc7ecd5dcb7d6bf8456feac1f2",
+      "title": "インターネット副回線のトラフィックをDCに集約してコスト削減した話 [DeNA インフラ SRE]",
+      "url": "https://engineering.dena.com/blog/2026/04/office-backup-line-dc-aggregation/",
+      "description": "はじめに こんにちは, IT基盤部ネットワークグループ(NOC)のnagiです.\nNOCでは本社やグループ会社を含む多くのオフィスネットワークを運用しています. これらのオフィスネットワークの規模感はさまざまですが, 多くはインターネット回線を冗長化しています.\n利用回線はいずれも品質を考慮しダークファイバー系のプロバイダーをよく採用しています. 加えてセキュリティ要件として必要なため/29で固定IPアドレスを確保しています. そのため回線費用は2万円~3万円程度, 回線冗長拠点の場合だとこれの倍です. 一拠点あたりでは大した金額ではありませんが, 拠点数が多いのでそこそこな金額にはなります. また事業部直営の拠点の場合は, 予算確保が難しく回線冗長化を断念するケースもありました.",
+      "publishedAt": "2026-04-08T15:00:00.000Z",
+      "feedName": "DeNA Engineering"
+    },
+    {
+      "id": "3b89fe9ca9f50536e741d825d85ccc0ccd0b6b2498bf786084c5103d0a1a46de",
+      "title": "仕様書は\"使い捨て\"にした方がうまくいった——仕様駆動開発3ヶ月の転換",
+      "url": "https://zenn.dev/dely_jp/articles/ef573ae39b9162",
+      "description": "はじめに\nクラシルでAndroidエンジニアをしているなぐも（@nagumo7960）です。\n今年の1月から、AWSが提唱する「AI-DLC（AI-Driven Development Life Cycle）」の一部コンセプトに着想を得て、仕様書ベースの開発フローをAndroid側に導入してきました。中でも参考にしたのがConstructionフェーズの考え方です。Constructionフェーズでは「AIが提案し、人間が承認する」という役割分担を軸にしています。仕様に基づいてAIが実装を支援し、人間は仕様・設計の判断とレビューで品質を担保する。仕様と設計という重要な意思決定さえ固め...",
+      "publishedAt": "2026-04-08T08:38:53.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "eeab7ca218dd40c11efd6a3fead902db27f369898ef8ebdbe7e03577eafc1695",
+      "title": "VSCode拡張機能から考える、サプライチェーン攻撃の身近さ",
+      "url": "https://zenn.dev/acntechjp/articles/e0f9ce661e794e",
+      "description": "!\nこの記事の三行まとめ\n\naxiosのサプライチェーン攻撃を機に調べたところ、VSCode拡張機能にはサンドボックスもバージョンロックもなく、npmより構造的にリスクが見えにくい\n自分のVSCodeを棚卸ししたら43個中15個が拡張パック経由の自動インストールで、自動更新もデフォルト有効のまま運用していた\nAIエージェントが依存関係を自律的に増やす時代だからこそ、「自分の環境に何が入っているか」を定期的に把握しておくことの重要性が増している\n\n\n\n はじめに\n2026年3月31日、JavaScriptの主要HTTPクライアントライブラリ「axios」のnpmパッケージが侵害されました[...",
+      "publishedAt": "2026-04-08T07:43:34.000Z",
+      "feedName": "Zenn"
     }
   ]
 }
