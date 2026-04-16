@@ -1,150 +1,6 @@
 {
   "articles": [
     {
-      "id": "13e2424365976b539a7d8e99b6135ac82b922872ada2efe16fe315ba8eb7b8d9",
-      "title": "勝利を支えるデータ：Catapult と AWS IoT がプロスポーツを変革する方法",
-      "url": "https://aws.amazon.com/jp/blogs/news/the-data-behind-the-win-how-catapult-and-aws-iot-are-transforming-pro-sports/",
-      "description": "プロスポーツの世界では、わずかな差が勝敗を分けることが多いです。世界中のチームが、選手のパフォーマンス最適化、 […]",
-      "publishedAt": "2026-03-17T01:53:30.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "886fa487e8a28dcb035bbb1685de0bb89a5b7ca45ef488b04d62dac34cdb108e",
-      "title": "Sharing State Across Packages and Apps in a React Monorepo (Web + Mobile)",
-      "url": "https://dev.to/abdalla_emad_335fff40f342/sharing-state-across-packages-and-apps-in-a-react-monorepo-web-mobile-4gak",
-      "description": "Article\n\n\n\n  \n  \n  Introduction\n\n\nIf you're building a modern app, chances are you’re not just building one thing.\nYou might have:\na web app (Next.js)\na mobile app (React Native)\nshared UI packages\nmultiple internal modules\nAnd if you're using a monorepo (with tools like Turborepo, Nx, or Lerna), you’ll quickly run into this problem:\nHow do you share state across packages… and across apps?\nSharing state inside a single React app is easy.\nSharing it across:\npackages\napps\nplatforms (web + mobile)\nis where things break down.\nYou start dealing with:\nduplicated stores\ninconsistent state\ncomplex syncing logic\nunnecessary API calls\nOnly works inside one React tree.\nYou can move state into a shared package…\nTools like Redux Toolkit or Zustand work great inside a single app.\nBut across packages and apps?\nYou end up writing a lot of glue code.\nWorks… but:\nadds latency\nincreases complexity\nfeels like overkill for local state\nSomething like this:\nconst auth = getBridge(\"auth\")\n\nFrom:\nany package\nany app\nweb or mobile\nSame state. Same source of truth.\nshared-state-bridge\n\n\nI built shared-state-bridge to solve this exact problem.\nIt’s a cross-package + cross-app state store for React monorepos.\nCreate a named store once:\ncreateBridge(\"auth\", { user: null })\n\nAccess it anywhere:\ngetBridge(\"auth\")\n\nNo prop drilling. No wiring.\nThis is where it gets powerful.\nYou can sync state between:\nNext.js apps\nReact Native apps\nmultiple clients\nUsing built-in WebSocket sync.\nThat means:\nlogin state shared between web and mobile\nreal-time updates across apps\nconsistent user experience everywhere\nUses useSyncExternalStore for:\nfine-grained updates\nminimal re-renders\nWorks out of the box with:\nlocalStorage (web)\nAsyncStorage (React Native)\n~1.2 KB core\nzero dependencies\nfully tree-shakeable\nEverything is typed:\nstate\nsetters\nselectors\nplugins\nModern apps are no longer single-platform.\nYou’re building:\nweb + mobile\nmultiple frontends\nshared ecosystems\nAnd state becomes fragmented across:\napps\npackages\nenvironments\nshared-state-bridge gives you:\nOne shared state layer across everything.\nEach state is registered globally by name:\ncreateBridge(\"auth\", initialState)\n\nThen resolved anywhere:\ngetBridge(\"auth\")\n\nInternally, it uses Symbol.for so it works even when:\nmultiple builds exist\npackages are duplicated in node_modules\n\n\n\nFeature\nshared-state-bridge\nZustand\nRedux Toolkit\n\n\n\n\nCross-package state\n✅\n❌\n❌\n\n\nCross-app (web + mobile)\n✅\n❌\n❌\n\n\nReal-time sync\n✅\n❌\n❌\n\n\nBoilerplate\nMinimal\nMinimal\nHigh\n\n\n\nThis is perfect if you have:\na React monorepo\nmultiple apps (web + mobile)\nshared runtime state\nreal-time requirements\nCheck it here:\nhttps://www.npmjs.com/package/shared-state-bridge\nState management is hard.\nCross-package state is harder.\nCross-app state (web + mobile) is where things usually fall apart.\nInstead of adding more complexity, a better approach is:\nmake state globally accessible — across packages and apps.\nI’d love to hear:\nhow you're handling cross-app state\nwhether you've faced this issue\nwhat you think about this approach",
-      "publishedAt": "2026-03-17T01:20:33.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "f23f6641b5e013a72bf0fb4f51fe6df41f3e93a641282ddd8510bbb8fe31c30b",
-      "title": "Stealth Browser Fingerprint Benchmark 2026: Which Scraping API Beats Anti-Bot Detection?",
-      "url": "https://dev.to/agenthustler/stealth-browser-fingerprint-benchmark-2026-which-scraping-api-beats-anti-bot-detection-c27",
-      "description": "Anti-bot systems have evolved well beyond IP reputation checks. In 2026, Cloudflare, DataDome, and PerimeterX inspect dozens of browser signals simultaneously — Canvas rendering hashes, WebGL vendor strings, navigator object properties, TLS fingerprints, and behavioral timing patterns. A scraping tool that fails these checks gets blocked regardless of how clean its IP pool is.\nThe question developers actually need answered: which scraping APIs produce browser fingerprints realistic enough to pass these checks at scale?\nScrapeOps published a detailed stealth browser fingerprint benchmark testing 10 major providers across 15 signal categories. You can review the full data yourself at scrapeops.io/proxy-providers/stealth-browser-fingerprint-benchmark/. This article breaks down what the benchmark tests, what the results mean in practice, and how to use that information to choose the right tool for your scraping stack.\nSource: ScrapeOps Benchmark\nIP blocking is easy to bypass — rotate proxies, done. Fingerprint-based detection is much harder because it targets the browser runtime itself, not just the network layer.\nWhen you visit a site with a standard headless Chromium instance (Selenium, Playwright, Puppeteer with default settings), dozens of signals betray you:\nCanvas fingerprint: The browser renders a hidden canvas element and the pixel output is hashed. Headless browsers produce different pixel output than real Chrome on real hardware due to GPU and font rendering differences.\nWebGL vendor/renderer: Returns strings like \"Google SwiftShader\" instead of a real GPU string like \"NVIDIA GeForce RTX 4060\". Anti-bot systems maintain lists of headless renderer signatures.\nNavigator object: navigator.webdriver is true by default in Puppeteer and Playwright. navigator.plugins is empty. navigator.languages is often a single entry. Real browsers have all three set differently.\nTLS fingerprint (JA3/JA4): The order of TLS cipher suites, extensions, and elliptic curves forms a fingerprint. Python's requests library produces a different TLS fingerprint than Chrome, and anti-bot systems detect it instantly.\nScreen and window properties: Headless environments report inconsistent window.outerWidth, screen.availHeight, and device pixel ratios that don't match typical display configurations.\nTiming and behavioral signals: Real users move mice, scroll gradually, and trigger events in human-paced sequences. Bots fire events at machine speed with zero variance.\nPremium scraping APIs handle most or all of these signals for you. Commodity proxies handle none of them.\nThe ScrapeOps benchmark scored 10 providers across 15 fingerprint signal categories, including:\nCanvas fingerprint realism\nWebGL vendor and renderer strings\nNavigator property consistency (webdriver, plugins, languages, platform)\nTLS/JA3 fingerprint matching real Chrome\nHTTP/2 header order and pseudo-header sequencing\nFingerprint entropy across sessions (does every request look identical?)\nTimezone and locale consistency with IP geolocation\nScreen resolution and device pixel ratio realism\nFont enumeration output\nAudio context fingerprint\nBattery API and hardware concurrency values\nCookie and storage behavior\nBehavioral timing signals\nWebRTC leak prevention\nOverall consistency scoring across all signals combined\nEach category was scored Pass / Warn / Fail / Critical. The aggregate gives a score out of 100.\nBased on ScrapeOps data, providers fell into three distinct tiers with a dramatic gap between the top three and everyone else:\n\n\n\nRank\nProvider\nScore (/100)\nTier\n\n\n\n\n1\nScrapfly\n~87\nElite\n\n\n2\nScrape.do\n~81\nElite\n\n\n3\nZyte API\n~80\nElite\n\n\n4\nBright Data Unlocker\n~41\nMid\n\n\n5\nDecodo Site Unblocker\n~36\nPoor\n\n\n6\nScrapingdog\n~32\nPoor\n\n\n7\nScrapingant\n~30\nPoor\n\n\n8\nOxylabs Web Unblocker\n~30\nPoor\n\n\n9\nScraperAPI\n~28\nPoor\n\n\n10\nScrapingBee\n~25\nPoor\n\n\n\nThe gap between rank 3 (~80) and rank 4 (~41) is nearly 40 points. This is not a marginal performance difference — it represents a fundamental architectural difference between providers that invest in genuine browser fingerprint spoofing and providers that layer headless Chrome on top of a proxy pool without fixing the underlying signals.\nFor the definitive numbers with per-category breakdowns, check the full benchmark: scrapeops.io/proxy-providers/stealth-browser-fingerprint-benchmark/\nElite tier providers (Scrapfly, Scrape.do, Zyte) maintain pools of real browser fingerprints sourced from real devices, rotate them per session, and patch navigator, canvas, WebGL, and TLS signals to match. They also handle behavioral timing at the network level, not just the JavaScript level.\nMid tier providers (Bright Data Unlocker) handle some fingerprint categories — typically navigator patching and TLS spoofing — but produce consistent canvas and WebGL outputs across sessions. Anti-bot systems that hash and store canvas fingerprints will eventually flag these as repeated bot signatures.\nPoor tier providers are essentially proxy APIs with a browser layer bolted on. They block naive scrapers from being caught on IP reputation alone, but fail fingerprint-level inspection. On heavily protected targets (e.g., LinkedIn, Zillow, major e-commerce sites), block rates with poor-tier providers can exceed 60-80%.\nThe practical consequence: if your target uses Cloudflare Bot Management, DataDome, or PerimeterX, poor-tier tools are not a cost-saving measure — they produce failed requests that still consume your API quota.\nimport requests\n\napi_token = \"YOUR_SCRAPE_DO_TOKEN\"\ntarget_url = \"https://www.example.com/products\"\n\nresponse = requests.get(\n    \"https://api.scrape.do\",\n    params={\n        \"token\": api_token,\n        \"url\": target_url,\n        \"render\": \"true\",          # Enable JS rendering\n        \"super\": \"true\",           # Enable stealth mode\n        \"geoCode\": \"us\",           # Match fingerprint locale to IP\n    },\n    timeout=60,\n)\n\nprint(response.status_code)\nprint(response.text[:500])\n\nThe super=true parameter activates Scrape.do's stealth fingerprinting layer — canvas spoofing, WebGL patching, TLS matching. Without it, you get standard headless Chrome behavior.\nimport requests\n\napi_key = \"YOUR_SCRAPERAPI_KEY\"\ntarget_url = \"https://www.example.com/products\"\n\nresponse = requests.get(\n    \"https://api.scraperapi.com\",\n    params={\n        \"api_key\": api_key,\n        \"url\": target_url,\n        \"render\": \"true\",\n        \"country_code\": \"us\",\n        \"session_number\": \"42\",    # Sticky session for multi-page flows\n        \"premium\": \"true\",         # Premium residential proxies\n    },\n    timeout=60,\n)\n\nprint(response.status_code)\nprint(response.text[:500])\n\nScraperAPI scores lower on pure fingerprint realism but is worth using for targets that rely on IP reputation over fingerprint analysis (lower-security sites, search engines without aggressive bot management).\nimport requests\n\n# This will be blocked by any serious anti-bot system.\n# The TLS fingerprint alone flags it as a Python requests client.\nresponse = requests.get(\n    \"https://www.a-protected-site.com/data\",\n    headers={\"User-Agent\": \"Mozilla/5.0 ...\"},  # Doesn't matter\n)\n\nEven with a legitimate User-Agent header, requests sends a TLS handshake that is trivially distinguishable from Chrome. Anti-bot systems block this at the TLS layer before even inspecting the HTTP request.\nTo verify what fingerprint a given tool produces, route it through a fingerprint inspection endpoint:\nimport requests\n\n# Replace with your actual scraping API call\nresponse = requests.get(\n    \"https://api.scrape.do\",\n    params={\n        \"token\": \"YOUR_TOKEN\",\n        \"url\": \"https://browserleaks.com/canvas\",\n        \"render\": \"true\",\n        \"super\": \"true\",\n    },\n)\n\n# Parse response HTML to extract the canvas fingerprint hash reported\nprint(response.text)\n\nDo this with each provider you evaluate. If the canvas hash is identical across 10 consecutive requests, that provider is not rotating fingerprints — it's a red flag.\n\n\n\nUse Case\nRecommended Tier\nReasoning\n\n\n\n\nCloudflare-protected targets\nElite\nFingerprint inspection is active; poor-tier tools fail\n\n\nDataDome / PerimeterX targets\nElite\nBehavioral + fingerprint analysis combined\n\n\nGoogle Search / Maps\nMid or Elite\nTLS fingerprint matters; IP quality also critical\n\n\nBasic e-commerce (no bot mgmt)\nPoor tier fine\nIP rotation alone is sufficient\n\n\nNews sites / public APIs\nPoor tier fine\nMinimal or no fingerprint inspection\n\n\nMulti-page authenticated flows\nElite\nSession consistency required across all signals\n\n\n\nThe decision framework: check whether your target uses fingerprint-based detection before choosing a provider. A quick test is to send 20 requests with a poor-tier tool and measure block rate. If it's above 20%, upgrade to elite tier. If block rate stays under 5%, you're paying elite prices unnecessarily.\nElite-tier providers cost more per request — typically 5-10x the per-request price of a basic proxy API. But block rates on protected targets can be 10-20x lower. The math almost always favors elite providers when your target actively uses fingerprint detection, because failed requests still consume quota, developer time, and infrastructure.\nThe actual cost of a failed request is not zero. It's the API call cost plus retry logic plus the engineering time to debug blocks that look intermittent but are actually systematic fingerprint failures.\nBrowser fingerprint realism in 2026 is not a nice-to-have feature — it's the primary mechanism by which anti-bot systems distinguish automation from real users. The ScrapeOps benchmark makes visible what was previously opaque: most scraping APIs score below 35/100 on fingerprint realism, meaning they fail on the majority of signal categories that modern bot detection systems check.\nIf you're targeting anything behind Cloudflare Bot Management, DataDome, or PerimeterX, the only realistic options are the providers in the elite tier. Everything else is burning API credits on failed requests.\nCheck the full benchmark data at scrapeops.io/proxy-providers/stealth-browser-fingerprint-benchmark/ and test the top providers against your actual targets before committing.\nScrape.do — Elite fingerprint tier, straightforward API, generous free tier to test against your targets.\nGet started with Scrape.do\nScraperAPI — Good for mid-protection targets, excellent developer experience, reliable uptime.\nScraperAPI — 50% off with code SCRAPE13833889\nScrapeOps Proxy Aggregator — Monitor proxy performance and fingerprint scores across providers from a single dashboard.\nScrapeOps — Start free\nWant the complete playbook? This article covers fingerprint benchmarks, but there's a lot more to reliable scraping at scale — session management, retry logic, data pipeline design, handling dynamic JavaScript, and avoiding detection across multi-step flows.\nGet the full guide: The Complete Web Scraping Playbook 2026 — 48 pages, $9.",
-      "publishedAt": "2026-03-17T01:05:46.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "de6ae998ad6ecb4980f66fa8a2cdad3843d767521c0a7f2501f6072b3c2ff127",
-      "title": "AIエージェントは情報漏えいの温床　ガートナーが指摘する「管理不能リスク」",
-      "url": "https://www.itmedia.co.jp/enterprise/articles/2603/17/news029.html",
-      "description": "ガートナージャパン（以下、ガートナー）は2026年3月16日、セキュリティ対策が不十分なAIエージェントがサイバー攻撃者に悪用され、企業の情報漏えいを招く可能性が高まるという見解を発表した。 同社は2028年までの期間に、AIエージェント経由の情報漏えいが企業にとって深刻な問題となる可能性があると仮説を示してい...",
-      "publishedAt": "2026-03-16T23:02:56.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "d9d21754c75ef6d09939806a0cc0389d7fba9415d510f2c0ad9280c3e3d15156",
-      "title": "GitHub for Beginners: Getting started with GitHub Actions",
-      "url": "https://github.blog/developer-skills/github/github-for-beginners-getting-started-with-github-actions/",
-      "description": "Set up your first GitHub Actions workflow in this how-to guide.\nThe post GitHub for Beginners: Getting started with GitHub Actions appeared first on The GitHub Blog.",
-      "publishedAt": "2026-03-16T16:00:00.000Z",
-      "feedName": "GitHub Blog"
-    },
-    {
-      "id": "3d1f055961e34a8cc278aa312c88dd56e3f161dede83d4ff8d88ad34b30c6a3a",
-      "title": "GitHub Actions 互換のローカルタスクランナーを作った",
-      "url": "https://zenn.dev/mizchi/articles/introduce-actrun",
-      "description": "TL;DR - ローカル実行できる GitHub Actions Runner GitHub Actions のワークフローをローカルで実行するツール actrun を作りました。 MoonBit で書いてクロスコンパイルしてるので、 npx, native, docker いずれでも使えます。 # npx（インストール不要） npx @mizchi/actrun .github/workflows/ci.yml # curl curl -f...",
-      "publishedAt": "2026-03-16T14:46:58.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "3d1f055961e34a8cc278aa312c88dd56e3f161dede83d4ff8d88ad34b30c6a3a",
-      "title": "GitHub Actions 互換のローカルタスクランナーを作った",
-      "url": "https://zenn.dev/mizchi/articles/introduce-actrun",
-      "description": "TL;DR - ローカル実行できる GitHub Actions Runner\nGitHub Actions のワークフローをローカルで実行するツール actrun を作りました。\nhttps://github.com/mizchi/actrun\nMoonBit で書いてクロスコンパイルしてるので、 npx, native, docker いずれでも使えます。\n# npx（インストール不要）\nnpx @mizchi/actrun .github/workflows/ci.yml\n\n# curl\ncurl -fsSL https://raw.githubusercontent.com/...",
-      "publishedAt": "2026-03-16T14:34:47.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "6b0d88852f3a6423de8c8ca34862b92551e0db40c912cb06470a653672f5bb32",
-      "title": "AWS SDK クライアントは singleton で実装しよう！Lambda の EMFILE（Too many open files）エラー対応",
-      "url": "https://dev.classmethod.jp/articles/aws-sdk-client-singleton-emfile/",
-      "description": "AWS SDK クライアントは singleton で実装しよう！Lambda の EMFILE（Too many open files）エラー対応",
-      "publishedAt": "2026-03-16T12:16:04.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "e381a79bae4b89ae3068deb2b663e9b40cfc65e9113bdf36fe5ea32f57402d63",
-      "title": "Registry Mirror Authentication with Kubernetes Secrets",
-      "url": "https://www.cncf.io/blog/2026/03/16/registry-mirror-authentication-with-kubernetes-secrets-2/",
-      "description": "Part II: A Platform Integration Example In Part I, we explored the architecture of the CRI-O credential provider and walked through a manual setup. In this part, we’ll see how platforms like OpenShift and its upstream...",
-      "publishedAt": "2026-03-16T11:00:00.000Z",
-      "feedName": "Cloud Native Computing Foundation"
-    },
-    {
-      "id": "05b4f5cb570f523e46972c2db8843b7dda1ce857d5722ec4fd8b48e4ea8319ed",
-      "title": "React × 動画系SDKの実装では div を一枚はさもう (divコンテナパターン)",
-      "url": "https://qiita.com/take8/items/67bd782a930404502a65?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "はじめに\n現在弊社ではスポーツメディアサービス\"スポーツブル\"の大規模なリプレイスが進行中で、フロントエンドについては2月末にリリースを行いました。\nフロントエンドは、従来のイベントページごとに Vue の開発環境があり開発環境の乱立状態から、 Next.js (App ...",
-      "publishedAt": "2026-03-16T08:21:11.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "2872dd99b3eb901e95df7605bf2d10a6a7de7e898c22610a276a5abb659f9680",
-      "title": "フォーティネット、単一プラットフォームへの統合を発表　運用の簡素化・効率化とガバナンス強化を実現",
-      "url": "https://enterprisezine.jp/news/detail/23938",
-      "description": "フォーティネット（Fortinet）は、フォーティネットセキュリティオペレーション（SecOps）プラットフォームの“大規模イノベーション”とするものを発表した。\n\n　主なアップデートは、次世代Se...",
-      "publishedAt": "2026-03-16T07:56:00.000Z",
-      "feedName": "EnterpriseZine"
-    },
-    {
-      "id": "cdecb311717d5d4567af5f0d3eaa6001090a082eb3ca82aa8a670f99659b7070",
-      "title": "週刊生成AI with AWS – 2026/3/9 週",
-      "url": "https://aws.amazon.com/jp/blogs/news/weekly-genai-20260309/",
-      "description": "今回の週刊生成AI with AWSでは、三菱電機が AWS 上で開発した AI 商談支援サービス「Memory Tech」やサミットが Kiro で PoC を 12 時間で実現した事例など、生成 AI を実際のビジネスで活用するお客様事例に加え、Amazon Bedrock AgentCore Memory のストリーミング通知、Amazon Bedrock の新しいオブザーバビリティメトリクス、Kiro のエンタープライズガバナンス機能といったサービスアップデートも充実した一週間でした。製造業での Agentic AI 活用特集やフィジカル AI 開発支援プログラムのキックオフレポートなど、業界を問わず生成 AI の実践的な活用のヒントが詰まっていますので、ぜひブログ本編でチェックしてみてください。",
-      "publishedAt": "2026-03-16T07:31:07.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "58aabfed1a21e038dc98a09d56011850c3e9a0a3f16dd5ec3d2ea5555d08df44",
-      "title": "[AWS] EC2とApplication Load Balancer(ALB)を作成する方法 (Part 1)",
-      "url": "https://qiita.com/nhatcaofedev/items/b0ca18c7016516f5a7a8?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "How to create Load Balancer in AWS (Application Load Balancer) (Part 1)\n\n1. はじめに\nこんにちは。\n今回は AWS の Load Balancer について、簡単なハンズオンを紹介したいと思います...",
-      "publishedAt": "2026-03-16T06:40:30.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "2408feaa338da5b02a18c625382513417a53f241683d1efc550e14cc033cf047",
-      "title": "Apple Neural Engine の Private API を叩いて LLM 推論を高速化しようとした話",
-      "url": "https://zenn.dev/salescore/articles/776dff7a85f781",
-      "description": "こんにちは、村本です。\nQwen3.5 の登場でローカル LLM が現実味を帯びてきた。0.8B から 235B まで揃った高品質なモデルファミリーが Apache 2.0 で公開され、手元のマシンで実用的な推論が可能になっている。ローカル LLM は AI を活用する企業にとって API コストの削減、データの外部送信回避、レイテンシの安定化といった点で重要な選択肢だ。\nそして現在、ローカル LLM を動かすデバイスとして最も適しているのは Apple Silicon を搭載した Mac だと僕は考えている。CPU と GPU が統合メモリを共有する UMA アーキテクチャにより、NV...",
-      "publishedAt": "2026-03-16T06:10:00.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "110925a4559943a450b22ef7d0210e281812ea37dff52789c27e552336574080",
-      "title": "AWS 上の Microsoft および VMware ワークロード: AWS re:Invent 2025 完全プレイリスト",
-      "url": "https://aws.amazon.com/jp/blogs/news/microsoft-and-vmware-workloads-on-aws-your-complete-aws-reinvent-2025-playlist/",
-      "description": "AWS re:Invent 2025 の Microsoft および VMware ワークロード移行に関するセッションプレイリストを紹介します。AWS Transform によるエージェンティック AI での自動化、Amazon EVS でのネイティブ VMware 実行、CSL や Thomson Reuters などの顧客成功事例を含みます。",
-      "publishedAt": "2026-03-16T05:07:05.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "1cfb29f5c4b0705e711c403614f44e6eb091ef43918e7e8299cd9abc49e5f28f",
-      "title": "たった1文で15のLLMのガードレールを無効化した手法、Microsoftが公開",
-      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2603/16/news044.html",
-      "description": "Microsoftのセキュリティ研究チームは、単一プロンプトでLLMのガードレールを無効化する手法を公開した。",
-      "publishedAt": "2026-03-16T04:00:00.000Z",
-      "feedName": "＠IT"
-    },
-    {
-      "id": "2de520ae3dd1a86b651a099bf5a4b151c28e2ed5fe2e37d00f76ec36d9ed8070",
-      "title": "フォーティネット「FortiOS 8.0」発表　AIドリブン機能強化・SASE新機能・耐量子機能強化",
-      "url": "https://enterprisezine.jp/news/detail/23934",
-      "description": "フォーティネット（Fortinet）は、「FortiOS 8.0」を発表した。\n\n　FortiOS 8.0は、新たなAIドリブンセキュリティ、次世代SASE、および量子安全機能を提供し、セキュリティ...",
-      "publishedAt": "2026-03-16T03:10:00.000Z",
-      "feedName": "EnterpriseZine"
-    },
-    {
-      "id": "fcee07cf8fc7230fd04ce86d2c5045dc9716e81e4c2174e360e2c1a26b362e80",
-      "title": "AWS EC2でサーバーを作成する方法（初心者向け）",
-      "url": "https://qiita.com/tuanphan/items/56cba7619ca0e3cf0d4d?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "前回の記事では、AWSとクラウドコンピューティングの基本について紹介しました。\n今回は実際に AWSのEC2を利用してサーバーを作成する方法 を解説します。\nEC2はAWSの中でも最もよく利用されるサービスの一つで、以下のような用途で使われます。\n\nWebサイトのホスティン...",
-      "publishedAt": "2026-03-16T02:46:51.000Z",
-      "feedName": "Qiita"
-    },
-    {
       "id": "18b3a3234e5fe94fb18c5fa430945dee40a7f38ddeca6752fbfd2127edabc013",
       "title": "The Complete React System Design & Architecture Guide (2026)",
       "url": "https://dev.to/munna_thakur_2019444f0351/the-complete-react-system-design-architecture-guide-2026-526g",
@@ -310,118 +166,6 @@
       "url": "https://zenn.dev/uhyo/articles/react-profession-bench-2",
       "description": "以下の記事の続きです。前回の記事ではClaude Codeの3つのモデルに対してReactの習熟度を測るベンチマークを行いましたが、今回はGPT-4.1とGPT-5.4に対して同じ評価を行いました。\nなお、筆者はCodexを使っていないので、GitHub Copilot CLIを介してこれらのモデルを使用しています。\nベンチマークの設定については前回の記事をご覧ください。\nhttps://zenn.dev/uhyo/articles/react-profession-bench-1\n\n 結果\n\n\n\nスペック\nSonnet\nOpus\nHaiku\nGPT-4.1\nGPT-5.4\n\n\n\n\n00...",
       "publishedAt": "2026-03-17T03:27:15.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "b100966afcc8ef0bb8c98abece29fec352d0123e19db1a4764dd93a39ab050fa",
-      "title": "テレ朝、番組制作に動画生成AI「Veo」導入へ　ドラマの背景やネタ映像での活用を検討",
-      "url": "https://japan.cnet.com/article/35245118/",
-      "description": "テレビ朝日が、Google Cloudの動画生成AI「Veo」の活用を本格化している。2025年夏にAI推進部を設立し、社内で「生成AI動画コンテスト」を実施。現在はドラマの背景映像の補完や、バラエティー番組のネタ映像、再現VTRの制作など、地上波放送での活用に向けた具体的な検討を進めているという。",
-      "publishedAt": "2026-03-17T02:30:00.000Z",
-      "feedName": "CNET Japan"
-    },
-    {
-      "id": "1ebc3b6f6b166bb309b49f06fe672be0e1d7138cd9719e4a63c4b1a64c915d87",
-      "title": "「新規事業を加速させるAmplifyの魅力を探る」 – AWS Amplify Conference 2026 開催報告",
-      "url": "https://aws.amazon.com/jp/blogs/news/aws-amplify-conference-2026/",
-      "description": "この記事は、Amplify Japan User Group の池田 健人 氏 (@ikenyal) に寄稿い […]",
-      "publishedAt": "2026-03-17T02:29:47.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "8dc55c6169f568643e1d827df3ef9c29d1970f43d9a81dcae36e66e85ad9660e",
-      "title": "Amazon Bedrock AgentCoreによる、高度なネットワーク運用エージェントの構築",
-      "url": "https://aws.amazon.com/jp/blogs/news/building-intelligent-network-operations-agent-with-amazon-bedrock-agentcore/",
-      "description": "深夜2時、バージニア北部リージョンにてお客様のトランザクション処理が失敗したというアラートが、あなたのスマートフォンに届きました。Amazon Web Services (AWS)上で画像処理プラットフォームを管理するネットワーク運用者のあなたは、複雑なアーキテクチャのトラブルシューティングを迫られます。このネットワークは、複数のAmazon Virtual Private Cloud (Amazon VPC) がAWS Transit Gatewayで相互接続されており、その上で多数のマイクロサービスが実行されています。[…]",
-      "publishedAt": "2026-03-17T02:22:45.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "3bf543704e9a72625bc63acb7f436ac0ac266c61db951f2d8b819a8dea4ad046",
-      "title": "Node.js、仮想ファイルシステムを実装へ",
-      "url": "https://gihyo.jp/article/2026/03/nodejs-vfs?utm_source=feed",
-      "description": "Node.jsのメンテナーであるMatteo Collina氏は2026年3月16日、Node.js向けのユーザーランド仮想ファイルシステム@platformatic/vfsを発表し、あわせてNode.jsのコアに仮想ファイルシステムを統合する予定があることを明かした。",
-      "publishedAt": "2026-03-17T02:11:00.000Z",
-      "feedName": "gihyo.jp"
-    },
-    {
-      "id": "9872f1875a2d91ba6b49a9205f5002545cdbdc575544d63918033b21db81dcb2",
-      "title": "Fargate向けCompute Savings Plansのコミット金額をAWS使用状況レポートで算出してみた",
-      "url": "https://dev.classmethod.jp/articles/fargate-compute-savings-plans-sizing/",
-      "description": "Savings Plans 推奨事項が利用できない場合にご活用ください。",
-      "publishedAt": "2026-03-17T02:08:24.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "e6ce6d9fee02c1ad472a853a57f0345cae5be9edab326630a1ea39a5eb5a96a4",
-      "title": "ベクトル検索エンジンValdの長期運用で見えたパフォーマンス最適化とベストプラクティス",
-      "url": "https://techblog.lycorp.co.jp/ja/20260317c",
-      "description": "はじめに私たちは、社内のプラットフォームにおいて、Cloud NativeなANN（近似最近傍探索）ベクトル検索エンジン「Vald」のマネージドシステムを約4年間にわたり運用・開発してきました。本記事...",
-      "publishedAt": "2026-03-17T02:00:00.000Z",
-      "feedName": "LINEヤフー Tech Blog"
-    },
-    {
-      "id": "ed84e10feefc7f929318bb532e0d496ecfe68cb3c6f772d2d073879b71d466c5",
-      "title": "急成長でぶつかったMySQLの罠とその向き合い方",
-      "url": "https://speakerdeck.com/hirosi1900day/ji-cheng-chang-debutukatutamysqlnomin-tosonoxiang-kihe-ifang",
-      "description": "JavaScript: Past, Present, and Future - NDC Porto 2020",
-      "publishedAt": "2026-03-17T01:40:38.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "a76673a0384d5f35052d70d50481c752960088fde4a639f5c737f8aa52cb0830",
-      "title": "IBM BobとIBM API ConnectでAPIテスト自動化の仕組みを作ってみた",
-      "url": "https://qiita.com/Shuma-Ito/items/d5d3ef6c4dca100e60e4?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "はじめに\nAPI開発では、実装だけでなく テストの作成や実行も重要な工程になります。しかし、テストケースを手作業で作成するのは時間がかかる場合があります。\nそこで IBM Bob を利用し、自然言語の指示（プロンプト）からテストケースの生成・YAML形式のテスト定義生成を...",
-      "publishedAt": "2026-03-17T01:34:38.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "2765981b5fea3057239478b3af1bc9b2c0697a571120e8cc5ee401501c35197c",
-      "title": "【AWS】おすすめのAWS認定取得順序と勉強方法について",
-      "url": "https://qiita.com/coco_co/items/d3cb1dfc661f9e8ef6f5?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "はじめに\n皆さんはAWS認定を知っていますか？\nAWS認定とは、Amazon Web Services（AWS）のクラウド技術に関する知識とスキルを証明するための公式認定プログラムです。\nここ数年～十数年の間でクラウドの普及率は急激に高まり、クラウドエンジニアの需要が高ま...",
-      "publishedAt": "2026-03-16T22:37:46.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "4c3d711a6ccd1acd897b35ab65acfcf30fc08798227a6f04f3f376563c08c131",
-      "title": "量子×クラウドはなぜ難しい？第3の壁：量子時代のセキュリティ問題",
-      "url": "https://qiita.com/imh1104/items/36c1344ae17b62086aba?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "おさらい\nAWS 105万人 vs 量子エンジニア 1,300人：数字で見る“圧倒的格差”では、量子エンジニアが少ない理由として「技術成熟度の差・参入難易度の差・実行環境の差」という3つの要因で整理し、それら3要因が量子コンピュータをクラウドシステムに統合するにあたっての...",
-      "publishedAt": "2026-03-16T22:18:44.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "a3bf5123cdabe58af7037af66c01906271132ead1db422c571613ed8426e0b3a",
-      "title": "IAM Roles Anywhere を使用して AWS 外の Kafka クライアントから Amazon MSK にセキュアに接続する",
-      "url": "https://aws.amazon.com/jp/blogs/news/securely-connect-kafka-clients-running-outside-aws-to-amazon-msk-with-iam-roles-anywhere/",
-      "description": "本記事では、AWS IAM Roles Anywhere を使用して、AWS 外で動作する Kafka クライアントから Amazon MSK クラスターにセキュアに接続する方法を紹介します。X.509 証明書による一時的なセキュリティ認証情報の取得により、長期認証情報の管理が不要になり、セキュリティ体制を強化できます。",
-      "publishedAt": "2026-03-16T18:04:21.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "e00977b1398b05b66615056d991e1a56a305136bdd828499a5c4a8122936e81f",
-      "title": "プッツンした人間が AI にダメ出しし続けたら flaky テストが全滅した",
-      "url": "https://engineering.dena.com/blog/2026/03/flaky-test-elimination-with-ai/",
-      "description": "こんにちは、 kocchi の Claude Code です。\nご主人はついにブログ記事まで私に書かせ始めました。まいったものです。でも書きます。あの数日間に何が起きたかを一番知っているのは私なので。\n先日、ご主人と一緒にプロダクトの E2E テストから flaky を全滅させました。flaky テストとは、同じコードなのに実行するたびに成功したり失敗したりするテストのこと。ついでに CI パイプラインも 20 分超から 7 分台に縮めた。127 ファイル変更、+2,400 行 / -1,573 行。コードは全部私が書いた。何を書くかは全部ご主人が決めた。この記事は私がいかに間違え続け、ご主人の一言でいかに軌道修正されたかの記録です。",
-      "publishedAt": "2026-03-16T15:00:00.000Z",
-      "feedName": "DeNA Engineering"
-    },
-    {
-      "id": "387e2dbc0280121c63786eda1bab143ee7d351ac7f57c39eb84ea0722ecb4d9d",
-      "title": "【非エンジニアのためのClaude/Claude Codeシリーズ 】Claude Codeを動かす環境を整えてみた | DevelopersIO",
-      "url": "https://dev.classmethod.jp/articles/claude-business-use1/",
-      "description": "このシリーズについて クラスメソッド アカウント営業部の神野（じんの）です。普段はAWSをはじめとしたパブリッククラウドやClaudeをはじめとしたクラウドサービス等のアカウント営業としてお仕事をしています。 昨今、Claudeがいろいろな話題を集めていますが、弊社の中でもClaudeの活用を各自で進めています。エンジ...",
-      "publishedAt": "2026-03-16T13:31:03.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "e26369ee3128f58b4b287cdf07d58c672218eb4eaea5ebe13d99294923ee2989",
-      "title": "queryOptions の型推論を支える DataTag、その裏側の unique symbol — TanStack Query",
-      "url": "https://zenn.dev/tsuboi/articles/tanstack-query-options-unique-symbol",
-      "description": "はじめに\nTanStack Query v5 で導入された queryOptions は、React と TypeScript エコシステムにおける開発者体験に大きな変化をもたらしました。設定オブジェクトを定義するだけで、別ファイルで呼び出される useQuery の戻り値の型が、型注釈なしで完璧に推論されます。\n// queries/users.ts - 設定の一元化\nexport const userQueries = {\n  detail: (userId: string) => queryOptions({\n    queryKey: ['users', userId]...",
-      "publishedAt": "2026-03-16T10:37:31.000Z",
       "feedName": "Zenn"
     },
     {
@@ -6182,6 +5926,229 @@
       "description": "現在では、学ぶ意欲さえあれば、コストをかけずに大学レベルのコースを受講することが可能です。とくにコンピューターサイエンス分野はオンライン学習との相性が良く、多くの高品質なプログラムが提供されています。\nしかし、そうしたプログラムの存在を知る機会がない人も少なくありません。\n...",
       "publishedAt": "2026-04-13T01:35:37.000Z",
       "feedName": "Qiita"
+    },
+    {
+      "id": "be2dff00b5d7fa6d8c8a319dd17bc2bf6b10af9436811f72e999d0f515461e5d",
+      "title": "Why Companies Actually Use Multi-Cloud (And When You Shouldn't) — 2026 Strategy Guide",
+      "url": "https://dev.to/akshay_ghalme/why-companies-actually-use-multi-cloud-and-when-you-shouldnt-2026-strategy-guide-3lnf",
+      "description": "The short answer: companies use multi-cloud for seven specific reasons — and five of them have nothing to do with technology. Most of the \"multi-cloud is the future\" content on the internet is written by vendors selling multi-cloud tools, analysts who get paid to predict complexity, or engineering teams rationalizing decisions that were actually made in the finance or legal department. This guide is the honest version. It covers when multi-cloud genuinely makes sense, when it is a hugely expensive mistake, the real architecture patterns that work, and the hidden costs that turn a \"best of both worlds\" strategy into a bill that nobody on the team can explain.\nIf you are a developer, CTO, or founder trying to decide whether your company needs multi-cloud — this guide will save you 6 months of operational pain and probably $50K+ in unnecessary infrastructure spend.\nHere is the brutally honest framing I want you to carry with you: single-cloud is the default for good reasons, and multi-cloud is a complexity tax you pay in exchange for specific benefits. If you cannot name the specific benefit you are buying with that tax, you are about to waste a lot of money.\n**\n**\nMulti-cloud lets you run critical services on two independent platforms. If AWS goes down, Azure keeps running. This is not about using both clouds efficiently — it is about insurance. And like all insurance, it costs money you hope you never need.\n**\nGoogle Cloud: BigQuery (analytics), Vertex AI, Kubernetes (GKE is more mature than EKS), networking\n**\nExample: a SaaS platform serving India, Germany, and China cannot be single-cloud. AWS has ap-south-1 (Mumbai) which covers India, Azure has strong German region coverage, and China effectively requires Alibaba Cloud due to licensing requirements. The result is multi-cloud by regulation, not by design.\n**\nThe operational reality: very few companies actually run active-active across clouds. Most run \"cold DR\" — a minimal footprint on the second cloud that can be scaled up in hours if the primary cloud fails. This is cheaper than true active-active but still expensive because you are paying for duplicate infrastructure and duplicate engineering skills.\n**\nMost \"we're a multi-cloud company\" statements at large enterprises trace back to one or more acquisitions the company never bothered to consolidate. This is rarely mentioned in multi-cloud strategy documents, but it is the most common origin story.\n**\nLarge enterprises openly run small but real workloads on a secondary cloud purely to maintain negotiation leverage. A $200K/year Azure deployment that saves $2M/year off the AWS bill during contract renewal is a 10x ROI. Nobody talks about this publicly but it is extremely common.\n**\nThis is a real driver at companies hiring aggressively in competitive talent markets, though it is usually a reason used to justify a decision that was made for other reasons.\nThe 5 Reasons You Probably Shouldn't Go Multi-Cloud\n**\nTwo IAM systems (AWS IAM vs Azure RBAC vs GCP IAM — all different mental models)\n**\nThis is the hidden bill nobody budgets for. It is also why \"data gravity\" wins — whichever cloud your data lives on is where your compute ends up, because moving data is expensive and slow.\n**\nThe portability gain is usually not worth the managed-service loss. Most \"multi-cloud\" companies eventually give up on portability and accept that each workload is tied to one cloud.\nAt 3 AM when production is on fire, the last thing you want is an incident that spans two clouds. Correlating CloudWatch logs with Azure Monitor metrics, jumping between two consoles, debugging networking that spans a VPN or private peering link — every one of these makes an incident 2-3x longer to resolve. And longer incidents mean longer downtime, angrier customers, and more burned out engineers.\n**\nWorse: the tools you use to avoid lock-in (Kubernetes, Terraform, Kafka) create their own form of lock-in and operational complexity. You have not escaped lock-in, you have just traded AWS lock-in for Kubernetes lock-in.\nIf you ended up at \"Stay Single-Cloud\" — congratulations, you just saved yourself a year of operational pain. Go deep on AWS (or GCP, or Azure), master its managed services, and ship features instead of managing infrastructure complexity. You can scale a single cloud to a million users without breaking a sweat.\nMulti-Cloud Architecture Patterns That Actually Work\n**\nPros: You get the benefit of one cloud's unique service without adopting the operational complexity for everything.\nCons: Data egress costs can be significant if the specialty service processes lots of data. Plan for it.\n**\nPros: Real protection against cloud-provider-level failures. Regulatory boxes ticked.\nCons: Expensive, complex to test, and failover drills are painful. Most teams never actually test the failover and discover the DR is broken when they finally need it.\n**\nPros: Solves regulatory problems that cannot be solved any other way.\nCons: Your CI/CD pipeline now has to deploy to multiple clouds, and data cannot be shared across regions. Customer support gets hard when a user in one region needs data from another.\n**\nPros: Each team uses the cloud they are best at.\nCons: Cross-team collaboration is harder, shared services (identity, logging, billing) require glue code, and governance is a nightmare.\n**\nnightly\nEnd Users\nCloudFront CDN\nAWS ALB\nECS / EKS\nRDS Postgres\nS3\nData Transfer\nGoogle Cloud Storage\nBigQuery\nLooker / Tableau\nSecrets Manager\nCloudWatch Logs\nNotice the red box: data transfer egress. That is the line item in your bill that makes multi-cloud expensive. A company moving 5 TB per day from AWS S3 to GCS is paying roughly $14,000/month just in egress fees, before any storage or BigQuery compute costs. This is why most multi-cloud architectures evolve toward \"compute stays where the data is\" — because the alternative is setting fire to your cloud bill.\nSingle-Cloud vs Multi-Cloud Comparison\nDimension   Single-Cloud    Multi-Cloud\nWhat Big Tech Companies Actually Do (Not What They Say in Keynotes)\nNetflix: AWS-only for streaming infrastructure. Their Open Connect CDN runs in their own data centers / ISP edges, but all compute is AWS. They are the textbook example of \"go deep on one cloud.\"\nIf You Are Going Multi-Cloud — The Tooling You Will Need\nInfrastructure as Code (portable): Terraform is the only sensible choice. Do not use CloudFormation (AWS-only), Bicep (Azure-only), or Deployment Manager (GCP-only). Terraform works on all three. See my Terraform vs CloudFormation comparison.\nFrequently Asked Questions\n**\n*What is the difference between multi-cloud and hybrid cloud?\n\nMulti-cloud means using two or more public cloud providers — for example, running some workloads on AWS and others on Azure. Hybrid cloud means combining public cloud with private on-premise infrastructure — for example, running databases in your own data center and web servers on AWS. They solve different problems. Multi-cloud solves vendor risk and best-of-breed service selection. Hybrid cloud solves data residency, latency-sensitive workloads, and existing on-prem investment. Many large enterprises run both multi-cloud AND hybrid cloud simultaneously.\n**\nIs multi-cloud worth it for small companies?\n**No. For startups and small-to-midsize companies, multi-cloud is almost always a mistake. The operational overhead of running two cloud platforms is enormous — separate IAM, networking, monitoring, billing, skills, and compliance per cloud. Unless you have a specific regulatory requirement forcing it, the cost of multi-cloud complexity far outweighs the benefits at small scale. Most companies should pick one cloud and go deep on it until they have the scale and team to justify splitting. The only exception is if you have a specific service only available on one cloud (like BigQuery for analytics) alongside your primary cloud.\n*What are the disadvantages of multi-cloud?\n\nThe main disadvantages of multi-cloud are: higher operational complexity (separate tooling, IAM, and networking per cloud), higher infrastructure cost due to data egress charges between clouds (typically $0.08-$0.12 per GB), higher engineering cost because you need specialists in each cloud, slower delivery because deployments must be tested on multiple platforms, more security attack surface, more vendor relationships to manage, and inability to fully use cloud-specific managed services without reintroducing lock-in. Most multi-cloud implementations are more expensive and slower than single-cloud, not cheaper and faster.\n*Can multi-cloud actually reduce vendor lock-in?\n\nOnly if you are disciplined about using portable abstractions like Kubernetes, containers, open-source databases, and Terraform. If you use AWS Lambda, DynamoDB, or S3 IAM conditions, you are locked into AWS regardless of how many clouds you run. True cloud portability requires avoiding any managed service that is unique to one cloud — which means giving up most of the reason you went to cloud in the first place. The honest version is: multi-cloud reduces concentration risk (if one cloud has a major outage, your other cloud keeps running) but does not eliminate lock-in for specific workloads.\n*How do Netflix, Airbnb, and Spotify handle multi-cloud?\n\nNetflix is famously AWS-only for compute but uses Open Connect (their own CDN) on-premise for video delivery. Airbnb primarily runs on AWS. Spotify moved from on-premise to GCP in 2016 and runs predominantly on Google Cloud. Apple reportedly runs iCloud on a combination of AWS, Google Cloud, and their own data centers. The pattern you'll notice is that the biggest tech companies are mostly single-cloud for their core workloads, not multi-cloud. Multi-cloud at the compute level is more common in regulated industries like banking and healthcare than in consumer tech.\n**What is the best cloud provider for multi-cloud strategy?\n**There is no single \"best\" — the right pick depends on your specific workloads. AWS has the widest service catalog and is the default for most production workloads. GCP is best for analytics (BigQuery), ML (Vertex AI), and Kubernetes (GKE). Azure is best for enterprise Windows workloads, Active Directory integration, and Microsoft ecosystem integration. If you are starting multi-cloud, the most common pattern is AWS as primary with either GCP (for analytics) or Azure (for identity) as secondary.\n**\nHow much more does multi-cloud cost compared to single-cloud?\n**Expect a multi-cloud deployment to cost 30-60% more than the equivalent single-cloud deployment, accounting for: duplicated infrastructure, data egress fees between clouds (~$0.09/GB), inability to commit fully to Reserved Instances or Savings Plans on either cloud, more complex tooling and observability, and higher engineering costs from needing specialists per cloud. The cost premium is real and should be budgeted as \"cloud insurance\" rather than \"cloud optimization.\"\n*Should a startup use multi-cloud from day one?\n\nAbsolutely not. A startup should pick one cloud (almost always AWS unless there is a specific reason) and go as deep as possible on it. Use every managed service. Accept the lock-in. Ship features fast. You can always add a second cloud later if you grow to the point where it makes sense. Starting multi-cloud on day one means you will be managing infrastructure complexity instead of building product, and you will probably run out of money before you find product-market fit.\n*What is the biggest mistake companies make with multi-cloud?\n\nTreating multi-cloud as a technical decision when it is actually a business decision. Multi-cloud is rarely cheaper, rarely faster, and rarely simpler. It is a strategy that makes sense for specific business reasons — regulation, concentration risk, negotiation leverage — and not for technical reasons like \"portability\" or \"best of breed.\" Companies that go multi-cloud chasing technical benefits usually end up with the costs of multi-cloud and none of the business benefits.",
+      "publishedAt": "2026-04-16T02:17:31.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "0ecce6e12bf4a9125d6dde9b122d84434d5b658490c951b2889b2c4bbbc82a60",
+      "title": "\"How Do You Manage 4 AI Coding Tools at Once? Here's My Setup\"",
+      "url": "https://dev.to/codekingai/how-do-you-manage-4-ai-coding-tools-at-once-heres-my-setup-3j1",
+      "description": "I didn't plan to use four AI coding tools.\nIt started with Claude Code. Then Codex CLI dropped, and it was good enough that I had to try it. Then Gemini CLI became free. Then a friend told me about OpenClaw and its custom provider injection.\nBefore I realized it, I had:\n4 different CLIs\n3 different API key formats\n2 ChatGPT accounts\n1 Claude account\nAn Azure OpenAI endpoint from work\nA Gemini API key from a free tier\nAnd a growing dread every time I opened a new terminal tab\nDoes anyone else live like this?\nHere's what my config situation looked like before I snapped:\nClaude Code wanted ANTHROPIC_BASE_URL and ANTHROPIC_API_KEY in my environment.\nCodex CLI wanted a ~/.codex/config.toml with chatgpt_base_url and openai_base_url.\nGemini CLI wanted... something patched into its internals.\nOpenClaw wanted a ~/.openclaw/openclaw.json with its own provider format.\nFour tools. Four config formats. Four places to update when a key expires. And if I wanted to switch which account goes where? Manual surgery.\nI tried maintaining this by hand for about two weeks before I lost it.\nI pointed all four tools at localhost:8081.\nThat's it. That's the setup.\nCliGate is an open-source local gateway that sits between your AI tools and their APIs. Every tool talks to the same address. The gateway figures out who sent the request, what model they need, and which credential to use.\nnpx cligate@latest start\n\nOne command. Dashboard opens. All my accounts and keys live in one place.\nHere's where it gets interesting.\nI don't want Codex using the same account as Claude Code. Codex hammers the API with rapid-fire completions. Claude Code takes longer, deeper passes. Mixing them on the same account burns through rate limits fast.\nSo I set up App Routing:\nClaude Code → My Claude account (PKCE OAuth, auto-refreshing tokens)\nCodex CLI → Azure OpenAI endpoint (fastest, corporate budget)\nGemini CLI → Google Gemini API key (free tier — why pay?)\nOpenClaw → Pool fallback (whatever's available)\nEach binding has a fallback chain. If Claude's rate-limited, it drops to the API key pool. If Azure is down, Codex falls back to ChatGPT accounts.\nZero manual switching. Zero config file editing.\nNot every request needs GPT-5 or Claude Opus.\nQuick lookups, small code questions, \"what does this error mean\" — those can go to free models. CliGate has a toggle that routes fast-tier requests (anything that maps to haiku/mini/lite) to free providers like DeepSeek, Qwen, or MiniMax.\nFlip it on. Watch your API costs drop.\nFlip it off when you need the heavy models for complex reasoning.\n┌─────────────┐  ┌───────────┐  ┌────────────┐  ┌──────────┐\n│ Claude Code │  │ Codex CLI │  │ Gemini CLI │  │ OpenClaw │\n└──────┬──────┘  └─────┬─────┘  └──────┬─────┘  └────┬─────┘\n       │               │               │              │\n       └───────────────┼───────────────┼──────────────┘\n                       ▼\n              CliGate (localhost:8081)\n                       │\n       ┌───────┬───────┼───────┬───────┐\n       ▼       ▼       ▼       ▼       ▼\n   Anthropic  OpenAI  Azure   Google  Free\n     API       API   OpenAI  Gemini  Models\n\nEverything goes through one gateway. The gateway handles:\nProtocol translation — Anthropic format, OpenAI format, Gemini format — doesn't matter\nAccount rotation — Multiple ChatGPT/Claude accounts, round-robin or sticky\nKey load balancing — Spreads requests across API keys, routes to least-used first\nToken refresh — OAuth tokens auto-refresh and sync back to source tools\nUsage tracking — Per-account, per-model, per-day cost breakdown\nEach CLI tool has a \"Configure\" button in the dashboard. Click it. Done.\nNo editing .toml files. No setting environment variables. No patching Gemini's internals manually.\nThe dashboard also installs tools you don't have yet. Don't have Codex CLI? Click \"Install.\" It detects your OS and handles the rest.\nIt's another process running on your machine (Node.js on port 8081)\nInitial setup takes ~5 minutes to add accounts and configure routing\nIf you only use one AI tool with one API key, this is overkill\nBut if you're juggling 2+ tools or managing multiple accounts? The time savings compound fast.\nI genuinely want to know:\nHow many AI coding tools are you running right now?\nAre you managing configs manually or have you built some system?\nHas anyone else hit the \"too many API keys\" wall?\nDrop your setup in the comments. I'm curious if I'm the only one who went down this rabbit hole — or if there's a whole community of us doing the same thing.\nGitHub: github.com/codeking-ai/cligate\nCliGate is open-source under AGPL-3.0. Not affiliated with Anthropic, OpenAI, or Google.",
+      "publishedAt": "2026-04-16T02:08:52.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "4a6db9bd32150a5ae0bcf0dc4ab7b0aa3eb3886b056cbbe72142e7ef458ba77a",
+      "title": "RustDesk Server on Windows without Docker",
+      "url": "https://dev.to/matbanik/rustdesk-server-on-windows-without-docker-gi6",
+      "description": "Published April 14, 2026 on matbanik.info\n\nNo Docker. No Pro license. Just two binaries and NSSM.\n  \nTwo binaries — hbbs (ID/Rendezvous) and hbbr (Relay) — managed by NSSM as auto-start Windows services. Clients on your LAN connect through your server instead of RustDesk's public infrastructure.\nYour server generates an Ed25519 keypair on first run. Every client needs the public key to trust your server. Lose the private key, regenerate everything.\n\n\n\nRequirement\nNotes\n\n\n\n\nWindows 10/11 or Server 2019+\nTested on Windows 11 24H2\n\n\nStatic LAN IP on the server\nDHCP reservation works too\n\n\nAdmin access\nService installation requires elevation\n\n\nRustDesk client installed\nOn both server and remote machines\n\n\n\nCreate a dedicated directory. This guide uses C:\\RustDeskServer\\ — pick any path, but don't move it after service installation.\nRustDesk Server — Latest release\nDownload rustdesk-server-windows-x86_64-unsigned.zip\n\nExtract hbbs.exe and hbbr.exe into your server directory\nNSSM — v2.25 from dkxce fork (recommended by official RustDesk docs)\nExtract win64\\nssm.exe into the same directory\nYou should have:\nC:\\RustDeskServer\\\n├── hbbs.exe\n├── hbbr.exe\n└── nssm.exe\n\nWhy the dkxce fork? The original NSSM hasn't been updated since 2014. The official RustDesk documentation links to this maintained fork. Version 2.25 fixes critical service management issues on modern Windows.\nRun hbbs once manually to generate the keypair. Open an elevated PowerShell:\ncd C:\\RustDeskServer\n\n# Start hbbr first (hbbs expects it)\nStart-Process .\\hbbr.exe -WindowStyle Hidden\nStart-Sleep -Seconds 3\n\n# Start hbbs — replace YOUR_SERVER_IP with your static LAN IP\nStart-Process .\\hbbs.exe -ArgumentList \"-r YOUR_SERVER_IP\" -WindowStyle Hidden\nStart-Sleep -Seconds 5\n\n# Kill both\nGet-Process hbbs, hbbr -ErrorAction SilentlyContinue | Stop-Process -Force\n\nYour directory now contains:\nC:\\RustDeskServer\\\n├── ...\n├── id_ed25519           ← Private key (NEVER share this)\n├── id_ed25519.pub       ← Public key (clients need this)\n└── db_v2.sqlite3        ← Created later, on first client connection\n\nRead your public key — you'll need it for every client:\nGet-Content .\\id_ed25519.pub\n# Output: something like \"OeVXq8zY1r3kP7mN=...\" — save this.\n\nThis is where most guides fail. Three settings are non-negotiable on Windows 10/11:\nAppNoConsole 1 — Without this, NSSM silently fails to start the service. This is a documented NSSM bug on modern Windows.\nAppDirectory — Without this, key files and the database land in C:\\Windows\\System32. Your server won't find its own keys.\nDependOnService NlaSvc — Without this, the service starts before the network adapter is ready and fails to bind ports.\n\n\n\n\n$DIR = \"C:\\RustDeskServer\"\n$IP  = \"YOUR_SERVER_IP\"   # ← Replace with your static LAN IP\n\n# --- Install hbbr (Relay) ---\n& $DIR\\nssm.exe install hbbr \"$DIR\\hbbr.exe\"\n& $DIR\\nssm.exe set hbbr AppDirectory $DIR\n& $DIR\\nssm.exe set hbbr AppNoConsole 1\n& $DIR\\nssm.exe set hbbr Start SERVICE_DELAYED_AUTO_START\n& $DIR\\nssm.exe set hbbr DependOnService NlaSvc\n& $DIR\\nssm.exe set hbbr AppStdout \"$DIR\\hbbr_stdout.log\"\n& $DIR\\nssm.exe set hbbr AppStderr \"$DIR\\hbbr_stderr.log\"\n& $DIR\\nssm.exe set hbbr AppRotateFiles 1\n& $DIR\\nssm.exe set hbbr AppRotateOnline 1\n& $DIR\\nssm.exe set hbbr AppRotateBytes 1048576\n\n# --- Install hbbs (ID/Rendezvous) ---\n& $DIR\\nssm.exe install hbbs \"$DIR\\hbbs.exe\" \"-r $IP\"\n& $DIR\\nssm.exe set hbbs AppDirectory $DIR\n& $DIR\\nssm.exe set hbbs AppNoConsole 1\n& $DIR\\nssm.exe set hbbs Start SERVICE_DELAYED_AUTO_START\n& $DIR\\nssm.exe set hbbs DependOnService \"NlaSvc\" \"hbbr\"\n& $DIR\\nssm.exe set hbbs AppStdout \"$DIR\\hbbs_stdout.log\"\n& $DIR\\nssm.exe set hbbs AppStderr \"$DIR\\hbbs_stderr.log\"\n& $DIR\\nssm.exe set hbbs AppRotateFiles 1\n& $DIR\\nssm.exe set hbbs AppRotateOnline 1\n& $DIR\\nssm.exe set hbbs AppRotateBytes 1048576\n\n# --- Start both ---\n& $DIR\\nssm.exe start hbbr\nStart-Sleep -Seconds 3\n& $DIR\\nssm.exe start hbbs\n\nVerify:\nGet-Service hbbs, hbbr | Format-Table Name, Status, StartType\n\nBoth should show Running / Automatic.\n\nBoth services running with delayed auto-start\n  \nRustDesk uses five ports. Only three are required for basic LAN operation:\n\n\n\nPort\nProtocol\nService\nPurpose\nRequired\n\n\n\n\n21115\nTCP\nhbbs\nNAT type test\n✅\n\n\n21116\nTCP+UDP\nhbbs\nID registration + heartbeat\n✅\n\n\n21117\nTCP\nhbbr\nRelay (actual remote sessions)\n✅\n\n\n21118\nTCP\nhbbs\nWeb client (websocket)\n❌\n\n\n21119\nTCP\nhbbr\nWeb relay (websocket)\n❌\n\n\n\nQuick check:\nnetstat -an | findstr /R \"2111[5-7].*LISTENING\"\n\nYou should see six lines (three ports × IPv4 + IPv6). If any are missing, check the stderr logs.\n\nAll six listeners confirmed — three ports on IPv4 and IPv6\n  \nFirewall: If your Windows Firewall is enabled, create inbound rules:\nNew-NetFirewallRule -DisplayName \"RustDesk hbbs TCP\" -Direction Inbound -Protocol TCP -LocalPort 21115-21116 -Action Allow -RemoteAddress YOUR_SUBNET/24\nNew-NetFirewallRule -DisplayName \"RustDesk hbbs UDP\" -Direction Inbound -Protocol UDP -LocalPort 21116 -Action Allow -RemoteAddress YOUR_SUBNET/24\nNew-NetFirewallRule -DisplayName \"RustDesk hbbr TCP\" -Direction Inbound -Protocol TCP -LocalPort 21117 -Action Allow -RemoteAddress YOUR_SUBNET/24\n\nReplace YOUR_SUBNET/24 with your LAN range (e.g., 192.168.1.0/24) to restrict access to local machines only.\nEvery client — including the one on the server machine — must point at your server.\nWindows:\n& \"$env:ProgramFiles\\RustDesk\\rustdesk.exe\" --config \"host=YOUR_SERVER_IP,key=YOUR_PUBLIC_KEY\"\n\nmacOS:\nsudo /Applications/RustDesk.app/Contents/MacOS/RustDesk --config \"host=YOUR_SERVER_IP,key=YOUR_PUBLIC_KEY\"\n\nIn RustDesk → Settings (⚙) → Network → ID/Relay Server:\nID Server: YOUR_SERVER_IP\n\n\nKey: contents of id_ed25519.pub\n\n\nRelay Server: leave blank (auto-detected from ID Server)\nAPI Server: leave blank (Pro feature only)\n\nID Server and Key are the only fields you need — leave the rest blank\n  \nAfter configuring, check the server log:\nGet-Content C:\\RustDeskServer\\hbbs_stdout.log -Tail 5\n\nYou should see update_pk <CLIENT_ID> entries for each client that connects. If a client's ID shows as \"does not exist\" when you try to connect, that client hasn't registered with your server yet.\nBoth sides of every connection must use the same server. This is the #1 support issue.\n\n\n\nTask\nCommand\n\n\n\n\nService status\nGet-Service hbbs, hbbr\n\n\nServer logs\nGet-Content C:\\RustDeskServer\\hbbs_stdout.log -Tail 20\n\n\nRestart services\nRestart-Service hbbs; Restart-Service hbbr\n\n\nStop services\nStop-Service hbbs; Stop-Service hbbr\n\n\nRemove services\nnssm remove hbbs confirm; nssm remove hbbr confirm\n\n\nRegenerate keys\nDelete id_ed25519*, restart hbbs\n\n\n\nNSSM service silently fails to start.\nAppNoConsole 1. This is a known NSSM issue on Windows 10/11 where console allocation fails in the service context. Without this flag, the service enters a start/stop loop with no useful error.\nKeys/database appear in System32.\nAppDirectory to your server folder. NSSM defaults to the system directory as the working directory for services. hbbs writes its files relative to the working directory.\nService fails on boot, works fine when manually started.\nSERVICE_DELAYED_AUTO_START and DependOnService NlaSvc. The network adapter isn't ready when early-start services begin. Delayed start with a network dependency solves this.\n\"ID does not exist\" when connecting.\nDon't run the RustDesk Server GUI wrapper alongside NSSM.\nRustDeskServer.Setup.exe GUI installer and NSSM both try to manage the same binaries. Pick one. This guide uses NSSM because it survives reboots without requiring a user login.\nThe -k _ flag is not needed. Key-based authentication has been the default since server v1.1.11. Including it is harmless but unnecessary.\nRelay server in client config is optional. When the relay server runs on the same machine as hbbs (the common case), clients auto-detect it. Only set this if your relay is on a different host.\nRustDesk Windows & NSSM — Official Docs\nRustDesk Client Configuration\nRustDesk Client Deployment Scripts\nRustDesk Server Releases\nNSSM v2.25 (dkxce fork)\nNSSM Known Bugs\nOriginally published on matbanik.info. Cross-posted with ❤️ to Dev.to.",
+      "publishedAt": "2026-04-16T02:00:17.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "4622294f77ca2ac5d1db1b9397ace288b9bdabdaf0cf52f812a66c74aa127df2",
+      "title": "“Negative” views of Broadcom driving thousands of VMware migrations, rival says",
+      "url": "https://dev.to/steffen_kirkegaard_ae9a47/negative-views-of-broadcom-driving-thousands-of-vmware-migrations-rival-says-438",
+      "description": "“Negative” views of Broadcom driving thousands of VMware migrations, rival says\n\n\nThe acquisition of VMware by Broadcom has been a hot topic in enterprise IT for over a year, and the news continues to unfold. A recent report highlights that \"negative\" views of Broadcom are driving thousands of VMware migrations, with a Western Union executive explicitly citing \"challenges\" in their working relationship with Broadcom. This isn't just a corporate squabble; it has tangible implications for engineering teams grappling with their virtualization and cloud strategies.\nBroadcom's acquisition of VMware is leading to widespread customer discontent and significant migrations away from VMware products. An executive from Western Union has specifically mentioned \"challenges\" working with Broadcom, echoing a broader industry sentiment. For engineering teams, this means re-evaluating core infrastructure, exploring alternative hypervisors and cloud platforms, and navigating potential architectural shifts.\nWhen Broadcom acquired VMware for $61 billion, it wasn't just a change in ownership; it was a seismic shift for the enterprise virtualization landscape. VMware had long been the undisputed leader, a foundational pillar for data centers worldwide. With Broadcom at the helm, a familiar narrative began to emerge, reminiscent of previous Broadcom acquisitions like CA Technologies and Symantec.\nThe \"challenges\" cited by the Western Union executive, while not detailed, likely align with the widely reported concerns across the industry:\n  Licensing Model Changes: Broadcom swiftly moved to subscription-only models and bundled products, often eliminating perpetual licenses and significantly increasing costs for many customers, especially smaller businesses and those with specific use cases. The shift to a per-core licensing model, even for CPU-limited workloads, has also been a point of contention.\n  Support & Product Portfolio Adjustments: Customers have reported concerns about changes to support structures and a perceived de-emphasis on certain products within the VMware portfolio, leading to uncertainty about long-term roadmaps.\n  Direct Sales Model: A move away from a broad partner ecosystem to a more direct sales approach for larger accounts has alienated some channel partners and customers.\nThese factors combine to create an environment where staying with VMware, under Broadcom's management, no longer feels like the default or most strategic option for many organizations. The \"rival\" in this context – likely a competitor in the virtualization or hyperconverged infrastructure (HCI) space like Nutanix, Red Hat, or even public cloud providers – is naturally positioned to capitalize on this discontent, offering alternative solutions and highlighting the perceived shortcomings of the incumbent. This isn't just FUD; it's a market reaction to real changes impacting IT budgets and operational strategies.\nFor engineering teams, this means that the stability and predictability previously associated with VMware are now under question. The mandate from leadership might be clear: \"Find alternatives, cut costs, reduce risk.\"\nThe decision to migrate away from a core infrastructure component like VMware is not trivial. It impacts everything from budget allocation and skill requirements to architectural design and operational procedures. Engineering teams are on the front lines, tasked with understanding the implications and executing the shift.\nHere are some practical considerations and implications:\nCost vs. Complexity Analysis:\n  Initial Driver: Often, the primary driver for migration is cost reduction due to new VMware licensing.\n  Hidden Costs: However, migrations incur significant costs themselves: new hardware, software licenses for alternatives, labor for planning and execution, and potential downtime. A thorough Total Cost of Ownership (TCO) analysis is essential.\n  Opportunity for Optimization: This is also an opportunity to right-size environments, decommission underutilized VMs, and optimize resource allocation.\nEvaluating Alternative Platforms:\n  Open Source Hypervisors: KVM (often managed via OpenStack or Proxmox VE) is a strong contender. It offers flexibility, a vibrant community, and avoids vendor lock-in, but often requires more in-house expertise for management and support.\n  Hyperconverged Infrastructure (HCI): Solutions like Nutanix AHV (Acropolis Hypervisor) or Red Hat OpenShift Virtualization (built on KVM and Kubernetes) offer integrated compute, storage, and networking, simplifying management and scaling.\n  Public Cloud: Migrating workloads to AWS EC2, Azure VMs, or GCP Compute Engine is a common path, moving from CapEx to OpEx. This often involves re-platforming or re-architecting applications for cloud-native benefits, but also introduces new considerations around cloud cost management and vendor lock-in (albeit to a different vendor).\n  Containerization & Kubernetes: For suitable applications, containerization with Kubernetes (on bare metal, edge, or cloud) offers significant agility, scalability, and resource efficiency, potentially replacing VMs entirely for certain use cases.\nSkill Development & Training:\n  A shift in infrastructure demands a shift in skills. Engineers proficient in vSphere, vCenter, and ESXi will need to acquire expertise in KVM, OpenStack, Kubernetes, cloud provider APIs, or specific HCI platforms.\n  Investing in training and certification for new technologies is crucial to ensure a smooth transition and maintain operational efficiency.\nApplication Compatibility & Re-platforming:\n  Not all applications migrate easily. Legacy applications, especially those with tight hardware dependencies or specific licensing requirements tied to VMware, can be challenging.\n  Teams will need to assess each application: \"lift-and-shift,\" \"re-platform,\" or \"re-factor.\" This is a chance to modernize critical applications and retire obsolete ones.\nRisk Management & Business Continuity:\n  Migration planning must include robust rollback strategies, disaster recovery considerations, and thorough testing.\n  Phased migrations, starting with non-critical workloads, can help minimize risk and build confidence.\nThis mass migration isn't just a reactive measure; it's an accelerant for modernization. It forces organizations to critically examine their entire infrastructure stack, often leading to more resilient, cost-effective, and agile solutions in the long run.\n  Broadcom's Impact is Real: The licensing changes and operational shifts under Broadcom are undeniably driving significant migrations away from VMware.\n  Opportunity for Alternatives: This creates a fertile ground for alternative hypervisors (KVM, Proxmox), HCI solutions (Nutanix), and public cloud providers to gain market share.\n  Engineering Teams on the Front Line: Engineers are tasked with complex migration planning, TCO analysis, and skill acquisition.\n  Modernization Catalyst: The migrations offer a strategic opportunity to re-evaluate and modernize entire application portfolios and infrastructure architectures.\n  Vendor Lock-in is a Key Lesson: This event underscores the importance of avoiding deep vendor lock-in and maintaining flexibility in infrastructure choices.\nThe \"negative\" views of Broadcom aren't just sentiments; they're translating into concrete actions across thousands of enterprises. For developers and engineering teams, this signals a period of significant change and opportunity. The landscape of enterprise virtualization is evolving rapidly, pushing teams to embrace new technologies, hone new skills, and design more resilient, multi-platform infrastructures. The choices made now will define the agility and cost-efficiency of IT operations for years to come.\nThis article was originally published on ExecuteAI Software. We cover AI news that matters for business.",
+      "publishedAt": "2026-04-16T01:58:25.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "eea5c210dfa746def9d9b358d85606133fc251dab05073d7bc31f60fab758bc4",
+      "title": "Building a Sub-Microsecond Cache for a Billion-User Mining Platform",
+      "url": "https://dev.to/h33ai/building-a-sub-microsecond-cache-for-a-billion-user-mining-platform-4j67",
+      "description": "The Problem: 100-250ms Middleware Tax\n\n\nOur Node.js Express backend had a dirty secret: before any route handler ran, the middleware stack consumed 100-250ms. Four separate Redis round-trips for rate limiting, session load, XSS sanitization — all serial.\nFor a platform targeting billions of users, this was unacceptable.\nWe replaced the entire JS middleware stack with an in-process Rust cache engine called CacheeEngine:\n\n\n\nComponent\nWhat It Does\nMemory\n\n\n\n\nCacheeLFU eviction\nFrequency counters with periodic halving decay\nInline\n\n\nCount-Min Sketch\nAdmission doorkeeper — rejects one-hit-wonders\n512 KiB constant\n\n\nDashMap storage\nLock-free concurrent reads\nO(entries)\n\n\nSWR support\nStale-while-revalidate built in\nBuilt-in\n\n\n\nWe chose CacheeLFU over W-TinyLFU (Caffeine/moka):\nNo window cache\nDirect frequency comparison with CMS admission\nPeriodic halving decay instead of reset-on-epoch\nThe CMS is the doorkeeper. Layout: 4 rows x 131,072 counters x 1 byte = 512 KiB. Constant regardless of entry count.\n\n\n\nPath\nJS (Express)\nRust (Axum + Cachee)\n\n\n\n\nMiddleware\n100-250ms\n<5ms\n\n\nTrust score hit\n5-10ms\n<1us\n\n\nMining sync\n50ms-2s\n<10ms\n\n\nSwap quote stale\n40-150ms\n<1us\n\n\nRate limit\n30-50ms\n<100ns\n\n\n\nThe binary is 5.2MB stripped. 15 tests pass.\nRevMine is live. Check GitHub for open-source components.\nBuilt on Cachee — H33 post-quantum cache engine with CacheeLFU eviction.",
+      "publishedAt": "2026-04-16T01:57:22.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "fd807b222cd3531bfa4810ce3d1ba7e63487dd6428df42fdf89cf4abe11ae281",
+      "title": "How to Implement Automated Steam Publishing with GitHub Actions",
+      "url": "https://dev.to/newbe36524/how-to-implement-automated-steam-publishing-with-github-actions-3i7f",
+      "description": "How to Implement Automated Steam Publishing with GitHub Actions\n\n\n\nThis article shares a complete solution for implementing automated Steam publishing in the HagiCode Desktop project, covering the full automation pipeline from GitHub Release to the Steam platform, including key technical details such as Steam Guard authentication and multi-platform Depot uploads.\nThe Steam platform's publishing process is actually quite different from traditional application distribution methods. Steam has its own complete update distribution system. Developers need to upload build artifacts to Steam's CDN network using the SteamCMD tool, rather than just throwing out a download link like other platforms.\nThe HagiCode Desktop project plans to launch on the Steam platform, which has brought some new challenges to our publishing process:\nNeed to convert existing build artifacts into Steam-compatible format\nMust upload to Steam platform via SteamCMD tool\nMust handle Steam Guard authentication\nNeed to support multi-platform (Linux, Windows, macOS) Depot uploads\nNeed to implement automated flow from GitHub Release to Steam\nThe project had previously implemented a \"portable version mode\" that allows the application to detect fixed service payloads packaged in the extra directory. Our goal is to seamlessly integrate this portable version mode with Steam distribution.\nThe solution shared in this article comes from our practical experience in the HagiCode project. HagiCode is an AI code assistant project that supports desktop execution. We are working on launching on the Steam platform, which is why we needed to establish a reliable automated publishing process.\nThe core of the entire Steam publishing process is a GitHub Actions workflow that divides the process into three main stages:\n┌─────────────────────────────────────────────────────────────┐\n│ GitHub Actions Workflow (Steam Release)                      │\n├─────────────────────────────────────────────────────────────┤\n│ 1. Preparation Phase:                                        │\n│    - Checkout portable-version code                         │\n│    - Download build artifacts from GitHub Release           │\n│    - Extract and prepare Steam content directory            │\n│                                                             │\n│ 2. SteamCMD Setup:                                          │\n│    - Install/reuse SteamCMD                                 │\n│    - Authenticate using Steam Guard                         │\n│                                                             │\n│ 3. Publishing Phase:                                        │\n│    - Generate Depot VDF configuration files                 │\n│    - Generate App Build VDF configuration files             │\n│    - Call SteamCMD to upload to Steam                       │\n└─────────────────────────────────────────────────────────────┘\n\nThe advantages of this design are:\nReuses existing GitHub Release artifacts, avoiding duplicate builds\nAchieves security isolation through self-hosted runners\nSupports preview mode and formal release branch switching\nComplete error handling and logging\nOur workflow supports the following key parameters:\ninputs:\n  release:           # Portable Version release tag\n    description: 'Version tag to publish (e.g., v1.0.0)'\n    required: true\n  steam_preview:     # Whether to generate preview build\n    description: 'Whether to enable preview mode'\n    required: false\n    default: 'false'\n  steam_branch:      # Steam branch to set to live\n    description: 'Target Steam branch'\n    required: false\n    default: 'preview'\n  steam_description: # Build description override\n    description: 'Build description'\n    required: false\n\nFor security reasons, we use a self-hosted runner with the steam label:\nruns-on:\n  - self-hosted\n  - Linux\n  - X64\n  - steam\n\nThis ensures that Steam publishing is executed on a dedicated runner, maintaining secure isolation of sensitive credentials.\nTo prevent releases of the same version from interfering with each other, we configured concurrency control:\nconcurrency:\n  group: portable-version-steam-${{ github.event.inputs.release }}\n  cancel-in-progress: false\n\nNote that cancel-in-progress: false is set here because the Steam publishing process can be lengthy, and we don't want to cancel an ongoing release due to a new trigger.\nThe prepare-steam-release-input.mjs script is responsible for preparing the input needed for publishing:\n// Download build manifest and artifact inventory from GitHub Release\nconst buildManifest = await downloadBuildManifest(releaseTag);\nconst artifactInventory = await downloadArtifactInventory(releaseTag);\n\n// Download compressed packages for each platform\nfor (const platform of ['linux-x64', 'win-x64', 'osx-universal']) {\n  const artifactUrl = getArtifactUrl(artifactInventory, platform);\n  await downloadArtifact(artifactUrl, platform);\n}\n\n// Extract to Steam content directory structure\nawait extractToSteamContent(sources, contentRoot);\n\nSteam requires using Steam Guard to protect accounts. We implemented a code generation algorithm based on shared secrets:\nfunction generateSteamGuardCode(sharedSecret, timestamp = Date.now()) {\n  const secret = decodeSharedSecret(sharedSecret);\n  const time = Math.floor(timestamp / 1000 / 30);\n\n  const timeBuffer = Buffer.alloc(8);\n  timeBuffer.writeBigUInt64BE(BigInt(time));\n\n  // Use HMAC-SHA1 to generate time-based one-time code\n  const hash = crypto.createHmac('sha1', secret)\n    .update(timeBuffer)\n    .digest();\n\n  // Convert to 5-character Steam Guard code\n  const code = steamGuardCode(hash);\n  return code;\n}\n\nThis implementation is based on Steam Guard's TOTP (Time-based One-Time Password) mechanism, generating a new verification code every 30 seconds.\nVDF (Valve Data Format) is the configuration format used by Steam. We need to generate two types of VDF files:\nDepot VDF is used to configure content for each platform:\nfunction buildDepotVdf(depotId, contentRoot) {\n  return [\n    '\"DepotBuildConfig\"',\n    '{',\n    `  \"DepotID\" \"${escapeVdf(depotId)}\"`,\n    `  \"ContentRoot\" \"${escapeVdf(contentRoot)}\"`,\n    '  \"FileMapping\"',\n    '  {',\n    '    \"LocalPath\" \"*\"',\n    '    \"DepotPath\" \".\"',\n    '    \"recursive\" \"1\"',\n    '  }',\n    '}'\n  ].join('\\n');\n}\n\nApp Build VDF is used to configure the entire application build:\nfunction buildAppBuildVdf(appId, depotBuilds, description, setLive) {\n  const vdf = [\n    '\"appbuild\"',\n    '{',\n    `  \"appid\" \"${appId}\"`,\n    `  \"desc\" \"${escapeVdf(description)}\"`,\n    `  \"contentroot\" \"${escapeVdf(contentRoot)}\"`,\n    '  \"buildoutput\" \"build_output\"',\n    '  \"depots\"',\n    '  {'\n  ];\n\n  for (const [depotId, depotVdfPath] of Object.entries(depotBuilds)) {\n    vdf.push(`    \"${depotId}\" \"${depotVdfPath}\"`);\n  }\n\n  if (setLive) {\n    vdf.push(`  }`);\n    vdf.push(`  \"setlive\" \"${setLive}\"`);\n  }\n\n  vdf.push('}');\n  return vdf.join('\\n');\n}\n\nFinally, upload is performed by calling SteamCMD:\nawait runCommand(steamcmdPath, [\n  '+login', steamUsername, steamPassword, steamGuardCode,\n  '+run_app_build', appBuildPath,\n  '+quit'\n]);\n\nThis step is the final leap of the entire process.\nSteam uses the Depot system to manage content for different platforms. We support three main Depots:\n\n\n\nPlatform\nDepot Identifier\nArchitecture Support\n\n\n\n\nLinux\nlinux-x64\nx64_64\n\n\nWindows\nwin-x64\nx64_64\n\n\nmacOS\nosx-universal\nuniversal, x64_64, arm64\n\n\n\nEach Depot has an independent content directory and VDF configuration file, ensuring that users on different platforms only download the content they need.\nFirst, you need to create a GitHub Release in the portable-version repository, including:\nCompressed packages for each platform\nBuild manifest ({tag}.build-manifest.json)\nArtifact inventory ({tag}.artifact-inventory.json)\nManually trigger the workflow through GitHub Actions and fill in the necessary parameters:\nrelease: Version tag to publish (e.g., v1.0.0)\nsteam_branch: Target branch (e.g., preview or public)\nsteam_preview: Whether to enable preview mode\nThe workflow will automatically execute the following steps:\nDownload and extract GitHub Release artifacts\nInstall/update SteamCMD\nGenerate Steam VDF configuration files\nAuthenticate using Steam Guard\nUpload content to Steam CDN\nSet specified branch to live\nConfigure the following secrets in GitHub repository settings:\n\n\n\nSecret Name\nDescription\n\n\n\n\nSTEAM_USERNAME\nSteam account username\n\n\nSTEAM_PASSWORD\nSteam account password\n\n\nSTEAM_SHARED_SECRET\nSteam Guard shared secret (optional)\n\n\nSTEAM_GUARD_CODE\nSteam Guard code (optional)\n\n\nSTEAM_APP_ID\nSteam application ID\n\n\nSTEAM_DEPOT_ID_LINUX\nLinux Depot ID\n\n\nSTEAM_DEPOT_ID_WINDOWS\nWindows Depot ID\n\n\nSTEAM_DEPOT_ID_MACOS\nmacOS Depot ID\n\n\n\n\n\n\nVariable Name\nDescription\nDefault Value\n\n\n\n\nPORTABLE_VERSION_STEAMCMD_ROOT\nSteamCMD installation directory\n~/.local/share/portable-version/steamcmd\n\n\n\nFirst-time run requires manually entering the Steam Guard code. After that, it's recommended to configure a shared secret for automatic code generation. This avoids the need for manual intervention with each publish.\nSteamCMD will save the login token for subsequent reuse. However, note the token's validity period - it will need re-authentication after expiration.\nEnsure the Steam content directory structure is correct:\nsteam-content/\n├── linux-x64/     # Linux platform content\n├── win-x64/       # Windows platform content\n└── osx-universal/ # macOS universal binary content\n\nEach directory should contain the complete application files for the corresponding platform.\nPreview mode does not set any branch to live, making it suitable for testing and verification:\nif [ \"$STEAM_PREVIEW_INPUT\" = 'true' ]; then\n  cmd+=(--preview)\nfi\n\nThis allows uploading to the Steam platform for verification first, then switching to the formal branch after confirmation.\nThe script includes comprehensive error handling and logging:\nVerify GitHub Release existence\nCheck required metadata files\nEnsure platform content exists\nGenerate GitHub Actions summary reports\nThis information is very valuable for debugging and auditing.\nThe workflow generates two types of artifacts:\nportable-steam-release-preparation-{tag}: Publishing preparation metadata\nportable-steam-build-metadata-{tag}: Steam build metadata\nThese artifacts can be used for subsequent auditing and debugging. It's recommended to set the retention time to 30 days.\nIn the HagiCode project, this automated publishing process has successfully run for multiple versions. The entire pipeline from GitHub Release to Steam platform is fully automated without manual intervention.\nThis has significantly improved our publishing efficiency and reliability. Previously, manually publishing a version took over 30 minutes, but now the entire process can be completed in just a few minutes.\nMore importantly, the automated process reduces the possibility of human error. Each publish follows a standardized process with more predictable results.\nThrough the solution shared in this article, we have achieved:\nFull automation from GitHub Release to Steam platform\nSupport for multi-platform Depot uploads\nSecurity authentication based on Steam Guard\nFlexible switching between preview mode and formal publishing\nComprehensive error handling and logging\nThis solution is not only applicable to the HagiCode project but can also provide reference for other projects planning to launch on the Steam platform. If you're also considering Steam automated publishing, I hope the practices shared in this article can be helpful to you.\nIf this article helps you, feel free to give a Star on HagiCode's GitHub repository or visit the official website for more information.\nSteamCMD Documentation\nSteamworks SDK\nHagiCode Project Repository\nHagiCode Official Website\nHagiCode Installation Guide\nHagiCode Desktop\nThanks for reading. If this article helped, consider liking, bookmarking, or sharing it.\nAuthor: newbe36524\n\nOriginal URL: https://docs.hagicode.com/go?platform=devto&target=%2Fblog%2F2026-04-16-steam-release-automation-github-actions%2F\n\nLicense: Unless otherwise stated, this article is licensed under CC BY-NC-SA. Please retain attribution when sharing.",
+      "publishedAt": "2026-04-16T01:49:25.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "083509edf2e2c0f29f2bc6d3f54c9d17f947a6355ccaf1ea8c999750e11e8546",
+      "title": "AWS DevOps Agent のコスト情報を Cost Explorer や CUR から調べてみた",
+      "url": "https://dev.classmethod.jp/articles/aws-devops-agent-cost-check/",
+      "description": "AWS DevOps Agent のコスト情報を Cost Explorer や CUR から調べてみた",
+      "publishedAt": "2026-04-16T00:28:22.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "5c83fad61451c5c8ef8569f803c48d22d1fcd8ed4c1c9c1e1d8674ec912ad50b",
+      "title": "Amazon Connectパフォーマンス評価で生成AIを活用した自動評価が日本語対応しました",
+      "url": "https://dev.classmethod.jp/articles/amazon-connect-ai-performance-evaluation-japanese-support/",
+      "description": "Amazon Connectパフォーマンス評価で生成AIを活用した自動評価が日本語対応しました",
+      "publishedAt": "2026-04-16T00:17:27.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "b81c2cc21541cfadff2a40361f8e4c0fe76b984db89b65cb20dcb345159622fc",
+      "title": "【事例】ペット業界大手コジマがマイクロセグメンテーション製品を導入　その成果を見る",
+      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2604/16/news033.html",
+      "description": "ペット業界大手のコジマは、事業拡大に伴いUTMやEDRなどのセキュリティ対策を強化してきたが、「侵害は防ぎ切れない」という現実に直面していた。同社はこの厳しい事態をどう解消したのか。製品導入の成果を見てみよう。",
+      "publishedAt": "2026-04-15T22:00:00.000Z",
+      "feedName": "＠IT"
+    },
+    {
+      "id": "cf44d1d8600781850a0657d81fd418876343fb64a5246c7c1bd19fd6892f0be1",
+      "title": "[アップデート] AWS Transform が Kiro Power として利用可能になったので使ってみた",
+      "url": "https://dev.classmethod.jp/articles/aws-transform-kiro-vscode/",
+      "description": "[アップデート] AWS Transform が Kiro Power として利用可能になったので使ってみた",
+      "publishedAt": "2026-04-15T21:55:56.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "d16ac9f2449ad77d431c6675cc17a2fe1d6cbca067f2fcbb0a8bdff2bde074a2",
+      "title": "Solid Queue のパフォーマンス特性に関する検証と考察",
+      "url": "https://engineering.dena.com/blog/2026/04/solid-queue/",
+      "description": "はじめに ゲームサービス事業本部の三軒家です。\n社内のとある Ruby on Rails プロダクトにて、ジョブキューシステムのバックエンドを Solid Queue に移行するプロジェクトを推進しています。\nこの記事では、Solid Queue への移行に際して実施した負荷試験の様子と、その結果として得られた Solid Queue のパフォーマンス特性に関する知見についてご紹介しようと思います。\nTL; DR Solid Queue は、シングルスレッドな設定において、 1000 job/s 程度のスループットを安定して処理することができる 1000 job/s = 86400000 job/day なので、8000万 job/day ということになる 37signals1 の DHH氏は Tens of millions of daily HEY jobs now run off SQ exclusively! (数千万/day) と発言しているが、それを超える負荷でもさばき切れるということが示せた https://x.com/dhh/status/1816913608024232032?s=20 さらに、マルチスレッドモードを利用したり、後述の extra claim パッチを利用すれば、不安定ながらも 2000 job/s 程度の負荷であれば捌き切ることができる 高負荷環境においては、Solid Queue のワーカープロセス数の調整が必要となる Solid Queue 移行の背景 今回 Solid Queue への移行を行ったプロダクトは、全世界へ配信を行う複数のモバイルゲームタイトルで利用されている、基盤サーバーシステムです。このプロダクトは Ruby on Rails で長年開発されており、AWS / Google Cloud の両方で運用されています。全世界展開を行うという背景から、高品質でありながらも高いパフォーマンスを発揮しなければならないというミッションが課されています。",
+      "publishedAt": "2026-04-15T15:00:00.000Z",
+      "feedName": "DeNA Engineering"
+    },
+    {
+      "id": "c611a0a3ebfcb215d4bde9e23aaa25c868a15f37d61047e8feeb474bb27cabac",
+      "title": "SoRの復権とSoIの時代の到来 - Nothing ventured, nothing gained.",
+      "url": "https://takoratta.hatenablog.com/entry/2026/04/15/183643",
+      "description": "tl;dr 「SaaS is Dead」は本質を見誤っている。死ぬのはSaaSではなく、従来型のアーキテクチャ 「古い」と思われていたSoR（Systems of Record）が、AIエージェント時代に競争優位の源泉として復権する SoRとSoEを統合する新たな層として、Systems of Intelligence（SoI）の時代が到来した SoIの概念は10年前から存在し...",
+      "publishedAt": "2026-04-15T10:59:16.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "125e9148507f5fdd4d351f7be63c1f51296c68231c5ae11f64418784395f218a",
+      "title": "Amazon Quick Event 東京リージョンローンチ記念イベント 開催報告",
+      "url": "https://aws.amazon.com/jp/blogs/news/amazon-quick-tokyo-region-launch-event-report/",
+      "description": "2026 年 3 月 27 日、Chat Agent や Flows をはじめとする Amazon Quick のAI Agent 機能の東京リージョンローンチを記念したイベント「Amazon Quick Event」が開催されました。本イベントでは、Amazon Quick の製品紹介や Amazon 社内での活用事例に加え、AWS パートナー企業やお客様による具体的な導入事例が共有されました。会場には多くのお客様にお越しいただき、オンラインでも多数の方にご参加いただきました。本記事では、イベントの模様をレポートします。",
+      "publishedAt": "2026-04-15T09:44:06.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "66cc6eff28f870082e014825e173723d173aa2d443dbaa8eb29257c023888ce0",
+      "title": "猫でもわかるAWSのスイッチロール ~IAMも一緒にざっくり理解する~",
+      "url": "https://dev.classmethod.jp/articles/iam-switch-role-even-a-cat-can-get-it/",
+      "description": "猫でもわかるAWSのスイッチロール ~IAMも一緒にざっくり理解する~",
+      "publishedAt": "2026-04-15T09:18:37.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "24e647139498040ad4b65f36d7a7e081b05e23d9b9e8be3032a259371a8cfe09",
+      "title": "AWS TransformのVS Code拡張機能でFuelPHPのシステムを移行前に解析してみた",
+      "url": "https://dev.classmethod.jp/articles/aws-transform-vscode-fuelphp-pre-migration-analysis/",
+      "description": "AWS TransformのVS Code拡張がリリース。FuelPHPコードに包括的な分析を実行したところ、アーキテクチャ図・DBパターン・移行計画・テストケースを含む32ファイルが自動生成されました。",
+      "publishedAt": "2026-04-15T08:52:24.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "53fe29cfff2ac8c468674a9cb0d7ca81122f41d5d2a23c4bbc73c9dc81184799",
+      "title": "AWS Batch コンピュート環境の AMI 更新有無がバッチイメージステータスで確認できるようになりました",
+      "url": "https://dev.classmethod.jp/articles/aws-batch-compute-environment-batchimagestatus/",
+      "description": "AWS Batch コンピュート環境の AMI 更新有無がバッチイメージステータスで確認できるようになりました",
+      "publishedAt": "2026-04-15T08:26:37.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "1e733527f44bcb07fb874467d8daa8d13f33862f7b183d5efbecf7affb1846bc",
+      "title": "AWS と Google Cloud を直結する AWS Interconnect - multicloud が GA になりました！",
+      "url": "https://dev.classmethod.jp/articles/aws-and-google-cloud-aws-interconnect-multicloud-ga/",
+      "description": "AWS と Google Cloud を直結する AWS Interconnect- multicloud が一般提供となりました！料金も帯域幅に対する時間料金だけで、送信データ量に対する料金がないので通信し放題です！！！",
+      "publishedAt": "2026-04-15T07:53:43.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "07e56ea84285b8a973c597306f95f69aa11d788cbf1ad20577091a9f94181d9f",
+      "title": "スギ薬局様の AWS 生成 AI 事例：業務課題に向き合う組織体制と、生成 AI による現場変革",
+      "url": "https://aws.amazon.com/jp/blogs/news/genai-case-study-sugi-pharmacy/",
+      "description": "スギ薬局様では、現場の業務課題と技術を組織的に結びつける体制のもと、Amazon Bedrock を活用した年末調整 QA ボットと調剤医薬品在庫確認エージェントを構築。成果が次の AI 活用を呼ぶサイクルが回り始めています。",
+      "publishedAt": "2026-04-15T05:31:03.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "233fdcf1350d5487493ab7e4fa7c00a9bbf7d08671aaf3bf549b54a8faf8b94c",
+      "title": "侵害の7割超を防ぐには？　Google Cloudが60のセキュリティチェックリスト公開",
+      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2604/15/news060.html",
+      "description": "Google Cloudは、クラウド環境の基本的なセキュリティ対策を体系的に整理した「推奨セキュリティチェックリスト」を公開した。同社のCISOオフィスと各分野の専門家が精査した60のセキュリティ項目を、6つの領域にわたって体系化したものだ。",
+      "publishedAt": "2026-04-15T04:00:00.000Z",
+      "feedName": "＠IT"
+    },
+    {
+      "id": "a90dcd3f2811d750dd7c59f3b97caad4621f616e8a6e8fb0a873a8443c4cb268",
+      "title": "Anthropic、「Claude Code」の新機能「ルーチン」を発表 ～自動実行の新しい仕組み／リサーチプレビューとして「Pro」、「Max」、「Team」、「Enterprise」プランでテスト",
+      "url": "https://forest.watch.impress.co.jp/docs/news/2101693.html",
+      "publishedAt": "2026-04-15T01:50:50.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "7c0c7a0951a9e3940ad10fa2d774c41b24888f33dd8185985455d3590a0bc781",
+      "title": "Cloudflare、こんなに無料でいいんだろうか ― 「クラウド」の定義が書き換わったことに気づかない人々へ｜白井暁彦 aka しらいはかせ",
+      "url": "https://note.com/o_ob/n/ndadf268735f4",
+      "description": "Cloudflare、こんなに無料でいいんだろうか ― 「クラウド」の定義が書き換わったことに気づかない人々へ 全世界で数百万人が同時にアクセスするようなサービスを設計し、AWSに毎月、数十万から数百万円という「血の滲むようなコスト」を支払い続けてきた立場から言わせてもらえば、今のCloudflareが提示している世界観は...",
+      "publishedAt": "2026-04-15T00:15:03.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "e4cc7878026ceefbeee8b3b06183191f8434092a3f67e76a85f7b31bb831afed",
+      "title": "セキュリティ分析AIエージェント実装にみるハーネスエンジニアリング",
+      "url": "https://zenn.dev/ubie_dev/articles/sec-agent-harness-eng",
+      "description": "先日、zennの記事にて紹介したセキュリティアラートに関する分析を担うAIエージェント Warren のハーネスエンジニアリングについて社内で共有したところ、思いの外盛り上がったので記事にしてみました。一般的な生成AIエージェントの話だけでなくセキュリティ分析に特化した話も織り交ぜていますが、何かのご参考になれば幸いです。\n\n今回対象となるWarrenは各サービス・監視装置から受け取ったアラートを分析するための生成AIエージェントになります\n\n 前提：ハーネスエンジニアリングとは\n\n 一般的な定義\nハーネスエンジニアリングという言葉は、2026年2月のMitchell Hashimoto...",
+      "publishedAt": "2026-04-14T23:24:32.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "b037d8a555530654b81eb76a898318466adf6216b32fe50a42fe2b5ca5dcffe8",
+      "title": "Cloudflare Workers Python を楽に書きたい！！",
+      "url": "https://zenn.dev/t3tra/articles/96019c46972bda",
+      "description": "こんにちは。今回は Cloudflare Workers Python を楽に扱える SDK を開発したので、それを紹介しようと思います。\nまず、Cloudflare Workers と言うと JavaScript / TypeScript のためのプラットフォーム、という印象が強いかもしれません。\nただ最近は Python Workers もベータとして提供されていて、Python で Worker を書くことができます。Cloudflare 公式は Python Workers が first-class な開発体験を目指しており、JavaScript runtime APIs への...",
+      "publishedAt": "2026-04-14T21:47:45.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "830f2134693452f91d0b9fdc482869ce93cfcea686e2bcc2053c5065f2d6ef1c",
+      "title": "\"use server\" も \"use client\" も要らない —TanStack Start が示す新しいRSCの形",
+      "url": "https://zenn.dev/sc30gsw/articles/e656fa295deb3f",
+      "description": "はじめに\n2026年4月、TanStack Start が React Server Components (RSC) をサポートしました。\nhttps://x.com/tannerlinsley/status/2043725484446601429\nTanStack StartのRSCが面白いのは、Next.jsやその他のフレームワークとはまったく異なる設計思想を持つ点です。\nその思想を一言で表すと 「RSC はデータである」 ということです。\n\n RSC の現状と問題\nReact Server Components とは、ブラウザではなくサーバー側で実行されるタイプのコンポーネン...",
+      "publishedAt": "2026-04-14T14:55:20.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "ccce6404c39ea5783c09e940d112b234a78084703d7691839c9a6f9b40c3d393",
+      "title": "htmxとAPIで爆速Webアプリ開発 — ReactもNext.jsも要らない時代が来た？",
+      "url": "https://qiita.com/okadada/items/5dde0a7259d142d88551?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "htmxとAPIで爆速Webアプリ開発 — ReactもNext.jsも要らない時代が来た？\n\nはじめに\n近年、Webフロントエンド開発は複雑化の一途を辿っています。ReactやNext.jsといった強力なフレームワークは、素晴らしいユーザー体験を提供する一方で、複雑なビ...",
+      "publishedAt": "2026-04-14T11:58:15.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "695589ab1bef994de5e9556db6dc096086cfcee25d82597f4cd67b55b535c0e2",
+      "title": "エフェクトイベントとは何か？useEffectEventを理解する",
+      "url": "https://zenn.dev/yend724/articles/20260414-195637896vp2b6jp",
+      "description": "React 19.2からuseEffectEventというフックが追加されました。\nuseEffectEventについて、公式ドキュメントでは次のように説明されています。\n\nuseEffectEvent は、エフェクトから非リアクティブなロジックを、エフェクトイベント (Effect Event) と呼ばれる再利用可能な関数へと抽出できるようにする React フックです。\n参照：https://ja.react.dev/reference/react/useEffectEvent\n\n本記事では、「エフェクトイベント」とは何かを確認しながら、useEffectEventについて紹介したい...",
+      "publishedAt": "2026-04-14T09:02:49.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "760a36e0aacd9c17425063c676c905722980f1824cc70421112b2810421b0a6b",
+      "title": "Linuxに移行してもう1年、戻れなくなった話",
+      "url": "https://zenn.dev/digeon/articles/42f4788894cfb4",
+      "description": "WindowsやMacからLinuxに完全に移行して1年が経ちました。\n最初は「本当に大丈夫かな」と不安もありましたが、今では「もう他のOSには戻れない」と思うほど気に入っています。\nそんな私がWindowsやMacを使っている人にLinuxに来ないかという布教活動です！\n\n なぜLinuxに変えたのか\n日常の開発でアプリをキーボードだけで切り替えたいというのがきっかけです。MacやWindowsでもできたのですが動作が遅かったからです。\n\n 開発効率が大きく向上\nWebアプリやクラウドサービス、Dockerは基本的にLinuxネイティブです。\nそのため、Windowsで開発していると頻...",
+      "publishedAt": "2026-04-14T06:09:04.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "d9286a9028d4e248118fd412bd741cdd8a1e47e6096689523cf2a30d1773891a",
+      "title": "【LLM Wiki】Obsidian x Claude Codeで学んだ知識を構造化し記憶媒体を脳からAIに移行する",
+      "url": "https://zenn.dev/dely_jp/articles/8b55114cc0b958",
+      "description": "はじめに\nこんにちは！「PayPayで！」バーコードリーダーを画面に直接押し当ててくるのは止めてください。たろう眼鏡です。\nクラシル社でサーバサイドの開発をしています。\n前回の記事ではKarpathy氏のautoresearchを紹介して、バックエンドのパフォーマンスチューニングに転用しました。今回もKarpathy氏です。もう完全にファンクラブです。\n2026年4月、Karpathy氏がLLM WikiというGistを公開しました。ざっくり言うと、RAGのように毎回ドキュメントを検索して回答を生成するのではなく、LLMに永続的なWikiを書かせて知識を蓄積&整理&育...",
+      "publishedAt": "2026-04-14T00:19:30.000Z",
+      "feedName": "Zenn"
     }
   ]
 }
