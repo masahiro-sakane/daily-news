@@ -105,198 +105,6 @@
       "feedName": "Qiita"
     },
     {
-      "id": "e031d1da346c90c2d6f67816e0a78ca1f6b4e24d8034e4204c56b4d5d558e2db",
-      "title": "Push events into a running session with channels - Claude Code Docs",
-      "url": "https://code.claude.com/docs/en/channels",
-      "description": "Use channels to push messages, alerts, and webhooks into your Claude Code session from an MCP server. Forward CI results, chat messages, and monitoring events so Claude can react while you’re away. Channels are in research preview and require Claude Code v2.1.80 or later. They require claude.ai l...",
-      "publishedAt": "2026-03-20T02:09:11.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "bb286acaa51b57084230ffbd998ee1179d2aed45d4524645f04685cb2b6bdd9d",
-      "title": "LLMにちゃんと“電卓と検索”を使わせるには — ReActスタイルのツール利用・実装入門",
-      "url": "https://zenn.dev/lluminai_tech/articles/ae5020da567bcd",
-      "description": "はじめに ルミナイR&Dチームの栗原です。 最近の LLM は、テキストを出すだけでなく、 電卓 Web 検索 社内 API データベース など、**外部ツールを叩きながらタスクをこなす「エージェント」**として使われることが増えています。 ただ、 「いつツールを呼ぶべきか？」 「どの引数で呼ぶべきか？」 「ツールの結果をどう...",
-      "publishedAt": "2026-03-20T00:58:30.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "7e66fd34d7ad2735e6ad985f22f787f14dc7effbd8af05c8889b87198a0cba2a",
-      "title": "CDK for TypeScriptで検証するAgentCore Observabilityゼロコード計装の仕組み",
-      "url": "https://gihyo.jp/article/2026/03/aws-llmops-02?utm_source=feed",
-      "description": "連載第二回である今回は、そのアーキテクチャを支える技術基盤のひとつであるAgentCore Observabilityに焦点を当てます。",
-      "publishedAt": "2026-03-19T23:51:00.000Z",
-      "feedName": "gihyo.jp"
-    },
-    {
-      "id": "b2a2c6bab793fe2921d1757fd4b888bd1acddd8ea307e739ecee1b483cb10d20",
-      "title": "Claude Code の /batch コマンドで同じ作業を6並列で回してみた",
-      "url": "https://dev.classmethod.jp/articles/claude-code-batch-parallel/",
-      "description": "Claude Code /batch コマンドの使い方を実例で解説。Vitest テスト生成の並列実行、rules/skills でのルール適用、実案件で学んだ注意点をまとめました。",
-      "publishedAt": "2026-03-19T14:30:17.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "2d00e76cf7430c412ff138d41efbcbbbc37af848ef95fc14cbbf6d30b9565057",
-      "title": "AWS Community Builders（Serverless）に選出されました",
-      "url": "https://qiita.com/tetutetu214/items/ed8662412cc98a0d5868?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "はじめに\nこの度 AWS Community Builders 2026 に Serverless カテゴリーで応募し、選出いただきました。\nこの記事では、結果的に選出へと繋がった「私がこの1年、どんな思いをもって取り組んできたのか」についてまとめます。\n応募を検討してい...",
-      "publishedAt": "2026-03-19T13:45:32.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "3c3cd54262188360e4d365add4c626fc246ed291e376bfdab82559791fe52028",
-      "title": "Policy-as-Code: Flexible Kubernetes governance with Kyverno",
-      "url": "https://www.cncf.io/blog/2026/03/19/policy-as-code-flexible-kubernetes-governance-with-kyverno/",
-      "description": "Overview Kubernetes has fundamentally transformed how enterprises deploy and manage business workloads. As organizations build production applications at scale on Kubernetes, cluster size and complexity continue to grow—creating unprecedented challenges in ensuring cluster security, compliance, and...",
-      "publishedAt": "2026-03-19T11:00:00.000Z",
-      "feedName": "Cloud Native Computing Foundation"
-    },
-    {
-      "id": "47fa15595520947ee5d8efe4818f2e5aa7e7d9bfc438c48cf2098ac8f7d9568f",
-      "title": "Amazon SageMaker を使用したレイクハウスのアーキテクチャ選択ガイド",
-      "url": "https://aws.amazon.com/jp/blogs/news/navigating-architectural-choices-for-a-lakehouse-using-amazon-sagemaker/",
-      "description": "Amazon SageMaker のレイクハウスアーキテクチャにおけるストレージパターンの選択ガイドです。データレイク (汎用 S3、S3 Tables) とデータウェアハウス (Redshift Managed Storage) の特性を比較し、ETL、Zero-ETL、データフェデレーションなどのデータ取り込みパターンとともに、ユースケースに応じた最適なアーキテクチャの選択方法を解説します。",
-      "publishedAt": "2026-03-19T10:41:10.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "67fa10f79121478c326e2ac5fb432532fb45ae3177afcffb5a92fc53df403112",
-      "title": "Amazon EMR Serverless のベストプラクティス 10 選",
-      "url": "https://aws.amazon.com/jp/blogs/news/top-10-best-practices-for-amazon-emr-serverless/",
-      "description": "Amazon EMR Serverless のパフォーマンス、コスト、スケーラビリティを最適化するためのベストプラクティス 10 選を紹介します。アプリケーション設計、ワーカーの適正化、Graviton プロセッサの活用、ストレージ選択、マルチ AZ 構成など、効率的なデータ処理パイプラインの構築に役立つ実践的な推奨事項をまとめています。",
-      "publishedAt": "2026-03-19T10:40:32.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "14708a2dad30d19847e2569b390cc92a397246944ec91427034c254cb2f2e290",
-      "title": "cdk acknowledge でAWS CDKの通知メッセージを抑制する",
-      "url": "https://dev.classmethod.jp/articles/suppress-cdk-notices-with-acknowledged-issue-numbers/",
-      "description": "cdk acknowledge でAWS CDKの通知メッセージを抑制する",
-      "publishedAt": "2026-03-19T10:12:10.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "e68bda928f26c11d6b1b189101536790806f8e29b48021d5febbc0d1f942e50a",
-      "title": "AWS Load Balancer Controller が Kubernetes Gateway API サポートの一般提供を開始",
-      "url": "https://aws.amazon.com/jp/blogs/news/aws-load-balancer-controller-adds-general-availability-support-for-kubernetes-gateway-api/",
-      "description": "AWS は最近、Amazon Web Services (AWS) Load Balancer Controller による Kubernetes Gateway API サポートの一般提供を発表しました。これまで、AWS Load Balancer Controller は Kubernetes Ingress と Service リソースの要件を満たすため、それぞれ Application Load Balancer (ALB) と Network Load Balancer (NLB) をプロビジョニングしていました。この新機能により、標準の Kubernetes Gateway API を使用してAWSロードバランシング機能を定義できるようになりました。",
-      "publishedAt": "2026-03-19T10:08:05.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "a941c48a0efdd4c7f925e78045888f4f16229524c788a393e4384289867b7473",
-      "title": "Dynatrace、ドメイン特化型のAIエージェントを発表　SREチームの業務効率化を促進",
-      "url": "https://enterprisezine.jp/news/detail/23970",
-      "description": "Dynatraceは、サイト信頼性エンジニアリング（SRE）、開発、セキュリティチームにおけるAIの自律的なアクションを促す、ドメイン特化型エージェントを発表した。エージェント型運用システム「Dyn...",
-      "publishedAt": "2026-03-19T09:10:00.000Z",
-      "feedName": "EnterpriseZine"
-    },
-    {
-      "id": "40c51d6be4c8e310b9fed154986a9b03c56240786cb117abe4045183bb12c8cc",
-      "title": "AWS Client VPN（相互認証）のハンズオンを試してみた",
-      "url": "https://dev.classmethod.jp/articles/aws-client-vpn-mutual-auth-handson/",
-      "description": "AWS Client VPN（相互認証）のハンズオンを試してみた",
-      "publishedAt": "2026-03-19T09:09:41.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "91837154753ab30226e2e90645838074522316b6f7ff2e7f6e82e0fa878e758e",
-      "title": "Oracle Database@AWS におけるレジリエンシーのための Well-Architected 設計",
-      "url": "https://aws.amazon.com/jp/blogs/news/well-architected-design-for-resiliency-with-oracle-databaseaws/",
-      "description": "本記事は 2026/2/24に投稿された Well-Architected design for resili […]",
-      "publishedAt": "2026-03-19T08:15:07.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "32dea0c45302a73571fe7e14659dd7c5f9cddca47b88548e1f429987604ba987",
-      "title": "Plaud NotePin S発表、物理ボタン追加でハイライト対応--ウェアラブルAIレコーダー新型",
-      "url": "https://japan.cnet.com/article/35245264/",
-      "description": "PLAUDがウェアラブルAIレコーダー「Plaud NotePin S」を2万8600円で発売する。ボタン操作でハイライト記録が可能になり、4種類のアクセサリーを同梱。日本ユーザーのデータはAWS東京リージョンで保管し、法人利用のハードルを下げた。",
-      "publishedAt": "2026-03-19T08:00:00.000Z",
-      "feedName": "CNET Japan"
-    },
-    {
-      "id": "c51228a04ec77d42905381108a942ee9ef8215f8a20dc9e431c15f4bea9b56e3",
-      "title": "アクセンチュアとGoogle Cloud、「AI駆動型サイバー脅威」に対する“能動的セキュリティ”実現支援で協力",
-      "url": "https://enterprisezine.jp/news/detail/23969",
-      "description": "アクセンチュアとGoogle Cloudは戦略的パートナーシップをさらに拡大し、高度に個別化されたソーシャルエンジニアリング攻撃から自律型マルウェアまで、複雑化・高度化するAI駆動型サイバー脅威に対...",
-      "publishedAt": "2026-03-19T07:06:00.000Z",
-      "feedName": "EnterpriseZine"
-    },
-    {
-      "id": "8bf6d4c7bd4ee20f790b6b0e214913739c584b341a2d8f72dcf70a6ac4df642b",
-      "title": "AWS Console for SAP Applications の発表：AWS 上の SAP アプリケーションを登録・管理するための統合エクスペリエンス",
-      "url": "https://aws.amazon.com/jp/blogs/news/announcing-aws-console-for-sap-applications-a-unified-experience-to-register-and-manage-your-sap-applications-on-aws/",
-      "description": "本日、AWS Console for SAP Applications の提供開始を発表します。これは、AWS 上で稼働する SAP HANA ベースのアプリケーションを登録・管理するための、アプリケーション中心のビューを SAP のお客様に提供する新しい一元管理エクスペリエンスです。このコンソールは、登録済みの SAP アプリケーションの表示、ランディングゾーンのセットアップ状況の把握、SAP ワークロードが使用するリソースの可視化を行うための統合ダッシュボードを提供します。アプリケーション詳細ページでは、アプリケーショントポロジーや関連リソースの表示に加え、アプリケーションを考慮した起動/停止、SAP ワークロード構成の自動検証、スケジュールされたオペレーションなどの管理操作を実行できます。",
-      "publishedAt": "2026-03-19T07:00:27.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "b364f43cee4967ac7469ed9e522f885a9a8b529c90ff64b5ff7444d364c9a6fd",
-      "title": "Goで値オブジェクトをどこまで作るべきか〜コスパの良いDDD戦術設計〜",
-      "url": "https://zenn.dev/135yshr/articles/98473f8e119657",
-      "description": "本記事はDDD/クリーンアーキテクチャ連載の一部です。Goで値オブジェクト（Value Object）をどの粒度で作るべきかについて、実務での判断基準を紹介します。各セクションの根拠となる一次情報源は、該当箇所に参照リンクを記載しています。 DDDの戦術設計を学ぶと、「プリミティブ型をそのまま使わず、値オブジェクトに...",
-      "publishedAt": "2026-03-19T05:49:20.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "4dfa23e26bbdfcf826e2ba153d36a443a04d1d53fe68736f6878d7705b5958dd",
-      "title": "Java歴21年のエンジニアが同じAPIをJava・Go・Rust・Kotlinで実装して徹底比較した",
-      "url": "https://zenn.dev/netfishx/articles/4ee8f57d8a8ec7",
-      "description": "はじめに\n筆者はJava歴21年のバックエンドエンジニアです。現在は日本のIT企業で働きながら、自社プロダクト（短動画プラットフォーム）のバックエンドを開発しています。\n元々Spring Bootで構築していた本番環境をGoに移行し、さらにRustで書き直しました。その過程で「ちゃんと数字で比較したい」と思い、同じAPIをKotlin（Ktor）でも実装し、4言語の実測データを取りました。\n本記事では、同一仕様のAPIを4言語で実装し、スループット・レイテンシ・メモリ・起動時間・ビルド時間・コード量を比較した結果を共有します。\n\n テスト環境\n\n\n\n項目\n詳細\n\n\n\n\nマシン\nmac...",
-      "publishedAt": "2026-03-19T05:44:43.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "99d07b5fc4d2c75ddd54567c58af3bca2ffc134f9c3b5bbe4d35dd1bbd74cf2b",
-      "title": "CODEX / Antigravity / Claude Codeに同じクラサバ型アプリを作らせて比較した話",
-      "url": "https://qiita.com/Sh1n0g1/items/bb35d6c224634237f968?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "目次\n\nテスト対象\n結論\n作らせたアプリ「Windowsセキュリティチェッカー」\nVibeCodingから動かすまで\n結果・比較\nスクリーンショット\n利用したプロンプト\nクライアントのリスク判定基準\n\nテスト対象\n\n月額3000円～4000円のプランを利用した\nいずれ...",
-      "publishedAt": "2026-03-19T05:33:19.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "db942133a71c15cdafe25cf84b3393f0206519700de850d4ba9015f526864684",
-      "title": "AWS Organizations における不正なアカウント離脱を防止するための重要なセキュリティコントロール",
-      "url": "https://aws.amazon.com/jp/blogs/news/essential-security-controls-to-prevent-unauthorized-account-removal-in-aws-organizations/",
-      "description": "AWS メンバーアカウントが侵害された場合、攻撃者はアカウントを組織から離脱させ、すべてのガバナンスコントロールを無効化する可能性があります。本記事では、サービスコントロールポリシー (SCP)、安全なアカウント移行、一元化されたルートアクセス管理などの多層的なセキュリティコントロールを使用して、AWS 環境を保護する方法を解説します。",
-      "publishedAt": "2026-03-19T04:57:04.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "c760b021857fb6e31eac114660830c324bc41b9650cbac70a57f2321c1c9b3b9",
-      "title": "作って、捨てて、また作る - Claude Code に社内ツールの開発を丸ごと任せた49日間の記録",
-      "url": "https://dev.classmethod.jp/articles/claude-code-49days-build-scrap-rebuild/",
-      "description": "Claude Code に社内ツールの開発を丸ごと任せた49日間の記録です。\nアーキテクチャを途中で変え、10日間で111タスクを実装し、2,755件のテストが通ったものの、採用したプラットフォームの構造的な速度制限により本番採用を見送りました。高速に作って、高速に失敗して、次に活かす。AI 駆動開発で「撤退判断」まで行った体験記です。（読み終わるまでの時間：20分程度）",
-      "publishedAt": "2026-03-19T04:37:28.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "fbd3844e18368d6f01252585704ce1f1ea8d7d90607d4142f7ad04496d873843",
-      "title": "業務アプリのフロントエンド負債と向き合い、Tailwind CSS から Panda CSS への移行を決めた話",
-      "url": "https://zenn.dev/levtech/articles/frontend-kaizen-pandacss",
-      "description": "はじめに\nはじめまして。2025 年 10 月より、レバテック開発部にジョインした早川です。\n私たちのチームでは、社内業務を効率化するための Web アプリケーションを Next.js（App Router）+ TypeScript で開発しています。フロントエンドのスタイリングには Tailwind CSS を採用しており、プロジェクト開始から 1 年半が経過してコードベースは 200 ファイルを超える規模になっていました。\n私が入ったタイミングでは、すでにフロントエンドの技術選定に関わったメンバーは異動しており、デザイナーも不在。スタイルのルールが不明確なまま、画面数とコードが増...",
-      "publishedAt": "2026-03-19T04:15:04.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "90c440b548a84b892a0ed646bab13be16899f023853ca436ea09d4e596c4ccf4",
-      "title": "Microsoft、「Microsoft Store」の開発者向け分析・配布ツールを強化",
-      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2603/19/news072.html",
-      "description": "Microsoftは「Microsoft Store」の開発者向けツールを強化した。アプリのパフォーマンス分析機能の改善、Webインストーラーの機能拡張、新しいCLIの提供が主な内容となる。",
-      "publishedAt": "2026-03-19T04:00:00.000Z",
-      "feedName": "＠IT"
-    },
-    {
-      "id": "c34088bb2c5fec9926fa242768d4fbd60ab795a6d32c455005e8333c785fccaa",
-      "title": "生成AI時代のドキュメント基盤",
-      "url": "https://zenn.dev/nuits_jp/articles/2026-03-19-genai-documentation-foundation",
-      "description": "本項はFindy様のイベント\n\n仕様駆動開発（Spec-Driven Development） Lunch Talk\n\nで発表した発表原稿を、加筆修正したものになります。\nスライドはこちら\n\n生成AI時代のドキュメント基盤 - Docswell\n\n\n 生成AI、活用されていますか？\n生成AI、活用されていますか？\n私はもう毎日、どっぷりつかっています。\n\n 仕様駆動開発にも注目\nそんな中、仕様駆動開発も注目を集めてきました。\n\nAWS - Kiro\nGitHub - Spec Kit\nFission-AI - OpenSpec\ngotalab - cc-sdd\n\n\n ドキュメントの重要性...",
-      "publishedAt": "2026-03-19T03:34:48.000Z",
-      "feedName": "Zenn"
-    },
-    {
       "id": "3d60173ad505c1fdd16421b79e5b2e57857ba97b926e311bc8c766b987a073f6",
       "title": "Migrating 8 SvelteKit Sites to Vite 8 in a day: What We Learned",
       "url": "https://dev.to/rickcogley/migrating-8-sveltekit-sites-to-vite-8-in-a-day-what-we-learned-4le8",
@@ -399,22 +207,6 @@
       "description": "はじめに\nRust で DI をどうやるか調べていて entrait を試しました。\nRust で DI しようとすると、トレイトの手動定義、各構造体への impl、テスト用モック構造体の量産と、書くべきコードが多くなります。entrait はこの問題を #[entrait] マクロで解決します。関数を書くだけでトレイトが自動生成され、依存関係は Rust の trait bounds で表現されます。Impl<T> というラッパー型を通じて、アプリケーション状態に対してすべてのトレイトを実装します。テスト用モックの生成には unimock を使います。\n検証用に EC ...",
       "publishedAt": "2026-03-20T08:31:56.000Z",
       "feedName": "Zenn"
-    },
-    {
-      "id": "57dcfa8c323cf7c6c9a74d0105676d86de3e1add37ea3a3048b929a9b5c15895",
-      "title": "AI前提のセキュリティ対策室での仕事 - Pepabo Tech Portal",
-      "url": "https://tech.pepabo.com/2026/03/19/ai-and-security-team/",
-      "description": "セキュリティ対策室のn01e0です。 この記事では、セキュリティ対策室で私がAI(広義)をどのように活用しているかを紹介します。 Attack Surface Managementの自動化から、機械学習による異常検知、AIエージェントを活用した脆弱性診断まで、私の業務の各領域でAIが前提となりつつある現状をお伝えします。 PASM (Pepabo A...",
-      "publishedAt": "2026-03-19T07:23:37.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "bbcdeff8cd7191ab4b8da3891c0bea2dca9afcc31b3694e0b24b53965d20e6fb",
-      "title": "AWS認定の勉強方法",
-      "url": "https://qiita.com/K24same/items/2d180fad1a49ab9d825e?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "AWS認定の勉強方法と考え方について\n\n初めに\n下期にAWS認定を5個(DOP、SCS、DVA、MLA、DEA)取ったので、勉強方法と考え方についてまとめています。\n内容については以下を記載します\n1.勉強の仕方\n2.問題の解き方\n3.AWS認定を取って実務に活用できてい...",
-      "publishedAt": "2026-03-19T04:11:59.000Z",
-      "feedName": "Qiita"
     },
     {
       "id": "a4995c44d53c3daaf77d1142d91ce65e222f48e4ef9ef76f8ee57414fad150ac",
@@ -6085,6 +5877,150 @@
       "description": "この記事は約6分で読めます。\n\n筆者プロフィール: ソフトウェアエンジニア。「知った気にならない。いつまでも学び続ける」を信条に、業務と個人開発の両輪で技術を磨いています。AI 駆動開発で複数の個人開発アプリを構築・運用中。\n👉 ポートフォリオ: 筆者ホームページ\nGit...",
       "publishedAt": "2026-04-15T11:56:11.000Z",
       "feedName": "Qiita"
+    },
+    {
+      "id": "25557f679159715b1c58a17a3ef36bc0c7f63a82a1c9b3af8904a93e7bbe9386",
+      "title": "How I Rebuilt Educando.app's Core: Tavily + GPT-5.4 nano Search Pipeline",
+      "url": "https://dev.to/lusrodri/how-i-rebuilt-educandoapps-core-tavily-gpt-54-nano-search-pipeline-28g6",
+      "description": "After a security incident forced Educando.app offline, I took the opportunity to rethink the entire product. The original version was a Gemini-powered activity generator for Brazilian teachers. The new version is an intelligent content repository with a semantic search pipeline. This post is about the technical decisions behind that rebuild.\nThe original architecture was simple: user submits a prompt → Next.js API route → Gemini Flash → response streamed to the UI. It worked, but it had two structural problems.\nFirst, a compromised API key triggered unauthorized generation at scale. The key was client-accessible during an early dev iteration and never fully locked down server-side. Lesson: even keys that \"should\" be server-only need to be audited regularly — especially when Vercel environment variable scoping can be misconfigured silently.\nSecond, the value was never in real-time generation. Teachers don't want to prompt an LLM. They want to find a good activity fast, trust it, and use it. A repository with good search solves that better than a generator.\nThe core is a three-layer pipeline:\nUser query → Tavily search → GPT-5.4 nano evaluation → ranked JSON → UI\n\nLayer 1: Tavily\nTavily handles the actual search. It returns structured results with titles, descriptions, and URLs. The query goes in raw — no preprocessing — and Tavily does the semantic heavy lifting.\nLayer 2: GPT-5.4 nano evaluation\nEach result batch gets passed to GPT-5.4 nano with a structured prompt asking it to score and rank the results as JSON. The model evaluates relevance, content quality, and match to the Brazilian curriculum (BNCC codes). The prompt enforces strict JSON output — no preamble, no markdown fences — so the response can be parsed directly.\nconst evaluationPrompt = `\nYou are evaluating educational activity search results for Brazilian teachers.\nScore each result from 0-10 based on: relevance, pedagogical quality, BNCC alignment.\nReturn ONLY a JSON array: [{ \"index\": 0, \"score\": 8, \"reason\": \"...\" }, ...]\nResults: ${JSON.stringify(searchResults)}\nQuery: \"${userQuery}\"\n`\n\nGPT-5.4 nano is the right model here — it's fast, cheap, and the task is classification/ranking, not generation. No need for a larger model.\nLayer 3: Supabase cache\nResults are cached in Supabase keyed by a normalized query hash. Cache hit = skip Tavily + GPT entirely. This keeps costs predictable and latency low for repeated queries.\nconst queryHash = createHash('md5').update(normalizedQuery).digest('hex')\nconst cached = await supabase\n  .from('search_cache')\n  .select('results')\n  .eq('query_hash', queryHash)\n  .single()\n\nif (cached.data) return cached.data.results\n\nA separate search_telemetry table logs every query and click for future ranking improvements.\nThe old schema was flat — just the generated text blob. The new schema is structured:\ncreate table activities (\n  id uuid primary key default gen_random_uuid(),\n  title text not null,\n  theme text not null,\n  short_description text,\n  long_description text,\n  bncc_codes text[],\n  type text,\n  image_url text,\n  created_at timestamptz default now()\n);\n\nBNCC codes are the Brazilian national curriculum identifiers (e.g. EF05LP01). Having them as a queryable array field lets the search layer filter by curriculum alignment without relying purely on semantic matching.\nActivity thumbnails go through a qwen/qwen-image-2-pro pipeline on Replicate. The model handles resizing, quality normalization, and description extraction — the output feeds back into the activity metadata for better search indexing.\nThe original version had FingerprintJS + IP hashing. It was complex and brittle — VPN, browser switch, new tab, and the identity broke.\nThe new version uses Cloudflare Turnstile at the edge combined with server-side rate limiting per IP. Turnstile runs before the request hits the Next.js API route, so abuse is stopped at the CDN level. Simpler, more reliable, and no client-side fingerprinting library to maintain.\nNo auth in this version. The Saved Activities feature is scoped to v2, which will include Supabase Auth + Google SSO. There was no reason to ship an auth system without a paywall to motivate it.\nNext.js + TypeScript — unchanged\nSupabase — database, cache, telemetry\nTavily — search\nGPT-5.4 nano — result evaluation and ranking\nReplicate (Qwen) — image processing\nCloudflare Turnstile — abuse prevention\nVercel — deployment\nThe premium tier — download/print behind a paywall, Supabase Auth, Google SSO — is designed but not yet shipped. The repository needs enough content before a paywall makes sense.\nThe security incident was painful. Rebuilding was the right call.",
+      "publishedAt": "2026-04-19T02:22:50.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "016340c316e1c8654855bdc81298973c1b0f175ad48e07499c93ddec32f9300d",
+      "title": "Stop Over-Testing the UI. Your API Deserves the Spotlight.",
+      "url": "https://dev.to/vinod_kumar_d26c0bc8c7f3b/stop-over-testing-the-ui-your-api-deserves-the-spotlight-1941",
+      "description": "Why shifting your automation budget away from brittle browser tests and toward API testing is the smartest move your QA team can make right now.\nThere is a particular kind of pain that every QA engineer knows intimately. You spend days scripting a thorough end-to-end test suite. The selectors are clean, the waits are tuned, the coverage looks impressive. Then a designer nudges a button two pixels to the right — and half your suite is on fire. No regression. No bug. Just a broken test that cost you a morning to untangle.\nThis is the silent tax of UI automation done without restraint. And most teams are paying it without realizing there is a better way to spend that same effort.\n\n\n\n\nAPI Testing ✅\nUI Automation ❌\n\n\n\n\nExecution speed\nMillisecond range\nSeconds to minutes\n\n\nMaintenance burden\nMinimal\nHigh\n\n\nValidation level\nLogic-level\nPresentation-level\n\n\nParallelization\nEasy\nInfrastructure-heavy\n\n\nStability\nStable by nature\nFlaky by nature\n\n\nInfrastructure cost\nLow\nHigh\n\n\n\nThe Testing Pyramid — popularized by Mike Cohn and later refined by Martin Fowler — is one of those ideas that everyone nods at and almost nobody follows. At the base sit unit tests: fast, cheap, and numerous. In the middle are service or API tests. At the tip, small and deliberate, sit UI tests. The shape is intentional.\n         /\\\n        /  \\\n       / UI \\         ~10%   slow · costly · fragile\n      /------\\\n     /  API   \\       ~30%   fast · stable · powerful  ← double down here\n    /----------\\\n   /    Unit    \\     ~60%   instant · cheap · comprehensive\n  /--------------\\\n\nIn practice, many teams invert this pyramid. They write comparatively few unit tests, a moderate amount of API tests, and an enormous Selenium or Playwright suite that acts as the primary regression safety net. The result is a \"testing ice cream cone\" — and it melts under pressure every single sprint.\nModern API testing tools like Postmate Client make this shift easier by allowing teams to run API tests, compare responses, and debug issues directly inside VS Code without relying on UI automation.\nA single Playwright test that boots a browser, navigates through a login flow, clicks through three pages, and asserts on a modal might take 15 to 30 seconds on a good day. Multiply that across 400 tests in a CI pipeline and you are waiting 90 minutes for a red or green signal. By the time the build finishes, the developer has context-switched twice and the bug is already compounding into related work.\n\n\n\nMetric\nValue\n\n\n\n\nAvg. API test execution\n~20ms\n\n\nAvg. UI test execution\n~18s\n\n\nSpeed difference\n~900× faster\n\n\n\nAn API test makes an HTTP request and asserts on a JSON response. No browser launch. No rendering engine. No waiting for JavaScript hydration. The whole thing runs in under 50 milliseconds. A thousand API tests finish before a single UI test has rendered its first page. That is not a marginal difference — it is a different category of feedback loop entirely.\n\"The goal of test automation is fast, reliable feedback. A slow, flaky test suite is not a safety net — it is a liability.\"\nUI tests are tightly coupled to the presentation layer. Selectors, element hierarchies, CSS classes, and page structure all become implicit dependencies. When the frontend evolves — and it always does — tests break. Not because there is a regression in behavior, but because the implementation changed. This is the worst kind of false failure: it erodes trust in the suite and trains teams to ignore red builds.\nAPI tests are coupled to contracts: endpoints, request schemas, response structures. These change far less frequently than UI layout, and when they do change, they represent a real semantic shift in product behavior — exactly the kind of change you want tests to catch. Maintenance of an API test suite scales with business logic, not pixel movement.\n💡 Practical rule of thumb: If a test breaks because a designer changed a button label or refactored a CSS class, the test was testing the wrong thing. Business logic lives in your API, not your DOM. Put your automation where the logic is.\nNone of this means you should delete your Playwright suite. UI tests earn their place in specific, irreplaceable scenarios:\nValidating critical user journeys end-to-end\nCatching visual regressions when combined with screenshot diffing tools\nVerifying accessibility with real browser rendering\nSmoke-testing deployments before releasing to production traffic\nThe key word is few and deliberate. Cover the five or ten flows that define your product's core value. Keep them focused. Treat UI tests as expensive assets, not cheap ones — because they are.\nEvery hour your team stops spending maintaining a fragile selector can become an API test that covers a whole category of edge cases:\nBoundary conditions on validation logic\nError response shapes and status codes\nAuthentication token expiry behavior\nRate limiting and throttling\nPagination correctness\nSchema contract validation\nThese are the tests that catch real bugs before users do — and they run in your CI pipeline in seconds, not minutes.\nContract testing with tools like Pact adds another layer: it validates that services communicate exactly as both sides expect, catching integration failures before they reach a shared environment. That is the kind of coverage no amount of end-to-end UI scripting can reliably replicate.\nThere is a resource argument here too. Authoring and maintaining a robust Selenium or Playwright suite requires dedicated effort — often a full QA engineer or more. The same team, focused on API and contract testing, can achieve:\nBroader coverage across more scenarios\nFaster pipelines with shorter feedback loops\nMore reliable signals with fewer flaky failures\nWhen you also consider the infrastructure cost of running hundreds of parallelized browser instances in CI versus running HTTP clients, the economics become difficult to ignore.\n\"You do not have an automation strategy if your pipeline takes two hours and fails randomly on Tuesdays.\"\nTools like Postmate Client help teams transition to API-first testing workflows without changing their entire CI setup.\nIf your team is UI-test-heavy today, a big-bang migration is not the answer. Here is a practical approach:\nAudit your existing suite — identify which UI tests validate business logic with no corresponding API test, and which are duplicating coverage that could live at the API layer more cheaply.\nMove the duplicates first — rewrite those as API tests and delete the UI equivalents.\nSet a new default policy — new feature coverage defaults to API tests; UI tests require a deliberate justification.\nKeep your smoke suite small — 10 to 20 critical path UI tests is a healthy ceiling for most products.\nTrack your pipeline time — make it a team metric. Watch it drop.\nWithin a few sprints, you will start noticing the build getting faster. The flake rate dropping. Developers trusting the suite again. That is what a healthy testing strategy feels like.\nBuilt for developers who want faster API testing workflows → Postmate Client\nThe testing pyramid was never a suggestion. It is an architecture. The teams that respect its proportions ship faster, debug faster, and sleep better. Stop automating everything you can see. Start rigorously testing everything that matters.\nYour API is where the truth lives — test it there.",
+      "publishedAt": "2026-04-19T01:50:39.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "dec35179e4c2c8b59d1cc6c82b98cf28bbb546aaf9c8ccb37568148f947ce0cf",
+      "title": "How to Implement Customer Success for Non-SaaS Companies",
+      "url": "https://dev.to/james_dong_fe741d15cf974d/how-to-implement-customer-success-for-non-saas-companies-cnl",
+      "description": "By Chinmay Pingale, Co-founder of Cuelock.\nOriginally published on cuelock.com/blog.\nI'll be blunt. Customer Success for Non-SaaS companies is not about relationship building. It's about operational reliability under pressure.\nLook, most traditional businesses already \"have relationships.\" That's not the bottleneck. The bottleneck is what happens when something goes wrong. Orders slip. Projects stall. Renewals get wobbly. Information lives in emails, Slack, and one person's head. In those moments, your organization behaves like a system without error handling.\nCustomer success, done well, is the layer that adds that error handling. It's the discipline that turns messy, person-dependent heroics into a repeatable production process. Well instrumented. Well rehearsed. Well documented.\nWhy this matters? Because retention in non-SaaS compounds slowly and punishes mistakes quickly. Every prevented churn event is not just saved revenue, it's saved distraction, saved cost-to-serve, and saved organizational whiplash.\nAccount management optimizes for relationship and revenue capture. Customer Success optimizes for outcomes and risk reduction.\nFor account management, the unit of work is the account. For CS, the unit of work is the situation. A risky implementation. A delayed shipment. A troubled renewal.\nIn my experience at companies like ServiceChannel, the best teams had both. Account managers owned the commercial relationship. CS owned the health of the delivery system. When that line blurred, things got sloppy fast.\nComplexity has outrun memory.\nMore products. More integrations. More stakeholders. More bespoke work. You can't run a modern non-SaaS business on institutional knowledge and hallway handoffs. Customer Success is how you encode that tribal knowledge into a repeatable system that actually works under pressure.\nI've seen mid-market industrial suppliers move from \"Bob is the system\" to structured playbooks that cut renewal escalations by about 50% inside a year. Same revenue. Far less chaos.\nExamples include, but are not limited to:\nSubscription or recurring contracts\nLong implementation cycles\nHigh switching costs\nComplex delivery or service models\nMulti-stakeholder buyers\nIn other words, Customer Success isn't about being nicer to customers, it's about managing operational risk that Sales can't and Delivery won't. If your revenue depends on what happens after the contract is signed, you need a dedicated layer that owns that reality, documents it, and improves it over time. If it doesn't, adding CS just creates another team in the loop without changing any outcomes.\nRenaming Account Managers as \"CSMs\" tends to look like progress on a slide while changing very little in practice. Incentives stay the same, workflows stay the same, and when the next high-stakes moment hits, you still rely on heroics. It's the organizational equivalent of shipping code straight to production without tests you absorb all the risk and get none of the reliability.\nThe other traps are quieter but just as costly. Teams build elaborate health scores that look impressive in dashboards and get ignored in real life, adding maintenance work without reducing risk. Leaders treat Customer Success purely as a cost center, which optimizes for activity instead of outcomes. And when Sales or Delivery create systemic problems, those issues get routed to individual CSMs, slowly burning them out rather than fixing the underlying system. Cosmetic changes feel safe. They don't move the needle. Real progress starts when you change how the system actually works.\nAsk yourself a few simple questions. Do you regularly hit high-stakes moments where retention is on the line? When those moments arrive, does the response depend on who happens to be on shift? And after the fire is out, do you actually extract lessons, or just move on and hope it doesn't happen again?\nIf the answer to any of these is yes, you're not ahead of the curve. You're already behind it.\nSuccess is not \"happy customers.\" It's durable retention, predictable renewals, and fewer fire drills. Write this down in one sentence. If you can't, you're not ready to build anything.\nSales, Delivery, and Finance need the same definition of success. If Sales sells unrealistic timelines, CS inherits impossible risks.\nAt a facilities management company I worked with, simply aligning on a single \"successful go-live\" definition reduced post-sale escalations by roughly 30% over two quarters. Clarity compounds.\nWhat you get: a north star that makes every later decision easier.\nFor high-touch: deeper relationships, fewer accounts, higher cost, stronger risk mitigation.\nFor scaled: lighter coverage, more automation, lower cost, more variance in outcomes.\nThe primary difference is control versus efficiency. Most non-SaaS companies land in hybrid. High-touch for strategic accounts, scaled for the long tail.\nHere's the thing. If onboarding is messy, CS will spend its life cleaning it up.\nMy default: Delivery owns execution. CS owns clarity of milestones and risk escalation paths. In the case that you don't have a dedicated Delivery team, it does make sense for CS to own it, but it's crucial to have the correct playbooks in place.\nSales sells. If you have a delivery or implementation team, they build and execute. Customer Success keeps the train on the tracks after launch. If you don't have a separate delivery team, then Sales closes and hands the relationship to CS, and CS effectively owns post-sale execution and risk. In both cases, the principle is the same: clear lanes reduce friction, and ambiguity creates it.\nWhen those lanes are fuzzy, handoffs turn into blame games and every escalation becomes a debate about \"who dropped it.\" When they're crisp, risk gets owned in the right place and problems get solved faster. What you get is fewer turf wars, smoother transitions, and more forward motion.\nStart by making your milestones undeniable. Create one single source of truth that everyone points to, not three spreadsheets and a shared drive no one checks.\nNext, assign real owners to every milestone. Name a person, not a team, and make it explicit who moves the ball forward when things slip.\nFinally, define what \"off track\" actually means before you're in the middle of a crisis. Is it a missed date? A budget overrun? A stakeholder going quiet? Spell it out.\nSimple. Boring. Effective.\nDon't overcomplicate this. A good quarterly review fits on three slides outcomes, risks, and next steps. Outcomes keep you honest about value delivered, risks force you to surface what everyone can see but avoids saying, and next steps create forward motion instead of vague agreement. If you can't run that meeting crisply, no amount of tooling will save you.\nI've seen teams at companies like Schneider Electric standardize this simple format and cut \"surprise\" renewals by more than half within a year. The template didn't win deals by itself. The discipline did.\nSo the account gets flagged as \"at risk,\" and now you're in production, not planning.\nYou're moving through your day, and then a critical customer misses a milestone. The Slack pings start. Calendars explode. Pressure spikes. What happens next?\nIn the good version, there's a clear playbook. You know who leads, what context gets pulled in, and where every action is tracked. In the bad version, everyone reacts in parallel email threads, context fragments, and the loudest voice wins.\nStructure beats heroics.\nDon't design your renewal process in the final 30 days before a contract comes due. That's when pressure is highest and judgment is worst. The work has to be done while things are calm, not when they're on fire.\nBe explicit about the mechanics. Who drafts the renewal? Who is responsible for surfacing risks early? Who owns escalation if something goes sideways? Write it down and make it repeatable instead of relying on memory or goodwill.\nWhen you do this well, you replace end-of-quarter chaos with steady, predictable motion.\nA good first Customer Success hire is less a people person in a title and more a systems person who happens to be good with people. They naturally see broken flows before anyone else, own risk instead of deflecting it, and understand how customer outcomes connect to revenue rather than optimizing only for \"happiness.\" They're steady in high-stakes moments, credible with Sales and Delivery from day one, and disciplined about documenting and standardizing what actually works. In practice, you're better off with a system builder who can grow their relational muscle than a pure relationship manager who can't build anything that lasts.\nEvery business calibrates this differently, and that's fine. A complex services firm will need a different profile than a distributor or a manufacturer, so there isn't one universal \"right\" archetype. Frankly, your very first CS hire probably won't be perfect, and that's normal. In early-stage functions you learn by doing, which means you'll likely iterate on people as much as on process. Cycling through a hire or two while you figure out what you actually need is not a failure of strategy, it's part of building a function that can scale.\nAccount Managers are naturally oriented toward the commercial side of the house, how to protect and grow revenue, manage the contract, and navigate pricing and negotiations. Customer Success, by contrast, is oriented toward the health of the account and the mechanics of risk resolution whether milestones are being hit, issues are being surfaced early, and problems are being resolved in a durable way. Both roles create real value, just in different parts of the customer lifecycle. Unless your team is very small or your model is unusually simple, collapsing them into a single role tends to blur incentives and weaken both motions rather than making things cleaner.\nWhen you scale a CS team, the order matters. Start centralized so you can see patterns, agree on what \"good\" looks like, and standardize how work actually gets done. Only then should you decentralize and embed CS more deeply with different segments, regions, or product lines.\nIf you push autonomy too early, you don't scale expertise, you scale inconsistency. Done in the right sequence, you end up with a team that compounds its learning instead of fragmenting into isolated silos.\nUse health scores lightly. They're best treated as signals, not oracles. A score can nudge you to look closer, but it shouldn't replace judgment or context. When teams start treating a number as ground truth, they stop listening to what's actually happening with the customer.\nThe key isn't perfect accuracy. It's creating a shared language about risk that Sales, Delivery, and CS can all recognize. A simple, imperfect score that gets everyone aligned and talking about the same problems will outperform a \"precise\" model that no one trusts or uses.\nYour CRM should remain the system of record for accounts, contracts, and activity. But when customer risk surfaces, speed without alignment is just chaos in motion, and a CRM is a poor place to run that moment. You need a dedicated space where the team can move fast, stay aligned, and execute a clear, repeatable response so CSMs can focus on the right actions, pull in the right people, and prevent issues from slipping through the cracks. This is exactly the gap Cuelock is built to fill, especially for non-SaaS companies that need more structure and systems around onboarding, renewal, and risk. It gives teams a structured workspace for running playbooks, coordinating stakeholders, and capturing what actually happened so the organization can learn from it and steadily raise its standard for managing customer risk.\nThis is not meant to be prescriptive, but instead a blueprint that worked for me, and the companies I've helped. The best thing you could do is take inspiration and apply it meaningfully to your organization.\nDefine success in one sentence. Be explicit about the outcome you care about most. For example: \"Reduce last-minute renewal escalations for our top 20 accounts.\" Write it down and socialize it with Sales, Delivery, and Finance. If people don't nod to the same definition, you're not aligned.\nMap your riskiest customer moments. List the 5 to 7 moments that reliably create pain. Examples include, but are not limited to: delayed go-lives, missed milestones, scope creep, executive escalations, or renewal surprises. For each one, note who is involved, what usually breaks, and where information lives today.\nPick one risk scenario to standardize. Choose the moment that is both frequent and high stakes. Don't pick the hardest or the fanciest pick the one that will move the needle in 90 days. This is your beachhead.\nWhat you get: a focused problem that everyone agrees matters.\nShip a lightweight playbook for that scenario. Define three things only:\nWho leads when this risk appears.\nWhat context must be pulled in immediately.\nWhere actions get tracked in one place.\nKeep it short enough that someone could follow it under pressure.\nTrain the team by running it, not explaining it. Walk through a recent real example together. Ask: \"If this happened again tomorrow, what would we do differently?\" Calibrate the playbook based on that discussion.\nStart documenting every instance in one place. Create a single home for risk cases. Every time the scenario happens, open a record, follow the playbook, and capture what actually occurred. This is where your institutional memory begins.\nWhat you get: a working process you can observe and improve, not a slide deck.\nMeasure what actually changes, not what looks good on a dashboard. Start with two simple questions. Did escalations for this scenario meaningfully drop? And did renewals or outcomes feel less frantic and less last-minute? If you can't answer those clearly, your playbook still has too much wiggle room and your tooling probably isn't giving you a clean view of what really happened.\nThen iterate from reality, not consensus. Tighten ownership where things stalled, simplify steps that people quietly bypassed, and strip out anything that created friction without reducing risk. This is where having a single, structured place like Cuelock to run and review your risk cases pays off you can see patterns instead of relying on memory or scattered Slack threads. Your goal is fewer surprises, not a prettier process.\nFinally, decide whether to expand with discipline. If the first scenario is running cleanly, pick a second high-impact risk moment and repeat the cycle. If it isn't, stop. Fix what you have before you scale it.\nJames and Chinmay Pingale are the co-founders of Cuelock, a customer success platform for SaaS teams. Learn more about the team or read more posts on the Cuelock blog.",
+      "publishedAt": "2026-04-19T01:50:15.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "6e0a9898e0a2e8e1c43bbf36561e6306f2b51dcbdba5f248b1da312209168872",
+      "title": "地下鉄に乗るなりノートPCを開いてガンガン仕事しだしたお姉さんが、取引先の人で、かつ超秘密事項と思われる情報を見ていてビビり倒した→「公共交通機関でPC作業してる人本当に怖い」",
+      "url": "https://togetter.com/li/2687456",
+      "description": "ねくたい @nekutai_start 新人へ ・私物のUSBは仕事で使うな ・社外メールの宛先はちゃんと確認しろ ・エッチなサイトを会社のPCでは絶対見るな ・カフェに社用携帯やパソコンを置き忘れるな ・新幹線でパソコン開くな顧客情報が見えてるぞ ・席を離れるときはWindows +Lで画面ロックしろ 情報セキュリティを甘く見るな ...",
+      "publishedAt": "2026-04-18T15:43:57.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "4dd7a598c70e6e0844f296ad5a9595b375368e6188ad89e6ce86bb61cd4b6357",
+      "title": "AWS と NVIDIA によるフィジカル AI の加速: シミュレーションと実世界での学習による本番環境向けアプリケーションの構築",
+      "url": "https://aws.amazon.com/jp/blogs/news/accelerating-physical-ai-with-aws-and-nvidia-building-production-ready-applications-with-simulation-and-real-world-learning/",
+      "description": "本記事は 2026/04/15 に公開された “Accelerating physical AI […]",
+      "publishedAt": "2026-04-18T15:05:39.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "4b701b3700c31f842df1f62bcee13718a4b8321c8fa04f69f39b4a751b708341",
+      "title": "今月 GA された AWS DevOps Agent のスペース作成から GitHub 連携までを AWS CDK で実装してみた",
+      "url": "https://dev.classmethod.jp/articles/aws-devops-agent-cdk-implementation-github-integration/",
+      "description": "今月 GA された AWS DevOps Agent のスペース作成から GitHub 連携までを AWS CDK で実装してみた",
+      "publishedAt": "2026-04-18T14:41:51.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "ae9fb94f3bb163fd93cff35e8d5b399bd933f7ac594c301a817cf963506d42db",
+      "title": "社内SQLチューニングコンテストの開催にあたって得られた知見",
+      "url": "https://zenn.dev/forcia_tech/articles/202604_devsemi_sql",
+      "description": "エンジニアの吉田です。 フォルシアにはdevゼミという文化があり、エンジニアが講師となって自身の詳しい分野に関する講義やハンズオンを行っています。 私もこれまでに何度かSQLチューニングを題材としたdevゼミを開講してきましたが、いずれもこちらが一方的に話すという形式に終始しており、実際に受講者が手を動かせ...",
+      "publishedAt": "2026-04-18T10:29:02.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "e51f2f9618167f1472fefef6877c44f26ddb7dea5fd20e59b863e94a93c389c8",
+      "title": "Async React時代の宣言的UI 2: トランジション対応のuseDebouncedフックを作る",
+      "url": "https://zenn.dev/uhyo/articles/async-react-debounce-2",
+      "description": "皆さんこんにちは。以下の記事では、Async React時代の宣言的UIとして、デバウンスをuseDeferredValueで代替する方法を示しました。\nhttps://zenn.dev/uhyo/articles/async-react-debounce\n記事の末尾で「実際には、ネットワークアクセスをデバウンスしている場合とか応用形もあるのですが」と述べたので、今回はネットワークアクセスを含む場合について考えたいと思います。\n今回の記事に登場するコードは以下のStackBlitzで実際に動作を確認できます。\n\n\n 今回の要件\n前回の記事では、ユーザーが入力すると、フロントエンドで検索結...",
+      "publishedAt": "2026-04-18T08:54:05.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "e13f66c04ccc81c009dc42b17054dc2911da8f6dc1f0ff115a23e203af4b42ba",
+      "title": "次世代バージョン管理システムの基礎となる堅牢なアーキテクチャ「Manyana」、CRDTの利用によりマージやリベースに強みを発揮",
+      "url": "https://gigazine.net/news/20260418-manyana/",
+      "description": "バージョン管理システムの歴史は1972年のSCCS(Source Code Control System)から始まり現在ではGitが主流となっています。長い歴史の中でバージョン管理システムはどんどん便利になりましたが、「今後はどのように進化していくのだろうか」という疑問に対する回答ともいえる、次世代のバージョン管理システムを構成するア...",
+      "publishedAt": "2026-04-18T08:51:50.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "a699bd89b62a93e79a1895c54ab4a7e258829679bc41a158d9f6ab5fa99644e6",
+      "title": "LINE公式Go SDKでモックサーバーを叩いてみたら、SDKとの互換性の穴が2つ見つかった話",
+      "url": "https://qiita.com/crowdy/items/800439e271272c3dec3d?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\n前回の記事で、LINE Messaging API のモックサーバー (line-api-mock) を作って ConoHa VPS にデプロイしました。Node.js の公式 SDK (@line/bot-sdk) では baseURL を差し替えるだけで動作...",
+      "publishedAt": "2026-04-18T06:10:23.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "b4b9ed9a8fc7c5609e27975b866f3e06a4456cc1751d92a383dff77bbe2cc865",
+      "title": "AIコーディングツール1億5000万DLの根幹MCPに設計欠陥：Anthropicは「仕様」と修正を拒否 — XenoSpectrum",
+      "url": "https://xenospectrum.com/mcp-stdio-design-flaw-anthropic/",
+      "description": "AIコーディングツールを使っているなら、その足元が揺らいでいる可能性がある。Claude Code、Cursor、Windsurf——これらが共通して依存するMCP（Model Context Protocol）に、アーキテクチャレベルの設計欠陥が発見されたというのだ。200以上のオープンソースプロジェクト、1億5000万超のダウンロード、7000以上の公開サ...",
+      "publishedAt": "2026-04-17T17:20:04.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "4fcbf73820194fba57544291a14d8745d6be3b2def1c52875ce516285960fe14",
+      "title": "Claude Code モデル別に追加耐性テストをしてみた",
+      "url": "https://qiita.com/aito1234/items/11c70a0b2a2362a5c913?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "1.はじめに\nClaude Codeを使っていると、モデルによって出力の精度が違うことは体感的に分かります。\nただ、実際に開発を何度か行ってきて、本当に効いてくるのはそこではなく、\n「機能を追加するたびに、既存の何かが壊れるかどうか」\nだと感じました。小さな変更を重ねるう...",
+      "publishedAt": "2026-04-17T13:37:24.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "2e1c8fc39a29435ecdbdcbaf227e8e719eb81ad6e8c3ef2f7ef6631753be384e",
+      "title": "話題基点で交流できるコミュニティSNSを作った！｜ぽメイト",
+      "url": "https://note.com/pomate_cc/n/n7c34ecf9500e",
+      "description": "はじめにPomateという掲示板型のコミュニティサービスを作りました！ まだ人がいないのでテスト用のスレやコメのみですpomate.cc 一言で言うと「半匿名型掲示板式SNS」です。 ありそうでなかった匿名とニックネームの自由な切り替えを主軸のコンセプトとして、日本のかつてのコミュニティの中心であった匿名掲示板の流れ...",
+      "publishedAt": "2026-04-17T07:31:19.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "94ff65963867bc04be17e543f76fb1eac3a769a7d088c4dbc89d7a71be6a8b7d",
+      "title": "Solid Queue のパフォーマンス特性に関する検証と考察 | BLOG - DeNA Engineering",
+      "url": "https://engineering.dena.com/blog/2026/04/solid-queue/",
+      "description": "はじめに ゲームサービス事業本部の三軒家です。 社内のとある Ruby on Rails プロダクトにて、ジョブキューシステムのバックエンドを Solid Queue に移行するプロジェクトを推進しています。 この記事では、Solid Queue への移行に際して実施した負荷試験の様子と、その結果として得られた Solid Queue のパフォーマン...",
+      "publishedAt": "2026-04-17T05:01:49.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "ae9fb94f3bb163fd93cff35e8d5b399bd933f7ac594c301a817cf963506d42db",
+      "title": "社内SQLチューニングコンテストの開催にあたって得られた知見",
+      "url": "https://zenn.dev/forcia_tech/articles/202604_devsemi_sql",
+      "description": "エンジニアの吉田です。\nフォルシアにはdevゼミという文化があり、エンジニアが講師となって自身の詳しい分野に関する講義やハンズオンを行っています。\n私もこれまでに何度かSQLチューニングを題材としたdevゼミを開講してきましたが、いずれもこちらが一方的に話すという形式に終始しており、実際に受講者が手を動かせる形式での講義も望まれていました。\n色々とやり方を模索した結果、コンテスト形式で実際にPostgreSQLのチューニングを行ってもらう、という形の講義を行うことになりました。コンテスト形式での実施にあたりいろいろと工夫した点や学びがあったので、以下にそれらをまとめます。\n\n SQLチュ...",
+      "publishedAt": "2026-04-17T04:00:10.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "9bc89c17b43befb4734e6698691a8e3d66f9b7d390a5303eeb368b1e9924917e",
+      "title": "お薦めの「Linux」デスクトップ5選--2026年版",
+      "url": "https://japan.zdnet.com/article/35246327/",
+      "description": "「Linux」の長所は、信頼性、セキュリティ、安定性にとどまらない。OSのほぼあらゆる要素において、豊富な選択肢が用意されている点も大きな魅力である。各ディストリビューションが標準で採用している構成をそのまま利用することも可能だが、Linuxを選択する以上、ユーザーの選択肢が制限されることはない。 こうした柔...",
+      "publishedAt": "2026-04-17T02:21:33.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "a3fae48b2bdfad5202f6bd5a50958212d7fec3fde5ff456e4a925e5375c07c9e",
+      "title": " 【AI for Science 研究者向け】GraphRAG で科学文献ナレッジグラフを構築する ─ Azure AI Foundry 実践ガイド",
+      "url": "https://qiita.com/hisaho/items/0d779317551f86091bed?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\nMicrosoft GraphRAG は、LLM を使って文書コーパスから 知識グラフを自動構築 し、グラフベースの RAG（Retrieval-Augmented Generation）を実現するオープンソースフレームワークです。\n従来のチャンクベース RAG...",
+      "publishedAt": "2026-04-17T00:52:18.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "33051cc7795461a79f839a7c593e56044d3c6a4cb7f19d326350a097e65af7ef",
+      "title": "Azure Lifecycle with Copilot CLI",
+      "url": "https://speakerdeck.com/torumakabe/azure-lifecycle-with-copilot-cli",
+      "description": "※リンクを効かせたい場合はダウンロードしてください",
+      "publishedAt": "2026-04-16T22:43:31.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
     }
   ]
 }
