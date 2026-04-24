@@ -9,237 +9,6 @@
       "feedName": "豆蔵デベロッパーサイト"
     },
     {
-      "id": "b34ebf88373d6a479857f8107c4167369568b791d72c59e89c93aeb77b93f928",
-      "title": "The Complete Guide to Model Context Protocol (MCP): Building AI-Native Applications in 2026",
-      "url": "https://dev.to/universe7creator/the-complete-guide-to-model-context-protocol-mcp-building-ai-native-applications-in-2026-10c5",
-      "description": "The Complete Guide to Model Context Protocol (MCP): Building AI-Native Applications in 2026\n\n\nA technical deep-dive into Anthropic's open standard for connecting AI assistants with external data sources and tools\nThe Model Context Protocol (MCP) has emerged as the definitive standard for building AI-native applications that can seamlessly interact with external data sources, tools, and services. Originally developed by Anthropic and released as an open standard in late 2024, MCP has rapidly gained adoption across the AI ecosystem, with major platforms like OpenAI, Vercel, and numerous developer tools integrating support.\nAs of March 2026, MCP represents more than just a protocol—it's a fundamental shift in how we architect AI applications. This guide explores MCP's architecture, implementation patterns, and real-world applications for developers building the next generation of AI-powered software.\nModel Context Protocol is an open standard that enables AI assistants to connect to external data sources and tools through a standardized interface. Think of it as \"USB-C for AI applications\"—a universal connector that allows any AI assistant to plug into any data source or tool that implements the protocol.\nMCP is built on several key principles:\nDecoupling: Separate the AI model from the data sources it accesses\nStandardization: Provide a common language for AI-tool communication\nComposability: Allow developers to mix and match data sources and tools\nSecurity: Built-in authentication and permission mechanisms\nExtensibility: Easy to add new capabilities without breaking existing integrations\nMCP defines three primary roles in its architecture:\nHosts are AI applications that initiate connections and use MCP to access data and tools. Examples include:\nClaude Desktop\nClaude Code\nOpenClaw and other agent frameworks\nCustom AI applications\nClients run within hosts and manage the connection to servers. They handle:\nProtocol negotiation\nMessage routing\nCapability discovery\nRequest/response lifecycle\nServers provide the actual data and tool capabilities. They expose:\nResources: Read-only data sources (files, databases, APIs)\nTools: Executable functions that can perform actions\nPrompts: Pre-defined templates for common tasks\nMCP operates over several layers:\nApplication Layer (Claude, OpenClaw, etc.)\nMCP Client (Capability Discovery, Routing)\nTransport Layer (stdio, HTTP/SSE, WebSocket)\nMCP Server (Resources, Tools, Prompts)\nData Sources (Files, APIs, Databases)\n\nLet's build a practical MCP server that exposes GitHub repository data.\nThe TypeScript implementation includes:\nServer initialization with capabilities\nTool handlers for repository operations\nResource handlers for trending data\nError handling and response formatting\nSetup: Install @modelcontextprotocol/sdk\n\n\nDefine Tools: List available operations with JSON schemas\nImplement Handlers: Execute tool calls and return results\nConfigure Transport: Use stdio for local, HTTP for remote\nClaude Code uses MCP to integrate with:\nGit repositories (status, diff, commit)\nFile systems (read, write, search)\nTerminal commands (execute, stream output)\nLSP servers (code intelligence)\nMCP enables AI assistants to:\nQuery SQL databases directly\nAccess cloud storage (S3, GCS, Azure Blob)\nConnect to data warehouses (Snowflake, BigQuery)\nRead from APIs and webhooks\nCommon MCP server implementations include:\nKubernetes: List pods, deployments, services\nAWS/GCP/Azure: Manage cloud resources\nDocker: Container management\nTerraform: Infrastructure state inspection\nTypeScript: @modelcontextprotocol/sdk (most mature)\nPython: mcp package\nRust: mcp-rs community implementation\nGo: go-mcp community implementation\n\n\n\nServer\nPurpose\nGitHub Stars\n\n\n\n\nfilesystem\nLocal file access\n2,500+\n\n\ngithub\nGitHub API integration\n1,800+\n\n\npostgres\nPostgreSQL queries\n1,200+\n\n\nsqlite\nSQLite database access\n900+\n\n\nfetch\nHTTP requests\n800+\n\n\nbrave-search\nWeb search via Brave\n600+\n\n\n\nBuild small, focused MCP servers that do one thing well.\nAlways return structured error responses with isError: true.\nInclude usage examples in tool descriptions.\nProtect downstream services from excessive requests.\nAs we progress through 2026, MCP is evolving:\nExpanding beyond text to support images, audio, video, and binary data.\nRemote servers over WebSocket, serverless functions, edge deployment.\nPlatforms for discovering, rating, and deploying MCP servers.\nIndustry groups working on common definitions and interoperability.\nModel Context Protocol represents a fundamental shift in how we build AI applications. By decoupling AI models from data sources through a standardized interface, MCP enables:\nFaster development: Reuse existing MCP servers\nBetter composability: Mix and match data sources\nImproved security: Centralized authentication\nEcosystem growth: Thriving marketplace of implementations\nFor developers building AI-native applications in 2026, understanding MCP is essential infrastructure knowledge.\nOfficial Documentation: https://modelcontextprotocol.io\n\n\nGitHub Repository: https://github.com/modelcontextprotocol\n\n\nTypeScript SDK: https://github.com/modelcontextprotocol/typescript-sdk\n\n\nPython SDK: https://github.com/modelcontextprotocol/python-sdk\n\n\n\n\n\n\nPublished March 2026 by Can Koylan — Exploring the frontiers of AI infrastructure.",
-      "publishedAt": "2026-03-25T02:05:29.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "76acf8e31b95aebee38d85f86610c6cb355d9a343662dc72a2574f103337fe00",
-      "title": "Matrix Math for Developers Who Skipped Linear Algebra",
-      "url": "https://dev.to/alphashark/matrix-math-for-developers-who-skipped-linear-algebra-195i",
-      "description": "If you work with graphics, machine learning, game development, or 3D rendering, you need matrix operations. If you skipped linear algebra in college (or never took it), here is the practical subset that covers most real-world use cases.\nA matrix is a 2D array of numbers. That is all. No mystery. A 3x3 matrix has 3 rows and 3 columns:\n| 1  2  3 |\n| 4  5  6 |\n| 7  8  9 |\n\nIn JavaScript:\nconst matrix = [\n  [1, 2, 3],\n  [4, 5, 6],\n  [7, 8, 9]\n];\n\nElement-wise. Both matrices must have the same dimensions.\nfunction add(A, B) {\n  return A.map((row, i) => row.map((val, j) => val + B[i][j]));\n}\n\nThis is where most developers stumble. Matrix multiplication is NOT element-wise. The element at position (i,j) in the result is the dot product of row i from matrix A and column j from matrix B.\nRequirements: A must have the same number of columns as B has rows. An m*n matrix times an n*p matrix produces an m*p matrix.\nfunction multiply(A, B) {\n  const rows = A.length;\n  const cols = B[0].length;\n  const n = B.length;\n\n  const result = Array.from({ length: rows }, () => \n    Array(cols).fill(0)\n  );\n\n  for (let i = 0; i < rows; i++) {\n    for (let j = 0; j < cols; j++) {\n      for (let k = 0; k < n; k++) {\n        result[i][j] += A[i][k] * B[k][j];\n      }\n    }\n  }\n\n  return result;\n}\n\nKey property: matrix multiplication is NOT commutative. A * B is usually NOT equal to B * A. This catches developers constantly in graphics programming where transformation order matters.\nThe identity matrix is the matrix equivalent of 1. Multiplying any matrix by the identity matrix returns the original matrix.\n| 1  0  0 |\n| 0  1  0 |\n| 0  0  1 |\n\nfunction identity(n) {\n  return Array.from({ length: n }, (_, i) =>\n    Array.from({ length: n }, (_, j) => i === j ? 1 : 0)\n  );\n}\n\nSwap rows and columns. Row i becomes column i.\nfunction transpose(M) {\n  return M[0].map((_, j) => M.map(row => row[j]));\n}\n\nTranspose is used constantly in machine learning. If your data has features as columns and samples as rows, transposing gives you features as rows and samples as columns. Many algorithms expect a specific orientation.\nThe determinant of a square matrix is a single number that tells you whether the matrix is invertible (nonzero determinant) or singular (zero determinant).\nFor a 2x2 matrix:\nfunction det2x2(M) {\n  return M[0][0] * M[1][1] - M[0][1] * M[1][0];\n}\n\nFor larger matrices, use cofactor expansion:\nfunction determinant(M) {\n  const n = M.length;\n  if (n === 1) return M[0][0];\n  if (n === 2) return det2x2(M);\n\n  let det = 0;\n  for (let j = 0; j < n; j++) {\n    const minor = M.slice(1).map(row => \n      [...row.slice(0, j), ...row.slice(j + 1)]\n    );\n    det += M[0][j] * determinant(minor) * (j % 2 === 0 ? 1 : -1);\n  }\n  return det;\n}\n\nCSS transforms. Every CSS transform (translate, rotate, scale, skew) is a matrix operation. The browser computes a 4x4 transformation matrix and applies it to every pixel.\n/* This CSS */\ntransform: rotate(45deg) scale(1.5) translate(10px, 20px);\n\n/* Is internally computed as a matrix multiplication */\ntransform: matrix(1.06, 1.06, -1.06, 1.06, -11.21, 25.61);\n\n3D graphics. Game engines and 3D renderers use 4x4 matrices for everything: camera position, object transforms, projection from 3D to 2D screen coordinates.\nMachine learning. Neural networks are essentially chains of matrix multiplications with nonlinear activations between them. The weights of a neural network are stored as matrices.\nImage processing. Convolution (blur, sharpen, edge detection) is a matrix operation. A convolution kernel is a small matrix multiplied against patches of the image.\nFor computing matrix operations interactively, I keep a calculator at zovo.one/free-tools/matrix-calculator. It handles multiplication, determinants, inverses, transposes, and eigenvalues. Useful for verifying implementations and working through textbook exercises.\nI'm Michael Lip. I build free developer tools at zovo.one. 500+ tools, all private, all free.",
-      "publishedAt": "2026-03-25T02:02:56.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "5e4a36714e968d4bae79a7bef71503dccb2ba2c3ce7893c09b0f7e662c38269a",
-      "title": "The Five Math Operations That Cover 90% of Programming Problems",
-      "url": "https://dev.to/alphashark/the-five-math-operations-that-cover-90-of-programming-problems-dib",
-      "description": "After years of building tools and reviewing code, I have found that the vast majority of mathematical operations in production software come down to five categories. You don't need a math degree. You need fluency in these five areas.\nPercentages appear everywhere: discounts, tax, tips, progress bars, analytics dashboards, A/B test results.\n// What is X% of Y?\nconst percentOf = (percent, total) => (percent / 100) * total;\n\n// What percentage is X of Y?\nconst whatPercent = (part, total) => (part / total) * 100;\n\n// Percentage change from A to B\nconst percentChange = (oldVal, newVal) => \n  ((newVal - oldVal) / oldVal) * 100;\n\nThe percentage change formula is the one developers get wrong most often. The denominator is the old value, not the new one. Going from 50 to 75 is a 50% increase. Going from 75 to 50 is a 33.3% decrease. The asymmetry catches people.\nMapping a value from one range to another. Used in animations, data visualization, color gradients, audio processing, and sensor calibration.\nfunction lerp(value, inMin, inMax, outMin, outMax) {\n  return outMin + (value - inMin) * (outMax - outMin) / (inMax - inMin);\n}\n\n// Map a 0-1023 sensor reading to 0-100%\nlerp(512, 0, 1023, 0, 100); // 50.05%\n\n// Map a 0-1 progress value to a 200-800px width\nlerp(0.75, 0, 1, 200, 800); // 650px\n\nThe inverse function (finding where a value falls in a range) is equally useful:\nfunction inverseLerp(value, min, max) {\n  return (value - min) / (max - min);\n}\n\n// Where does 650 fall in the 200-800 range?\ninverseLerp(650, 200, 800); // 0.75\n\nJavaScript's floating-point arithmetic produces famously surprising results:\n0.1 + 0.2 // 0.30000000000000004\n\nThe practical fix for display:\nfunction round(value, decimals) {\n  return Number(Math.round(value + 'e' + decimals) + 'e-' + decimals);\n}\n\nround(0.1 + 0.2, 2); // 0.3\n\nFor financial calculations, never use floating point. Use integer cents:\n// Wrong\nconst price = 19.99;\nconst tax = price * 0.08; // 1.5992000000000002\n\n// Right\nconst priceCents = 1999;\nconst taxCents = Math.round(priceCents * 0.08); // 160\nconst totalCents = priceCents + taxCents; // 2159\nconst totalDollars = (totalCents / 100).toFixed(2); // \"21.59\"\n\nThe modulo operator (%) is used for cycling through arrays, wrapping values, determining even/odd, and time calculations.\n// Cycle through an array\nconst colors = ['red', 'green', 'blue'];\nconst color = colors[index % colors.length];\n\n// Wrap a value within bounds\nfunction wrap(value, min, max) {\n  const range = max - min;\n  return ((value - min) % range + range) % range + min;\n}\n\n// Convert seconds to hours:minutes:seconds\nfunction formatTime(totalSeconds) {\n  const hours = Math.floor(totalSeconds / 3600);\n  const minutes = Math.floor((totalSeconds % 3600) / 60);\n  const seconds = totalSeconds % 60;\n  return `${hours}:${String(minutes).padStart(2,'0')}:${String(seconds).padStart(2,'0')}`;\n}\n\nThe double-modulo in the wrap function handles negative numbers. JavaScript's % operator returns negative results for negative dividends, which is usually not what you want.\nMean, median, standard deviation. Used in monitoring, alerting, data analysis, and performance measurement.\nconst mean = arr => arr.reduce((a, b) => a + b, 0) / arr.length;\n\nconst median = arr => {\n  const sorted = [...arr].sort((a, b) => a - b);\n  const mid = Math.floor(sorted.length / 2);\n  return sorted.length % 2 \n    ? sorted[mid] \n    : (sorted[mid - 1] + sorted[mid]) / 2;\n};\n\nconst stdDev = arr => {\n  const avg = mean(arr);\n  const variance = mean(arr.map(x => (x - avg) ** 2));\n  return Math.sqrt(variance);\n};\n\nStandard deviation tells you how spread out your data is. For monitoring, if a metric deviates more than 2 standard deviations from the mean, something unusual is happening. This is the basis of most anomaly detection systems.\nReal problems combine multiple operations. \"Show a progress bar for a file upload with percentage and estimated time remaining\":\nfunction uploadProgress(bytesUploaded, totalBytes, elapsedMs) {\n  const percent = whatPercent(bytesUploaded, totalBytes);\n  const rate = bytesUploaded / elapsedMs; // bytes per ms\n  const remaining = (totalBytes - bytesUploaded) / rate;\n\n  return {\n    percent: round(percent, 1),\n    barWidth: lerp(percent, 0, 100, 0, 300), // 300px bar\n    remainingSeconds: Math.ceil(remaining / 1000)\n  };\n}\n\nFor working through any mathematical calculation with step-by-step solutions, I keep a solver at zovo.one/free-tools/mathematics-solver. It handles everything from basic arithmetic to algebra and statistics. Fast, free, and shows the work.\nI'm Michael Lip. I build free developer tools at zovo.one. 500+ tools, all private, all free.",
-      "publishedAt": "2026-03-25T02:02:19.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "11b931ae2017a2dcffb007bbb78596f2a8ec4f50632a6ad6bc30a65104e96cd3",
-      "title": "Parsing Math Equations in JavaScript: From String to Solution",
-      "url": "https://dev.to/alphashark/parsing-math-equations-in-javascript-from-string-to-solution-476n",
-      "description": "Building a math equation solver that accepts text input like \"2x + 5 = 13\" and returns \"x = 4\" is one of those projects that sounds straightforward and then quickly reveals the depth of parsing, algebra, and numerical methods. Here is how it works.\nThe first step is breaking the input string into meaningful tokens. For \"2x + 5 = 13\", the tokens are:\n[NUMBER:2, VARIABLE:x, OPERATOR:+, NUMBER:5, EQUALS:=, NUMBER:13]\n\nfunction tokenize(expr) {\n  const tokens = [];\n  let i = 0;\n\n  while (i < expr.length) {\n    if (/\\s/.test(expr[i])) { i++; continue; }\n\n    if (/\\d/.test(expr[i]) || (expr[i] === '.' && /\\d/.test(expr[i+1]))) {\n      let num = '';\n      while (i < expr.length && /[\\d.]/.test(expr[i])) num += expr[i++];\n      tokens.push({ type: 'NUMBER', value: parseFloat(num) });\n      continue;\n    }\n\n    if (/[a-z]/i.test(expr[i])) {\n      tokens.push({ type: 'VARIABLE', value: expr[i++] });\n      continue;\n    }\n\n    if ('+-*/^()='.includes(expr[i])) {\n      tokens.push({ type: 'OPERATOR', value: expr[i++] });\n      continue;\n    }\n\n    i++;\n  }\n  return tokens;\n}\n\nThe subtle part is implicit multiplication. In mathematical notation, \"2x\" means \"2 * x\" and \"3(x+1)\" means \"3 * (x+1)\". The tokenizer needs to insert multiplication tokens where they are implied:\nfunction insertImplicitMultiplication(tokens) {\n  const result = [];\n  for (let i = 0; i < tokens.length; i++) {\n    result.push(tokens[i]);\n    if (i < tokens.length - 1) {\n      const curr = tokens[i];\n      const next = tokens[i + 1];\n      if ((curr.type === 'NUMBER' && next.type === 'VARIABLE') ||\n          (curr.type === 'NUMBER' && next.value === '(') ||\n          (curr.type === 'VARIABLE' && next.value === '(') ||\n          (curr.value === ')' && next.type === 'NUMBER')) {\n        result.push({ type: 'OPERATOR', value: '*' });\n      }\n    }\n  }\n  return result;\n}\n\nThe token stream needs to be parsed into an Abstract Syntax Tree (AST) that respects operator precedence. The standard approach is the Shunting-Yard algorithm by Dijkstra.\nOperator precedence:\nParentheses (highest)\nExponentiation (^)\nMultiplication and division\nAddition and subtraction\nEquality (=) (lowest)\nThe algorithm uses two stacks: one for output and one for operators. It produces an expression tree where leaves are numbers and variables, and internal nodes are operations.\nFor a linear equation (degree 1), the solution is algebraic. Move all variable terms to one side and all constants to the other:\n2x + 5 = 13\n2x = 13 - 5\n2x = 8\nx = 4\n\nIn code, this means evaluating the AST to collect coefficients:\nfunction solveLinear(equation) {\n  // equation is in form: ax + b = c\n  // Rearrange to: ax = c - b, so x = (c - b) / a\n\n  const left = equation.left;   // Expression tree for left side\n  const right = equation.right; // Expression tree for right side\n\n  // Collect terms: coefficient of x and constant\n  const leftTerms = collectTerms(left);   // { coefficient: 2, constant: 5 }\n  const rightTerms = collectTerms(right); // { coefficient: 0, constant: 13 }\n\n  const a = leftTerms.coefficient - rightTerms.coefficient;\n  const b = rightTerms.constant - leftTerms.constant;\n\n  if (a === 0) {\n    return b === 0 ? 'infinite solutions' : 'no solution';\n  }\n\n  return b / a;\n}\n\nFor degree 2 equations (ax^2 + bx + c = 0), the quadratic formula applies:\nfunction solveQuadratic(a, b, c) {\n  const discriminant = b * b - 4 * a * c;\n\n  if (discriminant > 0) {\n    const x1 = (-b + Math.sqrt(discriminant)) / (2 * a);\n    const x2 = (-b - Math.sqrt(discriminant)) / (2 * a);\n    return [x1, x2]; // Two real roots\n  }\n\n  if (discriminant === 0) {\n    return [-b / (2 * a)]; // One repeated root\n  }\n\n  // Complex roots\n  const real = -b / (2 * a);\n  const imaginary = Math.sqrt(-discriminant) / (2 * a);\n  return [`${real} + ${imaginary}i`, `${real} - ${imaginary}i`];\n}\n\nFor equations of degree 3 and higher, there is no general closed-form solution. Numerical methods are required. Newton's method is the standard approach:\nfunction newtonsMethod(f, fPrime, x0, tolerance = 1e-10, maxIter = 100) {\n  let x = x0;\n  for (let i = 0; i < maxIter; i++) {\n    const fx = f(x);\n    if (Math.abs(fx) < tolerance) return x;\n\n    const fpx = fPrime(x);\n    if (fpx === 0) { x += 0.1; continue; } // Avoid division by zero\n\n    x = x - fx / fpx;\n  }\n  return x; // Best approximation\n}\n\nNewton's method converges quadratically for well-behaved functions, meaning each iteration roughly doubles the number of correct digits. But it can fail for functions with flat regions, oscillate between values, or converge to the wrong root depending on the starting point.\nFor solving equations without worrying about the implementation details, I keep an equation solver at zovo.one/free-tools/math-equation-solver. Type in the equation in natural notation, and it handles the parsing, classification, and solution method automatically. It shows the steps too, which is useful for verifying your own work.\nI'm Michael Lip. I build free developer tools at zovo.one. 500+ tools, all private, all free.",
-      "publishedAt": "2026-03-25T02:00:04.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "29e0c4a4e3eaf0fa5a4230338c51b269c12a9593b0e1bcb40842c4faf03b8e71",
-      "title": "JavaScript Countdown Timers: Why setInterval Drifts and How to Fix It",
-      "url": "https://dev.to/work_hau_cb718f47075930f9/javascript-countdown-timers-why-setinterval-drifts-and-how-to-fix-it-26fe",
-      "description": "Building a countdown timer feels like a two-minute task:\nlet seconds = 60;\nconst timer = setInterval(() => {\n  seconds--;\n  display(seconds);\n  if (seconds <= 0) clearInterval(timer);\n}, 1000);\n\nShip it. Done. Except... after a few minutes, your \"60 second\" timer has taken 63 seconds of wall-clock time. Users notice. This is timer drift, and every interval-based timer has it.\nsetInterval(fn, 1000) doesn't fire exactly every 1000ms. It fires \"at least 1000ms after the last call, when the event loop is free.\" Three sources of error compound over time:\nScheduling jitter — The browser/Node event loop fires the callback a few milliseconds late due to other tasks\nCallback execution time — If your callback takes 5ms, the next interval starts 1005ms after the previous one began\nTab throttling — Browsers throttle timers in background tabs to 1 second minimum (sometimes more)\nSmall errors, big compounding:\nExpected:  0ms  1000ms  2000ms  3000ms  4000ms ...\nActual:    0ms  1004ms  2009ms  3013ms  4018ms ...\n\nAfter 5 minutes, you're 5.4 seconds behind. After an hour? 65+ seconds of drift.\nInstead of counting ticks, measure elapsed time against a fixed reference point:\nfunction createCountdown(durationMs, onTick, onComplete) {\n  const endTime = Date.now() + durationMs;\n\n  function tick() {\n    const remaining = endTime - Date.now();\n\n    if (remaining <= 0) {\n      onTick(0);\n      onComplete();\n      return;\n    }\n\n    onTick(remaining);\n    // Schedule next tick relative to how much time SHOULD have passed\n    const nextTick = remaining % 1000 || 1000;\n    setTimeout(tick, nextTick);\n  }\n\n  tick();\n}\n\n// Usage\ncreateCountdown(\n  60_000,\n  (ms) => display(Math.ceil(ms / 1000)),\n  () => console.log('Done!')\n);\n\nThis approach:\nNever accumulates drift, because every tick calculates remaining time fresh\nSelf-corrects automatically after tab throttling\nFires extra-soon when recovering from a delayed tick\nFor \"days until\" counters (time until an event, product launch, etc.), use the same principle:\nfunction countdownTo(targetDate) {\n  function update() {\n    const now = Date.now();\n    const target = new Date(targetDate).getTime();\n    const diff = target - now;\n\n    if (diff <= 0) {\n      render({ days: 0, hours: 0, minutes: 0, seconds: 0 });\n      return;\n    }\n\n    render({\n      days:    Math.floor(diff / 86_400_000),\n      hours:   Math.floor((diff % 86_400_000) / 3_600_000),\n      minutes: Math.floor((diff % 3_600_000)  / 60_000),\n      seconds: Math.floor((diff % 60_000)     / 1000),\n    });\n\n    // Sync to the next whole second\n    setTimeout(update, diff % 1000 || 1000);\n  }\n\n  update();\n}\n\ncountdownTo('2026-12-25T00:00:00');\n\nThe key line is diff % 1000 || 1000 — this syncs the next update to fire right when the second digit changes, rather than on a fixed interval.\nBrowsers aggressively throttle background tabs. When the user switches back, your timer might jump 30+ seconds at once. Handle it:\ndocument.addEventListener('visibilitychange', () => {\n  if (!document.hidden) {\n    // Force immediate re-render when tab becomes visible\n    update();\n  }\n});\n\nSince update() always reads Date.now(), it will immediately show the correct remaining time — no accumulated error to correct.\nIf your countdown genuinely must be accurate in background tabs (e.g., a timed exam), browsers won't throttle Web Worker timers the same way:\n// worker.js\nself.onmessage = ({ data: { endTime } }) => {\n  const tick = () => {\n    const remaining = endTime - Date.now();\n    self.postMessage({ remaining });\n    if (remaining > 0) setTimeout(tick, remaining % 1000 || 1000);\n  };\n  tick();\n};\n\n// main.js\nconst worker = new Worker('worker.js');\nworker.postMessage({ endTime: Date.now() + 300_000 });\nworker.onmessage = ({ data: { remaining } }) => render(remaining);\n\n\n\n\nApproach\nDrift\nBackground accuracy\nComplexity\n\n\n\n\n\nsetInterval counting\nAccumulates\nPoor\nLow\n\n\n\nsetTimeout + Date.now()\n\nNone\nModerate\nMedium\n\n\nWeb Worker\nNone\nGood\nHigher\n\n\nrequestAnimationFrame\nNone\nPoor (pauses when hidden)\nMedium\n\n\n\nFor countdowns to specific future dates, tools like datetimecalculator.app/days-until give you the static number without any drift concerns — useful for planning how long you have before you need to implement the real thing.\nWhat's the worst timer drift bug you've shipped? Mine was a \"60-second\" quiz timer that gave users 68 seconds on slow laptops.",
-      "publishedAt": "2026-03-25T02:00:01.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "9ba5eef24bea77d3110f8eb9b016a29411191d9a25ba68a3a10a4d59c307e17c",
-      "title": "Findy Architecture AI - アーキテクチャ設計をAIで加速",
-      "url": "https://ai-architecture.findy-tools.io/",
-      "description": "アーキテクチャの 悩みを、AIに 聞いてみよう。 設計のベストプラクティス、リスクの洗い出し、アーキテクチャの選定理由を提示。Findy Architecture AIがあなたのサービスのシステム設計をスピードアップします。",
-      "publishedAt": "2026-03-25T01:01:20.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "7cd414b6b21d00d8ade210679e242fab19e72bd4237d52979183dcc50dcfcac3",
-      "title": "Vanguard が Amazon Redshift マルチウェアハウスアーキテクチャで分析基盤を刷新",
-      "url": "https://aws.amazon.com/jp/blogs/news/how-vanguard-transformed-analytics-with-amazon-redshift-multi-warehouse-architecture/",
-      "description": "Vanguard の Financial Advisor Services 部門が、Amazon Redshift のマルチウェアハウスアーキテクチャを活用して分析基盤を変革した事例を紹介します。単一クラスターから、プロビジョンドクラスターと Serverless を組み合わせたワークロード分離アーキテクチャへの移行により、ETL の SLA 遵守率 100%、月間 50 万以上のクエリ対応、BI ダッシュボード 25 倍増を実現しました。さらに、データメッシュアーキテクチャへの進化についても解説します。",
-      "publishedAt": "2026-03-24T22:50:10.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "89848677bc6ab734fc79577266d754438f083c61f5803a929d5abae0dfd09dff",
-      "title": "Amazon Redshift と AWS IAM Identity Center できめ細かなアクセス許可を複数のウェアハウスに展開する",
-      "url": "https://aws.amazon.com/jp/blogs/news/scale-fine-grained-permissions-across-warehouses-with-amazon-redshift-and-aws-iam-identity-center/",
-      "description": "本記事では、Amazon Redshift フェデレーテッドアクセス許可と AWS IAM Identity Center を使用して、複数のデータウェアハウスのきめ細かなアクセス許可をスケーラブルに管理する方法を紹介します。Enterprise Data Warehouse (EDW) でセキュリティポリシーを一度定義すれば、Sales や Marketing のコンシューマーウェアハウスに自動適用されるアーキテクチャを解説します。",
-      "publishedAt": "2026-03-24T22:48:18.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "d62f039133b8e852498918467f3fb63469b6368437f94e2404951b21b072483d",
-      "title": "2026年3月24日の LiteLLM 侵害の概要と対応指針",
-      "url": "https://diary.shift-js.info/litellm-compromise/",
-      "description": "2026年3月24日、LLMプロキシライブラリ LiteLLM の PyPI パッケージが侵害されました。 攻撃者は PyPI のメンテナアカウント（krrishdholakia）を乗っ取り、クレデンシャル窃取・Kubernetes 対象のラテラル・永続化マルウェアを含むバージョン 1.82.7 および 1.82.8 を公開しました。 本記事では公開情報をもとに、事象...",
-      "publishedAt": "2026-03-24T21:10:48.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "6dadfdf0777adae1d9e086f094842bd391e23d5fa0289f73b229afcc8ef0c685",
-      "title": "ストレージ非搭載、それでも仕事ができる新デバイス「Windows 365 Link」を触ってみた",
-      "url": "https://japan.cnet.com/article/35245434/",
-      "description": "日本マイクロソフトが展示したクラウドPC専用デバイス「Windows 365 Link」は、手のひらサイズで5万6800円。起動から約40秒でクラウドPCに接続でき、データを端末に残さない設計で法人のセキュリティニーズに応える。",
-      "publishedAt": "2026-03-24T20:50:00.000Z",
-      "feedName": "CNET Japan"
-    },
-    {
-      "id": "cadb0124ec259d002e26857ea7c44f500c47d6b09c0f7a5d2b4a4141bfd504f3",
-      "title": "Building AI-powered GitHub issue triage with the Copilot SDK",
-      "url": "https://github.blog/ai-and-ml/github-copilot/building-ai-powered-github-issue-triage-with-the-copilot-sdk/",
-      "description": "Learn how to integrate the Copilot SDK into a React Native app to generate AI-powered issue summaries, with production patterns for graceful degradation and caching.\nThe post Building AI-powered GitHub issue triage with the Copilot SDK appeared first on The GitHub Blog.",
-      "publishedAt": "2026-03-24T16:00:00.000Z",
-      "feedName": "GitHub Blog"
-    },
-    {
-      "id": "482fb7ee41e701cec9a9b5dd95819fbaaedd076bcf5d98e81b4daef7398c8b33",
-      "title": "Cloudinary のキャッシュ検証テストで確認すべきポイント",
-      "url": "https://dev.classmethod.jp/articles/cloudinary-cache-test-checkpoints/",
-      "description": "Cloudinary のキャッシュ検証テストで確認すべきポイント",
-      "publishedAt": "2026-03-24T11:02:15.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "f9aa8e1f4e4d3cfa8285299b90dac8054d53d70f926ca489d8414159636725cd",
-      "title": "[AWS Technical Support Note] วิธีการตรวจสอบสถานะการทำงานของ RDS ด้วย CloudWatch Metrics",
-      "url": "https://dev.classmethod.jp/articles/tsnote-thai-how-to-perform-rds-health-monitoring-from-cloudwatch-metrics/",
-      "description": "วิธีการตรวจสอบสถานะการทำงานของ RDS ด้วย CloudWatch Metrics",
-      "publishedAt": "2026-03-24T10:25:43.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "0514822cb2c7ac7fb039da95e79f5f758088d54ea68fc638d82847a836a6570c",
-      "title": "[AWS Technical Support Note] สิ่งที่ควรตรวจสอบเมื่อไม่สามารถเก็บ screenshot ของ Instance ของ EC2 ได้",
-      "url": "https://dev.classmethod.jp/articles/tsnote-thai-cannot-fetch-screenshot-ec2-instance/",
-      "description": "สาเหตุที่ไม่สามารถเก็บ screenshot ของ Instance ได้",
-      "publishedAt": "2026-03-24T10:09:25.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "58226d042cc793aa057665af36d30289fa92de3df24609c1ac1c5658088460b7",
-      "title": "決済システムのギャップを埋める：スケーラブルなバックエンドテスト自動化基盤の構築",
-      "url": "https://blog.paypay.ne.jp/bridging-the-gap-building-a-scalable-backend-test-automation-framework-for-payment-systems/",
-      "publishedAt": "2026-03-24T09:00:51.000Z",
-      "feedName": "PayPay Product Blog"
-    },
-    {
-      "id": "a7dfb2f1f3088c27ff87ea401fd00963143b6faf2ab7f49828f1e23cb6e030b3",
-      "title": "Tekton Becomes a CNCF Incubating Project",
-      "url": "https://www.cncf.io/blog/2026/03/24/tekton-becomes-a-cncf-incubating-project/",
-      "description": "The CNCF Technical Oversight Committee (TOC) has voted to accept Tekton as a CNCF incubating project.  What is Tekton? Tekton is a powerful and flexible open source framework for creating continuous integration and delivery (CI/CD) systems...",
-      "publishedAt": "2026-03-24T08:00:00.000Z",
-      "feedName": "Cloud Native Computing Foundation"
-    },
-    {
-      "id": "a34e5521a69306520398e88002dc55f2e29ed7f057cf63fc4701d6fd4b9a13e0",
-      "title": "CNCF Nearly Doubles Certified Kubernetes AI Platforms",
-      "url": "https://www.cncf.io/announcements/2026/03/24/cncf-nearly-doubles-certified-kubernetes-ai-platforms/",
-      "description": "Following an over 70% surge in certified offerings, the program now includes agentic workflows and introduces stricter v1.35 requirements to eliminate infrastructure fragmentation Key Highlights KUBECON + CLOUDNATIVECON EUROPE, AMSTERDAM—24 MARCH, 2026— The Cloud Native Computing...",
-      "publishedAt": "2026-03-24T08:00:00.000Z",
-      "feedName": "Cloud Native Computing Foundation"
-    },
-    {
-      "id": "ac5da577d1973e9a0505dbda77bfd39be9fde4ffdf21dea78e909f4264b3cf13",
-      "title": "Fluid Becomes a CNCF Incubating Project",
-      "url": "https://www.cncf.io/blog/2026/03/24/fluid-becomes-a-cncf-incubating-project/",
-      "description": "The CNCF Technical Oversight Committee (TOC) has voted to accept Fluid as a CNCF incubating project.  What is Fluid? Kubernetes provides a data access layer through the Container Storage Interface (CSI), enabling workloads to connect to...",
-      "publishedAt": "2026-03-24T08:00:00.000Z",
-      "feedName": "Cloud Native Computing Foundation"
-    },
-    {
-      "id": "992721ec55c9359d0ba52cc5b948d11dbe0db39c2ee42e3e3857c880afde58a4",
-      "title": "Welcome llm-d to the CNCF: Evolving Kubernetes into SOTA AI infrastructure",
-      "url": "https://www.cncf.io/blog/2026/03/24/welcome-llm-d-to-the-cncf-evolving-kubernetes-into-sota-ai-infrastructure/",
-      "description": "We are thrilled to announce that llm-d has officially been accepted as a Cloud Native Computing Foundation (CNCF) Sandbox project! As generative AI transitions from research labs to production environments, platform engineering teams are facing a...",
-      "publishedAt": "2026-03-24T07:45:00.000Z",
-      "feedName": "Cloud Native Computing Foundation"
-    },
-    {
-      "id": "be5213dfae3a022122a34090e00f14f43924bdf61f69e03f4de622b92805920e",
-      "title": "AWS IoT Core のデータ送信先としての Amazon SQS を考える",
-      "url": "https://dev.classmethod.jp/articles/iot-core-lambda-sqs-architecture/",
-      "description": "AWS IoT Core のデータ送信先としての Amazon SQS を考える",
-      "publishedAt": "2026-03-24T07:10:41.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "618198bb574a9bab6b55f49978bdef5505360faca3ca5a781e31b844974267ce",
-      "title": "JavaScriptとTypeScriptのpolyglot",
-      "url": "https://zenn.dev/qnighy/articles/e65e0995161ade",
-      "description": "Polyglot とは、複数のプログラミング言語 (あるいはより一般に、何らかのファイルフォーマット) で解釈できるプログラムのことで、多言語話者にちなんでこの名前がつけられています。Polyglotはしばしば、プログラミングに関する非実用的な探求として遊ばれます。 TypeScriptはJavaScriptのスーパーセットであるため、J...",
-      "publishedAt": "2026-03-24T06:46:45.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "f8d38de87c16be6143d69e7841a0f8bf2579f80db23de25a3676584a76da77f7",
-      "title": "Google Cloud、AIを搭載した新たなセキュリティ製品イノベーションを発表",
-      "url": "https://enterprisezine.jp/news/detail/23988",
-      "description": "Google Cloudは、MandiantとGoogle Threat Intelligenceグループ（GTIC）が持つ脅威インテリジェンスと、Geminiモデルによる推論機能を活用し、AIを搭...",
-      "publishedAt": "2026-03-24T06:05:00.000Z",
-      "feedName": "EnterpriseZine"
-    },
-    {
-      "id": "2ddd51ace72275b82e3dde15a87d9bc6645bc4bd6da716a6da4bcdb61bda1d65",
-      "title": "[登壇レポート] 「AWS re:Invent 2025 新機能「やってみた」報告会 ～セキュリティ・ガバナンス編～」にて「AWS Control Tower Landing Zone 4.0 導入も移行もまとめて解説」という内容で登壇しました",
-      "url": "https://dev.classmethod.jp/articles/202603-aws-reinvent-2025-update-control-tower-landing-zone-v4-webinar-report/",
-      "description": "[登壇レポート] 「AWS re:Invent 2025 新機能「やってみた」報告会 ～セキュリティ・ガバナンス編～」にて「AWS Control Tower Landing Zone 4.0 導入も移行もまとめて解説」という内容で登壇しました",
-      "publishedAt": "2026-03-24T05:51:15.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "a8137393deded85fffbe2a527b7bcf4032e5ca141f567a82db20e967df508a94",
-      "title": "SentinelOne、AIエージェントや“非人間”のアイデンティティを保護するセキュリティ製品群を発表",
-      "url": "https://enterprisezine.jp/news/detail/23986",
-      "description": "SentinelOne Japanは、企業で急増しているAIエージェントや“非人間”のアイデンティティを保護するための新たなアイデンティティセキュリティ製品群を発表した。\n\n　SentinelOne...",
-      "publishedAt": "2026-03-24T05:00:00.000Z",
-      "feedName": "EnterpriseZine"
-    },
-    {
-      "id": "65494349aad748b1b2d3cd0516f96d13fcca45b43c78bdde7be6a3066d51b86d",
-      "title": "AWS CloudShell로 10분 만에 EC2 띄우기",
-      "url": "https://dev.classmethod.jp/articles/jw-launch-ec2-in-10-minutes-aws-cloudshell/",
-      "description": "AWS CloudShell로 10분 만에 EC2 띄우는 방법을 정리해 봤습니다.",
-      "publishedAt": "2026-03-24T04:19:19.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "321a76162a2eeb113020d3e457ded29b10f9910522e071087744a97c0b16ac1a",
-      "title": "Lighthouse CI & GitHub Actions でパフォーマンスを自動計測する",
-      "url": "https://qiita.com/TOMOSIA-HieuNT/items/d513a921bd416a8b63d8?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "この記事はAIの支援を受けて執筆しました。内容の正確さには注意を払っていますが、誤りがあればコメントでご指摘ください 🙏\n\nシリーズ： Webパフォーマンス最適化 — 第5回/全10回\nタグ： JavaScript GitHub Actions Lighthou...",
-      "publishedAt": "2026-03-24T04:13:58.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "cb1bb6cfc5f4e00278138756de1f2ddb6595bba6ee52464bf32d395137a79b50",
-      "title": "MCPは「AIの業界標準になるのか」？　利用拡大の裏で“普及を阻む課題”も浮上",
-      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2603/24/news060.html",
-      "description": "API管理ベンダーZuploは、「MCP」の利用状況に関する調査結果を公開した。利用拡大への期待が高い一方で、セキュリティやアクセス制御の複雑さが最大の課題と認識されていることが分かった。",
-      "publishedAt": "2026-03-24T04:00:00.000Z",
-      "feedName": "＠IT"
-    },
-    {
-      "id": "f361f3f077b2c1e83de67ff81b8ea86595b2b2f9acb92993b01412ec9cb8023d",
-      "title": "AWS Security Agent 徹底解説: 自動ペネトレーションテストのためのマルチエージェントアーキテクチャ",
-      "url": "https://aws.amazon.com/jp/blogs/news/inside-aws-security-agent-a-multi-agent-architecture-for-automated-penetration-testing/",
-      "description": "AWS Security Agent に組み込まれた自動ペネトレーションテストのマルチエージェントアーキテクチャについて解説します。従来は数週間を要していたペネトレーションテストを、専門化された AI エージェント群の連携により自動化し、認証処理、ベースラインスキャン、多段階探索、アサーションベースの検証までを一貫して実行します。単一の脆弱性検出にとどまらず、複数の脆弱性を組み合わせた複雑な連鎖攻撃の検出・検証まで実現する仕組みを紹介します。",
-      "publishedAt": "2026-03-24T03:16:05.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "1265f5afbb86e1ff7fe18696ddecc52d933a8a952596716110addeb96f873ffa",
-      "title": "初めてのKiroでAWSアプリを開発してみた — ゲームキャラクター自動生成ツールの構築記",
-      "url": "https://qiita.com/sugumura/items/e6af97c867c160d9e71a?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "はじめに\nソーイ村上です。\n社内のAIツール評価の一環として、AWSが提供するAI搭載IDE「Kiro」を使い、ゲームキャラクターの設定を自動生成するWebアプリケーションを開発しました。\nKiroの開発体験は「AIにコードを書かせる」というよりも「AIと一緒に設計を固め...",
-      "publishedAt": "2026-03-24T02:57:27.000Z",
-      "feedName": "Qiita"
-    },
-    {
       "id": "20dc3e0482ba2a7037de11fc50b3dcf3f9438f4146c8de68243266b26c4e75d4",
       "title": "The Security First Guide to AI Development: Edge Functions, Rate Limiting, and Supabase",
       "url": "https://dev.to/devperez08/the-security-first-guide-to-ai-development-edge-functions-rate-limiting-and-supabase-2epf",
@@ -461,78 +230,6 @@
       "description": "!\nこの記事は、KNOWLEDGE WORK Blog Sprint 2026 Spring の 17 本目の記事です。\n\n「このSaaS、業務で使っていいですか？」\nチームメンバーからの質問に、即答できませんでした。ISMS？取ってる。SOC2？ある。セキュリティ的には問題なさそうだ。でも、それだけで「使っていい」と言い切れるのか──。\nSaaSプロダクトを開発する会社で、ISMS運用やセキュリティ施策を担当しています。生成AIをはじめとする外部サービスの利用が加速する中、利用可否を判断するためのガイドラインを法務と協力して策定しました。\nその過程で得た最大の学びは、 外部サービスの利...",
       "publishedAt": "2026-03-25T03:00:10.000Z",
       "feedName": "Zenn"
-    },
-    {
-      "id": "8e632547d54d47a86d67df645640afa8952e5b3dab7694b5437362f98ebeccf9",
-      "title": "8,706回のINSERTがCIを殺していた — Rails CI 55%短縮の全手順",
-      "url": "https://zenn.dev/pepabo/articles/ci-speedup-rails-infra-and-app",
-      "description": "CIが8分を超えていました。1日に10回pushすれば、待ち時間だけで80分になります。開発のテンポが悪くなるし、プルリクエスト（PR）のフィードバックループも遅れます。\n結果から書くと、CI実行時間を8m08s → 3m37sまで短縮できました。55%の削減です。しかも最初のPRではプロダクションコードの変更は一切なく、CI設定とDB設定だけで47%削減しています。\nこの改善はRailsアプリのCI（GitHub Actions、matrix 5分割、MySQL使用）で行ったもので、似た構成のプロジェクトならそのまま適用できる部分が多いはずです。この記事では、インフラ層の最適化（第1...",
-      "publishedAt": "2026-03-24T23:22:05.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "f482de31a993fc956d9494597be21d6230635780f3acb8d0e783de5b120165c3",
-      "title": "【フロントエンド】画面遷移時に気を付けるべき設計ポイント",
-      "url": "https://qiita.com/aki_number16/items/50fe3e6f62df0b2323d6?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "本稿は生成AIと壁打ちして記述してます。\n\n最近の Web アプリケーションは、画面を紙芝居のように滑らかに切り替えながらユーザー体験を提供します。React で SPA（Single Page Application）を構築する場合、どうしても「画面単体のコンポーネ...",
-      "publishedAt": "2026-03-24T22:13:29.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "309c37997c6dbd022dfad6db0fb9673e1148f9f2d403678243aa09b4d5e5d6b7",
-      "title": "量子×クラウドはなぜ難しい？第4の壁：量子クラウドの待ち行列問題",
-      "url": "https://qiita.com/imh1104/items/84dd7d5dee9884a008fa?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "おさらい\nAWS 105万人 vs 量子エンジニア 1,300人：数字で見る“圧倒的格差”では、量子エンジニアが少ない理由として「技術成熟度の差・参入難易度の差・実行環境の差」という3つの要因で整理し、それら3要因が量子コンピュータをクラウドシステムに統合するにあたっての...",
-      "publishedAt": "2026-03-24T21:19:01.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "9f7bff7e1fb6c3ffe9a4877474ba22903876a846abbf32778c019e15532552db",
-      "title": "【緊急】月間9500万DLのLiteLLMが乗っ取られた。インストールしただけでSSH鍵・AWS認証・仮想通貨が全部盗まれる",
-      "url": "https://qiita.com/emi_ndk/items/2332ff5c93e63ab736ad?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "あなたのマシンにLiteLLMが入っていたら、今すぐこの記事を読んでください。\n2026年3月24日、AIエージェント開発者の間で最も広く使われているPythonライブラリの一つ「LiteLLM」が、サプライチェーン攻撃により完全に乗っ取られました。\n月間9,500万ダウン...",
-      "publishedAt": "2026-03-24T17:51:59.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "cd9d1e52a8da160203f8e0ea0836719ed79884405117c652696806aba14494aa",
-      "title": "Microsoft Learn参照させるAgent Skillsあるじゃん！",
-      "url": "https://zenn.dev/headwaters/articles/d4417cd67f7935",
-      "description": "はじめに\n周りの方の業務におけるAI活用がすごい…！\nヘッドウォータース初参画のプロジェクトで最初に感じた事です\n開発経験やAzureの知識が浅い事に不安を感じてましたが、そもそも業務、開発を進める上でのAI活用でも遅れてました😭\nなので、今回はAgent Skillsについて調べてみたのでまとめようと思います！\n\n Agent Skillsとは\nAgent Skillsとは、コーディングエージェントに特定の能力や知識、手順を持たせるための仕組みです。\nエージェントが実行できるタスクをモジュールとして定義し、必要なときに読み込んで利用できるようにすることで、より安定した動作と高い再利...",
-      "publishedAt": "2026-03-24T10:32:04.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "d37e69f5caed26ce55abf88e929dd6eccebe99afb25463d859e908bcae46c676",
-      "title": "Webアプリケーションにおけるキャッシュ戦略",
-      "url": "https://zenn.dev/catatsuy/articles/8e2c1cf3d8083c",
-      "description": "発表資料\nhttps://offers-jp.connpass.com/event/385661/\n\n 自己紹介\n\n\n本名：金子達哉\n\n\n株式会社PR TIMES PR TIMES事業ユニット 第一開発部長CTO\n\n\n達人が教えるWebパフォーマンスチューニング〜ISUCONから学ぶ高速化の実践（技術評論社）（通称：ISUCON本）の著者の1人\n\n6章「リバースプロキシの利用」・7章「キャッシュの活用」・8章「押さえておきたい高速化手法」を担当\n\n\n\n\n\ncatatsuyのIDで各種SNSにいます\nISUCON練習用のprivate-isuや、GoのCLIツールとしてsed/grep代替...",
-      "publishedAt": "2026-03-24T09:36:13.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "cb872e72969c26d72fbecccc24147a023331cadd17e8808cd7f2c72eca0c53cb",
-      "title": "クリーンアーキテクチャで迷子になったときに読む、もっと直感的なアーキテクチャ（Go実装例付き）",
-      "url": "https://zenn.dev/hinoguma/articles/23905889418405",
-      "description": "この記事は何ですか？\nクリーンアーキテクチャってよく聞くし、一応調べてみたけど\nわかったようでよくわからないかも...\nと、アーキテクチャの沼にハマってしまったことはありませんか？\nこの記事では\nクリーンアーキテクチャやヘキサゴナルアーキテクチャなどを参考に\n「関心の分離」という本質的には同じことを目指した\nシンプルで理解しやすいアーキテクチャを紹介しようと思います。\n実装例はGitHubにアップしているので良かったら参考にしてください。\nhttps://github.com/hinoguma/go-connectable-architecture\nエンタープライズビジネスルール 依...",
-      "publishedAt": "2026-03-24T06:14:48.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "29d4e08a124c446eebf854275dddc2c017e8369cf63c520f5e84773a23f0ff6c",
-      "title": "国産AIサービス「Sakana Chat」一般無料公開へ　大規模言語モデル「Namazu」を搭載",
-      "url": "https://kai-you.net/article/94960",
-      "description": "東京発のAI研究ラボ・Sakana AI社が、新たな大規模言語モデル（LLM）「Namazu」の開発を発表した。また、これまでグローズドでβテストが行われていたAIチャットサービス「Sakana Chat」の一般無料公開も行われた（外部リンク）。 「Sakana Chat」には今回新たに発表された「Namazu」が搭載されているという。 同社は2023...",
-      "publishedAt": "2026-03-24T05:42:08.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "1af2c554dddf04079778cb661e06aac01b4c82bf8cb213c2f2c64f4575f4d869",
-      "title": "【30分で理解する】GitHub CopilotのAgent Skills",
-      "url": "https://qiita.com/ALeX_EXVS/items/943fd31eb4e1639cd5b9?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "はじめに\nGitHub Copilotを使っていて、こんなことを思ったことはないでしょうか。\n「毎回同じこと説明するの、だるいな」\n「テストの書き方、プロジェクトごとに違うんだけど、覚えてくれないかな」\n「このリポジトリ特有のルール、何回言えばわかるんだ」\nわかります。自...",
-      "publishedAt": "2026-03-24T04:51:46.000Z",
-      "feedName": "Qiita"
     },
     {
       "id": "dd54bb2c4dbdd9d65686c69dc5bba990975e7fdf4ed0288deea662b60ecd68ce",
@@ -6230,6 +5927,206 @@
       "description": "何が起きたか\n2026年4月19日、Vercelが公式にセキュリティインシデントを発表した。\n内容は「Vercel社内の特定システムへの不正アクセス」。\nただし原因はVercel自体ではなく、サードパーティ製AIツールのGoogle Workspace OAuthアプリが...",
       "publishedAt": "2026-04-20T06:10:46.000Z",
       "feedName": "Qiita"
+    },
+    {
+      "id": "2979fd8c60a63e18a72c5a2a3a40e95f877ba01c877ebd665f22a44323c19296",
+      "title": "How we scaled to 1.3 MILLION Session Replays",
+      "url": "https://dev.to/mohammadrrashid/how-we-scaled-to-13-million-session-replays-54c2",
+      "description": "Rejourney.co has scaled to over 1.3 MILLION session replays from app developers over the world.\nRejourney is an alternative to sentry.io and posthog.com for indie React Native developers. \nQuick growth for any startup is hard. However, the difficulty is far greater when your startup handles hundreds to thousands of small files ingested every minute. Every startup dreams of that \"hockey stick\" moment, but as we recently learned at Rejourney, the infrastructure that supports 10,000 sessions a day doesn't always handle 100,000 with the same grace.  \nLast month, we officially onboarded new customers with expansive user bases across several high-traffic mobile apps. It was a milestone for our team, but it also quickly became an \"all-hands-on-deck\" engineering challenge.  \nThe trouble started almost immediately after they loaded Rejourney live on their apps. Within minutes, our ingestion metrics spiked by an order of magnitude.  \nAt the edge, Cloudflare’s automated security systems saw this sudden, massive influx of traffic to our API and did exactly what they were programmed to do: they flagged it as a Distributed Denial of Service (DDoS) attack. Legitimate session data from thousands of users was being dropped before it even reached our infrastructure.  \nOur immediate fix was to implement a bypass filter for our specific API endpoint. We wanted to ensure no data was lost and that the onboarding experience was seamless. We flipped the switch, the \"Attack Mode\" subsided, and the floodgates opened.  \nOpening the floodgates is only a good idea if your reservoir can handle the volume. By bypassing the edge protection, we redirected the full, unthrottled weight of the traffic directly to our origin server.  \nAt the time, our backend was running on a single-node K3s cluster. While we’ve optimized our ingestion pipeline to be lean, no single node is immune to a \"thundering herd.\" As thousands of concurrent connections hit our API, our Ingest Pods were pinned at Max CPU, and the server eventually became unresponsive.  \nWe realized that scaling \"up\" (getting a bigger VPS) was no longer enough. We needed to scale \"out.\"  \n\nSession lifecycle architecture from SDK start through upload lanes, workers, and reconciliation\n\nSession lifecycle overview: upload lanes, durable queue boundary, workers, and reconciliation.  \nThe biggest bottleneck in our old setup was the \"monolithic\" nature of ingestion. If a pod restarted, in-memory tasks were lost. We’ve now decomposed the pipeline into five specialized, durable stages:  \nThe Control Plane (API): Our API pods now focus exclusively on the \"handshake.\" When the SDK calls our endpoints, we immediately create durable rows in Postgres (via PgBouncer) to track the session and ingest jobs.  \nThe Upload Relay: We isolated heavy client upload traffic into its own ingest-upload layer. These pods act as a relay to Hetzner S3, ensuring that a flood of incoming bytes doesn't starve our core API of resources.  \nThe Durable Queue Boundary: We moved away from in-memory task management. Work is now represented as durable rows in Postgres. If a worker pod crashes or restarts, the job still exists in the database, waiting to be claimed.  \nSpecialized Worker Deployments: We split our processing power. ingest-workers handle lightweight metadata like events and crashes, while replay-workers tackle the heavy lifting of screenshots and hierarchies.  \nSelf-Healing Reconciliation: A dedicated session-lifecycle-worker performs periodic sweeps to recover stuck states or abandon expired artifacts.  \nBy using Postgres as the source of truth for state and S3 for storage, our system is now remarkably resilient. Even if Redis or individual pods face transient issues, the state survives and processing resumes exactly where it left off.  \n\nWe’ve moved away from the single-node bottleneck to a High Availability configuration. We now run HA Postgres and Redis with automated failover. If a VPS goes down, the databases automatically fall back to a replica. The platform keeps moving, and the data stays safe.  \nK3s cloud setup showing ingress, API, workers, and data services\n\nK3s cloud setup: ingress, app services, workers, and HA data plane.  \nBefore  \nSingle-node Postgres and Redis tied to one VPS.\n\nInfrastructure maintenance had direct outage risk.\n\nNo automated failover path during node loss.  \nAfter  \nHA Postgres and Redis replicated across nodes.\n\nAutomated failover promotes healthy replicas quickly.\n\nPlatform continuity during host-level interruptions.  \n\nAs we scaled, we hit a literal physical limit: providers like Hetzner often impose a 50-million-object limit per bucket. To bypass this, we implemented a dynamic multi-bucket topology.  \nInstead of hard-coding storage locations in environment variables, we moved the source of truth to a storage_endpoints table in Postgres. This allows us to manage storage with extreme granularity:  \nMulti-bucket topology with endpoint resolution, artifact pinning, and shadow replication\n\nMulti-bucket topology: endpoint routing, artifact pinning, and shadow durability.  \nWeighted Traffic Splitting: We can resolve active buckets and perform weighted random selection to balance load across providers.  \nArtifact Pinning: To avoid \"File Not Found\" errors during migrations, we store the specific endpoint_id on every artifact. This \"pins\" future reads to the correct bucket, even as global defaults change.  \nShadow Copies for Durability: We implemented a \"Shadow\" role. Once a primary write succeeds, we fan out asynchronous writes to shadow targets for extra redundancy.  \nDespite the intensity of the traffic spike, we managed to implement these changes with less than five minutes of total downtime.  \nThis incident reinforced why we focus so much on performance. Our lightweight SDK ensures we aren't taxing the user’s device, while our new HA infrastructure ensures we can handle whatever volume the next \"hockey stick\" growth moment throws at us.  \nWe’re now back to 100% stability, with a much larger \"reservoir\" ready for the next wave of growth. If you’ve been looking for a session replay tool that respects your app’s performance as much as you do, we’re more ready for you than ever.  \nDetected false-positive edge protection and restored trusted API traffic.\n\nIsolated upload traffic and shifted orchestration state to durable Postgres rows.\n\nSplit workers by workload, then added reconciliation for crash-safe recovery.\n\nEnabled HA Postgres + Redis and finalized multi-bucket endpoint routing.",
+      "publishedAt": "2026-04-24T02:23:41.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "c630d0865dfaecebc907f07c840ad6e77172ee6e977cf0d7688a591aaa88252b",
+      "title": "Mixpanel vs Amplitude 2026: What to Pick and Why",
+      "url": "https://dev.to/juan_diegoisazaa_5362a/mixpanel-vs-amplitude-2026-what-to-pick-and-why-1p2o",
+      "description": "Product teams searching for mixpanel vs amplitude 2026 aren’t usually debating “which dashboard looks nicer.” They’re trying to avoid expensive re-instrumentation, mistrusted metrics, and a backlog of “can you pull this report?” requests. Here’s an opinionated, engineering-friendly comparison focused on what actually breaks (or scales) in real analytics stacks.\nBoth mixpanel and amplitude are event analytics tools. The gap shows up less in features and more in how teams work with data.\nMixpanel tends to shine when you want fast time-to-insight with straightforward event + properties tracking. It’s strong for product managers who live in funnels, retention, and segmentation and don’t want to spend weeks modeling.\nAmplitude tends to win when teams lean into a more structured analytics culture: governance, planning, and repeatable analysis across larger orgs. It often feels better suited when analytics becomes a “platform” used by many squads.\nOpinionated take: if your team is small-to-mid and needs answers this week, Mixpanel often gets you there faster. If your org is scaling and you care about consistent definitions across many teams, Amplitude’s ecosystem tends to fit the operating model better.\nThe biggest hidden cost in either tool isn’t license fees—it’s bad tracking hygiene.\nBoth tools support flexible event schemas, but you should still standardize:\nEvent naming conventions (e.g., Signup Started, Signup Completed)\nProperty types (don’t alternate between numbers and strings)\nVersioning for breaking changes (Checkout Completed v2)\nIf you don’t, your funnels slowly become “choose-your-own-adventure.”\nIn 2026, cross-device identity is table-stakes, but the failure mode is the same: you end up with duplicate users and inflated conversion rates.\nPractical guidance:\nTrack an anonymous_id from first touch.\nAs soon as you know the user, call identify with a stable user_id.\nBe disciplined about when you merge identities (especially for shared devices).\nAmplitude generally offers a stronger “system” feel for governance-heavy setups. Mixpanel can absolutely be governed too, but the process usually lives more in your team’s conventions and less in how the platform nudges you.\nIf you already run a data catalog and enforce event contracts, either tool works. If you don’t, pick the one whose workflow your team will actually follow.\nHere’s how the day-to-day analysis typically differs.\nFunnels: both are strong. In practice, teams pick based on usability and how quickly non-analysts can iterate.\nCohorts/segmentation: both handle it, but Amplitude often feels better when cohorts become shared “assets” used across teams.\nRetention: both support classic retention curves. Your outcome depends more on correct event definitions than on the tool.\nExperiment analysis: if you run a mature experimentation program, think beyond the UI. You’ll care about consistent metric definitions, segment exclusions, and how experiment metadata flows into events.\nA common pattern is pairing event analytics with qualitative tools. For example:\nUse hotjar for heatmaps and session snippets when you need to explain why a funnel step drops.\nUse fullstory for deeper session replay and debugging complex UI issues.\nEvent analytics tells you what happened; replay tools help you see how it happened.\nIf you do one thing after reading this: write a tiny event contract and enforce it in code review. Here’s a small JavaScript example you can adapt regardless of whether you’re sending to Mixpanel, Amplitude, or a CDP.\n// analytics.js\nconst REQUIRED = {\n  \"Signup Completed\": [\"method\", \"plan\", \"ab_variant\"],\n  \"Checkout Completed\": [\"currency\", \"value\", \"payment_method\"]\n};\n\nexport function track(event, props = {}) {\n  if (REQUIRED[event]) {\n    for (const key of REQUIRED[event]) {\n      if (props[key] === undefined || props[key] === null) {\n        throw new Error(`Missing required property '${key}' for event '${event}'`);\n      }\n    }\n  }\n\n  // Example: swap this out for mixpanel.track or amplitude.track\n  window.analyticsProvider?.track(event, props);\n}\n\n// Usage\ntrack(\"Signup Completed\", {\n  method: \"oauth_google\",\n  plan: \"starter\",\n  ab_variant: \"B\"\n});\n\nWhy this matters: most “analytics migrations” are really “we never agreed on definitions.” A contract prevents silent drift.\nChoose based on your team shape and how you’ll keep metrics trustworthy.\nPick Mixpanel if:\nYou want fast setup, fast answers, and minimal process overhead.\nYour primary users are PMs and growth folks who live in funnels and segmentation.\nYou’re okay enforcing governance via conventions and lightweight contracts.\nPick Amplitude if:\nYou’re scaling analytics across many teams and need stronger shared definitions.\nYou expect heavier governance, a more “platform” approach, and repeatable analysis.\nYou care about standardization more than immediate speed.\nAlso consider whether you should own the pipeline.\nIf you want more control and privacy, posthog can be a compelling alternative for teams that prefer self-hosting or deeper product instrumentation control.\nIf you’re going multi-tool, pairing event analytics with hotjar or fullstory can close the loop between quantitative and qualitative.\nSoft final thought: whichever you pick, invest in your tracking contract, naming conventions, and identity strategy first. Tools amplify discipline; they don’t replace it.",
+      "publishedAt": "2026-04-24T02:05:52.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "389e449beb2475f69c56ee80ca84e1bea0ea3724d9a11384804b72253cec7c34",
+      "title": "Hardcoding Security into Every Commit: The Future of Snyk Secrets",
+      "url": "https://dev.to/snyk/hardcoding-security-into-every-commit-the-future-of-snyk-secrets-2jel",
+      "description": "In the modern software development lifecycle, the speed of innovation is often at odds with the security of our most sensitive data. As organizations embrace cloud-native development and AI-generated code, they face a phenomenon known as “secret sprawl”, aka, the uncontrolled and widespread distribution of API keys, passwords, and tokens across repositories, CI/CD logs, and developer collaboration tools.\nHowever, the challenge has evolved beyond static credentials. We are entering a new phase of AI adoption where autonomous, stateful agents are not just writing code; they are executing workflows, connecting to Model Context Protocol (MCP) servers, and operating applications at machine speed. Secrets are no longer just accidentally exposed; they are now generated and executed by agents. An AI agent might be tasked with setting up a server, and while completing this task, it creates its own temporary secrets or access keys to talk to other services. \nThis process allows AI to go far beyond “knowing” the password - it uses it to log in, move data, or change settings without a human ever seeing the password. Without a human-in-the-loop, AI that is poorly programmed or “hallucinates” may create a key that is too powerful or leave a backdoor open. Every agent is, by design, a consumer and executor of secrets. \nTraditional security has often been a “checkbox” feature that is noisy, reactive, and disconnected from the developer’s workflow. This leads to critical frustrations, exacerbated by the growing presence of AI:\nAlert fatigue: Legacy engines produce high rates of false positives, while public-facing AI agents can be manipulated via prompt-injection to perform unsafe actions, such as confirming legally binding offers for pennies.\nDire lack of visibility: 72% of organizations struggle to maintain visibility of embedded AI. Developers are integrating \"Shadow AI\"—unapproved agents and third-party tools—without security oversight\nReactive remediation: Once a secret is leaked or an autonomous agent deletes a production database, the cost of recovery is catastrophic. The ServiceNow Bodysnatcher incident exploited insecure configurations in hardcoded secrets and was known as “the most severe AI-driven vulnerability to date”.\nThe result is clear: exposed credentials and untrusted agentic development represent a unified front of risk that traditional AppSec was never designed to manage. \nBefore organizations can move fast with AI, they need a stable foundation built on visibility. Risk must be discovered before it can be prioritized and remediated. Traditional application security scanning across your proprietary code (SAST) and open source repositories (SCA) is no longer enough. AppSec teams are fighting a two-front battle between risk originating within AI itself (models and artifacts), as well as a drastically increased speed in which risk can be discovered by threat actors using AI to power their own discovery. \nSnyk is built on best-in-class security engines across SAST, SCA, DAST, and more – validated by leading analysts and trusted at enterprise scale. Throughout our history, we’ve understood the need for AppSec teams to have a complete picture of risk, evidenced most recently in our release of Evo AI-SPM to extend visibility further left into AI models and artifacts. This principle has guided our journey to deliver holistic AppSec governance to our customers. This very principle is why we’re so excited to share our vision for the future of Secrets detection. \nSnyk Secrets isn’t just another scanner; it is an integrated platform play designed to bridge the gap between code and commit. Our goal is to empower developers to stay fast while ensuring sensitive data remains hidden. Let’s take a look at how we will deliver on this:\nWe are moving beyond simple pattern matching. Snyk Secrets leverages a best-in-class engine that combines ML-driven semantic and contextual analysis with high-entropy scanning and regex. By understanding the surrounding code and metadata, we can dramatically reduce false positives and provide a high-fidelity signal that developers can trust. \nOrganizations also tend to have proprietary Secrets (such as DB passwords), so ensuring that you can supplement the Snyk Secrets engine with custom regex and patterns to scan, you can feel confident that we’ll detect Secrets across all of your plain-text code files in your repos.\nThe most effective way to manage a leak is to prevent it from occurring in the first place. Snyk’s shift-left strategy has been our beacon over the last ten years, and Secrets is no exception. Real-time feedback directly within developers’ native tools is essential:\nPrevention: By scanning through the IDE and CLI, you can prevent Secrets from ever reaching a commit, saving time and improving your security posture\nDetection: You can scan for Secrets in PR checks to ensure they never merge to a major branch, and by integrating with the SCM and CI/CD pipeline, you can detect Secrets at build time and through scheduled testing.\nSecurity cannot properly be managed through a fragmented lens. Snyk Secrets fits seamlessly into Snyk’s single pane of glass approach to providing AppSec teams to manage risks across all repos:\nUnified reporting: Track trends in detection and remediation (MTTR) across your entire organization, with the ability to export them to provide you with a single pane of glass view of your security posture.\nIgnore approval workflow: Democratize the ability to request and triage ignores whilst consistently managing and governing risk acceptance for false positives through a centralized dashboard.\nThe secret-scanning market has matured, and value lies not just in finding secrets but in finding the right ones and preventing exposure at the source. Snyk is energized and committed to helping customers consolidate secrets sprawl into our unified platform, closing an essential visibility gap in the age of AI.\nHowever, secrets are only one piece of a much larger puzzle. As organizations move toward agentic development, where autonomous systems plan, execute, and interact across tools and environments, the attack surface expands beyond static code to include agent inputs, tool usage, and runtime decision-making. Snyk Secrets is a foundational component of our broader AI Security Fabric. It is an invisible, intelligent layer providing continuous, context-aware security across code, agents, and AI-native systems.\nBy integrating Secrets into the Snyk AI Security Platform, we ensure that your security posture keeps pace with agents operating at machine speed. Our vision for the future of Secrets is tied directly to the core principles of Agentic Development Security: validating what agents use, controlling what they do, and preventing insecure output.\nInterested in what Snyk Secrets and the Snyk AI Security Platform can do for your team? Book a demo and be sure to stay tuned for more excitement to come!",
+      "publishedAt": "2026-04-24T02:00:50.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "f266bb6655f9dd41bf3bba09305245b9a763bc0650c1ce1df971a8991543df62",
+      "title": "JPMorgan Just Published a Cyber To-Do List and Snyk Covers 8 of the 10 Items. How do you stack up?",
+      "url": "https://dev.to/snyk/jpmorgan-just-published-a-cyber-to-do-list-and-snyk-covers-8-of-the-10-items-how-do-you-stack-up-n87",
+      "description": "Key takeaway\n\n\nJPMorganChase's Global Technology Leadership published \"Fortifying the enterprise: 10 actions to take now for AI-ready cyber resilience\" on April 17, 2026. It's a CISO mandate for every large enterprise. Snyk directly addresses 8 of those 10 actions — out of the box, in the developer workflow, with one platform.\nWhen JPMorgan's global technology leadership publishes a public cyber checklist, security teams at large enterprises take notice. JPMorgan spends roughly $15 billion a year on technology and runs one of the most battle-tested security programs on the planet. When they say \"do these 10 things,\" it lands less like advice and more like a preview of what regulators and boards will soon require.\nThe timing is no accident. AI is rapidly narrowing the window between a vulnerability's discovery and exploitation. Processes designed for quarterly release cycles are now a liability. The JPMC directive acknowledges this directly — as does Anthropic's companion security post from April 10, which describes AI models as increasingly effective at chaining known bugs into working exploits.\n\"Adversaries are scaling attacks, compressing the time from vulnerability discovery to exploitation, and increasing the volume of threats that enterprises face each day.\" \n— JPMorganChase Global Technology Leadership, April 17, 2026\nHere's what JPMorgan said, what it means in practice, and where Snyk fits.\nJPMC requirements: Stop using outdated open source packages and end-of-life libraries. Only use current, well-maintained releases from trusted repositories.\nHow Snyk helps: Snyk SCA continuously scans every open source dependency, flags outdated or vulnerable packages, and opens automated fix pull requests — at every commit, before anything ships.\nJPMC requirements: Know exactly what's in every application. Build a Software Bill of Materials (SBOM) for each one, enriched with who owns it and how critical it is.\nHow Snyk helps: Snyk generates SPDX and CycloneDX SBOMs for every application and container, maps all open source dependencies, and integrates with tools like ServiceNow and Jira for ownership tracking.\nJPMC requirements: Fix known vulnerabilities in priority order — internet-facing systems first. Scan continuously, not quarterly. Factor in real-world exploit availability and CISA's Known Exploited Vulnerabilities (KEV) list.\nHow Snyk helps: Snyk scans every PR and build, prioritizes based on reachability and exploit maturity, natively ingests CISA KEV data, and uses Agent Fix to auto-generate remediation PRs that developers can accept with one click.\nJPMC requirements: Run tabletop exercises and live simulations. Test backup and recovery. Include legal, comms, and business leaders — and close the gaps you find.\nHow Snyk helps: IR planning is a program function, not a code scanner's job. Snyk supports post-incident reviews through audit trails, exception tracking, SBOM lineage, and compliance reporting. Pair with a dedicated IR platform for the exercises themselves.\nJPMC requirements: Maintain a current register of every third-party service your critical systems depend on. Assess their security posture. Have an exit plan.\nHow Snyk helps: Snyk Evo AI-SPM inventories AI models, third-party AI services, agent frameworks, and MCP servers, extending supply chain visibility into the AI layer that most security teams still can't see. Discovery data shows 28% of enterprises already run agentic AI in production, most of it invisible to their security teams. \nJPMC requirements: Know how long it takes a patch to reach production. Automate testing and staged rollouts. Make security scanning a built-in quality gate — not a separate bottleneck.\nHow Snyk helps: This is the core Snyk use case. Native integrations with GitHub, GitLab, Bitbucket, Azure DevOps, Jenkins, CircleCI, and more. Security gates run automatically at PR, build, and deploy. JPMC is describing, in their own words, the category Snyk created.\nJPMC requirements: Default-deny outbound traffic from production environments. Only allow approved endpoints. JPMC notes that this single control would have substantially mitigated both Log4Shell and SolarWinds.\nHow Snyk helps: Network egress is enforced by firewalls and cloud network policy — not code scanners. However, Snyk IaC catches misconfigurations that silently weaken those controls: overly broad NAT gateways, unrestricted 0.0.0.0/0 rules in Terraform, and Kubernetes NetworkPolicy drift.\nJPMC requirements: Eliminate persistent admin access. Use just-in-time entitlement. Require MFA and session recording. Pay special attention to service accounts — they're the most targeted.\nHow Snyk helps: PAM tools handle the identity plane. Snyk handles the upstream of the problem: Snyk Secrets detection finds embedded credentials, API keys, cloud tokens, and SSH keys in code and containers before they ever merge — removing the most common source of standing privilege leakage.\nJPMC requirements: Require MFA for all remote access. Segment environments by trust level. Authenticate every system-to-system connection. Test with red team exercises.\nHow Snyk helps: Snyk IaC validates zero-trust and segmentation controls as code — VPC peering, private endpoints, service mesh mTLS, network ACLs, and firewall rules. Drift between your policy-as-code and the deployed network is caught at merge time, not after a red team finds it.\nJPMC requirements: Threat-model AI systems. Treat AI models and training data as high-value assets. Validate AI-generated code the same way you'd validate human-written code. Red-team for prompt injection and data poisoning.\nHow Snyk helps: Snyk Evo delivers the full AI security lifecycle: Agent Scan (scan AI-generated code), Snyk Studio (secure-by-default guardrails for coding agents like Cursor, Claude Code, Copilot), AI-SPM (model and agent inventory), Agent Red Teaming (adversarial testing for prompt injection), and MCP/agent supply chain security. \nThe JPMC directive wasn't written in a vacuum. It's a direct response to AI changing the economics of cyberattacks. “We need to know that we can release it safely, and it’s not exactly clear how we can do that with full confidence,” said Logan Graham, the head of Anthropic’s Frontier Red Team, which evaluates AI for risks.\nBoth documents land on the same conclusion: defenders must use AI at the code level, continuously, at the speed of change. Quarterly scans and manual triage simply won't keep pace with automated exploitation at scale.\nExternal research reinforces the stakes: BaxBench (ETH Zurich, UC Berkeley, 2025) found that 62% of frontier LLM-generated backend code is incorrect or insecure. As teams lean more heavily on coding agents, the volume of security issues entering codebases is rising — without automated scanning designed to detect AI-generated patterns.\nIf you're a security team that needs to demonstrate progress against the JPMC 10, here's a practical phased approach:\n\n\n\n\n\n\n\n\n\nDays 1–30\n\nClose the most urgent code gapsDeploy Snyk Open Source, Snyk Code, and Snyk Secrets across your top 25 revenue-critical applications. Covers Actions 1, 2, 3, and the secrets portion of Action 8.\n\n\nDays 31–60\n\nExtend to cloud infrastructure Roll out Snyk IaC across production cloud accounts. Covers Actions 6, 7 (adjacent), and 9 — catching misconfigurations before they reach runtime.\n\n\nDays 61–90\n\nSecure the AI development layer Deploy Evo AI-SPM, Agent Scan, and Snyk Studio guardrails across active coding-agent deployments. Covers Actions 5 and 10. By day 90, 8 of 10 Actions are instrumented on one control plane.\n\n\n\nJPMorganChase published the mandate, and Anthropic published the mechanics behind why it's urgent. Snyk is the platform that operationalizes both — natively in the developer workflow, across 8 of the 10 actions — at the speed AI is now generating code.\nIf you're a CISO, AppSec lead, or procurement owner mapping vendors to the JPMC 10, the table above is your RFP foundation. If you're a security team preparing for an order-of-magnitude increase in vulnerability volume, Snyk is the platform already instrumented for it.",
+      "publishedAt": "2026-04-24T02:00:44.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "360411d75b88b3e2e462ba9e8d2a8cd39d422ec51d41ebbdbd8b7c808e1f46c0",
+      "title": "HCD認定資格受験備忘録 〜実務経験の棚卸しと書類作成のリアル〜",
+      "url": "https://dev.classmethod.jp/articles/hcdspecialist/",
+      "description": "HCDスペシャリストを受験した備忘録です。この資格は知識を問うテストではなく、実務でのHCD実践を証明する書類審査型。書類作成のルールやコンピテンシー記述のコツなど、これから受験を検討されている方の参考になれば幸いです。",
+      "publishedAt": "2026-04-24T02:00:24.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "8d5027d595c8ecf9182b3ea6b6fe6fbbf1690bab70eab84bb074c74d2fa8fae0",
+      "title": "🚀 I'm a Senior Mobile Engineer. Here's what I can do for your team.",
+      "url": "https://dev.to/frxncisxo/im-a-senior-mobile-engineer-heres-what-i-can-do-for-your-team-4f6e",
+      "description": "7+ years building native Android (Kotlin) and iOS (Swift) apps for enterprise clients.\nCurrently open to Senior Mobile roles.\nArchitecture & Scale\nI think in terms of systems, not just features\nExperience with large, complex codebases (legacy refactoring + greenfield)\nBuilt apps handling millions of transactions (fintech at EY)\nDesigned scalable mobile architectures for enterprise-grade applications\nCode Quality\nClean code principles (SOLID, design patterns)\nPerformance optimization (profiling, memory management)\nSecurity-first mindset (handled sensitive financial data)\nComprehensive testing strategies\nFull Ownership\nWork across the full stack (backend integration, database design, API consumption)\nCollaborate with product, design, backend, QA\nDrive architectural decisions\nMentor junior developers\nCross-Platform\nMaster both Android (Kotlin/Jetpack Compose) and iOS (Swift/SwiftUI)\nUnderstand platform-specific constraints and opportunities\nBuild consistent experiences across platforms\nWhile searching, I shipped 5 open-source libraries:\nFLOWLLM - Real-time LLM streaming on Android (Kotlin)\nXCODE-CONTEXT-MCP - AI-powered iOS analysis tool\nSYNCWAVE - Distributed state management with CRDTs\nNEXUS - Code impact analysis for safer deployments\nENVOY - Developer tooling (automation)\nEach one demonstrates:\nFull breakdown: dev.to/frxncisxo\nA team where I can:\nOwn features end-to-end\nInfluence architectural decisions\nWork with high-quality code standards\nGrow technically (latest mobile tech, system design, etc)\nBuild products that matter\nIdeally:\nSenior Mobile Engineer or Tech Lead Mobile role\nRemote or flexible arrangement\nProduct-focused (not agency)\nTeams that value scalability & maintainability\nEY (2024-2026) - Mobile Engineer\nEnterprise Android development (Kotlin)\nCross-functional collaboration (backend, product, QA)\nScalable architecture design\nCode quality & long-term maintainability\nGeko (2021-2023) - iOS Developer\nNative iOS with Swift & UIKit\nPerformance optimization\nApple Pay integration\nProduction apps at scale\nGoMobile (2020-2021) - Software Analyst\nRequirements translation\nTechnical solutions design\nProject collaboration\nLatin American BYTE (2017-2020) - Full-stack Developer\nBackend (Java, Spring, Microservices)\nFrontend (Angular, Ionic)\nNative Android (Kotlin)\nAWS deployments\nWhile searching for my next role, I decided to build 5 libraries and write technical articles.\nResult:\nThis speaks louder than a CV.\nIf you're hiring for:\nSenior Mobile Engineer (Android/iOS/Cross-platform)\nTech Lead Mobile\nMobile Architect\nOr know someone who is...\n👉 Let's chat. I'm ready to make an impact.\n📧 daframoli@hotmail.com\n✅ 7+ years mobile development (Android + iOS)\nReady to build something great.\n\n\n  \n  \n  SeniorMobileEngineer #iOS #Android #Kotlin #Swift #Hiring #OpenToWork #TechJobs",
+      "publishedAt": "2026-04-24T01:59:20.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "1235905fe6856bdac2e61dec4fceda3414ed1ea1ec49aaa62f5c6d1c68c91d0d",
+      "title": "AI Weekly 4/17–4/24 | OpenAI Stack, Anthropic Politics, Figma Tumbles",
+      "url": "https://dev.to/yang_goufang_23c7ba674984/ai-weekly-417-424-openai-stack-anthropic-politics-figma-tumbles-25oj",
+      "description": "One-line summary: Across one week OpenAI shipped GPT-5.5 (4/23), Images 2.0 (4/21), and a reported $20B Cerebras chip-and-equity deal (4/16, per The Information). In the same window Anthropic launched Claude Design (Figma -7% intraday), and its CEO walked into the White House. AI competition expanded out of the \"toolchain\" along three axes at once — down to compute supply, up to product distribution, sideways into politics.\nThis week's dual protagonists: If OpenAI defined this week's commercial ceiling (model → image tools → chips → ads → enterprise), Anthropic defined this week's political ceiling (Mythos leak reporting, White House meeting, Claude Design moving Figma's stock). Last week we said the toolchain was the real battlefield. This week, the battlefield got pushed outward at both ends.\nThe week's narrative spine (used to organize every section below):\nDown to compute supply: OpenAI-Cerebras $20–$30B + equity; Anthropic-Amazon 5 GW.\nUp to product distribution: GPT-5.5, Images 2.0, CPC ads inside ChatGPT.\nSideways into politics: Mythos leak reporting, Amodei at the White House, Anthropic vs. Trump-administration litigation still active.\nTimeline: April 16–23. On 4/16 (Thu), The Information broke the OpenAI–Cerebras $20B chip-and-equity deal. On 4/21 (Tue), ChatGPT Images 2.0 went live. On 4/23 (Thu), GPT-5.5 shipped. The three actions are not the same day, but lay them on a one-week timeline and the narrative is unambiguous — OpenAI is no longer just selling models. It is pushing chip supply, product surfaces, and distribution/ads outward at the same time. This is exactly the \"down\" and \"up\" axes of this week's spine.\nOpenAI released GPT-5.5 just six weeks after GPT-5.4. Internal codename: \"Spud\". Rolling out to Plus, Pro, Business, and Enterprise users in ChatGPT and Codex; GPT-5.5 Pro is restricted to Pro / Business / Enterprise. OpenAI emphasizes improvements in data analysis, coding and debugging, software operation, online research, and document/spreadsheet generation. TechCrunch frames it as one step closer to a \"super app\".\n\n\n\nItem\nGPT-5.5\n\n\n\n\nRelease date\n2026-04-23\n\n\nTime since prior model (GPT-5.4)\n6 weeks\n\n\nInternal codename\nSpud\n\n\nTier access\nPlus / Pro / Business / Enterprise\n\n\nPro variant\nGPT-5.5 Pro (Pro+ tiers only)\n\n\n\nAnalysis: A six-week iteration cadence is materially faster than the previous norm. OpenAI is treating \"the model\" as a high-frequency product release, not an annual flagship. For enterprises, that cuts both ways — capability ramps fast, but prompt and workflow compatibility testing burns more cycles too.\nOpenAI shipped gpt-image-2, its first image model with native reasoning — it thinks before generating, integrates real-time web search, and produces up to 8 coherent images from a single prompt (with character and object continuity across the batch). 2K resolution; aspect ratios from 3:1 to 1:3. Instant mode ships to all ChatGPT users including the free tier; Thinking mode (web search, layout reasoning, multi-image batching, output verification) is restricted to Plus / Pro / Business / Enterprise. TechCrunch led on the text-rendering improvements — usable menus, posters, UI text, finally.\n\n\n\nItem\nChatGPT Images 2.0\n\n\n\n\nRelease date\n2026-04-21\n\n\nResolution\n2K\n\n\nCoherent images per prompt\nup to 8\n\n\nInstant mode\nAll users (incl. free)\n\n\nThinking mode\nPlus / Pro / Business / Enterprise\n\n\nImage Arena ranking, 12h post-launch\n#1 (+242 margin — largest ever)\n\n\n\nAnalysis: Image model + reasoning + real-time search + multi-image batching + output verification is a new combination. It pulls the category from \"aesthetic toy\" into \"production-ready design and content workflow.\" For Midjourney, Adobe Firefly, Recraft, and the rest of the dedicated image-tool stack, this is cross-category compression. The +242 Image Arena lead will compress over time, but the opening signal is unambiguous.\nThe Information broke the story on Thursday, April 16; Reuters subsequently reported on the same terms but stated it could not independently verify. OpenAI will reportedly spend over $20 billion across three years on Cerebras chip servers, with warrants for a minority equity stake that could rise to ~10% if total spend reaches $30B. OpenAI is also providing roughly $1B to fund Cerebras data center build-out. This doubles January's $10B / 750 MW agreement. Cerebras is targeting a Q2 2026 IPO at ~$35B valuation, raising $3B. Note: this remains at the reported stage — neither OpenAI nor Cerebras has issued an official confirmation.\n\n\n\nItem\nNumber\n\n\n\n\nThree-year purchase commitment\n> $20B\n\n\nMaximum spend (with equity step-up)\n$30B\n\n\nEquity ceiling\n~10% (warrants)\n\n\nData center funding\n~$1B\n\n\nMultiple of January's deal\n~2×\n\n\nCerebras IPO target\nQ2 2026, ~$35B valuation\n\n\n\nAnalysis: This is not a supply-chain transaction. It is OpenAI binding \"biggest customer\" and \"largest minority shareholder\" into the same legal instrument — using a contract to lift a supplier into IPO. As a signal about how the cost structure of frontier AI actually works, it is significant: leading AI companies are now willing to commit equity and multi-year multi-billion purchase obligations to lock down a chip supplier, which means bargaining power over compute supply is now treated as a core competitive moat, not something the market will solve.\nConnecting takeaway: Three actions across one week, spanning chip, image, and model. Add Digiday's report that ChatGPT now has live cost-per-click ads and the distribution / monetization layer is filled in too. Place all four in the same week and OpenAI no longer reads as \"a model company\" — it reads as a vertically integrating AI platform company. That is the literal \"down to supply, up to distribution\" half of this week's spine.\nOn the same Friday, Anthropic launched Claude Design — a tool that turns text prompts into slide decks, app prototypes, and marketing one-pagers. The differentiator fits in one sentence: Claude Design can read your codebase and Figma files, automatically extract your design system, and apply it to new projects.\nThe market answered immediately: Figma's stock dropped roughly 7% intraday — as much as -7.28% from the prior close of $20.32 to $18.84. Adobe was rattled in sympathy. The detail worth noting: per Figma's 8-K filing dated April 14, Anthropic CPO Mike Krieger resigned from Figma's board three days before the Claude Design launch. Lined up on a calendar, the timing reads as deliberate competitive positioning.\n\n\n\nItem\nNumber\n\n\n\n\nRelease date\n2026-04-17 (Friday)\n\n\nFigma intraday max drop\n-7.28% ($20.32 → $18.84)\n\n\nAdobe\nRattled, down in sympathy\n\n\nMike Krieger leaves Figma board\n2026-04-14 (3 days pre-launch)\n\n\n\nAnalysis: This is one of the clearest same-day public-market reactions yet — the market drew a direct causal line between an AI product release and a public design-software incumbent's intraday price. Short term, the Figma move will get attributed to many things (macro, sentiment, competition). Structurally the signal is sharper: when Claude Design can read your Figma files and produce new designs from them, Figma's value stops being \"how good the drawing experience is\" and starts being \"how easy it is for an AI to extract this file and reuse it.\" Design systems become AI training data. That is a commercial conversation the industry hasn't fully had yet.\nThis week's most politically loaded story is Anthropic's Mythos model graduating from a tech story into a political one.\nTimeline:\n\n\n\nDate\nEvent\n\n\n\n\n2026-04-07\nAnthropic launches Mythos Preview via Project Glasswing — restricted to 12 defensive-security partner orgs\n\n\n2026-04-16\n\nReuters report (citing Bloomberg): the White House is planning to give U.S. agencies access to Mythos\n\n\n2026-04-17\nAnthropic CEO Dario Amodei meets at the White House; Reuters confirms his arrival\n\n\n\n2026-04-21\n\nBloomberg reports Mythos is being accessed by unauthorized users\n\n\n2026-04-22~23\nMass coverage: Fortune, Euronews, CBS, Cybernews\n\n\n\n\nThe leak: TechCrunch reports that a Discord group \"made an educated guess\" at the model's URL based on Anthropic's known model-hosting naming pattern, and gained access the same day Mythos was publicly announced. Anthropic told Bloomberg it is investigating \"unauthorized access through one of our third-party vendor environments.\"\nInside the White House meeting: On April 17, Amodei met with Chief of Staff Susie Wiles, Treasury Secretary Scott Bessent, and National Cyber Director Sean Cairncross. The White House described the talks as \"productive and constructive.\" When President Trump was asked about the meeting at a Phoenix airport, he said only \"Who?\" and added he had \"no idea\". Backdrop: Anthropic is currently in court with the Trump administration over Claude being blacklisted.\nAnalysis — three layers, separately (note: the analysis below relies on Bloomberg / TechCrunch reporting; Anthropic's official line is only that it is \"investigating unauthorized access through one of our third-party vendor environments\" — the company has not confirmed the specific \"guessed the URL\" mechanism):\nTechnical: A model billed as \"too dangerous to release\" was, per reporting, accessed by guessing the URL. If the reporting holds, this is a basic access-control design problem. How strong a model is, and how well its access perimeter is guarded, are independent variables.\nPolitical: The Anthropic CEO walks into the White House 10 days after Mythos goes public. The conversation is not just about this model — it is about where the line should be drawn between AI companies and the U.S. government. Trump's \"Who?\" inadvertently exposes that the talks are with the staff apparatus, not the President.\nCommercial: For Anthropic, Mythos + Glasswing positions the company as the priority partner for U.S. defensive-security work. That's a fundamentally different growth path from the pure commercial competition Claude Design represents.\nFor engineering teams, the most direct lesson is concrete: frontier-model access control is now a real production issue, not an academic warning. If you operate any high-sensitivity internal model API, audit URL naming patterns, third-party vendor access, and the gap between \"publicly announced\" and \"actually opened\" — Mythos got compromised inside that gap.\nMultiple outlets traced the same internal signal this week. Business Insider on April 21 reported that DeepMind has an internal divide over AI tooling, with some engineers turning to Claude for coding. The LA Times followed on April 22, saying Google's internal struggle is \"handing the AI coding race to Anthropic and OpenAI\" — and that Google is trying to consolidate its internal coding tools under the Antigravity platform (the agentic IDE Google released alongside Gemini 3 in November 2025).\nIn the same week, Google shipped the Gemini app for Mac (covered by Mashable, ZDNET, CNET) and Deep Research / Deep Research Max autonomous research agents.\n\n\n\nSignal\nDetail\n\n\n\n\nInternal divide\nBusiness Insider: DeepMind teams split on AI tooling; some moving to Claude\n\n\nConsolidation\nLA Times: Google trying to unify internal coding tools under Antigravity\n\n\nExternal moves\nGemini Mac app live; Deep Research Max launched\n\n\n\nAnalysis: Engineers drifting toward Claude inside Google is a sharper signal than the platform consolidation itself — it means the productivity gap is now wide enough to drive org-level tooling decisions. Antigravity is the other path: leverage user reach and agent-first workflows to route around raw model-quality weakness. Classic Google playbook (Search, Android, Gmail all worked that way). It may not pull coding back. But it will prevent Anthropic and OpenAI from holding the lead on raw model strength alone for very long.\nOpenAI turned on cost-per-click ads inside ChatGPT (Digiday) — distribution/monetization layer is now live.\nOpenAI briefed the Five Eyes on a new cybersecurity product (Reuters / Axios) — a direct counterpart to Anthropic's Glasswing. OpenAI is also positioning at the government layer.\nOpenAI Privacy Filter, ChatGPT for Clinicians, and GPT-Rosalind for life sciences all shipped — vertical scenarios are getting carpet-bombed.\nAnthropic and Amazon expanded collaboration to 5 GW of compute — counterpart to the OpenAI-Cerebras deal, Anthropic is also locking down compute supply.\nAnthropic Economic Index Survey released with 81,000-person dataset — Anthropic continues to own the \"AI's economic impact\" narrative through its own channel.\nOpenAI CPO Kevin Weil is leaving (Wired); former Sora lead Bill Peebles is also departing.\n\n\n\nEvent\nNumber\n\n\n\n\nOpenAI ↔ Cerebras three-year purchase commitment\n> $20B\n\n\nSame: max spend / equity ceiling\n$30B / ~10%\n\n\nOpenAI Cerebras data center funding\n~$1B\n\n\nAnthropic ↔ Amazon compute partnership expanded to\n5 GW\n\n\nCerebras targeted IPO valuation\n~$35B\n\n\nFigma intraday max drop on Claude Design launch\n-7.28% ($20.32 → $18.84)\n\n\nGPT-5.5 cadence vs GPT-5.4\n6 weeks\n\n\nChatGPT Images 2.0 Image Arena lead at +12h\n+242 (largest ever recorded)\n\n\nMythos: time from public announcement to unauthorized access\nsame day\n\n\nAnthropic Economic Index sample size\n81,000 people\n\n\n\nThe deeper thread of the week: the battlefield expanded from the toolchain to the full value chain to the political arena.\nLast week we wrote that \"the real competition has shifted from 'whose model is stronger' to 'whose toolchain can get enterprises to production fastest.'\" This week pushed the line further at both ends:\nDown the stack to supply: OpenAI locked down Cerebras with $20–30B plus equity. Anthropic expanded with Amazon to 5 GW. Frontier AI companies are no longer just buying compute. They are turning compute into a balance-sheet asset of their own.\nUp the stack to distribution and ads: ChatGPT's CPC ads, Images 2.0's multi-image batching, GPT-5.5's \"super app\" framing — OpenAI is converting its inbound traffic into a monetizable product layer.\nSideways into politics: Anthropic's CEO inside the White House. Mythos leaked. OpenAI briefing the Five Eyes. Anthropic still in litigation with the Trump administration. AI companies are now being treated as strategic assets — and strategic-asset competition follows different rules from tech-company competition.\nAnd pure competition got hotter too: Claude Design dropped Figma 7% on the day. Google's strike team is the most direct evidence yet of an incumbent feeling cornered.\nThe image to leave you with: Lay this week's milestones on a single timeline — 4/16 The Information breaks OpenAI-Cerebras $20B; 4/17 Anthropic ships Claude Design, Figma drops ~7% intraday, Amodei walks into the White House; 4/21 ChatGPT Images 2.0 ships and the Mythos leak surfaces; 4/23 GPT-5.5. Three competitive axes — product, capital, politics — moved in lockstep across one week. Are you still going to call AI \"an industry\"? It looks more like multiple industry axes evolving in lockstep on a single timeline.\nThis article covers AI industry developments from April 17–24, 2026. Corrections and additions welcome in the comments.",
+      "publishedAt": "2026-04-24T01:55:41.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "de68de6f7d7925ff7c024148355d8e87b056a105047e70ab87e9d66cd50831df",
+      "title": "AWS Weekly Roundup: Amazon Bedrock での Claude Opus 4.7、AWS Interconnect の GA など (2026 年 4 月 20 日)",
+      "url": "https://aws.amazon.com/jp/blogs/news/aws-weekly-roundup-claude-opus-4-7-in-amazon-bedrock-aws-interconnect-ga-and-more-april-20-2026/",
+      "description": "私は 4 月 13 日週、University of Namur (uNamur) の 2025 年度の卒業式 […]",
+      "publishedAt": "2026-04-24T01:23:05.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "a9390efd0c915f11f474f983dcfb1eac4d58fb70e448649d39042525e0914f9d",
+      "title": "LayerX、初M＆Aはセキュリティ領域　AIエージェントでペンテスト自動化に期待",
+      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2604/24/news051.html",
+      "description": "LayerXは初のM＆Aとしてセキュリティ企業のAgenticSecをグループに加え、セキュリティ領域に本格参入した。AgenticSecはAIエージェントによってペンテストの自動化を研究するスタートアップだという。",
+      "publishedAt": "2026-04-24T00:49:00.000Z",
+      "feedName": "＠IT"
+    },
+    {
+      "id": "0ae512d270ae16d5aeb5309368679f39c5f6b77ae4a3474906e57cb4c155380f",
+      "title": "Claude Managed Agents、ハンズオンでぜんぶ教えたるで｜CLI×Web 2本立てで3層アーキテクチャ完全攻略",
+      "url": "https://zenn.dev/masayan1126/books/claude-managed-agents-handson",
+      "description": "Anthropic公式のマネージドエージェントサービス「Claude Managed Agents」を、AI Trend Watcher（Python CLI）とMarkdown Review App（Next.js Web）の2本立てハンズオンで完全攻略するで。Agent/Environment/Session 3層設計、組み込みツール8種、パーミッション、料金体系、Messages APIとの行数差分──実装コードと公式仕様のポイントぜんぶ見せたるで。",
+      "publishedAt": "2026-04-23T22:30:26.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "cf8e04bcdb020f41721717a2935289e1de44912f3459b06c2b8c1ec003741ca8",
+      "title": "LevelBlueと合併のサイバーリーズン、総合セキュリティベンダーへの転換を強調──日本上陸10年",
+      "url": "https://enterprisezine.jp/news/detail/24200",
+      "description": "サイバーリーズンは2026年4月23日、日本法人設立10周年の節目に事業方針説明会を開催した。2025年10月に、世界最大級のマネージドセキュリティサービスプロバイダー（MSSP）である米Level...",
+      "publishedAt": "2026-04-23T22:00:00.000Z",
+      "feedName": "EnterpriseZine"
+    },
+    {
+      "id": "5aad21574e3549c10acdff2625d5f5d74d81cdc71932f3286caf093aeed7e889",
+      "title": "BigLake 改め Google Cloud Lakehouse で AWS 側の Iceberg を BigQuery から直接アクセス可能になりました #GoogleCloudNext",
+      "url": "https://dev.classmethod.jp/articles/cross-cloud-lakehouse-preview-bigquery-aws-iceberg/",
+      "description": "クラウドを跨って Lakehouse に直接アクセスできます。本当は実際に試すつもりだったんですよ。本当は。。。",
+      "publishedAt": "2026-04-23T10:07:40.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "0c22725ce4b3d4d6180a7cbb4775f40b6f71a8bb849e8b9d5bc5a0e3ebd27e98",
+      "title": "AWS CLI / SDK はデフォルトでどのサービスエンドポイント URL を使いますか",
+      "url": "https://dev.classmethod.jp/articles/tsnote-cli-sdk-default-service-endpoint/",
+      "description": "AWS CLI / SDK はデフォルトでどのサービスエンドポイント URL を使いますか",
+      "publishedAt": "2026-04-23T09:26:13.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "1d5cca956f8337e47a3032bea668f0d7820d988faceb94f1401dcc4bdf2afbbe",
+      "title": "特定 EC2 インスタンスがどの Systems Manager 機能を利用しているか一括で確認できるスクリプトを作ってみた",
+      "url": "https://dev.classmethod.jp/articles/check-ec2-ssm-features-script/",
+      "description": "EC2 インスタンスが利用しているAWS Systems Manager（SSM）の各機能を一括で確認できるスクリプトを作成しました。これでコンソール画面の迷子から解放されます。",
+      "publishedAt": "2026-04-23T08:30:00.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "7541e073fcafbe863614fb691565f3c1342603c21678d6d64ba8a428dda9c7d1",
+      "title": "AIエージェント前提のCLI「Swamp」でClaude CodeにAWS棚卸しを作ってもらった",
+      "url": "https://dev.classmethod.jp/articles/swamp-claude-code-ai-native-aws-inventory/",
+      "description": "AIエージェント前提のCLI「Swamp」でClaude CodeにAWS棚卸しを作ってもらった",
+      "publishedAt": "2026-04-23T07:33:32.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "e6ca5687d425248af6a0fe33b7337de30cdb126ce7a579b41bccd2f86bc8b511",
+      "title": "AIエージェントがGmailやスプレッドシート横断し情報収集・業務支援　Googleから「Workspace」新機能",
+      "url": "https://www.itmedia.co.jp/news/articles/2604/23/news107.html",
+      "description": "米Googleは4月22日（現地時間）、AIエージェントがオフィススイート「Google Workspace」（GWS）内の情報を横断的に集め、業務を支援する仕組み「Workspace Intelligence」を発表した。3月にβ版を展開したGWSとGeminiの連携機能に、セキュリティや管理機能を追加し、正式版として公開したものとみられる。 例えば「Googl...",
+      "publishedAt": "2026-04-23T06:04:02.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "5ce853b07cb49c5018e4129b2ec3ce70053cef3cfa4d1f74aaa3abd4c970d2d4",
+      "title": "AWS認定全冠を2か月で全て合格した話",
+      "url": "https://dev.classmethod.jp/articles/aws-certifiation-all-2026-two-month/",
+      "description": "AWS認定全冠を2か月で全て合格した話",
+      "publishedAt": "2026-04-23T05:45:41.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "5322f6984aa99486b49c2ad315c4b52d577bb4e2b5a181a17757fb84e57f149a",
+      "title": "MCPに深刻な脆弱性　関連ソフトウェアのダウンロード数は1億5000万件超え",
+      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2604/23/news038.html",
+      "description": "セキュリティ企業のOX Securityは2026年4月15日（米国時間）、AIと外部データやツールをつなぐオープンなプロトコルModel Context Protocol（MCP）の中核に、重大かつ広範囲に影響する設計上の問題が存在すると発表した。 1.5億DLに影響　MCPに深刻な脆弱性 同社の調査によると、この問題は単なる実装ミスではなく、公式...",
+      "publishedAt": "2026-04-23T05:28:13.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "81ac7d1431e71a79ba6db16f9667c7ce55a4e93004ea7aa35e43780f3f2019cf",
+      "title": "AgenticSec、LayerXグループに参画　LayerX初となるM&A、セキュリティ領域に進出",
+      "url": "https://enterprisezine.jp/news/detail/24196",
+      "description": "2026年4月23日、AgenticSecは、LayerXグループに参画したことを発表した。\n\n　AgenticSecが提供する「AgenticSec Pentest」は、IPアドレスの入力のみで自...",
+      "publishedAt": "2026-04-23T05:25:00.000Z",
+      "feedName": "EnterpriseZine"
+    },
+    {
+      "id": "f2810a81b66881a5abf574f61ee617064fdb6592096d7f3356a05d995db241ca",
+      "title": "Aurora Serverless v2 プラットフォームバージョン4がリリースされました",
+      "url": "https://dev.classmethod.jp/articles/aurora-serverless-v2-platform-version-4/",
+      "description": "2026年4月21日、Aurora Serverless v2 のプラットフォームバージョン4（Platform Version 4）が発表されました。プラットフォームバージョンとは、データベースのエンジンバージョン（MySQL 8.0等）とは独立した、裏側のインフラ基盤の世代を示すものです。本記事では、PF版4の実機検証、Data APIを使ったCPUアーキテクチャ調査、アップグレード方法と注意点を紹介します。",
+      "publishedAt": "2026-04-23T04:37:49.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "e25953cd9a142c39ba2c0c4f6a0e20bfad7e654857b66d496dfd373fae9922ad",
+      "title": "[Frontend Performance - Part 5] なぜ UI は止まるのか？JavaScript の実行モデルと Event Loop を理解する",
+      "url": "https://qiita.com/tuanphan/items/8c4a7ad8271232ae9d30?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "📝 注意\n本記事はAIの補助を受けて編集しています。\n内容は大規模Webアプリケーションの実務経験に基づいています。\n\n📚 目次\n\n問題：UIがカクつく・止まるのはなぜ？\nJavaScriptはシングルスレッド – その意味とは？\nCall Stack – すべて...",
+      "publishedAt": "2026-04-23T03:32:06.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "fc7a27e0f058306de67e40d3fe10c5fa980b2dc70ada2776856af75abb9943f9",
+      "title": "Next.js (Turbopack) のバンドルサイズを元の半分まで削減した話",
+      "url": "https://zenn.dev/aldagram_tech/articles/nextjs-bundle-size-reduction",
+      "description": "こんにちは！アルダグラムでエンジニアをしている今町です。\n今回は、弊社で運用している Next.js 製の Web アプリケーションの バンドルサイズを元の半分まで削減した話 を書いていきます。\n単に「サイズが減って嬉しい」だけじゃなくて、どのページを開いても巨大な共通チャンクが必ずロードされる という構造的な問題を抱えていたので、そこを解きほぐしていく過程を書き残しておきます。Turbopack / webpack を問わず、Next.js をある程度の規模で運用している現場なら、どこかで一度は踏む地雷だと思うので、参考になれば幸いです。\n\n 背景：バンドルがクソデカすぎる問題 🔥\n対...",
+      "publishedAt": "2026-04-23T00:00:13.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "16743b825773ddad7dd62bdb45f96d3729eac82c79d1bc37d71396f012df1cb8",
+      "title": "Next.js を SSG 化しようとして、最終的に React SPA に落ち着いた理由",
+      "url": "https://zenn.dev/ctag/articles/nextjs-ssg-to-react-spa-on-cloudflare",
+      "description": "はじめに\nこんにちは。株式会社シータグで、自社サービスである BtoB 向けクラウド受発注サービス「受注ハック」の開発に携わっている ritsukei です。\n受注ハックのフロントエンドは、もともと Next.js を Amazon ECS Fargate 上でサーバーとして動かしていました。コストと運用負荷を見直す中で、最初に考えたのは「Next.js を残したまま SSG / static export に寄せる」ことです。\nただ、検討を進めると問題は CDN やホスティングの選び方よりも、既存フロントエンドが持っている routing model そのものにあることが分かってき...",
+      "publishedAt": "2026-04-22T09:05:34.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "412b050789a5a25e445794ec02853628c346693bba4fafcfb4d116acb5e47864",
+      "title": "【2026年上半期】エンジニアが知っておくべき重大セキュリティインシデント8選",
+      "url": "https://qiita.com/kawabe0201/items/f45b754d9f475f2e15ea?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "2026年に入ってからのセキュリティ状況は昨年にも増して深刻です。エンジニア2年目の自分が実際に追いかけていた案件・報道・公開レポートをもとに、2026年1〜4月の重大インシデント8件をまとめました。他山の石として参考にしてください。\n\n1. 北米大手物流会社へのランサムウ...",
+      "publishedAt": "2026-04-22T07:01:44.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "513c4ab88180e4bbb6ef9ce3577a6a6a0e808a78fa38a2cf48f72f236f2c503c",
+      "title": "Claude Codeが$20プランから一時撤退した件で、改めてプランを選び直した話",
+      "url": "https://zenn.dev/aiforall/articles/33534863994e45",
+      "description": "はじめに\n\n2026年4月21日午後（米国時間）、Anthropicがclaude.com/pricingを告知なく書き換え、Claude Codeを$20 Proプランから外して$100 / $200のMaxプラン専用にしました。\n数時間でSNSで広く拡散され、Anthropicがページを元に戻すという結果になりました。（これも告知なし）\nHead of Growthのツイートでは「新規プロシューマー登録の約2%を対象としたテスト」であり、「既存Pro/Maxユーザーには影響なし」と説明されています。\nつまり、現時点（2026年4月22日）では、Pro $20プランでもClaude...",
+      "publishedAt": "2026-04-22T06:00:17.000Z",
+      "feedName": "Zenn"
     }
   ]
 }
