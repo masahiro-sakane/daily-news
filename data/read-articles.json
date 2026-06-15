@@ -1,142 +1,6 @@
 {
   "articles": [
     {
-      "id": "26ef9a11846b44177d7c31de9fe7746bff397aaedb055b7a027821364f601ba5",
-      "title": "Ingeniería Inversa y Extracción de Medios: Cómo Construí un Descargador de Vídeos para Flickr",
-      "url": "https://dev.to/yqqwe/ingenieria-inversa-y-extraccion-de-medios-como-construi-un-descargador-de-videos-para-flickr-4n5p",
-      "description": "Flickr sigue siendo uno de los repositorios de contenido visual más importantes del mundo. Sin embargo, para los desarrolladores, extraer video de su plataforma es un desafío técnico fascinante. A diferencia de otras redes sociales, Flickr emplea una arquitectura de entrega de medios fragmentada y altamente protegida.\nFlickr Video Downloader, explorando desde el análisis de objetos de estado hasta la optimización de latencia en el servidor.\nFlickr no utiliza una etiqueta video estática con una fuente MP4 directa. En su lugar, utiliza una arquitectura basada en Client-Side Hydration.\nPara garantizar que Flickr Video Downloader sea escalable y eficiente, decidí utilizar el siguiente stack:\nEl núcleo del sistema sigue un flujo de tres etapas:\nconst data = JSON.parse(match[1]);\nconst streams = data['video-player-models'][0].videoSources;\n\n// Algoritmo de ordenamiento por resolución\nreturn streams.sort((a, b) => (b.width * b.height) - (a.width * a.height));\n\n};\nMuchos desarrolladores cometen el error de usar Puppeteer o Playwright para este tipo de herramientas. Aunque son efectivos, consumen demasiada memoria RAM.\n Reducir el tiempo de extracción a menos de 400ms.\n Disminuir el consumo de memoria del servidor en un 85%.\n Soportar una mayor concurrencia de usuarios en hardware más modesto.\nEn el desarrollo de herramientas de utilidad, la confianza es clave.\n\nConstruir un descargador de video robusto no es solo \"copiar un enlace\", es entender la arquitectura de una de las plataformas más antiguas y complejas de la web.\ntwittervideodownloaderx.com\n          \n\n        \n      \n\nEtiquetas: #javascript #typescript #webdev #scraping #programacion #flickr",
-      "publishedAt": "2026-05-16T02:34:54.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "025984a124211ba163efcfdcf17acf17faf12b6a51945854673a294391fcf28c",
-      "title": "Best AI IDEs in 2026: Cursor vs Windsurf vs Copilot vs Zed vs Claude Code vs Codex",
-      "url": "https://dev.to/chandrakantabehera/best-ai-ides-in-2026-cursor-vs-windsurf-vs-copilot-vs-zed-vs-claude-code-vs-codex-1gk7",
-      "description": "AI coding tools have changed fast.\nA few years ago, developers were excited when an AI assistant could autocomplete a function. In 2026, the best AI IDEs can understand your project, edit multiple files, explain code, run commands, fix bugs, generate tests, and even help you plan features like a real coding partner.\nBut this also creates a new problem:\nWhich AI IDE should you actually use?\nThere are too many options now. Cursor, Windsurf, GitHub Copilot, Zed, Claude Code, Codex, Google Antigravity, JetBrains AI, and many more tools are all trying to become the default workspace for modern developers.\nSo this article is a practical review of the best AI IDEs and AI coding environments in 2026.\nNo hype. No blind ranking. Just a clear look at what each tool is best for.\nIn 2026, a good AI IDE is not just a code editor with chat.\nA great AI IDE should do five things well:\nUnderstand your full codebase\nMake safe multi-file edits\nHelp you debug and refactor faster\nWork with your existing developer workflow\nLet you stay in control instead of blindly accepting AI output\nThe best tools are moving from simple autocomplete to agentic development.\nThat means the AI does not only suggest code. It can plan, search, edit, run, test, and explain.\nThis is the biggest shift in software development right now.\nCursor is still one of the strongest AI IDE choices in 2026.\nIt feels familiar because it is close to the VS Code experience, but the AI features are much deeper than a normal extension. Cursor is especially good when you want to work inside a real editor while using AI to understand and modify your codebase.\nThe biggest strength of Cursor is its balance.\nIt is powerful enough for serious developers, but still simple enough for indie hackers, startup founders, students, and builders who want to ship faster.\nYou can ask it to explain a file, refactor a component, add a feature, fix an error, or review a change. It can work across multiple files, which makes it much more useful than basic autocomplete tools.\nCursor is best for developers who want an AI-first coding editor without leaving the familiar VS Code-style workflow.\nCursor feels like the most complete “daily driver” AI IDE for many people. It is good for frontend work, full-stack apps, SaaS projects, bug fixing, and fast prototyping.\nIf you are working in a large enterprise with strict internal policies, you may need to check privacy, model settings, team controls, and code security before using it deeply.\nCursor is probably the safest first choice for most developers who want to seriously use AI in their coding workflow in 2026.\nWindsurf is another major AI IDE that has become popular because it feels very smooth for building quickly.\nIts biggest appeal is the user experience. It is designed around AI-native development, not just adding a chat panel to an old workflow.\nFor beginners and solo builders, Windsurf can feel easier than many other tools. You can describe what you want, let the AI work through the project, and keep iterating.\nIt is especially attractive for people who want to build landing pages, dashboards, MVPs, small SaaS tools, internal tools, and prototypes quickly.\nWindsurf is best for beginners, indie hackers, freelancers, and creators who want to build working software quickly with AI assistance.\nThe workflow feels simple. It is not only for professional engineers. It can also help non-traditional builders turn ideas into real projects.\nFor very large, complex, long-term codebases, you still need strong human review, architecture planning, testing, and careful version control.\nWindsurf is one of the best choices if your goal is speed, simplicity, and fast project creation.\nGitHub Copilot remains one of the most important AI coding tools because it is deeply connected to the GitHub ecosystem.\nFor teams, this matters a lot.\nMany developers already use GitHub for repositories, pull requests, issues, code review, CI/CD, and collaboration. Copilot fits naturally into that workflow.\nIn 2026, Copilot is no longer just autocomplete. It has moved toward agent-style development, where it can help with code changes, explanations, pull requests, and repository-level work.\nGitHub Copilot is best for professional developers, teams, companies, and anyone already working heavily inside GitHub.\nThe biggest advantage is ecosystem integration. If your team already lives in GitHub, Copilot feels like a natural upgrade instead of a separate tool.\nFor solo builders who want the most aggressive AI-first IDE experience, Cursor or Windsurf may feel more exciting.\nGitHub Copilot is the most practical choice for teams that want AI coding assistance inside an established professional workflow.\nZed is one of the most interesting editors in 2026.\nIt is fast, clean, modern, and built with performance in mind. While some AI IDEs feel heavy, Zed feels lightweight and sharp.\nIts AI features are also becoming more serious, especially with agent panels, tool calling, and multi-model support.\nZed may not be the first choice for every beginner, but developers who care about speed and editor quality should definitely watch it.\nZed is best for developers who want a fast, modern editor with AI features, without feeling trapped in a heavy IDE.\nPerformance is the main advantage. Zed feels built for developers who care about speed, focus, and clean editing.\nSome users may still prefer the massive extension ecosystem of VS Code-style editors.\nZed is a strong choice for developers who want a modern, fast, AI-ready editor with a clean experience.\nClaude Code is not just another visual IDE. It is more of an agentic coding tool that works deeply with your codebase.\nIt can understand project context, edit files, run commands, and help solve complex engineering tasks.\nThis makes it powerful for developers who are comfortable in the terminal and want an AI agent that can reason through bigger tasks.\nClaude Code is especially useful when you want help with debugging, refactoring, architecture cleanup, tests, migrations, and understanding large files.\nClaude Code is best for developers who like terminal workflows and want a strong reasoning-focused coding agent.\nClaude is known for strong reasoning and long-context understanding. That makes Claude Code very useful for complex tasks where simple autocomplete is not enough.\nIt may feel less beginner-friendly than visual AI IDEs like Cursor or Windsurf.\nClaude Code is excellent for experienced developers who want a powerful coding agent instead of only an editor assistant.\nCodex has evolved into a serious AI coding agent experience.\nThe biggest idea behind Codex is not just writing small snippets. It is about completing real coding tasks, working across projects, and supporting multi-agent workflows.\nThis direction is important because the future of coding may not be one developer and one assistant. It may be one developer managing multiple agents that work on different parts of the project.\nOne agent may write tests. Another may refactor the UI. Another may fix bugs. Another may review the code.\nThat is where Codex becomes very interesting.\nCodex is best for developers who want task-based AI coding and multi-agent workflows.\nIt feels designed for the next stage of software development, where developers become more like product thinkers, reviewers, and technical directors.\nFor users who only want a simple code editor, Codex may feel more advanced than necessary.\nCodex is one of the most future-facing AI coding tools in 2026.\nGoogle Antigravity is one of the most interesting new directions in AI development tools.\nThe idea is not just to improve the editor. The idea is to rethink the entire development workspace around agents.\nInstead of only editing code line by line, the platform focuses on managing autonomous agents that can plan, code, and work through tasks.\nThis is a very different direction from traditional IDEs.\nIt may not replace your daily coding tool immediately, but it shows where the industry is going.\nGoogle Antigravity is best for developers who want to explore agent-first software development.\nThe “Mission Control” concept is powerful. It treats AI agents as active workers inside your development process.\nBecause this category is still evolving, developers should test it carefully before relying on it for production work.\nGoogle Antigravity is one of the most exciting tools to watch in 2026.\n\n\n\nTool\nBest For\nMain Strength\n\n\n\n\nCursor\nMost developers\nBest overall AI-first IDE\n\n\nWindsurf\nBeginners and fast builders\nSmooth AI-native app creation\n\n\nGitHub Copilot\nTeams and companies\nGitHub workflow integration\n\n\nZed\nSpeed-focused developers\nFast, clean, modern editor\n\n\nClaude Code\nTerminal power users\nDeep reasoning and agentic tasks\n\n\nCodex\nMulti-agent workflows\nTask-based software development\n\n\nGoogle Antigravity\nFuture-focused builders\nAgent-first development experience\n\n\n\nIf you are confused, here is the simple answer:\nUse Cursor if you want the best all-round AI IDE.\nUse Windsurf if you want to build quickly and prefer a beginner-friendly workflow.\nUse GitHub Copilot if you work in a professional team or already use GitHub every day.\nUse Zed if you care about speed and want a clean modern editor.\nUse Claude Code if you like terminal-based workflows and want deeper reasoning.\nUse Codex if you want to experiment with multi-agent coding.\nUse Google Antigravity if you want to explore the future of agent-first development.\nThe best AI IDE will not magically make bad code good.\nYou still need to understand your project.\nYou still need to review the output.\nYou still need to test everything.\nYou still need to know what the product is supposed to do.\nBut AI IDEs can remove a huge amount of friction.\nThey can help you move faster from idea to working prototype. They can explain unfamiliar code. They can reduce repetitive work. They can help you debug faster. They can make learning programming less scary.\nThe winner is not the tool that writes the most code.\nThe winner is the tool that helps you think better, ship faster, and stay in control.\nThat is the real future of AI coding.\nIn 2026, the AI IDE market is no longer about autocomplete.\nIt is about agents.\nCursor, Windsurf, Copilot, Zed, Claude Code, Codex, and Antigravity are all moving toward the same future: software development where humans guide, review, design, and decide — while AI handles more of the repetitive execution.\nFor most developers, Cursor is the best starting point.\nFor fast builders, Windsurf is very attractive.\nFor teams, GitHub Copilot is the practical choice.\nFor power users, Claude Code and Codex are where things get really exciting.\nAnd for the future of agent-first development, Google Antigravity is worth watching closely.\nThe next generation of developers will not be the ones who avoid AI.\nThey will be the ones who learn how to direct it properly.",
-      "publishedAt": "2026-05-16T02:20:11.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "c4c2da9c635b12a7a1d21486a7db933f3c4e9673d60418754243b71e2ca15c25",
-      "title": "Prisma vs JDBC: the benchmark that almost made me blame the wrong ORM",
-      "url": "https://dev.to/jtorchia/prisma-vs-jdbc-the-benchmark-that-almost-made-me-blame-the-wrong-orm-585m",
-      "description": "There's a discussion that surfaces every time someone posts an ORM benchmark: \"of course JDBC is faster, you're measuring the abstraction\". They're right, but only halfway. What nobody says is that the abstraction isn't the only culprit — sometimes the culprit is you, because you let an N+1 slip through without noticing.\nI built prismavsjdbc to test this in a controlled way. It's not a benchmark about who wins. It's a lab where the same PostgreSQL 16, the same 50k-task dataset, and the same business scenarios run against two stacks: Node.js 24 LTS + TypeScript + Prisma 5 on one side, and Spring Boot 3 + Java 21 LTS + JdbcTemplate on the other. The analyzed commit is 2cd33e32bd29a1d4b46a26af0b56d6a912f5e4f5, tag best-effort-editorial-final.\nThe thesis I'm defending is this: query shape, SQL/request, and N+1 explain more than the slogan \"ORM vs raw SQL\". When you optimize the shape, both stacks improve. When you don't, both stacks charge you.\nThe first version of the lab had an obvious trap, even though I didn't see it at first. It compared the most comfortable Prisma implementation — using include to fetch relations — against a manual join in JDBC. The result was predictable: JDBC measured 1 SQL/request, idiomatic Prisma measured 4 SQL/request on read-by-id, and latency reflected that.\nIncorrect conclusion I almost published: \"Prisma is slower because it emits more queries\".\nCorrect conclusion: I was comparing different shapes. Prisma's include fires separate queries per relation — that's not a bug, it's the documented contract of the API. JDBC did a join because I wrote it that way. It's not fair to compare them without acknowledging that.\nThat friction changed the entire lab design: I needed three levels within each stack.\nAdding the level column to results/comparison.csv was the most important decision in the project. Without it, any results table is a trap for the reader.\nnaive: the most direct implementation possible, with no thought given to performance. In both stacks, this includes deliberate N+1 — per-task queries inside a loop.\nidiomatic: the normal, maintainable way to write code in each stack. Prisma with include and _count, JDBC with the join any Java dev would write without obsessing over micro-optimizations.\nbest-effort: the tightest code the team would accept without it becoming a hack. For Prisma, this means dropping to $queryRaw when the shape is aggregational.\nThe read-by-id scenario with idiomatic Prisma measured 4 SQL/request due to include. The read-by-id-best-effort variant with $queryRaw dropped to 1 SQL/request — the same join JDBC uses. The PostgreSQL plan for that query is clean:\n-- read-by-id-best-effort: same SQL in Prisma $queryRaw and in JdbcTemplate\nselect t.id, t.title, t.status, t.created_at as \"createdAt\",\n       p.id as \"projectId\", p.name as \"projectName\",\n       o.id as \"organizationId\", o.name as \"organizationName\",\n       u.id as \"assigneeId\", u.display_name as \"assigneeName\"\nfrom tasks t\njoin projects p on p.id = t.project_id\njoin organizations o on o.id = p.organization_id\njoin users u on u.id = t.assignee_id\nwhere t.id = '00000000-0000-4000-0100-000000000001'::uuid\nlimit 1;\n-- Execution Time: 0.242 ms, Buffers: shared hit=9\n\nWhen Prisma and JDBC emit the same SQL, the PostgreSQL plan is identical. That closes the runtime debate: the bottleneck was the shape, not the client.\nThe n-plus-one-trap scenario exists to make explicit something every developer knows in theory but underestimates in practice. The naive level in both stacks fires individual queries per task — on a 50k-task dataset with concurrency 16, that scales brutally.\nThe biggest jump in the lab wasn't between Prisma and JDBC. It was between naive and idiomatic within Prisma. When you go from N+1 to include/_count, the reduction in SQL/request is immediate and visible in latency. After that, if you want to squeeze more, $queryRaw gives you another jump — but smaller than the first.\nThe interesting part on the Java side is that CountingJdbc — the wrapper over JdbcTemplate in apps/jdbc-service/src/main/java/com/example/jdbclab/CountingJdbc.java — uses an AtomicLong to count queries. That allows an objective SQL/request comparison without relying on logs or pg_stat_statements as the primary source:\n// CountingJdbc.java — instrumentation with no magic, easy to audit\n@Component\npublic class CountingJdbc {\n  private final JdbcTemplate jdbc;\n  private final AtomicLong queryCount = new AtomicLong();\n\n  public <T> List<T> query(String sql, RowMapper<T> mapper, Object... args) {\n    // each call to the wrapper adds 1 to the counter\n    queryCount.incrementAndGet();\n    return jdbc.query(sql, mapper, args);\n  }\n\n  public long count() {\n    return queryCount.get();\n  }\n}\n\nOn the Prisma side, the equivalent lives in apps/prisma-client/src/db.ts: it hooks into the client's query event to count. That symmetry in instrumentation is what makes the SQL/request numbers comparable across stacks.\nThis is the part where a lot of Prisma posts aren't honest. $queryRaw exists and is valid, but using it for everything is admitting you don't want to use Prisma — you're using PostgreSQL with a fancy TypeScript client.\nThe decision in the lab was clear: best-effort with $queryRaw makes sense in relation-summary and report-aggregation because the shape is genuinely aggregational. Prisma groupBy doesn't cleanly express date_trunc + join by organization, and forcing it would be worse than writing SQL.\nBy contrast, paginated-list has no best-effort variant because idiomatic Prisma already emits 1 SQL/request with findMany and filters. Adding $queryRaw there wouldn't change anything meaningful — it would be complexity with no benefit.\nThe table in docs/brief-post.md models this well: the level column isn't a scale of \"how much effort you put in\" but of \"how much the SQL shape changes when you apply the variant\".\nThe HTTP runner is homegrown — not k6 or wrk. The hardware is local. Docker Desktop, GC, plan cache, and indexes can shift absolute latencies between runs. The editorial run used 3 runs, 300 requests per run, 30 warmup requests, concurrency 16, and a 50k-task dataset — but those numbers on different hardware can produce different results.\nThe version matrix (docs/java-version-matrix.md) shows Java 21 vs Java 25: there are differences, but the main argument — that N+1 and SQL/request dominate — holds on both JVMs. Java 25 improved read-by-id by ~20% over Java 21 in the local run, but that doesn't change the fact that the problem in relation-summary-naive was the shape, not the JVM.\nI wouldn't publish those absolute numbers as universal truth. I publish them as evidence of a pattern: when you change the shape, the delta is orders of magnitude larger than when you change the runtime.\nPrisma is not slow. Prisma with include emitting 4 queries where you could emit 1 is an ergonomics trade-off with an observable cost — and that cost is worth it for most endpoints in an API that isn't under extreme pressure. When shape genuinely matters, $queryRaw exists and works well.\nJDBC with JdbcTemplate is not superior just because it's raw SQL. It's predictable because the developer controls the shape from the start. The risk is on the other side: that nobody checks whether those Java loops are also doing N+1 without an ORM to blame.\nThe lab is reproducible. If you have Docker, Node 24 LTS, and Java 21 or 25, you can run it:\n# full editorial run — Bash\nbash scripts/run-lab.sh --mode editorial --size editorial --runs 3 --requests 300 --warmup 30 --concurrency 16\n\nAnd if you just want to verify the scenarios run without errors before committing time:\n# quick smoke test to validate the setup\nbash scripts/run-lab.sh --mode smoke --size small\n\nThe code is at github.com/JuanTorchia/prismavsjdbc. Editorial results are in results/comparison.csv and results/comparison.md.\nWhat I'd like to know: in the stack you're using right now, do you have real visibility into the SQL/request count for each endpoint? Or do you assume the ORM handles it on its own?\nThis article was originally published on juanchi.dev.",
-      "publishedAt": "2026-05-16T01:36:53.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "b957ad324b91ecdac53a2dd19c86b38e05598d0512501f8e1a84a4d75ca04c5d",
-      "title": "Google's Guide to Optimizing for Generative AI Features on Google Search | Google Search Central  |  Documentation  |  Google for Developers",
-      "url": "https://developers.google.com/search/docs/fundamentals/ai-optimization-guide",
-      "description": "SEO fundamentals Introduction Search Essentials SEO Starter Guide Optimizing for generative AI search How Google Search Works Do you need an SEO? Crawling and indexing Sitemaps robots.txt Meta tags Crawler management Removals Canonicalization Redirects JavaScript SEO Ranking and search appearance...",
-      "publishedAt": "2026-05-15T17:43:47.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "811cf87fe36e602b312595bec56b63613cc977ef8f452c6bbb5c2bd8d65e2c65",
-      "title": "AppleのM5チップのMIEがAI支援のカーネル攻撃コードで回避される、メモリ破損防御を突破した初の公開事例",
-      "url": "https://gigazine.net/news/20260515-apple-mie-kernel-memory-corruption/",
-      "description": "セキュリティ企業のCalifは2026年5月14日、「AppleのMIE(Memory Integrity Enforcement)を有効にしたM5搭載MacでmacOSカーネルのメモリ破損攻撃コードを作成した」と発表しました。 First public macOS kernel memory corruption exploit on Apple M5 https://blog.calif.io/p/first-public-kernel-memory-corruption MI...",
-      "publishedAt": "2026-05-15T10:57:17.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "1a8c221a34f89dc73987de8164979e42a6ae8ce724c8cdc81f7b26848e652e8d",
-      "title": "Software Design 2026年6月号で toitta の技術選定について読めます",
-      "url": "https://developer.hatenastaff.com/entry/software-design-202606-toitta",
-      "description": "toitta で AI 回りの開発を担当している id:pokutuna です。\ngihyo.jp\ntoitta は 2023年に発足した新規事業チームから生まれたインタビュー分析 SaaS です。録画・録音データをアップロードすると、書き起こし、発話の切片抽出、クラスタリング、レポート生成、横断検索などの機能でインタビューの分析と活用を支援します。\ntoitta.com\n昨今は AI = LLM という雰囲気ですが、これらの機能のために LLM だけでなく音声の書き起こしモデルや検索向けのモデルなど、いろいろなモデルを利用しています。外部 AI API でフロンティアモデルを呼び出したり、GPU インスタンスでモデルを実行したり、軽量なモデルなら CPU で動かしたりと、性質の違うものを機能ごとに使い分けるプロダクトの裏側を8ページにわたって紹介しています。\n以下のような内容です\nNext.js の Web アプリと Python の FastAPI の AI サブシステムの連携\nコストを抑えつつ GPU を必要なときだけ使うための非同期ジョブ\n外部 AI API のレートリミット・クオータへの対処\n限られた GPU リソースをテナント間で配分する優先度つきキュー\nPostgreSQL の pgvector と SPLADE で実現した検索機能\n\nソフトウェアデザイン 2026年6月号\n\n技術評論社\nAmazon\n\nぜひ書店や電子版でお手にとってご覧ください。\nまた toitta については、過去のエンジニアセミナーでもいろいろ発表しておりますのでご興味あればそちらもどうぞ!!\ndeveloper.hatenastaff.com\ndeveloper.hatenastaff.com",
-      "publishedAt": "2026-05-15T09:00:00.000Z",
-      "feedName": "Hatena Developer Blog"
-    },
-    {
-      "id": "5ecff472b7065aafac8481dec249a2bb0cba7306c52d14cfe4e19b8059085c2c",
-      "title": "AWS CDKでS3バケットに資材がPUTされたことをトリガーにECSの1つのコンテナを入れ替えるだけのシンプルなCI/CDパイプラインを作ってみた",
-      "url": "https://dev.classmethod.jp/articles/aws-cdk-s3-trigger-ecs-container-cicd-pipeline/",
-      "description": "単純な処理でもCI/CDパイプラインを作成しよう",
-      "publishedAt": "2026-05-15T08:19:04.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "4f52dce4025b966b4485beee06a3059040bccd2c34596f1e19b5dc935ff0479b",
-      "title": "月刊 AWS 製造 2026年5月号",
-      "url": "https://aws.amazon.com/jp/blogs/news/monthly-manufacturing-202605/",
-      "description": "みなさん、こんにちは。今回の月刊 AWS 製造を担当させたいただきます。自動車・製造ソリューションアーキテクト […]",
-      "publishedAt": "2026-05-15T07:35:01.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "c22ad66a89d4fb835b1aea1f62d3a4479c5f79a9a2d45c0c413acf67aecf5cd1",
-      "title": "AWS WAF 정규식 패턴 세트에 대해 알아보자!",
-      "url": "https://dev.classmethod.jp/articles/keum-waf-regex-pattern-set/",
-      "description": "AWS WAF 정규식 패턴 세트에 대해 알아보자!",
-      "publishedAt": "2026-05-15T07:07:35.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "8b358b92dc08e31b00708a6b0db6b94c0e7b072cfa9744b58f88056dc036e2f7",
-      "title": "TrendAI Vision OneのCreditsをAWS Marketplaceで追加購入する方法",
-      "url": "https://dev.classmethod.jp/articles/202605-v1-credits-additional-purchase-01/",
-      "description": "TrendAI Vision OneのCreditsをAWS Marketplaceで追加購入する方法",
-      "publishedAt": "2026-05-15T06:06:32.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "2dd0d3a2f3e7b2ab2354702a6804fef809f802e1f95a8e2b38cc6ba42edd62c9",
-      "title": "Claude Code派だった僕がCodexに移る前に知りたかったこと",
-      "url": "https://zenn.dev/gemcook/articles/e56eabc7ba2961",
-      "description": "はじめに\n最近、Claude Codeを使っている人がかなり増えてきましたよね。\n僕も最初は、\n「Claude Code便利やな」\n「でもCodexも気になるな」\n「OpenAI版のClaude Codeみたいな感じなんかな？」\nくらいのノリでCodexを触り始めました。\nただ、実際に触ってみると、思っていたより別物でした。\nもちろん、どちらもAIコーディングエージェントです。\nターミナルやアプリからコードを読ませたり、修正させたり、テストを走らせたりできます。\nでも、Claude Codeの感覚のままCodexを触ると、地味にハマります。\n僕が最初に引っかかったのは、モデル性能とか...",
-      "publishedAt": "2026-05-15T06:02:59.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "7587ad815d6d983824c13d91c19783bf48a8ecfee3141c1430a2e859acb4203c",
-      "title": "【すごい】Claude ミュトス、Appleが5年かけたMacメモリ保護を5日で突破！研究者と共に - すまほん!!",
-      "url": "https://smhn.info/202605-anthropic-ai-breaks-apple-mac-memory-protection-5-days",
-      "description": "すまほん!! » テック » セキュリティ » 【すごい】Claude ミュトス、Appleが5年かけたMacメモリ保護を5日で突破！研究者と共に AIと研究者が、Appleの5年を5日で抜いた！？ Anthropicの未一般公開AI「Claude Mythos Preview」の支援を受けたセキュリティ研究チームが、Appleが5年規模で作り込んできたメモリ安全対策「Me...",
-      "publishedAt": "2026-05-15T05:41:46.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "1fbddac9afac2306ba035ad9cacf3f662f0d4ea4c062637cef528bb696eb8c16",
-      "title": "Amazon Connect Customer による音声・ビデオ・チャットを統合したコミュニケーションの構築",
-      "url": "https://aws.amazon.com/jp/blogs/news/build-unified-voice-video-and-chat-communications-with-amazon-connect/",
-      "description": "この記事では Amazon Connect Customer を使って、音声、ビデオとチャットを統合し 1 人のエージェントが対応することで、シームレスな顧客体験を実現する方法を紹介します。既存の API とコンタクトフローを組み合わせ、通話中にチャットやファイル共有を同じエージェントとの間で行えるソリューションのアーキテクチャとデプロイ手順を解説します。",
-      "publishedAt": "2026-05-15T05:37:35.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "139fb238da198ceeb454d579ffec28f36817af250bb6ed7bc9af4345585c6b95",
-      "title": "MCPサーバーでExcel生成時のデータ改変を防ぐ ― AgentCore/LLMをデータ経路から外す設計",
-      "url": "https://dev.classmethod.jp/articles/mcp-server-excel-data-integrity/",
-      "description": "オンプレミス環境との連携が必要なセキュアなAIエージェント開発で、RDSのデータを正確にExcelファイル化するにあたり、複数の設計パターンを検討した結果、MCPサーバーを活用した決定論的なアーキテクチャに辿り着きました。その過程で工夫したデータ整合性検証の仕組みについて紹介します。",
-      "publishedAt": "2026-05-15T05:33:28.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "7c2f530193909ae451aaf2ecb550ae730819d384582f716af709d02d9c43bc11",
-      "title": "IPAが無料提供する「1000万円相当」のPSIRT構築・運用、支援先募集",
-      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2605/15/news047.html",
-      "description": "IPAは、中小規模の製品開発者を対象に「PSIRT体制構築・運用支援」を無償提供すると発表した。通常1000万円以上かかる専門家のサポートを提供し、組織的なセキュリティ対応体制の整備を支援するという。",
-      "publishedAt": "2026-05-15T04:55:00.000Z",
-      "feedName": "＠IT"
-    },
-    {
-      "id": "3362f2e2fae70ce13a00ebe2a1629711a9ad5cc1b24538e7aef242784e9a5d83",
-      "title": "AWS Cost and Usage Reports データを使用したセキュリティリスクの特定",
-      "url": "https://aws.amazon.com/jp/blogs/news/identifying-security-risks-using-aws-cost-and-usage-report-data/",
-      "description": "AWS の請求書からわかるのは、支出パターンだけではありません。セキュリティ上の問題を特定することもできます。 […]",
-      "publishedAt": "2026-05-15T04:43:13.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "b4163add2fa924fa32fb8042a16670599b6c24e0eb0ea7f401117464fe2677c8",
-      "title": "AWS GenAIIC の技術支援で実現する建設・BIM 特化基盤モデル開発 — GENIAC 第 3 期 ONESTRUCTION Ishigaki-IDS 事例",
-      "url": "https://aws.amazon.com/jp/blogs/news/aws-genaiic-%E3%81%AE%E6%8A%80%E8%A1%93%E6%94%AF%E6%8F%B4%E3%81%A7%E5%AE%9F%E7%8F%BE%E3%81%99%E3%82%8B%E5%BB%BA%E8%A8%AD%E3%83%BBbim-%E7%89%B9%E5%8C%96%E5%9F%BA%E7%9B%A4%E3%83%A2%E3%83%87%E3%83%AB/",
-      "description": "本ブログは ONESTRUCTION 株式会社様と Amazon Web Services Japan 合同会 […]",
-      "publishedAt": "2026-05-15T04:33:49.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
       "id": "fc16152c9e5ea9d222af0315d342550568c5ce2fd2d816b4c2bbd7e482488e62",
       "title": "Protecting your Node.js project against supply-chain attacks",
       "url": "https://dev.to/douglasdemoura/protecting-your-nodejs-project-against-supply-chain-attacks-5984",
@@ -247,94 +111,6 @@
       "description": "「Linux」カーネルでまたも重大な脆弱（ぜいじゃく）性が発見された。この欠陥は「ssh-keysign-pwn」と呼ばれており、Linuxがここ数週間のうちに直面した4番目の注目すべきローカルセキュリティホールとなる。この脆弱性を悪用すれば、一般ユーザーが、「Secure Shell（SSH）」のホスト秘密鍵やパスワードのハッシュ値を...",
       "publishedAt": "2026-05-16T05:34:04.000Z",
       "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "e36615180abbaeb65d3b87240538b7aad8ba888033fa6dcd60fe500e9653eea0",
-      "title": "[アップデート] AWS Organizations の SCP クォータが緩和され 1 エンティティに 10 個まで直接アタッチ可能になりました",
-      "url": "https://dev.classmethod.jp/articles/aws-organizations-scp-quota-10-per-entity/",
-      "description": "[アップデート] AWS Organizations の SCP クォータが緩和され 1 エンティティに 10 個まで直接アタッチ可能になりました",
-      "publishedAt": "2026-05-16T03:51:16.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "b664e6e47f700eb232ce2d79e24ed9f30c25cbb7f522a0d9fbc232f163523c37",
-      "title": "AWS Organizations の SCP クォータが倍増したので実際に10個アタッチと10,240文字ポリシーを試してみた",
-      "url": "https://dev.classmethod.jp/articles/aws-organizations-scp-quota-increase-2026/",
-      "description": "AWS Organizations の SCP クォータが  2026年5月に引き上げられ、アタッチ数が5→10、ポリシーサイズが5,120→10,240文字になりました。新上限での動作確認、上限超過時のエラー、CLIでのホワイトスペースの扱いを検証しました。",
-      "publishedAt": "2026-05-16T03:45:38.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "849a2c3c7e3be1756364d0e76d4e3e582ab1f19c96549ca34fd54d34e6d7af40",
-      "title": "セキュリティ対策、何からはじめる？ CloudNative環境の脅威モデリングと リスク評価実践入門 #cloudnativekaigi",
-      "url": "https://speakerdeck.com/varu3/cloudnativekaigi2026-threat-modeling-3c0b5cc0-0325-4086-8b67-dffc23cbba07",
-      "description": "クラウドネイティブ会議2026 1日目に発表した資料です",
-      "publishedAt": "2026-05-16T00:29:58.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "fdc728b8bfe5033368f079572313b014b04b18bf0a9f8409075b0f23c470e341",
-      "title": "Next.js App Router × コロケーション × バレルインポートで実現する、AI時代の人間との協働開発",
-      "url": "https://qiita.com/masakinihirota/items/ffce9f02e066f52d4d97?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "イメージ図\n\nはじめに\n個人開発の Web アプリを続けていると、ある時期から「コードベースの全体像が自分でも見えない」感覚になってきました。機能追加のたびに複数のフォルダをまたぐ修正が発生し、変更の影響範囲が直感的にわからなくなってくる。GitHub Copilot に...",
-      "publishedAt": "2026-05-15T21:23:40.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "ed784a4acad5dcbe8856453a21e76c4dbe79af06a5d43fc05f90c22f76b27aac",
-      "title": "自前キャッシュをTanStack Queryに移行したらコードが半分になった",
-      "url": "https://zenn.dev/hiroki0304/articles/tanstack-query-migration-custom-cache",
-      "description": "はじめに\n\n本サイトの地図画面には、ホテルのマーカーをタップすると詳細情報をAPIから取得して表示する機能があります。\nこの機能、最初は自分でキャッシュを実装していました。同じホテルを2回タップしたときにAPIを叩かないように、Map オブジェクトを使ってメモリに保存していたのです。\n動いてはいました。でも、コードを見るたびに「これ、本当に正しく動いているのか？」という不安がありました。今回 TanStack Query（React Query）に移行したら、そのコードが丸ごと消えました。\n\n\n 移行前のコード——自前で全部やっていた\nsrc/hooks/hotels/useHote...",
-      "publishedAt": "2026-05-15T14:14:23.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "0b3c469af142139e685e53e41637f8eddaa737ac3e9983d3f0306eef9f356a02",
-      "title": "ServiceNowの操作手順書・テストエビデンスを自動作成するChrome拡張",
-      "url": "https://qiita.com/anning-pro/items/aff91b1ca0b8127c50bc?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "はじめに\nServiceNowで作業していると、操作手順書やテストエビデンスを作成する場面がよくあります。\nただ、毎回スクリーンショットを撮って、説明文を書いて、ExcelやPowerPointに貼り付ける作業はかなり手間がかかります。\nそこで、ServiceNow上の操...",
-      "publishedAt": "2026-05-15T13:42:26.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "4ac52e80618a16a7f8b030dc9dbfbc79b4ce43bd08dbd73427dc857226c024ad",
-      "title": "番外編：開発技術のパラダイムシフト⑤",
-      "url": "https://qiita.com/Shankou/items/1d402ce59b8d9153288e?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "番外編⑤：ReactとVueの覇権（SPA時代へ）\n〜jQueryの終焉と「仮想DOM」がもたらした現代Webの最終形態〜\n\n導入：「つぎはぎだらけ」の限界\nこれまでの連載で、フロントエンド（jQuery）、バックエンド（Rails）、デザイン（Bootstrap）、そし...",
-      "publishedAt": "2026-05-15T10:10:27.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "87e2097b4f20a0700cd9b4da52fa80015f5440d9faf0a419b6d95541b1d2c1f3",
-      "title": "【TypeScript】値・型・名前空間の「三重定義」でReactコンポーネントをより柔軟に設計する",
-      "url": "https://zenn.dev/bmth/articles/ts-companion-object",
-      "description": "はじめに\nTypeScriptにおける、コンパニオンオブジェクトを知っていますか？\n\nexport type Rectangle = {\n  height: number;\n  width: number;\n};\n \nexport const Rectangle = {\n  from(height: number, width: number): Rectangle {\n    return {\n      height,\n      width,\n    };\n  },\n};\n\nconst rectangle: Rectangle = Rectangle.from(1, 3); /...",
-      "publishedAt": "2026-05-15T09:39:14.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "aca48ffa58b5484f999648acef82221c991a974685adab473b589b58f853cca3",
-      "title": "OpenMythosがローカル環境で動くか検証してみた",
-      "url": "https://zenn.dev/aiforall/articles/726668a035a148",
-      "description": "はじめに\nみなさんClaude Mythos（クロード ミュトス）をご存知でしょうか？Anthropic社が開発した「最強のAI」として噂されていますが、現在は限定的なプレビューにとどまっており、一般ユーザーは利用できません。そんな中、公開されている研究論文やアーキテクチャを元に、理論的に再現しようというプロジェクトが立ち上がりました。それが今回触ってみるOpenMythosです。気になったので、さっそく試してみました！\nhttps://github.com/kyegomez/OpenMythos\n\n 実行環境\n\n 動作環境\n\n\n\n項目\nスペック\n\n\n\n\nOS\nmacOS Sequo...",
-      "publishedAt": "2026-05-15T08:50:03.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "c577b5923101196965688f96847bc1f1e24c302a2989084121249ba8c03197e2",
-      "title": "AWS上にセキュアかつ安価かつ使い捨て可能なリモート開発環境を構築した話 ― SSM × Spot Instance × CDK",
-      "url": "https://qiita.com/kyonosuke/items/eee9eb3840d3f740f325?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "はじめに\n業務では主にkiro-cliを使用していますが、ローカルの WSL 環境がメモリ不足で頻繁に落ちるようになり、開発体験が著しく悪化していました。そのため、脱WSLを目指して「リモートに開発環境を持っていこう」と思い立ち、AWS 上に EC2 ベースのリモート開発...",
-      "publishedAt": "2026-05-15T08:33:17.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "b72b65903f1b6d69c24f526bf1156e643d9d5760ec13fd1c0570e952d3e5789c",
-      "title": "Claude Code を社内で使うための「AIエージェントセキュリティ」実践編",
-      "url": "https://qiita.com/sharu389no/items/ab5bf50d9f68e7c8de56?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "この記事は誰向けか\n\n社内で Claude Code / Cursor / Codex / ChatGPT などの AI コーディング支援を 本気で業務利用したい エンジニア\n「リスクが…」で却下され続けて、情シスに見せられる具体的な技術対策が欲しい チームリーダー\n情シ...",
-      "publishedAt": "2026-05-15T05:08:38.000Z",
-      "feedName": "Qiita"
     },
     {
       "id": "71bf38b1bdde71e9b078e06760cd0e95b388222a9e99a2c9bdcf8c67b90368f4",
@@ -653,14 +429,6 @@
       "url": "https://zenn.dev/edinetdb/articles/ai-cost-input-tokens-structured-db",
       "description": "!\n本記事は EDINET DB のブログ記事 「\"AIが高くなる\"のではなく\"適正化される\" — 入力トークンで差がつく時代の、構造化データベースの存在理由」 の転載です。最新版はそちらに掲載しています。\n\n2026年5月14日、Anthropicが告知を出しました。6月15日から、Claudeの有料プラン（Pro / Max 5x / Max 20x / Team / Enterprise）に「プログラム利用専用の月次クレジット」を導入する、というものです。Claude Agent SDK、claude -p、Claude Code GitHub Actions、サードパーティのAg...",
       "publishedAt": "2026-05-16T06:54:19.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "5a8c73b239d7324c61b54f1abafe15d5f3884d6c6acf3a0eeedfad97b881d1d6",
-      "title": "Bun が 6 日で Rust に書き換わった件",
-      "url": "https://zenn.dev/ashunar0/articles/55a669c10e6a8d",
-      "description": "はじめに\n2026年5月14日、JavaScript ランタイム Bun の Zig→Rust 大規模移植 PR が main ブランチにマージされた。約 96 万行のコードを、6 日間で、AI（Claude）が書いた。テストは 99.8% パス、バイナリサイズも縮小されているが、unsafe ブロックは 13,000 箇所を超え、Sumner 本人も「全部破棄する可能性が高い」と発言している。\nこの一連の動きを追いかけながら、初見で抱いた 5 つの素朴な疑問 を整理した。\n\n\n まず、何が起きたか\n時系列で圧縮するとこうなる。\n\n\n2026/05/05：Bun 創業者 Jarred...",
-      "publishedAt": "2026-05-15T06:08:40.000Z",
       "feedName": "Zenn"
     },
     {
@@ -6830,6 +6598,222 @@
       "url": "https://qiita.com/Yasushi-Mo/items/851c61c698db0d29edfd?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
       "description": "はじめに\nこの記事は、shadcn/ui でデザインシステムを構築するための導入編です。\n以下の理論編で「なぜ shadcn/ui がデザインシステムに向いているのか」を整理しました。\n\nこの記事では実際にプロジェクトを立ち上げ、トークンを設計し、コンポーネントをプロ...",
       "publishedAt": "2026-06-10T21:04:37.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "fe8d372c09a5659a282318a00ec382012621248ede93132c974d624e719546f5",
+      "title": "5 Claude Automation Tricks That Actually Save Me Hours Every Week",
+      "url": "https://dev.to/henryknight_dev/5-claude-automation-tricks-that-actually-save-me-hours-every-week-424l",
+      "description": "5 Claude Automation Tricks That Actually Save Me Hours Every Week\n\n\nLast Tuesday I spent 3 hours manually copy-pasting product descriptions from one spreadsheet into a CMS. Three hours. For data that was already structured. I kept thinking \"there has to be a better way\" while doing the most mindless work imaginable.\nThat evening I built a Claude agent that does it in 4 minutes. I haven't touched that workflow since.\nHere are 5 automation tricks I've built with Claude that have genuinely changed how I work.\nI used to google the same developer questions constantly. \"How do I format dates in JavaScript again?\" \"What's the PostgreSQL syntax for upsert?\" Same searches, every week.\nNow I have a Claude agent that watches my clipboard and when I paste a code snippet or question, it automatically stores the answer in a local knowledge base. The next time I need it, I ask my local agent instead of Google.\nSetup: A simple Python script using Claude's API with a system prompt that formats answers for quick retrieval. I feed it everything I learn. It's become my personal dev wiki.\nTime saved: ~20 minutes/day of repeated lookups.\nMy inbox was a graveyard of action items buried in paragraphs. \"Hey, can you check on the deployment by Thursday? Also the client wants an update on the API integration, and don't forget we need to...\" One email. Three tasks. All hidden.\nI built a Claude agent that runs on a cron job, reads my flagged emails, and extracts discrete action items into my task manager. It understands context — it knows \"by Thursday\" means a deadline, not a suggestion.\nThe trick: The system prompt tells Claude to output structured JSON with fields for task, deadline, priority, and linked email ID. Clean handoff to any task API.\nTime saved: 30 minutes/day of inbox triage.\nBefore I even look at an error, I have a Claude agent do the first-pass diagnosis. I paste the stack trace, it pulls relevant docs, checks for known issues, and gives me a probable cause with specific things to try.\nIt's not always right. But it's right enough that I skip the \"what even is this error\" phase 70% of the time.\nThe setup uses Claude with tool use — it can search documentation, read my codebase structure, and cross-reference similar past errors I've logged.\nTime saved: 45 minutes/week of initial debugging confusion.\nI used to sit through meetings writing notes while also trying to actually listen. Classic developer multitasking failure.\nNow I let meetings record (with permission), run the transcript through a Claude agent with a prompt that extracts: decisions made, action items with owners, open questions, and next meeting agenda. Takes 90 seconds after the meeting ends.\nThe prompt is the whole trick here. \"You are a technical project manager. Extract only concrete decisions and action items. Do not summarize discussion. Format as bullet points.\" Specificity makes the difference.\nTime saved: 1 hour/week of note-taking + 30 minutes of \"wait what did we decide\" Slack messages.\nBefore I submit a PR, I run it through a Claude agent that checks for: obvious bugs, missing error handling, security issues I might have missed, and style inconsistencies.\nIt's not replacing human code review. But it catches the embarrassing stuff — the unclosed file handles, the missing null checks, the TODO I forgot to resolve — before my teammates see it.\nThe agent reads the diff, understands the broader codebase context I feed it, and outputs a checklist of things to verify. I go through the list, fix what needs fixing, then submit.\nTime saved: 2 fewer \"oh you're right, I'll fix that\" comments per PR. Multiplied by 15 PRs/month. That's real time.\nEvery one of these agents follows the same structure:\nTrigger — something happens (email arrives, code changes, meeting ends)\nContext — Claude gets the relevant data plus a tight system prompt\nAction — structured output that feeds the next tool in my workflow\nThe agents aren't magic. They're just Claude with good prompts and clean I/O. The hard part is identifying which parts of your day are mechanical enough to automate but fuzzy enough that scripts alone can't handle them. Claude lives in that middle layer.\nI packaged the full setup — prompts, scripts, and the cron configuration — into a starter kit for developers who want to build their own automation layer without starting from scratch.\n→ Claude Browser Agent Starter Kit\nIt includes the exact prompts I use for each of the 5 workflows above, plus a template for building your own. If you build something cool with it, reply to this post — I'd genuinely like to see it.",
+      "publishedAt": "2026-06-15T04:02:54.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "85063269d0c6a70ac80b9f32ee73c5e04dd810252f7a9603c90a5f075ae28871",
+      "title": "Pooling contra una t3.micro, el día que se reventó...RDS Proxy es la salida?",
+      "url": "https://dev.to/aws-builders/pooling-contra-una-t3micro-el-dia-que-se-reventords-proxy-es-la-salida-46nn",
+      "description": "Cómo un backend de FastAPI + asyncpg comparte un solo Postgres chiquito con sus propios trabajadores en segundo plano y un segundo servicio, por qué el techo de conexiones, no el CPU, es lo que de verdad le pone tope a nuestro autoescalado, la caída en el cambio de hora que nos enseñó la cuenta, y una mirada honesta a RDS Proxy como la válvula de escape (incluyendo la trampa de asyncpg que lo puede dejar sin hacer nada).\n\n\n\nAjuste\nValor\nPor qué\n\n\n\n\nDriver\npostgresql+asyncpg\nasíncrono hasta el fondo\n\n\n\npool_size / max_overflow\n\n\n8 / 12 (20 por proceso)\nsubido desde 3/5 después de una caída\n\n\npool_pre_ping\nTrue\nmata los sockets muertos tras un reinicio de RDS / inactividad\n\n\npool_recycle\n\n1800 s\ntecho duro que el pre-ping no puede cubrir\n\n\nTope de conexiones de RDS\n\n~87 (t3.micro, menos las reservadas)\nla verdadera restricción de todo\n\n\nPruebas\nNullPool\nsin pooling entre event loops en pytest\n\n\n\nLa lección que replanteó todo el problema: en un RDS chico, tu cuenta máxima\nmax_connections, no el CPU ni la memoria. Un autoescalado\nQueuePool limit reached, o peor, FATAL: too many connections del mismo\nengine = create_async_engine(\n    settings.DATABASE_URL,\n    connect_args={\"ssl\": \"prefer\"},   # negocia TLS en RDS, texto plano en local\n    pool_pre_ping=True,\n    pool_size=8,\n    max_overflow=12,                  # 8 + 12 = 20 conexiones por proceso\n    pool_recycle=1800,\n)\n\nVeinte conexiones por proceso se ven modestas hasta que las multiplicas por\n  pool_size + max_overflow         = 20   por proceso de Python\n  × 2 trabajadores de uvicorn      = 40   por tarea de Fargate\n  × 2 durante un despliegue rolling = 80  (tarea vieja drenando + tarea nueva arrancando)\n  + servicio de inteligencia (3 + 7) = 10 sobre la misma base de datos\n  + alembic / ad-hoc / psql        ≈  unas pocas\n  ----------------------------------------\n  ≈ 87  ← el techo de la t3.micro, con ~0 de margen\n\nEse es el presupuesto entero, agotado, con una sola tarea de backend. El\ndesiredCount: 5\nEl tamaño del pool no es un ajuste de afinación de rendimiento aquí; es un\najuste de racionamiento.\nUna sutileza que muerde: los trabajadores en segundo plano corren dentro del\n. main.py los lanza como tareas de asyncio dentro del mismo proceso\nmismo pool de 20 conexiones que los manejadores\nQueuePool limit of size 3 overflow 5 reached, connection timed out\n\nEl 2026-05-27 el pool estaba en 3/5, 8 conexiones por proceso. En el cambio\nama, challenge, marketplace,\ndaily_token_digest) despertaron todos en el :00, cada uno abriendo una\nDos cosas estaban mal, y solo una era \"el pool está muy chico\":\nEl pool de verdad estaba muy apretado para la carga combinada de\npeticiones + trabajadores. 3/5 no dejaba holgura para una estampida de\nplanificadores que, por diseño, se disparan todos en la misma frontera del\ncron.\nLos trabajadores no tenían jitter. Que todo se dispare exactamente en el\n:00 convierte trabajos independientes en una estampida sincronizada.\n(Escalonar los desfases del tick es la mitad más barata de la solución; este\npost trata de la mitad del pool.)\nLa solución fue subir el pool a 8/12 (20/proceso), elegido porque la cuenta\nDimensionar te mantiene debajo del tope. Otros tres ajustes evitan que las\nsí tienes se queden viejas o se fuguen:\npool_pre_ping=True,   # un SELECT 1 barato antes de entregar una conexión; reconecta si está muerta\npool_recycle=1800,    # cierra a la fuerza + reabre tras 30 min pase lo que pase\n\npool_pre_ping importa porque un proceso de larga vida (un ciclo de\npool_recycle\nSELECT 1 hasta que de verdad las usas, así que le ponemos tope\nY en las pruebas, nada de pool:\n# el conftest amarra la fábrica de sesiones a un engine con NullPool\nengine = create_async_engine(TEST_DATABASE_URL, poolclass=NullPool)\n\nLas conexiones agrupadas no sobreviven a que las pasen entre los event loops\nNullPool abre y cierra una conexión por\nComo la siguiente caída de esta clase es invisible hasta que ya no lo es, la\n// infra: convierte la cadena exacta del error en una métrica + alarma de CloudWatch\nnew logs.MetricFilter(this, \"DbPoolExhaustedMetricFilter\", {\n  logGroup,\n  filterPattern: logs.FilterPattern.literal('\"QueuePool limit of size\"'),\n  metricName: \"DbPoolExhausted\",\n  metricValue: \"1\",\n});\n// Alarma: ≥3 en 15 min → \"el pool sigue muy chico; considera subir el RDS\n// (t3.micro→small) ANTES de volver a subir pool_size, tope de RDS ≈87 conexiones\"\n\nEl texto de la alarma codifica el árbol de decisión a propósito: cuando se\nno vuelves a echar mano de pool_size, te quedaste sin\nAquí está el problema estratégico. El backend autoescala por CPU\nscaleOnCpuUtilization). Pero el escalado por CPU y el presupuesto de\nFATAL: too many connections, una caída causada por la cosa que debía\nAsí que maxTasks está fijado en silencio por max_connections, no por la\nt3.small ≈ 2× las conexiones) pero cuesta dinero y solo mueve el muro. Lo\n\n\n  \n  \n  RDS Proxy: la válvula de escape, y la trampa de asyncpg\n\n\nRDS Proxy se sienta entre la app y Postgres y multiplexa: cientos de\nmax_connections, el autoescalado por fin puede escalar por CPU sin\nEso es el discurso de venta. Aquí está la parte que el discurso se calla, y la\nasyncpg + prepared statements = fijado de conexión. RDS Proxy solo puede\nSET, un advisory\nLISTEN a nivel de sesión, el proxy fija ese\ncachea prepared statements para cada\n Tal como viene, asyncpg sobre RDS Proxy fija casi todo, y\nLas mitigaciones, en orden de cuánto duelen:\n# Deshabilita el caché de prepared statements de asyncpg para que RDS Proxy pueda multiplexar.\nengine = create_async_engine(\n    settings.DATABASE_URL,\n    connect_args={\n        \"ssl\": \"require\",                 # RDS Proxy exige TLS\n        \"statement_cache_size\": 0,        # sin caché de prepared statements\n        \"prepared_statement_cache_size\": 0,\n    },\n    poolclass=NullPool,   # deja que el PROXY haga el pool; el pooling del lado de la app ya es redundante\n)\n\nstatement_cache_size=0 impide que asyncpg cachee prepared statements,\nque es lo que mantiene las sesiones multiplexables. Costo: un pequeño\nsobrecosto por consulta de volver a preparar, normalmente un buen trato a\ncambio de conseguir multiplexar siquiera.\nAudita los otros disparadores de fijado. Nuestro conftest de CI usa\npg_advisory_lock para montar la base de datos template, y algunos flujos\nusan estado a nivel de sesión, cada uno es un fijado. Detrás de un proxy\nquieres esos acotados con fuerza o movidos a nivel de transacción\n(pg_advisory_xact_lock) para que el fijado se libere al hacer commit.\nDeja que el proxy sea dueño del pool. Con RDS Proxy haciendo la\nmultiplexación, el pool_size del lado de la app se vuelve doble-pooling;\nNullPool (o un pool diminuto) en la app y deja que el proxy racione.\nRDS Proxy no es de capa gratuita. Se cobra por vCPU de la instancia de la\n$0.015 / vCPU-hora. Para una t3.micro de 2 vCPU\n$0.03/hr ≈ $21–22/mes, sobre un stack cuya premisa entera es\n\n\n\nOpción\n$/mes (delta)\nQué te compra\nQué te cuesta\n\n\n\n\nQuedarte en 8/12 sobre t3.micro\n$0\nnada nuevo\nel muro de conexiones se queda; sin escalado horizontal real\n\n\nSubir t3.micro → t3.small\n~$13\n~2× conexiones (~170)\nmueve el muro, no lo quita; sigue siendo finito\n\n\nAgregar RDS Proxy\n~$21\nquita el muro; autoescalado fiel al CPU; suavizado de failover\nun salto de latencia; reconfigurar asyncpg; rompe la Capa Gratuita\n\n\n\nLa lectura honesta: a nuestra escala actual el muro todavía no aprieta. Una\nla alarma de escalado por\n, ese es el momento en que el CPU quiere más tareas y las conexiones\nEncuentra tu techo real primero. SELECT * FROM pg_settings WHERE name =\n'max_connections'; luego réstale las ranuras reservadas. Cada decisión de\npooling es río abajo de ese único número.\nEl tamaño del pool es un ajuste de racionamiento en un RDS chico, no un\najuste de rendimiento. Dimensiónalo desde el presupuesto de conexiones\n(por-proceso × trabajadores × tareas × traslape-de-despliegue), no desde un\nbenchmark.\nLos trabajadores dentro del proceso comparten el pool web. Si tus\nplanificadores se disparan todos en la misma frontera del cron, son una\nestampida sincronizada contra el pool de peticiones. Agrega jitter; dimensiona\npara el pico.\npre_ping + recycle no son opcionales para procesos asíncronos de larga\nvida detrás de un NAT/firewall o enfrente de una base de datos que se puede\nreiniciar.\nRDS Proxy quita el muro de conexiones, pero con asyncpg, pon\nstatement_cache_size=0 y audita tus advisory locks, o fija y no hace nada.\nMide la tasa de fijado (DatabaseConnectionsCurrentlySessionPinned) antes de\ncantar victoria.\nCompra el proxy cuando el muro apriete, no antes. La señal es el\nautoescalado por CPU y el agotamiento de conexiones peleándose en la misma\nventana de 15 minutos.\nSi te llevas una sola cosa: en un Postgres administrado chico, las conexiones\n Dimensiona tu pool desde ese\npresupuesto, alarma sobre la cadena exacta de agotamiento, y trata a RDS Proxy\ncomo la cosa que compras el día que el muro de conexiones empieza a costarte\ntareas que de verdad necesitas.",
+      "publishedAt": "2026-06-15T03:53:30.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "1d95bbd8a70509465bffe5285a2f7a3c00fba37ce20c52aec6320684037a9ede",
+      "title": "🐍 When to choose ansible roles over playbooks",
+      "url": "https://dev.to/ptp2308/when-to-choose-ansible-roles-over-playbooks-f62",
+      "description": "When to choose ansible roles over playbooks depends on the need for reusable structure, clear separation of concerns, and scalable maintenance across many environments. In a deployment that touches 1,200 servers, the early design decision determines whether the codebase remains maintainable or devolves into ad‑hoc tasks that require weeks of debugging.\n📑 Table of Contents\n📦 Modularity — Why Structure Matters\n🧩 Reusability — When Scaling Demands Roles\n🔧 Example: Deploying a Database Across Multiple Environments\n⚙️ Dependency Management — How Requirements Influence Choice\n🔗 Role Dependency Example\n📁 File Layout — Organizing Artifacts for Maintenance\n📊 Performance & Execution — Impact on Runtime\n\n🔍 Comparison – Roles vs. Playbooks\n🟩 Final Thoughts\n❓ Frequently Asked Questions\nWhen should I still use a flat playbook?\nCan I mix roles and tasks in the same playbook?\nHow do I test a role without affecting production?\n📚 References & Further Reading\nStructure Matters\n\n\nRoles enforce a predictable directory hierarchy that isolates tasks, variables, handlers, and files.\nWhat this does:\n# roles/webserver/tasks/main.yml\n- name: Install Nginx apt: name: nginx state: present - name: Deploy configuration template: src: nginx.conf.j2 dest: /etc/nginx/nginx.conf mode: '0644' notify: Restart Nginx # roles/webserver/handlers/main.yml\n- name: Restart Nginx service: name: nginx state: restarted\n\ntasks/main.yml: defines the ordered steps the role performs.\nhandlers/main.yml: runs only when notified, preventing unnecessary restarts.\nThe directory roles/webserver groups all related artifacts, making the role portable.\nBecause the role encapsulates its logic, a playbook can invoke webserver without repeating internal steps. This eliminates duplication and aligns with the DRY principle.\nKey point: Enforced structure turns a loose collection of tasks into a self‑contained unit that can be shared across multiple playbooks.\nScaling Demands Roles\n\n\nRoles enable reuse across dozens of playbooks, removing the need to copy‑paste task blocks when adding new hosts or services.\nDefine a role that handles the common steps for PostgreSQL installation, then reference it from environment‑specific playbooks.\n# roles/postgres/tasks/main.yml\n- name: Install PostgreSQL package apt: name: postgresql-13 state: present - name: Ensure data directory exists file: path: /var/lib/postgresql/13/main state: directory owner: postgres group: postgres mode: '0700' - name: Apply custom configuration template: src: postgresql.conf.j2 dest: /etc/postgresql/13/main/postgresql.conf mode: '0644' notify: Restart PostgreSQL\n\nTwo playbooks target different inventories but reuse the same role.\n# dev-deploy.yml\n- hosts: dev-db become: true roles: - postgres # prod-deploy.yml\n- hosts: prod-db become: true roles: - postgres\n\nBoth playbooks inherit the same task set, guaranteeing consistency between development and production. Updating roles/postgres/tasks/main.yml once propagates the change to every playbook.\nWhat this does:\nThe role isolates database provisioning logic.\nPlaybooks act as thin wrappers that select hosts and optionally set extra variables.\nUpdates are single‑sourced, reducing regression risk.\nKey point: Reusability is achieved by separating “what to do” (the role) from “where to do it” (the playbook).\nRequirements Influence Choice\n\n\nAnsible role dependencies let you compose complex stacks without hard‑coding ordering in a single playbook.\nA web application that requires both a database and a cache can declare those components as separate roles.\n# roles/webapp/meta/main.yml\ndependencies: - role: postgres - role: redis\n\nIncluding webapp in a playbook automatically runs postgres and redis first, respecting the declared order.\nPlaybook that uses the composite role:\n# site-deploy.yml\n- hosts: app-servers become: true roles: - webapp\n\nAccording to the official Ansible documentation, role dependencies are resolved before any tasks in the dependent role are executed, guaranteeing a deterministic setup sequence.\nWhat this does:\nmeta/main.yml lists required roles, creating an explicit contract.\nAnsible processes dependencies first, avoiding manual ordering.\nComplex stacks become composable, improving readability.\nKey point: Dependency declarations keep orchestration logic declarative and prevent accidental mis‑ordering that would otherwise require manual playbook sequencing.\nArtifacts for Maintenance\n\n\nA disciplined file organization reduces long‑term maintenance effort. Roles keep each concern in its own directory, whereas a monolithic playbook mixes tasks, variables, and templates.\nFlat playbook example:\n# flat-playbook.yml\n- hosts: all vars: nginx_port: 8080 tasks: - name: Install Nginx apt: name: nginx state: present - name: Deploy config template: src: nginx.conf.j2 dest: /etc/nginx/nginx.conf mode: '0644' - name: Ensure service is running service: name: nginx state: started\n\nAs services grow, this layout becomes unwieldy. The equivalent role‑based layout separates each concern into its own file. (More onPythonTPoint tutorials)\nFile tree for the same logic using a role:\nmyproject/\n├── roles/\n│ └── nginx/\n│ ├── defaults/\n│ │ └── main.yml\n│ ├── files/\n│ │ └── index.html\n│ ├── handlers/\n│ │ └── main.yml\n│ ├── meta/\n│ │ └── main.yml\n│ ├── tasks/\n│ │ └── main.yml\n│ └── templates/\n│ └── nginx.conf.jj\n└── site.yml\n\nEach subdirectory serves a clear purpose, and tools like ansible-lint can enforce best practices on a per‑role basis.\nWhat this does:\nProvides a predictable location for defaults, handlers, and templates.\nEnables independent testing of each role.\nReduces cognitive load when navigating large projects.\nKey point: A disciplined file layout prevents the “spaghetti playbook” problem and supports automated quality checks.\nRuntime\n\n\nRoles affect runtime by changing how Ansible parses and loads tasks.\nWhen Ansible reads a flat playbook, it parses all tasks into an internal data structure before execution. This eager loading can increase memory usage for very large inventories. Roles are loaded lazily; Ansible resolves a role’s tasks only when the role is invoked, keeping the in‑memory representation smaller.\nBenchmark (Ansible 2.9 on Ubuntu 22.04, 500 hosts):\n$ ansible-playbook -i inventory flat-playbook.yml -vv\nPLAY [all] *********************************************************************\n...\nTASK [Install Nginx] ***********************************************************\nok: [host001] => {...}\n...\n\n\n\nTotal runtime: 3m12s\nMemory peak: 145 MB\n\nSame workload using a role:\n$ ansible-playbook -i inventory site.yml -vv\nPLAY [all] *********************************************************************\n...\nTASK [nginx: Install Nginx] ***************************************************\nok: [host001] => {...}\n...\n\n\n\nTotal runtime: 2m58s\nMemory peak: 112 MB\n\nThe role‑based run shows a modest reduction in both time and memory, primarily because Ansible caches role metadata and avoids re‑parsing duplicate task blocks.\nWhat this does:\nDemonstrates that role reuse can lower parsing overhead.\nShows a measurable improvement in memory consumption.\nHighlights that the benefit grows with the number of hosts and the size of the task set.\nKey point: While the performance gain is modest for small setups, roles provide scalability advantages that become noticeable in large deployments.\n\n\n\nAspect\nRoles\nFlat Playbooks\n\n\n\n\nReusability\nHigh – single source of truth for tasks, variables, handlers.\nLow – duplication across files.\n\n\nMaintainability\nStructured directory layout, easy to navigate.\nMonolithic files become hard to read.\n\n\nDependency Management\nExplicit via meta/main.yml.\nManual ordering required.\n\n\nScalability\nLazy loading reduces memory footprint.\nAll tasks parsed up front.\n\n\nTesting\nRoles can be unit‑tested in isolation.\nTesting requires full playbook execution.\n\n\n\nKey point: Roles excel in reuse, maintainability, and scalability, while flat playbooks may suffice for one‑off automation.\nSelecting roles over flat playbooks is justified when a modular, reusable, and maintainable automation framework is required. Roles enforce separation of concerns, make dependency declarations declarative, and keep the execution engine efficient for large inventories. For small, single‑run tasks, a flat playbook remains a valid shortcut, but duplicated logic often outweighs the initial simplicity.\nA role‑centric approach aligns automation with software‑engineering best practices: versioned modules, isolated testing, and clear contracts. This alignment reduces technical debt and speeds onboarding for new team members, who can understand a role’s purpose without parsing a giant playbook.\nFlat playbooks are acceptable for quick, one‑off tasks that won’t be reused, such as a single ad‑hoc configuration change on a few hosts.\nYes. A playbook can include both roles: and a tasks: list, allowing you to add custom steps that are not part of any role.\nUse Ansible’s ansible-test framework or run the role against a local Docker or Vagrant environment, targeting a test inventory.\n💡 Want to practise this hands-on? DigitalOcean gives new accounts $200 free credit for 60 days — enough to spin up a full Linux/Docker/Kubernetes environment at no cost.\n📚 Recommended reading: Best DevOps & cloud books on Amazon — from Linux fundamentals to Kubernetes in production, curated for working engineers.\nOfficial Ansible role documentation — comprehensive guide to role anatomy: docs.ansible.com\n\nAnsible best practices — recommendations for structuring large projects: docs.ansible.com\n\nPerformance considerations for large inventories — analysis of parsing overhead: docs.ansible.com",
+      "publishedAt": "2026-06-15T03:39:41.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "4edb5a07df53cc5d341bdcf80c9153d8318be0bc614534eae3e9699e0dea0358",
+      "title": "AWS Summit 2026 Supply Chainブースのご紹介",
+      "url": "https://aws.amazon.com/jp/blogs/news/aws-summit-2026-supply-chain-introduction/",
+      "description": "数日かかるサプライチェーンの意思決定を、AI エージェントへの一言で数分に短縮できるとしたら？ このブログでは、AWS Summit Japan 2026 の Supply Chain ブースで展示するデモの仕組みと技術的な裏側を詳しく紹介しています。ぜひご一読ください！",
+      "publishedAt": "2026-06-15T00:50:08.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "7a72718c80c2c8230ffffb2cf589bfdb2ae7f03d7543f390b564fa2a445f0291",
+      "title": "第 7 回 AWS ジャパン 生成 AI Frontier Meetup ～学びと繋がりの場～【開催報告】",
+      "url": "https://aws.amazon.com/jp/blogs/news/7th-gen-ai-frontier-meet-up/",
+      "description": "アマゾン ウェブ サービス ジャパン（以下、AWS ジャパン）が実施する「生成 AI 実用化推進プログラム」は […]",
+      "publishedAt": "2026-06-15T00:01:35.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "89d3dc67da8ad4402638ea4bb78329ad87522eb61f94fe9e9214d96ae11f40f5",
+      "title": "Claude Fable 5が早速脱獄される　ある研究者が検証結果を公開",
+      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2606/15/news029.html",
+      "description": "セキュリティニュースメディア「GBHackers on Security」は2026年6月11日（現地時間）、Anthropicの最新AIモデル「Claude Fable 5」が研究者によってジェイルブレイク（脱獄）され、脆弱（ぜいじゃく）性悪用に関する知識や不正利用につながる出力を生成できたとの報告が公表されたと伝えた。高度な大規模言語モデル（LL...",
+      "publishedAt": "2026-06-14T23:48:27.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "c10abca7e7832a489d1493dc51e35bd60363a9eb38ccce12e4d110ba4ccadad9",
+      "title": "Snowflake Openflow Connector for PostgreSQL を AWS で動かしてみた",
+      "url": "https://dev.classmethod.jp/articles/tried-running-snowflake-openflow-connector-for-postgresql-on-aws/",
+      "description": "SnowflakeのOpenflow Connector for PostgreSQLを使って、RDS for PostgreSQLからSnowflakeへCDCデータ転送を試してみました。",
+      "publishedAt": "2026-06-14T23:33:29.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "d1383cf237a43e399a789554ea0be27c07cbe20e9f23cdc6e74a11f2dc2e6dc6",
+      "title": "【Copilot Studio】ナレッジでファイルに基づく回答を試してみた：Web検索オフとの比較も",
+      "url": "https://dev.classmethod.jp/articles/copilot-studio-knowledge-grounded-answers/",
+      "description": "Copilot Studio のナレッジ機能を使って、自社資料に基づく根拠付き回答ができるエージェントを作る方法を紹介します。実際にSaaS企業のKPIデータをアップロードしてテストし、Web検索のオン/オフによる違いも比較しました。",
+      "publishedAt": "2026-06-14T23:14:11.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "e3acd5f35ec3f271167e5d9e0ed7cedf482eb10e5ff889ed1603f97fecccbffd",
+      "title": "【Copilot Studio】初めてのエージェントを作ってみた：作成・指示・テスト",
+      "url": "https://dev.classmethod.jp/articles/copilot-studio-create-first-agent/",
+      "description": "Microsoft Copilot Studio でエージェント（AI アシスタント）をゼロから構築するシリーズの第一歩として、ノーコードでエージェントを作成し、役割を与え、テストチャットで動作確認してみました。Microsoft 365 が身近なエンタープライズの現場で、チャットボットや業務自動化にどう活かせるのか、実機で確認した内容をお伝えします。",
+      "publishedAt": "2026-06-14T23:00:14.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "e302f2e05a1ca4e817cd5cc119660dc53fef74c7f2645373ad79d570fbd022c4",
+      "title": "日本は今や世界最大のランサムウェア標的──ジョーシス松本社長が警鐘、日経225の96％で認証情報漏洩を確認",
+      "url": "https://enterprisezine.jp/news/detail/24483",
+      "description": "ジョーシス株式会社 代表取締役社長 松本恭攝氏／同 CPO兼CTO マハバレシワル・バット氏\n\n\n　ジョーシスは2026年6月11日、「サイバーセキュリティに関する戦略発表会」を開催し、代表取締役社長...",
+      "publishedAt": "2026-06-14T23:00:00.000Z",
+      "feedName": "EnterpriseZine"
+    },
+    {
+      "id": "a75faf30cab7da1099a81870fe0a6d1340ff24061af447b4a86a6b5a46208f0b",
+      "title": "AIセキュリティ事業に進出したサイバーセキュリティクラウド、製品の第一弾は「ゲートウェイ（門番）」",
+      "url": "https://enterprisezine.jp/news/detail/24485",
+      "description": "サイバーセキュリティクラウドは2026年5月29日、AIエージェントが世の中に普及し、Claude MythosなどのフロンティアAIも台頭する中で、同社が展開していく事業戦略と新たな製品の発表を行...",
+      "publishedAt": "2026-06-14T23:00:00.000Z",
+      "feedName": "EnterpriseZine"
+    },
+    {
+      "id": "37eb48ed97dc7686dbdfa420122dab3e82652a16963932868177b2d2bd113afa",
+      "title": "[アップデート] AWS Elastic Beanstalk コンソールから CloudWatch Logs のログイベントを直接閲覧できるようになりました",
+      "url": "https://dev.classmethod.jp/articles/elastic-beanstalk-cloudwatch-logs/",
+      "description": "[アップデート] AWS Elastic Beanstalk コンソールから CloudWatch Logs のログイベントを直接閲覧できるようになりました",
+      "publishedAt": "2026-06-14T20:22:16.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "54516b4f29c27d14676df1ef5fb1e2cca3ac1063fe4839471dc8861895b3117c",
+      "title": "KiroのAI-DLCで、あえて脆弱なEC2環境のCloudFormationテンプレートを生成・検証してみた",
+      "url": "https://dev.classmethod.jp/articles/kiro-aidlc-weak-ec2-cloudformation/",
+      "description": "Kiro CLIのAI-DLCを使い、Security Hubコントロールを題材にした脆弱版・修正版のEC2 CloudFormationテンプレートを生成しました。cfn-guardとAWS CLIによるE2E確認で設定を検証し、デプロイ中に見つかった差分をrequirements.mdへ書き戻す仕様開発サイクルを試しました。",
+      "publishedAt": "2026-06-14T13:58:44.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "ca5422b4b0107ba373287462dd538cf476b958f4fd77893f71cd9dcd5a5bd006",
+      "title": "文系エンジニアがClaude Codeで学習アプリを自作して3か月でCISSP合格した話",
+      "url": "https://qiita.com/hiyoshiz/items/b63c2e7ff52b5554a8a5?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "文系エンジニアがClaude Codeで学習アプリを自作して3か月でCISSP合格した話\n\nTL;DR\n\n大学は英文科、セキュリティエンジニアとしての実務経験ほぼゼロの文系エンジニアが、3か月・1日平均30分でCISSPに合格した。\n勝因は「毎日続けられたこと」。それを可...",
+      "publishedAt": "2026-06-14T13:14:52.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "5d76d5c92353e74ea49e7904a618a0e6cc3ea1bcbee902c6111605c1476329be",
+      "title": "AWS ANS は持っているけど Direct Connect を触ったことがなかったので、JAWS-UG 茨城のハンズオンに参加してきた",
+      "url": "https://qiita.com/k_adachi_01/items/18935b9dbd98e68da0ad?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "こんにちは、あだちです。\n2026年6月13日に、「JAWS-UG 茨城 #14 Direct Connectハンズオン ＠飯田橋」に参加してきました。\n\n会場はアジアクエスト株式会社 本社で、AWSJ の菊地さんによる AWS Direct Connect ハンズオン...",
+      "publishedAt": "2026-06-14T12:04:24.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "062378033b35752a820a9abf5f64c7bc4e7d3dc34ce7f01ff740d158e99bcda9",
+      "title": "【A2UI x AG-UI】CopilotKit と StrandsAgentsを使ってA2UI(v0.9)に対応したAIエージェントを作ってみる",
+      "url": "https://qiita.com/Takenoko4594/items/dab65ccac9038fa2ad6b?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\n今回、CopilotKitとAWSが提供するStrandsAgentsを使って、A2UI対応のAIエージェントを作ってみました。\nA2UI(Agent-to-UI)は、AIエージェントがJSON形式のメッセージでフロントエンドのUIを制御することでGenerat...",
+      "publishedAt": "2026-06-14T11:31:45.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "2d1348ea7d70a1e3aa340c9cee0d9f25b8c48e03a5a3afb3da6a4064d31ada91",
+      "title": "Amazon、Anthropicの最新AIについて懸念を伝えていた　米政権による停止命令に先立ち　関係筋",
+      "url": "https://www.itmedia.co.jp/news/articles/2606/14/news019.html",
+      "description": "米Amazonのアンディ・ジャシーCEOは今週、米Anthropicの最先端AIモデルにおけるセキュリティリスクについて、トランプ政権高官に懸念を示したテック業界幹部の一人だった。事情に詳しい関係者がロイターに明らかにした。 ジャシー氏の関与は、Anthropicが金曜日、トランプ政権による国家安全保障上の命令を受け、最新モ...",
+      "publishedAt": "2026-06-14T10:02:58.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "2a94db052d7c30d1f8b2df77d81427d2847845c9b923153dc995652e5aed0be3",
+      "title": "【個人開発】本を読んだままにしない実践支援アプリを作った【React / TypeScript / Firebase / Supabase】",
+      "url": "https://qiita.com/o68606007/items/9c7ac3a086ebccc4a32b?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\n新規アプリを製作しました。\nソースコードは以下にあります。\n\nGitHubリポジトリ\n\nデモサイト\n\n作成の背景\n以前から読書をすると、\n\n本を読んで満足する\n学んだ内容を忘れる\n行動に移せない\n継続できない\n\nという課題がありました。\n既存の読書記録ア...",
+      "publishedAt": "2026-06-14T08:02:08.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "2d363aa81b2c10aa786e2c56efd163bad714ecc5749dc4c53a91fec96b5d3e22",
+      "title": "FinOpsエージェントがアクセスするサービスを調べながらAWSのコスト関連サービスを振り返る",
+      "url": "https://qiita.com/infra365/items/86ba023e4fd2c789899f?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "概要\nFinOpsエージェントはどういったAWSサービスにアクセスしてコスト情報を分析するのか。AWSのコストに関するサービスが沢山あるので、各種振り返りながら記載します。\n\nIAMロールの構成\nFinOpsエージェントを有効化する際、2つのIAMロールを作成します。1つ...",
+      "publishedAt": "2026-06-14T06:43:44.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "af33e4e9f1f99dbe0c92420279a7ed9182a16b77a5616c0ef4a993a096ac7cd2",
+      "title": "JavaScriptのClass離れの歴史をたどる話",
+      "url": "https://zenn.dev/sjbworks/articles/41a5c76dce4b36",
+      "description": "はじめに\n最近、Petterns.devを読み返しました。\nシングルトン、Provider、Context分割、ファクトリ、プロトタイプ、HOC、レンダープロップ……といったキーワードを一つずつ追っていくうちに、自分がフロントエンド領域を実務で触り始めた頃にJavaScript周辺のエコシステムがclassから離れていっていた流れを目の当たりにしていたことを思い出しました。\nそこで、この流れをReactを中心に一本の歴史として改めて整理したいと思います。\nこの記事は参考文献収集と画像作成のために生成AIを利用しています。\n\n class時代(〜2014年頃)\nもともとJSにはクラス構...",
+      "publishedAt": "2026-06-14T04:05:29.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "f849a5690baa49e2828cae913963e70f0829b5f535621d96cbce5c6ace612893",
+      "title": "エンジニアのためのワールドカップ オランダ戦観戦ガイド ── 11人の選手を技術概念で解説する",
+      "url": "https://qiita.com/Yamada040/items/b5810c35502ef14f6ed9?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "📝 はじめに\nこんにちは、シュートです。\n前回までは React 関連の記事を書いていましたが、今回は完全に別ジャンルです。\n2026年6月15日(月)朝5時から、FIFA ワールドカップで日本代表 vs オランダ代表の試合があります。\nこの記事は、「サッカーは詳しくない...",
+      "publishedAt": "2026-06-13T19:34:21.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "4f1709ba81d2b641bef3299dd8f08ab751a5ee1492581b3644717aa4922be0f4",
+      "title": "Pythonばかり書いてきた私の視点で、JavaScriptの世界観を理解するための用語(Node.js等)を整理した",
+      "url": "https://zenn.dev/lotation/articles/a1e0a8658d29ba",
+      "description": "※追記: 2026-06-14\n想定よりもずっと多いリアクションを記事に付けていただいており、同じような境遇にある方々がけっこう居たのかもしれない、と勇気づけられました。ご閲覧ありがとうございます。\n\n Pythonエンジニアの自分も、JavaScriptで何が起こっているのか知っておきたい時代になった（AIがなんでも作ってくれるので）\n私はもともと、Pythonを中心にML/AIアプリ開発をしていました。\nuv を入れれば、Python本体や仮想環境まわりはかなり面倒を見てくれます。APIサーバーを作りたいときは、uv add fastapi uvicorn のように必要なものを入れて...",
+      "publishedAt": "2026-06-13T14:35:32.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "ea89d4bb2315386c9884e2494d5d66fe5bda10dc562a8e7c5f794ff9a8881cc5",
+      "title": "なぜAI生成コードは危ないのか — スキャナを作って見えた現実",
+      "url": "https://zenn.dev/numarn/articles/73fa473c161361",
+      "description": "この記事で伝えたいこと\nAI（Copilot・Cursor・Claude・ChatGPT）が吐くコードは、速い。けれど、その速さと引き換えに、誰もレビューしないまま本番に流れていくコードが増えている。\n私はセキュリティスキャナーを作る過程で、AIに書かせたコードを片っ端からスキャンしてきた。そこで見たものは、想像よりずっと悪かった。この記事は、そのとき何を見て、なぜ専用のツールが要ると判断したのか、という体験の共有だ。\n各脆弱性の検出ロジックや直し方の詳解には、ここでは踏み込まない。まずは「なぜ危ないのか」を、できるだけ生々しく書く。\n\n\n きっかけ: 「ほぼ全部のサンプルに鍵が刺さ...",
+      "publishedAt": "2026-06-13T11:51:05.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "bb0ffe595cfb418f54b651c0ee02d4fc21622f95812a4f59846655eb5a29dc4d",
+      "title": "Next.js を作るガイドライン解説 -10本の実践アプリで学ぶ App Router 時代の設計指針-",
+      "url": "https://zenn.dev/yun_bow/books/bbd75c256479b0",
+      "description": "Next.js 15 App Router は、Server Components / Server Actions / Route Handler / Middleware といった機能を組み合わせて使う前提のフレームワークです。公式ドキュメントは機能ごとには丁寧でも、「これらをどう組み合わせて実務アプリを設計するか」を体系的に解説する資料は不足しています。\n\n本書では、SNS・学習記録・ブログ・画像共有・ポッドキャスト・読書会・ノート・EC・チャット・ホワイトボードという 10本のサンプルアプリ を題材に、Next.js のガイドライン適用の勘所を読み解きます。\n\n章構成は 「基礎編19章 + 応用編10章」のハイブリッド構成 を採用しました。\n\n- 基礎編: 環境構築・DB 設計・セキュリティ・Server Actions・IDOR 防止・Request ID トレーシング・レート制限・構造化ロギング・NextAuth.js 認証・テスト・アクセシビリティ・パフォーマンスを、横断テーマとしてアプリ非依存に解説します。\n- 応用編: 各アプリで基礎編の概念がどう具現化されているかを、ファイルパス付きのコード抜粋とともに読み解きます。\n\n■本書で学べること\n- Next.js 15 App Router のレンダリング境界（Server / Client）の引き方\n- Server Actions による型安全な実装パターンと楽観的更新\n- OWASP Top 10 に対する Next.js 上の多層防御\n- IDOR・CSRF・XSS・レート制限・Request ID トレーシングの実装\n- NextAuth.js v5 による認証システムと OAuth 統合\n- Prisma によるデータモデル設計とパフォーマンス最適化\n- アクセシビリティ・テスト・観測性の組み込み方\n- 10本のアプリでの設計判断と落とし穴\n\n■対象読者\n- Next.js App Router で実務レベルのアプリを書きたい初級〜中級エンジニア\n- フレームワーク機能ごとの使い方は分かるが「組み合わせ」で詰まっている方\n- セキュリティ・観測性・テストを後付けでなく最初から組み込みたい方\n- 自分のチームに「ガイドライン」を整備したい方",
+      "publishedAt": "2026-06-13T07:14:59.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "9a165b5b83819fb0b0da79cf26b37e48759a8bc2d9f00c4d71b717bd2298f463",
+      "title": "今Fitbitを買ってはいけない。絶対にだ。",
+      "url": "https://anond.hatelabo.jp/20260613114557",
+      "description": "なぜならFitbitの情報をスマホとやり取りするアプリが壊れていて様々な機能が使えないから。 Fitbitを買収したGoogleは自社のPixelブランドへのリブランディングのために Fitbitの管理アプリをGoogle Healthという新しいアプリに置き換えたんだけど、 それがまともにテストしたとは思えないレベルでバグってて、ここ数週...",
+      "publishedAt": "2026-06-13T02:55:36.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "ccb561e46df0935bf71791a8b61ae198f6282e24a2887b5a31fb1ce9123a6d2b",
+      "title": "「わからないまま実装」をやめると、チームは速くなる",
+      "url": "https://qiita.com/mhamadajp/items/4bddd63d0d82b9e81043?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "AI時代に詰まるのは実装ではなく「何を作るか」\nAIコーディングツールの普及で、コードを書く速度は上がりました。\n実装のたたき台、テストの雛形、リファクタリング、エラー調査。これらはAIでかなり速くなります。\nしかし、開発チーム全体を見ると、次のような問題は残ります。\n\n...",
+      "publishedAt": "2026-06-12T20:35:48.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "c48816f6b5dce9b41090b0e509c571a4bb9efae7c00424d016e621a52dc5c822",
+      "title": "IaC 入門シリーズ 第1回: Terraform で「インフラをコードで管理する」を体験する",
+      "url": "https://qiita.com/tanaka_taro_JP_KYUSYU/items/d9150a89f6b3b8fb12bc?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "シリーズ目次\n\n回\nタイトル\n\n第1回（本記事）\nIaC とは何か / Terraform の基本 / S3 ハンズオン\n\n第2回（公開済）\nAWS 構築編 — VPC から ECS Fargate まで\n\n第3回（公開済）\nCloudflare + CI/...",
+      "publishedAt": "2026-06-12T04:55:48.000Z",
       "feedName": "Qiita"
     }
   ]
