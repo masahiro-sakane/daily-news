@@ -353,78 +353,6 @@
       "feedName": "EnterpriseZine"
     },
     {
-      "id": "362ab3a34bec151b186f1cd120cc48ecaec8a3cb32c407a5240cbbcf049360fc",
-      "title": "npmサプライチェーン攻撃対策",
-      "url": "https://qiita.com/SatoshiGachiFujimoto/items/48b179ac4495976d7555?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "開発環境\n\nMacBook Air M1, 2020\nnvm 0.40.4\nNode.js v22.22.0\nnpm 11.14.1\n\nnpm のバージョン確認\n$ npm -v\n10.9.4\n\nnpm のバージョンを11に上げる\n$ npm install -g n...",
-      "publishedAt": "2026-05-20T02:08:13.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "e55377a1c97aba9e8c083ee41f024e4af4dbe7220f48a16042fde5d388ac124e",
-      "title": "スマホを使えない高齢者に防災情報をテレビで届けるシステムをAWSで作った",
-      "url": "https://qiita.com/kojiman/items/67763951482a58dcdfb5?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "はじめに\n内閣府の調査によると、災害時に避難が遅れた理由として「情報が届かなかった」「操作がわからなかった」が繰り返し上位に挙がります。スマートフォンが普及しても、70〜80代の高齢者が緊急時に慣れないアプリを開くのは現実的ではありません。\nテレビが防災情報端末になれば、...",
-      "publishedAt": "2026-05-20T01:49:43.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "02ec04512345a652ded944d113dda11ea2cec8cf05da6b6c5a368d1b69d13f6c",
-      "title": "PR： ネットワークのブラックボックス化が招く致命的な被害とは　有線・無線を一括制御して、トラブル復旧を速める秘策",
-      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2605/20/news003.html",
-      "description": "物理的な配線状況さえ把握できていない「見えないネットワーク」は、トラブル発生時の業務停止を長期化させるだけでなく、セキュリティ侵害時の致命的なリスクとなる。リソースが限られる中堅・中小企業にとって、属人的なスキルに頼った復旧作業はもはや限界だ。UTMを核として拠点全体を可視化する方法と、トラブルの原因特定をAIアシスタントとの対話で「ものの数分」に短縮する運用手法を紹介する。",
-      "publishedAt": "2026-05-20T01:00:00.000Z",
-      "feedName": "＠IT"
-    },
-    {
-      "id": "bf2195f0075c7f1f716e6a69e8726d567e1fedb2027caa88cc47a1def81eed30",
-      "title": "AWS Weekly Roundup: 1 周年を迎えた AWS Transform、Claude Platform on AWS、EC2 M3 Ultra Mac インスタンスなど (2026 年 5 月 18 日)",
-      "url": "https://aws.amazon.com/jp/blogs/news/aws-weekly-roundup-aws-transform-at-1-year-claude-platform-on-aws-ec2-m3-ultra-mac-instances-and-more-may-18-2026/",
-      "description": ".NET、メインフレーム、および VMware ワークロード向けの AWS Transform がリリースされ […]",
-      "publishedAt": "2026-05-19T23:50:42.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "9862ad24985c0a397562bb5b384e91cf5f389a6233a064afb89148e41d88c41d",
-      "title": "macOSのキッティングは“なめるなキケン”　情シスが知るべきPC管理の本質",
-      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2605/20/news007.html",
-      "description": "キッティングは今なお「単純作業」と誤解されがちですが、実際には“届いた瞬間から安全に使えるPC”を実現する裏側で、情シスはIT統制やセキュリティ、業務継続を支える高度な設計と運用を担っています。なぜその価値は見えず、評価されないのか。キッティングの本質を掘り下げます。",
-      "publishedAt": "2026-05-19T20:00:00.000Z",
-      "feedName": "＠IT"
-    },
-    {
-      "id": "103989afe7d14772bbe610ae5aa9dcfcdc8fcae35bcd14ebe676241935ec8170",
-      "title": "無料版Geminiを仕事で使い倒すための設定と注意点、Gmailやドライブ連携で差をつけろ",
-      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2605/20/news014.html",
-      "description": "Googleの生成AI「Gemini」は導入しただけでは真価を発揮できない。特に無料版では、適切な初期設定とセキュリティへの配慮が不可欠だ。本Tech TIPSでは、GmailやGoogleドライブとの連携手順から、カスタムAI（Gems）と「カスタム指示」の活用、データの安全な扱い方まで、仕事の生産性を高める具体策を解説する。",
-      "publishedAt": "2026-05-19T20:00:00.000Z",
-      "feedName": "＠IT"
-    },
-    {
-      "id": "ebcd79f96f32db4615fa481b963880a1a49729868630a7ef41908f4ba9dd1eab",
-      "title": "React CompilerをannotationモードとOxlintで漸進的に導入する",
-      "url": "https://zenn.dev/dress_code/articles/92dfb9206f50f3",
-      "description": "React CompilerをannotationモードとOxlintで漸進的に導入する\n\n はじめに\nこんにちは。ぷーじ（@yug1224）です。\n約7,500ファイルのTypeScriptプロジェクトにReact Compilerを導入しました。本記事では、annotationモードとOxlintで、all モードの一括適用ではなく、段階的に Compiler を広げた進め方を紹介します。\n\n 導入の背景\n最初は \"all\" モードをローカルで気軽に試してみたのですが、TanStack Table v8を使ったテーブルが軒並み壊れ、react-hook-formのフォームが無限ルー...",
-      "publishedAt": "2026-05-19T10:00:00.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "440cfbbc1f8283a46261601d32b670956f49be79cbb1a3211b1b940bd5aeedd3",
-      "title": "Oracle Interconnect for AWS のプレビュー版をためしてみてみた",
-      "url": "https://qiita.com/shirok/items/a9734df1336e46e83315?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "AWS は、Oracle Cloud Infrastructure（OCI）とのマルチクラウド接続機能である AWS Interconnect - multicloud のパブリックプレビューを発表しました。\n\nクラウドへの移行が進むにつれて、マルチクラウド戦略を採用するお...",
-      "publishedAt": "2026-05-19T06:42:33.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "6a5b66cbc393829432dbdc8bd8b796c846966fe5f3fd9f138ead2e394bef720c",
-      "title": "「脱獄できてもバグと認めない」　OpenAIが新設バグ報奨プログラムで狙う“3つの急所”",
-      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2605/19/news046.html",
-      "description": "OpenAIは、従来のサイバーセキュリティの枠組みでは捉え切れない、AI固有の安全性リスクや悪用リスクを対象とした新たなバグ報奨プログラム「Safety Bug Bounty」を開始した。",
-      "publishedAt": "2026-05-19T04:00:00.000Z",
-      "feedName": "＠IT"
-    },
-    {
       "id": "6eee211daf418aef797a6741a0bfa5b57fde93790588933a0a370eec05bc0b52",
       "title": "Google's Gemini Spark. Here's What It Actually Does for Developers.",
       "url": "https://dev.to/om_shree_0709/googles-gemini-spark-heres-what-it-actually-does-for-developers-5fc6",
@@ -6951,6 +6879,278 @@
       "url": "https://qiita.com/monotein/items/789b0b2250d1ed2e8acf?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
       "description": "「どこから始めればいい？」という問いの前に\n以前教えていた生徒の中には、シニアやテックリードのポジションにいる人もいます。\n新年度には、新卒エンジニアへのReact研修にアサインされる方もいるようです。\nそういう方たちからよく聞く言葉があります。\n「どこから始めて、何を教...",
       "publishedAt": "2026-06-16T05:54:56.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "88e56f215c0e2e0e61fa464bbfbe8824226546f1158893ed84d3a2f2f39e3cf2",
+      "title": "Construyendo Arquitecturas Eficientes: Microservicios en Java con Spring Boot Reactivo",
+      "url": "https://dev.to/comunidad-vallegrande/construyendo-arquitecturas-eficientes-microservicios-en-java-con-spring-boot-reactivo-o1c",
+      "description": "¡Hola!Soy Karla Magallanes Vicente estudiante del 5to semestre de Análisis de Sistemas te contare un poco sobre los microservicios.\nEn el desarrollo de software moderno, la eficiencia, la escalabilidad y el uso óptimo de los recursos son aspectos fundamentales para construir aplicaciones capaces de atender miles de usuarios de manera simultánea. Durante muchos años, la arquitectura tradicional basada en un modelo bloqueante (un hilo por petición) fue el estándar para el desarrollo de aplicaciones empresariales.\nSin embargo, a medida que aumentan las demandas de tráfico y la necesidad de procesar grandes volúmenes de información, este enfoque puede generar un consumo elevado de recursos y limitar la capacidad de escalamiento de los servidores. Para afrontar estos desafíos, el ecosistema Java incorporó la programación reactiva, un paradigma diseñado para maximizar el rendimiento mediante operaciones asíncronas y no bloqueantes.\n¿Qué es la Programación Reactiva?\nLa programación reactiva es un modelo basado en flujos de datos y eventos asíncronos. A diferencia del enfoque tradicional, donde un hilo de ejecución permanece bloqueado mientras espera la respuesta de una base de datos o de un servicio externo, el paradigma reactivo permite que los hilos continúen ejecutando otras tareas mientras la operación pendiente se completa.\nCuando la información solicitada está disponible, el sistema genera un evento que reanuda automáticamente el flujo de procesamiento. De esta manera, se aprovechan mejor los recursos del servidor y se incrementa la capacidad para atender múltiples solicitudes concurrentes.\nSpring WebFlux: La Base de los Microservicios Reactivos\nDentro del ecosistema de Spring Boot, la principal tecnología para desarrollar aplicaciones reactivas es Spring WebFlux. A diferencia de Spring MVC, que se basa en un modelo bloqueante, WebFlux está diseñado para trabajar con operaciones asíncronas y no bloqueantes.\nSpring WebFlux puede ejecutarse sobre servidores de alto rendimiento como Netty, optimizado para gestionar miles de conexiones simultáneas con un uso eficiente de memoria y procesamiento.\nPara representar los flujos de datos reactivos, WebFlux utiliza el proyecto Reactor, que proporciona dos tipos principales:\nMono\nRepresenta un flujo que emite como máximo un elemento o ningún valor. Es ideal para operaciones como:\n1. Buscar un registro por identificador.\n2. Autenticar un usuario.\n3. Consultar información específica.\n4. Flux\nRepresenta un flujo que puede emitir múltiples elementos, desde cero hasta una cantidad indefinida. Se utiliza comúnmente para:\nListar registros de una base de datos.\nProcesar grandes volúmenes de información.\nImplementar transmisión de datos en tiempo real (streaming).\nBeneficios de los Microservicios Reactivos\nMayor aprovechamiento de recursos\nAl evitar el bloqueo de hilos durante operaciones de entrada y salida (I/O), los servidores pueden gestionar una mayor cantidad de solicitudes concurrentes utilizando los mismos recursos de hardware.\nEscalabilidad mejorada\nLa naturaleza asíncrona de las aplicaciones reactivas facilita el crecimiento horizontal de los servicios y mejora su comportamiento bajo cargas elevadas.\nResiliencia ante fallos\nEl ecosistema reactivo incorpora mecanismos como el Backpressure (contrapresión), que permite controlar el flujo de datos entre productores y consumidores, evitando sobrecargas y mejorando la estabilidad del sistema.\nPreparación para entornos Cloud Native\nGracias a su eficiencia en el consumo de CPU y memoria, los microservicios reactivos se adaptan perfectamente a plataformas basadas en contenedores como Docker y orquestadores como Kubernetes, contribuyendo a optimizar costos y recursos en la nube.\nConclusión\nLa adopción de microservicios reactivos con Java y Spring Boot representa una evolución importante hacia aplicaciones más escalables, eficientes y preparadas para los desafíos actuales del desarrollo empresarial. Aunque este paradigma requiere un cambio de mentalidad respecto a la programación tradicional, los beneficios en rendimiento, aprovechamiento de recursos y capacidad de respuesta convierten a la programación reactiva en una alternativa altamente atractiva para sistemas modernos de alta disponibilidad.\nImplementar tecnologías como Spring WebFlux no solo permite desarrollar soluciones más robustas, sino también preparar los proyectos académicos y profesionales para las exigencias de los entornos tecnológicos actuales y futuros.",
+      "publishedAt": "2026-06-19T04:00:22.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "cd2699bb36067aa39b517657d6b500c90331b31ad29f10d881616c0b73a8749c",
+      "title": "Stop Saying \"It Works on My Machine\": Docker for AI Engineers",
+      "url": "https://dev.to/sachinsingh2156/stop-saying-it-works-on-my-machine-docker-for-ai-engineers-481g",
+      "description": "You trained the model. The notebook runs. The demo works. You push it to a teammate, and forty minutes later you get the message every engineer dreads:\n\"Hey, I'm getting a CUDA error. And torch won't import. And what version of Python is this?\"\nAnd you say the seven words that have haunted software since the dawn of time:\n\"But it works on my machine.\"\nHere's the uncomfortable truth: \"it works on my machine\" isn't a defense. It's a confession. It means your code depends on something living on your laptop that you never wrote down a Python version, a system library, a CUDA toolkit, a stray environment variable, a model file sitting in ~/Downloads.\nDocker is how you stop making that confession. Let's fix this.\nA typical web app has a handful of dependencies. An AI project has layers of them, and each layer can betray you:\nPython packages : torch, transformers, numpy, and the version conflicts between them.\nSystem libraries : things like libgl1 or ffmpeg that pip won't install for you.\nThe CUDA / driver stack : the single most common reason \"it works on my machine\" and nowhere else.\nThe model weights themselves : multi-gigabyte files that aren't in your repo.\nPython itself : 3.10 on your laptop, 3.12 on the server, subtle breakage everywhere.\nrequirements.txt captures one of those five layers. Docker captures all of them. That's the whole pitch.\nForget the whale logo and the buzzwords for a second.\nA Docker image is a frozen snapshot of a complete computer: the operating system, Python, your packages, your code, and your config, all baked into one file. A container is a running copy of that snapshot.\nThe mental model that makes it click: a virtual machine simulates an entire computer including its own operating system kernel, which is heavy and slow. A container shares your machine's kernel and only packages everything above it. So it boots in seconds, not minutes, and a single image runs identically on your laptop, your teammate's laptop, and a cloud GPU server.\nYou write the recipe once. Everyone gets the exact same kitchen.\nA Dockerfile is just that recipe, a plain text file of instructions. Here's a real one for a PyTorch project, with every line explained:\n# Start from an official Python image. The \"-slim\" variant is smaller.\nFROM python:3.11-slim\n\n# Install system libraries that pip can't. Many vision/audio\n# libraries need these, and forgetting them is a classic\n# \"works on my machine\" trap.\nRUN apt-get update && apt-get install -y --no-install-recommends \\\n    build-essential \\\n    libgl1 \\\n    && rm -rf /var/lib/apt/lists/*\n\n# Set the working directory inside the container.\nWORKDIR /app\n\n# Copy ONLY requirements first, then install.\n# This is a caching trick, see the note below.\nCOPY requirements.txt .\nRUN pip install --no-cache-dir -r requirements.txt\n\n# Now copy the rest of your code.\nCOPY . .\n\n# The command that runs when the container starts.\nCMD [\"python\", \"predict.py\"]\n\nTwo beginner mistakes this avoids:\n1. Pin your versions. Your requirements.txt should look like this, not just bare package names:\ntorch==2.3.1\ntransformers==4.41.2\nfastapi==0.111.0\nuvicorn==0.30.1\nnumpy==1.26.4\n\ntorch without a version is a future outage waiting to happen. The whole point of Docker is reproducibility, don't undermine it by letting versions float.\n2. Copy requirements.txt before your code. Docker builds in layers and caches each one. If you copy everything at once, changing a single line of code forces it to reinstall torch (a multi-minute download) every single build. By copying requirements first, Docker reuses the cached install layer and only re-runs steps that actually changed. Your build goes from minutes to seconds.\nTo build and run it:\ndocker build -t my-model .\ndocker run my-model\n\nThat -t my-model just names the image. The . tells Docker to look for the Dockerfile in the current folder. That's it, you now have a portable, reproducible model.\nBeginners often COPY model.bin straight into the image. Don't. A 5GB image is painful to build, push, and pull, and you'll rebuild it every time the weights change.\nInstead, keep large files outside the image and mount them at runtime with a volume,  a shared folder between your machine and the container:\ndocker run -v $(pwd)/models:/app/models my-model\n\nThis maps your local models/ folder to /app/models inside the container. The weights live on disk, the image stays lean, and you can swap models without rebuilding anything.\nMost of the time you don't just want to run a script, you want a model behind an endpoint your app can call. Here's a minimal FastAPI server, app.py:\nfrom fastapi import FastAPI\nfrom pydantic import BaseModel\nimport torch\n\napp = FastAPI()\n\n# Load the model ONCE at startup, not on every request.\n# This is the single biggest performance mistake beginners make.\nmodel = torch.load(\"/app/models/model.pt\", map_location=\"cpu\")\nmodel.eval()\n\nclass Request(BaseModel):\n    text: str\n\n@app.post(\"/predict\")\ndef predict(req: Request):\n    with torch.no_grad():\n        result = model(req.text)\n    return {\"prediction\": result}\n\n@app.get(\"/health\")\ndef health():\n    return {\"status\": \"ok\"}\n\nNotice the model loads once when the server boots, not inside predict(). Loading weights on every request will make your API crawl, a mistake that's easy to miss until production traffic hits.\nNow adjust the Dockerfile's last line to launch the server instead of a script:\nCMD [\"uvicorn\", \"app:app\", \"--host\", \"0.0.0.0\", \"--port\", \"8000\"]\n\nThat --host 0.0.0.0 matters. Inside a container, the default 127.0.0.1 means \"only reachable from inside this container\", your requests from outside would bounce. Binding to 0.0.0.0 makes it reachable. Then map the port when you run it:\ndocker run -p 8000:8000 -v $(pwd)/models:/app/models my-model\n\n-p 8000:8000 connects port 8000 on your machine to 8000 in the container. Hit http://localhost:8000/predict and you're serving a model from a container.\nReal AI apps rarely run alone. You've got your model API, plus maybe a Redis cache for results and a vector database for embeddings. Starting three containers by hand, with the right flags and in the right order, gets old fast.\ndocker-compose lets you define your whole stack in one docker-compose.yml file:\nservices:\n  model-api:\n    build: .\n    ports:\n      - \"8000:8000\"\n    volumes:\n      - ./models:/app/models\n    depends_on:\n      - redis\n\n  redis:\n    image: redis:7-alpine\n    ports:\n      - \"6379:6379\"\n\n  vector-db:\n    image: qdrant/qdrant:latest\n    ports:\n      - \"6333:6333\"\n    volumes:\n      - ./qdrant_data:/qdrant/storage\n\nThen the entire stack starts with one command:\ndocker compose up\n\nOne command, three services, wired together and talking to each other. And because services can reach each other by name, your API connects to Redis at the host redis:6379,  no IP addresses to chase down. Shut it all down with docker compose down. This is the moment most people fall in love with Docker.\nA short list of things worth doing from day one:\nAdd a .dockerignore file. Just like .gitignore, it keeps junk out of your image. At minimum: __pycache__, .git, venv, *.pt, and data/. Without it, you'll accidentally copy gigabytes of cache and datasets into your build.\nUse -slim or official ML base images. python:3.11-slim over the full image saves hundreds of megabytes. For GPU work, start from an official CUDA-enabled base like pytorch/pytorch so the driver stack is handled for you.\nOne process per container. Resist the urge to cram your API, database, and worker into one container. Split them, that's exactly what compose is for.\nNever bake secrets into images. API keys and tokens go in environment variables (-e MY_KEY=... or an .env file), never hardcoded into the Dockerfile. Anyone with the image can read what's baked in.\nGo back to that teammate who couldn't run your model. With Docker, the entire conversation becomes:\ngit clone your-repo\ndocker compose up\n\nTwo commands. Same Python, same CUDA, same packages, same everything on their laptop, on the cloud GPU, on the production server. No \"what version are you on?\" No \"did you install ffmpeg?\" No 40-minute debugging session.\nYou don't need to master Kubernetes or become a DevOps engineer to get this. You just need a Dockerfile, a pinned requirements.txt, and maybe a docker-compose.yml. Start with the PyTorch example above, get one model running in a container today, and build from there.\nThe next time someone asks if your project works on their machine, you'll already know the answer.\nIt works on every machine.\nFound this useful? Drop a comment with the trickiest \"works on my machine\" bug you've hit",
+      "publishedAt": "2026-06-19T04:00:19.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "d765d2dccc46e39a88440017626d35943a0833d976c4bbdd531495c5003adf3d",
+      "title": "Building a Safe, Local AI Coding Agent with Node.js",
+      "url": "https://dev.to/gaurav101/building-a-safe-local-ai-coding-agent-with-nodejs-46ol",
+      "description": "Welcome to the 4th article of the MCP and RAG with JS series.\nIn this article, we will learn what AI agents are by building a practical, beginner-friendly coding agent in JavaScript. We will use a locally running LLM, Mistral on Ollama.\nYou do not need any paid subscription or API key. Everything runs locally on your machine, so this is accessible for learning, testing, and experimenting.\nWe are building a local personal coding agent.\nIt runs in the terminal and helps us understand a JavaScript project. It can:\nlist project files\nread project files\nsearch text\nexplain code\nfind possible bugs\npropose code changes\nThe important safety rule is this:\nThe agent can inspect files, but it does not directly edit them. If it wants to change something, it only returns a patch proposal for a human developer to review.\nSo in simple words, we are building a small local coding assistant.\nAI agents can sound complicated, but most agent systems use a few common patterns.\nIn this project, we will learn those patterns with plain JavaScript:\nAgent loop: repeat until the model gives a final answer.\nTool calling: let the model request specific JavaScript functions.\nTool allowlist: only allow approved tools to run.\nSystem prompt: tell the model how it should behave.\nJSON action protocol: make the model respond with structured JSON.\nModel adapter: keep the Ollama HTTP code in one small file.\nSafety boundary: keep file access inside the project root.\nHuman-in-the-loop changes: propose patches instead of applying them.\nTests for safety: verify path traversal, large file, and missing file behavior.\nThese same ideas appear in larger AI-agent frameworks. This project keeps them small enough to understand.\nA normal chatbot usually works like this:\nUser asks question -> Model answers\n\nAn agent works more like this:\nUser asks question\n  -> Model decides what to do\n  -> JavaScript runs a safe tool\n  -> Model sees the tool result\n  -> Model answers\n\nThe model does not directly read your files or run commands. It asks for a tool, and your JavaScript code decides whether that tool is allowed.\nThat is the main idea behind this project.\nYou can explore and clone the complete codebase in the coding-agents GitHub repository.\n.\n|-- package.json\n|-- src\n|   |-- cli.js\n|   |-- agent.js\n|   |-- ollama.js\n|   `-- tools.js\n`-- test\n    `-- tools.test.js\n\nEach file has a clear job:\nsrc/cli.js: terminal entry point\nsrc/agent.js: agent loop and tool dispatch\nsrc/ollama.js: local Ollama API client\nsrc/tools.js: safe filesystem tools\ntest/tools.test.js: safety and tool behavior tests\nThe app starts in src/cli.js.\nIt imports the agent:\nimport { runAgent } from \"./agent.js\";\n\nThen it chooses the project root and model:\nconst root = options.root || process.cwd();\nconst model = options.model || process.env.OLLAMA_MODEL || \"mistral\";\n\nThis means:\nuse --root if the user provides it\notherwise use the current folder\nuse --model if provided\notherwise use OLLAMA_MODEL\n\notherwise use mistral\n\n\n\nThe CLI supports two modes.\nOne-shot mode:\nnpm start -- \"Explain src/tools.js\"\n\nInteractive mode:\nnpm start\n\nIn both cases, the CLI eventually calls:\nconst answer = await runAgent({ goal, root, model, verbose });\n\nSo the CLI is only responsible for input and output. The real agent behavior lives in runAgent.\nThe main function is in src/agent.js:\nexport async function runAgent({ goal, root, model, verbose = false }) {\n\nAt the start, it creates the available tools:\nconst { createTools } = await import(\"./tools.js\");\nconst tools = createTools({ root });\n\nPassing root is important. It tells the tools which folder they are allowed to inspect.\nThen the agent creates a message history:\nconst messages = [\n  {\n    role: \"system\",\n    content: buildSystemPrompt(tools)\n  },\n  {\n    role: \"user\",\n    content: goal\n  }\n];\n\nThe system message contains rules for the model. The user message contains the developer's request.\nThen the agent runs a loop:\nfor (let step = 1; step <= MAX_STEPS; step += 1) {\n  const prompt = renderPrompt(messages);\n  const raw = await generateWithOllama({ prompt, model });\n  const action = parseAction(raw);\n\n  // final answer or tool call\n}\n\nMAX_STEPS is set to 8, so the agent cannot loop forever.\nThis loop is the heart of the agent:\nmessages -> prompt -> model -> action -> tool or final answer\n\nThe system prompt tells the model how to behave.\nIn this project, the prompt says the model should:\ninspect files before making project-specific claims\nnever claim a patch was applied\nuse propose_patch only for suggested changes\nreturn exactly one JSON object\nIt also describes the available tools:\nconst toolDescriptions = Object.entries(tools)\n  .map(([name, tool]) => `- ${name}: ${tool.description} Parameters: ${JSON.stringify(tool.parameters)}`)\n  .join(\"\\n\");\n\nThis lets the model know what it can ask for.\nThe model must respond in one of two shapes.\nTo call a tool:\n{\"type\":\"tool\",\"name\":\"read_file\",\"arguments\":{\"path\":\"src/example.js\"}}\n\nTo finish:\n{\"type\":\"final\",\"answer\":\"Your answer here.\"}\n\nThis is a simple JSON action protocol. It is easy to understand because there is no hidden framework magic.\nThe file src/ollama.js keeps the Ollama API call separate from the rest of the app.\nThe default local URL is:\nconst DEFAULT_OLLAMA_URL = \"http://127.0.0.1:11434\";\n\nThe function sends the prompt to Ollama:\nconst response = await fetch(`${baseUrl}/api/generate`, {\n  method: \"POST\",\n  headers: {\n    \"content-type\": \"application/json\"\n  },\n  body: JSON.stringify({\n    model,\n    prompt,\n    stream: false,\n    options: {\n      temperature\n    }\n  })\n});\n\nThen it returns the model text:\nconst data = await response.json();\nreturn data.response || \"\";\n\nThis file has one job:\nprompt in -> Ollama HTTP request -> model response out\n\nKeeping this in one file makes it easier to swap models later.\nAfter Ollama responds, the agent parses the response:\nconst action = parseAction(raw);\n\nIf the model gives a final answer, the agent returns it:\nif (action.type === \"final\") {\n  return action.answer;\n}\n\nIf the model asks for a tool, the agent checks whether that tool exists:\nconst tool = tools[action.name];\nif (!tool) {\n  messages.push({\n    role: \"tool\",\n    content: JSON.stringify({\n      error: `Unknown tool: ${action.name}`,\n      allowedTools: Object.keys(tools)\n    })\n  });\n  continue;\n}\n\nThis is very important.\nThe model cannot invent tools. It can only use tools that exist in the local JavaScript object.\nThen the agent runs the tool:\nconst result = await tool.run(action.arguments || {});\n\nAnd sends the result back into the message history:\nmessages.push({\n  role: \"tool\",\n  content: JSON.stringify({\n    tool: action.name,\n    result\n  })\n});\n\nNow the model can use real project information instead of guessing.\nExample flow:\nUser: Explain src/tools.js\nModel: calls read_file\nJavaScript: reads the file safely\nModel: sees the file content\nModel: gives final explanation\n\nThe tools live in src/tools.js.\nThe project has four tools:\nlist_files\nread_file\nsearch_text\npropose_patch\n\nEach tool has:\ndescription: tells the model what it does\nparameters: tells the model what arguments it accepts\nrun: the actual JavaScript function\nExample shape:\nread_file: {\n  description: \"Read a UTF-8 text file from inside the project root.\",\n  parameters: {\n    path: \"File path relative to project root.\"\n  },\n  run: async ({ path: filePath } = {}) => {\n    // safe implementation\n  }\n}\n\nThe tools are intentionally narrow.\nlist_files lists files under the project root.\nread_file reads one text file if it is safe and not too large.\nsearch_text searches project files for a string or regex.\npropose_patch returns a patch proposal, but does not apply it.\nThat last point matters. The model can suggest changes, but a human still reviews them.\nsafeResolve\n\n\nThe most important safety function is:\nexport function safeResolve(root, requestedPath) {\n  const absolute = path.resolve(root, requestedPath);\n  const relative = path.relative(root, absolute);\n\n  if (relative.startsWith(\"..\") || path.isAbsolute(relative)) {\n    throw new Error(`Path escapes project root: ${requestedPath}`);\n  }\n\n  return absolute;\n}\n\nThis blocks path traversal.\nFor example, this should be allowed:\nsrc/tools.js\n\nBut this should be blocked:\n../outside.txt\n\nWhy?\nBecause the agent should only inspect the selected project folder. Model output is not trusted input, so every requested path goes through safeResolve.\nThis is one of the most important lessons in agent development:\nGive the model useful tools, but put real safety checks in code.\nThe tool layer also avoids reading huge files:\nconst MAX_READ_BYTES = 80_000;\nconst MAX_SEARCH_FILE_BYTES = 250_000;\n\nread_file throws an error if a file is too large.\nsearch_text skips files that are too large.\nThis protects the model context and keeps the agent responsive.\nThe propose_patch tool returns:\n{\n  summary,\n  patch,\n  applied: false,\n  note: \"Patch proposal only. Review before applying.\"\n}\n\nThis is a human-in-the-loop design.\nThe agent can help you think and propose changes, but it does not silently modify your files.\nFor a beginner agent, this is a good safety tradeoff.\nThe project uses Vitest.\nFrom package.json:\n{\n  \"scripts\": {\n    \"test\": \"vitest run\",\n    \"test:watch\": \"vitest\"\n  }\n}\n\nThe tests cover the dangerous parts:\nsafeResolve allows normal paths\nsafeResolve blocks ../ traversal\nlist_files handles missing directories\nread_file rejects missing paths and directories\nread_file rejects large files\nsearch_text skips large files\npropose_patch returns applied: false\n\n\n\nExample traversal test:\nexpect(() => safeResolve(fixtureProjectRoot, \"../outside.txt\")).toThrow(/escapes project root/);\n\nExample large-file test:\nawait expect(tools.read_file.run({ path: \"large-read.txt\" })).rejects.toThrow(/too large to read safely/);\n\nTests are not just for correctness here. They protect the safety boundary of the agent.\nIf you run:\nnpm start -- \"Explain src/tools.js\"\n\nthe flow is:\nsrc/cli.js receives the request.\nIt calls runAgent.\nsrc/agent.js creates safe tools.\nThe system prompt describes the rules and tools.\nsrc/ollama.js sends the prompt to local Ollama.\nThe model returns a JSON action.\nIf it asks for a tool, the agent checks the allowlist.\nThe tool runs with safety checks.\nThe tool result goes back to the model.\nThe model returns a final answer.\nThat is an AI agent in practical terms.\nIt is an LLM connected to a controlled loop, safe tools, and clear rules.\nRequirements:\nNode.js 18 or newer\nOllama installed\nMistral pulled locally\nPull the model:\nollama pull mistral\n\nStart Ollama:\nollama serve\n\nRun the agent:\nnpm start\n\nAsk one question:\nnpm start -- \"Explain src/agent.js\"\n\nInspect another project:\nnpm start -- --root /path/to/project \"Find bugs in the main CLI file\"\n\nRun tests:\nnpm test\n\nRun syntax checks:\nnpm run check\n\nAn AI agent is not just an LLM.\nAn AI agent is usually:\nLLM + loop + tools + context + safety rules\n\nIn this project:\nthe CLI gets the user request\nthe agent loop manages steps\nOllama provides the local model\ntools provide controlled abilities\nsafeResolve protects file access\ntests protect the safety behavior\nThe model can request actions, but JavaScript decides what actually runs.\nThat is the key idea.\nThis project is intentionally small, but it teaches the foundation behind many larger agent systems.\nOnce you understand this version, you can explore more advanced ideas like:\nmemory across chat turns\nstreaming model output\nricher tool schemas\npatch validation\nconfirmation-based patch applying\nMCP tools\nRAG over larger codebases\nBut the core idea stays the same:\nMistral is a good simple default for learning, but when you are building stronger coding agents, coding-focused models usually give better results. Good options to try are qwen2.5-coder, deepseek-coder, and Gemma.\nBuild useful tools, keep them narrow, and let your application code enforce the safety boundaries.",
+      "publishedAt": "2026-06-19T03:57:12.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "62a590bcf6d4d62fed000721932a66b6c20e21e0c5854c3d362238ee8ccb4c9d",
+      "title": "From MERN to Next.js: My Journey as a Full Stack Developer",
+      "url": "https://dev.to/pawan_vishwakarma_54577b8/from-mern-to-nextjs-my-journey-as-a-full-stack-developer-4dib",
+      "description": "Hi everyone 👋\nI'm a Full Stack Developer with experience in JavaScript, React.js, Next.js, Node.js, Express.js, MongoDB, and WordPress development.\nOver the last few years, I have worked on multiple projects ranging from company websites to full-stack web applications. In this article, I want to share my experience transitioning from the traditional MERN stack to Next.js and why it has become my preferred framework for modern web development.\nWhy I Started with MERN Stack\nThe MERN stack was my first choice because it allowed me to build complete applications using JavaScript.\nTechnologies\nBenefits\n✅ Single language across frontend and backend\n✅ Huge ecosystem\n✅ Fast development\n✅ Easy API integration\nChallenges I Faced\nAs projects became larger, I started facing issues like:\nSEO limitations\nPerformance optimization\nRouting complexity\nCode organization\nServer-side rendering requirements\nThis is where Next.js entered the picture.\nWhy I Switched to Next.js\nNext.js provides several powerful features out of the box.\nServer-Side Rendering (SSR)\nPages can be rendered on the server which improves SEO and initial page load performance.\n2.** Static Site Generation (SSG)**\nPerfect for blogs, landing pages, and marketing websites.\n3.** App Router**\nThe new App Router makes routing cleaner and more scalable.\nServer Components\nLess JavaScript is sent to the browser, improving performance.\nBetter Developer Experience\nFeatures like:\nFile-based routing\nBuilt-in image optimization\nMiddleware\nAPI routes\nmake development faster and cleaner.\nMy Current Tech Stack\nFrontend\nBackend\nTools\nWhat I Learned\nThe biggest lesson I learned is:\nConclusion\nNext.js has significantly improved my development workflow and application performance.\nIf you're currently working with React and haven't explored Next.js yet, I highly recommend giving it a try.\nThanks for reading! 🚀",
+      "publishedAt": "2026-06-19T03:47:55.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "5afab8c94de4f048abab0c9d4ba3caf4254b4198677058661bdbe6a352c8f1b7",
+      "title": "Structuring TypeScript: Interfaces, Type Aliases, Enums, and Object Types",
+      "url": "https://dev.to/ramesh_s_a8f0867d239e927c/structuring-typescript-interfaces-type-aliases-enums-and-object-types-1gmb",
+      "description": "Structuring TypeScript: Interfaces, Type Aliases, Enums, and Object Types\n\n\nYou've learned TypeScript's primitive types and the basics of type inference here. Now it's time to model real-world data — users, orders, API responses, configuration objects. That's where interfaces, type aliases, and enums come in.\nThese three features are what make TypeScript genuinely powerful for building applications. Let's dig in.\nBefore we get to interfaces, let's understand object types. When you want to describe the structure of an object, you define what properties it has and what types those properties are:\n// Inline object type annotation\nfunction displayUser(user: { name: string; age: number; email: string }): void {\n  console.log(`${user.name} (${user.age}) — ${user.email}`);\n}\n\nThis works, but it's messy to repeat everywhere. That's why we use type aliases and interfaces to name and reuse these shapes.\nA type alias gives a name to any type — primitives, unions, objects, or combinations:\n// Alias for a primitive union\ntype ID = string | number;\n\n// Alias for an object shape\ntype User = {\n  id: ID;\n  name: string;\n  age: number;\n  email: string;\n};\n\n// Now use it anywhere\nconst user: User = {\n  id: 1,\n  name: \"Ramesh\",\n  age: 31,\n  email: \"ramesh@example.com\",\n};\n\nfunction getUser(id: ID): User {\n  // ... fetch user logic\n}\n\nType aliases are flexible — they can represent almost anything.\nAn interface is specifically designed to describe the shape of an object. Syntax is slightly different:\ninterface User {\n  id: number;\n  name: string;\n  age: number;\n  email: string;\n}\n\nconst user: User = {\n  id: 1,\n  name: \"Ramesh\",\n  age: 31,\n  email: \"ramesh@example.com\",\n};\n\nProperties can be marked as optional (?) or read-only (readonly):\ninterface UserProfile {\n  readonly id: number;      // Can't be changed after creation\n  name: string;\n  age?: number;             // Optional — may or may not be present\n  bio?: string;             // Optional\n}\n\nconst profile: UserProfile = { id: 101, name: \"Ramesh\" };\nprofile.id = 999;           // ❌ Error: Cannot assign to 'id' (readonly)\nprofile.age = 31;           // ✅ Fine, optional doesn't mean immutable\n\nInterfaces support inheritance — you can build on existing ones:\ninterface Animal {\n  name: string;\n  sound(): string;\n}\n\ninterface Dog extends Animal {\n  breed: string;\n  fetch(): void;\n}\n\nconst myDog: Dog = {\n  name: \"Bruno\",\n  breed: \"Labrador\",\n  sound: () => \"Woof!\",\n  fetch: () => console.log(\"Fetching...\"),\n};\n\nThis is great for modelling hierarchical data (e.g. AdminUser extends User).\ninterface vs type: When to Use Which\n\n\nThis is one of TypeScript's most debated questions. Here's a practical answer:\n\n\n\nFeature\ninterface\ntype\n\n\n\n\nObject shapes\n✅\n✅\n\n\nPrimitives/unions\n❌\n✅\n\n\nExtending/inheriting\n\nextends keyword\nIntersection (&)\n\n\nDeclaration merging\n✅\n❌\n\n\nUse with classes\n✅ Preferred\nWorks\n\n\n\n// Extending with interface\ninterface Animal { name: string; }\ninterface Dog extends Animal { breed: string; }\n\n// Extending with type (using intersection)\ntype Animal = { name: string; };\ntype Dog = Animal & { breed: string; };\n\nThe honest answer:\nUse interface for objects that represent real-world entities (users, products, components)\nUse type for unions, intersections, utility combinations, and when you need to alias primitive types\nIn most modern TypeScript codebases, both work. Just be consistent within a project.\nAn enum is a set of named constant values. Instead of using magic strings or numbers scattered across your code, you define them once:\nenum Direction {\n  Up,    // 0\n  Down,  // 1\n  Left,  // 2\n  Right, // 3\n}\n\nfunction move(dir: Direction): void {\n  console.log(`Moving in direction: ${dir}`);\n}\n\nmove(Direction.Up);    // ✅ Clean, readable\nmove(0);               // ✅ Also works (but less clear)\nmove(\"Up\");            // ❌ Error\n\nValues auto-increment from 0. You can override the starting number:\nenum StatusCode {\n  OK = 200,\n  NotFound = 404,\n  ServerError = 500,\n}\n\nconsole.log(StatusCode.OK); // 200\n\nenum OrderStatus {\n  Pending = \"PENDING\",\n  Processing = \"PROCESSING\",\n  Shipped = \"SHIPPED\",\n  Delivered = \"DELIVERED\",\n  Cancelled = \"CANCELLED\",\n}\n\nfunction updateOrderStatus(orderId: number, status: OrderStatus): void {\n  console.log(`Order ${orderId} is now: ${status}`);\n}\n\nupdateOrderStatus(1001, OrderStatus.Shipped);\n// Output: Order 1001 is now: SHIPPED\n\nString enums are preferred because the values are human-readable in logs, APIs, and debugging.\n// Union type approach\ntype OrderStatus = \"PENDING\" | \"SHIPPED\" | \"DELIVERED\";\n\n// Enum approach\nenum OrderStatus {\n  Pending = \"PENDING\",\n  Shipped = \"SHIPPED\",\n  Delivered = \"DELIVERED\",\n}\n\nUse union types when the values are simple and stable. Use enums when you need a named, reusable group of constants — especially when the values are used across many files.\nHere's how interfaces, type aliases, and enums work together in a realistic scenario:\n// Enum for user roles\nenum UserRole {\n  Admin = \"ADMIN\",\n  Editor = \"EDITOR\",\n  Viewer = \"VIEWER\",\n}\n\n// Base interface for all users\ninterface BaseUser {\n  readonly id: number;\n  name: string;\n  email: string;\n  createdAt: Date;\n}\n\n// Extended interface with role\ninterface AppUser extends BaseUser {\n  role: UserRole;\n  lastLogin?: Date;\n}\n\n// Type alias for API response shape\ntype ApiResponse<T> = {\n  success: boolean;\n  data: T;\n  error?: string;\n};\n\n// Function using all of the above\nfunction createUser(name: string, email: string, role: UserRole): ApiResponse<AppUser> {\n  const newUser: AppUser = {\n    id: Math.random(),\n    name,\n    email,\n    role,\n    createdAt: new Date(),\n  };\n\n  return {\n    success: true,\n    data: newUser,\n  };\n}\n\nconst result = createUser(\"Ramesh\", \"ramesh@example.com\", UserRole.Admin);\nconsole.log(result.data.role); // \"ADMIN\"\n\nNotice how the types tell a clear story. You don't need to read the function implementation to understand what it takes and what it returns.\nMistake 1: Over-nesting object types\n// ❌ Hard to read and reuse\ninterface Order {\n  user: {\n    id: number;\n    address: {\n      street: string;\n      city: string;\n    };\n  };\n}\n\n// ✅ Break it out into named types\ninterface Address {\n  street: string;\n  city: string;\n}\n\ninterface OrderUser {\n  id: number;\n  address: Address;\n}\n\ninterface Order {\n  user: OrderUser;\n}\n\nMistake 2: Numeric enums in APIs\n// ❌ Numeric enum values in API responses are confusing\nenum Status { Active, Inactive } // 0, 1 in JSON — meaningless without context\n\n// ✅ String enums are self-documenting\nenum Status { Active = \"ACTIVE\", Inactive = \"INACTIVE\" }\n\nHere's what to remember from this post:\nObject types describe the shape of an object inline\nType aliases (type) name any type — great for unions, intersections, and flexibility\nInterfaces (interface) define object contracts — great for classes, extension, and real-world entities\nUse readonly for immutable properties, ? for optional ones\nEnums group related constants — prefer string enums for readability\nCombine all three to model complex, real-world data clearly\nYou've completed the TypeScript Beginners Series. You now understand the full foundation: types, inference, arrays, tuples, unions, interfaces, aliases, and enums. That's everything you need to start writing real TypeScript confidently.\nFound this helpful? Follow for the rest of the series. Questions or corrections? Drop them in the comments.",
+      "publishedAt": "2026-06-19T03:27:06.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "1eae67977c17653dd808533e477aa8feb6763a8508851221c170487472c4aa1b",
+      "title": "「この写真を復元して」と入力するだけ、ChatGPTが過激な画像を生成する抜け穴が発覚",
+      "url": "https://japan.cnet.com/article/35249158/",
+      "description": "「ChatGPT」が「この写真を復元して」というプロンプトによって、性的で生々しい暴力表現を含む画像を容易に生成していたことが分かった。AIサイバーセキュリティ・調査会社であるMindgardが報告書を公開した。",
+      "publishedAt": "2026-06-19T03:27:00.000Z",
+      "feedName": "CNET Japan"
+    },
+    {
+      "id": "66ab97380df2eb4e750f9e01507ebf70340cd70e12fb77cc6729362b0cdc1568",
+      "title": "TypeScript Types Demystified: Simple Types, Special Types, and Type Inference",
+      "url": "https://dev.to/ramesh_s_a8f0867d239e927c/typescript-types-demystified-simple-types-special-types-and-type-inference-5bf0",
+      "description": "TypeScript Types Demystified: Simple Types, Special Types, and Type Inference\n\n\nIn the first post, we covered why TypeScript exists and how to write your first program. Now it's time to get comfortable with the type system itself — the foundation everything else is built on.\nBy the end of this post, you'll know how to type variables, arrays, and function parameters correctly. You'll also understand the \"special\" types that trip up most beginners: any, unknown, never, and void.\nTypeScript's basic types map directly to JavaScript's primitives:\n// string\nlet firstName: string = \"Ramesh\";\nlet greeting: string = `Hello, ${firstName}`;\n\n// number (no separate int/float — it's all number)\nlet age: number = 31;\nlet price: number = 9.99;\nlet hex: number = 0xFF;\n\n// boolean\nlet isLoggedIn: boolean = true;\nlet hasAccess: boolean = false;\n\nThese are the types you'll use most often. Simple, predictable, and exactly what you'd expect.\nYou don't always have to write the type. TypeScript infers it from the value you assign:\nlet city = \"Chennai\";    // TypeScript infers: string\nlet year = 2026;         // TypeScript infers: number\nlet isActive = true;     // TypeScript infers: boolean\n\nOnce inferred, that type is locked in:\nlet city = \"Chennai\";\ncity = 42; // ❌ Error: Type 'number' is not assignable to type 'string'\n\nRule of thumb: Let TypeScript infer types for local variables. Write explicit annotations for function parameters and return types.\n// Let inference work for variables\nconst scores = [95, 87, 72]; // inferred as number[]\n\n// Be explicit for function signatures\nfunction calculateAverage(scores: number[]): number {\n  return scores.reduce((a, b) => a + b, 0) / scores.length;\n}\n\n// ✅ Explicit annotation — good for function params & return types\nfunction formatName(first: string, last: string): string {\n  return `${first} ${last}`;\n}\n\n// ✅ Inferred — good for simple variable assignments\nconst result = formatName(\"Ramesh\", \"Kumar\"); // inferred as string\n\n// ❌ Over-annotating — redundant when value makes it obvious\nconst count: number = 5; // The `= 5` already tells TypeScript it's a number\n\nArrays hold multiple values of the same type:\n// Two equivalent syntaxes\nlet tags: string[] = [\"typescript\", \"javascript\", \"react\"];\nlet scores: Array<number> = [95, 87, 72];\n\n// TypeScript will catch wrong types in arrays\ntags.push(42); // ❌ Error: Argument of type 'number' is not assignable to type 'string'\n\nTuples are fixed-length arrays where each position has a specific type:\n// A tuple: exactly [string, number]\nlet user: [string, number] = [\"Ramesh\", 31];\n\n// Order and types are both enforced\nlet wrongOrder: [string, number] = [31, \"Ramesh\"]; // ❌ Error\n\n// Accessing tuple elements\nconsole.log(user[0]); // \"Ramesh\" — TypeScript knows this is string\nconsole.log(user[1]); // 31 — TypeScript knows this is number\n\nTuples are great for things like coordinate pairs, key-value pairs, or when returning multiple values from a function:\nfunction getMinMax(numbers: number[]): [number, number] {\n  return [Math.min(...numbers), Math.max(...numbers)];\n}\n\nconst [min, max] = getMinMax([3, 1, 7, 2, 9]);\n// min: number, max: number — fully typed!\n\nSometimes a value can legitimately be more than one type. That's what union types handle:\n// This function accepts string OR number\nfunction formatId(id: string | number): string {\n  return `ID-${id}`;\n}\n\nformatId(\"abc123\"); // ✅\nformatId(42);       // ✅\nformatId(true);     // ❌ Error: boolean not in the union\n\nUnion types are especially useful for API responses, form inputs, and optional values:\n// A status that can only be one of these three strings\nlet orderStatus: \"pending\" | \"shipped\" | \"delivered\";\n\norderStatus = \"shipped\";   // ✅\norderStatus = \"cancelled\"; // ❌ Error: not in the union\n\n// A value that might not exist yet\nlet userId: number | null = null;\nuserId = 101; // Fine, it's assigned now\n\nany, unknown, never, void\n\n\nThese four confuse most beginners. Here's each one explained clearly.\nany — The Escape Hatch (Use Sparingly)\n\n\nany turns off TypeScript's type checking for that value:\nlet data: any = \"hello\";\ndata = 42;        // Fine\ndata = true;      // Fine\ndata.foo.bar();   // Fine — no error, even if this blows up at runtime!\n\nWhen to use it: Almost never. any defeats the purpose of TypeScript. It's there as a last resort when migrating old JavaScript code.\n// ❌ Overusing any — you've lost all type safety\nfunction processData(input: any): any { ... }\n\n// ✅ Be specific whenever possible\nfunction processData(input: string[]): number { ... }\n\nunknown — The Safe Version of any\n\n\nunknown says \"this could be anything, but I need to check before I use it\":\nlet userInput: unknown = getUserInput();\n\n// ❌ Can't use unknown directly\nconsole.log(userInput.toUpperCase()); // Error!\n\n// ✅ Must narrow the type first\nif (typeof userInput === \"string\") {\n  console.log(userInput.toUpperCase()); // Now it's safe\n}\n\nPrefer unknown over any when you genuinely don't know the type. It forces you to handle the uncertainty explicitly.\nvoid — Functions That Return Nothing\n\n\nUse void when a function doesn't return a value:\nfunction logMessage(message: string): void {\n  console.log(message);\n  // No return statement needed\n}\n\n// Trying to use the return value of a void function makes no sense\nconst result = logMessage(\"hello\"); // result is void — useless\n\nnever — Code That Never Completes\n\n\nnever represents values that never occur. It's used for:\nFunctions that always throw an error\nFunctions with infinite loops\nExhaustive type checking\n\n\n\n\n// Always throws — never returns\nfunction throwError(message: string): never {\n  throw new Error(message);\n}\n\n// Exhaustive check — if you add a new status and forget to handle it,\n// TypeScript will error here\nfunction handleStatus(status: \"active\" | \"inactive\"): string {\n  if (status === \"active\") return \"User is active\";\n  if (status === \"inactive\") return \"User is inactive\";\n\n  // This line should be unreachable\n  const _exhaustive: never = status; // ❌ Error if you missed a case\n  return _exhaustive;\n}\n\nnever is an advanced concept — don't worry if it doesn't fully click yet. You'll encounter it naturally as you write more TypeScript.\n// Primitives\nlet name: string = \"Ramesh\";\nlet age: number = 31;\nlet active: boolean = true;\n\n// Arrays\nlet tags: string[] = [\"ts\", \"js\"];\nlet ids: number[] = [1, 2, 3];\n\n// Tuples\nlet point: [number, number] = [10, 20];\n\n// Union\nlet id: string | number = \"abc\";\nlet status: \"on\" | \"off\" = \"on\";\n\n// Special types\nlet anything: any = \"...\";     // Avoid when possible\nlet safeAny: unknown = \"...\";  // Safer — must narrow before use\nfunction log(): void { ... }   // No return value\nfunction fail(): never { throw new Error(); } // Never returns\n\nThe TypeScript type system is deep, but the everyday usage is straightforward. Here's what to take away:\nPrimitives — string, number, boolean cover most cases\nType inference — TypeScript is smart; you don't need to annotate everything\nArrays — string[] or Array<string>, your choice\nTuples — fixed-length, fixed-type arrays\nUnion types — when a value can be more than one type\nany — avoid it; unknown — use this instead when you must\nvoid — functions with no return; never — functions that never return normally\nFound this helpful? Follow for the rest of the series. Questions or corrections? Drop them in the comments.",
+      "publishedAt": "2026-06-19T03:22:28.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "9f0ec9fcb2355d435eec0ef9c7fc1c0ca69dd53bc89da55e984c9cb606f5d28f",
+      "title": "TypeScript 7.0 RCリリース ―Go言語ベースに移植され10倍高速に",
+      "url": "https://gihyo.jp/article/2026/06/typescript-7-0-rc?utm_source=feed",
+      "description": "Microsoftは2026年6月18日、TypeScript 7.0のリリース候補版（RC）をリリースした。",
+      "publishedAt": "2026-06-19T02:46:00.000Z",
+      "feedName": "gihyo.jp"
+    },
+    {
+      "id": "b49fac0541056f837df996a8a44c012ef7c966ca1fed0b3921a4ad5b1217231c",
+      "title": "インスタンスタイプ変更前に知っておきたい AWS PV ドライバーの話",
+      "url": "https://dev.classmethod.jp/articles/ec2-instance-device-drivers-pv-driver/",
+      "description": "EC2 インスタンスタイプ変更前の準備作業として登場する「AWS PV ドライバー」について調査しました。EC2 のデバイスドライバー全体像と合わせて整理しています。",
+      "publishedAt": "2026-06-19T01:54:01.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "9a74ff2c14db547809252f3565fc80e9fd6cc2d56768cb591b6a5870af677b4f",
+      "title": "ほぼ新記録なしに終わった ドーピングOK競技会 本当の目的は薬の宣伝",
+      "url": "https://www.technologyreview.jp/s/384469/the-steroid-olympics-were-a-circus-and-a-window-into-our-culture/",
+      "description": "パフォーマンス向上薬の使用を推奨する初の競技会「エンハンスト・ゲームズ」が、2026年5月に米ラスベガスで開かれた。「自分の体は自分で決める」を掲げ、薬で世界記録を塗り替えると謳っていたが、主要種目を制したのは薬を使わない選手で、新記録はほとんど出なかった。主催企業の目的であるホルモン剤やペプチドの宣伝は達成されたか。",
+      "publishedAt": "2026-06-19T01:53:23.000Z",
+      "feedName": "MITテクノロジーレビュー"
+    },
+    {
+      "id": "6b0f5b4600a836b7f6be45e7bedad313e9ae21c8ae8fb84815c327a77e279d64",
+      "title": "【Martin Fowler氏 来日】ソフトウェア設計の世界的権威が登壇 、「アーキテクチャConference 2026」スポンサー募集を開始",
+      "url": "https://prtimes.jp/main/html/rd/p/000000246.000045379.html",
+      "description": "エンジニアプラットフォームを提供するファインディ株式会社（東京都品川区、代表取締役：山田 裕一朗、以下「当社」）は、「アーキテクチャConference 2026」のスポンサー募集を開始したことを発表します。本カンファレンスは、スタートアップ・ベンチャー企業から大企業まで幅広い規模・分野のアーキテクチャに関する...",
+      "publishedAt": "2026-06-19T01:16:39.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "0bf7b889f87e104d9c482699a0ac33e0bfeb1bd4bf154543c75260f7b64d9f30",
+      "title": "google-adk 2.2.0 更新後に /a2aが404になってAnalysis Templateが失敗する",
+      "url": "https://tech.uzabase.com/entry/2026/06/19/101024",
+      "description": "はじめに 私たちのプロダクトチームでは、AI Agentの開発にGoogle ADK (Agent Development Kit)を利用しています。 過去に開発したエージェントを段階的に成長させる形でバージョンアップを行っていますが、その過程で少しニッチなエラーに遭遇し、デプロイがブロックされる事象が発生しました。 今回は、その原因と解決策について備忘録を兼ねてまとめます。 起きた問題：アップデート後にSmoke Testが404エラーで落ちる 私たちは Argo Rollouts を利用してデプロイを行っており、AnalysisTemplate を用いたスモークテストを自動実行しています。…",
+      "publishedAt": "2026-06-19T01:10:24.000Z",
+      "feedName": "Uzabase for Engineers"
+    },
+    {
+      "id": "0d38faed725aa5d57a18fd34e56d88b8d8735446a4cad3c6fe491e6e2d673b40",
+      "title": "AIエージェントとシステムをつなぐMCP入門（プロンプト編）",
+      "url": "https://developer.mamezou-tech.com/blogs/2026/06/19/mcp-impl_prompt/",
+      "description": "はじめに\n#\n本ページは「AIエージェントとシステムをつなぐMCP入門」の続編です。\nMCPのプロンプトは、MCPクライアント向けにテンプレート化されたメッセージやワークフローを提供する機能です。\n本記事で掲載しているコードはこちらで公開しています。\n -->\n  シリーズ目次\n連載：AIエージェントとシステムをつなぐMCP入門\nイントロダクション\nstdio実装編\nStreamableHTTPステートレス実装編\nStreamableHTTPステートフル実装編\nプロンプト編（本ページ）\n今回使用するライブラリなど\n#\nnpm@11.11.1\nnode@22.22.0\ntypescript@6.0.3\n@modelcontextprotocol/sdk@1.29.0\nzod@4.3.6\n使用例\n#\n定形タスクのテンプレート化: コード生成やレビューなど利用頻度の高い指示をテンプレート化することで、クライアント側の指示作成を省略できます\nペルソナやルールの適用: 役割や出力形式の制約をコンテキストとして適用します\nワークフローのテンプレート化: ツールの利用順序などを定義して一連の流れをガイドします\n実装サンプル\n#\nコードの全体はこちらをご覧ください。\n定形タスクのテンプレート化\n#\n定形タスクであるレビュー指示をテンプレート化した実装例です。\nargsSchema（引数スキーマ）: プロンプトの変数部分を定義するもの\nmessages: roleとcontentで構成されるメッセージ配列\n\nrole: メッセージのスピーカーを示す識別子で、user/assistantのいずれかを設定します\n\nuser（ユーザー）: 人間からの入力を表します。ここにAIへの指示（プロンプト本文）を記述します。\nassistant（アシスタント）: AIからの返答を表します。\n -->\n  プロンプトの指示だけではレスポンスの形式がブレてしまう場合\n出力形式の「見本（Few-shot）」をあらかじめAI自身の返答として配置しておくことで、精度の高い結果を引き出せます。\ncontent: メッセージ本体。サンプルはテキストのみですが、バイナリ（画像、音声、埋め込みリソース）も扱えます。\n\ntext（テキスト）: プレーンテキストのメッセージで、自然言語のやりとりで一般的に使用されるタイプ\nimage（画像）: 視覚的な情報を含むメッセージ\naudio（音声）: 音声情報を含むメッセージ\nresource（埋め込みリソース）: サーバーのリソース（ドキュメント、コードサンプルなど）を会話に組み込む。\n -->\n  バイナリを扱う場合\nBase64でエンコードし、適切なMIMEタイプの設定が必要です。\n  // プロンプト：コードレビュー指示をテンプレート化\n  server.registerPrompt(\n    \"code-review-prompt\",\n    {\n      title: \"code-review-prompt\",\n      description: \"コードレビュー指示\",\n      // 引数スキーマの定義：MCP InspectorなどのMCPクライアントのUIで入力フォームとして表示され、サーバー側の関数に渡されます。\n      argsSchema: {\n        specPath: z.string().describe(\"仕様書パス\"),\n        codePath: z.string().describe(\"対象コードパス\"),\n      },\n    },\n    async ({ specPath, codePath }) => {\n      return {\n        messages: [\n          // user: プロンプト本文\n          {\n            role: \"user\",\n            content: {\n              type: \"text\",\n\t\t\t        // 実務ではもっと細かい指示が必要になりますが、行数を抑えるため最小限に留めています\n              text: [\n                \"コードレビュー指示\",\n                \"あなたはNode.js/TypeScriptのバックエンド開発スペシャリストです。\",\n                \"* 優先観点: 仕様整合性、例外設計、認可制御、トランザクション制御、性能、保守性、セキュリティ。\",\n                \"* 禁止: 推測で仕様補完しない。根拠のない断定をしない。\",\n                \"* 指摘の重大度: High(必須)/Medium(基本的に対応)/Low(できるだけ対応)を付ける。\",\n                \"* 指摘は「問題」「対象個所」「修正案」を1行で示す。\",\n                \"* 出力は最大10件、重複指摘は統合する。\",\n                \"* 改善コードが必要なら最小差分で提案する。\",\n                `* 仕様書パス: ${specPath}`,\n                `* 対象コードパス: ${codePath}`,\n              ].join(\"\\n\"),\n            },\n          },\n          // assistant: 見本\n          {\n            role: \"assistant\",\n            content: {\n              type: \"text\",\n              text: [\"（コードレビュー指摘の出力例）\",\n                \"1. High: [問題] 仕様に記載のないAPIエンドポイントが存在する。 [対象個所] src/api/user.tsのgetUser関数。 [修正案] 不要なエンドポイントなら削除、仕様が古いなら更新して整合させる。\",\n\t\t\t\t// omit\n              ].join(\"\\n\")},\n          },\n        ],\n      };\n    },\n  );\n\n\n  \n\n\n動作確認（MCP Inspector）\n\nワークフローのテンプレート化\n#\nツールの実行順序をテンプレート化した実装例です。\n  // プロンプト: 指示やワークフローをテンプレート化。\n  server.registerPrompt(\n    \"inventory-check-workflow\",\n    {\n      title: \"inventory-check-workflow\",\n      description: \"在庫確認ワークフロー\",\n      argsSchema: {\n        orderNo: z.string().describe(\"受注番号\"),\n      },\n    },\n    async ({ orderNo }) => {\n      const prompt = [\n        \"在庫確認ワークフロー\",\n        `1. tools/callでget-orderを実行してください。（引数 orderNo: \"${orderNo}\"）`,\n        \"2. tools/callでcheck-attached-inventoryを実行してください。（引数: orderId: 1のレスポンスのorderId, quantity: 1のレスポンスのquantityの合計）\",\n        \"3. 2のレスポンスのavailableがtrueなら「在庫引当済み」、falseなら「在庫不足」と返してください。\",\n      ].join(\"\\n\")\n      return {messages: [{role: \"user\", content: {type: \"text\", text: prompt,}}]};\n    },\n  );\n  server.registerTool(\n    \"get-order\",\n\t// omit: 今回は固定値を返すだけの実装にしています\n  );\n  server.registerTool(\n    \"check-attached-inventory\",\n\t// omit: 今回は固定値を返すだけの実装にしています\n  );\n\n\n  \n\n\n動作確認（MCP Inspector）\n\nプロンプトの利用（VS Code）\n\nまとめ\n#\nプロンプトは、定形タスクを標準化したい場面で効果を発揮します。\nプロンプト内でツールの呼び出し順序を指示し、同じサーバー内にそのツールをregisterToolで用意しておくと、LLMが指示にしたがって自律的にツールを呼び出し、一連の作業を自動完結できます。\n次編ではリソースを扱います。",
+      "publishedAt": "2026-06-19T00:00:00.000Z",
+      "feedName": "豆蔵デベロッパーサイト"
+    },
+    {
+      "id": "4e13806bd3b4c1af26265a887d6c3b442c25287eee1324730195953451591366",
+      "title": "Vercel、エージェント構築のためのフレームワーク「eve」をリリース ―“エージェントにおけるNext.js”を目指す",
+      "url": "https://gihyo.jp/article/2026/06/eve?utm_source=feed",
+      "description": "Vercelは2026年6月17日、AIエージェントを構築、実行するためのオープンソースのフレームワーク「eve」を発表、パブリックプレビューとしてリリースした。",
+      "publishedAt": "2026-06-18T23:43:00.000Z",
+      "feedName": "gihyo.jp"
+    },
+    {
+      "id": "25362f244a74b594089f1e4a08a8956a0e0509cce7a36ece36afa6310d9f871d",
+      "title": "「MacBook」で「Linux」を簡単に実行--新ツール「container」の使用方法",
+      "url": "https://japan.zdnet.com/article/35249088/",
+      "description": "筆者はこれまで、「Docker」「Docker Desktop」「Podman」「Portainer」など、あらゆる種類のコンテナーツールを使ってきた。コンテナー関連の作業のほとんどは各種「Linux」マシンで処理してきたが、「MacBook」で作業したくなることもある。どちらを使用するにせよ、選択肢は常に存在することに気づいた。 筆者の（Mac...",
+      "publishedAt": "2026-06-18T22:49:49.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "b24ca5a7b77d843d781efd410525371ce077eea5d9763f58a1838f6c2a27ce57",
+      "title": "「ログを取っているから安心」が危ない　攻撃者はクラウドログを“監視ツール”に変える",
+      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2606/19/news046.html",
+      "description": "ログは攻撃の痕跡を追うための重要な証拠という常識が揺らぎつつある。Palo Alto Networksは、AWSとGoogle Cloudのログ管理機能を悪用する複数の攻撃手法を分析した。攻撃者はログを隠すだけでなく、意外な方法で被害環境を監視し続けられるという。",
+      "publishedAt": "2026-06-18T22:30:00.000Z",
+      "feedName": "＠IT"
+    },
+    {
+      "id": "01a9a24c3be236ca24a3c5ddec8431e4ec4b3f3f390874aeb63fa4db1bf62601",
+      "title": "人もいなけりゃ権限もなし、実害ゼロでも感謝なし――セキュリティ兼務の運用担当者が抱える“モヤモヤ”の正体",
+      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2606/19/news018.html",
+      "description": "セキュリティ業務を兼務するシステム運用管理担当者は、何に悩んでいるのでしょうか。＠ITのヒアリングからは、技術的な課題だけでは語れない現場の実態が見えてきました。",
+      "publishedAt": "2026-06-18T20:00:00.000Z",
+      "feedName": "＠IT"
+    },
+    {
+      "id": "645c4ed55d1f82463d3b27f6bbc58c291fd97cbb63a392d199e86a970da3dcba",
+      "title": "【アップデート】DevOps Agentにリリース管理の機能が追加されたので、コードレビューを試してみた",
+      "url": "https://dev.classmethod.jp/articles/devops-agent-support-release-management/",
+      "description": "DevOps Agentにリリース管理の機能が追加され、Devの機能が強化されました。\n現在パブリックプレビュー中なので、コードレビューや自動テストといった便利機能が無料で利用可能です。\nどんどん試していきましょう！",
+      "publishedAt": "2026-06-18T13:19:54.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "6257440a92f2f302bb9bf88939e9ebca32fb71ece1d577d4b6de526095c33032",
+      "title": "VR × モーションキャプチャ × AI でパデルフォームを可視化する ── AWS Builders’ Fair 展示のご紹介",
+      "url": "https://aws.amazon.com/jp/blogs/news/vr-motion-capture-ai-padel-form-visualization/",
+      "description": "MetaQuestによるVR空間にて、HaritoraXでのモーショントラッキング技術とカメラによるMoveNetによる骨格推定を合わせて、パデルのフォーム分析。パデルトッププレイヤーとどのようにフォームが異なるのかを評価。AWS Summit 2026 Builders Fairのブースに出展。",
+      "publishedAt": "2026-06-18T12:46:16.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "a96ef2962cbb89a881dd21e3c9f6b0a98e88bd059ee785487faf31dbe9d0a21e",
+      "title": "Amazon OpenSearch Service による「EC サイト検索ワークショップ」と「Observability Stack ワークショップ」のご紹介",
+      "url": "https://aws.amazon.com/jp/blogs/news/introducing-amazon-opensearch-service-ec-search-observability-workshops-jp/",
+      "description": "2025 年 3 月に Amazon OpenSearch Service による検索ワークショップ（日本語版）のご紹介 という記事を公開し、OpenSearch の基本概念から AI を活用した検索までを学べる日本語ワークショップをご案内しました。 このたび、2 つの日本語版ワークショップが仲間入りいたしましたので、ご紹介いたします。 EC サイト検索ワークショップ：架空の EC サイトを題材に、検索機能を全文検索からセマンティック検索、マルチモーダル検索、エージェント検索へと段階的に育てていくワークショップです。また、ユーザーの行動ログを使った品質計測、機械学習による最適化を体験いただける実験的なラボも付属しています。 OpenSearch Observability Stack ワークショップ：OpenSearch を Observability のバックエンドとして使い、マイクロサービスの APM・ログ・メトリクスを横断しながら、Agentic AI も活用して障害の原因を調査するワークショップです。Agent Trace といった新しい OpenSearch の Observability 関連機能もお試しいただけます。",
+      "publishedAt": "2026-06-18T08:35:26.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "e0a36c759c54b84a639a61e56c2c0c20e5cf841cf950c7587a49a7337f64672a",
+      "title": "「上限500万円、費用が半分に」　東京都が中小企業のセキュリティ対策助成金の申請を受け付け",
+      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2606/18/news058.html",
+      "description": "東京都と東京都中小企業振興公社が都内の中小企業などを対象とした「サイバーセキュリティ対策促進助成金」について、令和8年度の申請を受け付ける。",
+      "publishedAt": "2026-06-18T08:25:00.000Z",
+      "feedName": "＠IT"
+    },
+    {
+      "id": "16e62a0781eb3863ef91bf2f703b684cb5e5397e2b5b6ebb695d3a848546d08d",
+      "title": "[アップデート] AWS Security Agent に脅威モデリング機能が追加され、設計ドキュメントやソースコードから STRIDE ベースの脅威分析を自動生成できるようになりました",
+      "url": "https://dev.classmethod.jp/articles/aws-security-agent-threat-modeling/",
+      "description": "[アップデート] AWS Security Agent に脅威モデリング機能が追加され、設計ドキュメントやソースコードから STRIDE ベースの脅威分析を自動生成できるようになりました",
+      "publishedAt": "2026-06-18T08:15:06.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "18a10de1f15b32bcb6526b6c62368333e27c5891962b00eeb7457f95cb5baaff",
+      "title": "ニューヨークで開催される 2026 年の AWS Summit に関する主要なお知らせ",
+      "url": "https://aws.amazon.com/jp/blogs/news/top-announcements-of-the-aws-summit-in-new-york-2026/",
+      "description": "2026 年 6 月 17 日、ニューヨーク市で開催された AWS Summit では、AWS VP of A […]",
+      "publishedAt": "2026-06-18T08:06:37.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "85bac2bda597d5af2323ed828e938a61b3627728bc22a2414e98a8c0ed07b5c5",
+      "title": "メモリ管理の基本と、Railsで省メモリに書くための実装Tips",
+      "url": "https://qiita.com/akachiryo/items/30c076850c90e50da118?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "お疲れ様です！\n皆さんは普段パフォーマンスを意識してコードを書いていますか？ \nエンジニアなりたての頃は意識していなかったのですが、いろいろな経験を通して学ぶことができました！\n今まで言語化してこなかったので自分の中で整理しつつ、メモリ管理について簡潔にまとめてみました！\n...",
+      "publishedAt": "2026-06-18T06:30:18.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "6fcaf020980393ef5ce6dd2b1f1371b00c4ba66fbec7f124afa9b8b1cbc03090",
+      "title": "AWSに繋げなくてもテストできる？新サービス「AWS Blocks」を触ってみた",
+      "url": "https://zenn.dev/aws_japan/articles/aws-blocks-ai-agent-intro",
+      "description": "はじめに\n先日、AWSから AWS Blocks という新しい開発者向けツールがリリースされました。\nドキュメントをひと通り読んで実際にAIエージェントのデモアプリを作ってみたら、思っていた以上に「これは良いぞ」となったので紹介します。結論から言うと、「ローカルで即動く・AWS接続不要・そのままデプロイできる」 ツールです。\nこの記事では、\n\nAWS Blocks って結局なに？\nなにが嬉しいの？\n実際にAIエージェントアプリを作って動かしてみる\n\nという流れで、コード多めで紹介していきます。\n!\nこの記事の内容は v0.1.1 時点のものです。出たばかりのサービスなので、APIは今...",
+      "publishedAt": "2026-06-18T06:20:23.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "95cc24d5bc09550e383430d12486503ca42a16395ebd0489db766ce7bd5d58e9",
+      "title": "【Security Hub修復手順】[RDS.51] RDS グローバルクラスターは、サポートされている Aurora MySQL バージョンで実行する必要があります",
+      "url": "https://dev.classmethod.jp/articles/securityhub-fsbp-remediation-rds-51/",
+      "description": "AWS SecurityHub 基礎セキュリティのベストプラクティスコントロール修復手順をご紹介します。",
+      "publishedAt": "2026-06-18T06:11:12.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "882c9cf93fd3f552f7da78fba92c24734e8af5d0b3970501b35116710bb2dd87",
+      "title": "Flipkart Wins CNCF End User Case Study Contest for Kubernetes and Chaos Engineering Scale",
+      "url": "https://www.cncf.io/announcements/2026/06/17/flipkart-wins-cncf-end-user-case-study-contest-for-kubernetes-and-chaos-engineering-scale/",
+      "description": "Integration of LitmusChaos with Kubernetes-native architecture drives production-grade reliability for India’s largest e-commerce platform Key Highlights KUBECON + CLOUDNATIVECON INDIA, MUMBAI, India — June 18, 2026 — The Cloud Native Computing Foundation® (CNCF®), which builds sustainable...",
+      "publishedAt": "2026-06-18T06:00:00.000Z",
+      "feedName": "Cloud Native Computing Foundation"
+    },
+    {
+      "id": "335c40d98139c7920d032b1c3c89265931f8dd763641d7738153866e7c3abd5c",
+      "title": "Tackling Anti-patterns ด้วย AI-Driven Development Lifecycle (AI-DLC): บทเรียนจาก AWS Summit Bangkok 2026",
+      "url": "https://dev.classmethod.jp/articles/aws-ai-dlc-anti-patterns-2026-th/",
+      "description": "สรุป session DVT304 จาก AWS Summit Bangkok 2026 ว่าด้วย anti-patterns ที่พบบ่อยเมื่อนำ AI เข้ามาช่วยพัฒนาซอฟต์แวร์ พร้อมแนวทางแก้ด้วย AI-Driven Development Lifecycle (AI-DLC) และเคสจริงของ AXONS ที่เร่ง UI testing ด้วย Kiro จนสเกล automation ได้กว่า 3 เท่า",
+      "publishedAt": "2026-06-18T04:09:33.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "db2f99fc9e8e8a67c340526cc2d27e730e1384d28336ecf42dc38f310bf664c6",
+      "title": "友人の会社の「既存の勤怠アプリが高すぎる」問題を、Firebase + Reactの完全無料なWebアプリを作って解決した話",
+      "url": "https://qiita.com/keishin_nishiura/items/607804ea831416b49ee4?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "1. はじめに\nソーイ株式会社の西浦です。\n今回は、友人の要望を受けて個人で開発した「勤怠管理アプリ」について、技術的なアプローチや開発の進め方を記事にまとめました。\nことの発端は、友人の会社が抱えていたコストの課題です。従業員数が数名（約10名）と小規模なのですが、「既...",
+      "publishedAt": "2026-06-18T03:13:10.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "8977926de9db89872bcf5efb5d01f73273ccf49c8a9ad1702b500c5630af6ebe",
+      "title": "「テスト対象がない」をAIで解決した話 ─ QAエンジニアがPlaywright・APIテスト・CI/CDを学ぶまで",
+      "url": "https://qiita.com/kenji-m/items/e5afce6610de40734443?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "🧑‍💻 はじめに\nQAエンジニアとして働いていると、\n\nPlaywrightでE2Eテストを書いてみたい\nAPIテストを実践してみたい\nGitHub ActionsでCI/CDを構築してみたい\n\nと思うことはありませんか？\n私自身も以前から興味はあったのですが、学習を進め...",
+      "publishedAt": "2026-06-18T01:26:24.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "d32b4ac85e6d812dae9629cf33c00c5d8c3e41edbdcb14c4f514c5d4e42356bf",
+      "title": "AWS Summit New York 2026 での新発表まとめメモ",
+      "url": "https://qiita.com/hayao_k/items/44b25e2a51d12482a308?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "本記事は Amazon Quick と一緒に書きました\n\nはじめに\n現地時間 2026/6/17 に開催されている AWS Summit New York 2026 で今年も多くのアップデートが発表されました。本記事では基調講演などでの発表も踏まえて日本語で概要をま...",
+      "publishedAt": "2026-06-17T18:48:47.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "045f9ea1912cd6e4911baa7f48347f77f8a21784e4679f009f218ea5b65860c0",
+      "title": "【AWS】Managed Knowledge Basesが発表！AgentCoreから試してみました",
+      "url": "https://qiita.com/yakumo_09/items/1b4ab7d392a85c1b4612?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\nAWS Summit NewYorkで以下の新機能、アップデートが発表されました。\n早速試してみましたので、ぜひ読んでみてください。\n\nどんなアップデートか\n\nAgentCore Gatewayからナレッジベースをツールとして利用可能に\nAge...",
+      "publishedAt": "2026-06-17T17:44:06.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "6bd933d2ad078ef0d49360690e810cea878c06a53bffce6ed94064eeb9411838",
+      "title": "Node.jsで動くのにDenoで動かないJavaScript",
+      "url": "https://zenn.dev/monicle/articles/74ad93709c2199",
+      "description": "Node.jsで動くのに，Denoで動かないJavaScriptのコードに偶然出会しました．\n// example.ts\nconst あ・あ = \"Hello, 世界!\";\n\nconsole.log(あ・あ);\n一見なんてことはないコードですが，Denoで実行すると，次のようなエラーが出ます．\n$ deno run example.ts\nerror: SyntaxError: Expected ',', got '<lexing error: Error { error: (53..53, UnexpectedChar { c: '・' }) }>'\n  |\n3 | cons...",
+      "publishedAt": "2026-06-17T14:40:07.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "8cfe5fccf548a7ed54c6a66d48af09e074aad976b4392deb11c4de0092d264d6",
+      "title": "AWSを経験してからAzureを触り始めて感じたこと",
+      "url": "https://qiita.com/takumiida1/items/a895edf4b5edc2caf39f?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "Summary\n\nAzureはAWSと異なり「サービスをVNetにアタッチする」思想であり、ネットワーク設計の前提が異なる\nApp Serviceは「実行基盤(Plan)」と「アプリ」が分離された二層構造を持ち、それぞれに管理が必要\nAzureのお作法に則った設計をすると...",
+      "publishedAt": "2026-06-17T10:54:14.000Z",
       "feedName": "Qiita"
     }
   ]
