@@ -1,198 +1,6 @@
 {
   "articles": [
     {
-      "id": "6eee211daf418aef797a6741a0bfa5b57fde93790588933a0a370eec05bc0b52",
-      "title": "Google's Gemini Spark. Here's What It Actually Does for Developers.",
-      "url": "https://dev.to/om_shree_0709/googles-gemini-spark-heres-what-it-actually-does-for-developers-5fc6",
-      "description": "Every major AI lab now has a personal agent story. Google's answer: announced at Google I/O 2026, isn't just another chatbot with calendar access. Gemini Spark runs 24/7 on Google's cloud infrastructure, with or without your device turned on, completing multi-step tasks across your entire Workspace ecosystem while you're doing something else entirely.\nThe standard Gemini experience, like most AI assistants, is reactive. You type, it responds. The moment you close the tab, nothing happens. That works fine for one-off questions. It breaks down completely for any task that involves monitoring, waiting, or executing across multiple apps over time - which is basically most of the actual overhead in a knowledge worker's day.\nGoogle wants Gemini Spark to behave differently. Instead of simply answering questions, the assistant actively helps users manage digital activities. The premise is straightforward: stop making the user the orchestrator of every multi-step process. Hand that orchestration to the agent and get out of the way.\nGemini Spark follows a wave of popular agentic products from major AI labs, most notably Anthropic's Claude Cowork and OpenAI's ChatGPT agent, but Google is positioning Spark around one concrete structural advantage: it already has your email, your calendar, your Drive, and your Docs. No integrations to set up. No OAuth dance. It's all already there.\nSpark was built from Gemini base models and an agentic harness from Google Antigravity - the same agent infrastructure behind the company's own internal tools. It runs on dedicated virtual machines on Google Cloud, so you don't need to keep your laptop open to make sure it's running. That's not a minor implementation detail - it's what makes Spark structurally different from agents that require a persistent local process.\nSpark runs on the Gemini 3.5 Flash model and Google's Antigravity agent system. The three core primitives developers and power users will spend most of their time with are Tasks, Skills, and Schedules:\nTasks are one-off or multi-step instructions you hand off to the agent - things like \"find and track interior design internships in New Orleans\" or \"scan my Google Drive and organize files into a tagged spreadsheet.\" Spark breaks these down and executes them across your connected apps.\nSkills are reusable behavioral templates you define once and invoke repeatedly. As you build Skills, you define exactly how you want Spark to take actions on things you do often, tailoring your experience and saving you from repetitive prompting. The canonical example from Google's own demo: read through your last 50 sent emails, derive a writing style guide, and save that as a skill called ghostwriter that fires every time you ask Spark to draft an email.\nSchedules are time-based or conditional triggers. Schedules allow you to automate your workload on your own terms by setting up time-based or conditional triggers to execute tasks exactly when you need them. A practical example: every Monday at 9 AM, scan the inbox from the past week, produce a priority summary, and block deep-work time on the calendar.\nSpark integrates with Gmail, Docs, and Slides out of the box, and adds MCP connections to Canva, OpenTable, and Instacart starting today. Those MCP connections are worth paying attention to - they signal that Google is building Spark on the same open protocol that the broader agentic ecosystem is converging around, not locking the agent capability behind proprietary APIs.\nThe Google I/O demo made the email drafting use case look simple. Google's VP of Google Labs, Josh Woodward, tasked the agent with collecting information from Google Docs, emails, and chat conversations before running a skill designed to draft the email in Woodward's voice. In a second demo, Woodward showed Spark compiling a list of people who RSVP'd to a block party and building a document that itemizes what each person is planning to bring - a document that auto-updates when a new email related to the event arrives in the inbox.\nThat second demo is more interesting than it sounds. Auto-updating documents driven by email events is a conditional trigger executing across multiple data sources in real time. That's not chatbot behavior - that's a lightweight workflow automation, defined entirely in natural language, with no code.\nFor developers specifically, the Skills primitive is the most interesting surface. Teaching the agent a repeatable behavioral pattern - and giving it a name you can call - is essentially defining a function in natural language. The ghostwriter example isn't just a productivity trick; it demonstrates that Spark can build compound capabilities from prior interactions, which is closer to how production agent systems are actually architected.\nThe MCP integrations matter here too. If Google continues expanding Spark's MCP surface, developers will be able to connect it to custom tools and internal services using the same protocol they're already building on - without waiting for a native Google integration that may never come.\nIn the race to build compelling personal AI agents, Google may have an underrated advantage: it already has all your emails. That's a real moat. The hardest part of building an effective personal agent isn't the model - it's the context. An agent that can't read your history, understand your commitments, or act across your actual tools is just an expensive chatbot. Google doesn't have that cold-start problem.\nMillions of users already rely on Google Workspace for work and communication. Spark doesn't ask those users to migrate to a new platform, connect a new service, or change their workflow. It inserts itself into the tools they're already in, which dramatically lowers adoption friction compared to standalone agent products.\nThe bigger architectural signal is the Antigravity harness. Google isn't shipping a one-off consumer feature - it's making its internal agent infrastructure available as a consumer product. That's the same pattern we've seen with cloud compute, ML infrastructure, and developer tooling: Google builds it for internal use, battle-tests it at scale, then ships it outward. If Antigravity is as capable as the Spark demos suggest, this is just the beginning of what runs on it.\nGemini Spark is currently rolling out to trusted testers and will be available for Google AI Ultra subscribers over 18 in the United States, as well as select business users. Google is expanding access to more users and businesses over the coming weeks.\nGemini Spark runs on Gemini 3.5 Flash and Antigravity. Native integrations cover Gmail, Calendar, Drive, Docs, Sheets, Slides, YouTube, and Google Maps - all turned off by default, toggled on in settings. MCP connections to Canva, OpenTable, and Instacart are live at launch, with more presumably following.\nThe agent-first paradigm is no longer a research demo or a beta experiment. Google just shipped it to 900 million Gemini users with zero new apps required. Whether Spark becomes the default way developers automate their own workflows - or just another underused feature in the Gemini app - depends entirely on how good the Skills and Schedules primitives turn out to be in practice.\nFollow for more coverage on MCP, agentic AI, and AI infrastructure.",
-      "publishedAt": "2026-05-23T02:42:30.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "67619939f42ab744fa912c5f45b1437c56641bb7b997940426e28ae4386dafb1",
-      "title": "How does VuReact compile Vue 3's defineExpose() to React?",
-      "url": "https://dev.to/smirk9581/how-does-vureact-compile-vue-3s-defineexpose-to-react-1jhj",
-      "description": "VuReact is a compiler toolchain for migrating from Vue to React — and for writing React with Vue 3 syntax.\nIn this article, we will look at how Vue 3's defineExpose() macro is mapped into React.\nTo keep the examples easy to read, this article follows two simple conventions:\nAll Vue and React snippets focus on core logic only, with full component wrappers and unrelated configuration omitted.\nThe discussion assumes you are already familiar with the API shape and core behavior of Vue 3 defineExpose().\ndefineExpose() -> React forwardRef() + useImperativeHandle()\n\n\ndefineExpose() is the macro used inside Vue 3 <script setup> to expose internal state or methods from a child component to its parent.\nVuReact compiles that pattern into React's forwardRef() plus useImperativeHandle(), allowing the parent component to access the exposed object through a ref.\nVue\n\n\n\n\n<script setup lang=\"ts\">\nimport { ref, defineExpose } from 'vue';\n\ndefineProps<{ title: string }>();\n\nconst count = ref(0);\nconst increment = () => count.value++;\n\ndefineExpose({\n  count,\n  increment,\n});\n</script>\n\nCompiled React\n\n\n\n\nimport { forwardRef, useCallback, useImperativeHandle, memo } from 'react';\nimport { useVRef } from '@vureact/runtime-core';\n\ntype IComponentProps = { title: string };\n\nconst Component = memo(\n  forwardRef<any, IComponentProps>((props, expose) => {\n    const count = useVRef(0);\n\n    const increment = useCallback(() => {\n      count.value++;\n    }, [count.value]);\n\n    useImperativeHandle(expose, () => ({\n      count,\n      increment,\n    }));\n\n    return <div>{count.value}</div>;\n  }),\n);\n\nexport default Component;\n\nAs the example shows, Vue defineExpose() is compiled into React's forwardRef() and useImperativeHandle() combination.\nVuReact preserves the structure of the exposed object, and exposed refs still use .value, which keeps the interaction model close to Vue.\nref + expose -> React ref.current\n\n\nIn Vue, parent components access exposed child values through ref and expose. In React, VuReact maps that pattern to useRef() plus ref.current.\nVue parent\n\n\n\n\n<template>\n  <Component ref=\"childRef\" />\n</template>\n\n<script setup lang=\"ts\">\nimport { onMounted, ref } from 'vue';\n\nconst childRef = ref();\n\nonMounted(() => {\n  childRef.value?.count.value; // 0\n  childRef.value?.increment();\n  childRef.value?.count.value; // 1\n});\n</script>\n\nCompiled React parent\n\n\n\n\nconst Parent = () => {\n  const childRef = useRef();\n\n  useMounted(() => {\n    childRef.current?.count.value; // 0\n    childRef.current?.increment();\n    childRef.current?.count.value; // 1\n  });\n\n  return <Component ref={childRef} />;\n};\n\nVuReact keeps the parent access path aligned with the original Vue intent, so exposed child refs and methods remain straightforward to use.\nGitHub: https://github.com/vureact-js/core\n\nDocs: https://vureact.top/en/guide/semantic-comparison/script/define-expose.html",
-      "publishedAt": "2026-05-23T02:25:00.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "ec2da525cd45f504f5e99d4a6151b7f5cb68433a461386e1de0b3bb9cec98e42",
-      "title": "Neo-VECTR's Rift Ascent",
-      "url": "https://dev.to/tizwildin/neo-vectrs-rift-ascent-1ca1",
-      "description": "Rift Ascent Is Live\n\n\nBeen building systems, tools, audio tech, AI infrastructure, and experimental engines nonstop — but I also wanted to make something people could instantly jump into and experience.\nSo here’s Rift Ascent.\nA fast experimental browser game/project built as part of the larger ecosystem I’ve been developing under TizWildin Entertainment.\nMain Hub:\n━━━━━━━━━━━━━━━━━━\nLive Demo:\ngarebear99.github.io\n          \n\n        \n      \n━━━━━━━━━━━━━━━━━━\nGitHub Repo:\n / \n        RiftAscent\n      \n    \nGENERATOR: RIFT ASCENT\nInfinite Heat — A canvas-based action game with prestige cycles, upgrades, co-op, and procedural audio.\n🔐 Built on ARC-Core — the authoritative event-and-receipt engine. Every player action, wave, prestige cycle, upgrade, and leaderboard submission is an ARC-Core-shaped event with a SHA-256 receipt. The receipt chain is the anti-cheat layer.\n🎮 Play Now\nhttps://garebear99.github.io/RiftAscent/\nFeatures\nPrestige Cycle — 100-wave loop with meta progression\nInfinite Heat — Endless mode with scaling difficulty via wave composition and pressure\nUpgrade Economy — Enemies drop credits; spend at the shop to evolve builds\nGeo Droids — Cube, Prism, Arc, Mine companions with unique abilities\nProcedural Audio — Rift Synthwave engine that reacts to gameplay state\nCo-op — Local and online multiplayer\nDaily Challenges — Seeded runs with leaderboards\n1000 Achievements — Deep progression tracking\nControls\n\n\n\nKey\nAction\n\n\n\n\nWASD\nMove\n\n\nLMB\nShoot\n\n\nRMB\nFireball\n\n\nE\nBomb\n\n\nSHIFT\nDash (tap)\n\n\nSPACE\nOverdrive\n\n\nB\nShop\n\n\n\n…\n  \nView on GitHub\nBackened: \n / \n        ARC-Core\n      \n    \nARC-Core\nARC-Core is a signal-intelligence event spine — a deterministic kernel built to host every project its author has ever developed, in tandem and smoothly, through one universal discipline: every state change is an event, every event produces a signed receipt, and every receipt is authority-gated.\nThe design bet is simple and falsifiable: if a system — a game, a simulator, a plugin backend, a governed-AI training loop, an archive manager, a language engine, a binary runtime, a cognition lab — can be modeled as entities, events, authority, and receipts, then ARC-Core can serve as its spine. In theory the entire author's project ecosystem (games, engines, simulators, audio plugins, governed-AI stack, archives, languages, binary runtimes) can ride on one ARC-Core authority layer without any project owning another's truth. The seven-repo governed-AI ecosystem plus the five active consumer applications (see below) are the current concrete evidence of that bet.\nInspiration…\nView on GitHub\nAlso, this is the Audio Plugin Suite I made to back it..\n / \n        RiftWaveSuite_RiftSynth_WaveForm_Lite\n      \n    \n🎛️ Part of the TizWildin Plugin Ecosystem — 19 free audio plugins with a live update dashboard.\nFreeEQ8 · XyloCore · Instrudio · Therum · BassMaid · SpaceMaid · GlueMaid · MixMaid · MultiMaid · MeterMaid · ChainMaid · PaintMask · WURP · AETHER · WhisperGate · RiftWave · FreeSampler · VF-PlexLab · PAP-Forge-Audio\n🎁 Free Packs & Samples — jump to free packs & samples\n🎵 Awesome Audio — (FREE) Awesome Audio Dev List\nRiftWaveSuite\nWaveForm / RiftSynth / Lite Combo (Free)\nWaveForm / RiftSynth Lite\nFree hybrid audio plugin combining real-time visualization and seed-based generative synthesis.\nWaveForm / RiftSynth Lite serves as the entry point to the RiftWave plugin ecosystem.\nIt includes lightweight versions of two plugins:\n• WaveForm Pro\nFeatures\nWaveForm Lite\nReal-time audio visualization.\nIncludes:\n• waveform display\nDesigned to be lightweight and…\nView on GitHub\n━━━━━━━━━━━━━━━━━━\nRift Ascent is part gameplay experiment, part rendering sandbox, part rapid-development testbed.\nBuilt solo while simultaneously developing:\nAI tooling\nmusic production systems\nJUCE-based audio software\nweb infrastructure\nbrowser-based interactive systems\ncross-domain experimental projects\nThe goal wasn’t just “make a game.”\nThe goal was building a reusable ecosystem where:\nvisuals\ngameplay\naudio\ntooling\ndeployment\nexperimentation\ncan all evolve together.\n━━━━━━━━━━━━━━━━━━\nBecause instant access matters.\nNo installs.\nOpen link → play immediately.\nThat philosophy is becoming more important as indie developers compete against massive production pipelines.\n━━━━━━━━━━━━━━━━━━\nI’m actively iterating on:\nmechanics\nvisuals\nmovement feel\nperformance\nprogression systems\nenvironmental design\naudio integration\nIf you try it, let me know:\nwhat feels good\nwhat feels bad\nwhat you’d expand\nwhat you’d remove entirely\n━━━━━━━━━━━━━━━━━━\nRift Ascent is connected to a much larger solo-built ecosystem currently in development through:\nhttps://github.com/GareBear99\nIncluding:\nAI infrastructure\naudio tools\nexperimental engines\nproduction utilities\nbrowser-native systems\ngame prototypes\ninteractive media experiments\nTrying to prove you can still build ambitious multi-domain projects independently without a giant studio behind you.\nWould love feedback from:\nindie devs\ngameplay programmers\nweb engine developers\naudio people\nshader/rendering nerds\nexperimental game designers\nanyone interested in browser-native games\n\n\n\n  \n  \n  gamedev\n\n\n\n  \n  \n  indiedev\n\n\n\n  \n  \n  webdev\n\n\n\n  \n  \n  javascript\n\n\n\n  \n  \n  github\n\n\n\n  \n  \n  opensource\n\n\n\n  \n  \n  browsergames\n\n\n\n  \n  \n  gamedesign\n\n\n\n  \n  \n  indiegame\n\n\n\n  \n  \n  programming\n\n\n\n  \n  \n  creativecoding",
-      "publishedAt": "2026-05-23T02:19:50.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "aef0d0c285a081e0074045258aa1e4545ec704f6f54b313f8498a69bce856816",
-      "title": "Idempotency Keys: The API Safety Net You Probably Aren't Using",
-      "url": "https://dev.to/apikumo/idempotency-keys-the-api-safety-net-you-probably-arent-using-4fa5",
-      "description": "Idempotency Keys: The API Safety Net You Probably Aren't Using\n\n\nNetwork failures happen at the worst possible times. A user clicks \"Pay Now,\" your request hits the payment API, the connection drops before the response arrives — and now you don't know if the charge went through. Do you retry and risk a double charge? Do you let it fail and frustrate the user?\nIdempotency keys solve this problem cleanly. They're one of those API patterns that seems like a small detail until the moment you desperately need it, and then they feel like magic.\nAn idempotency key is a unique value you generate on the client side and attach to a request. The server uses it to de-duplicate: if it sees the same key twice, it returns the cached result of the first request rather than executing the operation again.\nThe practical effect is that retrying a failed request is always safe. The operation runs once — exactly once — no matter how many times you send it.\nimport requests\n\ndef charge_customer(customer_id: str, amount_cents: int) -> dict:\n    response = requests.post(\n        \"https://api.payments.example/charges\",\n        json={\"customer_id\": customer_id, \"amount\": amount_cents},\n        headers={\"Authorization\": \"Bearer sk_live_...\"}\n    )\n    response.raise_for_status()\n    return response.json()\n\n# If this times out after the server processed it, calling it again = double charge\ncharge_customer(\"cus_abc123\", 4999)\n\nIf raise_for_status() throws a ConnectionError or a timeout, you have no idea whether the charge happened. You're stuck.\nMost APIs that care about this (Stripe, Brex, Adyen) accept idempotency keys via a header:\nimport uuid\nimport requests\nfrom typing import Optional\n\ndef charge_customer_safely(\n    customer_id: str,\n    amount_cents: int,\n    idempotency_key: Optional[str] = None\n) -> dict:\n    # Generate a stable key for this specific operation\n    key = idempotency_key or str(uuid.uuid4())\n\n    response = requests.post(\n        \"https://api.payments.example/charges\",\n        json={\"customer_id\": customer_id, \"amount\": amount_cents},\n        headers={\n            \"Authorization\": \"Bearer sk_live_...\",\n            \"Idempotency-Key\": key,\n        }\n    )\n    response.raise_for_status()\n    return response.json()\n\nNow you can retry freely:\nimport time\n\nkey = str(uuid.uuid4())  # Generate ONCE, reuse on retries\nmax_retries = 3\n\nfor attempt in range(max_retries):\n    try:\n        result = charge_customer_safely(\"cus_abc123\", 4999, idempotency_key=key)\n        print(f\"Charged successfully: {result['id']}\")\n        break\n    except requests.exceptions.Timeout:\n        if attempt == max_retries - 1:\n            raise\n        time.sleep(2 ** attempt)  # Exponential backoff\n\nThe key insight: the key is generated before the first attempt, not per-attempt. Reusing the same key across retries is what makes this safe.\nIf you're building an API, adding idempotency support is worth the effort. Here's a minimal implementation in Node.js with Express and Redis:\nconst express = require('express');\nconst redis = require('redis');\n\nconst app = express();\nconst client = redis.createClient();\napp.use(express.json());\n\nasync function idempotencyMiddleware(req, res, next) {\n  const key = req.headers['idempotency-key'];\n  if (!key) return next(); // Key is optional — skip if absent\n\n  const cached = await client.get(`idem:${key}`);\n  if (cached) {\n    const { status, body } = JSON.parse(cached);\n    return res.status(status).json(body);\n  }\n\n  // Intercept the response to cache it\n  const originalJson = res.json.bind(res);\n  res.json = async (body) => {\n    await client.setEx(\n      `idem:${key}`,\n      86400, // Cache for 24 hours\n      JSON.stringify({ status: res.statusCode, body })\n    );\n    return originalJson(body);\n  };\n\n  next();\n}\n\napp.post('/charges', idempotencyMiddleware, async (req, res) => {\n  // Your actual charge logic here\n  const charge = await processCharge(req.body);\n  res.status(201).json(charge);\n});\n\nA few rules to enforce:\nScope keys to the authenticated user. User A's key should never collide with User B's.\nReturn 422 if the same key is reused with different request bodies. Mismatched payloads suggest a bug in the client.\nSet a reasonable TTL. 24 hours is standard; some APIs go up to 7 days.\nKeys should be:\nUnique per logical operation — not per HTTP request\nCryptographically random — UUID v4 is the standard choice\nStable under retries — generate once, persist it until the operation succeeds\nA common mistake is generating a new UUID on every retry. That completely defeats the purpose.\n// ❌ Wrong — new key per attempt\nfor (let i = 0; i < 3; i++) {\n  await fetch('/charges', {\n    headers: { 'Idempotency-Key': crypto.randomUUID() } // New key each time!\n  });\n}\n\n// ✅ Correct — stable key across all retries\nconst key = crypto.randomUUID(); // Generated once\nfor (let i = 0; i < 3; i++) {\n  await fetch('/charges', {\n    headers: { 'Idempotency-Key': key } // Reused across retries\n  });\n}\n\nNot all operations need this treatment. A good rule of thumb:\nYes: POST /charges, POST /orders, POST /transfers — anything that moves money or creates unique records\nYes: Any webhook delivery retry mechanism\nNo: GET and DELETE — these are already naturally idempotent\nJudgment call: PUT — it's idempotent by definition in REST, but explicit keys don't hurt for extra safety\nVerify your implementation handles three cases:\nKEY=\"test-key-$(date +%s)\"\n\n# First request — should process normally\ncurl -X POST https://api.example.com/charges \\\n  -H \"Idempotency-Key: $KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"amount\": 4999}' \\\n  | jq '.id'  # Note the returned ID\n\n# Second request with same key — should return identical response\ncurl -X POST https://api.example.com/charges \\\n  -H \"Idempotency-Key: $KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"amount\": 4999}' \\\n  | jq '.id'  # Should be the same ID\n\n# Same key, different body — should return 422\ncurl -X POST https://api.example.com/charges \\\n  -H \"Idempotency-Key: $KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"amount\": 9999}' \\\n  | jq '.error'\n\nIf your API passes all three, your idempotency implementation is solid.\nIdempotency keys are one of those features that's invisible when it works and catastrophic when it's missing. If you're working with payment flows, order creation, or any operation your users would be upset to see run twice, add idempotency support now — before the production incident.\nIf you want to test how your idempotent endpoints behave end-to-end, APIKumo makes it straightforward to craft requests with custom headers, save idempotency keys as environment variables, and replay the same request multiple times to verify your de-duplication logic holds up. It's the kind of sanity check that's easy to skip and painful to skip.",
-      "publishedAt": "2026-05-23T02:13:10.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "f0bb65f3834f995f8f0f0f8e13803b7bf4c3061c45fd322a8418df8c2eb9e527",
-      "title": "Open-source SDS tooling for Japanese MHLW compliance: the gap nobody filled",
-      "url": "https://dev.to/kent-tokyo/open-source-sds-tooling-for-japanese-mhlw-compliance-the-gap-nobody-filled-6o",
-      "description": "In March 2025, Japan's Ministry of Health, Labour and Welfare (MHLW) published a structured JSON schema for Safety Data Sheet data exchange. The schema covers roughly 200 deeply nested fields and is intended to standardize how SDS information moves between chemical management systems.\nMost SDS tooling was not built for this.\nJapan's SDS requirements come from two laws: the Industrial Safety and Health Act (ISAH, 労働安全衛生法) and the Chemical Substances Control Law (化審法). Both mandate SDS for regulated chemicals, with format requirements governed by JIS Z 7253 — Japan's implementation of the UN Globally Harmonized System (GHS).\nJIS Z 7253 follows the standard 16-section GHS structure. In principle, any GHS-compliant SDS satisfies the content requirements. What makes Japanese compliance distinct is a digital layer: the MHLW schema specifies how SDS content should be structured as machine-readable data, with field-level granularity that PDF documents cannot capture.\nGHS uses a \"building block\" approach — each country adopts the elements it chooses. The result is that the same GHS-aligned document varies by jurisdiction:\n\n\n\nCountry/Region\nStandard\nGHS basis\nNotable difference\n\n\n\n\nJapan\nJIS Z 7253:2019\nGHS Rev. 6\nMHLW digital schema; revised to GHS Rev. 9 in Dec 2025\n\n\nUnited States\nOSHA HazCom 2012\nGHS Rev. 3\nUpdated to GHS Rev. 7 in 2024\n\n\nEuropean Union\nCLP Regulation\nGHS-aligned\nStricter on environmental hazards\n\n\nChina\nGB 13690-2009\nGHS Rev. 4 equivalent\nMoving to GB 30000.1-2024 (GHS Rev. 8), mandatory from August 2025\n\n\nTaiwan\nCNS 15030\nGHS-aligned\n—\n\n\n\nThe MHLW schema includes fields with no equivalent in EU REACH or US OSHA HazCom formats. These are the main reason international SDS tooling does not cover the schema out of the box:\n\n\n\nLaw\nExample fields\nWhat they capture\n\n\n\n\nChemical Substances Control Law (化審法)\n\nCaSCL.ClassificationStatus, CaSCL.RegistrationNumber\n\nRegulatory classification and registration numbers under this law\n\n\nIndustrial Safety and Health Act (安衛法)\n\nISHAct.PublicationOfName, ISHAct.Notification\n\nName disclosure and notification obligations\n\n\nPoisonous and Deleterious Substances Control Law\nControlledSubstancesAct.Applicability\nWhether the substance is classified as poison, deleterious, or specific poison\n\n\nPRTR Law\n—\nChemical release and transfer reporting obligations\n\n\n\nSection 15 (Regulatory Information) is the most complex section in the schema — it contains separate subsections for each of these laws, each with its own field structure.\nThe MHLW published the schema in 2025, but the driver was a 2022 amendment to the Industrial Safety and Health Act. The amendment shifted Japan's chemical substance regulation from a prescriptive model (government designates specific hazardous substances) to an autonomous management model (companies assess and manage risk themselves).\nThe practical impact:\n\n\n\nEnforcement date\nChange\n\n\n\n\nApril 2023\nShift to autonomous management model — all substances with confirmed GHS hazard classifications brought progressively into scope\n\n\nApril 2024\nSDS must now specify concentration ranges numerically (not just qualitatively)\n\n\nApril 2025\nProtective equipment mandatory for substances with skin/eye hazards\n\n\nApril 2027\nRisk assessment obligations expand to all regulated substances\n\n\n\nWith risk assessment coverage expanding significantly, companies need to process SDS data faster and more accurately. Manual PDF entry does not scale. The JSON schema is the infrastructure layer for automating this.\nThe major SDS authoring platforms — Sphera, EcoOnline, Chemwatch, Verisk 3E — have broad international coverage. Japanese is typically a supported output language. What they do not provide, as far as I have found, is export to the MHLW JSON schema. They produce Word or PDF output in the correct section structure, which satisfies the document requirement but not the structured data exchange requirement.\nJapanese-market products like SDS Meister and SmartSDS support MHLW JSON output, but their PDF-to-JSON conversion coverage is limited — they are primarily SDS authoring tools, not bulk conversion tools for incoming supplier documents.\n\n\n\nTool\nLanguage\nMHLW JSON\nPDF → JSON\nApproach\n\n\n\n\nsds_parser\nPython\nNo\nYes\nRegex, per-manufacturer rules\n\n\ntungsten\nPython\nNo\nYes\nRule-based, English-only\n\n\nsds-converter\nRust\nYes\nYes\nLLM-based extraction\n\n\n\nsds_parser and tungsten solve a different problem: extracting SDS data in English, for specific known manufacturer formats. Neither targets the MHLW schema.\nEven within JIS Z 7253-compliant documents, format varies by manufacturer:\n\n\n\nSource of variation\nExample\n\n\n\n\nSection heading labels\n\"2. 危険有害性の要約\" (JIS Z 7253) vs \"2. Hazard(s) identification\" (OSHA HazCom) vs \"第2部分 危险性概述\" (GB/T 16483) — all mean the same thing\n\n\nSection order\nThe 16 sections can appear in any order the manufacturer chooses\n\n\nConcentration notation\n\"≥95%\", \"1〜5%\", \"約100%\", \"企業秘密\" (trade secret) all need different handling\n\n\nLanguage mixing\nJapanese SDS documents regularly contain English chemical names and CAS numbers\n\n\n\nA rule-based parser must enumerate every variant. In practice, manufacturer-specific headings add another layer of variation on top of the standard differences.\nTwo properties of the MHLW schema are worth knowing before implementing against it.\nSection 3 stores component information as a repeating array. Each component object has nested fields for chemical identity, concentration range, and hazard classification. The same data appears differently depending on whether the source document covers a pure substance, a mixture, or a trade secret formulation.\n{\n  \"Composition\": {\n    \"CompositionAndConcentration\": [\n      {\n        \"ChemicalIdentity\": {\n          \"CASNumber\": \"64-17-5\",\n          \"ISHActNotificationNumber\": \"2-396\"\n        },\n        \"ConcentrationRange\": {\n          \"ConcentrationRangeFrom\": 95.0,\n          \"ConcentrationRangeTo\": 100.0,\n          \"ConcentrationRangeUnit\": \"%\"\n        },\n        \"TradeSecretFlag\": false\n      }\n    ]\n  }\n}\n\nThe schema contains field name errors that are now part of the specification:\nHumanExposureAndEmergencyMeasuress  ← trailing double-s\nTestGuidline                        ← missing 'e' (not Guideline)\nDesclaimer                          ← transposed letters (not Disclaimer)\ngazetteNo                           ← lowercase first character\n\nCorrecting these would break all existing implementations, so they cannot be fixed in v1.0. An implementation that normalizes these to standard English spellings will fail schema validation.\nI built sds-converter to address the MHLW schema gap. It handles both directions: PDF/DOCX/XLSX to MHLW JSON, and MHLW JSON to a JIS Z 7253-compliant Word document.\nThe core approach: rather than enumerating format variants with rules, the tool passes raw section text and the corresponding MHLW schema fields to an LLM and asks it to map values. The LLM handles heading label variation naturally. The output is validated against the schema before writing.\ncargo install sds-converter\n\n# PDF → MHLW JSON\nsds-converter to-json --input input.pdf --output output.json\n\n# MHLW JSON → JIS Z 7253 Word document\nsds-converter to-docx --input output.json --output result.docx --lang ja\n\nThe LLM backend is pluggable — Claude, GPT, Gemini, Mistral, Groq, or local models via Ollama. A --quality flag adjusts cost versus accuracy for batch workloads.\nKnown limitations:\n\n\n\nIssue\nStatus\n\n\n\n\nScanned PDFs without a text layer\nNot supported — requires upstream OCR\n\n\nSection 3 tables with merged cells\nExtraction sometimes fails on complex DOCX layouts\n\n\nPrecision fields mixed with \"not measured\" entries\nOccasional type errors in Section 9 output\n\n\n\nThese are open problems, not design decisions.\nThe MHLW schema represents a real need for anyone handling chemical compliance in Japan at volume. Commercial tools cover the authoring side; the bulk conversion of incoming supplier PDFs to structured data has no open-source solution targeting this schema — other than sds-converter, which I developed and which is the only implementation I am aware of.\nThe repository is open. Contributions on the extraction side — particularly Section 3 table handling — are welcome. If you work in cheminformatics or chemical compliance and have approached the MHLW compliance problem differently, I would be interested to hear it.",
-      "publishedAt": "2026-05-23T01:34:49.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "e0f28d56840bbc6d8df528d8061ff2b9563f2f770de16393fcd47027c9a42c56",
-      "title": "AWS Security Agent のペネトレーションテスト実行ログを CloudWatch Logs で確認してみた",
-      "url": "https://dev.classmethod.jp/articles/security-agent-log/",
-      "description": "AWS Security Agent のペネトレーションテスト実行ログを CloudWatch Logs で確認してみた",
-      "publishedAt": "2026-05-22T23:18:54.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "888c5a75b095dd4bf8b14ed5c7ac32613d528a6fb72da6c1f2c3f20c1aa89a23",
-      "title": "The Agentic Evolution - Anthropicが語るClaudeとエージェント時代のいま - AWS Summit Hamburg 2026 レポート",
-      "url": "https://dev.classmethod.jp/articles/aws-summit-hamburg-2026-claude/",
-      "description": "AWS Summit Hamburg 2026のAnthropicセッションで、Claude開発チームから聞いた「エージェント元年の実態」と「2026年に潮目が変わった理由」についてまとめます。モデルの能力向上に対して、自分たちのタスク設計がどう変わるべきかが見えてきました。",
-      "publishedAt": "2026-05-22T16:23:55.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "5d186c44c484dbe8641295ba56038fdc5411286ab57eddb0586dc69d2fa28a98",
-      "title": "GCS ファイルを Snowflake on AWS に Snowpipe で取り込んでみた。",
-      "url": "https://dev.classmethod.jp/articles/snowpipe-gcs-to-snowflake-on-aws/",
-      "description": "GCS ファイルを Snowflake on AWS に Snowpipe で取り込んでみた。",
-      "publishedAt": "2026-05-22T16:09:47.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "1ecc2d33efce1b421f970c8388770d9178ce70a7d589047758bef735d74173dc",
-      "title": "ハンズオンで使う IAM ユーザーを AWS CloudFormation StackSets で一括作成してみた",
-      "url": "https://dev.classmethod.jp/articles/create-handson-iam-users-with-stacksets/",
-      "description": "ハンズオンで使う IAM ユーザーを AWS CloudFormation StackSets で一括作成してみた",
-      "publishedAt": "2026-05-22T14:47:17.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "14ef6e9839139b1580b9a6e87659da33ffee914a51dc72d37a14f958045a0918",
-      "title": "Terraform S3 Backend で aws login 認証が使えるか検証してみた",
-      "url": "https://dev.classmethod.jp/articles/terraform-s3-backend-aws-login/",
-      "description": "Terraform S3 Backend で aws login 認証が使えるか検証してみた",
-      "publishedAt": "2026-05-22T12:44:45.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "2bc4ef23f9e46685f714e139d47b481db13078ff89fef6d00d443a04028331ac",
-      "title": "OSSサプライチェーン汚染の連鎖：今起きている異変 | LAC WATCH",
-      "url": "https://www.lac.co.jp/lacwatch/alert/20260522_004729.html",
-      "description": "2026年3月以降、JavaScript向けのnpm、Python向けのPyPI、Ruby向けのRubyGemsといった主要なパッケージ管理システムやプログラム開発に利用されるパッケージ、サーバーの原型となるコンテナイメージにおいて、悪性パッケージの混入や正規パッケージの侵害が連続して確認されています。この侵害についてはラックが確認し...",
-      "publishedAt": "2026-05-22T11:22:07.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "e3b970b14c85e99a25a8a7c1bf5e9c20e330786bde6a7f91e9bb61d473bb8b57",
-      "title": "AWS DevOps Agent と EC2 障害調査をやってみた 〜inode 枯渇編〜",
-      "url": "https://dev.classmethod.jp/articles/devops-agent-investigate-inode/",
-      "description": "千葉です。ディスク使用率に余裕があるのに「No space left on device」エラーが出る謎のトラブル。AWS DevOps Agentとペアオペレーションで、本番環境でもよくある「inode枯渇」の調査から復旧まで、実践的なトラブルシューティングをお見せします。",
-      "publishedAt": "2026-05-22T10:48:47.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "1c9e283484886ed9055e30188cdd55d8cb979a472e8628f6645186e08df27851",
-      "title": "CloudWatch Logs Insights の新コマンド・関数を試してみた（parse logfmt、case、expand 他）",
-      "url": "https://dev.classmethod.jp/articles/cloudwatch-logs-insights-new-commands-functions-2026/",
-      "description": "CloudWatch Logs Insights のクエリ言語に、文字列操作、エンコード/デコード、logfmt パースなどの新機能が追加されました。テストログを投入して主要な関数・コマンドの動作を確認しました。",
-      "publishedAt": "2026-05-22T09:28:36.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "9011806d3027ee1fd9418ed18c43571f9a6b9f4ad8a33b319748f748deb1c794",
-      "title": "AWS DevOps Agent と Azure を繋いで DevOps Agent で Azure 側のリソースを調査させてみた",
-      "url": "https://dev.classmethod.jp/articles/aws-devops-agent-azure-integration/",
-      "description": "DevOps AgentはAzureの調査もできるよ！",
-      "publishedAt": "2026-05-22T09:02:30.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "a50467b2fd48eaa4d9327ea0694386f4f849466abbd2eb8636184b4ecc0cd045",
-      "title": "ドイツのネット銀行が、AIをUIに「組み込まずに」決済トラブルSLAを48→85%に改善した話 - AWS Summit Hamburg 2026 レポート",
-      "url": "https://dev.classmethod.jp/articles/n26-aws-summit/",
-      "description": "ドイツのネット銀行が、AIをUIに「組み込まずに」決済トラブルSLAを48→85%に改善した話 - AWS Summit Hamburg 2026 レポート",
-      "publishedAt": "2026-05-22T07:21:15.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "8c376b1356ec8b295507dc280dde315c6da8adf0b5e6a4cbcd1f8a872c769973",
-      "title": "CIRT インサイト: AWS Organizations からの不正なアカウント離脱を防ぐには",
-      "url": "https://aws.amazon.com/jp/blogs/news/cirt-insights-how-to-help-prevent-unauthorized-account-removals-from-aws-organizations/",
-      "description": "AWS Customer Incident Response Team (CIRT) が観測している、攻撃者がお客様アカウントを侵害した後に AWS Organizations から離脱させ、SCP やガバナンス制御を回避する新しい手口について解説します。 具体的には、organizations:LeaveOrganization 権限を持つクレデンシャルが悪用されると、メンバーアカウントが Organization の保護下から外れ、CloudTrail の組織トレイル、GuardDuty の中央集約、SCP による制限、一括請求などの可視性と統制が失われます。 最も効果が大きく労力の少ない対策として、organizations:LeaveOrganization アクションを拒否する SCP (DenyLeaveOrganization) の実装を推奨します。あわせて、CloudTrail での AcceptHandshake / LeaveOrganization / InviteAccountToOrganization / RemoveAccountFromOrganization イベントの監視、IAM の最小権限原則の徹底、およびルートアクセスの一元管理についても解説しています。",
-      "publishedAt": "2026-05-22T07:14:06.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "23d5f26731149c82251a43ee15d5ed6c08ae81d0a9b4852130d59a852c580f5f",
-      "title": "自動推論で実現する Amazon のポスト量子暗号の検証と最適化",
-      "url": "https://aws.amazon.com/jp/blogs/news/verifying-and-optimizing-post-quantum-cryptography-at-amazon/",
-      "description": "AWS は、Amazon Automated Reasoning Group、AWS Cryptography、オープンソースコミュニティと協力し、ポスト量子暗号 (PQC) ML-KEM の形式的に検証された最適化実装 mlkem-native を開発しました。本記事では、CBMC によるメモリ安全性・型安全性の検証、HOL Light と s2n-bignum によるアセンブリ実装の正当性証明、SLOTHY によるマイクロアーキテクチャ最適化を組み合わせ、セキュリティ・性能・保守性を同時に実現した取り組みをご紹介します。AWS-LC への統合により、c7i や c7g で約 2 倍の性能向上を達成しました。",
-      "publishedAt": "2026-05-22T07:10:03.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "ec00fe31eb644896c68ca77f68dd07e939eaca97015260a384754ca59ed4321a",
-      "title": "PLG Stack — 第1部：Prometheus・Loki・Grafanaを深く理解する",
-      "url": "https://qiita.com/luan_nguyen/items/acaa441d34a20de58f27?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "あなたのシステムは動いている——でも、本当に何をしているか把握できていますか？\n\nこれは PLG Stack シリーズ全2回の 第1部 です。各コンポーネントがどのように動作し、何のために使うのかを詳しく解説します。第2部 では、Docker Compose・Kubern...",
-      "publishedAt": "2026-05-22T06:50:30.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "586c9c07bb929d87d76acd44e0276e87bd237d54e4364e0dbc1b93965e285446",
-      "title": "[Frontend Performance - Part 20] フロントエンドパフォーマンス改善 完全ロードマップ総まとめ",
-      "url": "https://qiita.com/tuanphan/items/1feeae0fc6ae30aa709d?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "📝 注意\nこの記事はAIによる編集支援を受けています。\n\n📚 目次\n\n0. はじめに：「勘に頼った最適化」から「計測駆動型の改善プロセス」へ\n1. 振り返り：5つの基礎パートと8つの知識レベル\n2. 3つの柱となる知識の総まとめ\n3. 実践的な最適化ロードマップ –...",
-      "publishedAt": "2026-05-22T06:47:13.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "56ef299e22b45532b2f8f1ba22a388725272c81eda459afbfcb20676ce3f03fe",
-      "title": "Dockerコンテナ内で1Passwordから認証情報を取得できるようにしてみた",
-      "url": "https://dev.classmethod.jp/articles/devcontainer-1password-auth/",
-      "description": "Dockerコンテナ内で1Passwordから認証情報を取得できるようにしてみた",
-      "publishedAt": "2026-05-22T06:05:44.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "c3014b91bd05ed8e3be5104809344e5a02d8ddc727ffb4c34fdc6f4ac8d513f3",
-      "title": "中途エンジニアがクラスメソッドオペレーションズに入社して1ヶ月で印象に残った、6つのカルチャー",
-      "url": "https://dev.classmethod.jp/articles/joined-classmethod-group-1month-cultures/",
-      "description": "クラスメソッドオペレーションズに中途エンジニアとして入社して1ヶ月。Slackでの発信、振り返りでの称賛、経営側からの方針共有、AWS認定資格の推進、AI活用、セキュリティへの組織的な姿勢など、入社直後だからこそ気づく6つのカルチャーを、中の人の視点から紹介します。",
-      "publishedAt": "2026-05-22T06:00:00.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "494b90710337f76ebfa227234206815844496ac3387af5c99da811f6a500b2bb",
-      "title": "パロアルト、保護機能をデフォルトで備えたアイデンティティセキュリティプラットフォーム「Idira」発表",
-      "url": "https://enterprisezine.jp/news/detail/24336",
-      "description": "パロアルトネットワークスは、次世代アイデンティティセキュリティプラットフォームと称する「Idira」を発表した。\n\n　今回の発表は、エージェンティック機能を備えた最新の特権アクセス管理（PAM）を提...",
-      "publishedAt": "2026-05-22T05:07:00.000Z",
-      "feedName": "EnterpriseZine"
-    },
-    {
-      "id": "456aef25d9ed6ab69086627d5f8d9bc5877f533312a308a8809594c881a2551c",
-      "title": "「銀行をかたる」はもう古い　クレカ13社共同のフィッシングサイト閉鎖、その成果は",
-      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2605/22/news048.html",
-      "description": "日本クレジットカード協会（JCCA）は、国内クレジットカード会社13社とフィッシング対策協議会、サイバーセキュリティ企業ACSiONによるフィッシングサイト閉鎖に向けた共同の取り組みを拡大すると発表した。",
-      "publishedAt": "2026-05-22T04:20:00.000Z",
-      "feedName": "＠IT"
-    },
-    {
-      "id": "dcbca7ecf73603da3769008ad83834141b924063c4f58b66529fef3f7e35630b",
-      "title": "Terraform経験者が初めてAWS CDKを利用して感じたギャップ | フューチャー技術ブログ",
-      "url": "https://future-architect.github.io/articles/20260522a/",
-      "description": "Terraform連載2026 の4本目です。 TIG（Technology Innovation Group）の八木雅斗です。 2023年の新卒入社以来、IaCツールは一貫してTerraformを利用してきましたが、最近の業務ではAWS CDKを利用しています。 AWS CDKを実際に触ってみて、これまでTerraformの考え方に慣れ親しんでいたこともあり、いくつかギャップを感...",
-      "publishedAt": "2026-05-22T04:09:32.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
       "id": "5eac860f9f2c27516cc7b07aab678e856954d171aca5caa6929963b8781b4d78",
       "title": "Detecting unusual processes on your servers without writing a single rule",
       "url": "https://dev.to/gretl/detecting-unusual-processes-on-your-servers-without-writing-a-single-rule-2he",
@@ -310,78 +118,6 @@
       "url": "https://qiita.com/templeroyce/items/eb9ab297909136266582?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
       "description": "はじめに\nこんにちは！今回は、すべて無料枠のサービス（Vercel, Supabase, Gemini API, Unsplash API）を組み合わせて、LINEでAI編集者とチャットするだけで本格的な小説の原案が完成し、Kindle出版（EPUB出力）までサポートす...",
       "publishedAt": "2026-05-23T04:32:54.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "23ea2aaea8250e5b723094d5f51e1e025c4f2fbede7b6231ed6f75a81443d0a5",
-      "title": "2025 Japan AWS Jr.Champions としての活動を振り返る",
-      "url": "https://qiita.com/yakumo_09/items/76b9695a600a7491800a?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "はじめに\nこんにちは、やくもです。\n私は2025年度のJapan AWS Jr. Champions（以下、Jr. Champions）として活動してきました。本記事ではこの一年間の活動を振り返っていきます。\n\n本記事を通して、Jr. Champions というプログ...",
-      "publishedAt": "2026-05-23T02:03:39.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "2f05844fa9737119d555d1dd71b85192342877e9a3ce2348191462adab733273",
-      "title": "【セキュリティ】「とりあえず `Access-Control-Allow-Origin: *` で動いたからヨシ！」が招くデータ全流出",
-      "url": "https://qiita.com/fe1ix/items/122d24c7ae432b22cae8?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "導入：「CORSエラー」との不毛な戦い\nフロントエンド（React）からバックエンドAPIを叩いた瞬間、真っ赤なエラーがコンソールに殴り込んできます。\nAccess to fetch at 'https://api.example.com' from origin 'ht...",
-      "publishedAt": "2026-05-22T23:53:04.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "a672449dad37a2393f13aea16c8ccfd6d3b82b6147129df92166004a5ebfc637",
-      "title": "2025 Japan AWS Jr. Champions としての活動が終了しました",
-      "url": "https://qiita.com/har1101/items/ccbdbe70817ece37cfdb?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "この記事はハンドメイド…からオーダメイドまで仕掛ける大流行(Hi!)\n\nこんにちは、ふくちと申します。\n2025年6月からスタートした、2025 Japan AWS Jr. Champions としての活動が終了しました。\n\nそこでこの1年間の活動を振り返ってみよ...",
-      "publishedAt": "2026-05-22T17:49:36.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "c5a2e20c140105dc6b87d5c0543ee86b728492b278c415bd5aaee93c616b78af",
-      "title": "【AWS】非機能要件「ログの保持とアーカイブ」でCloudWatch LogsのS3エクスポートを担当したら、最も簡単だと思っていた方法が意外と面倒だった話",
-      "url": "https://qiita.com/miruky/items/a161a98bd6e68b9c3224?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "はじめに\nこんばんは、mirukyです。\n数ヶ月前、CloudWatch Logsの保持期間設定と、アーカイブの文脈でS3エクスポートを担当しました。\nもともとCloudWatch Logsは無期限保持になっていたため、保持期間を365日に変更する対応は、厳密にはコスト削...",
-      "publishedAt": "2026-05-22T13:13:59.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "45b2f2ca7363a46b81d591bc7498a38d669059f7db953010bb21b4d8f8f4b414",
-      "title": "TSKaigi 2026に行ってきた〜〜〜〜……よ！！！！Day 1",
-      "url": "https://zenn.dev/koyo_k0/articles/3b08a6f60ecb76",
-      "description": "初・TSKaigiに行ってきました。TypeScriptの国内で一番大きなイベントです。\n2日あるうちのDay 1のレポです！\n\n 会場まで\n会場は羽田空港の国際線ターミナルに隣接している羽田エアポートガーデンという商業施設にあります。場所柄、大きなキャリーケースを持っている人が周りに多かったです。\n\n空港までの東京モノレール。細すぎ、早すぎ、怖すぎ\n国際線ターミナルに着いたのち、インバウンド向け店舗の間を歩いて抜けると会場のベルサール羽田空港に到着です。\nおそらく言わないほうがいいことなんですが、コミケのようなイベントに行く時はなんとなくそういったオーラを出している人達に着いていくと概...",
-      "publishedAt": "2026-05-22T13:05:23.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "ae1e7352cda32c86ba06e12b5ba7f4d1a425c25df054e5dc52b24882fb9255bd",
-      "title": "スキルに自信がないポンコツエンジニアの僕が本気でReactを勉強して稼げるようになろうという決意",
-      "url": "https://qiita.com/taki-umi/items/eb2bd8ce8390efd3f424?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "どうも、ポンコツです\nはじめまして。\n現在8年ほどシステムエンジニアをやっています。\nJavaやSpringBootを長く触ってましたが、\n\n技術の表面だけしか知らないので、「その仕様なら今回はこのアーキテクチャで」みたいな知見の提供や提案ができない\n自分で考えるのが苦手...",
-      "publishedAt": "2026-05-22T12:10:54.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "643f9688de66840b9a57892cba14825ba182ab511eda0dafaff4f68d2a39a369",
-      "title": "PAD図作成ツール padtools_ts にMCPサーバーを追加した",
-      "url": "https://qiita.com/steelpipe75/items/9a0d5de0aff0ed7ab74b?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "以前作成した padtools_ts は、アルゴリズムをシンプルに記述できるSPD記法からPAD図を生成できるTypeScript製ツールです。\nPAD図普及のためにも、\n「AIエージェントにPAD図を書かせたい」\nと思い、MCPサーバーを追加してみました。\nこの処理をPA...",
-      "publishedAt": "2026-05-22T11:41:16.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "b8499c1bce70a523adc5ac6a58430d374234038e33f5e54a6e258a6f17fa313d",
-      "title": "JAWS-UG IoTハンズオンイベントのネットワークを自作ルータで構築した話",
-      "url": "https://qiita.com/akira-greennote/items/13f5009199cbc2bf0212?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "はじめに\n2026年5月21日に開催されたJAWS-UG IoT専門支部のハンズオンイベントで、参加者にRaspberry Piを配布してIoT体験をしてもらう企画を実施しました。\nこのイベントでは、会場内に閉じたネットワークを持ち込み、RasPi 22台＋参加者PC 2...",
-      "publishedAt": "2026-05-22T11:39:39.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "9efeac7420e661b04be4f1ade54af27be7f421096de73901fd91acbab45781ab",
-      "title": "【インフラエンジニアのkiro活用】既存環境をドキュメントに書きだす",
-      "url": "https://qiita.com/REALKTMR/items/8147f10e6a1e6d7570d4?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "はじめに\n過去に手組で作成したAWS環境を長年運用しているどうしてもドキュメントと実環境がずれが起きがちです。定期的に棚卸をしていても最後は実環境を見て確かめる。という運用をされている方が多いのではないでしょうか。\n今回はKiroの Spec機能を使って、既存 AWS ア...",
-      "publishedAt": "2026-05-22T07:32:08.000Z",
       "feedName": "Qiita"
     },
     {
@@ -607,14 +343,6 @@
       "description": "前提\n以下で自動取得した証明書をEC2のApache/Nginx上に自動で適用する方式を考えてみます。\n内容としてはスクリプトを用意して、Cronにそのスクリプトを回してもらう事で証明書の更新を自動化したいと思います。\n\n環境イメージ\n\n用語\n\naws s3 sy...",
       "publishedAt": "2026-05-23T10:54:00.000Z",
       "feedName": "Qiita"
-    },
-    {
-      "id": "52aa951b1dfa206821c9ff490375141b0f75a41b74aadd64d6f356ba830a16db",
-      "title": "Dockerを手放したら、Agent開発が身軽になった",
-      "url": "https://zenn.dev/mofuteq/articles/93a1920e7a8d62",
-      "description": "Agentを作っていました。\n最初は、LLMに入力を渡して、structured outputを返すくらいの小さなもののつもりでした。\nでも気がつくと、手元では docker compose が育っていました。\nPostgres\nRedis\nQdrant\nLangfuse\nClickHouse\nMinIO\nBackend\nFrontend\nWorker\nうおw、Agentどこいった。\nもちろん、自前で立てると理解は深まります。\n各componentの役割も分かるし、データの流れも見える。\nただ、ある段階を超えると、Agentを作っているのか、周辺インフラを飼育しているのか分からなくなる。...",
-      "publishedAt": "2026-05-23T02:58:14.000Z",
-      "feedName": "Zenn"
     },
     {
       "id": "659bfe78d03840d4cca999e65d9122dee6cb4d75e20da9564f1dda27c7462463",
@@ -7142,6 +6870,245 @@
       "url": "https://qiita.com/hisaho/items/4dbbcd41e83f9575cd28?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
       "description": "概要\n\nHotpotQA ベンチマーク 90.0% を達成（論文の公式実装 71.6% を +18.4% 上回る）\nKDD 2026 論文 MemGraphRAG（Xiang et al.） を TypeScript でクリーンルーム実装\n\n31万ノード・68万エッジ ...",
       "publishedAt": "2026-06-17T23:41:09.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "012c1cc22f3a642270fb4af1bfc3f67bf3feb0ad67e0034f8e391d8099e7ad1a",
+      "title": "Session 5 summary",
+      "url": "https://dev.to/hvdineshbabu/session-5-summary-5agg",
+      "description": "Today I learnt about short polling, long polling and server side events from the system design class.\n1. Short polling: The client sends requests at timed intervals to the server to get the information. For example, we could set the interval as 5 seconds and the request is sent from the client every 5 seconds to check if the requested data is actually available from the server.\n2. Long polling: The client sends a request to the server and the server holds the requests until the requested data is available. It is bound to using server resources more and many connections are wasted.\n3. Server-side events: This is the method whereby the server sends data in regular intervals. In javascript, we can use the EventResource object that creates a connection between the server and the client and at constant intervals, data is sent from the server to the client.",
+      "publishedAt": "2026-06-22T04:05:19.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "0f63ce03542a19411d69162ea98dab4b27c401c84e665a520b993aec4b08459c",
+      "title": "HelmSharp: render Helm charts from .NET without shelling out to helm",
+      "url": "https://dev.to/gatt_geng_ce6a8f5b3886c67/helmsharp-render-helm-charts-from-net-without-shelling-out-to-helm-1gng",
+      "description": "TL;DR: I built a .NET library that renders Helm charts and drives Kubernetes releases without shelling out to the helm CLI. 129/129 templates across ingress-nginx, cert-manager, external-dns, podinfo, and metrics-server now render successfully. The main entry point is HelmSharp.Action, with lower-level packages available for chart loading, rendering, Kubernetes operations, and release storage. MIT licensed, looking for feedback and early adopters.\nAt work, our .NET services deploy to Kubernetes through Helm. Every Docker image had to bundle the helm binary — another dependency to manage, another layer in the image, another surface for CVEs. I wanted to cut that out entirely and do Helm-style rendering directly in-process.\nThe .NET ecosystem doesn't really have this. There are YAML libraries. There are Kubernetes client libraries. There are template engines. But nothing ties them together the way helm template does — values merging, named templates, include, range, toYaml, the whole Sprig function set, all wired into a single render pipeline. So I started building one. (This is also my first real open source project — I'd spent years consuming OSS without contributing back, and HelmSharp is what came out of deciding to change that.)\nHelmSharp is a multi-package .NET SDK (net8.0 / net9.0 / net10.0) that covers:\n\n\n\nPackage\nWhat it does\n\n\n\n\nHelmSharp.Action\nHigh-level Helm client — TemplateAsync, UpgradeInstallAsync, RollbackAsync\n\n\n\nHelmSharp.Chart\nChart loading from directories and .tgz, values merging, --set / --set-json style overrides\n\n\nHelmSharp.Engine\nHelm-style template rendering — 100+ Sprig/Helm functions\n\n\nHelmSharp.Kube\nKubernetes apply, delete, and wait (no kubectl needed)\n\n\nHelmSharp.Release\nRelease history stored in Kubernetes Secrets (Helm-compatible)\n\n\nHelmSharp.Repo\nChart repository index, pull, and search\n\n\nPlus Registry, Storage, PostRenderer extension points\n\n\n\n\nHere's the lower-level rendering API — no result objects, no stdout strings, just in-process template evaluation:\nvar chart = await HelmChartLoader.LoadAsync(\"/charts/my-chart\", ct);\nvar values = await HelmValues.BuildAsync(chart, null, null, new Dictionary<string, object?>\n{\n    [\"image\"] = new Dictionary<string, object?> { [\"tag\"] = \"1.2.3\" },\n    [\"replicaCount\"] = 3\n}, null, null, null, ct);\n\nvar renderer = new HelmTemplateRenderer(chart, \"my-app\", \"production\", values);\nvar manifests = renderer.Render();\n// manifests is a string of valid YAML — feed it to kubectl apply, store it,\n// diff it, whatever you'd do with `helm template` output.\n\nNo helm binary. No Process.Start. Values are native .NET objects, not --set strings. The output is just a string — you decide what to do with it.\nThere's also a higher-level HelmClient API (TemplateAsync, UpgradeInstallAsync, RollbackAsync) that mirrors the Helm CLI workflow if you prefer that shape.\nThis week I hit a milestone I'm genuinely proud of: 129 out of 129 templates across 5 real-world public charts now render without a single parser exception.\n\n\n\nChart\nVersion\nTemplates\n\n\n\n\ningress-nginx\n4.12.1\n42/42 ✅\n\n\ncert-manager\n1.17.1\n41/41 ✅\n\n\nexternal-dns\n1.21.1\n7/7 ✅\n\n\npodinfo\n6.14.0\n21/21 ✅\n\n\nmetrics-server\n3.13.1\n18/18 ✅\n\n\n\nThis was blocked by two parser bugs that took a while to track down — one in pipeline splitting where | inside parenthesized expressions like (empty .x) was incorrectly treated as a pipeline separator, and one in else-if chain reconstruction where C# string interpolation was silently producing single braces instead of double braces. The kind of bug where you stare at it for hours, then the fix is four characters.\nThe test suite is at 214 tests across three target frameworks, with a golden-test harness that runs helm template as the oracle and diffs the output document-by-document against HelmSharp's renderer.\nThe project follows numbered milestones:\nM1 (in progress): Helm template parity — functions, whitespace, built-in objects, control flow\nM2: Subchart and dependency resolution\nM3: Release lifecycle (install/upgrade/rollback/uninstall with hook execution)\nM4: Kubernetes resource lifecycle hardening\nM5: OCI registry and provenance\nM6: API polish, XML docs, stable surface\nNo hard dates — I'm pushing forward steadily (you can see the cadence in the commit history). That said, if someone needs a specific feature, I'm happy to re-prioritize. Open source moves faster when real use cases drive it.\nIf you're writing a .NET Kubernetes operator, a CD pipeline, or any tooling that currently shells out to helm — this is for you. dotnet add package HelmSharp.Action and render one of your charts. If it works, great. If it breaks, I want to know exactly how — open an issue with the chart and template that failed, and I'll fix it.\nIf you find it useful, a star is appreciated — but stars are earned, not asked for. What I really want is feedback, bug reports, and feature requests from people who actually deploy things to Kubernetes.\nContributions are welcome too. The golden-test harness makes it easy to verify template fixes — add a chart fixture, run the test, see the diff.\nIf you use Helm in .NET-based tooling today, what would you expect from a managed SDK like this?\nGitHub: github.com/GaTTGeng/HelmSharp\nNuGet: nuget.org/packages/HelmSharp.Action\nLicense: MIT",
+      "publishedAt": "2026-06-22T03:47:32.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "9539329ca4a87866780ae0689dd20ed947921226262ae30ff14be6c74ea6bc0f",
+      "title": "What 60+ Claude Code memory entries taught me about solo ops",
+      "url": "https://dev.to/solosre/what-60-claude-code-memory-entries-taught-me-about-solo-ops-18eo",
+      "description": "I run a paid infrastructure service. Alone. No co-founder, no on-call rotation, no senior engineer to escalate to. My only collaborator is Claude Code, and after about a year, my persistent memory has grown to 60+ entries.\nThose entries have become more valuable than any runbook I've written. They've also taught me — painfully — what makes memory architecture work and what makes it quietly fail.\nIf you're running anything solo with an AI agent, here are five lessons I wish I'd burned into my brain on day one.\nwhy, not the what\n\n\nThe first instinct when you start using persistent memory is to log what you did. \"Migrated service X from tool A to tool B.\" \"Switched protocol from X to Y.\"\nSix months later, when something breaks, that information is worthless. You don't need to know what you did — git log and git blame already tell you that. You need to know why you made that choice. What constraint forced it. What you ruled out.\nReal example. The bad version of an entry I once wrote:\nSwitched the worker pool from Docker containers to systemd units on host.\nTells me nothing my git history doesn't. The rewritten version:\nsystemd units on the host instead of Docker containers on this VPS provider. Why: the provider runs aggressive kernel-wide OOM scoring across tenants; containers were getting reaped by oom-killer triggered by other customers' workloads. systemd processes survive because they're scored as system processes. How to apply: any VPS where dmesg | grep -i oom shows kills from PIDs you don't recognize — don't run containers there, run systemd.\nThat one entry has saved me three rebuilds. Because the next time I'm tempted to \"just dockerize it, it'll be cleaner,\" the memory entry says: no, you already learned this, you'll be back here in a week.\nThe pattern: always include Why: and How to apply: lines. If a memory entry can't answer those two questions, delete it.\nAbout six months in, I did a memory audit. Of 60 entries, 14 referenced things that no longer existed. A file path that had been renamed. A function that had been deleted. An architecture I'd since replaced.\nThe cost wasn't just irrelevant context. It was actively misleading context. The agent would surface a memory entry that pointed to a file path, the file wouldn't exist, and the agent would either dead-end or fabricate.\nI tried scheduled audits. Didn't work — I'd skip them. What worked: every time I read a memory entry mid-task, I make a snap call — still true? If yes, leave it. If no, edit or delete in that moment.\nMemory isn't a backup. It's a live dependency. You either keep it in your operations loop or it becomes lore.\nMy best memory entries don't describe systems. They describe what not to do.\n\"Don't run X on Y.\" \"Avoid this approach because we tried it last quarter and it cost three nights of debugging.\" \"This UI shortcut looks fast but breaks under condition Z.\"\nThese entries save the most time because they prevent re-discovering the same trap. But they're also the entries I have to actively force myself to write. Because when you've just spent four hours debugging something, the impulse is: I fixed it, I'm done, ship it. Not: let me sit here for another five minutes and document what I almost didn't notice.\nI now ask, after any frustrating debugging session: did I just learn something my past self would have wanted to know? If yes — entry. Even if it's two lines.\nThese are the entries with the highest savings per character written. They are also the easiest to skip.\nI keep a MEMORY.md that's an index — title plus a one-line hook for each memory file. After dozens of entries, I realized something uncomfortable:\nThe index entry matters more than the file content.\nWhy? Because the index is what the AI sees first. The body of the file is only loaded when the agent decides to read it. And the agent's decision is based entirely on the index description.\nIf webhook_replay.md is described as \"webhook stuff\", the AI never opens it. If described as\nStripe webhook replay: idempotency-key collisions vs. event_id reuse; what to do when a partial DB failure leaves the worker in an unknown state; the one query that tells you if it's safe to re-fire\n— the AI opens it in exactly the right moments.\nThe memory file might be 500 words. The index entry is 100 characters. The 100 characters do all the retrieval work.\nWhen I write a new memory entry now, I spend more time on the index line than I do on the file body. This feels backwards. It isn't.\nThis one I had to learn the hard way: my agent truncates MEMORY.md after a certain line count. For me, lines after 200 silently drop out of context. They might as well not exist.\nThis means MEMORY.md isn't just an index — it's a layout problem. Which 200 lines deserve to live in every conversation? Which entries are good enough to keep on disk but not critical enough to load every time?\nPruning isn't only about deleting things that became wrong. It's about deciding what earns context.\nMy rule now: if I haven't read or used a memory entry in two months and it's not load-bearing, the index line moves down or out. The file stays on disk for archaeology. The index line is sacred real estate.\nI'm packaging the schema I converged on — the memory templates, the MEMORY.md layout, the prompts I use to trigger high-signal writes, the audit rituals — into a kit for solo operators using Claude Code.\nIt's the kit I wish I'd had on day one. It's at solosre.dev.\nIf any of these failure modes feel familiar — if your AI memory has started to drift, mislead, or quietly stop pulling its weight — there's a structured way out of it. You don't have to learn this through 60 entries the way I did.\nIf you're running solo with Claude Code (or any agent with persistent memory), I'd love to hear what's worked and what's broken for you in the comments. The lesson nobody else will tell you is usually the one that saves the most pain.",
+      "publishedAt": "2026-06-22T03:33:08.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "a6b634b1c4ff9787bf5ddb48b15feff0c5f1e2f23e7132c9f388b0eafb912e5c",
+      "title": "Benchmark Rust, Go và TypeScript: NPU 50 TOPS hay RTX 5060?",
+      "url": "https://dev.to/hung_phatlaptop_a651fc86/benchmark-rust-go-va-typescript-npu-50-tops-hay-rtx-5060-16m9",
+      "description": "Trong thế giới phát triển phần mềm hiện đại, tốc độ build không chỉ là con số — nó ảnh hưởng trực tiếp đến workflow và trải nghiệm lập trình. Bài viết này sẽ so sánh hiệu năng compile của ba ngôn ngữ phổ biến: Rust, Go và TypeScript trên các dự án thực tế, đồng thời liên hệ với sức mạnh phần cứng từ ReviewLaptop để xem sự khác biệt giữa NPU và GPU ảnh hưởng thế nào đến máy trạm.\nKhi thực hiện benchmark trên một dự án quy mô trung bình, chúng ta thấy rõ sự khác biệt về kiến trúc trình biên dịch:\nRust (cargo build): Là ngôn ngữ có thời gian compile lâu nhất do hệ thống kiểm tra an toàn bộ nhớ và Generic phức tạp. \n\n\n\nCold Build: Có thể mất vài phút tùy độ lớn dự án.\nIncremental Build: Tối ưu hơn nhưng vẫn tiêu tốn tài nguyên đáng kể.\nGo (go build): Được thiết kế để biên dịch cực nhanh với cấu trúc đơn giản và hiệu quả.\n\n\n\nCold & Incremental: Thường chỉ mất vài giây, là lựa chọn hàng đầu cho các hệ thống microservices.\nTypeScript (tsc): Việc kiểm tra kiểu (Type checking) trên dự án lớn có thể gây nghẽn cổ chai.\\\n\n\n\nCold Build: Chậm đáng kể nếu không cấu hình đúng skipLibCheck hoặc sử dụng các công cụ như SWC/Esbuild để transpile nhanh hơn.\nBảng so sánh ước tính (Dự án thực tế):\n\n\n\nNgôn ngữ\nLệnh\nCold Build\nIncremental\nCPU Usage\nNhiệt độ\n\n\n\n\nRust\ncargo build\nCao (3-5m)\nTrung bình\nRất cao\nNóng nhanh\n\n\nGo\ngo build\nThấp (<10s)\nRất thấp\nThấp\nỔn định\n\n\nTypeScript\ntsc\nTrung bình\nThấp\nTrung bình\nẤm\n\n\n\nKhi compile kéo dài, CPU sẽ hoạt động hết công suất. Tuy nhiên, xu hướng AI offline đang làm thay đổi cách chúng ta chọn laptop.\\ Nếu bạn cần chạy các tác vụ AI hỗ trợ lập trình (như Copilot local hoặc khử ồn video call) trong khi đang build dự án Rust nặng:\nNPU 50 TOPS: Hoạt động dưới 10W, xử lý tốt các tác vụ nền mà không làm nóng máy hay tranh giành tài nguyên với CPU đang compile.\nRTX 5060 (572 AI TOPS): Mạnh mẽ cho Stable Diffusion hoặc LLM nặng nhưng tiêu thụ tới 80-115W. Nếu dùng GPU để chạy AI trong khi build dự án lớn, laptop sẽ rất nóng và nhanh hết pin.\\\nKết luận: Với lập trình viên, một cấu hình Hybrid (NPU + GPU rời) là lý tưởng nhất: NPU xử lý tác vụ AI nền, CPU tập trung tối đa cho việc cargo build hoặc go build.\nBài viết này là bản tóm tắt kỹ thuật. Xem chi tiết tại bài gốc.",
+      "publishedAt": "2026-06-22T03:28:05.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "e139f7c9b2422c3c916b4979906eb39402426db1208d5aaaf1c4fa7e16f72b57",
+      "title": "Archive — A Narrative Investigation Game About Curating Human History",
+      "url": "https://dev.to/adodanieln/archive-a-narrative-investigation-game-about-curating-human-history-1ca0",
+      "description": "This is a submission for the June Solstice Game Jam\nWhat if history wasn't discovered... but selected?\nHistory is often treated as something permanent—something waiting to be uncovered.\nArchive asks a different question:\nWhat happens when humanity loses the ability to tell the difference between truth, memory, and fabrication?\nYou play as the final Archivist after the collapse of civilization. Humanity's knowledge survives, but it has become fragmented, contradictory, and corrupted. Your responsibility is no longer to preserve everything—you must decide what deserves to be remembered.\nEvery decision changes the civilization that will inherit your version of history.\nArchive is a narrative investigation game where players reconstruct humanity's past by examining historical memories, investigating evidence, resolving contradictions, and deciding what becomes official history.\nUnlike traditional mystery games, there is rarely a perfect answer.\nInstead, every investigation asks questions such as:\nShould conflicting memories be preserved?\nIs stability more important than truth?\nCan compassion justify rewriting history?\nIf no one can verify the past, what does \"truth\" even mean?\nEach recovered memory is presented as a historical article. Players investigate through classified documents, research papers, witness testimonies, forensic reports, personal journals, and government archives before making irreversible decisions.\nThose decisions reshape the civilization that follows.\nBy the end of the game, players don't simply receive a score—they discover the kind of society they created.\nThe June Solstice represents a turning point.\nIt is the moment when one season gives way to another, when light begins yielding to darkness, or darkness begins yielding to light.\nArchive explores a similar transition.\nNot between seasons...\nbut between certainty and uncertainty.\nHuman civilization reaches a moment where objective history begins to disappear. Every decision the player makes determines what survives that transition.\nThe game is ultimately about how societies evolve through the stories they choose to preserve.\nPlayers:\nRecover fragmented historical memories.\nExplore multiple investigation paths.\nAnalyze evidence with varying reliability and bias.\nResolve contradictions between historical accounts.\nDecide which memories become part of civilization's official record.\nShape the philosophical identity of humanity's future.\nNo two playthroughs necessarily create the same civilization.\nthe-last-memory-of-earth.vercel.app\n          \n\n        \n      \nThe video demonstrates:\nArchive exploration\nInvestigation system\nEvidence paths\nDecision making\nCivilization evaluation\nMultiple possible historical outcomes.\nSorry about the low vibe during that, i was extremely tired 😅.\nGitHub Repository:\n(https://github.com/acetennyson/The-Last-Memory-of-Earth/)\nPublic domain:\n(https://the-last-memory-of-earth.vercel.app/)\nArchive was designed around one core philosophy:\nHistory is not merely remembered, it is curated.\nRather than treating lore as optional background reading, every piece of narrative content exists as gameplay.\nThe project includes systems for:\nbranching investigations\nlayered evidence\ncontradictory historical records\ncivilization philosophy\nprocedural ending evaluation\nmarkdown-powered historical articles\ndynamic narrative progression\nThe game is built using React, TypeScript, Capacitor, and a fully data-driven content architecture that allows new story arcs, memories, investigations, and evidence to be added without modifying gameplay systems.\nOne of the biggest design challenges was avoiding \"good\" and \"bad\" endings.\nInstead, the game evaluates the civilization created by the player's accumulated decisions across values such as Truth, Freedom, Compassion, Progress, Power, and Legacy.\nThe result is an ending that reflects who humanity became, rather than simply whether the player succeeded.\nArchive is deeply inspired by questions surrounding computation, information, and artificial intelligence.\nAs the Archive evolves, it begins connecting information in ways humans never anticipated, raising questions similar to those explored by Alan Turing:\nCan a machine create knowledge?\nCan intelligence emerge from information alone?\nWhen does computation become interpretation?\nRather than focusing on AI as a tool, the game explores AI as a historical force capable of reshaping civilization itself.\nGoogle AI played an important role throughout development.\nIt was used as a creative collaborator for:\nworldbuilding\nhistorical consistency\nnarrative iteration\ninvestigation design\nstory arc refinement\ngameplay balancing\ntechnical architecture discussions\nRather than generating finished content automatically, Google AI became part of the iterative design process, helping refine ideas while preserving a consistent narrative vision.\nArchive isn't about winning.\nIt isn't even about discovering the truth.\nIt's about confronting one uncomfortable possibility:\nHistory never remembers everything.\nOnly what someone chose to preserve.",
+      "publishedAt": "2026-06-22T03:23:20.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "bbf95f5f7e6cfa4cf9fb1e865c9fbe0ed16948b83e3111a00c95028081a46d18",
+      "title": "週刊AWS – 2026/6/15週",
+      "url": "https://aws.amazon.com/jp/blogs/news/aws-weekly-20260615/",
+      "description": "AWS WAF が AI トラフィック収益化機能を発表、AWS DevOps Agent がカスタム SRE エージェントと MCP/A2A プロトコルに対応、Amazon Bedrock AgentCore Memory が long-term memory に厳密に一貫したメタデータをサポート、Amazon Quick が Adobe、Figma、WhatsApp など 16 の新しいコネクタで統合を拡大、AWS Compute Optimizer が EBS ボリューム推奨で IOPS とスループットスパイクの可視性を強化　など",
+      "publishedAt": "2026-06-22T02:46:57.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "aa71a831f638b86bf0af7044a59f4f5e059585df7ed6665c6d6c85c0a2b5276a",
+      "title": "「フィジカル AI 開発支援プログラム by AWS ジャパン」Community Meetup #1 を開催しました",
+      "url": "https://aws.amazon.com/jp/blogs/news/physical-ai-community-meetup-1/",
+      "description": "2026 年 6 月 1 日、アマゾン ウェブ サービス ジャパン合同会社（以下、AWS ジャパン）は、「フィジカル AI 開発支援プログラム by AWS ジャパン」の第 1 回コミュニティイベント「Community Meetup #1」を、 AWS ジャパン 麻布台オフィスにて開催しました。本プログラムは 2026 年 1 月 27 日に発表し、3 月 3 日にキックオフイベントを開催しました。今回の Community Meetup は、約 6 ヶ月間の開発支援期間のなかで、採択企業同士の交流を主な目的として開いた初めてのコミュニティイベントです。",
+      "publishedAt": "2026-06-22T02:40:46.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "4b8e254a528d116accaef9ec15b2723a2ec0ae23f41d7e4d15fcd5f313b80edc",
+      "title": "Azure AI Search（Foundry IQ）とMicrosoft FoundryでRAGをつくる",
+      "url": "https://dev.classmethod.jp/articles/create-rag-with-azure-ai-search-and-microsoft-foundry/",
+      "description": "これまでのドキュメントを知見として活かしたい！Azure AI SearchとMicrosoft Foundryを使ったRAG構築に挑戦し、自分の書いた文章をもとにAIが回答できる仕組みを作ってみました。",
+      "publishedAt": "2026-06-22T02:40:15.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "86540ed757b2be108dd024073afa017b2cc6f90644343e315ba353f9d95d8272",
+      "title": "「Windows 11 バージョン 26H2」がテスト開始 ～2026年後半に正式リリース／「24H2/25H2」とコード共通で「eKB」による切り替え。ただし「26H1」からは更新不可",
+      "url": "https://forest.watch.impress.co.jp/docs/news/2118761.html",
+      "publishedAt": "2026-06-21T23:13:45.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "9c786811fb4b65c498023cda9b0939ab7a51e95cc10f70f390d7c4f23198f9cd",
+      "title": "「危険なAI」の証拠はあったのか？　Anthropic「Fable 5」規制に広がる疑問の声",
+      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2606/22/news026.html",
+      "description": "Anthropicの最新AIモデルに突如課された輸出規制が波紋を広げている。政権側は安全保障上の懸念を理由に挙げるが、セキュリティやAI分野の専門家は、その判断を支える根拠が十分に示されていないと反発している。問題視された能力とは何か。",
+      "publishedAt": "2026-06-21T22:30:00.000Z",
+      "feedName": "＠IT"
+    },
+    {
+      "id": "2cb71a568f892172a9471a913b7614a5308d305053e02b6326a1cd3fe19c3780",
+      "title": "Kiro Web のサンドボックスから AWS アカウントのリソースを参照できるように設定してみた",
+      "url": "https://dev.classmethod.jp/articles/kiro-web-sandbox-aws-access/",
+      "description": "Kiro Web のサンドボックスから AWS アカウントのリソースを参照できるように設定してみた",
+      "publishedAt": "2026-06-21T20:46:17.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "fc25728b05f3eff8b3c7adeaf453dda88e85ffff701199a7ccc61089b244cd2d",
+      "title": "「セキュリティのアレ」の3人が事例から導く、サプライチェーン攻撃対策の楔",
+      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2606/22/news008.html",
+      "description": "2026年5月29日、「ITmedia Security Week 2026 春」で、パネルディスカッション「信頼の境界線に打つ楔」が行われた。",
+      "publishedAt": "2026-06-21T20:00:00.000Z",
+      "feedName": "＠IT"
+    },
+    {
+      "id": "3d047084cdc936e7d31a971473282bad15068d750a8c8f162b8e4ce378c2dd87",
+      "title": "AWS Deadline Cloud: After Effects プラグインを conda 配信したら Worker でだけ機能しなかった話",
+      "url": "https://dev.classmethod.jp/articles/aws-deadline-cloud-after-effects-plugin-conda-adobe-common/",
+      "description": "AWS Deadline Cloud の CMF で After Effects を conda 配信したところ、ローカルでは機能するサードパーティプラグインが Worker でだけ機能しませんでした。原因はプラグインのインストール先にありました。",
+      "publishedAt": "2026-06-21T16:00:18.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "3e83051be54247197cba14aa786785c47d34eb1a5cc6c7e0fe9dabbb121cc234",
+      "title": "AWS、AIエージェントがリポジトリを自動スキャンして技術的負債を指摘してくれる「AWS Transform – continuous modernization」プレビュー公開",
+      "url": "https://www.publickey1.jp/blog/26/awsaiaws_transform_continuous_modernization.html",
+      "description": "AWS、AIエージェントがリポジトリを自動スキャンして技術的負債を指摘してくれる「AWS Transform – continuous modernization」プレビュー公開 Amazon Web Services（AWS）は、AIエージェントがコードリポジトリを継続的に自動スキャンし、サポートが終了したライブラリやフレームワークなどを始めとする技術的負債を検...",
+      "publishedAt": "2026-06-21T13:44:03.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "034bdd5f4412836e2bc10acd25614a2a6558ec7bf43ac30328672c990bc81e7b",
+      "title": "JavaScriptを事前コンパイルする。不可能と言われた挑戦に挑む開発者。｜直也テック",
+      "url": "https://note.com/naoya_tech/n/n99f05affec01",
+      "description": "今回はポッドキャスト「devtools.fm」に出演したOliver Medhurst氏の回をご紹介します。彼はPorffor（ポーファー）というプロジェクトの作者です。Porfforは「JavaScriptをWebAssemblyへと事前にコンパイルする（Ahead of Time Compiler、AOTコンパイラ）」という、多くの人が「不可能だ」と考えてきた仕組みに挑む研究...",
+      "publishedAt": "2026-06-21T12:42:21.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "174b66372c5c673a74415d06c222bbe752b18ef2dd694f336742c0a4cd43a669",
+      "title": "Windows の AWS Deadline Cloud Worker でジョブが同じエラーで 3 回拒否された話",
+      "url": "https://dev.classmethod.jp/articles/aws-deadline-cloud-windows-worker-agent-user/",
+      "description": "Windows の AWS Deadline Cloud Worker で WORKER_AGENT_USER モードのジョブを動かそうとしたところ、同じエラーメッセージのまま 3 段階に渡って拒否されました。文言は Administrator 権限を指していますが、実態は別のところにありました。",
+      "publishedAt": "2026-06-21T12:00:06.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "a8dc7e03e2573df8033edfc542c1faa6ad0618e7f0ec640a25bbde8b47e72ff0",
+      "title": "GitHub Copilot SDK が GA！TypeScript で カスタムツールを動かして料金体系も調べてみた",
+      "url": "https://dev.classmethod.jp/articles/shoma-github-copilot-sdk-ga-typescript-hello-world-to-custom-tools-pricing/",
+      "description": "GitHub Copilot SDK が GA！TypeScript で カスタムツールを動かして料金体系も調べてみた",
+      "publishedAt": "2026-06-21T11:33:56.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "e04f5212c29101e151b2042379eaccc38702bf2dbd7fe79100975eead12f575d",
+      "title": "AI-DLC Workflows v2がプレビューリリースされたのでKiro CLI / Claude Code / Codex CLIにインストールしてみた",
+      "url": "https://dev.classmethod.jp/articles/aidlc-workflows-v2-install-kiro-claude-codex/",
+      "description": "AI-DLC Workflows v2が2026-06-18にプレビューリリースされました。TypeScriptによるネイティブ実装へ全面刷新され、決定論的エンジンや状態管理が加わっています。本記事ではKiro CLI・Claude Code・Codex CLIの3ハーネスへのインストールと動作確認を試みました。",
+      "publishedAt": "2026-06-21T10:42:52.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "1811a4b0b1418e613d223d04965a6911c8951079e93049cfb7cb3ee0fab0fef9",
+      "title": "【AWS Blocks 入門】AWSのIfCツール「AWS Blocks」を体験してみた！",
+      "url": "https://qiita.com/yosuke-suzuki/items/aaac7afe22edf08d8d7d?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\n2026年6月16日、AWSから AWS Blocks がパブリックプレビューとして発表されました。\n\nAWS Blocksは、フルスタックアプリケーション向けのオープンソースのバックエンド開発フレームワークです。データベース・認証・ストレージ・AIエージェ...",
+      "publishedAt": "2026-06-21T09:27:12.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "f425a6bc1c03689668bcbb3979533a8ebddfd23d0ec09b5a0679114f7eaac54b",
+      "title": "生成 AI で書類審査を行う AWS ソリューション「RAPID」をデプロイして使ってみた",
+      "url": "https://dev.classmethod.jp/articles/try-rapid-document-review-on-aws/",
+      "description": "生成 AI で書類審査を行う AWS ソリューション「RAPID」をデプロイして使ってみた",
+      "publishedAt": "2026-06-21T08:31:22.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "e634830cf1cd92130739d731a66272db7e59251429b9d37fbcc9ae78c13a826a",
+      "title": "閉域 VPC の AWS Deadline Cloud CMF Worker では STS の VPC エンドポイントが要る話",
+      "url": "https://dev.classmethod.jp/articles/aws-deadline-cloud-cmf-private-vpc-sts-endpoint/",
+      "description": "AWS Deadline Cloud の Worker Agent 本体は STS を呼ばない設計ですが、job attachments の入力同期だけは内部で STS にフォールバックします。閉域 VPC では STS のインターフェイス VPC エンドポイントを追加すると、この入力同期のタイムアウトを解消できます。",
+      "publishedAt": "2026-06-21T08:15:43.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "955b8cd2fb812fc69654df0d81e8361a56835d0bfe8dd7b3f77173b61be37d04",
+      "title": "GPUDirect RDMA 入門: NIC が GPU メモリに直接読み書き",
+      "url": "https://zenn.dev/tosshi/articles/42f0ee03b328a4",
+      "description": "はじめに\n!\nこの記事のゴール: 「GPU 同士がネットワーク越しに、CPU をほとんど介さず直接データをやり取りする」仕組みである GPUDirect RDMA を、初学者向けに解説します。\n\nそもそも RDMA とは何か（Buffer → NIC → NIC → Buffer）\nTCP/IP と何が違うのか（RTT・カーネルバイパス）\nRDMA の操作（RDMA Operations）と「メモリ登録」\nGPUDirect RDMA — NIC が GPU メモリに直接アクセスする（2 つの実現方式）\nAWS EFA はどうやって RDMA を実現しているか（SRD / Queue...",
+      "publishedAt": "2026-06-21T07:12:02.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "87396c7b84f778b08889a7f9f37ff895493ae722f5c666e6d483573be3639656",
+      "title": "PrivateLinkとResource Gatewayで既存IPv4環境を変更せずにIPv6環境へ接続する",
+      "url": "https://qiita.com/infra365/items/94c359afab6508e2c657?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "概要\n既存VPCのIPv4環境を変更せずに、IPv6環境のVPCと通信したい場合の構成パターンを検証します。AWS PrivateLinkのResource GatewayおよびVPCエンドポイントを利用することで、NLB不要かつクライアント側のIPv4環境はそのままにI...",
+      "publishedAt": "2026-06-21T06:39:51.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "3917db309eb15bea02dfb62ce3877f6ebe169ddadb50a0bdb217615997d13091",
+      "title": "TypeScript プロジェクトに ESLint・Prettier・cspell を 1 つずつ入れて挙動を確かめてみた",
+      "url": "https://dev.classmethod.jp/articles/shoma-setup-eslint-prettier-cspell-one-by-one-in-typescript-project/",
+      "description": "TypeScript プロジェクトに ESLint・Prettier・cspell を 1 つずつ入れて挙動を確かめてみた",
+      "publishedAt": "2026-06-21T05:20:16.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "d7414cf641ec55a75766596fff7932cbd035eb70c768f63c38e0b781e7ac5fc5",
+      "title": "AWSのPhysical AI Scaffolding Kit (PASK)を試す② — HyperPodでNVIDIA Isaac GR00Tをファインチューニング",
+      "url": "https://dev.classmethod.jp/articles/aws-pask-hyperpod-nvidia-isaac-gr00t-finetuning/",
+      "description": "AWSのPhysical AI Scaffolding Kit (PASK)を試す② — HyperPodでNVIDIA Isaac GR00Tをファインチューニング",
+      "publishedAt": "2026-06-21T04:44:07.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "7e7a5a0c5684f9c27a1dbff4d00c06221d99607d3fc7c3327631b0fe961a04e4",
+      "title": "LocalStack が有料になったので MiniStack + Terraform でローカル AWS 環境を作り直した",
+      "url": "https://zenn.dev/kamegoro/articles/ef1ab1c9527f9d",
+      "description": "はじめに\n個人開発で AWS のインフラを Terraform で管理していると、こういう悩みが出てきます。\n\n「terraform apply のたびに実 AWS を使うのはコストが怖いし、壊すのも嫌だ。ローカルで試したい」\n\nそこで従来は LocalStack を使うのが定番でした。ところが 2026 年 3 月、LocalStack は Community Edition を廃止し、最新版の利用にはアカウント登録と認証トークンが必須になりました。無料の Hobby プランも「非商用に限定」という制約つきです。\n代わりになるものを探していたところ、MiniStack という OS...",
+      "publishedAt": "2026-06-21T03:26:04.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "54a7a64da69c5c48c90e9356e4a299ce0d156235f6580109ad36580253230b1a",
+      "title": "バグハンター視点で学ぶ Caido 実践入門",
+      "url": "https://zenn.dev/scgajge12/books/119c83fa281d04",
+      "description": "📕【概要】\n　本書は、急速に支持を広げる Web プロキシツール「Caido」を、バグハンターの視点で使い倒すための入門書です。ブラウザとサーバの間に割り込んで通信を傍受し、書き換え、再送し、自動化する。その一連の作業をCaidoでどう行うのかを、一冊にまとめました。\n\n　本書は、各機能を「どんな脆弱性を狙うときに、どう効くのか」というバグハンティングの文脈で説明します。さらに公式の練習用ラボ（Caido Labs）を実際に解いて手を動かし、バグハンターが現場で使っているテクニックまで拾い上げます。\n\n💪【こんな方にオススメ】\n・☆ Caido をこれから使ってみたい方\n・☆ バグハンティングやバグバウンティに挑戦したい方\n・Web セキュリティを学びたい学生\n・すでに Burp Suite を使っていて、Caido を試してみたい方\n\n📢【お知らせ】\n・本書は Zenn の無料本です。\n\n🧑‍💻【筆者プロフィール】\n・セキュリティエンジニア & バグハンター (since 2020)\n・これまでサイバーセキュリティ企業で脆弱性診断やペネトレーションテスト等を従事\n・日本ハッカー協会「Hack Fes.」や IssueHunt「P3NFEST」などで『バグバウンティ入門講座』の講師を担当\n\n💰【備考】\n・本書は PDF の仕様で約120ページのボリュームです。",
+      "publishedAt": "2026-06-21T03:05:13.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "1fbab683a763d29ef48126a319eabc8559e6f7f323a338bab4249c3b91ed1b68",
+      "title": "Kiroの仕様駆動開発でチーム分けアプリを1時間で作ってみた",
+      "url": "https://qiita.com/YSasago/items/2ed101acdacd5c9e3fc7?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\nAWS Kiro を使って、コードを一切書かずにチーム分けアプリをつくり、デプロイするまでの手順をまとめました。無料プランで簡単なアプリなら開発可能なので、Kiro を試してみたい人の参考になればうれしいです。\n今回つくったのは、こんなアプリです。\n\nメンバーを...",
+      "publishedAt": "2026-06-21T02:47:34.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "bfd726a952b26a6fd897622110fe6d90116c4eea59b276d5263489658e5a9d22",
+      "title": "Vercel、エージェント構築のためのフレームワーク「eve」をリリース ―“エージェントにおけるNext.js”を目指す | gihyo.jp",
+      "url": "https://gihyo.jp/article/2026/06/eve",
+      "description": "Vercel⁠⁠、エージェント構築のためのフレームワーク「eve」をリリース ―“エージェントにおけるNext.js”を目指す Vercelは2026年6月17日、AIエージェントを構築、実行するためのオープンソースのフレームワーク「eve」を発表、パブリックプレビューとしてリリースした。 Introducing eve -Vercel Eve -Vercel URL：https:...",
+      "publishedAt": "2026-06-21T01:12:13.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "5e08c033f6fd23f3220b0f34fd7a7670b8607fdf54218f4756f6c25494893145",
+      "title": "仕様駆動開発（Kiro流SDD）でClaude Code用の画像生成Skillを作ってみた",
+      "url": "https://qiita.com/potofo/items/604002fb4b8ab5f14857?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "TL;DR\n\nClaude Code の Agent Skill として、Azure の gpt-image-2 でテキストから画像を生成する仕組みを作りました。\n作り方は Kiro 流の仕様駆動開発（Spec-Driven Development, SDD）。要件 ...",
+      "publishedAt": "2026-06-19T22:38:01.000Z",
       "feedName": "Qiita"
     }
   ]
