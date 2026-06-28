@@ -1,22 +1,6 @@
 {
   "articles": [
     {
-      "id": "85c1a1b3152e7e26d5da9f25d37edb12e3c56e512ed87bc5b2d2aa15b610c6d1",
-      "title": "EC2 Beginner Guide: Launch Your First AWS Instance",
-      "url": "https://dev.to/kadhamvj23/ec2-beginner-guide-launch-your-first-aws-instance-5gjp",
-      "description": "Introduction\n\n\nIn my previous IAM article we learnt basics of IAM and how to create Users, Groups and attach Policies. You can refer here: https://dev.to/kadhamvj23/aws-identity-and-access-management-explained-for-beginners-cn7\nAfter setting up secure access to our AWS account using IAM, the next question we mostly have is where do we actually run our application?\nThe answer is Amazon EC2 - Elastic Cloud Compute.\nEC2 is one of the most widely used AWS services and understanding it well is essential for anyone starting their cloud journey. In this article we will cover what EC2 is, why it exists, the different types of instances, pricing models, Regions and availability Zones and finally hands-on walk through of creating your first EC2 instance.\nLet us understand what each word in the name actually means:\nElastic --> In AWS you will notice many services have this prefix \"Elastic\". The reason is simple. Whenever AWS provides a service that can be scaled up or scaled down based on our needs, that service is called Elastic. With EC2 you can increase resources when traffic is high and decrease them when the traffic is low.\nSo in simple terms EC2 = A virtual server on the cloud that you can resize anytime.\nCloud: EC2 runs on AWS's public cloud infrastructure, meaning the servers are owned and managed by Amazon across the world.\nCompute: The word compute means you are asking AWS to provide you CPU, RAM and Disk - basically a virtual machine or server that can run your applications.\nWhen you request a Virtual server from AWS, here is what happens behind the scenes:\nYou request a virtual machine on AWS\n                  ⬇️\nrequest goes to a Hypervisor(a software layer \nsitting on top of physical servers that creates and manages VMs)\n                  ⬇️\nHypervisor creates your VM\n                  ⬇️\nYou get the access to your EC2 instance\n\nYou never touch any physical hardware. AWS manages all of that for you.\nImagine your company wants to host an application. The traditional approach would be:\nBuy physical servers\nInstall a hypervisor\nCreate VMs\nProvide access to employees\nmanage timely upgrades\nHandle security patches\nDeal with hardware failures\nThis sounds manageable for 10 servers. But imagine doing this for 1000s of servers. Your entire day as a system admin would be consumed just keeping things running -not building anything new.\nAWS EC2 solves this entirely\nInstead of managing physical hardware, you simply:\nGo to AWS Console\nLaunch an EC2 instance in minutes\nPay only for what you use - PAYG\n\nLet AWS handle all hardware maintenance, upgrades and security\nAWS takes care of the physical infrastructure so you can focus on your actual work.\n1. AMI - Amazon Machine Image\nBefore launching an EC2 instance, you will need to choose an AMI. Think of it as the OS template for your server.\nExample: Amazon Linux, Ubuntu, Windows, Red hat\n2. Key-Pair\nWhen you create an EC2 instance, AWS gives you a key-pair - a set of two keys(public and private) used to securely connect to your instance.\nAWS keeps the public key.\nYou can download and keep the private key(.pem file)\nWithout this key, you can't SSH into your instance.\nThink of this as a digital lock and key - AWS puts the lock on the server and gives you the only key.\n3. Security groups:\nA Security Group acts as a virtual firewall for your EC2 instance. it controls which traffic is allowed in and out.\nWe will understand more about this in future articles when we deep dive more into Security Groups and Networking.\n4. EBS: Elastic Block Storage\nEvery EC2 instance needs storage. EBS is the hard disk attached to your EC2 instance where your data, OS files & application files are stored.\nJust like EC2, EBS is also elastic in nature, that can increase and decrease the disk size anytime without stopping your instance.\nAWS offers 5 types of EC2 instances. You can choose based on what your application needs. The following are the types:\n1. General Purpose: Best for balanced CPU, RAM and storage like web servers, small apps\n2. Compute Optimized: best for High CPU performance like gaming servers\n3. Memory Optimized: for large amounts of RAM like Big databases, data analytics\n4. Storage Optimized: For High disk rea/write speed like data warehouses, log processing\n5. Accelerated Computing: For GPU based tasks like machine learning.\nDepending on your application requirement you pick the right instance type. For the learning purpose in this complete blog I will be using the general Purpose EC2 instance.\nThis is very important and often comes up in AWS certifications:\n1. On-Demand:\nPay per hour or per second\nNo commitment\nbest for: short term or unpredictable workloads\nMost expensive per hour but most flexible.\n2. Reserved Instances\nYou commit to using EC2 for 1 or 3 years\nGet up to 75% discount compared to On-Demand\nBest for steady, predictable workloads\n3. Spot Instances\nYou bid for unused AWS capacity\nCan be up to 90% cheaper than On-Demand\nBut AWS can terminate your instance with 2 mins notice if they need the capacity back.\nBest for batch jobs, testing jobs, non critical tasks\n4. Savings Plan\nflexible pricing model\nCommit to a specific amount of usage per hour\nApplies across EC2, lambda and other services\nAWS has data centers spread across the world organized as:\nRegions -- A geographical area like Mumbai, US East, Singapore. AWS has multiple regions across the world. You can choose a region closest to your users for low latency.\nAvailability Zones(AZs) -- Within each region there are multiple Availability zones. Each AZ is essentially a separate data center with its own power, cooling and networking. This means if one AZ goes down your application can still run from another AZ.\nAlways attach a Security Group - never leave all ports open\nNever loose your key pair - you cannot recover it.\nChoose region closest to your uses.\nStop instances when not in use - you are charged for running time.\nNow, let’s move towards the practical implementation by launching an EC2 **instance and **deploying Jenkins on it.\nBy the end of this lab, you will successfully deploy your first application on AWS EC2.\nStep 1: Login to AWS Console\nOpen your AWS account and log in to the AWS Management Console.\n\nIn the search bar at the top, type EC2 and click on the EC2 service.\nYou will now be redirected to the EC2 Dashboard.\n\n\n\n\nStep 2: Launch a New EC2 Instance\nOn the left-hand side panel:\nClick on Instances\n\nThen click on Launch Instance (top-right corner)\nYou will now enter the Launch Instance configuration page.\nStep 3: Configure the EC2 Instance\n1. Give Your Instance a Name: Under the Name and Tags section, provide a name for your instance. Example: My-First-Instance\n2. Choose an Operating System: Under Application and OS Images (Amazon Machine Image) select the operating system.\nFor this practice, I selected: Ubuntu\n3. Create a Key Pair: The Key Pair is extremely important because it is used to securely log in to your EC2 instance.\nClick on Create new key pair\n\nGive the key pair a name\nDownload the .pem file\nNote: Keep this .pem file safe because it cannot be downloaded again.\nAnd for now, we will not touch the security part and other parts, just keep it as it is and then click on \"Launch Instance\".\nStep 4: Verify the Instance is Running\nOnce the instance is launched:\nOpen the instance\nEnsure the Instance State is Running\nClick on the Instance ID to view complete details.\nWe will use the Public IPv4 Address to access the server and application. Example: 32.197.45.191\nStep 5: Connect to EC2 Instance Using SSH\nOpen your terminal.\nDepending on your operating system, you can use:\nGit Bash (Windows)\nPuTTY\nMobaXterm\nDefault Terminal (Mac/Linux)\nFor this practice, I will use Git Bash.\nNavigate to the Download Folder: Move to the folder where the .pem file was downloaded like below image.\n\nConnect to the EC2 Instance\nRun the following command:\nssh -i test-user1.pem ubuntu@32.197.45.191\n\nStep 6: Fix Permission Error for .pem File\nWhile connecting, you may get an error like: \" Permissions for 'test-user1.pem' are too open \"\nThis happens because the .pem file contains sensitive credentials and requires restricted permissions.\nUse the following command to change file permissions:\nchmod 600\n\n\n\"chmod\" command is used to change the permissions of the file.\nNow reconnect:\nssh -i test-user1.pem ubuntu@32.197.45.191\n\nYou should now successfully log in to the EC2 instance.\nStep 7: Verify Current User\nTo check the current logged-in user, type \"whoami in the terminal.\n\"ubuntu\"\nStep 8: Switch to Root User (Optional)\nTo become the root user type:\nsudo su -\n\n\nNow you will have root access. As shown in below image.\n\nStep 9: Update Packages\nBefore installing any software, always update the server packages.\nIf Logged in as Ubuntu User\nsudo apt update\n\n\nIf Logged in as Root User, type \"apt update\"\nOnce this is done, lets now try to deploy an Jenkins application from here.\nStep 10: Install Jenkins\nNow let’s deploy an application on the EC2 instance.\nWe will install Jenkins.\nVisit the official Jenkins website\nCopy the Ubuntu installation commands from the website and execute them in the terminal.\nStep 11: Verify Jenkins Service Status\nAfter installation, check Jenkins status:\nsystemctl status jenkins\n\n\nIf Jenkins is not active, also if you are getting any error for inactive you can also check the java version, it works best with java 21 version. So if the java isn't in this version try updating the version. \nsystemctl restart jenkins\n\n\nThen check the status again.\nStep 12: Access Jenkins from Browser\nCopy the Public IP Address from your EC2 instance.\nhttp://<Public-IP>:8080\n\n\nInitially, the application may not open because port 8080 is blocked in the Security Group\nStep 13: Configure Security Group for Jenkins\nTo allow access to Jenkins:\nOpen the EC2 Instance\nScroll down to the Security section\nClick on the attached Security Group\n\n\n\n\nUnder Inbound Rules:\nClick Edit Inbound Rules\nAdd a new rule with:\nType          Port Range  Source\n\nThen click: Save Rules\nStep 14: Open Jenkins Again\nNow refresh the browser:\nhttp://<Public-IP>:8080\n\n\nStep 15: Retrieve Jenkins Initial Password\nRun the following command inside the EC2 terminal:\ncat /var/lib/jenkins/secrets/initialAdminPassword\n\n\nCopy the password and paste it into the Jenkins browser page.\nYou will now enter the Jenkins dashboard.\n\nCongratulations! 🎉🥳\nYou have successfully:\nLaunched your first EC2 instance\nConnected to it using SSH\nManaged secure access using a .pem key\nInstalled Jenkins\nConfigured Security Groups\nDeployed and accessed your first application on AWS\nI hope this article helped you in knowing the basics of EC2 and and also how to deploy an Application in EC2.\nLet's meet in next article with another service of AWS!!!",
-      "publishedAt": "2026-05-28T03:27:33.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "11b7eecfbf54cd5838fe495163002d2608367012e767511ac4ecf16d764ac548",
-      "title": "JaisCloud — A Free, Single-Binary AWS Emulator in Go",
-      "url": "https://dev.to/jaisraj/jaiscloud-a-free-single-binary-aws-emulator-in-go-1m40",
-      "description": "Why We Built JaisCloud — A Free, Single-Binary AWS Emulator in Go\n\n\nIf you've ever tried to test AWS-dependent code locally, you've probably reached \nJaisCloud is our answer to that problem.\nJaisCloud is a free, open-source local \n# Start it\njaiscloud-aws start\n\n# Point your SDK at it\nexport AWS_ENDPOINT_URL=http://localhost:4566\nexport AWS_ACCESS_KEY_ID=test\nexport AWS_SECRET_ACCESS_KEY=test\nexport AWS_REGION=us-east-1\n\n# Your existing code works — no changes needed\naws s3 mb s3://my-bucket\naws sqs create-queue --queue-name my-queue\n\n\n\n\n\nJaisCloud\nLocalStack Community\nMoto\n\n\n\n\nSingle static binary\nYes\nNo - Python + Docker\nNo - Python library\n\n\nZero runtime deps\nYes\nNo\nNo\n\n\nPostgres persistence\nYes\nPro only\nNo\n\n\nReal Spark/EMR execution\nYes\nNo\nNo\n\n\nApache Iceberg\nYes\nNo\nNo\n\n\nPrometheus metrics\nYes\nPro only\nNo\n\n\nState export / import\nYes\nNo\nNo\n\n\nDeterministic time control\nYes\nNo\nNo\n\n\nWritten in Go\nYes\nNo\nNo\n\n\nLicense\nApache-2.0\nApache-2.0\nApache-2.0\n\n\n\nJaisCloud ships as a single Go binary per cloud. No Python, no Docker, no Node — \n# Download and run — that is it\n./jaiscloud-aws start\n\n# Or with Docker\ndocker run --rm -p 4566:4566 rjaisval/jaiscloud-aws:latest\n\nExport the complete emulator state — every resource, every account, every region \n# Capture a baseline\njaiscloud-aws export -o baseline.tar.gz\n\n# Restore on a teammate's machine or CI runner\njaiscloud-aws import -i baseline.tar.gz\n\n# Named snapshots for test isolation\njaiscloud-aws snapshot create --name before-migration\n# ... run tests ...\njaiscloud-aws snapshot revert before-migration\n\nThis changes how teams share environments. Instead of per-developer setup scripts \nThis is the feature that has no equivalent in any other AWS emulator.\nJaisCloud lets you freeze the clock at any instant and advance it on demand. \n# Freeze the clock\ncurl -X POST http://localhost:4566/_jaiscloud/clock \\\n  -d '{\"mode\":\"fixed\",\"time\":\"2024-06-01T09:00:00Z\"}'\n\n# Advance to trigger time-based behaviour\ncurl -X POST http://localhost:4566/_jaiscloud/clock \\\n  -d '{\"mode\":\"fixed\",\"time\":\"2024-06-01T09:06:00Z\"}'\n\n# Reset to wall time\ncurl -X POST http://localhost:4566/_jaiscloud/clock \\\n  -d '{\"mode\":\"real\"}'\n\nThis unlocks deterministic testing for:\nSQS delay queues — advance clock instead of waiting\nDynamoDB TTL expiry — trigger expiry on demand\nEventBridge cron rules — replay the exact scheduled moment repeatedly\nSTS/SecretsManager token expiry — test expiry without waiting\nCloudWatch alarm windows — advance into the evaluation window instantly\nMost emulators fake compute — they accept the API call and immediately return \n# Docker executor — runs real Spark jobs in containers\nJAISCLOUD_EXECUTOR_MODE=docker ./jaiscloud-aws start\n\n# Kubernetes executor — runs jobs as real K8s batch jobs\nJAISCLOUD_EXECUTOR_MODE=k8s ./jaiscloud-aws start\n\nJaisCloud runs natively as a Kubernetes pod. Lambda functions execute as real \nAI coding agents — Claude, Copilot, Cursor, and others — are now writing, \nJaisCloud is the answer.\nWhen an AI agent writes a Lambda function, creates an SQS queue, or sets up \nLatency — round trips to AWS slow the agent's iteration loop\nCost — every test run consumes real AWS resources\nRisk — a misconfigured IAM policy or an accidental S3 bucket deletion has real consequences\nState pollution — test resources left behind in shared AWS accounts\nJaisCloud gives AI agents a fully isolated, local AWS environment that starts \nOne of the most powerful patterns for AI-driven development is using JaisCloud \n# Create a snapshot of the exact environment state the agent should work against\njaiscloud-aws snapshot create --name agent-task-baseline\n\n# Agent runs, creates resources, tests code\n# ...\n\n# If the agent's changes are wrong, revert and retry\njaiscloud-aws snapshot revert agent-task-baseline\n\nThe agent gets a deterministic, reproducible environment every time. \nAI-generated code often involves time-dependent logic — TTL expiry, scheduled \n# Agent generates code that processes expired DynamoDB records\n# Freeze clock, create records, advance past TTL, verify behaviour\ncurl -X POST http://localhost:4566/_jaiscloud/clock \\\n  -d '{\"mode\":\"fixed\",\"time\":\"2024-01-01T00:00:00Z\"}'\n\n# Create records with TTL\n# ...\n\n# Advance past TTL — no waiting\ncurl -X POST http://localhost:4566/_jaiscloud/clock \\\n  -d '{\"mode\":\"fixed\",\"time\":\"2024-01-02T00:00:00Z\"}'\n\n# Trigger TTL sweep and verify\n\nAn AI agent can iterate through dozens of time-dependent test scenarios in \nWhen AI agents submit pull requests, your CI pipeline needs to validate \n# .github/workflows/ai-pr-validation.yml\n- name: Start JaisCloud\n  run: |\n    docker run -d -p 4566:4566 rjaisval/jaiscloud-aws:latest\n\n- name: Import baseline state\n  run: jaiscloud-aws import -i ci-baseline.tar.gz\n\n- name: Run tests against JaisCloud\n  run: go test ./...\n  env:\n    AWS_ENDPOINT_URL: http://localhost:4566\n\nNo real AWS credentials needed in CI. No cost per PR. No shared state \nAI Agent writes code\n      |\n      v\nJaisCloud provides local AWS environment\n      |\n      v\nAgent tests and iterates against JaisCloud\n      |\n      v\nSnapshot captures validated state\n      |\n      v\nCI imports snapshot, runs full test suite\n      |\n      v\nPR merged — real AWS only touched in production\n\nJaisCloud makes the entire inner loop — from AI code generation to PR \nSQS, SNS, DynamoDB (+ Streams), S3, Lambda, EMR on EC2, EMR on EKS,\nDocker (quickest):\ndocker run --rm -p 4566:4566 rjaisval/jaiscloud-aws:latest\n\nBinary:\n# macOS\nbrew install jaisrajms/tap/jaiscloud-aws\n\n# Linux\ncurl -sSL https://github.com/jaisrajms/jaiscloud/releases/latest/download/jaiscloud-aws_linux_amd64.tar.gz | tar xz\n./jaiscloud-aws start\n\nDefault storage — state saved to ~/.jaiscloud/ and survives restarts.\nEphemeral mode (clean slate, ideal for CI):\njaiscloud-aws start --ephemeral\n\nPostgres backend (durable, for teams):\njaiscloud-aws start --dsn \"postgres://user:pass@localhost:5432/jaiscloud\"\n\nJaisCloud is in early alpha (v0.1.0-alpha.1). Core AWS services are working \nAzure emulator (jaiscloud-azure)\nGCP emulator (jaiscloud-gcp)\nStep Functions improvements\nWeb UI for resource inspection\nMore CloudFormation intrinsic functions\nGitHub: https://github.com/jaisrajms/jaiscloud\nhttps://jaiscloud.com\nJaisCloud is Apache-2.0 licensed — free forever, no Pro tier, no usage limits.\nIf you have hit walls with LocalStack Community or just want a Go-native cloud \nStar the repo if JaisCloud looks useful — it helps others find it.",
-      "publishedAt": "2026-05-28T03:23:36.000Z",
-      "feedName": "Dev.to"
-    },
-    {
       "id": "5d825832867d5b9538f3a9066b7bf8ba1f6c4908c849b400ad834cc8658a2f15",
       "title": "Stop Building Projects That Exist Only to Impress Other Beginners",
       "url": "https://dev.to/guilherme_galanti/stop-building-projects-that-exist-only-to-impress-other-beginners-nl8",
@@ -191,142 +175,6 @@
       "description": "AWS CLI 로그인, aws login으로 쉽게 끝내는 방법을 정리해 봤습니다.",
       "publishedAt": "2026-05-29T04:44:16.000Z",
       "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "6114d6d5a03d8ad473ad9edcf8906076f13afd2cfb8b3358afba6e6783b2ba9c",
-      "title": "Windows PCの『セキュアブート』証明書が2026年6月に期限切れ、更新状況の確認を",
-      "url": "https://news.mynavi.jp/techplus/article/20260529-4510597/",
-      "description": "Windows Latestは5月26日(現地時間)、「Microsoft reveals what happens to Windows 11 PCs if you ignore the Secure Boot deadline in June 2026」において、Windows搭載PCのセキュリティ機能「セキュアブート」の証明書がまもなく期限切れを迎えると報じた。 更新プログラムを適用せずにいると、コンピュータを起動で...",
-      "publishedAt": "2026-05-29T03:05:09.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "11a88511332749fbcbb6c0db4f4134dcf88392fad878baef76e5fb2c2ff9f9e2",
-      "title": "ランサム対策特化の注目企業「ハルシオン」が日本上陸、元FBIの幹部と米国初代国家サイバー長官も来日",
-      "url": "https://enterprisezine.jp/news/detail/24398",
-      "description": "米国テキサス州で2021年に創業し、ランサムウェアに特化したセキュリティ製品とサービスで急成長中のユニコーン企業 Halcyon（ハルシオン）が日本に上陸、本格的な事業の開始を発表した。それに合わせ...",
-      "publishedAt": "2026-05-29T02:50:00.000Z",
-      "feedName": "EnterpriseZine"
-    },
-    {
-      "id": "58f725a701fc7d1bb3783a5b1900f56d5ccdede4ccf1f99dabe0a40de337a1e5",
-      "title": "AWS 初学者向けの勉強方法 7 ステップ ! 2026 年版 !",
-      "url": "https://aws.amazon.com/jp/blogs/news/2026-aws-beginner-learning/",
-      "description": "みなさん、もしくはみなさんの周りで「AWS を勉強したいんだけど何から勉強すればよいだろう。どこかに勉強方法がまとまってないかな ?」「同僚や部下に AWS の勉強を促しているけど、ちょうど良い教材とか無いかな ?」という悩みを抱えている方はいませんか ? このブログはそういった AWS を勉強する際の悩みを抱えた AWS 初学者の方や、AWS 初学者を育成する立場にある方を対象にしています。 どのような段取りで知識を深めていけばよいのか、この勉強方法がなぜおすすめなのか、疑問点やハマりどころに直面した際にどこのサイトをチェックすればいいのか、など納得しながら勉強を進められるように具体的な情報を含めながら 7 ステップで紹介していきます。",
-      "publishedAt": "2026-05-29T02:32:06.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "a236ad3b69d0b9762e4bfe70ed62bb528c2928c6b2aff7c58b0e4de9c54ee828",
-      "title": "フロンティアAI による脅威変化を踏まえたFinatextグループとしての対応方針",
-      "url": "https://zenn.dev/finatext/articles/policy-for-frontier-ai",
-      "description": "背景\n昨今、Claude Mythos や GPT-5.5-Cyber を代表とするようなサイバーセキュリティに特化した高性能なAIモデルが登場し、各組織ではその対応が求められています。\nAnthropic は、Claude Mythosそのものは限定的な公開としているものの、同等クラスのモデルを数週間以内に全顧客に提供する見込みを示しています。\nhttps://www.anthropic.com/news/claude-opus-4-8\nこういった状況を加味し、金融庁と日本銀行は、連名で「フロンティアAIによる脅威変化を踏まえた金融機関等の短期的な対応」に係る要請を出しています。\n...",
-      "publishedAt": "2026-05-29T02:30:05.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "74b51993efc166035b7c93771967d86c674c17f1ec9fe88ef0f3243612bd135a",
-      "title": "AI対AIの今、“時代遅れ”なアーキテクチャで自社を守れるか？AI駆動型SOCの転換に着手すべき理由",
-      "url": "https://enterprisezine.jp/article/detail/24180",
-      "description": "生成AIの急速な進化は、サイバー攻撃の速度・規模をかつてない次元へと引きあげた。機械速度で脆弱性を突いてくる脅威に対して、人間の対応能力を前提とする従来のセキュリティ運用は根本から破綻しつつある。この「AI対AI」の戦場で、企業はいかにして自社を守るべきか──これに関して明確な戦略を掲げ、着々と準備を進めてきたのがZscaler（ゼットスケーラー）だ。同社はAvalorやRed Canaryなどの企業買収を通じて、独自のインライン型セキュリティクラウドを基盤とする「エージェント型（Agentic）SOC」の構築を進めている。米ゼットスケーラーの担当幹部に、同社が構想する次世代情報セキュリティのあり方と、日本企業が進めるべきセキュリティアーキテクチャ変革の道筋について聞いた。",
-      "publishedAt": "2026-05-29T01:00:00.000Z",
-      "feedName": "EnterpriseZine"
-    },
-    {
-      "id": "96db638e0b08252cf4ae26b9c68316a46ef4d7942336a00ee56439c6a160bfe6",
-      "title": "人間を脅かす「AIの精神的リスク」が訴訟の論点に──AIガバナンス実装に不可欠な5つの要素とは",
-      "url": "https://enterprisezine.jp/article/detail/24293",
-      "description": "AIの利活用が本格化する一方、サイバーリスクの顕在化やAIサービスを巡る海外訴訟など、企業が直面する経営リスクは深刻化している。サイバーセキュリティをバックグラウンドに持つ西村あさひ法律事務所・外国法共同事業の北條孝佳弁護士は、従来のITセキュリティ対策では人間の「精神」や「営業秘密」に対する新たな脅威への対応が不十分だと指摘する。EnterpriseZine編集部主催イベント「Security Online Day 2026 Spring」では、同氏が間接プロンプトインジェクションなどをはじめとする高度なAIリスクの実態とその対策について法的な観点を交えて解説。一律禁止ではなく、未然防止と被害最小化を基本としつつ、AIの利活用を推進するAIガバナンス構築の具体策を提言した。",
-      "publishedAt": "2026-05-28T23:00:00.000Z",
-      "feedName": "EnterpriseZine"
-    },
-    {
-      "id": "2f89c2fd3b50e5b4fd68afb721b8c4560ff737bf0fd73b5fd1baeb796c82d869",
-      "title": "無料で使える“ゼロCVE”支援のコンテナイメージ群、Red Hatが提供　不要ソフトを極力排除",
-      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2605/29/news043.html",
-      "description": "Red Hatは、セキュリティを強化したコンテナイメージ群「Red Hat Hardened Images」の一般提供を開始した。既知の脆弱性を極力含まない状態を目指す“ゼロCVE”戦略を支援するという。どのような仕組みなのか。",
-      "publishedAt": "2026-05-28T23:00:00.000Z",
-      "feedName": "＠IT"
-    },
-    {
-      "id": "92d3d615759ff565bb5f77d27b301274fc94b4f162950638f675ef1b11d3149b",
-      "title": "生成AIの成否を握るデータ準備　4つの処方箋",
-      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2605/29/news008.html",
-      "description": "企業がAI活用を進める中、データの品質やアクセス性が大きな課題となっている。特に生成AIでは基盤モデルの不透明性が高いため、データの準備と管理の重要性が増している。本稿では、企業が回帰テストやデータプロファイリングなどを通じて、データを継続的かつ体系的に整備し、関連性や安全性を確保した「生成AI-Readyデータ」を構築するための実践的な方策4つを紹介する。",
-      "publishedAt": "2026-05-28T20:00:00.000Z",
-      "feedName": "＠IT"
-    },
-    {
-      "id": "d87d7e0ff53e52169a75680b45009d414f199cef48598de61d8241a9971cc849",
-      "title": "「善意で暴走するAIエージェント」をどう止める？　AIガバナンスの極意",
-      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2605/29/news023.html",
-      "description": "AIは“便利な業務支援ツール”の段階を超え、自律的に判断して行動する存在に進化し始めた。その一方で、企業のセキュリティ常識を根底から覆すリスクも浮上している。「善意で暴走するAIエージェント」をどう止めればいいのか。",
-      "publishedAt": "2026-05-28T20:00:00.000Z",
-      "feedName": "＠IT"
-    },
-    {
-      "id": "4e2215d9c3852f11387cd8fd7fb3b4cfe810cefa59c48272ff1d6eebb3467688",
-      "title": "次世代の Amazon OpenSearch Serverless: エージェント向けにゼロから構築",
-      "url": "https://aws.amazon.com/jp/blogs/news/the-next-generation-of-amazon-opensearch-serverless-built-from-the-ground-up-for-agents/",
-      "description": "Amazon OpenSearch Serverless のアーキテクチャをゼロから刷新し、オートスケーリングが従来比で最大 20 倍に高速化、コンピューティングをゼロまでスケール可能、ピーク負荷に合わせたプロビジョニングと比べて最大 60% のコスト削減を実現した次世代アーキテクチャ NextGen を発表します。コンピューティングとストレージを完全に分離し、エージェントワークロードに最適化されました。本記事ではアーキテクチャの仕組みと、ハンズオンチュートリアルでの使い始め方を解説します。",
-      "publishedAt": "2026-05-28T18:24:54.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "314ce817275b059b958f3c68d872fcaa94b42a5a9fd1d3a83da24f26c1cf47b1",
-      "title": "【TypeScript】型まわりを整理する：実務でよく使うパターン11選   ",
-      "url": "https://qiita.com/Ryo-0131/items/65b3cfb6dc5edb2513cc?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "概要\nTypeScriptには「型」に関するキーワードが多く、混乱しがち...。\nこの記事では、実務で実際に登場したパターンをサンプルコードとともに整理します。\n\n目次\n\n型アノテーション\n型アサーション\n型ガード\nDiscriminated Union（判別可能なUni...",
-      "publishedAt": "2026-05-28T14:48:19.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "5a46256d797c61886a84bec25e8aff057fca2f861940e39115d6e492c5e7d623",
-      "title": "The Kubernetes integration tax: Prometheus, Cilium and production reality",
-      "url": "https://www.cncf.io/blog/2026/05/28/the-kubernetes-integration-tax-prometheus-cilium-and-production-reality/",
-      "description": "I still remember the first time we lost sleep over something that wasn’t a bug. It was a Tuesday. Grafana dashboards showed blank panels for Cilium network metrics. Hubble was working fine — DNS visibility, TCP...",
-      "publishedAt": "2026-05-28T11:00:00.000Z",
-      "feedName": "Cloud Native Computing Foundation"
-    },
-    {
-      "id": "f687888114adf7307e117425298853bfe2a3290f29ea63214b62fb8e9eb0a007",
-      "title": "太陽光発電所の「銅線盗難」、ミリ波レーダーで監視効率化　NTTとパナが導入",
-      "url": "https://japan.cnet.com/article/35248170/",
-      "description": "NTTドコモビジネスとパナソニック コネクトは5月27日、メガソーラー太陽光発電所での銅線ケーブル盗難対策として、ミリ波レーダーとセキュリティカメラを組み合わせた次世代の侵入検知ソリューションを導入したと発表した。NTTアノードエナジーのメガソーラー太陽光発電所に展開した。",
-      "publishedAt": "2026-05-28T09:28:00.000Z",
-      "feedName": "CNET Japan"
-    },
-    {
-      "id": "2d879ac67b11ee9f1cfdcd3caa6610cd6784a418480ee5fa24253d1dd0357fdd",
-      "title": "何故今日においても回帰分析の理論的基礎を勉強しておくべきなのか",
-      "url": "https://tjo.hatenablog.com/entry/2026/05/28/180000",
-      "description": "先日のことですが、以下のredtea(@Syuiro_2)さんの記事をお見かけしました。\n\nこれがもう本当に素晴らしい回帰分析の解説記事で、もう少し色々書き足すだけでかの佐和本*1の現代版として書籍化できるのではないか、というほどの優れた内容です*2。発展的話題として最近時々話題になる二重機械学習(Double/Debiased Machine Learning)についても触れられており、大いに勉強になりました。僕が四の五の論じる前に、まずは皆様にはぜひご一読いただければと思います。もっと言ってしまえば、以下に僕が記す戯言のほぼ全てはこちらの記事の内容で網羅されていますので、読む必要がないとすら言えます（笑）。\n\nで、そのredteaさんの記事の最後のLevel 6の節を読むと、こう書かれています。\nLevel 6: 哲学的問いへ\n最後のレベルでは、これまでの「回帰」という概念そのものを問い直します。が、私がこのレベルには到底到達していないので書けません笑\nこんなのがあるのかもしれませんし、ないのかもしれません。Level 5より上位の理解、または別観点の理解がある方は是非執筆していただけますと嬉しいです。\n「回帰」という概念そのものを問い直す、という哲学的問いに対しては僕も全く答えられませんが（笑）、「何故今日においてもこれらの回帰分析の理論的基礎を学ぶべきなのか」という実務家観点から語るポエムなら書けそうな気がします。ということで、相変わらずネタ切れ続きにつき他人様の記事をネタに何か書こうという浅ましさ加減で恐縮ですが以下につらつらと綴ってみようと思います。\n「『説明』のための多変量解析＝線形モデル族＝回帰分析」となりがちな故に回帰分析は多用されやすい\nだが現実の分析課題においては、回帰分析が正しい結果を返すための理論的な前提が満たされないことが多い\n回帰分析の結果の信頼性を評価するためにも、その理論的基礎の知識はある程度以上必要\n時には回帰分析だけで完結させず、実験など他のアプローチで補完することも必要\n最後に\n「『説明』のための多変量解析＝線形モデル族＝回帰分析」となりがちな故に回帰分析は多用されやすい\n\n\n皆さんも良くご存知のように、回帰分析は一般に「多変量解析」の代表例として多用されやすい統計的学習モデルの一つです。理由を挙げたらキリがないかと思いますが、基本的には上記のモデル式が示すように「説明変数を沢山盛り込める」点と「モデルの解釈が直感的で分かりやすい」点が挙げられるのではないでしょうか。\n\n前者は論を俟たないでしょう。「重」回帰分析の語が示す通りで、サンプルサイズさえ十分にあれば（≒ランク落ちの問題さえなければ）、そして各種精度の問題さえ許容できれば、事実上幾らでも説明変数を付け足していくことが出来ます。特にビジネス上の各種データ分析においては「要因分析」と言えば鉄板中の鉄板のテーマであり、考えられる限りの多数の要因の中から意味のあるものを選びたい……というケースではうってつけのアプローチです。\n\n\n後者についてはこのブログで大昔*3描いたこの図が分かりやすいかと思います。つまり、素朴に解釈すれば「その説明変数の回帰係数が大きければ大きいほど目的変数の増加に貢献する」「その説明変数の回帰係数がプラス（マイナス）なら目的変数に対して増やす（減らす）方向に働く」というように、極めて直感的に解釈できます。\n\n勿論、線形モデルのような「単なる線形和」の関係が森羅万象全てに当てはまるとは限りませんし、実際そこを考慮して工夫されたり新たに考案されたりした統計的学習モデルは他にも沢山あります。しかしながら、その説明変数の多さから表現され得る自由度の高さもあり、極めて柔軟に運用できるモデルであるということで、分野を問わず回帰分析は広く用いられているということだと個人的には理解しています。\nだが現実の分析課題においては、回帰分析が正しい結果を返すための理論的な前提が満たされないことが多い\n\nということで良いことずくめに見える回帰分析ですが、以前佐和本を取り上げた際にも強調した通り、割と細かい理論的前提が求められる代物でもあります。代表的なものを佐和本から引用すると、\n(4.11) \nと書くとき、とは、以下の仮定を満たす。\n仮定1 .\n仮定2 , は正定数である。\n仮定3 .\nなお行列の要素は、固定された（非確率的）変数値とする。\n\nの、ようになっています。これらの前提は割と直感的にも分かりやすいものだと思いますが、きちんと定式化された内容を覚えておくことは重要です。ちなみに上のイラストはこの佐和本からの引用箇所をNano Banana 2にまとめさせたものです*4。\n\n\nなのですが、これらの前提を綺麗に満たしているデータの方が現実世界では多数派だと思った方が無難です。例えば、前回の記事でも取り上げたトレンドを伴う時系列データがその筆頭で、モロに仮定1に反している上に、往々にして仮定2も満たさなかったりします。\n\n\n仮定3に従わないという意味では、これまた以前の記事でも取り上げた多重共線性が当てはまります。これは「予測」には殆ど影響しない代わりに、回帰係数にバイアスがかかるため「説明」には大きな悪影響を及ぼします。\n\n\nなお、除外変数バイアスという概念も回帰分析の「説明」の正確性に影響します。これは「本来含められるべき説明変数が回帰モデルに含まれないがために、その変数が本来担うべきだった寄与度が既にモデルに含まれている説明変数に上乗せされることで、回帰係数にバイアスが生じる」というものです。どちらかというと、実社会で行われる回帰分析の多くがこれに侵されていると言った方が妥当かもしれません。\n\nまた、回帰分析というと使い古された時代遅れの分析手法だと思ってしまう人が今時だと多そうなイメージがありますが、そんなことはありません。例えば、最近だとredteaさんの記事の後ろの方でも取り上げられた通り、今流行りの二重機械学習(Double/Debiased Machine Learning)でも回帰分析は用いられます。例として以下にGeminiに書かせたデモコードを貼っておきます*5。\nimport numpy as np\nimport pandas as pd\nfrom sklearn.ensemble import RandomForestRegressor\nfrom sklearn.model_selection import KFold\nfrom sklearn.linear_model import LinearRegression\nimport matplotlib.pyplot as plt\n\n# ==========================================\n# 1. データ生成 (Data Generation)\n# ==========================================\nnp.random.seed(71)\nn_samples = 2000\nn_features = 10\n\n# 交絡因子X (10次元の標準正規分布)\nX = np.random.normal(size=(n_samples, n_features))\n\n# 介入変数T (Xの一部と非線形な関係を持つ + ノイズ)\n# X[:, 0]とサインカーブ、X[:, 1]と2乗の関係を持つとする\nnp.random.seed(72)\nT = np.sin(X[:, 0]) + X[:, 1]**2 + np.random.normal(size=n_samples)\n\n# 目的変数Y\n# ★ 知りたい真の因果効果 (ATE) = 2.0\ntrue_ate = 2.0\n\n# YもXの一部と非線形な関係を持つ (交絡が存在する)\nnp.random.seed(73)\nY = true_ate * T + np.cos(X[:, 0]) + 2 * X[:, 1] + np.random.normal(size=n_samples)\n\nprint(f\"【設定】真の因果効果 (True ATE): {true_ate:.3f}\\n\")\n\n# ==========================================\n# 2. 比較用：単純なアプローチ（ナイーブなモデル）\n# ==========================================\n# パターンA: 交絡因子Xを完全に無視した単回帰\nlr_naive = LinearRegression()\nlr_naive.fit(T.reshape(-1, 1), Y)\nprint(f\"比較1 (Tのみの単回帰): {lr_naive.coef_[0]:.3f} -> 交絡を無視しているためバイアスがかかる\")\n\n# パターンB: 交絡因子Xを考慮するが、線形回帰として投入 (重回帰)\nX_with_T = np.hstack([T.reshape(-1, 1), X])\nlr_multiple = LinearRegression()\nlr_multiple.fit(X_with_T, Y)\nprint(f\"比較2 (TとXの重回帰): {lr_multiple.coef_[0]:.3f} -> Xの非線形性を捉えきれずバイアスが残る\\n\")\n\n# ==========================================\n# 3. Double Machine Learning (DML) のスクラッチ実装\n# ==========================================\n# K-Fold交差適合 (Cross-fitting) の設定\nn_splits = 5\nkf = KFold(n_splits=n_splits, shuffle=True, random_state=74)\n\n# 残差を格納する配列を用意\nY_residuals = np.zeros(n_samples)\nT_residuals = np.zeros(n_samples)\n\n# 非線形関係を捉えるための機械学習モデル (ランダムフォレスト)\n# ※過学習を防ぐためハイパーパラメータは適度に調整\nmodel_y = RandomForestRegressor(n_estimators=100, max_depth=5, random_state=75)\nmodel_t = RandomForestRegressor(n_estimators=100, max_depth=5, random_state=76)\n\nprint(\"DMLの交差適合 (Cross-fitting) を実行中...\")\n\nfor fold, (train_idx, test_idx) in enumerate(kf.split(X)):\n    # 訓練用とテスト用（残差計算用）にデータを分割\n    X_train, X_test = X[train_idx], X[test_idx]\n    Y_train, Y_test = Y[train_idx], Y[test_idx]\n    T_train, T_test = T[train_idx], T[test_idx]\n    \n    # [ステップ1] Yの残差化: XからYを予測\n    model_y.fit(X_train, Y_train)\n    Y_pred = model_y.predict(X_test)\n    Y_residuals[test_idx] = Y_test - Y_pred\n    \n    # [ステップ2] Tの残差化: XからTを予測\n    model_t.fit(X_train, T_train)\n    T_pred = model_t.predict(X_test)\n    T_residuals[test_idx] = T_test - T_pred\n\n# [ステップ3] 最終ステージ: Yの残差をTの残差で単回帰 (切片なし)\ndml_ols = LinearRegression(fit_intercept=False)\ndml_ols.fit(T_residuals.reshape(-1, 1), Y_residuals)\ndml_ate = dml_ols.coef_[0]\n\nprint(f\"\\n【結果】DMLによる推定因果効果: {dml_ate:.3f}\")\nprint(f\"-> 真の因果効果 ({true_ate:.3f}) と比較してみてください\\n\")\n\n# ==========================================\n# 4. 可視化: 残差同士のプロット (FWL定理の視覚化)\n# ==========================================\nplt.figure(figsize=(8, 6))\nplt.scatter(T_residuals, Y_residuals, alpha=0.3, label=\"Data points\")\nplt.plot(T_residuals, dml_ols.predict(T_residuals.reshape(-1, 1)), \n         color='red', linewidth=2, label=f\"DML Estimate (slope = {dml_ate:.3f})\")\nplt.xlabel(\"T Residuals (T independent of X)\")\nplt.ylabel(\"Y Residuals (Y independent of X)\")\nplt.title(\"Double Machine Learning: FWL Theorem Visualization\")\nplt.legend()\nplt.grid(True)\nplt.show()\n\n要は「目的変数Yを交絡変数Xで機械学習によって回帰した残差」と「介入変数Tを交絡変数Xで機械学習によって回帰した残差」同士を回帰すると交絡調整された介入変数Tの目的変数Yに対するATEが求まるというのがFrisch-Waugh-Lovell (FWL) 定理を援用したDMLの主張であり、同時にDMLの肝でもあるわけですが、最後に「残差同士を線形回帰する」以上は2つの残差がどちらとも線形回帰における理論的要件を満たしていることが重要であり*6、満たさない場合はバイアスが残るということを想定しなければならないというわけです。\n\n素朴に考えれば何もしなくても上手くいきそうな気がしてきますが、回帰分析の理論的要件を満たさない典型的なデータとして時系列データが挙げられることは、先述した通りです。トレンドを伴う時系列データはまさにその典型で、適切に回帰できなかった場合は残差に強い系列相関が残る可能性があります。そうすると、当然ながら推定されたATEにも強いバイアスがかかりかねません。\n\n\nもう一点、そもそも時系列データの場合は1段目で行われる2つの機械学習による回帰分析にも問題が起こり得ます。これは単純な話で、一般的なDMLで行われる素朴なK-folds CVだと系列相関に由来するleakage*7が生じる可能性が否定できないからです。よって、本来であれば「時系列データに特化した交差検証」をきちんと実施する必要があります。これについては上記リンク先の2年前に出た知人の記事が優れた解説となっているので、その推奨に従うべきだと考えています。個人的にはhv-blocked CVが良いのではないかと思いました。\n\n\n以上はあくまでも一例ですが、MMM (Marketing/Media Mix Modeling)のように根底にあるアプローチが回帰分析だという現代的な分析手法は他にも多くあるわけで、当然ながらそれらの手法には回帰分析と同じ制約が課せられます。しかも、そういった手法が対象とする実世界のデータの多くが回帰分析の理論的前提を満たさないこともまた同様です。そのような現実があればこそ、今日においても回帰分析の理論的基礎は広く学ばれるべきだと個人的には考えています。\n回帰分析の結果の信頼性を評価するためにも、その理論的基礎の知識はある程度以上必要\n\nこれまで見てきた通り、実世界のデータの多くは回帰分析に求められる理論的前提を満たさないことが多く、場合によってはデータを前処理するなどして幾ら調整してもなおどうにもならないことすら少なくないわけです。ではお手上げなのか？全てを諦めるべきなのか？というとそうでもありません。佐和本6章では、そういった理論的前提から外れたデータに対して回帰分析を行う際にはどうすべきかという指針が示されています。\n6.　標準的諸仮定からのズレ\n具体的な内容は割愛しますが、Durbin-Watson比やQ-Qプロットといった定番の「仮定からの外れ具合」に対する評価方法が取り上げられています。これらの評価によって、目の前に出てきた回帰分析の結果をどこまで信頼して良いかが推し量れるわけで、そこで「ある程度なら信頼できる」となればそれで良いわけですし、「信頼できない」となったら他のアプローチを試すなどの代替手段を検討する余地も出てくるということですね。\n\nしかしながら、そういった「回帰分析の結果の信頼性」を測れるようになるには、これまでに論ってきたような回帰分析の理論的基礎の知識が必要ですし、それがなければそもそもそのために何をしなければならないかも分からないわけです。今時なら「生成AIが全てをやってくれる」というのは確かにその通りですが、そもそもユーザーが認識しておらずプロンプトにもコンテクストにも与えられていない課題意識を生成AIが汲んでくれるとは限りません。今日においても、それらを学ぶべきだと僕が考える所以です。\n時には回帰分析だけで完結させず、実験など他のアプローチで補完することも必要\n\n\nあとは、いつもながらですが「回帰分析だけで完結させない」ことも大事です。過去の観察データに対する分析に頼り切りにせず、積極的に条件統制のなされた介入実験を行ってエビデンスの補強を試みるというのを僕個人はいつでも推奨しています。\n\n勿論完璧な条件統制がされた実験などというものは絵に描いた餅であり、これはこれで面倒な因果推論の対象になることも多い代物ですが、それでも回帰分析一辺倒よりは介入実験を組み合わせる方がよほど信頼性を担保できるはずです。\n最後に\n\nということで、今回も何年も前から繰り返し論ってきた話題の繰り返しのような記事で失礼しました。次回ぐらいは最近の論文のレビューでもやろうかと考えておりますが、いかんせん本業が忙しくてなかなか時間が取れず……ということでお後がよろしいようで。\n\n*1:温故知新：古典的名著『回帰分析』（佐和隆光）を読む - 渋谷駅前で働くデータサイエンティストのブログ\n*2:このブログの記事も引用していただき恐縮しております→多重共線性のはなし - 渋谷駅前で働くデータサイエンティストのブログ\n*3:13年前らしい\n*4:微妙に何か違う気がするんですが………………まぁいっか\n*5:Geminiのセンスが悪いのか、最後に出てくるATEの推定値が交絡調整前のバイアスのかかった推定値よりも真の値から外れているのはご愛嬌ということで笑\n*6:この場合は単回帰なのでたかだか2つの残差の正規性ぐらいだとは思いますが\n*7:各blockの前後からの系列相関＝トレンドによる影響が混入する",
-      "publishedAt": "2026-05-28T09:00:00.000Z",
-      "feedName": "渋谷駅前で働くデータサイエンティストのブログ"
-    },
-    {
-      "id": "08cc45422a914367d167fee2e4240c3354e28d13c64700afc8ceac0e24c40d8d",
-      "title": "【図解】IT初心者でもわかる！クリーンアーキテクチャの基本",
-      "url": "https://qiita.com/Yamashita_Sosuke/items/f4531c7266702b1419f8?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "はじめに\nエンジニアとして開発に携わっていると、「クリーンアーキテクチャ（Clean Architecture）」という言葉を耳にする機会が多いと思います。\nしかし、いざ調べてみると難しい専門用語ばかりで、「結局どういうことなの？」と挫折してしまった方もいるのではないでし...",
-      "publishedAt": "2026-05-28T04:04:50.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "13b84e981dc7c2a71749c208b501a56b18e3fdba57ef446b8bd1c4cedfd972b3",
-      "title": "「バイブコーディングは危険」はもう古い　“AI任せ”のコードに潜む4つのワナと回避策",
-      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2605/28/news071.html",
-      "description": "Trend Microがバイブコーディングがセキュリティに与えるリスクやその対策について解説するブログを公開した。",
-      "publishedAt": "2026-05-28T04:00:00.000Z",
-      "feedName": "＠IT"
-    },
-    {
-      "id": "c9efde96746a2d8e5a1f7ff0a34eba119d4b271e3d88ecac2af4492aea863b1d",
-      "title": "FacebookやInstagramの有料プラン「Plus」、世界展開へ",
-      "url": "https://japan.cnet.com/article/35248136/",
-      "description": "Metaは春の限定的なテストに続き、有料サブスクリプション「Facebook Plus」「Instagram Plus」「WhatsApp Plus」を世界中で展開すると発表した。",
-      "publishedAt": "2026-05-28T03:51:00.000Z",
-      "feedName": "CNET Japan"
     },
     {
       "id": "8105d9efa001ff5b993355dbf2a2e972d5ea5b862f3ccd48cb1f579fec9be95e",
@@ -7087,6 +6935,134 @@
       "url": "https://zenn.dev/studist/articles/program-purity-clojure-haskell",
       "description": "はじめに\n純粋ってなんだろう？\n\n「プログラムが純粋であるとは、副作用がなく参照透過であることです」\n「えっと、それで？」\n\nこうした 定義と理解の間のギャップ を埋めるために筆を執りました。\n筆者が特に届けたいのは「純粋とはプログラムを ただの計算 にする考え方だ」という理解です。\n「ただの計算」というのは f(x, y) = (x + y) * 2 のような入力だけで値が決まる式のことです。\nこれはいつ、何度、並行して呼ばれるかに影響されず、テストは計算結果が正しいかのチェックだけにできる。\nコードの難しさは 考慮しないといけない範囲 に大きく左右されると筆者は考えています。\nD...",
       "publishedAt": "2026-06-25T06:59:53.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "83873da1c9574e4ff179b6397a4396d27764ee18bdef2b9cacddfe48ef4cd7eb",
+      "title": "Moving Your On-Premises Database to the Cloud",
+      "url": "https://dev.to/fuadhusnan_f44f3e13/moving-your-on-premises-database-to-the-cloud-1189",
+      "description": "The decision to migrate an on-premises database to the cloud is rarely a simple one. It touches infrastructure, budget, team workflows, and application uptime all at once. Yet for most organizations, moving your on-premises database to the cloud is no longer a question of if but when — and more importantly, how to do it without bringing production systems to their knees. Whether you're running PostgreSQL on bare metal or SQL Server in a company-owned data center, the path to cloud-hosted data has predictable pitfalls and, when navigated carefully, significant payoffs.\nThis guide walks through the full migration process: from pre-migration assessment to post-migration validation, with real configuration examples and the kind of hard-won detail that vendor documentation tends to skip.\nOn-premises databases carry hidden costs that compound over time. Hardware refresh cycles, licensing renewals, physical security, power, and cooling — these expenses are easy to underestimate when they're already baked into the operating budget. Cloud databases shift that burden to a consumption model, where you pay for what you use and scale without a procurement cycle.\nBeyond cost, there's the question of availability. Cloud providers like AWS, Google Cloud, and Azure run managed database services with built-in replication, automated failover, and point-in-time recovery that would take a dedicated DBA weeks to configure manually. A startup can get enterprise-grade durability out of the box. A mid-sized company can stop worrying about what happens when a hard drive fails at 2 a.m.\nPerformance is another draw — though it comes with caveats. Managed cloud databases excel at read-heavy workloads and benefit from proximity to cloud-native application services. Latency-sensitive operations or highly custom storage configurations sometimes perform better on dedicated hardware. Knowing which category your workload falls into is the first real question to answer.\nSkipping the assessment phase is the single biggest mistake teams make. It leads to unexpected downtime, missed dependencies, and — in the worst cases — data loss. A thorough pre-migration audit covers four areas: data volume, schema complexity, application dependencies, and compliance requirements.\nStart with a size inventory. You need to know not just the total database size but the distribution across tables, the presence of large object (LOB) columns, and historical growth rates. A 500 GB database that grows 10 GB per week needs a different migration strategy than one that's been static for two years.\nSchema complexity matters because cloud databases don't always support every feature of their on-premises equivalents. Oracle-to-PostgreSQL migrations, for example, frequently surface issues around stored procedures, custom data types, and sequences. AWS Schema Conversion Tool (SCT) and pgloader are useful here, but they produce conversion reports, not magic. You'll still need a developer to review the flagged objects.\nApplication dependencies are where migrations often stall. Query your connection pool configurations, hardcoded IP addresses, and any application code that references the database hostname directly. A migration that takes two days of database work can turn into two weeks when four applications need their connection strings updated and tested.\nThere are three broad approaches to database migration: lift-and-shift, heterogeneous migration, and phased cutover. Each has a different risk profile and time-to-value.\nLift-and-shift moves the database engine and data as-is to a cloud VM, without changing the database software or schema. It's the fastest path and produces the fewest surprises, but it doesn't take advantage of managed services. You're still responsible for patching, backups, and HA configuration.\nThis strategy makes sense when deadlines are tight, when the application is tightly coupled to a specific database version, or when the migration is a step toward eventual modernization rather than the destination.\nA heterogeneous migration moves data between different database engines — Oracle to Aurora PostgreSQL, SQL Server to Cloud Spanner, MySQL to AlloyDB. This is the most complex and highest-reward approach. You get schema compatibility improvements, cost reductions from license elimination, and cloud-native performance features. But it requires rigorous application testing because even minor behavioral differences between SQL dialects can cause subtle bugs.\nAWS Database Migration Service (DMS) handles the data movement portion, while SCT handles schema conversion. Here's a minimal DMS replication task configuration for a continuous replication job:\n{\n  \"TargetMetadata\": {\n    \"TargetSchema\": \"\",\n    \"SupportLobs\": true,\n    \"FullLobMode\": false,\n    \"LobChunkSize\": 64,\n    \"LimitedSizeLobMode\": true,\n    \"LobMaxSize\": 32768\n  },\n  \"FullLoadSettings\": {\n    \"TargetTablePrepMode\": \"DROP_AND_CREATE\",\n    \"CreatePkAfterFullLoad\": false,\n    \"StopTaskCachedChangesApplied\": false,\n    \"StopTaskCachedChangesNotApplied\": false,\n    \"MaxFullLoadSubTasks\": 8,\n    \"TransactionConsistencyTimeout\": 600,\n    \"CommitRate\": 50000\n  },\n  \"Logging\": {\n    \"EnableLogging\": true,\n    \"LogComponents\": [\n      { \"Id\": \"SOURCE_UNLOAD\", \"Severity\": \"LOGGER_SEVERITY_DEFAULT\" },\n      { \"Id\": \"TARGET_LOAD\", \"Severity\": \"LOGGER_SEVERITY_DEFAULT\" },\n      { \"Id\": \"TASK_MANAGER\", \"Severity\": \"LOGGER_SEVERITY_DEFAULT\" }\n    ]\n  }\n}\n\nThe FullLobMode: false setting combined with LimitedSizeLobMode: true is a common performance optimization — it handles most LOB columns efficiently while avoiding the full-scan overhead that comes from treating all LOBs as potentially massive.\nPhased cutover uses change data capture (CDC) to keep the source and target databases synchronized while the application continues running. Once the target is caught up and validated, traffic is switched over with minimal downtime — often under a minute.\nThis is the preferred approach for production systems where extended downtime isn't acceptable. The tradeoff is complexity: you're running two databases in parallel, which requires careful monitoring and a clear rollback plan.\nCDC works by reading the database transaction log and replicating changes to the target in near real-time. PostgreSQL exposes this via logical replication; MySQL uses binary log (binlog) replication; SQL Server uses CDC tables backed by the transaction log.\nFor PostgreSQL-to-PostgreSQL migrations, you can set up logical replication with a publication and subscription:\n-- On the source database\nALTER SYSTEM SET wal_level = 'logical';\nSELECT pg_reload_conf();\n\nCREATE PUBLICATION migration_pub FOR ALL TABLES;\n\n-- On the target database\nCREATE SUBSCRIPTION migration_sub\n  CONNECTION 'host=source-db.internal port=5432 dbname=myapp user=replicator password=secret'\n  PUBLICATION migration_pub;\n\nOnce the subscription is active, PostgreSQL streams all inserts, updates, and deletes from source to target. You can monitor lag with pg_stat_subscription:\nSELECT subname, received_lsn, latest_end_lsn,\n       (latest_end_lsn - received_lsn) AS lag_bytes\nFROM pg_stat_subscription;\n\nA lag of zero bytes means the target is caught up. That's your signal that the cutover window is ready.\nThe actual cutover has a predictable sequence: stop writes to the source, confirm the target has caught up, update connection strings, verify application connectivity, then remove the replication slot. Each step should be documented with a time estimate and a rollback step.\nWhat many migration guides leave out is the importance of a tested rollback. Before executing the cutover, run a dry run in staging that includes the rollback path. Can you repoint applications back to the source database in under five minutes? Is there a runbook that anyone on the team can follow at midnight? These aren't hypothetical questions — they're the difference between a controlled incident and a crisis.\nCommunication matters too. Coordinate the maintenance window with product teams and customer support. Even a migration with near-zero downtime should have a status page entry and a prepared message for users in case something unexpected occurs.\nA migration isn't done when the data lands in the cloud. It's done when you've confirmed the data is correct and the application behaves identically. Row count checks are the minimum — not the finish line.\nRun a checksum comparison on critical tables:\n-- Run on both source and target; checksums should match\nSELECT MD5(CAST((array_agg(t.* ORDER BY id)) AS TEXT))\nFROM your_table t;\n\nBeyond checksums, replay a sample of recent production queries against the target and compare execution plans. Query planner behavior can differ between environments — particularly if the cloud database was initialized without running ANALYZE or if index statistics are stale.\nMonitor application error rates and slow query logs for the first 48 hours post-migration. This window captures most regression issues before they compound into bigger problems. Set up alerting on database CPU, connection counts, and replication lag (if you've kept the source running as a fallback).\nMigrating an on-premises database to the cloud is a project with real complexity — but it's entirely manageable when you work through it systematically. Assess before you plan, plan before you execute, and validate before you celebrate. The teams that have the smoothest migrations are almost always the ones that invested the most time in the pre-migration phase, built a tested rollback, and resisted the urge to rush the cutover.\nIf you're starting this process, begin with a data inventory and a dependency audit this week. Even if the migration is months away, that groundwork shapes every decision that follows. The cloud isn't a destination you arrive at — it's a platform you migrate to with intention.",
+      "publishedAt": "2026-06-28T03:25:54.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "c1d4c8f6896a636d5fc77c96efeadc69f1fb79de3a7fc1dee793293476bce6fe",
+      "title": "GitHub Actions で terraform plan を実行して Claude Code にレビューさせてみた",
+      "url": "https://dev.classmethod.jp/articles/github-actions-terraform-plan-claude-code-review/",
+      "description": "GitHub Actions で terraform plan を実行して Claude Code にレビューさせてみた",
+      "publishedAt": "2026-06-28T03:23:14.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "be95f2ec2752dc7381712e6d899abd46ca72fe9c78e68c08b39cde35f755a7e9",
+      "title": "I switched 23 sites from JPEG to WebP/AVIF last month — here's what I learned",
+      "url": "https://dev.to/gpszxtzys_07fba0736e6ecac/i-switched-23-sites-from-jpeg-to-webpavif-last-month-heres-what-i-learned-l7m",
+      "description": "I spent last month migrating 23 client sites from JPEG/PNG to WebP and AVIF. Here's what I wish someone told me before I started.\nAVIF is about 30% smaller than WebP at the same quality level. But Safari support is still patchy — if your traffic is 40%+ iOS, you need <picture> tags with WebP fallback. No way around it.\nThe single biggest reduction came from capping max image width at 1200px and setting quality to 80. One site went from 9.4MB to 318KB per page — a 97% reduction — just from those two settings plus lazy loading.\nThe format switch was the cherry on top, not the cake.\nSmartImgKit — quick batch conversions in the browser. No uploads, no signup, drag and drop. Handles the 80% case where you don't need a CLI pipeline. Supports JPG, PNG, WebP, AVIF, GIF, BMP, TIFF.\nImageMagick — server-side batch jobs for when you need automation.\nSquoosh — one-off fine-tuning with visual comparison.\nSharp (Node.js) — build pipeline integration.\nEvery iPhone user's photos are HEIC. Most web tools crash on them. You need a converter that handles them before the pipeline — SmartImgKit's HEIC converter works locally in-browser, no uploads.\nFormat + max width + lazy loading = 80% of the gain. Everything else is diminishing returns. Don't over-engineer it.",
+      "publishedAt": "2026-06-28T03:19:29.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "82a602eec4e3fcff2447caa3aa479366d72194ef3630c4802874c42a725980a7",
+      "title": "Update on Zen — we now have a package ecosystem",
+      "url": "https://dev.to/jishith_mp_82b1b8f25ca17e/update-on-zen-we-now-have-a-package-ecosystem-68",
+      "description": "A few weeks back I shared some early Zen code examples. Since then, a lot has changed. We're now at v1.1.1 and the language actually has real tooling.\nWhat's new:\nFull CLI with package management\nzen publish - publish packages directly from CLI\nzen install -  install packages from the registry\nzen list - browse all published packages with pagination\nLanguage improvements\nStruct support with literals and returns\nRegex with POSIX ERE (matchRegex)\nFile I/O with binary support\nFFI bindings to C functions\n162 stdlib functions across math, strings, fs, os, http, crypto, path utilities\nPackage Registry (v1.0.0)\nJWT-based authentication\nGitHub-hosted packages\nSupport for both runnable apps and libraries\nSemantic versioning\nThe reactive variables concept from the first post is still there (that was my favorite feature), and now you can actually write real programs and share them with the community.\nFull docs: https://jishith-dev.github.io/zen-doc/site/\nInstall: curl -fsSL https://raw.githubusercontent.com/jishith-dev/Zen/main/install.sh | bash\nNext up: HTTP server APIs, better imports, and whatever the community asks for.\nOpen to feedback and collaborators 💻 \n✨ \n\n\n  \n  \n  zen #programming #compiler #llvm #packagemanager #opensource #programminglanguage",
+      "publishedAt": "2026-06-28T03:12:42.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "3d59628b76b335d1489dba5901460e8084d187a28e1a72015ecaa87ad6543c4b",
+      "title": "【登壇レポート】AWS Summit Japan 2026 Builder Community Loungeで「AgentCoreの機能、全部要る？ ユースケース別にAWSサービスとの組み合わせ方を一緒に整理しよう」というタイトルでチョークトークしました",
+      "url": "https://dev.classmethod.jp/articles/aws-summit-japan-2026-chalktalk-bedrock-agentcore-usecase-design/",
+      "description": "AWS Summit Japan 2026でAmazon Bedrock AgentCoreについてチョークトーク形式で登壇した際のアーキテクチャ設計のディスカッション内容をまとめました。",
+      "publishedAt": "2026-06-27T14:15:47.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "6f6df32c89cacbad13b141e68b30d2438b70d625ab07db1006c7ed4c139f9baa",
+      "title": "AWS Summit Japan 2026公式ページでセッション資料が公開。オンデマンド視聴も可能になりました",
+      "url": "https://dev.classmethod.jp/articles/aws-summit-japan-2026-session-materials-and-ondemand/",
+      "description": "AWS Summit Japan 2026のセッション資料ダウンロードとオンデマンド視聴が公式ページで利用可能になりました。オンデマンド視聴にはイベント参加登録とは別にサインアップが必要です。本記事ではアクセス方法と現時点で公開中のセッション一覧を紹介します。",
+      "publishedAt": "2026-06-27T11:50:05.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "e1ea33948b42c79eba87ceeaffe356c24058a08e8714007a8184e448da68d3dd",
+      "title": "【セッションレポート】Amazon Connect Customer の AI 機能で顧客一人ひとりに最適化された体験を大規模に提供する [BIZ233]",
+      "url": "https://dev.classmethod.jp/articles/aws-summit--2026-session-report-connect-customer-ai-personalization/",
+      "description": "AWS Summit Japan 2026の「Amazon Connect Customer の AI 機能を活用し、顧客一人ひとりに最適化された体験を大規模に提供する方法」についてのセッションレポートです。パーソナライゼーションの重要性から最新機能、実際のデモまで、コンタクトセンターを収益貢献型の戦略拠点へ転換する方法が紹介されました。",
+      "publishedAt": "2026-06-27T11:37:56.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "ac2e7c4274e8a5be2ee4c7cbf8d32f49506d85358c0e47bea3f2f74ff2aa2594",
+      "title": "Deno で Desktop アプリを作れるようになっていた",
+      "url": "https://azukiazusa.dev/blog/deno-desktop-app/",
+      "description": "Deno v2.9.0 以降で `deno desktop` コマンドが使えるようになりました。`deno desktop` コマンドは単一の TypeScript ファイルから Next.js プロジェクトまで、デスクトップアプリに変換できます。この記事では Deno でデスクトップアプリを作る方法について紹介します。 Deno v2.9.0 以降で deno desktop コマンドが使...",
+      "publishedAt": "2026-06-27T08:48:02.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "1751f157a608abda5a21acb24cf7cc3ce6b6b4f15572e45df4c537e373ec1d11",
+      "title": "【IVR から AI 会話へ】 AWS Summit Japan 2026 カスタマーサポートセッション横断レポート",
+      "url": "https://dev.classmethod.jp/articles/aws-summit-2026-ivr-ai-contact-center-report/",
+      "description": "AWS Summit Japan 2026で、電力・銀行・自治体の3組織によるコンタクトセンター変革のセッションに参加しました。共通していたのは、従来のボタン選択型IVRから、AIが顧客と自然に会話して用件を分類する新しい形のIVRへの移行です。各組織の実例と共通トレンドをまとめます。",
+      "publishedAt": "2026-06-27T08:43:51.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "5c1ebd46975256d214b2037a1b2ef4a803b0a67ed752bb259d1b94b54f94b367",
+      "title": "【小ネタ】AWS CLIのAssumeRoleとマネジメントコンソール（マルチセッション無効）のスイッチロールでは使用される認証情報が異なる",
+      "url": "https://dev.classmethod.jp/articles/aws-console-switch-role-no-role-chaining/",
+      "description": "【小ネタ】AWS CLIのAssumeRoleとマネジメントコンソール（マルチセッション無効）のスイッチロールでは使用される認証情報が異なる",
+      "publishedAt": "2026-06-27T08:23:13.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "f3994c419a083f0f6da1f228c2b9b4dccaa57ad4a48addaf3b05a211d838e884",
+      "title": "GitHub Actions ワークフローのステップが並行実行可能になりました | 豆蔵デベロッパーサイト",
+      "url": "https://developer.mamezou-tech.com/blogs/2026/06/27/github-actions-parallel-steps/",
+      "description": "はじめに # 先日、GitHub Actions ワークフローで background 機能が実装され、単一のワークフロー内でステップを並行で実行可能になったことが発表されました。 https://github.blog/changelog/2026-06-25-actions-steps-can-now-be-run-in-parallel/ これまでも、Strategy Matrix を使うと複数のランナーを使って並行...",
+      "publishedAt": "2026-06-27T03:08:23.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "3fc538d5448d2dd400c92ad61d1407a399587776ea6a6de8bba7eca3ef473b0e",
+      "title": "AWS Summit 2026  「Builder Community」&「AWS HERO」 セッション資料まとめ",
+      "url": "https://qiita.com/tetutetu214/items/2af4f788bd0d1963eec7?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "概要\nこちらの記事では、AWS Summit Japan 2026(2026/6/26~27 で開催) での、Builder Community エリアのステージで開催されていました、セッション資料へのリンクをまとめまたものとなります。\n※資料リンクが不足しているところは...",
+      "publishedAt": "2026-06-27T00:34:36.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "ced8242d0611b80bf302a5d548579a8bc525f6ba8d3bbb47a1ade07f84df7f76",
+      "title": "【AWS】DevOpsAgentでレビューを自動化する【DevOpsAgent】",
+      "url": "https://qiita.com/Nana_777/items/31ef1d637150409a1990?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\n2026年6月17日、AWS Summit New York にて AWS DevOps Agent に Release Management 機能（プレビュー）が追加されました。この機能は、PRに対して自動的にコードレビューを実行し、リリース可否を判定するとい...",
+      "publishedAt": "2026-06-27T00:17:30.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "a945b6dc931068b2204abfecf78179b9432c6c2bbc0fdce02fa9e38fcd944bca",
+      "title": "Claude Enterprise全社導入で何を検討し、何をやらなかったか - メドピア開発者ブログ",
+      "url": "https://tech.medpeer.co.jp/entry/2026/06/26/122446",
+      "description": "こんにちは。セキュリティエンジニア兼SREの侘美です。 2026年6月、メドピアではClaude Enterpriseの全社導入を完了しました。正社員・契約社員あわせて約130名にアカウントを配布しています。 今回の導入は、自分（セキュリティ）とコーポレートIT（社内のIT機器・SaaS管理を担当）で協力して設計・構築しました。セキ...",
+      "publishedAt": "2026-06-27T00:13:39.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "f8c457b8c7cf09919cf1e333123487c40d81719edfb9c2d31b322ab330c7ffb1",
+      "title": "AWS Summit Japan 2026 参加してきた",
+      "url": "https://qiita.com/hu_yszw/items/44dd9d6d150840959b52?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "AWS Summit Japan 2026に参加してきた\n毎年AWS Summitには参加させていただいているのですがいつも社内への情報共有だけだったので、学んだこととかを残しておきます。\n\n参加の目的\nAWS Summitはブースやセッションがとても多いので目的を事前...",
+      "publishedAt": "2026-06-26T18:12:00.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "d00605012342d39c195d0b17b85753ba3233911fb8bcdce5715e6a753310adbf",
+      "title": "明日から始める、コーディングエージェント時代のフルスタック開発 — AWS Blocks のソースコードを読む",
+      "url": "https://zenn.dev/aws_japan/articles/aws-blocks-source-reading",
+      "description": "はじめに\nこんにちは、AWS Japan でソリューションアーキテクトをしているいなりくです。\n本記事は、AWS Summit Japan 2026 での登壇セッション「明日から始める、コーディングエージェント時代のフルスタック開発」の補足記事です。当日セッションに来てくださった皆さま、ありがとうございました！\n\n2026 年 6 月に AWS Blocks がパブリックプレビューとして公開されました。「TypeScript でバックエンドを書くとインフラが自動的に導出される」Infrastructure from Code（IFC）フレームワークです。\n対応プラットフォームは幅広く...",
+      "publishedAt": "2026-06-26T14:55:19.000Z",
       "feedName": "Zenn"
     }
   ]
