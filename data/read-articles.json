@@ -1,182 +1,6 @@
 {
   "articles": [
     {
-      "id": "5d825832867d5b9538f3a9066b7bf8ba1f6c4908c849b400ad834cc8658a2f15",
-      "title": "Stop Building Projects That Exist Only to Impress Other Beginners",
-      "url": "https://dev.to/guilherme_galanti/stop-building-projects-that-exist-only-to-impress-other-beginners-nl8",
-      "description": "There is a sacred ritual in the life of every beginner developer.\nFirst, you build a calculator.\nThen, a to-do list.\nThen, a weather app.\nThen, a Netflix clone.\nThen, perhaps a Pokédex, because apparently every junior developer must prove that they can fetch Pikachu from an API before entering the workforce.\nNone of these projects are bad.\nThey can help you learn programming fundamentals, practice a new framework, and understand how APIs work.\nThe problem begins when you place them in your portfolio and expect recruiters to react like archaeologists discovering a lost civilization.\nThey have seen these projects before.\nMany times.\nYour portfolio should not exist to impress other beginners.\nIt should provide evidence that you can solve problems.\nMost beginners choose projects based on one question:\n“Does this look impressive?”\nThat is usually the wrong question.\nA better question is:\n“Will this project help me have an interesting conversation during an interview?”\nImagine that a recruiter opens your portfolio and sees a calculator.\nThere is nothing wrong with the calculator.\nBut the conversation will probably be short.\n“Why did you build this?”\n“To practice JavaScript.”\nFair enough.\nNow imagine that the recruiter sees a simple inventory-management tool designed for a small local business.\nThe tool is not revolutionary.\nIt will not disrupt Silicon Valley.\nNobody will write a dramatic LinkedIn post about its innovative potential.\nBut it creates better questions:\nWho was the user?\nWhat problem were you trying to solve?\nHow did you decide which features mattered?\nHow did you structure the data?\nWhat happened when the requirements changed?\nDid someone actually test it?\nWhat would you improve in the next version?\nThat is what you want.\nYour portfolio is not an art gallery.\nIt is a conversation starter.\nStill building your technical foundation?\nRead my curated list of Udemy courses for beginner developers →\nThis distinction is important.\nA learning project helps you practice a skill.\nA portfolio project helps you demonstrate how you solve problems.\nSometimes the same project can do both.\nBut not automatically.\nA tutorial-based to-do list can be a great learning project.\nYou may practice:\ncomponents;\nstate management;\ndatabase operations;\nAPI requests;\nauthentication;\ndeployment.\nExcellent.\nBut if you followed a tutorial line by line, made no meaningful decisions, and changed only the background color, the project is not strong evidence of independent problem-solving.\nYou were a passenger.\nYou successfully remained inside the vehicle while someone else drove.\nThat is still useful during the learning phase.\nBut eventually, you need to take the wheel.\nA portfolio project should force you to make decisions without someone on YouTube telling you exactly which file to create next.\nSome beginners understand that tutorial clones are weak portfolio pieces.\nThen they overcorrect.\nThey decide that their first serious project must be a groundbreaking startup with artificial intelligence, blockchain, real-time collaboration, microservices, a mobile app, and probably drone delivery.\nThe project is abandoned three weeks later.\nOnly the login screen survives.\nYou do not need a revolutionary idea.\nYou need a complete project.\nA boring project that works is more valuable than an ambitious project that exists only as a Figma screenshot and a dream.\nProfessional software development is full of boring problems.\nCompanies pay developers to:\norganize data;\nautomate repetitive work;\nreduce mistakes;\nimprove internal processes;\nmake information easier to find;\nconnect systems;\nhelp users complete tasks faster.\nThe software does not need to change the world.\nSometimes it only needs to stop someone from manually updating the same spreadsheet every Friday afternoon.\nThat is already a noble mission.\nBefore writing any code, answer five questions.\nDo not say:\n“Everyone.”\nEveryone is not a user.\nEveryone is what people say when they have not thought about the problem.\nChoose someone specific.\nFor example:\na teacher managing student grades;\na local shop owner tracking inventory;\na freelancer organizing invoices;\na salesperson tracking follow-ups;\na small team scheduling appointments;\na customer-support analyst documenting recurring issues.\nA specific user creates useful constraints.\nAnd constraints make projects better.\nDo not start with the technology.\nDo not say:\n“I want to build something with React, Node.js, MongoDB, Docker, and AWS.”\nThat is not a project idea.\nThat is a grocery list.\nStart with the pain.\nFor example:\n“A small business owner tracks inventory manually and frequently discovers missing products too late.”\nNow you have a problem.\nThe technology becomes a tool, not the main character.\nBeginners frequently build too much.\nThey imagine twenty features before completing the first one.\nStart with the smallest version that solves the main problem.\nFor an inventory tool, the first version may include:\nproduct registration;\nquantity updates;\nlow-stock alerts;\nsearch and filtering;\na simple activity history.\nThat is enough.\nYou do not need a recommendation engine powered by machine learning to predict the emotional journey of each can of soda.\nFinish the useful version first.\nA good portfolio project should contain decisions you can explain.\nFor example:\nWhy did you choose a relational database?\nHow did you model the data?\nHow did you validate user input?\nHow did you handle authentication?\nHow did you organize the codebase?\nHow did you test the most important features?\nHow did you deploy the application?\nYou do not need sophisticated answers.\nYou need honest answers.\nA junior developer is not expected to design the infrastructure of Netflix.\nBut they should be able to explain their own project without looking like they discovered it five minutes before the interview.\nA deployed application is useful.\nA tested application is better.\nA project used by at least one real person is even better.\nAsk someone to interact with it.\nWatch where they get confused.\nAsk what is missing.\nFix a bug they discovered.\nImprove a feature based on feedback.\nNow the project has a story.\nYou did not only write code.\nYou solved a problem, observed reality refusing to cooperate, and improved the solution.\nThat is software development.\nCareer changers have a major advantage here.\nYou already know problems that many traditional beginners have never seen.\nUse them.\nIf you worked as a teacher, you probably understand educational problems better than someone randomly generating project ideas with ChatGPT at two in the morning.\nYou could build:\na student-progress dashboard;\na lesson-planning tool;\na quiz-management system;\na platform for organizing assignments;\na grading automation tool.\nIf you worked in sales, you could build:\na lead-tracking dashboard;\na lightweight CRM;\na commission calculator;\na follow-up reminder system;\na sales-performance report.\nIf you worked in customer support, you could build:\na searchable knowledge base;\na recurring-issue tracker;\na ticket-prioritization dashboard;\nan internal FAQ tool;\na customer-feedback organizer.\nIf you worked in administration, you could build:\nan invoice tracker;\na scheduling system;\nan approval workflow;\na document organizer;\na reporting dashboard.\nThese projects are not impressive because they are complex.\nThey are impressive because they make sense.\nYou understand the user.\nYou understand the problem.\nYou can explain why the project exists.\nThat gives you a much stronger narrative during an interview.\nYou do not always need to abandon your existing projects.\nSometimes you can improve them.\nWeak version:\nUsers can create, edit, and delete tasks.\nImproved version:\nA study-planning tool for students preparing for technical certifications. Users can organize tasks by subject, estimate study time, track completed sessions, and identify neglected topics.\nThe technical foundation may be similar.\nBut the project now has a user and a purpose.\nWeak version:\nUsers can search for a city and see the weather.\nImproved version:\nA weather dashboard for delivery workers that highlights rain probability, extreme temperatures, and the safest time windows for outdoor routes.\nNow you need to think about prioritization, interface design, and useful information.\nWeak version:\nA store with products, a cart, and checkout.\nImproved version:\nA basic inventory and ordering platform for a local bakery, including product availability, pickup scheduling, and low-stock alerts for ingredients.\nYou still practice common e-commerce concepts.\nBut the project feels grounded in reality.\nWeak version:\nUsers can send messages in real time.\nImproved version:\nA communication tool for a small volunteer organization, with channels for events, task assignments, and important announcements.\nAgain, the technology may be similar.\nThe context makes the project stronger.\nMany junior developers spend weeks building a project and approximately fourteen seconds documenting it.\nThe README usually says:\nThis project was created with React.\nThank you for this valuable historical record.\nYour README should help someone understand the project quickly.\nInclude:\nthe problem;\nthe intended user;\nthe main features;\nthe technologies used;\nthe technical decisions you made;\nthe biggest challenge;\nscreenshots;\na live demo;\ninstructions for running the project;\nwhat you would improve next.\nThis is not bureaucratic decoration.\nDocumentation proves that you can communicate.\nAnd communication matters.\nProfessional developers do not work alone inside caves, sending mysterious commits into the darkness.\nThey work with people.\nThey explain decisions.\nThey document systems.\nThey help other developers understand what is happening before everyone loses the will to live.\nA common beginner portfolio contains:\nseventeen repositories;\neight tutorial clones;\nfour empty README files;\nthree projects with broken links;\none repository called final-project-v2-new-final-really-final;\nzero deployed applications.\nThis does not communicate productivity.\nIt communicates archaeological complexity.\nYou do not need dozens of projects.\nThree strong projects are enough.\nA useful portfolio could contain:\nOne complete application\n\n\nOne project connected to your previous experience\n\n\nOne technically focused project\n\n\n\nQuality matters more than quantity.\nFinish things.\nDeploy things.\nDocument things.\nFix things after users break them in ways you did not expect.\nThat is where the learning becomes valuable.\nA project does not need twenty technologies to be impressive.\nSometimes beginners add tools only because they want the README to look expensive.\nThe architecture diagram becomes larger than the actual user base.\nYour application has three users and seven microservices.\nTwo of the users are your parents.\nThis is not depth.\nDepth means understanding your decisions.\nA simple application can demonstrate strong engineering habits:\nclear project structure;\ngood naming;\nthoughtful database design;\nuseful error handling;\nbasic automated tests;\nsensible Git commits;\ndocumentation;\ndeployment;\nfeedback-driven improvements.\nThat is more credible than adding Kubernetes because you saw it in a job description and panicked.\nYour project description should not be a list of technologies.\nWeak version:\nCreated an inventory system using React, Node.js, Express, PostgreSQL, and Docker.\nBetter version:\nBuilt and deployed an inventory-management tool for a small business to track product quantities and identify low-stock items. Designed the PostgreSQL database, implemented search and filtering, added input validation, and containerized the application with Docker to simplify local setup.\nThe second version gives the recruiter more information.\nIt shows:\nthe problem;\nthe user;\nthe outcome;\nthe technologies;\nthe decisions;\nthe scope.\nThe technologies still matter.\nBut they support the story.\nThey are not the story.\nYour portfolio should not prove that you can follow tutorials.\nIt should prove that you can think.\nBuild something small.\nBuild something useful.\nChoose a specific user.\nSolve a real problem.\nMake decisions.\nDeploy the project.\nAsk someone to use it.\nWatch reality destroy at least one of your assumptions.\nFix the problem.\nDocument what you learned.\nThen place the project in your portfolio.\nYou do not need another clone.\nYou need evidence.",
-      "publishedAt": "2026-05-30T02:52:28.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "c762cc96c0f6247fa1005e6271e1febfdc954b272ec88bf3cdc522e42196040c",
-      "title": "built a stranger chat app from scratch — and what we learned",
-      "url": "https://dev.to/king_555/built-a-stranger-chat-app-from-scratch-and-what-we-learned-1h1j",
-      "description": "My friend and I just launched Sparq — an anonymous stranger chat app with interest-based matching. This is the story of how we built it, what broke, what we learned, and the scrappy solutions we used when things didn't go as planned.\nWhat we built and why\n\n\nOmegle shut down. Every alternative we tried was either full of bots, had terrible mobile UX, or felt abandoned. So we decided to build something ourselves — clean, mobile-first, face verification ,games and actually fun to use.\nFrontend —HTML, CSS, JavaScript.\nBackend — Node.js with Socket.io for real-time chat and matchmaking\nDatabase — Supabase (free tier, saved us completely)\nHosting — Vercel for frontend, Render for backend\nAuth — JWT tokens, custom implementation\nThis was the hardest part to get right. The queue system works like this — when a user joins the search, we put them in a Map with their interests, location, and gender filter. Every new user who joins triggers a findMatch() scan across the entire queue.\nRender's free tier sleeps — our backend goes to sleep after 15 minutes of inactivity and takes 30 seconds to wake up. Early users thought the app was broken. Fixed it with UptimeRobot pinging the backend every 5 minutes.\n\n\nThe cold start problem — with a small user base, wait times for matching can get long. We built \"opener rooms\" — topic-based group spaces users join while waiting so the app never feels completely empty.\n\n\n\n\n  \n  \n  Where we are now\n\n\nJust launched. Small user base, still growing. The core experience works — two strangers match, have a conversation, sometimes something interesting happens. That's the whole point.\nIf you're a developer reading this and want to try it — we'd genuinely love feedback on the first session experience. Cold start feedback from a fresh set of eyes is the most valuable thing for us right now.\nhttps://sparq-flax.vercel.app/",
-      "publishedAt": "2026-05-30T02:51:35.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "04cf320f3169d9e9da45856360d811efec8a6241ec30ed0980bc7cc7ebb8b273",
-      "title": "Vamos participar do GitHub Challenge!",
-      "url": "https://dev.to/anamaria/vamos-participar-do-github-challenge-3d41",
-      "description": "Join the GitHub Finish-Up-A-Thon Challenge: $3,000 Prize Pool!\n\n\n  \nRevive old projects using GitHub Copilot\n\n              \n              \nJess Lee\n                    \n                  \n\n                \n for The DEV Team\n            \n          \nMay 21\n        \n#githubchallenge\n            #devchallenge\n            #githubcopilot\n        \n614 reactions\n            \n comments\n            \n        \n        \n          \n            3 min read",
-      "publishedAt": "2026-05-30T02:27:02.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "e9387db4a943de16b2f83741c3fd9cc1503e551c7ee5457a90bd2bca885aa3ef",
-      "title": "I Built 4 Real Mobile Apps With No Coding Background — Here's the Exact Workflow",
-      "url": "https://dev.to/rumi7911/i-built-4-real-mobile-apps-with-no-coding-background-heres-the-exact-workflow-69k",
-      "description": "I quit learning to code three times.\nNot because I wasn't motivated. I had app ideas I genuinely wanted to build. I bought courses, watched tutorials, followed roadmaps. Every single time, I hit the same wall: the resources assumed I already understood something I didn't, and by the time I'd filled that gap, three more gaps had appeared behind it.\nThen I stopped trying to learn to code first and started trying to build first — using Claude Code as my development partner.\nSix weeks later I had a working habit tracker and an AI-powered calorie tracker on the App Store.\nThis is the workflow I used, documented chapter by chapter. I've since turned it into a complete book for anyone who's been in the same place I was.\nMobile app development has been evolving for thirty years. In the 1990s and early 2000s, building software required deep technical expertise — compilers, memory management, hardware constraints. In the 2000s through 2020s, frameworks like React Native and tools like Expo dramatically lowered the barrier. But it was still a barrier measured in months of learning before you could ship anything real.\nWe are now in a third era. AI partners like Claude Code understand your entire project at once — not just the file you're editing, but the relationship between your components, your database schema, your API calls, and your navigation structure simultaneously.\nThe implication is significant: the bottleneck is no longer technical knowledge. It's the ability to describe what you want clearly.\nThat is a learnable skill, and it's the core skill this workflow develops.\nThe setup stack is deliberately minimal:\nNode.js — the runtime everything runs on\nClaude Code — your AI development partner (CLI)\nExpo — the framework that handles iOS/Android complexity\nA code editor — VS Code works perfectly alongside Claude Code\nThe key insight here is that you are not setting up a traditional development environment where you write code in files. You are setting up a conversation interface where you describe screens, features, and behaviours — and Claude Code builds them.\nThe first project you build in this environment is not an app. It is a \"Hello World\" screen you get running on your physical phone in under 20 minutes. This matters psychologically: seeing your name on a real phone screen, the first time, breaks the mental model that this is hard.\nBefore writing a single line of app logic, you prove the pipeline works end to end:\nClaude Code scaffolds a new Expo project\nYou run it on your computer\nYou scan a QR code with Expo Go on your phone\nYour app appears on your screen — live, updating in real time as you make changes\nThis is called the Three-Stage Testing Protocol: Computer → Mirror (screen mirroring on your laptop) → Physical Phone. Every feature you build gets tested through all three stages before you move on. It catches 90% of layout bugs that only appear on real hardware.\nThis protocol sounds simple. It saves enormous amounts of frustration later.\nBefore building anything complex, it is worth understanding what makes an app work — not technically, but structurally.\nThe Five-Element Framework breaks every successful app into five layers:\nLayer 1 — Core Function\nLayer 2 — Core Loop\nLayer 3 — Accessory Features\nafter the core loop works perfectly — never before.\nLayer 4 — Surface Area\nLayer 5 — Retention Hook\nThis framework is the difference between building something that works technically and building something people actually use.\nThe first real project is a habit tracker that stores everything locally on the device using AsyncStorage.\nWhy start local? Because local storage is instant. There is no network, no authentication, no database to configure. You can see the full app working on your phone within a few hours and the workflow is pure: describe the feature, Claude Code builds it, test it on your phone, iterate.\nThe app includes:\nAdding and removing habits\nMarking habits complete each day\nA streak counter\nA simple statistics view\nThe prompting workflow that works:\n\"Build a habit tracker screen. It should show a list of habits,\neach with a checkbox. When I check a habit it should mark it\nas done for today. Show a streak counter at the top that\nincrements each day all habits are completed.\"\n\nThat single prompt, given to Claude Code in a properly scaffolded Expo project, produces a working screen. You then iterate:\n\"Add a way to create new habits. Show a text input at the\nbottom with an Add button.\"\n\n\"The habit list is getting long. Add a scroll view.\"\n\n\"When I swipe left on a habit, show a delete option.\"\n\nThis is the workflow. Describe → Build → Test → Describe again.\nImportant: During development, Claude Code may add hidden panels for testing — data reset buttons, debug toggles. These must be removed before you submit to the App Store. Audit for these before every submission.\nLocal storage works for a single device. The moment a user switches phones, or wants their data on a tablet, it breaks.\nThe solution is Supabase — an open-source Firebase alternative that gives you a PostgreSQL database, authentication, and real-time subscriptions with minimal configuration.\nThe upgraded habit tracker adds:\nUser sign-up and login — email + password, handled entirely by Supabase Auth\nCloud sync — habits stored in Supabase, accessible from any device\nRow-Level Security — each user can only read and write their own data\nThe local cache + cloud sync pattern used here is worth understanding:\nWrites go to AsyncStorage first (instant feedback), then sync to Supabase in the background. Reads come from AsyncStorage unless it is empty, in which case Supabase is the source of truth.\nThis gives the app the feel of a local app (instant response) with the durability of a cloud app (data survives phone changes).\nThe Supabase dashboard is entirely visual — you create tables, set up auth, and configure security policies through a browser interface. No SQL knowledge required for the basics.\nThis is where things get genuinely impressive.\nThe third project adds the Anthropic vision API to the app. The user opens the camera, photographs their meal, and the app returns a nutritional breakdown: calories, protein, carbohydrates, fat. Automatically. From a photo.\nThe implementation:\nThe user takes a photo with their phone camera\nThe image is converted to base64 and sent to the Anthropic API\nClaude analyses the image and returns structured nutritional data\nThe app displays the breakdown and logs it to the day's total\nThe prompt sent to Claude with each image:\nAnalyse this food image and return a JSON object with:\n- calories (number)\n- protein_g (number)\n- carbs_g (number)\n- fat_g (number)\n- food_name (string)\n- confidence (low/medium/high)\n\nReturn only valid JSON, no explanation.\n\nRequesting JSON output is essential. Structured JSON responses can be directly consumed by the app without fragile text parsing.\nThe accuracy is genuinely useful for everyday logging — not clinical-grade, but good enough for the use case.\nHere is a problem that most beginner tutorials skip entirely, and it causes real security vulnerabilities:\nYou must never put your Anthropic API key inside your mobile app.\nA mobile app is a file that gets installed on millions of devices. Anyone can extract the binary and read hardcoded strings inside it — including your API key. If your key is exposed, anyone can run up unlimited API charges on your account.\nThe correct architecture:\nMobile App\n    ↓  (sends image, no API key)\nSupabase Edge Function\n    ↓  (adds API key securely, forwards request)\nAnthropic API\n    ↑  (returns result)\nSupabase Edge Function\n    ↑  (forwards result)\nMobile App\n\nThe Edge Function lives on Supabase's servers. The API key is stored as an environment variable on the server. The mobile app never sees it.\nClaude Code builds this Edge Function from a plain English description. You deploy it with a single command. The security model is correct from day one.\nEAS (Expo Application Services) handles the build and submission process:\n# Build for iOS\neas build --platform ios\n\n# Submit to App Store\neas submit --platform ios\n\n# Build for Android\neas build --platform android\n\n# Submit to Google Play\neas submit --platform android\n\nEAS compiles your Expo project into a native binary in the cloud. You do not need Xcode installed. You do not need a Mac to build for iOS (though you do need an Apple Developer account, $99/year).\nThe submission process for both stores requires app description and keywords, screenshots, a privacy policy URL, and an age rating questionnaire.\nSix weeks from knowing nothing to apps on the App Store.\nThat timeline is real. It is not a marketing claim. The limiting factor was not technical difficulty — it was learning to describe what I wanted precisely enough, learning to test systematically, and learning to iterate without fear.\nThe most important shift is mental: you are not a programmer who doesn't know enough yet. You are a product person who uses AI as a development partner. Those are different roles with different skills, and the second role is available to you right now.\nI documented this entire workflow in Building Mobile Apps with Claude Code — a 186-page guide for non-technical founders and vibe-coders.\n4 complete projects built from scratch to App Store\nStack: Expo, React Native, Supabase, Anthropic vision API, EAS\nNo prior programming experience assumed — ever\nAvailable on Amazon (Kindle + Paperback) and Gumroad (PDF + EPUB, DRM-free).\nFollow me for more on building with AI as a non-technical founder. Tag me when you ship your first app — I read everything.",
-      "publishedAt": "2026-05-30T02:23:19.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "fdf9c26eaf163f264cb294455e51323dc33c28a09f72beb8f1a60e9a76743d7f",
-      "title": "Is Claude directly editing your translation JSON files?",
-      "url": "https://dev.to/i18nexus/is-claude-directly-editing-your-translation-json-files-2o3c",
-      "description": "AI Translation Has Been Solved. The Workflow Hasn't.\n\n\nOver the past year, AI coding agents have become incredibly good at localization. Claude, Codex, Cursor, and similar tools can generate strings, update components, and create translations in multiple languages from a single prompt. For many React applications, generating translations is no longer the difficult part.\nThe interesting problem now is everything that happens after the translations are generated.\nProduct managers still want copy changes. Translators still need review workflows. Teams still need context for each string. Developers still need synchronized translation files. The AI can generate the content, but somebody still needs to coordinate the workflow around that content.\nWhile building i18nexus, we started wondering what would happen if AI coding agents created strings, translations, and context through the same system as everyone else instead of writing directly to translation JSON files.\nThe result is a workflow where AI agents can generate strings, translations, and context through MCP, while PMs and translators review everything in a shared dashboard. Translation files stay synchronized automatically, and developers work with AI coding agents the same way they already do in their application.\nThe easiest way to get started is to run the init command at the root of your project. It doesn't matter if you're using next-intl, i18next, or react-intl:\nnpx @i18nexus/cli init\nThe CLI creates an i18nexus project, imports your existing translations, configures synchronization, and sets up the MCP integration for Claude Code or Codex. No code changes needed. Continue working as you normally do.\nOnce configured, AI agents automatically add new copy and translations to i18nexus as you code, which are then synced down to your local JSON files. The developer experience doesn't change at all.\nThose changes immediately become available for review inside the dashboard, where PMs and translators can edit and verify translations before they are synchronized back to local translation files.\nWhether a PM edits a string in the dashboard or another developer adds a string from their MCP, the local translation files update automatically for all developers. The application updates. The build stays synchronized. Nobody, including AI agents, manually edits JSON files. We often find ourselves gitignore-ing them. They're now simply generated output.\nThe most interesting thing about AI localization isn't that AI can generate translations anymore. That's already becoming expected. The interesting challenge is figuring out how developers, translators, product managers, and AI agents work together around those translations.\nFor us, the answer has been to treat AI agents as first-class participants in the localization workflow rather than tools that edit translation files directly. The coding experience doesn't change, but the collaboration experience changes dramatically.\nCheck out the quick setup guide here.\nHappy coding!",
-      "publishedAt": "2026-05-30T02:23:06.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "d4c440fb1b8729fd8b26acddcd68ecfff1d3b7c781478fde2f6e5366b85f8d3e",
-      "title": "Idempotency Keys: The API Pattern That Prevents Duplicate Charges (and Worse)",
-      "url": "https://dev.to/apikumo/idempotency-keys-the-api-pattern-that-prevents-duplicate-charges-and-worse-5o",
-      "description": "Network requests fail. Timeouts happen. Clients retry. And without idempotency keys, a single payment request can become three charges.\nIdempotency keys are one of those API patterns that's easy to overlook until something goes wrong in production. Here's how they work, when to use them, and how to implement them correctly.\nAn operation is idempotent if running it multiple times produces the same result as running it once. GET requests are naturally idempotent — fetching a resource 10 times changes nothing. But POST requests (creating a payment, sending an email, provisioning a server) are not. Each call creates a new thing.\nIdempotency keys give POST requests the safety of GET requests. You attach a unique key to the request, and the server uses it to deduplicate repeated calls.\nThe client generates a unique key (typically a UUID) and sends it in a header:\nPOST /payments\nIdempotency-Key: a8098c1a-f86e-11da-bd1a-00112444be1e\nContent-Type: application/json\n\n{\n  \"amount\": 5000,\n  \"currency\": \"usd\",\n  \"source\": \"tok_visa\"\n}\n\nThe server stores the key alongside the result. If the same key arrives again, it returns the cached response instead of re-executing the operation:\nFirst request  → Process payment → Store result → Return 201 + result\nRetry request  → Look up key    → Return cached result (no charge)\n\nHere's a minimal implementation in Node.js with Express and Redis:\nconst express = require('express');\nconst redis = require('redis');\nconst app = express();\nconst redisClient = redis.createClient();\napp.use(express.json());\n\napp.post('/payments', async (req, res) => {\n  const idempotencyKey = req.headers['idempotency-key'];\n\n  if (!idempotencyKey) {\n    return res.status(400).json({ error: 'Idempotency-Key header required' });\n  }\n\n  // Check cache first\n  const cached = await redisClient.get(`idempotency:${idempotencyKey}`);\n  if (cached) {\n    return res.status(200).json(JSON.parse(cached));\n  }\n\n  // Acquire lock to prevent concurrent duplicate execution\n  const lock = await redisClient.set(\n    `lock:${idempotencyKey}`, '1', { NX: true, EX: 30 }\n  );\n  if (!lock) {\n    return res.status(409).json({ error: 'Request in progress, retry shortly' });\n  }\n\n  try {\n    const result = await processPayment(req.body);\n\n    // Cache the result for 24 hours\n    await redisClient.setEx(\n      `idempotency:${idempotencyKey}`,\n      86400,\n      JSON.stringify(result)\n    );\n\n    return res.status(201).json(result);\n  } finally {\n    await redisClient.del(`lock:${idempotencyKey}`);\n  }\n});\n\nThree details matter here:\nCache the full response, not just a flag. The retry needs to receive exactly what the original call returned — same status, same body.\nSet a TTL. Keys don't need to live forever. 24–48 hours covers any realistic retry window.\nLock before processing. If two retries arrive simultaneously before either has stored a result, you need a distributed lock (Redis SET NX) to prevent both threads from executing the payment concurrently.\nOn the client side, generate a UUID per logical operation — not per HTTP call. If you're retrying, reuse the same key:\nimport httpx\nimport uuid\n\ndef create_payment(amount: int, currency: str, retries: int = 3) -> dict:\n    # Generate ONCE before the retry loop\n    idempotency_key = str(uuid.uuid4())\n\n    for attempt in range(retries):\n        try:\n            response = httpx.post(\n                \"https://api.example.com/payments\",\n                json={\"amount\": amount, \"currency\": currency},\n                headers={\"Idempotency-Key\": idempotency_key},\n                timeout=10.0\n            )\n            response.raise_for_status()\n            return response.json()\n        except (httpx.TimeoutException, httpx.HTTPStatusError) as e:\n            if attempt == retries - 1:\n                raise\n            continue  # Retry with the SAME idempotency_key\n\nThe critical mistake to avoid: generating a new UUID inside the retry loop. That defeats the entire purpose.\nUse them on any non-idempotent endpoint where duplicate execution causes real harm:\nPayment processing — the canonical case\nEmail and notification sending\nResource provisioning (servers, databases, subscriptions)\nInventory deductions\nFinancial transfers\nSkip them on read-heavy endpoints or operations already naturally idempotent (like PUT with a full resource replacement).\nDifferent payload, same key — decide whether to return an error or the cached result. Stripe returns a 422 if the payload doesn't match the original. That's the safer choice and makes bugs visible.\nFailure between charging and caching — if your payment processor charges the card but the Redis write fails, a retry will charge again. Use a transactional outbox or write-ahead log to keep charging and caching atomic.\nKey namespace by user — prefix keys with a user or account ID to prevent one user's key from colliding with another's in multi-tenant systems.\nTesting idempotency manually means crafting the right headers, sending the same request twice, and verifying the second call returns a cached response without re-executing. This is where having a proper API client matters. APIKumo lets you save idempotency key headers directly in your request collections, replay requests with the same headers, and inspect response diffs — so you can verify deduplication behavior without juggling curl flags or writing throwaway scripts. If you're building or integrating payment-grade APIs, it's the kind of workflow support that pays for itself the first time you catch a double-charge bug before it ships.",
-      "publishedAt": "2026-05-30T02:21:49.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "af814e0212068996aaed120051bd6923a56227dd1060c7c930a2d8ab14ea9ba4",
-      "title": "How to optimize application performance — a hands on tutorial",
-      "url": "https://dev.to/therizwansaleem/how-to-optimize-application-performance-a-hands-on-tutorial-30h8",
-      "description": "How to optimize application performance — a hands on tutorial\n\n\n\n  \n  \n  Performance Optimization: Measure Before You Optimize\n\n\nDonald Knuth's famous warning-\"premature optimization is the root of all evil\"-boils down to one principle: measure before optimizing. Without real-world evidence that your application is too slow, you're guessing where to fix problems, and guesses create the wrong solutions.\nBefore touching any code, establish baseline metrics:\nLoad time (FCP, LCP, TTI)\nBundle size\nQuery durations\nMemory usage\nCPU utilization\nProfile the system to locate hot spots, identify root causes, then apply one targeted optimization at a time. After each change, re-measure and document the impact.\nPerformance profilers measure how long routines take to execute, how often they're called, where they're called from, and what percentage of total time is spent there. There are two main types:\n\n\n\nType\nHow It Works\nBest For\nLimitation\n\n\n\n\nInstrumenting\nInserts timing code at routine start/end\nPrecise timing, call traces\nOverhead affects short routines\n\n\nSampling\nInterrupts CPU at intervals, records execution point\nFinding bottlenecks in frequently-called code\nApproximate timing, no call trace\n\n\n\nFor accurate analysis, use a combination of profilers.\n\n\n\nLanguage\nTool\nType\n\n\n\n\nPython\n\ncProfile + snakeviz\n\nFunction-level\n\n\nPython\nline_profiler\nLine-level\n\n\nPython\nviztracer\nTimeline\n\n\nReact\nReact DevTools Profiler\nComponent render times\n\n\nTensorFlow\nTensorBoard Profiler\nHost/device breakdown\n\n\nBrowser\nChrome DevTools Performance\nCPU, paint, layout, network\n\n\n\nThe React Profiler reveals:\nComponent render times\nRe-render counts\nCommit durations\nWhich interactions cause renders\nHow to use it:\nOpen Chrome DevTools → Profiler tab\nClick \"Record\" and interact with your app\nReview the flamegraph (visualizes render cost) and ranked view (shows slowest components)\n### Common Bottleneck Patterns\nComponents re-render when props change-even if the data is identical. This is the most common React performance issue.\nFix: Use React.memo, useCallback, and useMemo wisely:\n// Prevents re-render when props haven't changed\nexport const UserCard = React.memo(({ name, age }) => (\n  <div><h3>{name}</h3><p>{age}</p></div>\n));\n\n// Memoizes event handler to prevent child re-renders\nconst handleClick = useCallback(() => {\n  console.log(\"Clicked\");\n}, []);\n\n// Memoizes expensive computation\nconst sortedUsers = useMemo(() => {\n  return users.sort((a, b) => a.name.localeCompare(b.name));\n}, [users]);\n\nFetching related data in loops causes exponential query growth:\n// ❌ BAD: N+1 queries\nconst posts = await db.post.findMany();\nconst postsWithAuthors = posts.map(post => \n  db.author.findUnique({ where: { id: post.authorId } })\n);\n\n// ✅ GOOD: Single batched query\nconst postsWithAuthors = await db.post.findMany({\n  include: { author: true }\n});\n\nIn TensorFlow, devices sit idle waiting for data. The Input Pipeline Analyzer identifies this:\nRed area in step-time graph = device idle time waiting for input\nGreen area = device actually working\nFix: Use tf.data.AUTOTUNE for parallelization and prefetching.\nLoading the entire app upfront delays Time to Interactive (TTI). Tools like Lighthouse and WebPageTest highlight large bundles.\nCache results of expensive operations to avoid recomputation:\n// Memoize repeated blocks\nconst expensiveResult = useMemo(() => computeExpensive(data), [data]);\n\n// Cache partials where possible\n// Avoid inline DB calls in templates\n\nUse long-term caching for static chunks-this reduces load on repeat visits.\nDelay loading code until the user actually needs it:\n// React lazyloading with Suspense\nconst SettingsPanel = React.lazy(() => import(\"./SettingsPanel\"));\n\nexport function App() {\n  return (\n    <Suspense fallback={<div>Loading…</div>}>\n      <SettingsPanel />\n    </Suspense>\n  );\n}\n\nBenefits:\nReduced initial bundle size\nFaster TTI\nLoad components only when needed\nLazy loading is recommended even with browser caching because it improves initial load time and resource efficiency.\n\n\n\nTechnique\nWhen to Use\n\n\n\n\nRoute-based splitting\nSPAs-each page loads only what's necessary\n\n\nCode splitting\nSplit early, review often as project grows\n\n\nPreloading\nAssets needed immediately\n\n\nPrefetching\nAssets needed soon (next page)\n\n\nKeep chunks small\nAvoid excessive network requests\n\n\n\nPrefer route-based splitting for Single Page Applications-this ensures each page loads only what's necessary.\nUse batched or parameterized queries in middleware/API routes, not templates\nAdd indexes on frequently queried columns\nUse EXPLAIN to analyze query plans\nAvoid SELECT *-fetch only needed columns\nImplement query result caching for read-heavy workloads\n\n\n\nStrategy\nImpact\n\n\n\n\nVirtualization (react-window)\nHuge gains for long lists\n\n\nStable keys (use ID, not index)\nPrevents unnecessary re-renders\n\n\nShallow component trees\nReduces render propagation\n\n\nDebouncing/throttling\nPrevents excessive event handling\n\n\nSSR/Streaming (Next.js, Remix)\nFaster FCP, better SEO\n\n\n\nUse virtualization for huge lists-render only what's visible in the viewport.\n// Virtualized list example\nimport { FixedSizeList } from 'react-window';\n\n<FixedSizeList\n  height={600}\n  itemCount={10000}\n  itemSize={35}\n  width=\"100%\"\n>\n  {({ index, style }) => <ListItem index={index} style={style} />}\n</FixedSizeList>\n\nA financial services company faced performance degradation with processes stuck in queues. The team:\nPerformed technical audit of AWS infrastructure\nCreated bottleneck monitoring system\nRe-developed inefficient SQL queries and data pipelines\nImplemented horizontal scaling with Docker/Kubernetes\nResult: Increased application performance, stability, and resilience while reducing operational costs.\nOver 4 months with 13 interventions:\n98.37% reduction in First Contentful Paint (desktop)\n97.56% reduction on mobile\n48.25% improvement in Speed Index (desktop)\nInterventions included code splitting, caching, image optimization, and database query improvements.\nOne developer profiled a React app and found:\nExcessive re-renders in a user list component\nLarge bundle due to unused lodash functions\nN+1 queries when fetching posts with authors\nFixes applied:\nAdded React.memo to list items\nReplaced lodash with native Array.prototype methods (reduced bundle by 68KB)\nConverted to batched queries\nResult: TTI improved from 4.2s to 1.8s.\nOptimization has diminishing returns. Stop when:\nMetrics meet user expectations: Core Web Vitals are in the \"good\" range (LCP < 2.5s, FID < 100ms, CLS < 0.1)\nROI drops: The next optimization takes 10 hours for a 2% improvement\nReadability suffers: Code becomes unmaintainable\nYou've hit the bottleneck ceiling: The limiting factor is now network latency or third-party services, not your code\nKey principle: Prefer high-impact fixes (code-splitting, caching, indexing) over micro-optimizations.\nMake one change at a time and measure its isolated effect-this tells you what actually worked.\n✅ Measure baseline (load time, bundle size, query duration)\n✅ Profile to find real bottleneck (not where you guess it is)\n✅ Identify root cause (input-bound, re-renders, N+1 queries)\n✅ Apply one targeted fix\n\n✅ Re-measure and document impact\n\n✅ Verify tests pass and functionality intact\n\n✅ Integrate monitoring into CI/CD (Lighthouse CI, bundle size tracking)\nPerformance optimization isn't about isolated tweaks-it's a continuous, iterative process.\n\n\n\nPrinciple\nWhy It Matters\n\n\n\n\nMeasure before optimizing\nGuessing creates wrong fixes\n\n\nProfile to find real bottleneck\n80% of time spent in 20% of code\n\n\nOne change at a time\nIsolates what actually worked\n\n\nHigh-impact > micro-optimizations\nCode-splitting beats loop unrolling\n\n\nMonitor continuously\nPerformance degrades over time\n\n\n\nMastering these techniques is one of the most impactful skills you can develop as an engineer.\nRizwan Saleem — https://rizwansaleem.co",
-      "publishedAt": "2026-05-30T02:20:21.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "32504c593cf2a21c085e1db2cf6fcf3d2f13c6a1de4e792d79a72e373ac0ef22",
-      "title": "AIOpsって実際機能するの？既存基盤を置き換えずにAIレディな環境を整えるには？最新の知見を共有",
-      "url": "https://enterprisezine.jp/article/detail/24374",
-      "description": "EnterpriseZine編集部は、2026年6月9日（火）にオンラインイベント「EnterpriseZine Day 2026 Summer」を開催します。本記事では、イベントの注目セッションを紹介。AI時代の到来によりITインフラの高度化が求められる今、企業が押さえるべきアーキテクチャ要件や考え方とは何か。そのヒントをお届けします。",
-      "publishedAt": "2026-05-29T23:00:00.000Z",
-      "feedName": "EnterpriseZine"
-    },
-    {
-      "id": "1bba3dc61709a7077dbf116998ad85203a49b51509efa573b5fc2ce93c1e56b5",
-      "title": "AWSセキュリティ成熟度モデルv2による段階的なセキュリティ強化のススメ",
-      "url": "https://dev.classmethod.jp/articles/intro-aws-security-maturity-model-v2/",
-      "description": "AWSセキュリティ成熟度モデルを活用することで自分たちのAWSセキュリティの現在地を確認できます。v2になったAWSセキュリティ成熟度モデルを解説し、考え方と使い方のコツを紹介します。",
-      "publishedAt": "2026-05-29T20:15:28.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "3f5738fb6b5ecc5f5add94868a064ea053b117faaa0aec64438fc94be7adc97f",
-      "title": "Kiro CLI が Claude Opus 4.8 に対応。Opus モデル別の違いを確認してみた",
-      "url": "https://dev.classmethod.jp/articles/kiro-cli-claude-opus-4-8/",
-      "description": "Kiro CLI が Anthropic の最新モデル Claude Opus 4.8 をサポート。\nセキュリティリスクを仕込んだ CloudFormation テンプレートの診断を、ヘッドレスの Kiro CLI で Opus 4.8 / 4.7 / 4.6 それぞれ5回ずつ実施し、診断結果・速度・クレジット消費の傾向を比較しました。",
-      "publishedAt": "2026-05-29T17:36:47.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "625abedf14fc73ab7ffeee2735f11cc4250a1fdbb4b3435ffc1e8fa851211702",
-      "title": "[登壇レポート] AWSのコスト異常は気づくのにもコストがかかる というタイトルで登壇しました",
-      "url": "https://dev.classmethod.jp/articles/opsmethod2-aws-cost-anomaly-detection-automation/",
-      "description": "Cost Anomaly Detection の調査工数を減らす取り組みです。AWS SAM でデプロイできるサンプルコード付きです",
-      "publishedAt": "2026-05-29T16:30:00.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "48393979fe8f974fe8914392cf3ea26cddae914c68d97f9058571fd7823e75b9",
-      "title": "AWS ParallelCluster v3.15.1 の Copy Fail 対応を確認してみた",
-      "url": "https://dev.classmethod.jp/articles/aws-parallelcluster-v3151-copy-fail/",
-      "description": "AWS ParallelCluster v3.15.1 の Copy Fail 対応を確認してみた",
-      "publishedAt": "2026-05-29T13:38:21.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "f69a7c5a8bc8aac39a55b299b8ecf09aaef99aedd9aeae812d40df74a6c26192",
-      "title": "Windowsのゼロデイ脆弱性を投稿したセキュリティ研究者が「Microsoftの報復でGitHubから追放された」と主張",
-      "url": "https://gigazine.net/news/20260529-nightmare-eclipse-github-banned/",
-      "description": "Microsoft傘下のGitHubが、Windowsのゼロデイ脆弱(ぜいじゃく)性を相次いで公開していたセキュリティ研究者Nightmare-Eclipse氏のアカウントを停止したと報じられています。アカウント停止の具体的な理由は明らかにされておらず、同氏はGitLabへ活動拠点を移したと報告しましたが、その後GitLabでもアカウントがBANされ...",
-      "publishedAt": "2026-05-29T11:15:33.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "2a655df29a50f992db4cd07aa7b6f6b4cb08d3b7792a1e3005602114218467a2",
-      "title": "Building a cloud native internal developer platform with Kubernetes, GitOps, and supply chain security",
-      "url": "https://www.cncf.io/blog/2026/05/29/building-a-cloud-native-internal-developer-platform-with-kubernetes-gitops-and-supply-chain-security/",
-      "description": "Modern software delivery is no longer constrained by application code — it is constrained by the platform that runs it. This article presents the design of a cloud-native Internal Developer Platform (IDP) built on Kubernetes and...",
-      "publishedAt": "2026-05-29T11:00:00.000Z",
-      "feedName": "Cloud Native Computing Foundation"
-    },
-    {
-      "id": "3470bfa9976ad40a19fd5ae5e420ed6583c70286d284b6afdaeb142575cf22da",
-      "title": "AWS WAF を ALB に直接アタッチするのと CloudFront にアタッチするのでは何が違いますか",
-      "url": "https://dev.classmethod.jp/articles/tsnote-waf-attach-alb-or-cloudfront/",
-      "description": "AWS WAF を ALB に直接アタッチするのと CloudFront にアタッチするのでは何が違いますか",
-      "publishedAt": "2026-05-29T08:34:03.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "c7e84e9b70819e6155cd52493c2a817620508f3478984d4796806f0945756762",
-      "title": "2025 Japan AWS  Jr. Champion としての1年を振り返る",
-      "url": "https://qiita.com/yosuke-suzuki/items/1fa43a4a63be7c684d39?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "はじめに\nこんにちは、すずきと申します。\n2025 Japan AWS Jr. Champions として活動してきましたが、2026年5月31日をもって任期が満了となります。\n\n本記事では、1年間を振り返り、選出をきっかけに私自身どのような活動を行ってきたか振り返ろ...",
-      "publishedAt": "2026-05-29T07:25:00.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "0fdd40a0bef791ed5610f2347df16e77d2795fd387c2b2c4803fdf2d7733cd6c",
-      "title": "【Security Hub修復手順】[EC2.181] EC2 起動テンプレートは、アタッチされた EBS ボリュームの暗号化を有効にする必要があります",
-      "url": "https://dev.classmethod.jp/articles/securityhub-fsbp-remediation-ec2-181/",
-      "description": "AWS SecurityHub 基礎セキュリティのベストプラクティスコントロール修復手順をご紹介します。",
-      "publishedAt": "2026-05-29T07:13:35.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "8cad8289df060e0571ad89e60aceb436a5a47a2ede069f39a3fe8b193a2979c7",
-      "title": "AWS上でSustainability Insights Framework (SIF) を使う方法",
-      "url": "https://aws.amazon.com/jp/blogs/news/howtouse-sif/",
-      "description": "AWS Sustainability Insights Framework（SIF）は、組織がAWS上で炭素排出量を自動的に追跡し、気候関連レポートを作成するためのスケーラブルなソフトウェアプラットフォームです。従来の手動プロセスに代わり、モジュラーアーキテクチャを通じてデータ収集・計算・報告を自動化します。人的エラーの削減、動的なスケーリング、進化する規制への適応という3つの利点を提供し、あらゆる規模の組織のサステナビリティ報告を支援します。",
-      "publishedAt": "2026-05-29T06:07:50.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "a5c7bb6756b5fe4718a10465b2343476bd715b5b32ea2505994cbe2e3311be0f",
-      "title": "AWS DevOps Agent で Azure 環境のどこまで見えるか試してみた",
-      "url": "https://dev.classmethod.jp/articles/aws-devops-agent-azure-reader-scope/",
-      "description": "DevOps AgentでのAzure調査は夢いっぱい",
-      "publishedAt": "2026-05-29T05:26:44.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "67570f6230f03e0fa6a28a520bfa0852d2439f768987e093a90d4a5b42c465d0",
-      "title": "2026년 다시 정리해 보는 AWS CLI 설치와 인증 설정 방법",
-      "url": "https://dev.classmethod.jp/articles/jw-2026-aws-cli-install-auth-setup-guide/",
-      "description": "AWS CLI 설치와 인증 설정 방법에 대해 정리해 봤습니다.",
-      "publishedAt": "2026-05-29T05:24:16.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "990a77afddf6277f753119d83197fb88022cff57fab68769055c3739d6d7b4fa",
-      "title": "pnpm v10→v11アップグレードで踏んだ3つの落とし穴 ─ Docker・CI環境での対処法まとめ",
-      "url": "https://dev.classmethod.jp/articles/pnpm-v10-to-v11-migration-docker-ci/",
-      "description": "pnpm v10からv11へのアップグレードで、Docker・CI環境が壊れた実体験をもとに、allowBuildsの設定、Dockerfileへのpnpm-workspace.yaml追加、ENV CI=trueの3つの対処法を解説します。",
-      "publishedAt": "2026-05-29T05:07:28.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "91c50ffa5a1345a6cc7114c29ae1283da773c1e203d5a6138a72a63e7a8df8f1",
-      "title": "AWS CLI 로그인, aws login으로 쉽게 끝내기",
-      "url": "https://dev.classmethod.jp/articles/jw-aws-cli-login-aws-login-easily/",
-      "description": "AWS CLI 로그인, aws login으로 쉽게 끝내는 방법을 정리해 봤습니다.",
-      "publishedAt": "2026-05-29T04:44:16.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
       "id": "8105d9efa001ff5b993355dbf2a2e972d5ea5b862f3ccd48cb1f579fec9be95e",
       "title": "Claude vs Gemini Across 4 Security Domains: A Dead Heat — and the Hardening 63% of AI Code Skips",
       "url": "https://dev.to/ofri-peretz/claude-vs-gemini-across-4-security-domains-a-dead-heat-and-the-hardening-63-of-ai-code-skips-mpp",
@@ -303,54 +127,6 @@
       "description": "AWS SecurityHub 基礎セキュリティのベストプラクティスコントロール修復手順をご紹介します。",
       "publishedAt": "2026-05-30T05:01:41.000Z",
       "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "270933c2a4e0e4684554243f7e293b6436deb1e096367386aa046b0234740294",
-      "title": "2025 Japan AWS Jr. Championsとしての活動を振り返る [ポエム]",
-      "url": "https://qiita.com/k_adachi_01/items/138f5b385f6ae1fc2e31?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "はじめに\nこんにちは。あだちです。\n2025 Japan AWS Jr. Championsとしての1年間が終わろうとしています。\n\n他のJr. Championsの方も、すでに何人か振り返り記事を書いていて、活動実績を数字でまとめていたり、Community Bui...",
-      "publishedAt": "2026-05-30T02:14:11.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "14174ece1d5d497c803fb608de9603ec1021764b97e3efdaab326d8752848fb9",
-      "title": "Hydration って結局なに？味噌汁の比喩で理解する ServerComponent と Client Component",
-      "url": "https://qiita.com/tanimoto-hikari/items/678bef59f3ce91a100c9?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "React/Next.js 学習を進めていると Server Component と Client Component をケースに応じて使い分けることかと思います。\nそんな時に下記のようなエラーに出会った経験がある方も多いのではないかと思います。\nError: Hydrat...",
-      "publishedAt": "2026-05-29T23:19:44.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "8450d6aea56490a28d07449a5c2fd281ee17ccc762caaadb6849f72bd86482f4",
-      "title": "同じ業務 Web UI を Vanilla HTML / Vue / React / Thymeleaf で実装して比較した — 4スタックの違いと選定指針",
-      "url": "https://qiita.com/y104autumn/items/6d560e5b87dd54136fe3?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "同じ業務 Web UI を Vanilla HTML / Vue / React / Thymeleaf で実装して比較した — 4スタックの違いと選定指針\n\nこの記事でわかること\n\n同一仕様の業務 Web UI を Vanilla HTML / Vue 3 / Rea...",
-      "publishedAt": "2026-05-29T18:49:02.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "f317ecb6e877528dfafc753b02f93d1751ff75c236642a9b4b1231635954020e",
-      "title": "自動運転アーキテクチャの一つの提案/Tri-Modal BEV VLA Planner",
-      "url": "https://zenn.dev/tatsuyai713/books/53b0b03395e35f",
-      "description": "本書は、Vision・LiDAR・Radarを統合したBEV表現を中心に、言語指示、動的物体予測、Lane Topology、複数候補軌跡、外部安全評価器、そして実車向けの舵角変換までを一体として扱う、次世代自動運転アーキテクチャの設計の一例です。\n\n従来のADASのようにレーン中心を追従するだけではなく、人間が実際に運転した軌跡を教師データとして学習し、周辺状況に応じた自然な未来軌跡を生成することを目指します。一方で、純粋なブラックボックスEnd-to-Endに寄せすぎず、BEV情報、動的リスク、レーングラフ、候補軌跡、外部評価器といった検証可能な構造を残すことで、実車適用や製品化に必要な説明性・安全性・デバッグ性も重視しています。\n\nまた、TeslaのようなLane Topologyや事前レーンマップを活用したルート誘導、Comma.ai的な人間走行軌跡の学習、Waymo型の安全ケース、SparseDrive的な軽量化設計など、既存ADASと最新研究・製品動向の両方を踏まえながら、なぜこの構成が有効なのかを解説しています。\n\n自動運転モデルを単なる認識ネットワークとしてではなく、実際の車両で安全に走らせるための「認識・予測・計画・評価・制御」の統合システムとして理解したい読者に向けた一冊です。",
-      "publishedAt": "2026-05-29T16:11:06.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "aea6b5c469ef665e14230009493fd1e0f9463346d7af186c08360ed7ffab124a",
-      "title": "Rails開発環境のDockerfileが「呪文」に見えたので初学者なりに分解してみた",
-      "url": "https://qiita.com/tota_0214/items/45d77ca1f905338a3a69?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "この記事について\nRails開発環境用のDockerfileのみを題材に、私自身がとてもつまずきましたので、学習の中で深掘りして理解したことを、この記事にて整理しました。\n復習も兼ねていますが、同じようにDockerfileでつまずいている方の参考になれば嬉しいと思いまし...",
-      "publishedAt": "2026-05-29T14:32:27.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "5bb1e26569a1df855888f90843e359b7c10a9ad0d8f213c6a58b5448766ddeee",
-      "title": "【AWS Secrets Manager】末尾が \"ハイフン＋6文字\" のシークレット名には気をつけろ！！",
-      "url": "https://zenn.dev/levtech/articles/946b5154085468",
-      "description": "背景\nAWS Secrets Managerにおいて、シークレットの命名に関する少し特殊な「罠」に引っかかってしまったため、備忘録として残しておきます。\n同じような挙動で数時間を無駄にする方が一人でも減れば幸いです。\n\n 忙しい人向けの結論\n\nシークレット名の末尾を -secret などの「ハイフン＋6文字」にした場合、IaC（AWS CDKなど）でシークレット名（部分ARN）を指定して参照しようとすると、リソースを見つけられずエラーになる可能性がある。\n\n原因: Secrets Managerが、シークレット名の一部を「AWSが自動付与するランダムなサフィックス」だと誤認してしまう...",
-      "publishedAt": "2026-05-29T10:29:58.000Z",
-      "feedName": "Zenn"
     },
     {
       "id": "8d1ebb8691036a4a7ae16608b946507f6e7cb73a5a1f790c27efea7ccaed3e64",
@@ -654,14 +430,6 @@
       "url": "https://zenn.dev/rrrraaaaa6/articles/5a8a540a864d83",
       "description": "これはなに\nどうもかわごえです。\nわたし、めっちゃCDKが好きです。Cfnも大好きです。\nAWSの中で好きなサービスは？と聞かれたら、間違いなくこれらのIaCのサービスを真っ先に挙げると思います。\nいままでCDKでいろんなシステムを構築し、運用してきました。\nその中でも、やはりCDKで楽になった反面、どうしても超えられない障壁があり。\nこれを機に、一度terraformに移行しようと考えているときの、思考のダンプです。\n繰り返しになりますが私はCDKが好きですし、\n小規模な開発であれば、やはり第一にCDKを選択すると思いますが\n大規模なシステムといったことを考える時にはもしかすると、...",
       "publishedAt": "2026-05-30T06:01:15.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "9e77adffafe2117968e456dae8c3ad94ecc126231e4536516a91411934b405a7",
-      "title": "構成図を描くだけでAWSの月額コストが分かるツールを作って公開した",
-      "url": "https://zenn.dev/tyumugiko/articles/83b15adf3370fd",
-      "description": "はじめに\nサーバーレスリソースを使ったAWSの構成を考えるのは、非常に楽しい作業です。\nしかし、最もめんどくさいのは 「構成の月額料金を算出する」 作業ではないでしょうか。\n私の職種はSIerですが、構成を考えると月額利用料の見積もりがセットで求められます。\n月ごとのアクセス数やデータ量を、まだ想定が固まっていない段階で算出することも多く、複数のアクセスパターンを想定した見積もりを要求されることも少なくありません。\n見積もりツールとして最もポピュラーなのは、AWS 公式の AWS Pricing Calculator だと思います。\nただ、このツールはサービスを1つずつ積み上げる方式...",
-      "publishedAt": "2026-05-29T11:37:30.000Z",
       "feedName": "Zenn"
     },
     {
@@ -7064,6 +6832,270 @@
       "description": "はじめに\nこんにちは、AWS Japan でソリューションアーキテクトをしているいなりくです。\n本記事は、AWS Summit Japan 2026 での登壇セッション「明日から始める、コーディングエージェント時代のフルスタック開発」の補足記事です。当日セッションに来てくださった皆さま、ありがとうございました！\n\n2026 年 6 月に AWS Blocks がパブリックプレビューとして公開されました。「TypeScript でバックエンドを書くとインフラが自動的に導出される」Infrastructure from Code（IFC）フレームワークです。\n対応プラットフォームは幅広く...",
       "publishedAt": "2026-06-26T14:55:19.000Z",
       "feedName": "Zenn"
+    },
+    {
+      "id": "da604b469cb087b3fa13b565c11e74f7b6ad05a15f978dde69fccb011430b832",
+      "title": "I built an AWS access recertification engine that actually enforces the decision",
+      "url": "https://dev.to/paramanandmallik/i-built-an-aws-access-recertification-engine-that-actually-enforces-the-decision-56dc",
+      "description": "The access you revoked in your last review is probably still live.\nI know how that sounds, but it is how most access recertification actually works. A tool generates a list, an owner clicks approve or revoke, the cycle gets marked complete, and then nothing touches the real resources. The review produces a record. The permissions stay exactly where they were. You attested to a state that was never made true.\nThat gap bothered me for a long time, so I built something to close it and open-sourced it on AWS's aws-samples org. It is called VIGIL.\nA normal review answers one question: should this access still exist? The owner says no, a ticket gets filed, and maybe someone actions it next quarter. Between the decision and the change, the risk just sits there.\nI wanted the decision and the change to be the same step. So VIGIL does four things:\nIt discovers resources by their owner tag and works out who actually has access to each one.\nIt asks the owner to keep, trim, or remove that access.\nIt applies that decision on the live resource.\nIt records what happened in a way you can later prove.\nThe lazy way to revoke someone's access to one bucket is to detach their policies. That nukes their access to everything, and it is how you cause an incident while trying to improve security.\nVIGIL never does that. If the access came from a bucket policy, it removes just that principal, or just the specific actions, from that bucket's policy. If the access came from the principal's own IAM policy, it adds a resource-scoped explicit Deny instead of touching shared policy, so nothing else the principal can do is affected. In practice it can remove only s3:PutObject for one principal on one bucket and leave everything else alone.\nIf a change cannot be made safely and narrowly, it raises a ticket instead of guessing. I would rather it do nothing than do something broad.\nEnforcement is not a synchronous call inside the API. The API validates the decision, records it, and drops it on an SQS queue. A separate worker picks it up, is idempotent, retries on failure, and dead-letters anything it cannot complete. So the API stays fast, and a change is never lost halfway through.\nEvery decision and every change is written to an append-only trail where each record is hash-linked to the one before it, so tampering is detectable. You can optionally mirror that into an S3 Object Lock (WORM) bucket so the records cannot be altered or deleted for a retention period. And because the engine snapshots the before-state, any change can be rolled back.\nWhen an auditor asks what changed and whether it actually held, that is the answer, not a spreadsheet someone signed.\nConnectors for S3 buckets, IAM users, IAM roles, and EC2 instances ship today. A connector is just four methods: snapshot, revoke, modify, rollback. Adding RDS, SNS, SQS, or Secrets Manager is one connector, not a change to the engine.\nIt is fully serverless: Lambda, SQS, DynamoDB, Cognito, SES, and API Gateway, with a documented REST API so you can put your own UI in front of it.\nVIGIL is built to a production specification: durable and idempotent enforcement on SQS with a dead letter queue, scoped changes that never over-revoke, least-privilege IAM per function, hash-chained evidence with optional WORM storage, rollback, and a passing test suite. The repo ships an AWS SAM template, a quick start, a developer guide, and a guide for writing your own connector:\nhttps://github.com/aws-samples/sample-identity-recertification-vigil\nClone it, point it at your owner-tagged resources, and run a cycle. As with any security tooling you bring into your environment, review it against your own standards before production. Feedback and connector contributions are very welcome.",
+      "publishedAt": "2026-06-29T03:46:33.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "85a13b452d2b1e99a6b1c777ac42a1000451446ee249b145797f5f1f8e638fab",
+      "title": "I Replaced My Entire Research Workflow With AI Agents. Here's What Actually Worked",
+      "url": "https://dev.to/aibughunter/i-replaced-my-entire-research-workflow-with-ai-agents-heres-what-actually-worked-3ck7",
+      "description": "I spend a lot of time in the AI space -- reading papers, building things, talking to engineers who are actually shipping. And there is a gap between what the demos show and what production systems actually look like that nobody is being fully honest about.\nSo here is my honest take on where things actually are.\nEveryone is calling everything an \"agent\" right now. A function that calls a tool? Agent. A chatbot with memory? Agent. A script with a loop? Agent.\nThis dilution is not just semantic. It is causing real engineering mistakes.\nWhen you do not have a precise definition for what you are building, you end up over-engineering simple pipelines and under-engineering genuinely complex ones. I have seen teams spend weeks adding \"agentic\" orchestration to workflows that would have been fine as a single well-structured prompt.\nHere is the definition I keep coming back to: an agent is a system that has an objective, not just an instruction. It decides what to do next. It handles failure. It knows when it is done.\nEverything else is just a fancy function call.\n🟢 If your system needs a human to tell it each step, it is not an agent. It is a chat interface.\n🔵 If your system can recover from a failed tool call and try a different approach, you are getting somewhere.\n✅ If your system can decompose a goal into subtasks and delegate them, that is the real thing.\nThe honest picture from teams I follow and talk to:\nMost real agent deployments are narrow. They do one thing well. Customer support triage. Document extraction. Code review on a specific codebase. They are not general-purpose reasoning engines. They are purpose-built pipelines with some intelligence in the decision layer.\nThe teams getting good results are not chasing the latest model release. They are obsessing over:\n☑️ Tool design -- what can the agent actually call, and how clean is the interface\n☑️ Failure handling -- what happens when a tool returns nothing useful\n☑️ Observability -- can you trace exactly why the agent made the decision it made\nThe teams getting bad results are the ones that swapped out GPT-4 for the latest frontier model and expected different behavior without changing anything else.\nSomething I kept seeing pop up recently: Google just redesigned the search box for the first time in 25 years — here’s why it matters more than you think. (VentureBeat AI). For a quarter century, the Google search box has been one of the most recognizable interfaces in computing: a thin white rectangle, a blinking cursor, a few typed words, and a list...\nWorth reading: https://venturebeat.com/technology/google-just-redesigned-the-search-box-for-the-first-time-in-25-years-heres-why-it-matters-more-than-you-think\nSomething I kept seeing pop up recently: Railway secures $100 million to challenge AWS with AI-native cloud infrastructure (VentureBeat AI). Railway, a San Francisco-based cloud platform that has quietly amassed two million developers without spending a dollar on marketing, announced Thursday that it raised $100 million...\nWorth reading: https://venturebeat.com/infrastructure/railway-secures-usd100-million-to-challenge-aws-with-ai-native-cloud\nSomething I kept seeing pop up recently: Claude Code costs up to $200 a month. Goose does the same thing for free. (VentureBeat AI). The artificial intelligence coding revolution comes with a catch: it's expensive.Claude Code, Anthropic's terminal-based AI agent that can write, debug, and deploy code a...\nWorth reading: https://venturebeat.com/infrastructure/claude-code-costs-up-to-usd200-a-month-goose-does-the-same-thing-for-free\nLangChain. LangGraph. CrewAI. AutoGen. Semantic Kernel. Every month there is a new one and someone is writing a post about why the old one is dead.\nHere is what I actually think: the framework matters less than the patterns.\nThe patterns that keep working regardless of what framework you use:\n✔️ Plan-then-execute. Have one reasoning step that produces a plan, and a separate execution step that follows it. Do not mix them.\n✔️ Separate retrieval from reasoning. Fetching context and using context are different jobs. Systems that conflate them get confused.\n✔️ Explicit handoffs. When one agent passes work to another, the handoff should be structured and logged. Not a string passed through a prompt.\nI have rebuilt the same architecture in three different frameworks and the results were similar each time. The framework is scaffolding. The architecture is the building.\nRAG is standard now. Almost every production AI system that touches proprietary data uses some form of it. But there is a problem that the tutorials do not cover well.\nThe chunk boundaries are wrong.\nWhen you split a document into chunks and embed them, you are making assumptions about what pieces of context belong together. Those assumptions are often wrong. A paragraph that only makes sense in light of the paragraph before it gets retrieved in isolation and the model hallucinates the missing context.\n🟢 Better chunking strategies help. Overlapping windows, semantic chunking, parent-document retrieval.\n🔵 But the real fix is rethinking what you are storing. Sometimes the right thing to store is not the raw text but a structured representation of the information.\n✅ If your RAG pipeline is returning technically correct but contextually useless results, the problem is almost certainly in the chunking or the metadata, not the embedding model.\nThe models are going to keep getting better. Context windows are going to keep expanding. The cost per token is going to keep dropping.\nNone of that changes the fundamental engineering challenge: building systems you can trust to behave correctly when you are not watching.\nThat is the problem worth solving. Governance, observability, and reliable tool use. Not chasing benchmarks.\nThe engineers who are going to matter in two years are the ones who can build AI systems that other engineers can maintain and trust. That is a different skill set than fine-tuning or prompt engineering.\nIt is closer to systems design than it is to model research.\nIf any of this resonates with what you are building, or if you have a completely different take, I want to hear it. Drop your experience in the comments. The interesting conversations in this space are not in the keynotes -- they are in the threads where people are actually honest about what works.",
+      "publishedAt": "2026-06-29T03:31:31.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "a474ea6a123e498c906509436874365295a505532b865b0af4d5a00427fc2d75",
+      "title": "PaperQuire v0.2.0 — CLI for Automating Your Docs Pipeline",
+      "url": "https://dev.to/paperquire_e3fdb510bbe49c/paperquire-v020-cli-for-automating-your-docs-pipeline-2ima",
+      "description": "Your docs pipeline, from the terminal\n\n\nPaperQuire v0.2.0 ships with a full command-line interface. Everything you can do in the desktop app — render, template, brand — now works from your terminal.\nThis means you can automate document generation, integrate PaperQuire into CI/CD pipelines, and batch-process entire directories of Markdown without opening the GUI.\nIf you installed via Homebrew, the paperquire command is already on your PATH:\nbrew install --cask paperquire/paperquire/paperquire\n\nVerify with:\npaperquire version\n\nThe simplest render is just:\npaperquire report.md\n\nThis produces report.pdf in the same directory, using the default template.\nApply templates, set metadata, control output:\npaperquire report.md -t corporate --title \"Q2 Report\" --author \"Jane Doe\"\npaperquire spec.md --page-size a4 --margins 0.75,0.75,0.75,0.75 --no-toc\npaperquire draft.md --watermark \"DRAFT\" -o drafts/draft.pdf\n\nAll 22 flags from the desktop app's Document Setup panel are available. See the full list in the CLI Reference.\nPaperQuire works in Unix pipelines:\ncat notes.md | paperquire - --stdout > out.pdf\n\nUse - as the input file to read from stdin, and --stdout to write the PDF to stdout instead of a file.\nRender every Markdown file in a directory with one command:\npaperquire batch ./docs -o ./out\npaperquire batch ./project --glob \"**/*.md\" -t corporate\npaperquire batch ./docs --concurrency 8 --continue-on-error\n\nUse --dry-run to preview which files would be rendered without actually producing output.\nList, inspect, create, and share templates:\npaperquire templates list\npaperquire templates show minimal-clean\npaperquire templates init my-template\npaperquire templates export corporate -o corporate.pqt\npaperquire templates import ./shared-template.pqt\n\nWe also launched a community templates repo where you can browse all built-in templates and submit your own via pull request.\nDrop a .paperquire.yml in your project root and every render in that directory picks up your settings automatically:\ntemplate: corporate\ntoc: true\nh1-page-break: true\ncover:\n  title: \"Project Documentation\"\n  author: \"Engineering Team\"\n  company: \"Acme Corp\"\nbranding:\n  primary-color: \"#2563eb\"\n\nConfig files are resolved in order: global (~/.paperquire/config.yml) then project (.paperquire.yml walked upward), then CLI flags win.\nThe CLI makes it straightforward to add document generation to your build pipeline. A GitHub Actions example:\n- name: Generate docs\n  run: |\n    paperquire batch ./docs -o ./dist/docs -t corporate --continue-on-error\n\nUse --dry-run in your CI to validate Markdown and options without producing output — useful as a pre-merge check.\nThis is the foundation. Future CLI updates will include watch mode for live rebuilding, PDF merge for combining multiple documents, and deeper CI integrations.\nDownload v0.2.0 for macOS, Windows, or Linux\nCLI Reference for the full flag and command documentation\nCommunity Templates to browse and share templates\nOr install via Homebrew:\nbrew install --cask paperquire/paperquire/paperquire",
+      "publishedAt": "2026-06-29T03:23:20.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "e2ccf7f79ce3a73c3753f8841504cf9ca1e4a6f244287fe5ba845c194b645e8b",
+      "title": "「変化はチャンスです」──AWSの変わらないビルダー思想と自律型AIエージェントが回すフライホイール",
+      "url": "https://enterprisezine.jp/news/detail/24569",
+      "description": "アマゾン ウェブ サービス ジャパン（以下、AWSジャパン）は2026年6月25日～26日にわたって、年次カンファレンス「AWS Summit Japan 2026」を開催。初日の基調講演では、生成...",
+      "publishedAt": "2026-06-29T02:20:00.000Z",
+      "feedName": "EnterpriseZine"
+    },
+    {
+      "id": "bc05838f9e9bf2d67a8c78e27c92817929c1f30f46b5f3a491c5c9270f060d71",
+      "title": "実践企業に学ぶ生成 AI 導入の勘所 〜眠るデータを企業価値に変える〜 – AWS Local Executive Roadshow 博多編（#6/8）開催レポート",
+      "url": "https://aws.amazon.com/jp/blogs/news/local_executive_roadshow_6/",
+      "description": "こんにちは。Amazon Web Services Japan のソリューションアーキテクト、田中 里絵 です […]",
+      "publishedAt": "2026-06-29T01:57:55.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "1d852dcb494c72b773b69d520f0c74bc3da1fd2696dd72a1d36e89c551b44846",
+      "title": "AWS WAF Classic コンソールにアクセスする方法を教えてください",
+      "url": "https://dev.classmethod.jp/articles/tsnote-waf-classic-console-access-method/",
+      "description": "AWS WAF Classic コンソールにアクセスする方法を教えてください",
+      "publishedAt": "2026-06-29T01:54:28.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "246c5d1865ef104b0f6bb66d88e15a63747714a283bfe87f5ff5cf0bb38b663d",
+      "title": "uvでPythonパッケージの脆弱性監査(uv audit)とマルウェアチェック(UV_MALWARE_CHECK)を試してみた",
+      "url": "https://dev.classmethod.jp/articles/uv-audit-malware-check-supply-chain/",
+      "description": "Pythonパッケージ管理「uv」のセキュリティプレビュー機能を検証。uv auditによる脆弱性スキャンと、UV_MALWARE_CHECK=1によるマルウェアのインストール遮断手順を解説。uv単体でのサプライチェーン攻撃対策が可能です。",
+      "publishedAt": "2026-06-29T01:30:10.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "0ca7f9472377cfd22748c0f0b62c759dc100b856d7a55609846be96dd5d3394f",
+      "title": "CSSはどんどん進化している！ border-shapeプロパティを使うとボーダーをあらゆる形状に実装できます",
+      "url": "https://coliss.com/articles/build-websites/operation/css/connecting-circles-with-border-shape.html",
+      "description": "CSSで2つの円を線でつなぐボーダーを実装できると思いますか？ 可能になりました！ Chrome 147+のアップデートでサポートされたborder-shapeプロパティを使用すると、ボーダーにあらゆる形状（多角形・円など）を設定できます。 まずは、実際の動作をご覧ください。ドラッグの操作にはJavaScriptが使用されていますが、...",
+      "publishedAt": "2026-06-29T00:44:55.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "7d9f7155d10150f24d782d0c614ae2cb33c97223651b2cdaa2849df854dadc69",
+      "title": "数を増やしても一貫性を保つ、runn の API テスト構成設計 - カミナシ エンジニアブログ",
+      "url": "https://kaminashi-developer.hatenablog.jp/entry/runn-api-test-architecture",
+      "description": "こんにちは、ソフトウェアエンジニアの渡邉（匠）です。 「カミナシ 設備保全」の開発に携わっています。 以前、「40,000行のAPIテスト作成で学んだClaude Code Skillsの育て方」という記事を書きました。 AI を使って大量の API テストを生成した話です。 今回はその土台になっている、テストそのものの構成を紹介しま...",
+      "publishedAt": "2026-06-29T00:24:44.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "83470dd4dad9718428080e0f8e32d4f40f3ec7c8f9ab0aa690a8a75d665c0b6c",
+      "title": "古豪OPSWAT、重要産業のセキュリティ強化に向けて独自AI技術を披露　未知の脅威も即座に解析してインテリジェンスに変換",
+      "url": "https://enterprisezine.jp/news/detail/24571",
+      "description": "サイバーセキュリティの古豪OPSWATが、2026年6月17日に都内で事業戦略説明会を行った。東京でのツアーイベント「OP/X Tokyo 2026」開催に合わせて来日していた、創業者兼CEOのベニ...",
+      "publishedAt": "2026-06-28T23:00:00.000Z",
+      "feedName": "EnterpriseZine"
+    },
+    {
+      "id": "22a460c49839b65043617d18ff4ce029ec16d140063924cfd4193bd4b2fa666d",
+      "title": "ChatGPTへの「入力NGリスト」「Amazon S3侵害まで8分」　AI普及でセキュリティの“前提”が崩壊",
+      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2606/29/news051.html",
+      "description": "2026年上半期に＠ITで公開された記事の中から、セキュリティ系の話題で特に注目を集めた5本をランキング形式で紹介します。何が読者の関心を引いたのでしょうか。",
+      "publishedAt": "2026-06-28T23:00:00.000Z",
+      "feedName": "＠IT"
+    },
+    {
+      "id": "216a8d1ca4127de985bba20ba3c6a278c4ce57b30868cf729d732879db03b8bb",
+      "title": "週刊生成AI with AWS – 2026/6/22 週",
+      "url": "https://aws.amazon.com/jp/blogs/news/weekly-genai-20260622/",
+      "description": "6 月 22 日週の生成 AI with AWS 界隈のニュースをまとめてお届けします。Amazon Bedrock AgentCore の Web Search 一般提供やマネージドナレッジベース、AWS DevOps/セキュリティエージェントの新機能など、AI エージェントを本番で活用するためのアップデートが充実しました。ユナイテッドアローズの店舗 AI エージェント「SMART」の国内事例や、Kiro の新機能・GovCloud 認証取得まで、今週の注目トピックをぜひご覧ください。",
+      "publishedAt": "2026-06-28T22:34:21.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "2a9c6e3b4ede0c4fbd19281802e71fec6721485463146c018f4ce07db815d58e",
+      "title": "生成AIブームの反動？　「AIだけの脆弱性診断」を見限る企業が急増",
+      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2606/27/news019.html",
+      "description": "「AIに脆弱性診断を任せれば、人手不足を補いながら効率良くセキュリティを強化できる」。ソフトバンクをはじめ国内でも複数の企業がAIによる脆弱性診断サービスの立ち上げを発表する中、そんな期待を裏切る調査結果が明らかになった。",
+      "publishedAt": "2026-06-28T22:30:00.000Z",
+      "feedName": "＠IT"
+    },
+    {
+      "id": "d80a6265b9306affbbf3a0492a38facc5f866ee7317498958dde4966702d8126",
+      "title": "「MEGURI2040」に見る、船舶自動化「認知・判断・制御・監視」のアーキテクチャ設計",
+      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2606/17/news114.html",
+      "description": "船員の高齢化と人手不足に直面する内航海運。日本財団の「MEGURI2040」は、この課題に船舶の自動運航技術で挑む。単なる無人化ではなく、認知・判断・制御・監視を統合したシステム構築の本質とは。ミッションクリティカルな社会インフラを自律化する、究極のシステムアーキテクチャに迫る。",
+      "publishedAt": "2026-06-28T20:00:00.000Z",
+      "feedName": "＠IT"
+    },
+    {
+      "id": "9b5d9dbc7469dabd3f730c76fff2590858c13c0520940bd14c130c249e4fd1c7",
+      "title": "AWS Summit Tokyo 2026のIDバッジNFCタグを読み取ってみた - re:Invent と同じ仕様に見えた",
+      "url": "https://dev.classmethod.jp/articles/aws-summit-tokyo-2026-nfc-badge-reinvent-comparison/",
+      "description": "AWS Summit Tokyo 2026で配布されたIDバッジのNFCタグをNFC Toolsで読み取り、手元のre:Invent 2024バッジと比較しました。NFC Toolsで確認できる範囲では、タグタイプやメモリサイズなどが一致していました",
+      "publishedAt": "2026-06-28T15:32:03.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "671a13099b62d0809324c55f6c7da4c1a8d0fa0bece3bb3dc44b2e8d2393c3f4",
+      "title": "Deno 2.9正式リリース。起動が2倍速、消費メモリは半分に。WebViewを用いたデスクトップアプリが作れる「Deno Desktop」など",
+      "url": "https://www.publickey1.jp/blog/26/deno_292webviewdeno_desktop.html",
+      "description": "Deno 2.9正式リリース。起動が2倍速、消費メモリは半分に。WebViewを用いたデスクトップアプリが作れる「Deno Desktop」など JavaScript/TypeScriptランタイムのDenoを開発するDeno Landは、Deno 2.9正式版をリリースしました。 Deno 2.9は起動を2倍速にするなどの性能面での大幅向上や、Denoを基盤にJavaScriptやHTMLな...",
+      "publishedAt": "2026-06-28T15:14:57.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "36333b332680c6b717fbf956c86140eb63b19d0aa62b23631b6af0d75911da02",
+      "title": "AI エージェントフレームワーク Flue を試してみた",
+      "url": "https://azukiazusa.dev/blog/ai-agent-framework-flue/",
+      "description": "Flue は AI エージェントを構築するための TypeScript フレームワークです。ハーネス駆動のアーキテクチャを採用しており、エージェントの構築に必要な機能を包括的に提供しています。この記事では SRE エージェントを構築する例を通じて Flue の機能に触れていきます。 Flue は AI エージェントを構築するための TypeSc...",
+      "publishedAt": "2026-06-28T14:26:18.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "9e0436365574e2f44d1c1c88ef8d652e840b347d3d5bb78effc2f2d5658e11c5",
+      "title": "2026 Japan AWS Jr. Championsに選出されるまでにやったこと",
+      "url": "https://qiita.com/manaty/items/d29f08e4b8a1893961a2?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\nはじめまして、マナティと申します！\nこの度、2026 Japan AWS Jr. Championsに選出いただきました。\n\n本記事では、選出までに取り組んできたことを、Challenge / Influence / Output の観点で振り返ります。\nこ...",
+      "publishedAt": "2026-06-28T13:14:51.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "d7cf44da91ba963609043cd36d06cd702bf8de8950be2a983bb8ab0b2239d2b9",
+      "title": "aws-vault vs Granted：macOSでAWSクレデンシャルを安全に管理するツール比較",
+      "url": "https://dev.classmethod.jp/articles/aws-vault-vs-granted-credential-management-macos/",
+      "description": "aws-vaultとGrantedの2つのAWSクレデンシャル管理ツールを比較します。macOS Keychain統合、セットアップ手順、マルチアカウント運用時のワークフローの違いを解説し、ユースケース別の選び方を紹介します。",
+      "publishedAt": "2026-06-28T12:39:57.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "8d7feee947802cf4d243fa86685a9626d07e28a3c88db8bfa90627d1c5c9fd6f",
+      "title": "AWS ParallelCluster で使う場合のある VPC エンドポイントを洗い出してみた",
+      "url": "https://dev.classmethod.jp/articles/aws-parallelcluster-required-vpc-endpoints/",
+      "description": "AWS ParallelCluster で使う場合のある VPC エンドポイントを洗い出してみた",
+      "publishedAt": "2026-06-28T12:26:03.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "aa305f6205beed321e8a4b121a5d486dd3a5c6e45d01b37bc60d1dea4129af1f",
+      "title": "Rustの安定ABI問題と、その先にある世界観 ── crABIが目指すもの",
+      "url": "https://zenn.dev/z001_001/articles/e1b0171dc70100",
+      "description": "Rustの安定ABI問題と、その先にある世界観 ── crABIが目指すもの\nRustはメモリ安全性と高パフォーマンスを両立するシステムプログラミング言語として急速に普及しています。LinuxカーネルへのRustサポート導入、Androidコアコンポーネントのリライト、そして各種OSや組み込み領域での採用拡大と、その勢いは止まりません。\nしかし、Rustにはシステムソフトウェアのエコシステムにとって根本的な課題が存在します。安定ABIの欠如です。\nこの記事では、RustのABI問題が具体的に何を意味し、どんな実害をもたらすのかを整理した上で、それを解決しようとするRust公式の実験的...",
+      "publishedAt": "2026-06-28T08:50:41.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "1580df8522b4712e294da02f1d340b6d2107818c3099c1dd6f53a64c178cc611",
+      "title": "AWS Community Buildersでもらったクレジットの適用方法と使い道を考える",
+      "url": "https://dev.classmethod.jp/articles/aws-community-builders-credit-usage/",
+      "description": "AWS Community Buildersでもらったクレジットの適用方法と使い道を考える",
+      "publishedAt": "2026-06-28T08:33:03.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "83e9ccc723b1cc89320b9d799ad778d98160f8a0d747c8c9eb08a15f700b7bb6",
+      "title": "AWS Configの高度なクエリを使ってAWSリソースの棚卸しをする",
+      "url": "https://dev.classmethod.jp/articles/aws-config-advanced-query-inventory/",
+      "description": "AWS Configの高度なクエリを使ってAWSリソースの棚卸しをする",
+      "publishedAt": "2026-06-28T07:24:07.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "ba5bedf06aae896a765d1a21dd67a6f40fc2688fd64496cdb0790b721c47a518",
+      "title": "Rustによる開発で使うツールまとめ",
+      "url": "https://qiita.com/hyperfinitism/items/54d9dc3b81e2d59982bb?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "Rustにおけるバージョン管理，ライセンス管理，テスト，ドキュメンテーション，CI/CDのためのcrate，CLIツール，GitHub Actionなどについてまとめた．本記事では以下を扱う．\n\nCargoプロジェクトにおける Cargo.toml / Cargo.lock...",
+      "publishedAt": "2026-06-28T02:47:32.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "65533d9d26081b896b018b7c3dd24b8f9b05600ab9537e1db5f8be9db8b28a72",
+      "title": "JAWS-UG神戸支部CTF Game大会参加レポ",
+      "url": "https://qiita.com/inorin__62/items/38acc7d01417b647eb13?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "みなさんこんにちは。\nアクセスキー流出していますか？\n6/13にハイブリットで開催された、JAWS-UG神戸支部のCTFイベントに参加したので、2週間以上経過してしまいましたが、その感想を書いていきたいと思います。\n（JAWS-UG神戸支部のみなさん遅くなって大変申し訳あり...",
+      "publishedAt": "2026-06-28T02:35:29.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "e916511519438e5dbc15f75805c5ad58e41a5630c281fd110f25f921ba83bcb3",
+      "title": "【AWS Summit Japan 2026】1日目参加レポート（AWS Jamにも参加！）",
+      "url": "https://qiita.com/eureka_/items/4fa9a7efcbcd841014c7?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\nAWS Summit Japan 2026に参加しました！\n本記事は、1日目の参加レポートになります！\n事前予約が一瞬で埋まってしまった「AWS Jam」にも参加できたので、そちらの様子もお伝えしていきます🙌\n\nAWS Summit Japanとは？\n\nAWS ...",
+      "publishedAt": "2026-06-28T01:27:28.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "3ab4555f75b7d83df018007ac0e4c5c6d7e37054983c071136afe41b2ec3a582",
+      "title": "【めざせカードマスター】Kaggleコンペ紹介 Pokémon Trading Card Game AI Battle Challenge",
+      "url": "https://zenn.dev/kkj/articles/85a3a0a08f193c",
+      "description": "Kaggleで「The Pokemon Company - PTCG AI Battle Challenge」が始まりました。ポケモンカードといえば、初期のオーキド博士が強かった想い出があります。\nhttps://ptcg-abc.pokemon.co.jp/\nhttps://www.youtube.com/watch?v=nQqv5dGrJ1A\n\n コンペ概要\nこのコンペは、ポケモンカードゲームで対戦するAIエージェントを開発し、その強さと戦略を競うコンテストです。株式会社ポケモン・HEROZ株式会社・株式会社松尾研究所の3社共催で、現金賞金だけで最大32万ドル規模の大会です。\n\n コ...",
+      "publishedAt": "2026-06-27T23:20:31.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "4d4363d486e2badbfc00fca8e7e345d17f496c0c5f8432ef8d1f0fe82f542050",
+      "title": "AWS DevOps Agentの設計ベストプラクティスから考えるガバメントクラウドでの活用",
+      "url": "https://qiita.com/infra365/items/b0417a9a18c8a0983657?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "概要\n最近注目しているサービスの一つがAWS DevOps Agentです。先日のAWS SummitでもDevOps Agentについてディスカッションさせていただいたり、下記のセッションを聞きました。\nセッションの中で設計のベストプラクティスの話がありましたので、ガバ...",
+      "publishedAt": "2026-06-27T20:17:23.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "0a24a55f7238fce79cbf3220ee00e75d285ac86314cf99ad71fc6661df2934b5",
+      "title": "SynologyのNASにメディアサーバーを構築した話",
+      "url": "https://qiita.com/hiroakikka/items/79df75b0b701dad03a24?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "自宅のSynology NAS（DSM7）の中に、Jellyfinを使ったメディアサーバーを構築しました。Container Manager（Docker）でコンテナを立てるだけなので、思っていたよりずっと手軽でした。公式の手順書はオプション設定も含めて結構ボリュームがあ...",
+      "publishedAt": "2026-06-27T14:51:48.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "9a49690154f936f83bad9d6adf75bfc7be94ce249080c9f502f34d435a30ae24",
+      "title": "弟が脳梗塞で倒れたので家族情報整理用LINEアプリをAWSメインで作った話",
+      "url": "https://qiita.com/zatrie78/items/32f93d32bdfa190efee4?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\n「弟が脳梗塞で倒れた。」\nあまりにも非日常なLINEが突然来ました。\nちょうどAWSSummitで基調講演を聴いているところでした。\n何ができるか分からないもやもゆ\nそこからの２４時間、ありとあらゆる情報が飛んできました。\n\n先生が言っていたこと\n次に聞くべき...",
+      "publishedAt": "2026-06-27T10:01:40.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "f9ca2700dc2fd69ce345d3ad97c88e212816964bb1480ee863d4b51c62fc4f74",
+      "title": "Claude Codeは「コードを書くAI」で終わらせるな：公式 document-skills でPDF・Excel・Word・PowerPointまで自動化する",
+      "url": "https://qiita.com/4q_sano/items/2c9d2686bdbc5e085191?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\nClaude Codeはコードを書く・直す・テストする・PRを確認するといったコード作業のためのツール、というイメージが強いと思います。\nただ、Anthropic公式の anthropics/skills リポジトリを見ると、Claude Codeはコード作業...",
+      "publishedAt": "2026-06-27T05:39:13.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "16a045f64524ebfcea9c043405b139ef83d80377f30fd729691a5b0396393a92",
+      "title": "【やってみた】Copilot Studio + Power Automate Desktop",
+      "url": "https://qiita.com/kaneoka_nr/items/221b0fb5db232850ad73?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "自然言語で Copilot エージェントに指示出して、Outlook からテストメール送信できたぞ・・・\n\nこうつぶやいてしまうくらい驚きを隠せなかったです！えっ・・・何がって？\n\nRPA のように UI 操作を定義することなく、「文章を書くだけ」でデスクトップアプリを操...",
+      "publishedAt": "2026-06-27T00:38:15.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "da40936a41bc5104f69d408365921e4e108afea65ab76882b4d0d8102183e10b",
+      "title": "あなたの.envはDockerイメージに焼き込まれ、誰でも抜き出せる",
+      "url": "https://qiita.com/kenimo49/items/fd13ea9436bbb3985dfc?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": ".env は .gitignore に書いてある。Gitには上げていない。だから秘密は守れている。\nそう考えている人は多いはずです。私もそうでした。ですが、Dockerでコンテナ化しているなら、その安心は半分しか正しくありません。.env をGitに上げていなくても、CO...",
+      "publishedAt": "2026-06-26T13:30:00.000Z",
+      "feedName": "Qiita"
     }
   ]
 }
