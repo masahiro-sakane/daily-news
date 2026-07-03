@@ -1,22 +1,6 @@
 {
   "articles": [
     {
-      "id": "b32e5a9b0949979b2af6fc4c00bb834976cabc4518cf1a230fd5ead72a67d966",
-      "title": "PREDICTION-20260601-0008: boredom-with-asymmetric-leverage [2026-Q3 through 2027-Q1]",
-      "url": "https://dev.to/sha888/prediction-20260601-0008-boredom-with-asymmetric-leverage-2026-q3-through-2027-q1-423b",
-      "description": "From the motivation-pattern-log — a public, dated, falsifiable prediction log for AI-era cybersecurity attack patterns grounded in motivation analysis. Predictions are scored quarterly against stated falsifiers.\nCreated: 2026-06-01\nPattern: boredom-with-asymmetric-leverage\nSubstrate: Open-source package registries (npm, PyPI, Crates.io, Packagist) and GitHub Actions CI/CD workflow injection\nLeading indicator observed: Four distinct, concurrent, cross-registry supply chain campaigns (TrapDoor: 34 packages across npm/PyPI/Crates.io; Megalodon: 5,718 automated commits to 5,561 GitHub repos in six hours; Packagist compromise of 8 packages; Laravel-Lang PHP credential stealer) appeared within a 72-hour window in 2026-W22, all exhibiting automation signatures — throwaway publisher accounts, wave publishing, base64-encoded shell payloads, off-the-shelf delivery via GitHub Releases — consistent with toolkit operation rather than bespoke tradecraft. npm's reactive rollout of 2FA-gated publishing signals registry operators recognizing volume pressure.\nPredicted window: 2026-Q3 through 2027-Q1\nPredicted shape: Automated, low-sophistication credential-stealing and backdoor-planting campaigns against npm, PyPI, Crates.io, and Packagist will continue to increase in incident volume while average per-campaign novelty declines. The dominant operational signature will be scripted account creation, automated package publication across multiple registries simultaneously, and CI/CD workflow injection via forged or compromised GitHub bot identities — all executable with commodity toolkits requiring no original exploit development. At least two registry operators beyond npm will announce reactive publishing controls (mandatory 2FA, namespace-squatting detection, automated malware scanning with publication holds) within the window in direct response to volume pressure. Security vendors will report a measurable increase in \"unsophisticated supply chain\" incidents relative to the prior four quarters, with the plurality of campaigns attributable to credential-stealing payloads of identical or near-identical construction, indicating shared toolkit lineage rather than independent authorship.\nFalsifier: A retrospective analysis published by a major package registry (npm, PyPI, or Packagist) or a security vendor covering the 2026-Q3 through 2027-Q1 period that shows supply chain incident volume declining quarter-over-quarter, or that attributes the majority of observed campaigns to a small number of skilled, financially structured threat actors using novel bespoke tooling — either finding would contradict the volume-without-sophistication signature the boredom-with-asymmetric-leverage pattern predicts.\nConfidence: medium\nStatus: open\nThe four campaigns documented in 2026-W22 are individually unremarkable; their significance is the temporal co-occurrence across four distinct ecosystems and the shared automation artifact profile. The Megalodon campaign's scale — 5,718 commits in six hours — is specifically diagnostic: that rate is not achievable by skilled operators working manually, and it is not consistent with financially motivated actors who benefit from stealth. It is consistent with actors running automation for its own sake, or with a toolkit that has diffused far enough into low-skill communities that volume is no longer bounded by operator capacity. The TrapDoor campaign's cross-registry simultaneous publication (npm, PyPI, Crates.io) similarly reflects toolkit operation: a skilled, financially motivated actor would typically specialize; multi-registry simultaneous publishing is a feature of automation scripts designed to maximize reach with minimal per-registry effort.\nThe boredom-with-asymmetric-leverage pattern predicts this shape: once a supply chain attack toolkit is available in commodity communities, the barrier to execution collapses and volume climbs while average sophistication per incident declines. The existing prediction PREDICTION-20260512-0004 addresses LLM-augmented commodity malicious-package campaigns specifically; this prediction is broader, covering the commodity supply chain attack surface as a whole, including CI/CD workflow injection (the Megalodon GitHub Actions vector) which is distinct from the package-publication vector that was that prediction's primary focus. The two predictions are complementary rather than duplicative.\nThe window is set at 2026-Q3 through 2027-Q1 — three quarters — because the pattern's known failure mode includes underestimating defensive adaptation: registries move faster than this pattern typically predicts when attack volume becomes highly visible. npm's 2FA rollout is already in motion. The window is deliberately conservative to allow for the possibility that defensive friction slows volume growth before it peaks. The confidence is medium rather than high because the noise caveat in the digest is genuine — reporting clustering in a single week does not prove operational temporal clustering, and the Laravel-Lang campaign in particular may involve more sophisticated financial actors than the pattern assumes.\nsignals/2026-W22.md\nConfidence: medium | Status: open | Scored quarterly. See repo for addenda and scoring rationale.",
-      "publishedAt": "2026-06-02T03:44:42.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "32ddec425cd9bd0f03d594dea0076531947423c9b9e34c67e40e5d99e9948d11",
-      "title": "I gave my coding agent root on my VPS so it would stop making me deploy by hand",
-      "url": "https://dev.to/an_nguynhong_0c0496258/i-gave-my-ai-agent-root-on-my-server-so-it-could-deploy-for-me-1881",
-      "description": "Last week I built a little dashboard with Claude. Took maybe ten minutes. Then I spent the next hour trying to get it online.\nssh in, install docker, write a Dockerfile, set up nginx, run certbot, certbot fails, read the log, oh the DNS hasn't propagated, wait, run it again, open port 443, realize ufw was blocking it the whole time. By the time it was live I'd forgotten what the app even did.\nI've done that maybe a few hundred times by now. I'm a backend guy, I'm fast at it. But fast at something boring still means doing the boring thing.\nSo at some point I just thought: the AI already wrote the app. Why does it stop right when the annoying part starts? Why doesn't it just deploy the thing itself?\n\nThe reason is it has no hands. The model can write you a perfect docker-compose file. It can't ssh into your box and run it. No connection to your server, nowhere to hold your key.\nSo I gave it hands. It's an MCP server, vibe-deploy. You hook it up once to a VPS you own, and then you just say \"deploy this to notes.mydomain.com\" and the agent containerizes it, ships it over ssh, sets up nginx, gets a real Let's Encrypt cert. Node, Python, Go, plain static. It figures out the stack and writes the Dockerfile.\nNo PaaS, no per-seat pricing, no free tier you'll outgrow. A $5 box runs a dozen of my projects and I own the whole thing.\nThe \"you gave an AI root on your server??\" reaction is fair, so: it runs locally, your key never leaves your laptop. I used a separate ssh key scoped to deploys, not my real one, and you should too. It checks the server host key before connecting and validates everything you pass it, because a deploy tool that pastes your input straight into a shell is a horror story waiting to happen. I had someone audit the security before I put it out. They found two real bugs. I fixed them.\nIt's free and MIT, on GitHub and npm as @cgnguyen/vibe-deploy. I built it because I wanted it. If you live in the same gap between \"it works on localhost\" and \"it's online\", try it and tell me where it breaks. The stacks it supports right now are the ones I needed. Next ones are whatever you ask for.",
-      "publishedAt": "2026-06-02T03:38:43.000Z",
-      "feedName": "Dev.to"
-    },
-    {
       "id": "fe190cb16b4dceea1b8b0da58b3da5021fb2a49e1236f50ce0aeec3485889414",
       "title": "How I Split My Livestream Archive at Shiftbloom Studio",
       "url": "https://dev.to/fabianzimber/how-i-split-my-livestream-archive-at-shiftbloom-studio-48d3",
@@ -71,142 +55,6 @@
       "description": "Hello!\nThis article is aimed at beginners to vector databases.\nA vector database is a database that stores data as vectors (arrays of numbers) and searches for data using \"distance\" or \"similarity\" between vectors.\nTraditional relational databases search for data using \"exact match\" or \"partial match\" (LIKE queries), but vector databases can search for things that are semantically similar.\nIn a vector database, all data is represented as points in a multidimensional space. When searching, the query is also converted into a vector, and data that is \"close in distance\" within that space is retrieved.\n\nThis diagram represents it in two dimensions, but in a real vector database, proximity and distance are defined across many dimensions.\nVector databases are used across a wide range of applications:\n\n\n\nUse Case\nDescription\n\n\n\n\nRAG (Retrieval-Augmented Generation)\nKnowledge base search to provide external knowledge to LLMs. Allows internal documents and up-to-date information to be reflected in LLM responses\n\n\nSemantic Search\nSearching internal documents or FAQs by meaning rather than keywords. Handles spelling variations and synonyms\n\n\nRecommendation\nRecommending products and content whose vectors are close to a user's preference vector. Used as an alternative or complement to collaborative filtering\n\n\nImage Search\nSearching for similar images (face recognition, product image matching). Images are vectorized using an embedding model and compared\n\n\nAnomaly Detection\nDetecting data that deviates far from the vector of normal patterns. Used in log analysis and security monitoring\n\n\nDuplicate Detection\nDetecting similar documents or code. Used for plagiarism detection and content deduplication\n\n\n\nThe most common use case is RAG.\nRAG (Retrieval-Augmented Generation) is a technique that improves LLM response accuracy by searching for relevant information from external data sources before generating a response, then including that information in the prompt.\nLLMs cannot accurately respond to information not included in their training data (internal documents, recent news, specialized technical information, etc.).\nWhen using Amazon Bedrock as the LLM for RAG, there is a fully managed RAG feature called Knowledge Bases.\nAWS Bedrock Knowledge Bases\nSince this article focuses on the vector database itself, we'll proceed without using Knowledge Bases.\nThe RAG process follows this flow:\nThe user inputs a question (e.g., \"What is AWS Lambda?\")\nThe application vectorizes the question text using an embedding model\nThe vectorized query is used to search the vector database and retrieve relevant documents\n\n\nAt this point, you specify how many relevant documents to retrieve (e.g., top_k=3)\nThe retrieved relevant documents are sent to the LLM as context in the prompt\nThe LLM generates a response while referencing the search results\nThe response is returned to the user\n\nAs you can see, the vector database plays a central role in RAG as the \"search engine for external knowledge.\"\nThe vector database search flow works as follows:\nThe user searches for \"weather in Tokyo\"\nThe application vectorizes \"weather in Tokyo\" using an embedding model (e.g., a 1024-dimensional vector)\nCosine distance is calculated against the data in the vector database (pre-vectorized using the same model)\nThe top k results with the closest distance are returned\n\nIn a vector database, data is represented as multidimensional numbers.\nThe key point of vector database search is that the search query itself is also vectorized.\nFrom here, I'll use implementation examples with Aurora PostgreSQL + pgvector (abbreviated throughout) and Python code.\nThere are multiple options for building a vector database on AWS, but I find Aurora PostgreSQL + pgvector to be the most approachable starting point, and it's a great way to feel the difference between a conventional relational database and a vector database.\nHere is an implementation example using Aurora PostgreSQL + pgvector:\n# ① Vectorize the text query (handler.py)\nembedding_result = generate_embedding(query)\nquery_embedding = embedding_result.embedding  # 1024-dimensional vector\n\n# ② Search the DB with the vectorized query (logic.py)\nwith connection.cursor() as cur:\n    cur.execute(\n        # Calculate cosine distance between query vector and DB vectors,\n        # return top_k results in ascending distance order\n        \"SELECT content, embedding <=> %s::vector AS distance \"\n        \"FROM embeddings ORDER BY distance LIMIT %s;\",\n        (query_embedding, top_k),\n    )\n    results = cur.fetchall()\n\nThe <=> operator here is pgvector's cosine distance operator.\n%s placeholders.\nSeveral terms have appeared in this simple search, so let me explain them.\nEmbedding refers to the process of converting data such as text or images into a numerical vector.\nHumans intuitively know that \"Tokyo weather forecast\" and \"Tokyo temperature\" are similar, but computers can only compare strings.\nBefore: \"Tokyo weather forecast\"\nAfter:  [0.0231, -0.0142, 0.0567, ..., 0.0412]  ← 1024 numbers\n\nHere is an implementation example using Amazon Bedrock's Titan Embeddings V2.\ngenerate_embedding function implemented here is called at step ① in the \"Search Implementation Code\" above.\ndef generate_embedding(text: str) -> EmbeddingResult:\n    \"\"\"Vectorize text using Bedrock Titan Embeddings V2.\"\"\"\n    client = _get_bedrock_client()\n    body = json.dumps({\n        \"inputText\": text,        # Before: text\n        \"dimensions\": 1024,       # Output dimensions\n        \"normalize\": True,        # Normalize (set vector length to 1)\n    })\n\n    response = client.invoke_model(\n        modelId=\"amazon.titan-embed-text-v2:0\",\n        body=body,\n    )\n\n    response_body = json.loads(response[\"body\"].read())\n    embedding = response_body[\"embedding\"]  # After: [float] × 1024\n    return EmbeddingResult(embedding=embedding, time_ms=elapsed_ms)\n\nSpecifying normalize=True normalizes the output vector length to 1.\nIn the embedding implementation code, there was a keyword called \"dimensions.\"\n3-dimensional vector:    [0.5, -0.3, 0.8]           ← 3 numbers\n1024-dimensional vector: [0.023, -0.014, ..., 0.041] ← 1024 numbers\n\nMore dimensions allow for finer representation of \"meaning,\" but storage consumption increases accordingly.\n\n\n\nDimensions\nSize per vector\nSize for 100k records\n\n\n\n\n256\n1 KB\n~100 MB\n\n\n1024\n4 KB\n~400 MB\n\n\n1536\n6 KB\n~600 MB\n\n\n3072\n12 KB\n~1.2 GB\n\n\n\nThe number of dimensions is determined by the embedding model you use. Titan Embeddings V2 lets you choose from 256, 512, or 1024, allowing you to balance accuracy and cost based on your use case.\nSpecialized models that convert text to vectors are distinct from LLMs (generative models).\n\n\n\nModel\nProvider\nDimensions\nFeatures\n\n\n\n\nTitan Embeddings V2\nAWS Bedrock\n256/512/1024\nAWS native. Has normalization option. High affinity with AWS environments\n\n\nCohere Embed v3\nAWS Bedrock\n1024\nMultilingual support. Evaluated as highly accurate for Japanese\n\n\ntext-embedding-3-small\nOpenAI\n256~1536\nLightweight and low cost. Multilingual support. Best for cost-sensitive use cases\n\n\ntext-embedding-3-large\nOpenAI\n256~3072\nHigh accuracy and multilingual support. Flexible dimension selection\n\n\n\nAn important note: you must use the same model for both search and registration.\nAmazon Titan Text Embeddings V2 - Bedrock Documentation\nCosine similarity represents \"how much two vectors point in the same direction\" as a number between -1 and 1.\nCosine distance is defined as 1 - cosine similarity and ranges from 0 to 2.\n<=> operator returns this cosine distance.\n\n\n\nMetric\nRange\n\"More similar\" direction\nUse case\n\n\n\n\nCosine Similarity\n-1 to 1\nLarger value (closer to 1)\nThreshold judgment (e.g., \"hit if >= 0.95\")\n\n\nCosine Distance\n0 to 2\nSmaller value (closer to 0)\nORDER BY in SQL, KNN search\n\n\n\nThe search implementation code (embedding <=> %s::vector) sorts by cosine distance, while the threshold judgment in semantic cache (described later) (similarity >= 0.95) uses cosine similarity.\ntop_k is the number of top-k results to return from a search. Set an appropriate value based on the use case.\nSmall top_k (1–5): Returns only the most relevant results. Suitable when you want to limit the context passed to an LLM in RAG\nLarge top_k (10–100): Returns a wide range of candidates. Suitable for recommendations or displaying a list of candidates\nIn RAG, it is common to pass the full set of top_k results as context to the LLM.\nNormalization is the process of setting the length (norm) of a vector to 1.\nnormalize=True automatically normalizes the output vector.\nOf course, data must be registered in advance before you can search a vector database.\nData registration in a vector database follows this flow:\nDrop the HNSW index (to speed up registration)\nVectorize text data using an embedding model and INSERT it into the database in batches (e.g., 500 records at a time)\nOnce all data is registered, bulk-create the HNSW index\nAs with the search explanation, I'll use implementation examples with Aurora PostgreSQL + pgvector and Python.\nThe following table and index are created on Aurora PostgreSQL with the pgvector extension enabled:\n-- Enable pgvector extension\nCREATE EXTENSION IF NOT EXISTS vector;\n\n-- embeddings table (storage for vector data)\nCREATE TABLE IF NOT EXISTS embeddings (\n    id SERIAL PRIMARY KEY,\n    content TEXT NOT NULL,\n    embedding vector(1024) NOT NULL\n);\n\n-- HNSW index (speeds up ANN search)\nCREATE INDEX IF NOT EXISTS idx_embeddings_embedding\n    ON embeddings\n    USING hnsw (embedding vector_cosine_ops)\n    WITH (m = 16, ef_construction = 64);\n\nThe content column in the embeddings table stores the text data, and the embedding column stores the vectorized text.\nembedding column.\nVector databases have indexes too, and in Aurora PostgreSQL + pgvector, you create indexes with the CREATE INDEX statement just like regular indexes.\nON embeddings USING hnsw specifies something called the index algorithm.\nThere are two main types of search methods in vector databases:\n\n\n\nSearch Method\nFull Name\nFeatures\n\n\n\n\nKNN\nK-Nearest Neighbor\nCompares against all data exhaustively. Accuracy is perfect but computation cost increases linearly as data grows, making it slow\n\n\nANN\nApproximate Nearest Neighbor\nSearches approximately. Slightly lower accuracy but can search at high speed even with large volumes of data\n\n\n\nIn practical systems, ANN is almost always used.\nThe data structures used to implement ANN are called index algorithms, and there are several types:\n\n\n\nAlgorithm\nMechanism\nFeatures\n\n\n\n\nHNSW\nBuilds a hierarchical graph structure and progressively narrows the search range from upper to lower layers\nHigh accuracy and high speed. Higher memory consumption but currently the most widely used\n\n\nIVF\nClusters data and performs partial search only on clusters close to the query\nMemory-efficient. Suitable for large-scale data but may have lower accuracy than HNSW\n\n\n\nCurrently, the ANN + HNSW combination is the standard for building vector databases.\n-- HNSW index (speeds up ANN search)\nCREATE INDEX IF NOT EXISTS idx_embeddings_embedding\n    ON embeddings\n    USING hnsw (embedding vector_cosine_ops)\n    WITH (m = 16, ef_construction = 64);\n\nThe WITH clause in the index creation SQL specifies the HNSW index parameters:\n\n\n\nParameter\nMeaning\nEffect when increased\nTypical value\n\n\n\n\nm\nConnections per node\nSearch accuracy ↑ / Memory consumption ↑ / Build time ↑\n16\n\n\nef_construction\nSearch width during construction\nSearch accuracy ↑ / Build time ↑\n64~200\n\n\n\nHere is the Python code to register a substantial amount of data into Aurora PostgreSQL + pgvector:\nclass AuroraIngester:\n    \"\"\"Batch INSERT data into Aurora pgvector.\n\n    Efficiently inserts vector data using batch INSERT of 500 records at a time.\n    \"\"\"\n    def __init__(self, connection: psycopg2.extensions.connection) -> None:\n        self._connection = connection\n\n    def ingest_batch(self, start_index: int, end_index: int) -> int:\n        \"\"\"Batch INSERT records in the specified range.\n\n        Args:\n            start_index: Start index (inclusive)\n            end_index: End index (exclusive)\n\n        Returns:\n            Number of records inserted\n        \"\"\"\n        values_parts: list[str] = []\n        params: list[str | list[float]] = []\n        for i in range(start_index, end_index):\n            values_parts.append(\"(%s, %s::vector)\")\n            params.append(f\"doc-{i}\")\n            params.append(generate_vector(seed=i))\n\n        sql = f\"INSERT INTO embeddings (content, embedding) VALUES {', '.join(values_parts)};\"\n        with self._connection.cursor() as cur:\n            cur.execute(sql, params)\n        self._connection.commit()\n        return end_index - start_index\n\n    def ingest_all(self, record_count: int, batch_size: int = 500) -> int:\n        \"\"\"Insert all records into Aurora in batches.\n\n        Args:\n            record_count: Total number of records to insert\n            batch_size: Number of records per batch (default 500)\n\n        Returns:\n            Total number of records inserted\n        \"\"\"\n        log = logger.bind(database=\"aurora_pgvector\")\n        total_inserted = 0\n\n        for start in range(0, record_count, batch_size):\n            end = min(start + batch_size, record_count)\n            for attempt in range(1, MAX_RETRIES + 1):\n                try:\n                    count = self.ingest_batch(start, end)\n                    total_inserted += count\n                    break\n                except Exception as e:\n                    log.warning(\"batch_insert_retry\", start=start, end=end, attempt=attempt, error=str(e))\n                    if attempt == MAX_RETRIES:\n                        log.error(\"batch_insert_failed\", start=start, end=end, error=str(e))\n                        break\n                    time.sleep(RETRY_DELAY_SECONDS)\n\n        log.info(\"ingest_all_complete\", total_inserted=total_inserted)\n        return total_inserted\n\ndef _run_database_ingestion(index_manager, ingester, record_count):\n    \"\"\"Execute bulk data insertion into the database.\n\n    Args:\n        index_manager: Object managing index drop and creation (implementation omitted)\n        ingester: Object that inserts data in batches (described above)\n        record_count: Total number of records to insert\n    \"\"\"\n    # ① Drop index (speeds up registration)\n    index_manager.drop_index()\n    # SQL executed internally:\n    # DROP INDEX IF EXISTS embeddings_hnsw_idx;\n    # TRUNCATE TABLE embeddings;\n\n    # ② Batch registration (500 records at a time)\n    ingester.ingest_all(record_count, batch_size=500)\n\n    # ③ Bulk index creation\n    index_manager.create_index()\n    # SQL executed internally:\n    # CREATE INDEX embeddings_hnsw_idx\n    #   ON embeddings USING hnsw (embedding vector_cosine_ops)\n    #   WITH (m = 16,              -- Connections per node (more = higher accuracy, more memory)\n    #         ef_construction = 64); -- Search width during construction (more = higher accuracy, slower build)\n\nThe reason for dropping the index first, registering data, and then recreating the index is that registering data while an index exists makes processing time unpredictable.\nIndex Considerations When Bulk-Inserting Large Amounts of Data into a Database (Japanese)\nOne technique for speeding up search and data retrieval is caching.\nSemantic cache is a mechanism that uses the embedding vector of a query as a key to cache past search results or FM (Foundation Model) responses, and quickly returns results from the cache for semantically similar queries.\nComparing it with conventional caching reveals its unique characteristics:\n\n\n\n\nConventional Cache\nSemantic Cache\n\n\n\n\nKey\nExact string match\nVector similarity\n\n\nHit condition\nOnly the exact same query\nSemantically similar queries also hit\n\n\nExample\nOnly \"weather in Tokyo\" hits\n\"Tokyo weather forecast\" and \"What's the weather in Tokyo today?\" also hit\n\n\n\nWith conventional caching, \"weather in Tokyo\" and \"Tokyo weather forecast\" are treated as different keys, resulting in lower cache hit rates. Semantic cache can group semantically equivalent queries together for caching, dramatically improving hit rates.\nWhen implementing semantic cache on AWS, Amazon ElastiCache or Amazon MemoryDB are the typical options.\nAmazon MemoryDB - Vector Search Examples\nSetting aside the RAG with a vector database for a moment, if you introduce semantic cache for Foundation Model queries, the processing flow would look like this:\nThe application vectorizes the query using Bedrock Titan Embeddings V2\nPerform cosine similarity search with FT.SEARCH KNN against MemoryDB (cache store)\nIf a result with similarity above the threshold is found (cache hit) → Return the cached FM (Foundation Model) response\nIf similarity is below the threshold (cache miss) → Call the FM for inference and save the result to cache (HSET + EXPIRE)\n\nNote: MemoryDB is a Redis-compatible key-value store and does not have \"tables\" like RDBs. Data is stored in Hash-type keys, and the search schema is defined as an \"index\" using the FT.CREATE command.\nIn this repository, the following FT.CREATE command creates the index for semantic cache:\nFT.CREATE semantic_cache_idx\n  ON HASH\n  PREFIX 1 cache:\n  SCHEMA\n    embedding    VECTOR HNSW 10\n                   TYPE FLOAT32\n                   DIM 1024\n                   DISTANCE_METRIC COSINE\n                   M 16\n                   EF_CONSTRUCTION 512\n    query_text   TAG\n    result       TEXT\n    created_at   NUMERIC\n    ttl          NUMERIC\n\n\n\n\nField\nType\nDescription\n\n\n\n\nembedding\nVECTOR (HNSW)\nQuery embedding vector (1024 dimensions). Target for KNN search\n\n\nquery_text\nTAG\nOriginal query text. For exact match filtering\n\n\nresult\nTEXT\nFM response result (cached answer)\n\n\ncreated_at\nNUMERIC\nCache entry creation time (UNIX timestamp)\n\n\nttl\nNUMERIC\nCache expiration time (seconds)\n\n\n\nPREFIX 1 cache: means only Hashes whose key name starts with cache: are indexed\nHNSW parameter EF_CONSTRUCTION=512 is set higher than Aurora pgvector (64). Since MemoryDB operates in-memory, build cost is relatively low, so accuracy is prioritized\nThe threshold for semantic cache is the cosine similarity value used to determine cache hits.\n\n\n\nThreshold\nCharacteristics\nRecommended Use Case\n\n\n\n\n0.95~1.0\nOnly nearly identical queries hit\nAccuracy-focused. When you want to minimize the risk of returning incorrect cached responses\n\n\n0.80~0.90\nSynonymous phrasing variations also hit\nPractical balance. Recommended for most use cases\n\n\n0.70~0.80\nRelated queries also broadly hit\nHit rate-focused. However, the risk of returning unrelated results increases\n\n\n\nThe appropriate threshold depends on business requirements, so I think it's safe to start with a high threshold around 0.95 and gradually lower it while monitoring cache hit rates.\nThese are not keywords specific to vector databases or semantic cache — they are Redis commands, which is the engine underlying MemoryDB.\nA command that saves field-value pairs together in a Hash-type key.\nembedding, query_text, result, and created_at can be stored as a single entry.\nIn Redis / MemoryDB, it's conventional to use colon-separated naming like cache:abc123 for key names.\nPREFIX 1 cache: in the index definition is a setting to make only keys starting with this prefix subject to search.\nRedis HSET Command\nA command that sets an expiration time (TTL) on a key. After the specified number of seconds, the key is automatically deleted. This prevents stale cache entries from accumulating.\nRedis EXPIRE Command\nThe implementation code got a bit long, but what it does is the same as typical cache-based data retrieval: use the cache if available, otherwise search and save the result to cache.\ndef handler(event, context):\n    query = event[\"query\"]  # \"What is AWS S3?\"\n\n    # ① Vectorize the query (Bedrock Titan V2)\n    embedding_result = generate_embedding(query)\n    query_embedding = embedding_result.embedding\n\n    # ② Cache lookup via MemoryDB → FM call\n    cache_result = process_query(\n        query_text=query,\n        query_embedding=query_embedding,\n        redis_client=redis_client,\n        threshold=0.95,   # Environment variable SIMILARITY_THRESHOLD\n        ttl_seconds=3600, # Environment variable CACHE_TTL\n    )\n\n    # ③ Return response (with metrics)\n    return {\"statusCode\": 200, \"body\": {...}}\n\ndef process_query(query_text, query_embedding, redis_client,\n                  threshold, ttl_seconds):\n    # ① Query MemoryDB cache (FT.SEARCH KNN)\n    search_results = search_similar(redis_client, query_embedding)\n\n    if search_results:\n        key, similarity, fields = search_results[0]\n\n        # ② Cache hit → Return result from cache (no FM call)\n        if similarity >= threshold:\n            return CacheResult(hit=True, source=\"cache\",\n                               result=fields[\"result\"])\n\n    # ③ Cache miss → Query FM directly and get result\n    fm_result = _invoke_fm(query_text)\n\n    # ④ Save result to cache (HSET + EXPIRE)\n    _store_cache_entry(redis_client, query_text,\n                       query_embedding, fm_result, ttl_seconds)\n\n    return CacheResult(hit=False, source=\"fm\", result=fm_result)\n\ndef search_similar(redis_client, query_embedding, top_k=1):\n    \"\"\"Execute KNN vector search with FT.SEARCH.\"\"\"\n    query_vec = struct.pack(f\"<{len(query_embedding)}f\", *query_embedding)\n\n    query = (\n        Query(f\"*=>[KNN {top_k} @embedding $query_vec AS score]\")\n        .return_fields(\"query_text\", \"result\", \"created_at\", \"score\")\n        .sort_by(\"score\", asc=True)\n        .paging(0, top_k)\n        .dialect(2)\n        .timeout(3000)  # 3-second timeout\n    )\n\n    results = redis_client.ft(\"semantic_cache_idx\").search(\n        query, query_params={\"query_vec\": query_vec}\n    )\n\n    # Convert cosine distance to similarity (distance = 1 - similarity)\n    return [(doc.id, 1.0 - float(doc.score), fields) for doc in results.docs]\n\nMemoryDB's FT.SEARCH command is compatible with Redis's RediSearch module and natively supports KNN vector search.\nscore is returned as cosine distance (1 - cosine similarity, theoretically in the range 0~2). 1.0 - score converts it to cosine similarity.\nnormalize=True, output vectors are already normalized, so actual scores fall in the range 0~1, meaning the converted similarity also stays in the 0~1 range.\nHere are the measured results under the following conditions:\n\n\n\nItem\nValue\n\n\n\n\nFM (Foundation Model)\nClaude 3 Haiku (anthropic.claude-3-haiku-20240307-v1:0)\n\n\nEmbedding Model\nTitan Embeddings V2 (1024 dimensions)\n\n\nCache Store\nAmazon MemoryDB\n\n\nSimilarity Threshold\n0.95\n\n\nTest Query\n\"What is AWS S3?\" (same query run twice)\n\n\n\nThe threshold is set high at 0.95.\n\n\n\nMetric\nCache Miss (1st run)\nCache Hit (2nd run)\nReduction\n\n\n\n\nTotal Response Time\n4,573ms\n279ms\n94%\n\n\nEmbedding Generation\n194ms\n192ms\n—\n\n\nCache Lookup\n4ms\n3ms\n—\n\n\nFM Call\n4,375ms\n0ms\n100%\n\n\n\nWhen there's a cache hit, the FM call is completely skipped, reducing response time by 94%.\nSemantic cache can be integrated into a RAG system.\nVectorize the query\nSearch for similar queries in MemoryDB (cache)\nCache hit → Immediately return the cached response\nCache miss → Search Aurora pgvector (vector DB) for RAG context\nCall the FM with the retrieved context for inference\nSave the FM response to cache and return it to the user\n\n\nIn this article, I covered everything from the basic concepts of vector databases to implementation on AWS and optimization with semantic cache.\nVector database basics\n\n\nA vector database is a database that \"searches by meaning.\" It handles spelling variations and synonymous expressions that traditional keyword search cannot catch\nBoth data and search queries are vectorized using the same embedding model, and \"semantic closeness\" is calculated using cosine similarity\nANN + HNSW is the standard for vector databases\nBuilding vector databases on AWS\n\n\nAWS offers multiple options: Aurora PostgreSQL + pgvector, OpenSearch, S3 Vectors, MemoryDB, and more\nAurora PostgreSQL + pgvector, which can be operated with SQL and leverages existing skills, is recommended as the first step\nFor bulk data ingestion, the \"drop index → insert data → bulk create index\" pattern is the go-to approach\nSemantic cache\n\n\nCan be used to cache queries that are semantically similar\nThat's all for this time.\nAWS Bedrock Knowledge Bases\nUsing the pgvector Extension with Amazon Aurora PostgreSQL\nIndex Considerations When Bulk-Inserting Large Amounts of Data into a Database (Japanese)\nMeasuring Data Ingestion and Search Processing Time for 100k Records Across 3 AWS Vector Databases (Japanese)\nAmazon MemoryDB - Vector Search Examples (Durable Semantic Cache)\nAmazon Titan Text Embeddings V2 - Bedrock Documentation\nOpenAI Embeddings Guide\nRedis Commands\nPractical Introduction to Vector Search (Book)",
       "publishedAt": "2026-06-03T03:32:51.000Z",
       "feedName": "Dev.to"
-    },
-    {
-      "id": "fa0d7c5ffded80b593e6683538aa6f96e0c2da620e1da189dc0e079ef1d43ade",
-      "title": "なぜ自宅に Kubernetes クラスタを持つのか —— 本番相当に運用して得られる学び（前編） - レバテックLAB",
-      "url": "https://levtech.jp/media/detail_868/",
-      "description": "須田 一輝 株式会社Preferred Networksのソフトウェアエンジニア。Kubernetesを基盤とした深層学習・AIワークロード向けクラウドサービス「PFCP」の開発・運用に従事。Kubernetes Meetup Tokyoの主催や書籍の執筆・監訳など、コミュニティ活動や情報発信にも精力的に取り組んでいる。 X: @superbrothers　GitHub: superb...",
-      "publishedAt": "2026-06-03T01:34:01.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "cd6922252d816e372aef5195ffafb73e81b24e3eb7da2a1ee5699ec7e2f3a324",
-      "title": "Lambda PDF生成を27倍高速化した話 — Puppeteerから@react-pdf/rendererへの移行レポート - Findy Tech Blog",
-      "url": "https://tech.findy.co.jp/entry/2026/06/03/070000",
-      "description": "こんにちは。Findy Freelance開発チームの久木田です。 今回は、社内で運用している支払明細書PDFの生成基盤を、Lambda + Puppeteerから@react-pdf/rendererへ全面的に移行した話を書きます。最終的に処理時間はP50（中央値）で約27倍速くなり、メモリ消費も実測で約1/4まで落とせました。 これまでのPDF生成基盤と課題 ...",
-      "publishedAt": "2026-06-03T00:52:15.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "c9df0af13343e9521ec7765ceed944ec623c5a33b6f8f6b00c8895d7efc9e90d",
-      "title": "もし、今からAWSのエミュレーターを選ぶならどれにする？ - カミナシ エンジニアブログ",
-      "url": "https://kaminashi-developer.hatenablog.jp/entry/2026/06/03/aws-emulator-selection",
-      "description": "はじめに カミナシでエンジニアリングマネージャーをしてます、すずけん（@szk3）です。 唐突ですが、皆さん AWSのエミュレーター使ってますか？ 自チームのプロダクトはS3、DynamoDB、STS、IAM あたりの AWS サービスに依存していて、ローカル開発やテストではこれらのエミュレーターを使っています。ただ、歴史的な背...",
-      "publishedAt": "2026-06-02T23:34:55.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "81d3068345ceed7c118128756b0858da9959e3ec6343b35c1077f667e7de891f",
-      "title": "「ミュトス」の出現が、日本の能動的サイバー防御を変える──図らずもつかんだ“世界先行”のシナリオ",
-      "url": "https://enterprisezine.jp/article/detail/24399",
-      "description": "Anthropicが開発したフロンティアAIモデル（最先端の大規模AIモデル）「Claude Mythos」の登場に象徴されるAIの進展で、サイバーセキュリティの世界が大きく揺れている。未知の脆弱性を驚異的な精度とスピードで自動検出するAIが台頭したことで、これまでの“人間を中心”とした防御プロセスの限界が一層鮮明になった。日本政府が異例のスピードで重要インフラ事業者へ注意喚起を行う中、国内で議論が進んでいた「能動的サイバー防御（Active Cyber Defense）」もまた、AI時代を見据えた質的転換を迫られている。本稿では、米ゼットスケーラー（Zscaler）でアジア太平洋・日本（APJ）地域の政府関係部門を統括するアダム・ドベル（Adam Dobell）氏へのインタビューを基に、激変する日本の脅威環境と、AIによるタイムライン圧縮に対抗するための「侵入前提」のゼロトラスト設計、そして官民連携による次世代の防御アプローチについて考える。",
-      "publishedAt": "2026-06-02T23:00:00.000Z",
-      "feedName": "EnterpriseZine"
-    },
-    {
-      "id": "ece96dfba5377e0b49fa1b80834ca3204e3ced2a02191f9900b84c0432d23775",
-      "title": "[Isaac Lab] AWS EC2 g5.2xlarge で SO-ARM101 の Reach の報酬・目標を「指先（TCP）」基準に再設計してみました",
-      "url": "https://dev.classmethod.jp/articles/isaac-lab-so-arm101-reach-tcp-reward/",
-      "description": "グリッパーの根元ではなく先端（TCP）を目標点に到達させる強化学習タスクへの改修と実装について紹介します。Isaac Labの Reach タスクをカスタマイズし、掴める向きも考慮した学習を実現した過程と、その具体的なコード変更をまとめました。",
-      "publishedAt": "2026-06-02T21:28:38.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "c86988853985efce4eb61993826bfa363a5dce9a7f34a7deaed4b5d2d38baa09",
-      "title": "Cisco年次イベントの目玉は“超統合”AgenticOps基盤「Cisco Cloud Control」",
-      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2606/02/news126.html",
-      "description": "Ciscoは同社年次イベントの目玉として、ITインフラとネットワークの運用とセキュリティをAIエージェントによって自動化／高度化する「Cisco Cloud Control」を発表した。AIのサイバー攻撃能力が飛躍的に高まる「ポストMythos」時代に備えるものだという。",
-      "publishedAt": "2026-06-02T13:00:00.000Z",
-      "feedName": "＠IT"
-    },
-    {
-      "id": "08eb1964f1a0be9a2bdd2bb5ba16b517fa5f9677262cebffe229bbb06d06ffae",
-      "title": "Cloud native is now AI-native: Engineering production-ready AI",
-      "url": "https://www.cncf.io/blog/2026/06/02/cloud-native-is-now-ai-native-engineering-production-ready-ai/",
-      "description": "At KubeCon + CloudNativeCon Europe in Amsterdam from March 23-26, CNCF brought together a roundtable with experts in the cloud native ecosystem, including Ellis Tarn of AWS, Allan Naim of Google Cloud, Jorge Palma of Microsoft,...",
-      "publishedAt": "2026-06-02T11:00:00.000Z",
-      "feedName": "Cloud Native Computing Foundation"
-    },
-    {
-      "id": "4eebb82f8518e1c1e7f4a7e7126c9c8f82c46b7991e65f60a7bc9020d565cb56",
-      "title": "AWS Summit Japan 2026 における Database 関連の注目セッションのご紹介",
-      "url": "https://aws.amazon.com/jp/blogs/news/aws-summit-japan-2026-database-sessions/",
-      "description": "日本最大の「AWS を学ぶイベント」、AWS Summit Japan が 2026年6月25日(木)、26日 […]",
-      "publishedAt": "2026-06-02T09:51:39.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "c26d4c471422547a8b370abced1b7f0a684c1c8948cd3e4a3123d7f092539ad4",
-      "title": "AWSでOpenAIモデルを使おう！（Bedrock APIとStrands編）",
-      "url": "https://qiita.com/minorun365/items/f83b3cf2df904ead28dd?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "ついにBedrockでOpenAIの最新モデルがGAしました！\n\nBedrockのAPIは何種類かあり、最もよく使われるClaudeなどを呼ぶ際には Converse API を使うのですが、GPT-5.5はConverseに非対応。\n代わりにOpenAI側のRespo...",
-      "publishedAt": "2026-06-02T09:10:36.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "ef53e9cb1393f707f9054200eddc743b3e773a90f9ea8d37d5c4c863c62affd1",
-      "title": "AWS Health Dashboard의 Config planned lifecycle event 어떤 대응이 필요할까?",
-      "url": "https://dev.classmethod.jp/articles/jw-aws-health-dashboard-config-planned-lifecycle-event-response/",
-      "description": "AWS Health Dashboard의 Config planned lifecycle event과 관련해서 어떤 대응이 필요한지 살펴봤습니다.",
-      "publishedAt": "2026-06-02T08:59:24.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "f647723241a277761e1166c82f605d2b83275266acaaa6e47d3b1ea3dd3d27e0",
-      "title": "AWS Client VPN 사용자 접속 방법",
-      "url": "https://dev.classmethod.jp/articles/lim-clientvpn-client-access-kr/",
-      "description": "AWS Client VPN 사용자 접속 방법",
-      "publishedAt": "2026-06-02T06:11:45.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "cc5e52bc2430b51f16b25357013c16277c77f54a23e877301e158ab19a50b2e8",
-      "title": "AWS Client VPN ユーザー接続手順書",
-      "url": "https://dev.classmethod.jp/articles/lim-clientvpn-client-access/",
-      "description": "AWS Client VPN ユーザー接続手順書",
-      "publishedAt": "2026-06-02T06:08:59.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "9a609aa856499d7909996d29c81cda47921c3d7e3f564fb809bb203e3a3581f3",
-      "title": "AWS PCS の Slurm 25.11 がリリース 新機能で監査ログを S3、運用ログを CloudWatch Logs に分離してみた",
-      "url": "https://dev.classmethod.jp/articles/aws-pcs-slurm-25-11-audit-log-separation/",
-      "description": "AWS PCS の Slurm 25.11 がリリース 新機能で監査ログを S3、運用ログを CloudWatch Logs に分離してみた",
-      "publishedAt": "2026-06-02T04:56:25.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "ca637b792bff766eddcb889ba649d5b9c19c44be4db0d2518febe56b8cf642c5",
-      "title": "2026年05月くらいのAWS最新情報ブログとかをキャッチアップする – AWSトレンドチェック勉強会用資料",
-      "url": "https://dev.classmethod.jp/articles/aws-trendcheck-202605/",
-      "description": "AWSの最新情報や私の独断と偏見で面白いと感じたブログをまとめています。みんなでトレンディになろう。",
-      "publishedAt": "2026-06-02T04:00:45.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "980fd9cc0727def86df193a6a636c7a7dd62ba85a64e774f54c3f6a7603f27af",
-      "title": "バイブコーディングの“プロトタイプで止まりがち”問題に「バイブ清書」が切り込む",
-      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2606/02/news047.html",
-      "description": "バイブコーディングの普及で社内ソフトウェアの開発は身近になった。一方でプロトタイプから本番利用へ移行する際の品質やセキュリティの確保に悩む企業もある。その課題に着目し、解決を図るのが「バイブ清書」だ。",
-      "publishedAt": "2026-06-02T04:00:00.000Z",
-      "feedName": "＠IT"
-    },
-    {
-      "id": "8e5af081940a0fa6aa1c673d8dca782b47d708c3c234d977db985db5f86218ed",
-      "title": "ネオクラウドはなぜ「AWS、Azureとは別物」なのか？　クラウド利用の常識は静かに変わりつつある",
-      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2606/02/news043.html",
-      "description": "調査会社Synergy Research Groupは、ネオクラウド市場が2031年までに約4000億ドル（約62兆円）規模に達するとの予測を発表した。AIインフラ需要の急増が成長をけん引する。",
-      "publishedAt": "2026-06-02T04:00:00.000Z",
-      "feedName": "＠IT"
-    },
-    {
-      "id": "6880b52837406722badad0c2f438c6872ca3d3359aae2cdc6d674487e57e8254",
-      "title": "Claude Code v2.1.159〜v2.1.160 の主要アップデート",
-      "url": "https://dev.classmethod.jp/articles/20260602-cc-updates-v2-1-160/",
-      "description": "セキュリティ強化、バックグラウンドエージェントの安定化、そしてDynamic Workflowsのトリガーキーワード（`workflow` → `ultracode`）変更など、主な改善点をご説明します。",
-      "publishedAt": "2026-06-02T03:52:22.000Z",
-      "feedName": "クラスメソッド開発ブログ"
     },
     {
       "id": "c99c9b31f176f93e8b1d55c0561bbe74c5a8bc760dae9c2e4a4fa879ec62ca98",
@@ -440,54 +288,6 @@
       "feedName": "＠IT"
     },
     {
-      "id": "d98f9b059be1e51c401e3294d03bc5fd7307309754c749042d2dc6ca0682f698",
-      "title": "セマンティックな型宣言に意味はない",
-      "url": "https://zenn.dev/toms74209200/articles/semantic-type-is-meaningless",
-      "description": "言いすぎました. TypeScript においてセマンティックな type 宣言には意味がないです[1].\n\n interface 宣言には意味がある\ninterface 宣言と type 宣言には明確な違いがあります. interface 宣言は Declaration Merging があります. これによって interface 宣言は開いた型宣言となっています. ライブラリなどでの interface の利用は拡張性を保持する宣言です[2][3].\n\n対して type 宣言は Declaration Merging を持ちません. 例えば以下の Jpy は示した通りの型定義しか持...",
-      "publishedAt": "2026-06-03T00:00:08.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "d3dfc0540250f9bd135506d11325a1ce2434e3a22e21bc0dae7cdc8d0fbc4622",
-      "title": "クリーンアーキテクチャを3行で説明してみる",
-      "url": "https://zenn.dev/innovation/articles/d3b5c1975e3c02",
-      "description": "はじめに クリーンアーキテクチャって難しいですよね。 最近ではソフトウェアアーキテクチャを考える上で クリーンアーキテクチャ は避けて通れません。 ですが、クリーンアーキテクチャで設計しよう！となった時に、そもそもクリーンアーキテクチャとは... となることが多々あります。 そこで、クリーンアーキテクチャ...",
-      "publishedAt": "2026-06-02T23:48:11.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "f4dff302d110b9bc4610359277acc6c5b1907f97962025cdccf9596327bfa0ac",
-      "title": "日本酒記録アプリをAWSを使って作ってみた",
-      "url": "https://qiita.com/yo_arai/items/c61eb886faa1cee69054?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "はじめに\n日本酒を飲むたびに「この銘柄・スペック、前も飲んだっけ？」「あのとき飲んだやつ何だったっけ？」と思うことが増えてきました。メモアプリに記録するのは面倒、SNSに投稿するのはちょっと違う、専用アプリはUIが好みでない。。。ということで、自分用に「酒ファイル」という...",
-      "publishedAt": "2026-06-02T15:17:43.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "d921ed59470ac0e3aa0303ed0195fc2f2dcb7e4935e91680f8cfa4ee10ab0dac",
-      "title": "誰も教えてくれないテスト自動化が普及しない理由",
-      "url": "https://zenn.dev/acntechjp/articles/20260602_test-automation",
-      "description": "半地下のこのバーには不思議といつも、日本のIT業界の疲弊と倦怠感のような吹き溜まりが似合う。\nEnterキーを叩く音が切なく響くような、鈍色の夜がまた凝りもせず繰り返し訪れる。今夜もまた、気を滅入らせる雨が降っている。\n今夜もひとり、静かに飲んでいたら後輩がやってきた。珍しくスーツがよれている。\n\n——先輩、あの\nお前が言いたいことはだいたい分かる。聞いてやるから、まずはマスター、バーボンのオンザロックをダブルで。こいつにも同じものをやってくれ。ワイルドターキーにしてくれるか。\n——相変わらずせっかちですね。いただきますよ。あの、実はテストの自動化がうまくいかなくて、上からはなんでそんな...",
-      "publishedAt": "2026-06-02T14:36:44.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "c17b6e2fbe19f3b7729688a73d9d9a318f2ecbe49751acdeb1af965a5c86aff1",
-      "title": "【初心者でもApp Store審査が一発で通る】AIが\"審査員\"になってくれるアプリを作ったら、申請が怖くなくなった",
-      "url": "https://qiita.com/naohirokaihatu/items/d7157a1e552467514d85?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "学校のコンテストで作ったiOSアプリを、いざApp Storeに出そうとして初めて「審査」という壁の存在を知りました。しかも審査待ちで完成が遅れる始末。その悔しさをそのままぶつけて、「審査に出す前に、AIに審査員役をやってもらう」アプリを約2ヶ月かけて個人開発し、リリースま...",
-      "publishedAt": "2026-06-02T12:44:16.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "d3dfc0540250f9bd135506d11325a1ce2434e3a22e21bc0dae7cdc8d0fbc4622",
-      "title": "クリーンアーキテクチャを3行で説明してみる",
-      "url": "https://zenn.dev/innovation/articles/d3b5c1975e3c02",
-      "description": "はじめに\nクリーンアーキテクチャって難しいですよね。\n最近ではソフトウェアアーキテクチャを考える上で クリーンアーキテクチャ は避けて通れません。\nですが、クリーンアーキテクチャで設計しよう！となった時に、そもそもクリーンアーキテクチャとは... となることが多々あります。\nそこで、クリーンアーキテクチャについてざっくり3行でまとめてみようと思います。\n\n モチベーション\nGo製のプロダクトのソースコードを眺めているGoでクリーンアーキテクチャ、というより抽象化とDIを伴うレイヤードアーキテクチャの類は過剰だ、と感じます。\nどうすると丁度いいのかといつも悩んでいて、それでいて全く答...",
-      "publishedAt": "2026-06-02T04:52:35.000Z",
-      "feedName": "Zenn"
-    },
-    {
       "id": "9ae961f44ff8209831e01a120c3fb6f3b21e6df2670d53daa945cd2ede4a1328",
       "title": "QuickLook Integration in a Tauri App — Native macOS File Preview",
       "url": "https://dev.to/hiyoyok/quicklook-integration-in-a-tauri-app-native-macos-file-preview-5fgd",
@@ -684,14 +484,6 @@
       "url": "https://zenn.dev/fast/articles/28c49ba5f38dae",
       "description": "!\nこの記事はシリーズの第2部です。\n\n\n第1部: メモリレイアウトの観察\n\n\n第2部: MIR・LLVM IR・ASMを追う（本記事）\n\n第3部: コンパイラ内部を読む\n\n第4部: 多重ネスト・パフォーマンス・保証と注意点\n\n\n\n はじめに\nこんにちは、moriです。\nファスト株式会社にてRustを用いてデスクトップアプリケーション・バックエンドの開発を行なっています。\n第1部では、Option<NonZeroU8> が u8 と同じ1バイトになることをメモリの中身から直接観察しました。\n「サイズが同じ」ことはわかりましたが、「なぜそうなるのか」——コンパイラが型安全...",
       "publishedAt": "2026-06-03T08:20:00.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "41984b2a8070642b3f9f705661806230e37c65f1f330d571f823703f061c5c5f",
-      "title": "使い方は覚えなくていいから tmux を入れろ",
-      "url": "https://zenn.dev/nasubikun/articles/tmux-for-ai-agents",
-      "description": "こんにちは @jomatsu_ です。AWS を退職して、RyoRee というレシピアプリを作っています。\nClaude Code や Codex を使っていると、AI にコマンドを実行させる場面が増えます。その中で困ることが 2 つあります。\n\n時間がかかるコマンドを background task で実行したとき、エージェントごとに挙動が違う\nAI が対話型コマンドを実行できない\n\nどちらも tmux で解決できます。\ntmux といえば「ターミナルを分割してショートカットで操作する玄人向けツール、自分には関係ない」と思っている人も多いかもしれません。しかし、tmux の操作を覚える...",
-      "publishedAt": "2026-06-02T10:24:08.000Z",
       "feedName": "Zenn"
     },
     {
@@ -7228,6 +7020,389 @@
       "url": "https://qiita.com/moyomoyomoyo/items/e3216973304097dd5909?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
       "description": "はじめに\n業務でパフォーマンス改善に取り組む中で、JavaのJDBCが提供するsetFetchSizeメソッドを使う機会がありました。\n「パフォーマンス改善」と聞くと速度向上をイメージしがちですが、今回はOOM（Out of Memory）を防ぐことが主な目的でした。その...",
       "publishedAt": "2026-06-30T14:24:54.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "8184ab7beb1d416c72d52c3fb4204815a52d3ab4634c38e2c6dbc81a6bcca712",
+      "title": "AI Text Enhancer – Full Technical Implementation Guide to Deblur Text in Images",
+      "url": "https://dev.to/daniyal_khan_fd094511e963/ai-text-enhancer-full-technical-implementation-guide-to-deblur-text-in-images-dcn",
+      "description": "You took a screenshot of an important chat conversation. You open it later and the text is a blurry, pixelated mess — compressed to death by WhatsApp or Messenger. You can barely make out what was said.\nOr you snapped a photo of a receipt for expenses. Two weeks later the thermal print has faded so much that the total amount is unreadable.\nWe've all been there. The information is there — it's just not legible anymore.\nSure, you could throw the image into a generic AI upscaler. But here's the problem: those tools are trained on photos of faces, landscapes, and buildings. When they see text, they treat it like a texture and smear it. The letters come out looking melted, warped, or replaced with alien-looking symbols that aren't even real characters.\nWhat you need is a text-specialized AI — one trained specifically on typography, handwriting, and printed letters. That's what we're building in this guide.\nBy the end of this article, you'll have a complete, production-ready implementation for an AI Text Enhancer that:\nReconstructs blurry, pixelated letters into sharp, readable text\nRemoves JPEG artifacts from compressed screenshots\nRestores contrast on faded receipt photos\nWorks on handwritten notes, book pages, scanned documents, and more\nRuns in the browser with no install, no watermark, and no account\nLet's build it.\nWhy Generic Enhancers Fail on Text\nSystem Architecture\nThe API Contract\nFrontend: React Upload + Before/After Preview\nBackend: Python + FastAPI\nThe Text Clarity Model\nEnd-to-End Flow\nError Handling\nOptimization Strategy\nTraining Your Own Text Clarity Model\nReal-World Use Cases\nWrapping Up\nBefore we write any code, it's worth understanding why we need a specialized model. Can't we just use Real-ESRGAN or Gemini Nano Banana and call it a day?\nNo. And here's why.\nGeneral-purpose image enhancers are trained on datasets like DIV2K — a collection of high-quality photographs. The loss functions optimize for perceptual quality across natural images: smooth skin tones, blue skies, green trees. Text is a tiny fraction of the training data, if it appears at all.\nWhen these models encounter text, one of two things happens:\nThe letters melt. The model applies the same smoothing it uses for skin and skies. Sharp letter edges become soft blobs. Curves lose their definition. The text looks like it was left out in the rain.\n\n\nThe letters hallucinate. The model tries to \"enhance\" what it thinks is a texture pattern and generates new, fake character-like shapes that aren't real letters. You get alien text — shapes that look like writing but aren't readable in any language.\n\n\n\nA text-specialized model solves this by being trained on text image pairs. It learns the manifold of real letters — the strokes, curves, serifs, and spacing that make text text. When it reconstructs a blurry letter, it pulls from a space of real character shapes, not a space of natural image textures.\nThis is the same principle behind OCR engines, but instead of outputting recognized text strings, we output a reconstructed image where the text is visually sharp and readable.\nHere's the high-level flow:\n[React Frontend]\n  ↓ User uploads image (JPEG/PNG/WebP)\n  ↓ Selects enhancement model (Text Clarity / Standard)\n  ↓ POST /api/text/enhance\n\n[FastAPI Backend]\n  ↓ Validates file (size, format)\n  ↓ Converts to PIL Image → resizes if > 2048px\n  ↓ Loads text-clarity RCAN model (cached)\n  ↓ Processes image in 256px tiles\n  ↓ Applies post-processing (contrast boost / artifact removal)\n  ↓ Returns enhanced PNG\n\n[React Frontend]\n  ↓ Renders before/after split comparison\n  ↓ User downloads watermark-free result\n\nThe key design decisions:\nTile-based inference — large images are processed in overlapping 256px tiles to avoid GPU OOM\nModel caching — the RCAN model loads once at startup, not per request\nMode-specific post-processing — receipts get contrast boost, screenshots get artifact removal\nNo watermark — the output is clean PNG, no branding overlaid\nOne endpoint. Simple.\nPOST /api/text/enhance\nContent-Type: multipart/form-data\n\nParameters:\n  file:   image file (JPEG, PNG, WebP) — max 5MB\n  model:  enhancement mode — \"text-clarity\" | \"standard\" | \"receipt\" | \"screenshot\"\n\nResponse:\n  image/png binary\n\n\n\n\nMode\nWhat it does\nWhen to use\n\n\n\n\ntext-clarity\nReconstructs blurry/pixelated letters\nDefault — screenshots, book pages, documents\n\n\nstandard\nGeneral image enhancement\nPhotos of people, landscapes (not text)\n\n\nreceipt\nText Clarity + contrast boost\nFaded thermal receipts, invoices\n\n\nscreenshot\nText Clarity + JPEG artifact removal\nWhatsApp/Messenger compressed screenshots\n\n\n\nThe frontend handles four things: file upload, model selection, API call, and before/after display.\nimport { useState, useRef } from \"react\";\n\nexport default function TextEnhancer() {\n  const [image, setImage] = useState(null);\n  const [model, setModel] = useState(\"text-clarity\");\n  const [resultUrl, setResultUrl] = useState(null);\n  const [loading, setLoading] = useState(false);\n  const [error, setError] = useState(null);\n  const fileInputRef = useRef(null);\n\n  function handleFileChange(e) {\n    const file = e.target.files[0];\n    if (!file) return;\n    if (file.size > 5 * 1024 * 1024) {\n      setError(\"File too large. Max 5MB.\");\n      return;\n    }\n    setImage(file);\n    setError(null);\n  }\n\n  async function enhanceText() {\n    if (!image) return;\n    setLoading(true);\n    setError(null);\n\n    const form = new FormData();\n    form.append(\"file\", image);\n    form.append(\"model\", model);\n\n    try {\n      const res = await fetch(\"/api/text/enhance\", {\n        method: \"POST\",\n        body: form,\n      });\n\n      if (!res.ok) {\n        const err = await res.json();\n        throw new Error(err.detail || \"Enhancement failed\");\n      }\n\n      const blob = await res.blob();\n      setResultUrl(URL.createObjectURL(blob));\n    } catch (e) {\n      setError(e.message);\n    } finally {\n      setLoading(false);\n    }\n  }\n\n  return (\n    <div className=\"text-enhancer\">\n      {/* Drop zone */}\n      <div\n        className=\"drop-zone\"\n        onDragOver={(e) => e.preventDefault()}\n        onDrop={(e) => {\n          e.preventDefault();\n          handleFileChange({ target: { files: e.dataTransfer.files } });\n        }}\n        onClick={() => fileInputRef.current?.click()}\n      >\n        <input\n          ref={fileInputRef}\n          type=\"file\"\n          accept=\"image/jpeg,image/png,image/webp\"\n          onChange={handleFileChange}\n          hidden\n        />\n        <p>Drop your blurry text image here</p>\n        <p className=\"hint\">JPEG, PNG, WebP — max 5MB</p>\n      </div>\n\n      {/* Model selector */}\n      <div className=\"model-selector\">\n        <label>\n          <input\n            type=\"radio\"\n            value=\"text-clarity\"\n            checked={model === \"text-clarity\"}\n            onChange={(e) => setModel(e.target.value)}\n          />\n          Text Clarity (recommended for text)\n        </label>\n        <label>\n          <input\n            type=\"radio\"\n            value=\"standard\"\n            checked={model === \"standard\"}\n            onChange={(e) => setModel(e.target.value)}\n          />\n          Standard (for photos)\n        </label>\n      </div>\n\n      {/* Enhance button */}\n      <button onClick={enhanceText} disabled={loading || !image}>\n        {loading ? \"Enhancing text...\" : \"Enhance Text\"}\n      </button>\n\n      {/* Error display */}\n      {error && <div className=\"error\">{error}</div>}\n\n      {/* Before / After result */}\n      {resultUrl && (\n        <div className=\"result\">\n          <img src={URL.createObjectURL(image)} alt=\"Before enhancement\" />\n          <img src={resultUrl} alt=\"After AI text enhancement\" />\n          <a href={resultUrl} download=\"enhanced-text.png\">\n            Download\n          </a>\n        </div>\n      )}\n    </div>\n  );\n}\n\n\n\n\nTask\nHow\n\n\n\n\nUpload image\nDrag & drop zone + hidden file input\n\n\nValidate file\nCheck size (5MB max) and format\n\n\nSend to backend\nFormData POST with file + model\n\n\nShow result\nSide-by-side before/after images\n\n\nDownload\nBlob URL, no watermark added\n\n\n\nThe backend does the heavy lifting: validation, preprocessing, model inference, and post-processing.\nbackend/\n  main.py                  # FastAPI app + endpoint\n  enhancer/\n    text_modes.py          # Mode configurations\n    text_model_client.py   # Model loading + inference\n    image_utils.py         # PIL preprocessing utilities\n\npip install fastapi uvicorn python-multipart pillow torch torchvision\n\nPillow — image preprocessing and format validation\ntorch + torchvision — model inference\npython-multipart — multipart form data parsing for file uploads\nenhancer/text_modes.py\nTEXT_MODES = {\n    \"text-clarity\": {\n        \"instruction\": \"Reconstruct blurry and pixelated letters into sharp, readable text. Preserve the background.\",\n        \"model\": \"text-clarity-rcan\",\n        \"tile_size\": 256,\n        \"scale\": 2,\n    },\n    \"standard\": {\n        \"instruction\": \"General image enhancement. Improve quality and resolution.\",\n        \"model\": \"real-esrgan-general\",\n        \"tile_size\": 512,\n        \"scale\": 4,\n    },\n    \"receipt\": {\n        \"instruction\": \"Restore faded thermal print. Maximize contrast between text and paper background.\",\n        \"model\": \"text-clarity-rcan\",\n        \"tile_size\": 256,\n        \"scale\": 2,\n        \"post_process\": \"contrast_boost\",\n    },\n    \"screenshot\": {\n        \"instruction\": \"Remove JPEG artifacts around text in compressed screenshots. Rebuild letter shapes.\",\n        \"model\": \"text-clarity-rcan\",\n        \"tile_size\": 256,\n        \"scale\": 2,\n        \"post_process\": \"artifact_removal\",\n    },\n}\n\nEach mode specifies which model to use, the tile size for inference, the upscale factor, and an optional post-processing step.\nenhancer/image_utils.py\nfrom PIL import Image, ImageEnhance, ImageFilter\nimport io\n\nMAX_DIMENSION = 2048\n\ndef load_image_as_pil(bytes_data):\n    \"\"\"Load raw bytes into a PIL Image (RGB).\"\"\"\n    return Image.open(io.BytesIO(bytes_data)).convert(\"RGB\")\n\ndef to_bytes(pil_img, format=\"PNG\"):\n    \"\"\"Convert PIL Image to raw bytes.\"\"\"\n    output = io.BytesIO()\n    pil_img.save(output, format=format)\n    return output.getvalue()\n\ndef resize_if_needed(pil_img, max_dim=MAX_DIMENSION):\n    \"\"\"Resize image if any dimension exceeds max_dim to keep inference fast.\"\"\"\n    w, h = pil_img.size\n    if max(w, h) > max_dim:\n        ratio = max_dim / max(w, h)\n        new_size = (int(w * ratio), int(h * ratio))\n        return pil_img.resize(new_size, Image.LANCZOS)\n    return pil_img\n\ndef boost_contrast(pil_img, factor=1.4):\n    \"\"\"Post-process: boost contrast for faded receipt text.\"\"\"\n    enhancer = ImageEnhance.Contrast(pil_img)\n    return enhancer.enhance(factor)\n\ndef remove_jpeg_artifacts(pil_img):\n    \"\"\"Post-process: light median filter to clean JPEG blocks around text.\"\"\"\n    return pil_img.filter(ImageFilter.MedianFilter(size=3))\n\nenhancer/text_model_client.py\nThis is where the magic happens. The model is loaded once at startup and cached. Inference runs in tiles to handle large images without OOM.\nimport torch\nimport io\nfrom PIL import Image\nfrom .text_modes import TEXT_MODES\nfrom .image_utils import resize_if_needed, boost_contrast, remove_jpeg_artifacts\n\n_model_cache = {}\n\ndef get_model(model_name: str):\n    \"\"\"Load and cache model — avoids 3-5s reload per request.\"\"\"\n    if model_name not in _model_cache:\n        if model_name == \"text-clarity-rcan\":\n            model = load_text_clarity_model()\n        else:\n            model = load_general_model()\n        _model_cache[model_name] = model\n    return _model_cache[model_name]\n\ndef load_text_clarity_model():\n    \"\"\"\n    Load the text-clarity RCAN model.\n    Fine-tuned on pairs of:\n      - Blurry/pixelated text images (input)\n      - Sharp, readable text images (target)\n    Training data: screenshots, receipts, book pages,\n    scanned documents, handwritten notes.\n    \"\"\"\n    from models.rcan import RCAN\n    model = RCAN(scale=2, n_resgroups=10, n_resblocks=6)\n    model.load_state_dict(\n        torch.load(\"weights/text-clarity-rcan.pth\", map_location=\"cpu\")\n    )\n    model.eval()\n    return model\n\ndef enhance_text_with_ai(img_bytes: bytes, mode: str):\n    config = TEXT_MODES.get(mode, TEXT_MODES[\"text-clarity\"])\n    pil_img = Image.open(io.BytesIO(img_bytes)).convert(\"RGB\")\n    pil_img = resize_if_needed(pil_img)\n\n    model = get_model(config[\"model\"])\n    img_tensor = pil_to_tensor(pil_img)\n\n    with torch.no_grad():\n        enhanced_tensor = process_with_tiling(\n            model, img_tensor, tile_size=config[\"tile_size\"]\n        )\n\n    enhanced_pil = tensor_to_pil(enhanced_tensor)\n\n    # Mode-specific post-processing\n    post = config.get(\"post_process\")\n    if post == \"contrast_boost\":\n        enhanced_pil = boost_contrast(enhanced_pil, factor=1.4)\n    elif post == \"artifact_removal\":\n        enhanced_pil = remove_jpeg_artifacts(enhanced_pil)\n\n    output = io.BytesIO()\n    enhanced_pil.save(output, format=\"PNG\")\n    return output.getvalue()\n\ndef process_with_tiling(model, tensor, tile_size=256):\n    \"\"\"\n    Process large images in overlapping tiles to avoid OOM.\n    Tiles overlap by 1/8 to blend edges seamlessly.\n    \"\"\"\n    _, _, h, w = tensor.shape\n    if h <= tile_size and w <= tile_size:\n        return model(tensor)\n\n    overlap = tile_size // 8\n    output = torch.zeros_like(tensor)\n\n    for y in range(0, h, tile_size - overlap):\n        for x in range(0, w, tile_size - overlap):\n            y_end = min(y + tile_size, h)\n            x_end = min(x + tile_size, w)\n            tile = tensor[:, :, y:y_end, x:x_end]\n            enhanced_tile = model(tile)\n            output[:, :, y:y_end, x:x_end] = enhanced_tile\n\n    return output\n\nmain.py\nfrom fastapi import FastAPI, File, Form, UploadFile, Response, HTTPException\nfrom enhancer.text_model_client import enhance_text_with_ai\nfrom enhancer.image_utils import load_image_as_pil\n\napp = FastAPI()\n\nALLOWED_FORMATS = {\"JPEG\", \"PNG\", \"WEBP\"}\nMAX_FILE_SIZE = 5 * 1024 * 1024  # 5MB\n\n@app.post(\"/api/text/enhance\")\nasync def enhance_text_image(\n    file: UploadFile = File(...),\n    model: str = Form(\"text-clarity\")\n):\n    if not file:\n        raise HTTPException(400, \"Image file is required\")\n\n    img_bytes = await file.read()\n\n    if len(img_bytes) > MAX_FILE_SIZE:\n        raise HTTPException(400, \"File too large. Max 5MB.\")\n\n    # Validate image format\n    try:\n        pil_img = load_image_as_pil(img_bytes)\n        if pil_img.format not in ALLOWED_FORMATS:\n            raise HTTPException(400, f\"Unsupported format: {pil_img.format}\")\n    except Exception:\n        raise HTTPException(400, \"Invalid image file\")\n\n    # Run enhancement\n    try:\n        result_bytes = enhance_text_with_ai(img_bytes, model)\n    except Exception as e:\n        raise HTTPException(500, f\"Enhancement failed: {str(e)}\")\n\n    return Response(content=result_bytes, media_type=\"image/png\")\n\nThe core of the system is the text-clarity RCAN model. RCAN (Residual Channel Attention Network) is a super-resolution architecture that uses channel attention to focus on the most important feature channels — which, for text, are the ones that encode stroke edges and character shapes.\n\n\n\nFeature\nReal-ESRGAN (general)\nRCAN (text-tuned)\n\n\n\n\nTraining data\nNatural photos (DIV2K)\nText image pairs\n\n\nLetter sharpness\nLow — letters melt\nHigh — letters stay crisp\n\n\nBackground preservation\nGood\nGood\n\n\nArtifact handling\nAdds artifacts to text\nRemoves artifacts from text\n\n\nInference speed\nSlower (4x scale)\nFaster (2x scale)\n\n\n\nThe text-clarity RCAN is fine-tuned from a base RCAN checkpoint using paired text images. The base model already understands edges and textures; the fine-tuning shifts its output space toward real letter shapes.\nThe model is loaded once at process startup and cached in _model_cache. This is critical — loading a PyTorch model from disk takes 3–5 seconds. If you load it per request, your API will be unusably slow.\nHere's what happens when a user clicks \"Enhance Text\":\n1. User drops a blurry screenshot onto the upload zone\n2. React validates file size (≤5MB) and format (JPEG/PNG/WebP)\n3. React POSTs FormData (file + model) to /api/text/enhance\n4. FastAPI receives the file:\n   a. Validates size and format with PIL\n   b. Converts to PIL Image, resizes if > 2048px\n   c. Looks up model config from TEXT_MODES\n   d. Gets cached RCAN model from _model_cache\n   e. Converts PIL → tensor\n   f. Processes in 256px overlapping tiles\n   g. Converts tensor → PIL\n   h. Applies post-processing (contrast boost / artifact removal)\n   i. Saves as PNG bytes\n5. FastAPI returns PNG binary response\n6. React creates a Blob URL from the response\n7. React renders before/after images side by side\n8. User clicks Download → gets watermark-free PNG\n\nTotal processing time: under 15 seconds for a typical phone screenshot.\nProduction-grade error handling covers five scenarios:\nif not file:\n    raise HTTPException(400, \"Image file is required\")\n\nif len(img_bytes) > MAX_FILE_SIZE:\n    raise HTTPException(400, \"File too large. Max 5MB.\")\n\nif pil_img.format not in ALLOWED_FORMATS:\n    raise HTTPException(400, f\"Unsupported format: {pil_img.format}\")\n\ntry:\n    result_bytes = enhance_text_with_ai(img_bytes, model)\nexcept torch.cuda.OutOfMemoryError:\n    raise HTTPException(503, \"Image too complex. Try a smaller crop.\")\nexcept Exception as e:\n    raise HTTPException(500, f\"Enhancement failed: {str(e)}\")\n\nconst controller = new AbortController();\nconst timeout = setTimeout(() => controller.abort(), 30000);\n\nconst res = await fetch(\"/api/text/enhance\", {\n  method: \"POST\",\n  body: form,\n  signal: controller.signal,\n});\nclearTimeout(timeout);\n\nLarge images are split into overlapping 256px tiles. This lets the model run on GPU-constrained servers without crashing on big screenshots. Tiles overlap by 1/8 (32px) to blend edges seamlessly — you should not see any seam lines in the output.\nThe RCAN model is loaded once at startup and reused across requests. Loading the model per request would add 3–5 seconds of overhead to every single API call.\nImages larger than 2048px are resized before inference. This cuts processing time by ~4x with minimal quality loss — the model upscales the text back during enhancement anyway.\n\n\n\nMode\nPost-processing\nWhy\n\n\n\n\ntext-clarity\nNone\nModel output is already clean\n\n\nreceipt\nContrast boost (1.4x)\nFaded thermal print needs extra contrast\n\n\nscreenshot\nMedian filter (3px)\nRemoves JPEG block artifacts\n\n\n\nFor repeated uploads of the same image, hash the file + mode and cache the result:\nimport hashlib\n\ndef get_cache_key(img_bytes, mode):\n    return hashlib.md5(img_bytes + mode.encode()).hexdigest()\n\nCache in Redis for 1 hour. This is optional — most users enhance each image once.\nThis is the part that makes or breaks the tool. The model is only as good as its training data.\nYou need pairs of (blurry input, sharp target) images. Here's how to build them:\n\n\n\nInput (blurry)\nTarget (sharp)\n\n\n\n\nScreenshot compressed by WhatsApp\nOriginal uncompressed screenshot\n\n\nPhoto of faded receipt\nHigh-contrast scan of same receipt\n\n\nOut-of-focus book page photo\nIn-focus photo of same page\n\n\nPixelated scanned document\nClean scan at native resolution\n\n\nBlurred handwritten note\nSharp photo of same note\n\n\n\nYou don't need thousands of real blurry photos. Take sharp text images and degrade them synthetically:\nfrom PIL import Image, ImageFilter, ImageEnhance\nimport random\nimport io\n\ndef degrade_image(pil_img):\n    \"\"\"Simulate real-world text image degradation.\"\"\"\n    # Random Gaussian blur (1-4px)\n    blur_radius = random.uniform(1, 4)\n    pil_img = pil_img.filter(ImageFilter.GaussianBlur(radius=blur_radius))\n\n    # Random JPEG compression (quality 20-50)\n    quality = random.randint(20, 50)\n    buffer = io.BytesIO()\n    pil_img.save(buffer, format=\"JPEG\", quality=quality)\n    pil_img = Image.open(buffer)\n\n    # Random contrast reduction\n    if random.random() > 0.5:\n        enhancer = ImageEnhance.Contrast(pil_img)\n        pil_img = enhancer.enhance(random.uniform(0.5, 0.8))\n\n    return pil_img\n\nThis covers the three most common text degradation patterns: blur, compression, and contrast loss.\nDon't just use L2 loss — it produces blurry outputs. Use a weighted combination:\nimport torch.nn as nn\n\nclass TextEnhancementLoss(nn.Module):\n    def __init__(self):\n        super().__init__()\n        self.l1 = nn.L1Loss()\n        self.ssim_weight = 0.2   # Structural similarity\n        self.l1_weight = 0.7     # Pixel accuracy for letter shapes\n        self.perceptual_weight = 0.1  # VGG features for visual quality\n\n    def forward(self, pred, target):\n        l1_loss = self.l1(pred, target)\n        ssim_loss = 1 - ssim(pred, target)\n        perceptual_loss = self.perceptual(pred, target)\n        return (\n            self.l1_weight * l1_loss\n            + self.ssim_weight * ssim_loss\n            + self.perceptual_weight * perceptual_loss\n        )\n\nL1 loss (70%) — ensures pixel-level accuracy for letter shapes. L1 is better than L2 for text because it doesn't over-penalize sharp edges.\nSSIM loss (20%) — structural similarity preserves stroke continuity. A letter \"a\" should look like an \"a\", not a blob.\nPerceptual loss (10%) — VGG feature matching for overall visual quality. Keeps the output looking natural, not artificially sharpened.\nThis text enhancer works on a wide range of real-world scenarios:\n\n\n\nUse case\nExample\nBest mode\n\n\n\n\nChat screenshots\nWhatsApp, Messenger, iMessage compressed text\nscreenshot\n\n\nReceipt photos\nFaded thermal print on crumpled paper\nreceipt\n\n\nBook page photos\nSmall print in photos of old books\ntext-clarity\n\n\nScanned documents\nInvoices, contracts, IDs converted to images\ntext-clarity\n\n\nHandwritten notes\nPhotos of handwritten letters and forms\ntext-clarity\n\n\nMemes\nCompressed meme text with JPEG artifacts\nscreenshot\n\n\nProduct labels\nTiny text on packaging and ingredient lists\ntext-clarity\n\n\nTraffic signs\nDistance shots of road and store signs\ntext-clarity\n\n\n\nWe built a complete AI text enhancer that:\nFrontend: React with drag & drop upload, model selector, and before/after preview\nBackend: Python + FastAPI with file validation, tile-based inference, and mode-specific post-processing\nModel: RCAN fine-tuned on text image pairs with L1 + SSIM + perceptual loss\nProduction-ready: Error handling, model caching, image pre-resizing, and response caching\nThe key takeaway from this guide: don't use a general image enhancer for text. The training data matters more than the architecture. A small RCAN fine-tuned on text pairs will outperform a massive Real-ESRGAN trained on photos — every single time.\nIf you want to try the finished product, check out the AI Text Enhancer — it's free, no watermark, no account needed, and runs in your browser.\nFound this guide helpful? Have questions about the implementation? Drop a comment below — I'm happy to help.",
+      "publishedAt": "2026-07-03T02:47:52.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "bb3bcb86152365e921754ef5a94bbf8ca0847f92a05aa71376175f5249c6c60b",
+      "title": "How I Built a Time-Locked Bitcoin Script with CSV and P2SH",
+      "url": "https://dev.to/aaron_recompile/how-i-built-a-time-locked-bitcoin-script-with-csv-and-p2sh-5b5p",
+      "description": "HODLing is the beginning.\nBut Bitcoin was meant to be programmed.\n\n“Not Just HODLing: Real Bitcoin Script Engineering” starts here.\n\nIn the Bitcoin development world, most tutorials only teach you concepts, not how to actually write code, and even fewer guide you to thoroughly dissect a real Bitcoin transaction from the perspective of on-chain data and script principles.\nThis article uses a real case and complete code to help you master, in one go:\nP2SH script validation mechanism\n\n\nCSV (CheckSequenceVerify) timelock mechanism\n\n\nP2PKH signature validation mechanism\n\n\n\nYou’ll see not just code, but also step-by-step on-chain data animation, as well as debug ideas and common error analysis at every stage.\nMotivation and Case Overview\n\n\nBuilding and Spending the P2SH Script (Full Code)\n\n\nThree-Layer Script Mechanism Breakdown\n\n\nAnimated Stack Execution Walkthrough\n\n\nDebugging and On-Chain Data Analysis\n\n\nSummary and Takeaways\n\n\n\n\n\n\n\n  \n  \n  1. Motivation and Case Overview\n\n\nThe goal of this case:\nUse Python to build a P2SH address that can only be spent after 3 blocks (a P2PKH script with a CSV timelock)\n\n\nActually send and spend coins, broadcasting on-chain for real\n\n\nThrough this single case, help you fully understand P2SH, CSV, and P2PKH script mechanisms, and be able to reverse every step in a block explorer\n\n\n\nThe real on-chain transaction for this case:\nhttps://mempool.space/testnet/tx/34f5bf0cf328d77059b5674e71442ded8cdcfc723d0136733e0dbf180861906f\nI recommend opening this link as you read, and comparing each script and data step by step.\nfrom bitcoinutils.setup import setup\nfrom bitcoinutils.transactions import Sequence\nfrom bitcoinutils.keys import P2shAddress, PrivateKey\nfrom bitcoinutils.script import Script\nfrom bitcoinutils.constants import TYPE_RELATIVE_TIMELOCK\nimport os, sys\nimport configparser\n\nconf = configparser.ConfigParser()\nconf_file = os.path.join(os.path.abspath(os.path.dirname(sys.argv[0])), \"wa_info.conf\")\nconf.read(conf_file)\ndef main():\n    setup(\"testnet\")\n    relative_blocks = 3\n    seq = Sequence(TYPE_RELATIVE_TIMELOCK, relative_blocks)\n    p2pkh_sk = PrivateKey(conf.get(\"testnet3\", \"private_key_wif\"))\n    p2pkh_addr = p2pkh_sk.get_public_key().get_address()\n    redeem_script = Script([\n        seq.for_script(),\n        \"OP_CHECKSEQUENCEVERIFY\",\n        \"OP_DROP\",\n        \"OP_DUP\",\n        \"OP_HASH160\",\n        p2pkh_addr.to_hash160(),\n        \"OP_EQUALVERIFY\",\n        \"OP_CHECKSIG\",\n    ])\n    print(f\"Redeem script (hex): {redeem_script.to_hex()}\")\n    addr = P2shAddress.from_script(redeem_script)\n    print(f\"P2SH address: {addr.to_string()}\")\n    conf.set('testnet3', 'p2sh_csv_addr', addr.to_string())\n    with open(conf_file, \"w\") as f:\n        conf.write(f)\nif __name__ == \"__main__\":\n    main()\n\nfrom bitcoinutils.setup import setup\nfrom bitcoinutils.utils import to_satoshis\nfrom bitcoinutils.transactions import Transaction, TxInput, TxOutput, Sequence\nfrom bitcoinutils.keys import P2pkhAddress, PrivateKey\nfrom bitcoinutils.script import Script\nfrom bitcoinutils.constants import TYPE_RELATIVE_TIMELOCK\nimport os, sys\nimport configparser\nimport requests\n\nconf = configparser.ConfigParser()\nconf_file = os.path.join(os.path.abspath(os.path.dirname(sys.argv[0])), \"wa_info.conf\")\nconf.read(conf_file)\ndef main():\n    setup(\"testnet\")\n    relative_blocks = 3\n    txid = \"8e763d0269963e666949606e84e811a24df9cb525d7c436096b0c8a72be3533f\"\n    vout = 0\n    seq = Sequence(TYPE_RELATIVE_TIMELOCK, relative_blocks)\n    seq_for_n_seq = seq.for_input_sequence()\n    txin = TxInput(txid, vout, sequence=seq_for_n_seq)\n    p2pkh_sk = PrivateKey(conf.get(\"testnet3\", \"private_key_wif\"))\n    p2pkh_pk = p2pkh_sk.get_public_key().to_hex()\n    p2pkh_addr = p2pkh_sk.get_public_key().get_address()\n    redeem_script = Script([\n        seq.for_script(),\n        \"OP_CHECKSEQUENCEVERIFY\",\n        \"OP_DROP\",\n        \"OP_DUP\",\n        \"OP_HASH160\",\n        p2pkh_addr.to_hash160(),\n        \"OP_EQUALVERIFY\",\n        \"OP_CHECKSIG\",\n    ])\n    to_addr = P2pkhAddress(\"mn3XG8tZQjyUsoAmECTYFqVUECNJzEdapj\")\n    txout = TxOutput(to_satoshis(0.00000588), to_addr.to_script_pub_key())\n    tx = Transaction([txin], [txout])\n    print(\"Raw unsigned transaction:\", tx.serialize())\n    sig = p2pkh_sk.sign_input(tx, 0, redeem_script)\n    txin.script_sig = Script([sig, p2pkh_pk, redeem_script.to_hex()])\n    signed_tx = tx.serialize()\n    print(\"Raw signed transaction:\", signed_tx)\n    print(\"TxId:\", tx.get_txid())\n    mempool_api = \"<https://mempool.space/testnet/api/tx>\"\n    try:\n        response = requests.post(mempool_api, data=signed_tx)\n        if response.status_code == 200:\n            txid = response.text\n            print(f\"Success! TxID: {txid}\")\n            print(f\"View transaction: <https://mempool.space/testnet/tx/{txid}>\")\n        else:\n            print(f\"Broadcast failed: {response.text}\")\n    except Exception as e:\n        print(f\"Error: {e}\")\nif __name__ == \"__main__\":\n    main()\n\nOn-chain locking script (scriptPubKey):\nOP_HASH160 <20-byte script hash> OP_EQUAL\n\nPurpose: Checks if the redeem script you provide matches the hash locked in the output.\nFirst part of the redeem script:\n3 OP_CHECKSEQUENCEVERIFY OP_DROP\n\nPurpose: Only if nSequence is at least 3 (i.e., after 3 blocks), the script continues.\nSecond part of the redeem script:\nOP_DUP OP_HASH160 <pubkey hash> OP_EQUALVERIFY OP_CHECKSIG\n\nPurpose: Standard Bitcoin signature validation.\n┌───────────────────────────────┐\n│53b27576...88ac (redeem script)│\n├───────────────────────────────┤\n│...(pubkey, signature)         │\n└───────────────────────────────┘\n\n┌───────────────────────────────┐\n│79b6f3...cabaadcc (redeem script HASH160)│\n├───────────────────────────────┤\n│...(pubkey, signature)         │\n└───────────────────────────────┘\n\n┌───────────────────────────────┐\n│79b6f3...cabaadcc (script hash in output)│\n├───────────────────────────────┤\n│79b6f3...cabaadcc (redeem script HASH160)│\n├───────────────────────────────┤\n│...(pubkey, signature)         │\n└───────────────────────────────┘\n\nCompares the top two hashes. If equal, continue; otherwise, fail.\n┌────────────┐\n│3           │\n├────────────┤\n│0250be...   │\n├────────────┤\n│30440220... │\n└────────────┘\n\nIf nSequence < 3, fail with non-BIP68-final.\n\n\nIf nSequence ≥ 3, continue.\n\n\n\n\n  \n  \n  Step 3: OP_DROP\n\n\n\n\n\n┌────────────┐\n│0250be...   │\n├────────────┤\n│30440220... │\n└────────────┘\n\n┌────────────┐\n│0250be...   │\n├────────────┤\n│0250be...   │\n├────────────┤\n│30440220... │\n└────────────┘\n\n┌────────────┐\n│5cdc28...   │  ← pubkey HASH160\n├────────────┤\n│0250be...   │\n├────────────┤\n│30440220... │\n└────────────┘\n\n┌────────────┐\n│5cdc28...   │  ← script's pubkey hash\n├────────────┤\n│5cdc28...   │  ← just computed HASH160\n├────────────┤\n│0250be...   │\n├────────────┤\n│30440220... │\n└────────────┘\n\n┌────────────┐\n│0250be...   │\n├────────────┤\n│30440220... │\n└────────────┘\n\nUses pubkey and signature to verify. If valid, script succeeds and coins are spent.\nSymptom: Broadcast fails with non-BIP68-final\n\n\nReason: You set a CSV timelock (e.g., 3 blocks), but not enough blocks have passed; nSequence is insufficient\n\n\nSolution:\n\n\nWait for enough blocks before spending\n\n\nCheck that your relative_blocks parameter and nSequence match\n\n\n\n\n  \n  \n  (2) bad-txns-in-belowout\n\n\n\n\nSymptom: Broadcast fails with bad-txns-in-belowout, value in < value out\n\n\nReason: Your input UTXO value is less than the output value (including change and fee)\n\n\nSolution:\n\n\nCheck your input UTXO value\n\n\nSet output and change properly, leaving enough for fees\n\n\n\n\n\n\n\n  \n  \n  2. On-Chain Data Analysis Walkthrough\n\n\n\n  \n  \n  Step 1: Open a block explorer\n\n\n\n\nVisit https://mempool.space/testnet/tx/34f5bf0cf328d77059b5674e71442ded8cdcfc723d0136733e0dbf180861906f\n\n\nFind the Inputs and Outputs sections\n\n\n\n\n  \n  \n  Step 2: Compare ScriptSig and scriptPubKey\n\n\n\n\nScriptSig: See OP_PUSHBYTES_71 (signature), OP_PUSHBYTES_33 (pubkey), OP_PUSHBYTES_28 (redeem script)\n\n\nPrevious output script (scriptPubKey): OP_HASH160 <20-byte hash> OP_EQUAL\n\n\n\n\n  \n  \n  Step 3: Manually step through script execution\n\n\n\n\nUse ScriptSig data to execute P2SH validation (OP_HASH160 + OP_EQUAL)\n\n\nIf valid, execute redeem script: first CSV timelock (OP_CHECKSEQUENCEVERIFY), then P2PKH signature check\n\n\nUse the stack animation above to follow each step\n\n\n\n\n  \n  \n  Step 4: Compare HEX and ASM\n\n\n\n\nIn the block explorer, find the HEX and ASM for ScriptSig and scriptPubKey\n\n\nMatch each byte and opcode to your code and the execution steps\n\n\n\n\n\n\n\n  \n  \n  3. Debugging Tips\n\n\n\n\nWhen you see errors, check mempool.space or blockstream.info for actual on-chain data\n\n\nPrint raw transactions and script contents at each step, and compare with on-chain data\n\n\nIf script execution fails, draw the stack changes by hand to find where it went wrong\n\n\n\n\n\n\n\n  \n  \n  4. Real Case Analysis\n\n\nFor this case, you can see on mempool.space:\nEach ScriptSig item (signature, pubkey, redeem script)\n\n\nThe scriptPubKey hash\n\n\nThe actual execution order and stack changes\n\n\nIf you spend too early, you’ll see non-BIP68-final\n\n\n\n\n\n\nWith this code-onchain-debug workflow, you can not only write scripts, but also understand and debug every on-chain transaction.\nThrough a real case and code, you have mastered:\nP2SH script validation\n\n\nCSV timelock mechanism\n\n\nP2PKH signature validation\n\n\nAnimated stack-based script execution\n\n\nDebugging and on-chain data analysis\n\n\n\nThis is the essence of Real Bitcoin Script Engineering.\nAll code and on-chain data analysis are available at my github repo\nFeel free to Star and Fork!\npython-bitcoin-utils official examples\n\n\nA Guide to creating TapRoot Scripts with bitcoinjs-lib\n\n\nOn-chain case at mempool.space\n\n\n\nBy Aaron Recompile on June 29, 2025.\nCanonical link\nExported from Medium on July 3, 2026.",
+      "publishedAt": "2026-07-03T02:47:43.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "2e3a8461301792f58c57c35c720ebe8c5ac31387c7dd8da794ae6cf0a1504a04",
+      "title": "I submitted a real PR to a Brazilian open source project — live, using AI as my right hand",
+      "url": "https://dev.to/pimenta/i-submitted-a-real-pr-to-a-brazilian-open-source-project-live-using-ai-as-my-right-hand-3hko",
+      "description": "Last Saturday, at the AWS Community Day Brasília, I ran a workshop that combined two things I'm passionate about: open source contribution and AI-powered productivity.\nThe goal was simple and ambitious: take a real project, understand the codebase, select a viable issue, and submit a legitimate Pull Request — all live, using Kiro as my right hand.\nThe project I chose was ScanAPI (scanapi.dev) — the first Brazilian project to receive GitHub sponsorship. Created by Camila Maia, it's a Python tool for chained API testing via YAML. It runs on CLI, integrates into CI/CD pipelines, automatically redacts sensitive data, and generates visual reports. A serious project with worldwide contributors.\nI started by asking Kiro to analyze open issues. It brought 3 candidates. Issue 957 (replace a deprecated library) looked perfect — but when we checked GitHub, we found a PR had been open for 3 weeks, just awaiting review. Issue 901 too. This was the real-world scenario: your first pick doesn't always work. I had to refine the request: \"find open issues with no PR and no assignee.\"\nThat's when it found issue 916 — a Docker Hub Image Hash Dependency Check bug. Commit 392 had introduced hash validation in the Dockerfile for security (OpenSSF Scorecard, a Linux Foundation project), but in release 2.13, PIP and SetupTools became outdated, breaking the build. The temporary fix was removing hashes and publishing manually. The project was left vulnerable.\nI said: \"let's implement.\" I enabled Kiro's autonomous mode and in ~5 minutes it executed the complete flow:\nFork created on my GitHub account\nRemotes configured (origin + upstream)\nSpecific branch created\nCorrect hashes obtained via pip download\n\nDockerfile updated with SHA256 hashes\nGitHub Action workflow for automated build created\nDependabot configured for automatic hash updates\nPush executed\nPull Request submitted to the official repository\nThe PR was created and is there, awaiting maintainer review. Merge blocked, as expected — only they can approve.\nThe message I closed with, and one I always repeat: delegate the arm to AI, but keep the brain with you. Don't close your eyes and walk away. Review, understand, validate. AI accelerates massively, but technical responsibility remains human.\nIt was special receiving a gift from the Brasília community at the end. Thank you to everyone who participated. The exchange was rich and the small format allowed a level of interaction that large talks can't achieve.\nIf you've ever wanted to contribute to open source but gave up when you saw the codebase complexity — know that with the right agent, the distance between \"never seen this code\" and \"PR submitted\" can be minutes.\n🔗 PR submitted: https://github.com/scanapi/scanapi/pull/1001 (issue #916)\nhttps://github.com/flap/ScanAPI",
+      "publishedAt": "2026-07-03T02:15:19.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "adfbe72b67f81a6d2f8c6fa46d0cacfa4431df1e42dd6d5626228a452e8ead8a",
+      "title": "WordPress Pre-Launch Checklist for Client Handoff — What to Check, Clean Up, and Prove Before Delivery",
+      "url": "https://dev.to/nokazehayato/wordpress-pre-launch-checklist-for-client-handoff-what-to-check-clean-up-and-prove-before-5ejd",
+      "description": "A few years ago, at an agency I worked at, we launched a corporate WordPress site by migrating the whole database from our development environment to production. The demo had looked perfect. The client had signed off.\nThe reports started coming in almost immediately — first from our own post-launch review, then from the client's side as they clicked through their brand-new site. Buttons that led nowhere. Images that wouldn't load. Our local dev URLs were hardcoded all over the site: pasted into button links, baked into image paths. Nothing had looked wrong, because on our machines, those URLs worked fine.\nThree of us spent the rest of that day clicking through every single page, hunting for leftovers. We fixed what we found and quietly hoped we'd found them all. No one yelled at us. The consequence was quieter than that, and heavier: the string of post-launch defects was treated as a formal incident, with a permanent entry in the company's internal incident list. That entry doesn't expire. As far as I know, it's still there.\n　\n\n\n  \n  \n  The handoff problem\n\n\nHandoff is the moment responsibility changes hands — the most dangerous, and the most important, moment in the entire project.\nClients trust the agency. They take it for granted — as they should — that the site they're receiving is solid. But that trust is easier to betray than anyone likes to admit. The moment a client finds a defect, doubt creeps in. However hard the team worked, a single careless leftover is enough to make them wonder: what does the quality of this site really look like?\nThere's a structural reason this happens. While you're building, you're in the admin every day — you'd notice a stray test post, a debug flag, a weird setting. After handoff, the person in the admin is your client. They edit content, upload images, and take everything at face value. The leftovers that were invisible in the demo are now their discoveries.\nMost launch checklists focus on whether the site works. A handoff checklist asks a different question: what will the client find that I should have found first?\nHere's the list I wish I'd had back then. Every item includes how to check it manually — no tools required.\n　\n\n\n  \n  \n  1. Content cleanup\n\n\nTest posts. About an hour after one delivery, a chat message arrived from the client: \"What is this 'test test' page?\" Chat messages don't carry tone, but I could feel the reaction through the screen. Test content is harmless to the site and terrible for trust.\nHow to check: In the admin, go to Posts and Pages, sort by date, and scan for anything you created as filler — \"test\", lorem ipsum, placeholder drafts. Don't forget custom post types and the trash.\nUnused media. On another project, a stock photo was still carrying the vendor's watermark — we had never replaced it with the licensed version. The client spotted it right before delivery, which is one step better than after delivery, and still one step worse than us spotting it ourselves.\nHow to check: Open Media Library, switch to list view, and go through everything uploaded during development. Look for placeholders, duplicates, screenshots, and anything watermarked.\nTemporary pages. Style-guide pages, block catalogs, layout sandboxes — anything you built for your own reference.\nHow to check: Pages → All Pages, review anything the client never asked for.\n　\n\n  \n  \n  2. Launch settings\n\n\nSearch engine visibility (the noindex trap). This one has two layers, and the second one almost got me. The obvious layer is Settings → Reading → \"Discourage search engines from indexing this site\" — staging environments have it on, production must not. The sneaky layer is your SEO plugin: on one site, the Reading setting was fine, but a noindex rule was still sitting in the SEO plugin's configuration from the staging days. Weeks of indexing time are lost this way, silently.\nHow to check: Verify the Reading setting, then open your SEO plugin's settings and check its index rules. Finally, view the page source of the live homepage and search for noindex in the <meta name=\"robots\"> tag — that's the ground truth.\nWP_DEBUG. Debug mode on a production site can print warnings — with file paths — right onto the page for every visitor.\nHow to check: Open wp-config.php and confirm WP_DEBUG is false.\nAdmin email. If the site's admin address is still yours, the client's password resets and system notices go to you forever.\nHow to check: Settings → General → Administration Email Address.\nPermalinks / rewrite rules. After a migration, stale rewrite rules are a classic source of unexplained 404s.\nHow to check: Settings → Permalinks → Save Changes (yes, just re-saving flushes the rules), then click through a few posts and archive pages.\n　\n\n  \n  \n  3. Security loose ends\n\n\nFour small things that take five minutes total and are exactly the kind of leftovers a security scan (or a curious visitor) finds later:\nFile editor — DISALLOW_FILE_EDIT in wp-config.php disables the built-in theme/plugin code editor. A client account clicking around in there is a risk nobody needs.\nXML-RPC — if nothing uses it (Jetpack, some mobile apps), it's an open door for brute-force amplification. Disable it via filter or plugin.\ndebug.log — a wp-content/debug.log file left web-accessible is a quiet information leak. Delete it and confirm logging is off.\nThe 'admin' username — a default admin account is half of a credential-stuffing attempt already solved. Rename or replace it.\n　\n\n  \n  \n  4. Site health before delivery\n\n\nOutdated plugins. Taking over or delivering a site with plugins that haven't been updated on WordPress.org in over a year means handing the client a maintenance liability without telling them.\nHow to check: For each installed plugin — including inactive ones — check its \"Last updated\" date on its WordPress.org page. Flag anything past 6 months; treat anything past a year as a conversation you need to have with the client before handoff, not after.\nInactive plugins. They still ship code. If it's not needed, it shouldn't ship.\nHow to check: Plugins → Inactive, and delete what has no reason to stay.\n　\n\n  \n  \n  5. Beyond the basics\n\n\nDepending on the hosting stack, a few more things deserve a look — these are harder to automate, which is exactly why you want the basics above done quickly and reliably:\nCache purge after the final content change. A page cache that never got purged will serve the old price, the old phone number, the old everything — with zero errors logged.\nLeftover staging credentials. Test admin accounts and staging logins have a talent for surviving into production.\nHardcoded dev URLs in the database. My opening story. A search-replace pass over the database (with a proper serialized-data-aware tool) before launch would have saved us an afternoon of page-by-page hunting — and a permanent line in an incident log.\nHow to check: Don't trust the search-replace tool alone. Click through the primary navigation, footer links, and CTA buttons on the live site — and open a few image-heavy pages — right after migration.\n　\n\n  \n  \n  6. The missing step: prove what you checked\n\n\nHere's the part almost no checklist talks about.\nRunning the checks protects the site. Showing the checks protects the relationship. A client can't see the noindex flag you flipped back or the debug log you deleted — to them, a clean launch and a lucky launch look identical. The difference only becomes visible when something breaks.\nSo make the invisible work visible. Before handoff, write a short plain-text delivery note:\nPre-launch verification — example.com — 2026-07-02\n✓ Test content removed (posts, pages, media)\n✓ Search engine indexing enabled (Reading settings + SEO plugin + meta verified)\n✓ WP_DEBUG disabled\n✓ Admin email set to client\n✓ File editor locked, XML-RPC disabled, no debug.log present\n✓ Default 'admin' username: not present\n✓ Plugin update status reviewed (2 flagged, listed below)\n\nAttach it to your delivery email. It takes ten minutes, it reads as professionalism, and months later — when someone asks \"was this checked?\" — you have an answer with a date on it.\n　\n\n\n  \n  \n  7. The checklist (copy-paste version)\n\n\n\n\n\n## Content cleanup\n- [ ] Test posts/pages deleted (incl. custom post types & trash)\n- [ ] Unused media removed (placeholders, duplicates, watermarked images)\n- [ ] Temporary/reference pages removed\n\n## Launch settings\n- [ ] Reading settings: search engine indexing allowed\n- [ ] SEO plugin: no leftover noindex rules\n- [ ] Live page source: no unexpected noindex meta tag\n- [ ] WP_DEBUG = false\n- [ ] Admin email = client's address\n- [ ] Permalinks re-saved (rewrite rules flushed)\n\n## Security\n- [ ] DISALLOW_FILE_EDIT set\n- [ ] XML-RPC disabled (if unused)\n- [ ] debug.log deleted, logging off\n- [ ] No default 'admin' username\n\n## Site health\n- [ ] All plugins (incl. inactive) checked for last-updated date\n- [ ] Unneeded inactive plugins deleted\n\n## Beyond the basics\n- [ ] Cache purged after final changes\n- [ ] Staging/test credentials removed\n- [ ] Database search-replace for dev URLs done\n- [ ] Site clicked through (nav, footer, CTAs, image-heavy pages) — no broken links or images\n\n## Prove it\n- [ ] Plain-text delivery note written and attached\n\n　\n\n\n  \n  \n  One more thing\n\n\nYou can run this whole list manually — copy the markdown above into your project notes and it's yours.\nI'll be honest about why I wrote this: I kept making these mistakes myself, so I also built a free WordPress plugin called Noshi-Kanamer that automates a good chunk of this list — it detects leftover test content, noindex (including SEO-plugin and code-level rules), WP_DEBUG, debug.log, the default admin username and more, then generates a plain-text handoff report you can paste straight into your delivery email. The checklist above works fine without it. The plugin just makes the boring parts fast.\nEither way — check before you hand over the keys, and leave a note that proves you did.",
+      "publishedAt": "2026-07-03T02:12:02.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "64b486a2d7d903526d0af5226f4e9c64845ba37e6ce2917e64a9da775c56ebce",
+      "title": "「AWS、Microsoft、Google以外」で押さえるべきクラウドベンダーは？　AI時代の新たな勢力図",
+      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2607/03/news063.html",
+      "description": "生成AI需要の拡大はクラウドインフラサービス市場にも変化をもたらしている。市場規模が拡大するだけではなく、ベンダーの顔ぶれにも変化が見られる。",
+      "publishedAt": "2026-07-03T02:00:00.000Z",
+      "feedName": "＠IT"
+    },
+    {
+      "id": "7d8532e77dff854a6b6bba2b0276b451d30cdfe69393db39747f509fed25eb6e",
+      "title": "バズワード化する「Mythos」だが、本質を捉えられているか？セキュリティ判断を誤る前に理解すべきこと",
+      "url": "https://enterprisezine.jp/article/detail/24410",
+      "description": "本稿では、情報セキュリティ対策製品を提供するベンダー側で長らくビジネスに携わってきた筆者の経験をもとに、セキュリティ業界特有のホラーストーリー仕立てのセールストークを排し、真にとるべき情報セキュリティ対策とは何か、今どきのテーマを取り上げたうえでその本質に迫っていく。今回は、今まさにバズワードとなっているClaude Mythosについて。なぜMythosが「危険」だと言われているのか、この技術に対抗する術はないのか。また、この潮流に乗じたベンダーのセールスを正しく見極めるために、この技術が及ぼすインパクトの本質を解説する。",
+      "publishedAt": "2026-07-03T01:00:00.000Z",
+      "feedName": "EnterpriseZine"
+    },
+    {
+      "id": "4867aa5d2a1af2578da2dbbe5ec2574569e4070a97fe95e5ecd56589c4d0c012",
+      "title": "Kubernetes バージョンロールバックを使用して Amazon EKS クラスターを安心してアップグレード",
+      "url": "https://aws.amazon.com/jp/blogs/news/upgrade-amazon-eks-clusters-with-confidence-using-kubernetes-version-rollbacks/",
+      "description": "Kubernetes コントロールプレーンのアップグレードは、長い間、一度行うと元に戻せないものでした。オープ […]",
+      "publishedAt": "2026-07-03T00:41:16.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "6c612414478f8b0419951a6ffe88cbc5c64902491508a211700de93aae05c670",
+      "title": "東京リージョンの  EFS をバージニア北部リージョンの EC2 インスタンスから VPC ピアリング経由でマウントしてみた",
+      "url": "https://dev.classmethod.jp/articles/efs-cross-region-vpc-peering-ec2/",
+      "description": "異なるVPCのAmazon EFSをVPCピアリング経由でマウントできるか検証しました。東京リージョンのEFSをバージニア北部リージョンのEC2インスタンスからマウントする手順と、ルートテーブルやセキュリティグループの設定方法について詳しく紹介します。",
+      "publishedAt": "2026-07-03T00:30:24.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "ecd68f93b37824cc8ca9a8960b7f824b1d96166bb90ee21083c27b933c680626",
+      "title": "【ブースレポート】AWSパブリックセクターブースで医療×AIの最前線を見てきました",
+      "url": "https://dev.classmethod.jp/articles/202606-aws-summit-japan-2026-publicsector-healthcare-academia-booth-report/",
+      "description": "【ブースレポート】AWSパブリックセクターブースで医療×AIの最前線を見てきました",
+      "publishedAt": "2026-07-03T00:06:45.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "583a121921144f9a423b3c8869213b912e516cd8bc2562efa6993b273c4e68c0",
+      "title": "【ブースレポート】AWSパブリックセクターブースで教育×生成AIの最前線を見てきました",
+      "url": "https://dev.classmethod.jp/articles/202606-aws-summit-japan-2026-publicsector-education-booth-report/",
+      "description": "【ブースレポート】AWSパブリックセクターブースで教育×生成AIの最前線を見てきました",
+      "publishedAt": "2026-07-03T00:06:37.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "374f2f6a1df5cf10296e0c1b7a9e1da6713265375e75aa4f3e7bb2bffc2fed20",
+      "title": "AWS CloudFormation Express モードを使用してインフラストラクチャのデプロイを最大 4 倍高速化",
+      "url": "https://aws.amazon.com/jp/blogs/news/accelerate-your-infrastructure-deployments-by-up-to-4x-with-aws-cloudformation-express-mode/",
+      "description": "2026 年 6 月 30 日、AWS CloudFormation Express モードについてお知らせし […]",
+      "publishedAt": "2026-07-03T00:00:53.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "b5c71804a2afb93aec7625f280b7cf8df03b35f9057015218ff128a773c1d3be",
+      "title": "AIエージェントとシステムをつなぐMCP入門（リソース編）",
+      "url": "https://developer.mamezou-tech.com/blogs/2026/07/03/mcp-impl_resource/",
+      "description": "はじめに\n#\n本ページは「AIエージェントとシステムをつなぐMCP入門」の続編です。\nMCPのリソースは、AIモデルが回答を生成する際に参照するコンテキスト情報（ファイル、ガイド、仕様など）を提供する機能です。\n本記事で掲載しているコードはこちらで公開しています。\n -->\n  シリーズ目次\n連載：AIエージェントとシステムをつなぐMCP入門\nイントロダクション\nstdio実装編\nStreamableHTTPステートレス実装編\nStreamableHTTPステートフル実装編\nプロンプト編\nリソース編（本ページ）\n今回使用するライブラリなど\n#\nnpm@11.11.1\nnode@22.22.0\ntypescript@6.0.3\n@modelcontextprotocol/sdk@1.29.0\nzod@4.3.6\n使用例\n#\n開発ガイドの共有: コーディング規約や設計方針をリソース化して、AI生成時の前提情報として渡します\n仕様断片の参照: API仕様、エラーコード定義、入力制約などの抜粋をリソースとして公開し、コード生成の精度を高めます\n動的パラメーターによって切り替える情報の提供: URIテンプレートを使い、可変パラメーターで内容が変わるリソースを提供します\nツール、プロンプト、リソースの違い\n#\nこれまでの特集でツール、プロンプト、リソースの主要要素に触れてきたので、ここで役割を振り返ります。\n要素名\n主な役割\n制御主体\n識別方法\n\n\n\n\nリソース\nデータ・コンテキスト（静的な知識）の提供\nアプリケーション主導\nリソースのURI\n\n\nプロンプト\nメッセージ・ワークフローのテンプレート\nユーザー主導\nプロンプト名\n\n\nツール\n具体的な関数の実行（能動的なアクション）\nAIモデルによる実行\nツール名\n\n\n\n\nリソースの種類\n#\nMCPのリソースは、URIの与え方によって2種類に分かれます。\n種類\n説明\n用途例\n\n\n\n\n静的リソース\n固定URIで一意に特定されるリソース\nガイド、固定仕様、設定情報など\n\n\nリソーステンプレート\nURIテンプレート（RFC 6570）でパラメーター化されたリソース\nIDや名前などの可変要素で内容が変わる情報\n\n\n\n\nプロトコルメッセージ\n#\nMCPのリソースに関するメッセージは6種類あります。\nメッセージ\n方向\n説明\n\n\n\n\nresources/list\nクライアント → サーバー\n利用可能なリソース一覧を取得する（ページネーション対応）\n\n\nresources/templates/list\nクライアント → サーバー\nリソーステンプレート一覧を取得する\n\n\nresources/read\nクライアント → サーバー\nURIを指定してリソースのコンテンツを取得する\n\n\nresources/subscribe\nクライアント → サーバー\n指定URIのリソース変更通知を購読する（ケーパビリティsubscribe: trueが必要）\n\n\nnotifications/resources/updated\nクライアント ← サーバー\n購読中のリソースが変更されたことを通知する\n\n\nnotifications/resources/list_changed\nクライアント ← サーバー\nリソース一覧が変化したことを通知する（ケーパビリティlistChanged: trueが必要）\n\n\n\n※通知を検証するためには、リソースの源泉を別に設け　かつ　源泉側の変更検知も必要なため、サンプルには含めていません。\nsequenceDiagram\n  actor client as MCP Client\n  participant server as MCP Server\n\n  client ->> server: リソース一覧取得（resources/list）\n  server -->> client: リソース一覧\n  client ->> server: リソース取得（resources/read）\n  server -->> client: リソース\n\nデータ構造（Data Types）\n#\nリソースコンテンツ\n\nuri: リソースを一意に識別可能なURI\nname: リソース名\ntitle: 表示用のタイトル\ndescription（任意）: リソースの説明\nicons（任意）: アイコンリスト\nmimeType（任意）: コンテンツのMIMEタイプ。テキストまたはバイナリ（Base64エンコードが必要）を指定可。\nsize（任意）: バイト数\nアノテーション（Annotations）: クライアントへのヒント\n\naudience: 誰向けのリソースか示す情報。user, assistantまたは両方を指定可。\npriority: 0.0～1.0の数値で示される重要度（1.0が最重要）\nlastModified: 最終更新日時（ISO8601形式のタイムスタンプ）\nURIスキーム\n#\nリソースのURIには目的に応じたスキームを選びます。\nスキーム\n用途\n備考\n\n\n\n\nhttps://\nWeb上のリソースを参照\nクライアント自身がアクセスできる場合に使用する。サーバー経由で取得する場合は独自スキームの検討が推奨されます\n\n\nfile://\nファイルシステムのような構造を表現したいリソース\nファイルシステムとのマッピングは必須ではなく、値の取得先は自由（DBや外部APIなど）\n\n\ngit://\nGitリソース\nコミット、ブランチ、パスなどのGit固有の構造を表現\n\n\nカスタム\n独自スキームによる任意のリソース\nRFC3986準拠。本サンプルのmemory://、orders://もこれに該当\n\n\n\n -->\n Information\nサーバーはすべてのリソースURIを検証する\nfileでディレクトリを表現する場合\ninode/directory（XDG規格）を指定することが推奨されます。\n実装サンプル\n#\nコードの全体はこちらをご覧ください。\n静的リソースの登録\n#\n固定URIでリソースを公開する例です。\nregisterResourceの第2引数にURI文字列を渡すと静的リソースになります。\n  // リソース: アノテーション付きの静的リソース（テキストコンテンツ）\n  const testGuideUri = \"memory://guides/testcase-prompt-playbook\";\n  server.registerResource(\n    \"testcase-prompt-playbook\",\n    testGuideUri,\n    {\n      mimeType: \"text/markdown\",\n      description: \"テスト観点生成のガイド\",\n      annotations: {\n        audience: [\"assistant\"],           // AIへの参照情報として位置づける\n        priority: 0.8,                     // 重要度（高め）\n        lastModified: \"2026-06-28T00:00:00Z\",\n      },\n    },\n    async () => ({\n      contents: [{\n        uri: testGuideUri, mimeType: \"text/markdown\",\n        text: [\n          // 実務ではもっと細かい指示が必要になりますが、行数を抑えるため最小限に留めています\n          \"# APIテストケース作成ガイド\",\n          \"- 仕様の観点: 正常系、代替系、異常系、境界値、認可、冪等性\",\n          \"- 基本フローの正常系を中心に、代替系、異常系、その他の観点を付加する形にまとめる。\",\n          \"- ユースケースの検証を主眼とし、入力値検証などは含めない（単体テストで担保する）\",\n          \"- 必要に応じて分類しながら、箇条書きで簡潔にまとめる\",\n        ].join(\"\\n\")\n      }]\n    }),\n  );\n\n\n  \n\n\n動作確認: resources/readが確認できるPostmanで確認\n\nバイナリコンテンツの指定例\nバイナリコンテンツ（画像など）はblobにBase64エンコード文字列を設定します。\n// リソース: バイナリコンテンツの例（画像）\nserver.registerResource(\n  \"company-logo\",\n  \"file://assets/logo.png\",\n  { mimeType: \"image/png\", description: \"企業ロゴ画像\" },\n  async () => ({\n    contents: [{ uri: \"file://assets/logo.png\", mimeType: \"image/png\", blob: \"<Base64エンコードされたデータ>\" }],\n  }),\n);\n\n\n  \n\n\nリソーステンプレートの登録\n#\nResourceTemplateクラスを使うと、URIテンプレート（RFC 6570）でパラメーター化されたリソースを公開できます。\n{orderId}のようなプレースホルダーがリクエスト時に展開されます。\nlistコールバックはresources/listで返す候補一覧を定義します（省略不可、不要ならundefinedを渡します）。\nresources/readリクエスト時、クライアントはorders://O00001/detailのようにテンプレートを展開したURIを指定します。\n{orderId}部分が変数として分解され、ハンドラーに渡されます。\n  // リソーステンプレート: URIのパラメータで内容が変わる動的リソース\n  server.registerResource(\n    \"order-detail\",\n    new ResourceTemplate(\"orders://{orderId}/detail\", {\n      list: async () => ({\n        resources: [\n          { uri: \"orders://O00001/detail\", name: \"O00001\", mimeType: \"application/json\" },\n          { uri: \"orders://O00002/detail\", name: \"O00002\", mimeType: \"application/json\" },\n        ],\n      }),\n    }),\n    { mimeType: \"application/json\", description: \"受注詳細\" },\n    async (uri, { orderId }) => ({\n      contents: [{ uri: uri.href, mimeType: \"application/json\", text: JSON.stringify({ orderId, status: \"pending\" }) }],\n    }),\n  );\n\n\n  \n\n\n動作確認\n\nリソーステンプレートの確認: resources/templates/listが確認できるMCP Inspectorで確認\n\nリソーステンプレートの実行確認: resources/readが確認できるPostmanで確認\n\nまとめ\n#\nリソースは、AIへの参照情報を明示的に管理したい場合に有効です。\n静的リソースは固定情報（ガイド、仕様など）、リソーステンプレートは可変情報（IDベースの詳細など）に向いています。\nアノテーションを設定することで、クライアントがリソースを適切に選択し、優先順位付けできます\nプロンプトと組み合わせると、生成指示と参照情報の両方を標準化できます",
+      "publishedAt": "2026-07-03T00:00:00.000Z",
+      "feedName": "豆蔵デベロッパーサイト"
+    },
+    {
+      "id": "3727ae5e79f0a4f8e2af23c6bf55a629ff5c52ee0a3ab3abad3e0ddfca6e7899",
+      "title": "Visa、「AIエージェントが本物のECサイトで買い物開始」と発表",
+      "url": "https://japan.cnet.com/article/35249941/",
+      "description": "Visaは7月2日（現地時間）、AIエージェントが利用者に代わって買い物をする「エージェントコマース」の実取引が欧州で始まったと発表した。AIエージェントがカード保有者の指示にもとづき、参加加盟店のECサイトで商品を探し、選び、購入までを実行する。管理された実験用店舗でのテストを越えて、実際の加盟店と取引する段階に進んだという。パリで開催した「Visa Payments Forum」で明らかにした。",
+      "publishedAt": "2026-07-02T23:08:00.000Z",
+      "feedName": "CNET Japan"
+    },
+    {
+      "id": "f444fd2c42c26d082bb07aa99714072976c83ee9c6072349deb6d36de0a770d5",
+      "title": "アクセンチュア、OTセキュリティ強化に向けDragosの株式過半数を取得　他2社を買収し機能統合へ",
+      "url": "https://enterprisezine.jp/news/detail/24616",
+      "description": "アクセンチュアは、100億ドル規模のサイバーセキュリティ事業のさらなる強化を目的として、Dragosの株式過半数を取得するとともに、runZeroとNetRiseの全株式を取得することを発表した。\n...",
+      "publishedAt": "2026-07-02T23:00:00.000Z",
+      "feedName": "EnterpriseZine"
+    },
+    {
+      "id": "006b1964e97865140736c2b5f10edc17136c527bbe115312db9eba9fa31bac15",
+      "title": "“開かずの基幹システム”、450人月→実質2カ月で解読　創業100年のカクヤス、生成AIで挑む「転生」",
+      "url": "https://www.itmedia.co.jp/news/articles/2607/03/news050.html",
+      "description": "“開かずの基幹システム”、450人月→実質2カ月で解読　創業100年のカクヤス、生成AIで挑む「転生」：AWS Summit Japan 2026（1/2 ページ） 老朽化した基幹システムの刷新に、生成AIを持ち込む企業が増えている。設計書が残っていなくても、AIがソースコードを読み解き、業務ロジックを洗い出す。人の手では現実的でなかっ...",
+      "publishedAt": "2026-07-02T22:02:59.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "e44eca3a39f167a31fa368414a8be4159837e9715dc9d3bc6064ee46fd25e3be",
+      "title": "[アップデート] Kiro Web のサンドボックスに IAM ロールを設定して AWS リソースへアクセスできるようになりました",
+      "url": "https://dev.classmethod.jp/articles/kiro-web-sandbox-service-role/",
+      "description": "[アップデート] Kiro Web のサンドボックスに IAM ロールを設定して AWS リソースへアクセスできるようになりました",
+      "publishedAt": "2026-07-02T21:12:22.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "3c106e4403a89b27aeabd31ff1c8925017d6657f0718de62762592dd6a1b8e6a",
+      "title": "JAWS-UG AI-DLC支部第1回勉強会に参加してきた - Raja SP来日記念スペシャル",
+      "url": "https://dev.classmethod.jp/articles/jawsug-aidlc-01-report-raja-sp-special/",
+      "description": "JAWS-UG AI-DLC支部第1回勉強会に参加してきた - Raja SP来日記念スペシャル",
+      "publishedAt": "2026-07-02T18:05:01.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "aad16c25e7a1a709af469cb346e11d17b70b123411d85f38fdfe013c684b6a9d",
+      "title": "2026年6月30日付けで発表されたAWSサービス終了・メンテナンスモード移行をまとめてみた",
+      "url": "https://dev.classmethod.jp/articles/aws-service-lifecycle-summary-20260630/",
+      "description": "2026年6月30日付けのAWS公式アナウンスで、Amazon Kendra、Q Business、Bedrock Agents等のメンテナンスモード移行やWorkSpaces PCoIP等のサービス終了予定が発表されました。対象サービスの一覧と主要サービスの移行先をまとめます。",
+      "publishedAt": "2026-07-02T17:15:27.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "e23dbbf0356ae401dd68b5dd77a1c97794066ead548c32e19357f271368de813",
+      "title": "【CDK for Go】GitHub Actions OIDC + CDKで最小権限デプロイロールを設計",
+      "url": "https://qiita.com/umekikazuya/items/a090e25a9cb9cfd7540a?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\napp repo と infra repo が分かれてる構成でCDを組む際、\n「GitHub Actions or CodePipeline」とツールの選択を論じてる現場、よく見ますよね。\n私は勿論「どっちが好み」かはありますし、みなさんも好みはあると思うんです...",
+      "publishedAt": "2026-07-02T16:46:18.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "dac587dd7d4d2cf87f06950e431302c9d623f663dae1b640eb13111ce4a2ad3e",
+      "title": "(re)introducing kpt: Your toolchain for infrastructure automation",
+      "url": "https://www.cncf.io/blog/2026/07/02/reintroducing-kpt-your-toolchain-for-infrastructure-automation/",
+      "description": "What is kpt? The opening tagline of the kpt documentation describes it as “… a package-centric toolchain that enables a WYSIWYG configuration authoring, automation, and delivery experience, which simplifies managing Kubernetes platforms and KRM-driven infrastructure at...",
+      "publishedAt": "2026-07-02T15:01:38.000Z",
+      "feedName": "Cloud Native Computing Foundation"
+    },
+    {
+      "id": "bad262116959cdf6485cc01fc5669d7bde87b8dbe0a550b0c041e790c232d584",
+      "title": "MoonBit を高速化する",
+      "url": "https://zenn.dev/mizchi/articles/optimize-moonbit-core",
+      "description": "プログラミング言語の速度が上がると嬉しいですね。というわけで MoonBit を高速化します。\nところで、AI Slop とそうでないものの境界はなんでしょうか。自分が思うに、明確な仕様が存在するときにそれに準拠することや、またAPI契約を変えずにパフォーマンスやセキュリティを向上させることは、誰も損しないので比較的やりやすいと思ってます。\n人間同士のコミュニティ境界を越えるなら自分が理解していないものを送ることは論外として、説得材料に観測された計測値の根拠を出すことが必要になると思います。とにかく、大事なのは計測すること\nというわけで、最近は MoonBit の標準ライブラリである m...",
+      "publishedAt": "2026-07-02T11:13:44.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "102c8e07b220de5c6a9c591466e87e7551cc342df124daee223af235645416e2",
+      "title": "認証認可を通して学ぶ、『わからない』のつぶし方 - ID沼入口 発表資料",
+      "url": "https://speakerdeck.com/calloc134/ren-zheng-ren-ke-wotong-sitexue-bu-wakaranai-notubusifang-jia-idzhao-ru-kou-fa-biao-zi-liao",
+      "description": "“ID沼入口” - 基本とセキュリティから始める、考え続けるためのID管理技術勉強会 で発表を行う資料です。 現在作成中のため、変更のある可能性があります。 https://openid.connpass.com/event/396041/",
+      "publishedAt": "2026-07-02T11:12:40.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "4dc0174b002d64294e8d3123c587f27c0231c5cdd26eee7dd243e40ab72fda1e",
+      "title": "【セッションレポート】 AI エージェントで切り拓く次世代の Amazon Aurora への移行 ― コード変更の実践とお客様検証事例[DAT302]",
+      "url": "https://dev.classmethod.jp/articles/aws-summit-japan-2026-DAT302/",
+      "description": "AWS Summit 2026で「AI エージェントで切り拓く次世代の Amazon Aurora への移行」セッションに参加してきました。OracleからPostgreSQLへのDB移行において、生成AIを活用してどのようにコード変換アプローチを行うのか？を中心としたセッションレポートになります。",
+      "publishedAt": "2026-07-02T10:24:43.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "7682e2ad9910a326799f7a82942c022c05b93769917b502d5b8621de953221fa",
+      "title": "【速報】Claude Sonnet 5のReact習熟度はOpus 4.8に匹敵",
+      "url": "https://zenn.dev/uhyo/articles/react-profession-bench-9",
+      "description": "皆さんこんにちは。最近の熱いニュースといえばClaude Fable 5の復活ですが、時をほぼ同じくしてSonnet 5というバージョンも出ています。 仕事で少しSonnet 5を使ってみましたが、いろいろなことに気を回してくれるようになったもののSonnetの強みであるコスパの良さが若干薄れた印象も持っています。 それはさておき、...",
+      "publishedAt": "2026-07-02T10:18:14.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "7682e2ad9910a326799f7a82942c022c05b93769917b502d5b8621de953221fa",
+      "title": "【速報】Claude Sonnet 5のReact習熟度はOpus 4.8に匹敵",
+      "url": "https://zenn.dev/uhyo/articles/react-profession-bench-9",
+      "description": "皆さんこんにちは。最近の熱いニュースといえばClaude Fable 5の復活ですが、時をほぼ同じくしてSonnet 5というバージョンも出ています。\n仕事で少しSonnet 5を使ってみましたが、いろいろなことに気を回してくれるようになったもののSonnetの強みであるコスパの良さが若干薄れた印象も持っています。\nそれはさておき、いつものように、Claude Sonnet 5のReact習熟度ベンチマークを行ったので、結果を共有します。\n前回の記事はこちらです。\nhttps://zenn.dev/uhyo/articles/react-profession-bench-8\n\n 結果\n結...",
+      "publishedAt": "2026-07-02T09:55:32.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "4d833215caadc0edad6f24323c78135f6fecd1361e3093990d5c93011849f807",
+      "title": "Metagenomi が LanceDB と Amazon S3 で実現した 10 億ベクトル超のスケーラブルな検索基盤",
+      "url": "https://aws.amazon.com/jp/blogs/news/search-solution-for-1b-vectors-built-on-lancedb/",
+      "description": "Metagenomi は LanceDB、Amazon S3、AWS Lambda を組み合わせ、35 億件のタンパク質エンベディングを低コストで保存・検索するサーバーレスソリューションを構築しました。データをバケット分割して並列インデックス化し、map-reduce 方式で検索する設計により、常時稼働サーバーなしで数十億ベクトル規模の近似最近傍検索を実現しています。",
+      "publishedAt": "2026-07-02T09:23:52.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "2ae41b0067058f76f6a410d8d35d7854d4a28e531bfa82ab53db6c8393addfea",
+      "title": "「Claude in Microsoft Foundry」が一般提供、Azure/Entra IDに統合されたAnthropicモデル／NVIDIAのハード、Microsoftのクラウド、Anthropicの運用で",
+      "url": "https://forest.watch.impress.co.jp/docs/news/2121816.html",
+      "publishedAt": "2026-07-02T08:39:40.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "470b5613620155902763d3c9aa79643a9eca686a45824862c5a964b34d299bb2",
+      "title": "【ブース展示報告】AWS Summit Japan 2026 不動産ブース　不動産業の未来を、生成 AI で切り拓く",
+      "url": "https://aws.amazon.com/jp/blogs/news/aws-summit-2026-japan-cre-booth-realestate/",
+      "description": "はじめに AWS Summit Japan 2026（6/25-26 @幕張メッセ）にご来場いただいた皆様、あ […]",
+      "publishedAt": "2026-07-02T08:39:01.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "d66ea930c9dbe64d997d54271d813431e02a04d238928ef72732fef428c9af44",
+      "title": "AWS Graviton5 プロセッサを搭載した Amazon EC2 の C9g インスタンスと C9gd インスタンスが利用可能に",
+      "url": "https://aws.amazon.com/jp/blogs/news/amazon-ec2-c9g-and-c9gd-instances-powered-by-aws-graviton5-processors-are-now-available/",
+      "description": "リアルタイム分析、バッチ処理、ビデオエンコーディング、科学モデリング、CPU ベースの機械学習推論など、計算量 […]",
+      "publishedAt": "2026-07-02T08:28:31.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "d0d3db8fd20ecd050d1cc33c589fd99adc21f07019fcd202f2ba391091bfa2e1",
+      "title": "AWS Certificate Manager の ACME サポートを使用してパブリック TLS 証明書の発行を自動化",
+      "url": "https://aws.amazon.com/jp/blogs/news/automate-public-tls-certificate-issuance-with-acme-support-in-aws-certificate-manager/",
+      "description": "アプリケーションの TLS 証明書を管理している場合、証明書が期限切れになると、顧客にエラーが表示されるか、サ […]",
+      "publishedAt": "2026-07-02T08:20:25.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "e27a29d4f39ac8b0c5358316f7a9bf5f0dff50293f5a46626b14ef6cd1d667c7",
+      "title": "RHEL 5 系といった古い OS のサーバを EC2 インスタンスに移行することは可能でしょうか",
+      "url": "https://dev.classmethod.jp/articles/tsnote-mgn-vmimport-rhel5-ec2-migration/",
+      "description": "RHEL 5系といった古いOSのオンプレミスサーバをAWSに移行したいとお考えですか？MGNとVM Import/Exportが非サポートの中、実現可能な代替案をご紹介します。",
+      "publishedAt": "2026-07-02T08:00:26.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "27a33602bdced4c5c266d2cde5fc2f96eece43a30523fd90bab52789892ae491",
+      "title": "Claude Code「Fable 5」にローカルLLM用シェル支援CLIを作らせたら、コードより仕事の進め方に驚かされた",
+      "url": "https://zenn.dev/gys/articles/fable5-local-llm-ask-cli",
+      "description": "完成物より、「仕事の進め方」そのものに驚いた話\n2026年7月2日早朝、日課のワークアウトを終えてClaude Codeを立ち上げたらfable5が使えるようになっていた。\nこの記事は、その実装会話ログを時系列で再構成したものである。\n\nセキュリティ上公開できない内部パス、IPアドレス、顧客固有情報、無関係な作業断片は削除または一般化しています。\nただし、判断の順序、途中の失敗、未検証事項、設計変更の経緯は、都合よく整え直していません。\nなお、本文中「引用する」と断って示すfable5の発言ブロックは、実際のセッションログからの原文引用です（［　］は固有名を一般化した箇所。それ以外は...",
+      "publishedAt": "2026-07-02T07:44:33.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "fb0f0a67b834ed53e03e13266eae431d0d566bff6bec958c3a892c85cf111d0a",
+      "title": "U-22プログラミング・コンテスト2026 応募受付開始",
+      "url": "https://gihyo.jp/article/2026/07/u22procon-2026-entry?utm_source=feed",
+      "description": "U-22プログラミング・コンテスト2026の応募受付が2026年7月1日に開始された。締切は8月31日。",
+      "publishedAt": "2026-07-02T07:35:00.000Z",
+      "feedName": "gihyo.jp"
+    },
+    {
+      "id": "5be7f2a9b6c8a8702704bea4f358ad5994761b6952c1dfb2614fd2a2df27bf56",
+      "title": "「モジュラー型アーキテクチャで柔軟な構成に」デル・テクノロジーズ、AIネイティブ企業への移行を支援へ",
+      "url": "https://enterprisezine.jp/news/detail/24609",
+      "description": "デル・テクノロジーズは、現地時間5月18日から21日にかけて米国ラスベガスで開催された年次カンファレンス「Dell Technologies World 2026」に関する記者説明会を6月26日に開...",
+      "publishedAt": "2026-07-02T07:00:00.000Z",
+      "feedName": "EnterpriseZine"
+    },
+    {
+      "id": "64e665873e9aa8c9f6b8737e7cbb6f5322d1e7014f079e3ce0a52bd4bba738e2",
+      "title": "まるで映画のワンシーン、iPhoneカメラの限界に挑んだコンテスト受賞作13選",
+      "url": "https://japan.cnet.com/article/35249909/",
+      "description": "「iPhone」のカメラで撮影された優れた写真を表彰する「iPhone Photography Awards」が今年で19回目を迎えた。受賞作の中から筆者のお気に入りをいくつか紹介する。",
+      "publishedAt": "2026-07-02T06:12:00.000Z",
+      "feedName": "CNET Japan"
+    },
+    {
+      "id": "cf4e79e1f59fa7036c3a46c471cfafa14cb6e0782f6c0ec589779bd6393517a2",
+      "title": "【Security Hub修復手順】[SageMaker.10] SageMaker モデルの説明可能性ジョブ定義では、コンテナ間のトラフィック暗号化を有効にする必要があります",
+      "url": "https://dev.classmethod.jp/articles/securityhub-fsbp-remediation-sagemaker-10/",
+      "description": "AWS SecurityHub 基礎セキュリティのベストプラクティスコントロール修復手順をご紹介します。",
+      "publishedAt": "2026-07-02T04:26:03.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "6b0adfebb95bb009e8f0daa6e8289fcaf8c4fcb7fce14bad6ff7a9613ce548f3",
+      "title": "高速 Gaussian Splatting レンダリング",
+      "url": "https://zenn.dev/abist_inno/articles/dbb046952261eb",
+      "description": "この記事は、以下で作った Gaussian Splatting ビューワをさらに高速化する手法を紹介します。\nテストした環境 (Apple M4 Mac) では、最大約５倍の高速化を確認しています。\n(計測結果は 3章 にあります)\nhttps://zenn.dev/abist_inno/articles/cb13d00751b2c9\nGitHubリポジトリはこちらになります。\n記事の内容は v-0.4.0 ブランチに対応しています。\nhttps://github.com/abist-co-ltd/wgpu-gs-viewer/tree/v-0.4.0\nこれまでのビューワは、3DGSのオ...",
+      "publishedAt": "2026-07-02T04:23:30.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "d623af69b14d9120c90c2fa9f299ee382fa630357dcb2cc5bb35f479aaabd915",
+      "title": "「脆弱なコード、データ漏えい、侵害され得るモデル」　開発者の不安をMicrosoftはどう解消するのか",
+      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2607/02/news049.html",
+      "description": "Microsoftは「Microsoft Build 2026」で、コード、AIエージェント、モデルを開発ライフサイクル全体で保護する新たなセキュリティツールと機能を発表した。セキュリティを上流工程に移行させ、開発者が日常的に使うツールに直接組み込むことで、スピードと安全性の両立を支援することを狙う。",
+      "publishedAt": "2026-07-02T04:00:00.000Z",
+      "feedName": "＠IT"
+    },
+    {
+      "id": "287b6aa6def23989a89f85c1183686a1015593ab419c74f0a77ac61208ccd1f7",
+      "title": "【小ネタ】CloudWatch Logs の AWS CLI コマンドの --filter-pattern オプションでハイフンで始まる値を指定する方法",
+      "url": "https://dev.classmethod.jp/articles/tsnote-cloudwatch-logs-filter-pattern-exclude-001/",
+      "description": "CloudWatch Logs の AWS CLI のオプション `--filter-pattern` にハイフンで始まる除外条件を指定すると、AWS CLI がオプションとして解釈しエラーになります。`--filter-pattern=\"-INFO\"` のように `=` でオプション名と値を繋げることで解決できます。",
+      "publishedAt": "2026-07-02T03:35:36.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "69e1f537a752f7345d95f588abcc6058b5979cb8544834b129330004ccc16a49",
+      "title": "試験が大の苦手な人がAWS初級の資格を取得した話",
+      "url": "https://qiita.com/chaochire/items/a17119d3d9487d5379a6?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "こんにちは\nソーイ株式会社Webエンジニア2年目の村上です。\n最近私事ですがAWSの初級資格であるAWS Certified AI Practitionerに合格しました。\n今回はその振り返りと有効だった手を記す合格体験記になります。\n業務でAWSの生成AIサービスを扱う機...",
+      "publishedAt": "2026-07-02T03:00:43.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "5fdb2aa94b0c387217a351fa1c905a874f2466b99eed28cd715c2d9cf080e218",
+      "title": "Azure 担当になった新人さんへ。Azure に触れ始める最初の一歩",
+      "url": "https://qiita.com/KoheiKushida/items/4ce8e917e09bf5f74939?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "1.はじめに\n4月に入社した新人の方も、そろそろ3か月。\n企業や組織によっては、すでに配属されている方もいれば、これから配属という方もいる頃でしょうか。\nAzure 関連の部署に配属されて「何から始めればいいんだろう？」「Azure って難しそう…」と感じている方もいると...",
+      "publishedAt": "2026-07-01T23:49:37.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "c1b513cf2b4cd481aa2598293ffefa72a0474785d36b477743c848b2df39ae92",
+      "title": "【AWS×Java】S3 + CloudFront + Lambdaでサーバーレスな動的サイトを組み込んだデジタル名刺を作る",
+      "url": "https://qiita.com/usanchuu/items/2c5dbeed9c22dad0b7ad?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "1. はじめに\nAWS Summitに向けて、スマホをかざすだけで自分のポートフォリオが開く「NFC搭載のデジタル名刺」を作成しました。\n普段AWSやJavaをメインに学習していることから、「せっかくなら裏側で動的な処理を持たせたWebアプリケーションにしたい！」と考えま...",
+      "publishedAt": "2026-07-01T20:33:43.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "7800c3913d4b0f036a5134e6ed0c01951deeef42ec5b184e58f25400a694e6d2",
+      "title": "【ハンズオン】AgentCore最新機能でRAG & AIエージェント構築に入門！",
+      "url": "https://qiita.com/minorun365/items/7d06434cf830df9c54ff?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "このイベント用のハンズオン手順ですが、どなたでも好きなときに試せます！（30分〜1時間目安）\n\nこれをローコードでサクッと作ります。\n\n残念なことに最近、新規作成したばかりのAWSアカウント（特に会社契約でないもの）では、Bedrockのモデル呼び出しクォータが既定で0...",
+      "publishedAt": "2026-07-01T16:32:50.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "608acc72f9cceffa180f918514b6f684db22d36380b28584b596c4d73d981013",
+      "title": "正規化はパフォーマンスの敵？非正規化との付き合い方を徹底解説",
+      "url": "https://qiita.com/Nao52/items/8568574542a4ca58a92e?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "■ この記事はこんな人におすすめ\n\nSQLを書き始めて、JOINを多用するようになってきた人\n「正規化って本当に正しいの？」と疑問を感じたことがある人\nパフォーマンスチューニングに興味がある初・中級エンジニア\n非正規化という言葉は聞いたことあるけど、具体的にどんなものかわ...",
+      "publishedAt": "2026-07-01T13:25:40.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "e2b8e73f9fd86800c05f707c1dab19f3c0cb009073c9f434e16d25fdb494175b",
+      "title": "政府のセキュリティガイドライン改定から学ぶ、5つの対策",
+      "url": "https://qiita.com/criminalip/items/f1cba62b8f59a7245985?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\n2026年6月12日、内閣官房 国家サイバー統括室が「政府機関等の対策基準策定のためのガイドライン」を一部改定しました。\n対象は政府機関や独立行政法人ですが、改定の内容を読むと、民間のシステム運用でも普通に参考になる話が多かったです。特に「なぜこの改定が必要にな...",
+      "publishedAt": "2026-07-01T08:47:47.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "b6613fed4d1e6a7ea3ab5bcc9b82cbb7aaf947f8f0c1f7475e4f20321492b909",
+      "title": "LakebaseがAWS東京リージョンに対応: 改めて整理するLakebaseとDatabricksでの位置付け",
+      "url": "https://qiita.com/taka_yayoi/items/62ec97c5fb31621b4142?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "東京リージョン対応で何が変わるのか\n2026年6月30日、Lakebase Autoscaling が AWS 東京リージョン (ap-northeast-1 / Asia Pacific - Tokyo) で利用可能になりました (2026年6月のリリースノート)。地味...",
+      "publishedAt": "2026-07-01T07:54:56.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "dcba415f1e63ace6d7159d96ce8d1cfb8cc42d30f638a7883a0125dbe8364f11",
+      "title": "「VPC内通信もTLSにすべき？」と聞かれて ── そもそもAWS内で盗聴できるのか脅威モデルで確かめた話",
+      "url": "https://qiita.com/ntaka329/items/de23144fdf7305a2e0c1?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\nGMOコネクトの永田です。\n公共系の案件で「ゲートウェイ（ALB）までは暗号化されているけど、その内側、VPCの中は平文ですよね。それで問題ないんですか？」と指摘されました。\nVPCがSDN（Software Defined Network）でできていて、他人の...",
+      "publishedAt": "2026-07-01T03:26:19.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "8922a6ae5433f75254d5db038dc1413ef4a7bf280e33c53ce942856e0a68c886",
+      "title": "🌟 フロントエンド基礎講座【第六回・最終回】まとめ・Next.js・ベストプラクティス・学習ロードマップ",
+      "url": "https://qiita.com/toamoku-20220418/items/f7e919a0a0d9c1f6a84c?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "1. 👋 はじめに\n5回にわたってフロントエンド開発の基礎を学んできました。\n最終回は これまでの振り返り・Next.jsへの橋渡し・ベストプラクティス・これからの学び方 をお届けします！\n\n2. 📚 シリーズ総まとめ\n6回で学んだ内容を振り返りましょう。\n\n回\nテ...",
+      "publishedAt": "2026-06-30T03:53:49.000Z",
       "feedName": "Qiita"
     }
   ]
