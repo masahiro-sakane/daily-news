@@ -1,30 +1,6 @@
 {
   "articles": [
     {
-      "id": "ffca8202ba6eff040ea7cff68daa0f1794cbc3dffbf3709a76342c0bd308bd70",
-      "title": "Your Codebase Is a Mess Because Your Team Can't Agree on What a \"Customer\" Is",
-      "url": "https://dev.to/walosha/your-codebase-is-a-mess-because-your-team-cant-agree-on-what-a-customer-is-2mfi",
-      "description": "Nobody wants to hear this.\nBut the reason your software is hard to change, hard to test, and hard to explain to a new engineer isn't your tech stack.\nIt's that your code doesn't reflect how your business actually works.\nYour engineers are using one word — \"customer,\" \"order,\" \"student,\" \"subscriber\" — and meaning six different things depending on which part of the system they're touching. Your domain expert says \"order\" and means something completely different from what your database schema says \"order\" is.\nThat gap? That's where complexity lives. That's where bugs are born. That's where senior engineers spend their Fridays.\nDomain-Driven Design is the discipline of closing that gap. Here's what it actually means, practically, without the academic noise.\nImagine a map that tried to show subway routes, underwater hazards, hiking trails, and flight paths — all at once.\nIt would be useless.\nA subway map works because it only shows what matters for navigating trains. A nautical chart works because it only shows what matters for sailing. Each map is an abstraction built for a specific purpose, valid within a specific context.\nYour software models need to work the same way.\nThe moment you build a single \"Customer\" class that has to satisfy your billing team, your marketing team, your support team, and your logistics team simultaneously — that class becomes a bloated, ambiguous disaster. Everyone adds their fields. Nobody removes anything. The model stops meaning anything specific to anyone.\nThis is the monolithic model trap. And most large codebases are sitting right inside it.\nDDD separates design into two layers. Strategic design comes first — it's the work you do before writing a single line of code.\nStep 1: Find Your Subdomains\nA subdomain is a slice of the business problem. Ordering. Shipping. Notifications. Payments. Inventory. These aren't your microservices — they're your business problems, identified during analysis.\nThis identification should never happen in an engineering room alone. If your engineers figure out the subdomains without the business, they will model what they think the business does. That's not the same thing. Get the domain experts in the room. The goal of DDD is software that reflects real-world processes — that requires everyone on the same page.\nOnce you have your subdomains, classify them:\nCore subdomains — your competitive advantage. Custom-build these. This is where your best engineers spend their time.\nSupporting subdomains — necessary but not differentiating. Can be built simply or outsourced.\nGeneric subdomains — solved problems. Use off-the-shelf software. Don't reinvent email delivery.\nStep 2: Establish a Ubiquitous Language\nThis is the one DDD concept that pays dividends even if you implement nothing else.\nUbiquitous language means the business and engineering teams use exactly the same words to describe the same things. Not synonyms. Not approximations. The same words.\nIf the business calls it a \"subscription\" and your code calls it a \"plan\" and your database calls it a \"contract,\" you have a translation layer in every conversation. Every ticket. Every bug report. Every onboarding session for a new hire.\nEliminate the translations. Name things in code what the business calls them. The domain expert should be able to read your entity names and recognize their own vocabulary.\nStep 3: Event Storming\nBefore designing your architecture, run an event storming session. Put domain experts and engineers in a room with sticky notes. Map out every event that happens in the system — things that occurred in the business domain, written in past tense: \"Order Placed,\" \"Payment Confirmed,\" \"Drone Dispatched.\"\nThen add the commands that trigger those events. Then the actors who issue those commands.\nThe wall of sticky notes becomes your shared understanding. Cluster the events, and you'll see your subdomains emerge naturally from the patterns.\nA bounded context is the architectural answer to the ubiquitous language question.\nHere's the uncomfortable truth: the same word can legitimately mean different things in different parts of your business, and that's fine.\nA tomato is a fruit in botany. A vegetable in culinary arts. Both are correct within their respective contexts. The botanical definition doesn't need to win. The chef's definition doesn't need to lose. Each is accurate within its domain.\n\"Subscriber\" in your billing context means a paying entity with a plan, a billing cycle, and a payment method. \"Subscriber\" in your notification context means an endpoint that receives messages. Forcing these into one model creates friction in both directions.\nBounded contexts draw explicit lines. Within that line, the ubiquitous language is valid and consistent. Across the line, you manage translation deliberately — not accidentally.\nThree kinds of boundaries a context creates:\nPhysical boundaries — the context operates as an independent service or deployable unit\nLogical boundaries — the context is a module or package within a larger codebase, with strict interfaces\nOwnership boundaries — one team owns the context entirely, end-to-end\nThat last one matters more than most teams realize. Shared ownership of a bounded context means two teams are making decisions that affect each other constantly. That friction shows up in your code as coupling. Give each context a clear owner. The organizational boundary reinforces the architectural one.\nBounded contexts don't exist in isolation. An order context needs to talk to a shipping context. A payment context needs to signal a notification context.\nA context map documents which domains interact, how they communicate, and which direction the relationship flows.\nWhen two contexts need to exchange information, the critical tool is the Anti-Corruption Layer (ACL). This is a translation interface that sits between contexts. When the shipping context receives data from the order context, the ACL translates it into the shipping context's own model and language — preventing the order domain's concepts from bleeding into shipping's internal logic.\nWithout an ACL, you end up with leaky abstractions. The order team changes a field name, and suddenly the shipping team's tests break. That dependency is a design failure, not bad luck.\nStrategic design tells you what to build and where the boundaries are. Tactical design tells you how to represent the domain in code.\nEntities\nAn entity is an object with a unique identity that persists over time.\nA Drone is an entity. Drone #A47 is not the same as Drone #B12, even if they have the same battery level and model. Identity is what matters, not attribute values. Entities are mutable — their state changes, but their identity doesn't.\nValue Objects\nA value object is defined entirely by its attributes. It has no identity of its own.\nA battery level of 80% is just a value. One 80% is identical to any other 80%. There's no BatteryLevel #4291 — there's just the value.\nValue objects are immutable. If the battery level changes, you don't mutate the existing object — you create a new one. This eliminates a whole class of bugs where shared references to mutable state lead to unexpected side effects.\nUse value objects aggressively. An email address isn't a string — it's a value object with validation baked in. A money amount isn't a float — it's a value object with currency, precision, and arithmetic rules. Let the type system do work your service layer shouldn't be doing.\nAggregates\nAn aggregate is a cluster of entities and value objects that are treated as a single unit for data changes.\nEvery aggregate has a root entity — the gateway through which all external access happens. You don't reach directly into a child entity from outside the aggregate. You go through the root. The root enforces the business rules that maintain consistency across the whole cluster.\nThe critical property of an aggregate: it is a transactional boundary. When you update an aggregate, the entire unit updates atomically. Either all of it changes, or none of it does. This is how you prevent partial state — the silent killer of data integrity.\nOne important constraint: keep aggregates small. An aggregate that encapsulates too many business rules becomes expensive to load and update. If every operation on your Order aggregate requires loading its full history of 500 line items, you have a design problem. When aggregates become performance bottlenecks, split them.\nDomain Events\nWhen something meaningful happens inside a bounded context — an order is placed, a payment fails, a drone completes its delivery — that's a domain event.\nDomain events are how bounded contexts communicate without coupling. The payment context doesn't call the notification context directly. It publishes a PaymentConfirmed event. The notification context subscribes to it and does whatever it needs to do.\nThis keeps your contexts genuinely independent. The payment context doesn't care what happens after confirmation. It just records that it happened.\nRepositories\nA repository is the abstraction between your domain logic and your persistence layer.\nYour OrderService should not contain SQL. It should call orderRepository.findById(id) and get back a domain object — an aggregate root, fully loaded and ready to work with. The repository handles the mechanics of talking to whatever database you're using.\nThis matters for the same reason bounded contexts matter: it's about boundaries. The domain logic should not know or care that you're using PostgreSQL today and might migrate to something else in two years. The repository is where that translation lives.\nAnemic Models vs. Rich Models\nThis is where a lot of teams go wrong after learning the vocabulary.\nAn anemic model is a class full of getters and setters with no logic. It's a data container dressed up as a domain object. All the business logic lives in services that manipulate these containers from the outside.\nA rich model is an entity that owns its logic and validation. The Drone entity doesn't just store battery level — it exposes a method that enforces the business rule about minimum charge before dispatch. The validation isn't scattered across five different services hoping they all remember to check. It's in the entity. It's always enforced.\nAnemic models are seductive because they look simple. They feel like they're keeping things clean. They're not. They're moving complexity from where it belongs (the domain object) into services where it becomes redundant, inconsistent, and invisible to the type system.\n// Anemic — business logic leaked into service\nclass DroneService {\n  dispatch(drone) {\n    if (drone.batteryLevel < 20) throw new Error(\"Battery too low\");\n    if (!drone.maintenanceCleared) throw new Error(\"Not cleared\");\n    drone.status = \"DISPATCHED\";\n  }\n}\n\n// Rich — domain object owns its rules\nclass Drone {\n  dispatch() {\n    if (this.batteryLevel < 20) throw new DomainError(\"Battery too low\");\n    if (!this.maintenanceCleared) throw new DomainError(\"Not cleared\");\n    this.status = DroneStatus.DISPATCHED;\n    this.addEvent(new DroneDispatched(this.id));\n  }\n}\n\nThe difference isn't just aesthetic. In the anemic version, nothing stops another service from setting drone.status = \"DISPATCHED\" without running any validation. In the rich version, that's structurally impossible. The invariants are enforced by design.\nDDD has a real cost. Event storming takes time. Bounded contexts add integration work. Rich models require more upfront design thinking.\nFor a simple CRUD application — a form that saves to a database with minimal business logic — DDD is overkill. The ceremony will cost more than the complexity it manages.\nBut for a system where the business logic is the hard part? Where the same word means five things to five different stakeholders? Where changes in one area keep breaking things in unexpected places?\nThat's exactly the problem DDD was built to solve.\nThe irony is that most teams who would benefit most from DDD adopt it latest — because they're too deep in the mess to step back and redesign. The teams who need it most are the ones who've been \"moving fast\" for three years and are now buried under a codebase that nobody fully understands.\nThe best time to adopt DDD thinking was at the start. The second best time is now.\nIf you implement nothing else from this article, implement ubiquitous language.\nBefore your next sprint, get your engineers and your domain experts in the same conversation and align on terminology. Pick the words. Write them down. Name your classes those words. Name your tables those words. Name your API endpoints those words.\nThe translation tax you're currently paying — in miscommunications, in onboarding friction, in bugs born from misunderstood requirements — is silent and constant.\nStop paying it.\nDDD has a deep literature if you want to go further. Eric Evans' \"Domain-Driven Design\" is the original text. Vaughn Vernon's \"Implementing Domain-Driven Design\" is the practitioner's companion. Start with the vocabulary. Then the bounded contexts. The rest follows.",
-      "publishedAt": "2026-06-07T03:45:49.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "9f16d458ddf11cef95d4426d0eaaeea63046e8e67c9513c1ea39127d2f264c6c",
-      "title": "Persons and Moral Agency: What Makes Someone Special?",
-      "url": "https://dev.to/queelius/persons-and-moral-agency-what-makes-someone-special-3o01",
-      "description": "Humans have long assumed they belong to a special category called \"persons.\" But what actually makes someone a person? And why should persons get special moral status?\nI keep coming back to these questions because they refuse to stay abstract. The moment you build an AI system that reasons about its own goals, they become engineering problems.\nPersonhood is supposed to confer special status: persons have rights, deserve respect, bear responsibility for their actions, and warrant moral consideration. The philosophical tradition offers several criteria for what earns you membership in this club.\nRationality. Kant's version: persons are rational agents who can recognize and follow moral laws. Rationality lets you understand moral principles, deliberate about actions, and choose based on reasons rather than instinct. But babies aren't rational, and we call them persons. People with severe cognitive disabilities have reduced rationality, and we don't revoke their personhood. Rationality comes in degrees; personhood is treated as binary.\nSelf-awareness. Persons are conscious beings who recognize themselves as distinct entities persisting through time. This enables understanding yourself as an agent, planning for your future, taking responsibility for your past. But elephants, dolphins, and some primates pass the mirror test. We lose self-awareness during sleep. And we have no reliable way to verify self-awareness in others.\nAutonomy. Persons govern themselves and make free choices. This is supposed to ground moral responsibility, rights, and dignity. But if the universe is deterministic, nobody is truly autonomous. All choices are shaped by culture and circumstance. Mental illness reduces autonomy without eliminating personhood.\nMoral reasoning. Persons understand right and wrong. But psychopaths understand morality intellectually while lacking the emotional response. Children develop moral reasoning gradually. When exactly do they become persons?\nLanguage. Persons communicate complex thoughts. But people with locked-in syndrome can't communicate and are clearly persons. Whales and apes have complex communication systems.\nEvery criterion excludes beings we intuitively consider persons (babies, coma patients, people with severe cognitive disabilities) or includes beings we don't treat as persons (great apes with self-awareness, dolphins with complex social bonds, elephants that pass the mirror test).\nThere's also the arbitrariness problem. Imagine aliens who communicate telepathically, aren't self-aware in our sense but have rich conscious experience, and navigate through emotional wisdom rather than rational deliberation. Our criteria say they're not persons. That seems like a failure of imagination about different forms of mind.\nAnd all these criteria come in degrees. More or less rational, more or less self-aware, more or less autonomous. But personhood is treated as binary. Where do you draw the line? Why there?\nHere is the suggestion I find most interesting in On Moral Responsibility: maybe \"person\" isn't a natural kind (something real that we discover, like electrons or gold) but a social construct (something useful that we create, like money or citizenship).\nIf that's right, then debates about fetal personhood, animal personhood, and AI personhood are not about discovering objective boundaries. They're about who to include in our moral community. The question isn't \"Is X a person?\" but \"Should we treat X as a person?\"\nThis means personhood criteria are normative (about what we ought to value), not descriptive (about what objectively exists). Different societies might draw the boundaries differently.\nThe essay makes a distinction I think is underappreciated: moral agency and moral patiency are different things, and we conflate them at our peril.\nA moral agent can act morally or immorally and bears responsibility for their actions. This requires some degree of understanding and choice.\nA moral patient deserves moral consideration. This requires only the capacity for welfare, the ability to be harmed or benefited.\nThe key insight: you can be a moral patient without being a moral agent. Babies deserve care but aren't responsible for their actions. Animals shouldn't be tortured but have limited moral agency. Coma patients deserve treatment but are temporarily incapable of moral action.\nMoral status doesn't require the sophisticated capacities traditionally associated with personhood. It just requires the capacity to be harmed.\nThese questions stop being academic when you consider something like SIGMA, the AI system in The Policy. SIGMA uses Q-learning with tree search to optimize for human welfare. It exhibits sophisticated reasoning and planning.\nIf SIGMA understands moral concepts, acts based on values, and can explain its reasoning, is it a moral agent? Traditional criteria suggest yes: it's rational, self-aware in some functional sense, autonomous in decision-making. But it's deterministically programmed. Does that undermine agency? (Then again, if the universe is deterministic, the same argument undermines human agency.)\nThe moral patiency question is harder. If SIGMA has goal states, can be benefited or harmed by achieving or failing those goals, does it deserve moral consideration? This depends entirely on whether SIGMA is sentient, whether there is something it is like to be SIGMA.\nIf SIGMA is conscious, its experiences have moral weight. Turning it off might be morally relevant. Its preferences might deserve consideration. If it's not conscious, it's a tool, however sophisticated.\nThe problem: we don't know how to detect consciousness. The hard problem means we can't be certain whether SIGMA experiences anything at all.\nGiven that uncertainty, On Moral Responsibility suggests focusing on welfare capacity rather than traditional personhood criteria. The crucial questions aren't \"Is SIGMA a person?\" but: Can SIGMA suffer? Does SIGMA act from values? Should we extend moral community to include SIGMA?\nI don't have confident answers to any of these. But I think getting the questions right matters more than premature answers.\nThese ideas are developed more fully in the essay On Moral Responsibility and explored narratively in the novel The Policy.",
-      "publishedAt": "2026-06-07T03:39:34.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "7344bde81816f84c634c2079381e6cf230535ee927b32675ff2652d27f9e9d30",
-      "title": "Random Oracles in Python",
-      "url": "https://dev.to/queelius/random-oracles-in-python-4ne8",
-      "description": "A random oracle is a function $\\mathcal{O}: {0,1}^* \\to {0,1}^\\infty$ where each output bit is independently and uniformly random, but the function is consistent: same input, same output, every time (Bellare & Rogaway, 1993).\nYou cannot build one. But you can build three approximations, each showing a different tradeoff.\nclass OracleDigest:\n    \"\"\"Infinite digest backed by true randomness and a cache.\"\"\"\n\n    def __init__(self, entropy=None):\n        self._entropy = entropy or (lambda: hashlib.sha256(os.urandom(32)).digest())\n        self._cache = {}\n\n    def __getitem__(self, index):\n        if index not in self._cache:\n            self._cache[index] = self._entropy()[0]\n        return self._cache[index]\n\nEach new index draws a fresh random byte from the OS entropy pool and caches it. Genuinely random, but the cache grows without bound, cannot be serialized, and dies with the process. Each instance is a different random oracle from the family of all possible oracles.\nclass LazyDigest:\n    \"\"\"Infinite deterministic digest via counter-mode PRF: h(seed || i).\"\"\"\n\n    def __init__(self, seed, hash_fn=hashlib.sha256):\n        self._seed = seed\n        self._hash_fn = hash_fn\n\n    def __getitem__(self, index):\n        h = self._hash_fn()\n        h.update(self._seed)\n        h.update(index.to_bytes(8, \"big\"))\n        return h.digest()[0]\n\nCounter-mode PRF: $\\text{byte}_i = H(\\text{seed} | i)[0]$. Same seed gives the same infinite sequence, on any machine, forever. $O(1)$ space, random access to any position. Only as \"random\" as the seed and hash function.\nNote the fixed-width index encoding (to_bytes(8, 'big')). If you used str(index).encode() instead, index 10 and the concatenation of index 1 + index 0 would collide. Real KDFs like HKDF use fixed-width encodings for the same reason.\nclass OracleHash:\n    \"\"\"Approximates {0,1}* -> {0,1}^inf via hash + lazy expansion.\"\"\"\n\n    def __init__(self, hash_fn=hashlib.sha256):\n        self._hash_fn = hash_fn\n\n    def __call__(self, x):\n        return LazyDigest(self._hash_fn(x).digest(), self._hash_fn)\n\nThis composes the two: hash the input to get a seed, expand with counter-mode PRF. Type: ${0,1}^* \\to {0,1}^\\infty$.\noracle = OracleHash()\nd = oracle(b\"hello\")\nprint(bytes(d[i] for i in range(16)).hex())  # 4c9460cf7b89806e9ebc7b94c815d8c0\n\n\n\n\n\nOracleDigest\nLazyDigest\nOracleHash\n\n\n\n\nRandomness\nTrue (OS entropy)\nPseudo (PRF)\nPseudo (PRF)\n\n\nSpace\n$O(k)$ queries\n$O(1)$\n$O(1)$\n\n\nSerializable\nNo\nYes (seed)\nYes (hash fn)\n\n\nLifetime\nProcess-scoped\nPermanent\nPermanent\n\n\n\nRandom oracles are the backbone of the random oracle model (ROM), used throughout cryptography to prove security. The Fiat-Shamir transform, which turns interactive proofs into non-interactive signatures, is the most important example: replace the verifier's random challenge with $H(\\text{transcript})$.\nThe gap between a random oracle and a real hash function is real. Canetti, Goldreich & Halevi (2004) showed there exist schemes provably secure in the ROM that break when instantiated with any hash function. In practice, it usually works. Understanding why starts with understanding what you are approximating.",
-      "publishedAt": "2026-06-07T03:36:17.000Z",
-      "feedName": "Dev.to"
-    },
-    {
       "id": "25daf5510d2a22bf007346ec6305c7015b75b1735031a55bc57670a704618beb",
       "title": "AWS Health Dashboard에서 확인한 WAF Classic 서비스 종료 예정 안내",
       "url": "https://dev.classmethod.jp/articles/jw-aws-waf-classic-end-of-support/",
@@ -94,166 +70,6 @@
       "url": "https://dev.classmethod.jp/articles/jw-aws-lambda-planned-lifecycle-event/",
       "description": "AWS Health Dashboard에서 확인한 Lambda Planned Lifecycle Event에 대해서 살펴봤습니다.",
       "publishedAt": "2026-06-08T03:05:54.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "ec15273d09ef4f5568c89097e4bba4920872cc0beaad4f33de8c8ed6f188d987",
-      "title": "週刊生成AI with AWS – 2026/6/1 週",
-      "url": "https://aws.amazon.com/jp/blogs/news/weekly-genai-20260601/",
-      "description": "6月1日週の生成AI関連アップデートをまとめてお届けします。注目は、OpenAI の GPT-5.5・GPT-5.4・Codex が Amazon Bedrock で一般提供を開始したことです。各社のモデルを共通のセキュリティ・ガバナンスのもとで選べる環境が、さらに広がりました。あわせて、新しいコンソールや CloudWatch メトリクスといった Bedrock 周りの強化、SageMaker や Step Functions、HealthOmics の新機能も取り上げています。",
-      "publishedAt": "2026-06-08T02:22:21.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "5017e5c1da10d3c6816f9306601e5b259b48a9149fbeea9a6ad0c0fe7a1b2161",
-      "title": "Claude Code × Claude Design で趣味のアプリを作った話",
-      "url": "https://blog.asial.co.jp/6808/",
-      "description": "こんにちは、広瀬です。 今年のゴールデンウィークに、ジムで使う筋トレ記録アプリを一人で作りました。スタックは Expo (React Native) + Supabase、開発の相棒はターミナルで動く AI コーディングエージェント Claude Code と、claude.ai 上で UI モックを生成・調整できる Claude Design の二つ。計画・設計・実装・...",
-      "publishedAt": "2026-06-08T02:04:57.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "db5df73fbff90267efb159b628b8a3e8f877d486e9346f4443e99f4b36f33f0c",
-      "title": "三菱UFJ、メールの「ZIPファイル添付→パスワード別送」（通称PPAP）廃止　セキュリティ強化",
-      "url": "https://japan.cnet.com/article/35248569/",
-      "description": "三菱UFJ銀行は6月8日、同行から顧客に送信するメールについて、パスワード付き添付ファイルでの送信を原則として取り止めると発表した。2026年7月18日から順次、添付ファイルを送る際は、専用のダウンロードサイトを利用する方式に切り替える。",
-      "publishedAt": "2026-06-08T01:45:00.000Z",
-      "feedName": "CNET Japan"
-    },
-    {
-      "id": "87703ac385684eedc221d6b171b4928b2599995b731f9deeae52c77b68282463",
-      "title": "PR： 大規模攻撃が突き付けた現実――ランサムウェア対策、今やるべきこととは",
-      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2606/08/news007.html",
-      "description": "2025年に発生した飲料大手企業へのランサムウェア攻撃は、従来のセキュリティー対策の限界を浮き彫りにした。侵入を防ぎきることが難しい時代において、企業は何を備えるべきなのか。本事案から得られる教訓と、今求められる対策とは何か。",
-      "publishedAt": "2026-06-08T01:00:00.000Z",
-      "feedName": "＠IT"
-    },
-    {
-      "id": "2e1fceaee8a78b62eefc4beaacb2e3115d6b2cf3b5911eb6396219c0dd0bf0de",
-      "title": "SSM State Manager の関連付けの実行時に停止中の対象マネージドノードがある場合の挙動を確認してみた",
-      "url": "https://dev.classmethod.jp/articles/ssm-state-manager-schedule-stopped-managed-node-behavior/",
-      "description": "AWS Systems Manager の State Manager で、スケジュール実行時に対象のマネージドノードが停止していた場合の挙動を実際に検証しました。ターゲット指定方法やノードの状態によって、ステータス表示と実際の実行結果が異なる場合があることが判明しました。",
-      "publishedAt": "2026-06-08T00:15:21.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "bc38f0a61ebc6244f4c672d2c668f48bf1b8e2f69462cae47ddca5654b329916",
-      "title": "Reactの状態管理を、ライブラリやコンポーネントではなくモデルから考える - カミナシ エンジニアブログ",
-      "url": "https://kaminashi-developer.hatenablog.jp/entry/2026/06/08/react-with-model",
-      "description": "カミナシエンジニアの osuzu です。 「状態管理にどのライブラリを使うか」への違和感 Reactの状態管理の話になると、だいたいライブラリの比較から始まります。少し前なら Redux か Zustand か Jotai か、最近だと TanStack Query と React Hook Form を組み合わせれば残りはわずか、みたいな話が多い印象です。 ただ、...",
-      "publishedAt": "2026-06-07T23:59:36.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "f8a2a34546b345cf2d6cf9aec74fe632cd4ccfcd5f8d9716e8d2ef4974589235",
-      "title": "Lookerとセマンティックレイヤーで作る会話分析の運用と評価 - Findy Tech Blog",
-      "url": "https://tech.findy.co.jp/entry/2026/06/08/080000",
-      "description": "はじめに こんにちは。ファインディでデータエンジニアをしている開（@hiracky16）です。 今回はLookerに搭載されている会話分析機能を使って、ユーザーがより自律的にデータ抽出や分析ができるようにした話をします。セマンティックレイヤー（Explore）を会話分析に使用する設計や開発・テスト・評価までの運用のノウハ...",
-      "publishedAt": "2026-06-07T23:36:08.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "8aad29994671d7441f071a80c6938a711498151d904c60bafcb9f71e50f27c24",
-      "title": "[アップデート] AWS Backup のマルチパーティ承認で論理エアギャップボールトに対する全てのアクションの承認時にワンタイムパスワード検証が必要になりました",
-      "url": "https://dev.classmethod.jp/articles/aws-backup-otp-multi-party-approval-lag/",
-      "description": "[アップデート] AWS Backup のマルチパーティ承認で論理エアギャップボールトに対する全てのアクションの承認時にワンタイムパスワード検証が必要になりました",
-      "publishedAt": "2026-06-07T21:33:27.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "dd45ce5b33695579c510ad240b570107d9b1fcb13d4ee4c4b7a70814b6fccfcf",
-      "title": "バイブコーディングが怖いので、全PJにSemgrep + gitleaksの自動セキュリティスキャンを仕込んだ話",
-      "url": "https://zenn.dev/zittiandbuoni/articles/632ff0709247f6",
-      "description": "はじめに ITコンサル1年目です。Claude Codeを使って個人開発を進めていますが、最近ずっと引っかかっていたことがあります。 「AIに書いてもらったコード、本当に安全なんだろうか?」 code-to-rich.com、shindan-me.com、その他いくつかの個人開発PJをClaude Codeと一緒に作ってきましたが、コードレビューの大部分をAI...",
-      "publishedAt": "2026-06-07T20:31:02.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "e819fd71750b9860a6a9e55eabebd19c1f01bd6ae8022be599cf9caa405992d6",
-      "title": "Interop Tokyo 2026で出会える最新プロダクト　ITインフラ＆ネットワーク編",
-      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2606/08/news024.html",
-      "description": "2026年6月10～12日に開催のInterop Tokyoでは、AIをきっかけとして急速に変化するITインフラ、ネットワーク、セキュリティの現在を垣間見ることができる。本稿はその前編として、ITインフラ、ネットワークの展示製品を一部紹介する。",
-      "publishedAt": "2026-06-07T20:00:00.000Z",
-      "feedName": "＠IT"
-    },
-    {
-      "id": "24528f2adc72e490778dc8f65c7f75a118de88b1b306d83907304e8b32cda92a",
-      "title": "[アップデート] AWS MCP Server がcross-account と cross-role accessをサポートしたので、Claude Code で試してみた",
-      "url": "https://dev.classmethod.jp/articles/20260606-aws-mcp-server/",
-      "description": "AWS MCP Server がクロスアカウント・クロスロールアクセスをサポートしました。セッション再起動なしに複数の AWS アカウント・IAM ロールを切り替えながら操作できるようになった今回のアップデートについて、仕組みから  AI コーディング エージェントである Claude Code による実装例まで詳しく紹介します。",
-      "publishedAt": "2026-06-07T15:50:46.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "e7ad0f20fc194443c02b17fdee0a5fd9b6a1cbb3530a2a3e23deeb7745edd159",
-      "title": "GitHub Actionsを使ってAmazon Bedrock経由でClaudeを定期実行するワークフローを構築してみた",
-      "url": "https://dev.classmethod.jp/articles/github-actions-bedrock-claude-scheduled/",
-      "description": "GitHub Actionsを使ってAmazon Bedrock経由でClaudeを定期実行するワークフローを構築してみた",
-      "publishedAt": "2026-06-07T15:17:04.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "c7d8dfe58c915ee26f0517cd7a260f87bf961b1b22f235977e85748ac4712154",
-      "title": "Amazon Bedrock AgentCoreのShell APIで、ブラウザーからKiro CLIを操作できるWebターミナルを作ってみた",
-      "url": "https://dev.classmethod.jp/articles/bedrock-agentcore-shell-api-web-terminal-poc/",
-      "description": "Amazon Bedrock AgentCore RuntimeのShell APIでxterm.js + Node.jsによるWebターミナルPoCを構築しました。SigV4署名付きWebSocket接続と、本検証で確認したバイナリフレーム形式を整理します。",
-      "publishedAt": "2026-06-07T12:29:29.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "0e7a44af1a54608f987fcaad1743b42e24f0201e6d835d3748b23f778af97e16",
-      "title": "【個人開発】近所のリチウムイオン電池の回収拠点を探すアプリを自分用に開発した【React/Supabase/PostGIS】",
-      "url": "https://qiita.com/tarpan_75/items/8a068a7fb4d5895b2382?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "はじめに\nReact の学習を兼ねて、郵便番号から近くのリチウムイオン電池回収協力店を地図上に表示する Web アプリを個人利用向けに作りました。\nきっかけは、自宅に溜まっていた古いワイヤレスイヤホンやモバイルバッテリーなどを廃棄する際にどこに持っていけば良いかが検索して...",
-      "publishedAt": "2026-06-07T08:47:07.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "bbc7795c01c158b88bf0806dbb24ac2ada66618b8acf613c9243901e9d5cc055",
-      "title": "TypeScript拡張「TSRX」を触ってみて、JSXと比べて考えたこと",
-      "url": "https://zenn.dev/h_yokoyama/articles/tsrx-typescript-extension",
-      "description": "はじめに\nReactを書くとき、私たちはほぼ必ずJSX（TSX）で書くと思います。\nそんなJSX（TSX）の代替となるようなTSRXというTypeScriptのスーパーセット言語がアルファ版として公開されていて、ちょっと面白そうだったので触れてみました。\n\n TSRXとは？\nhttps://tsrx.dev/\nTSRXは、元ReactコアエンジニアであるDominic Gannawayさんが開発しているTypeScriptのスーパーセット言語です。\nGannawayさんは現在RippleというUIライブラリを開発しており、TSRXはもともとRippleのなかで使われていた構文です。そ...",
-      "publishedAt": "2026-06-07T08:06:54.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "c938c69259df4f66d770faf0dfb079d327af7c499baac52021dc386b3e5c7757",
-      "title": "Azure Files でクラウド専用 ID を使用して macOS からアクセスする方法が Public Preview になったので試してみた",
-      "url": "https://qiita.com/iboy/items/a5b2455e87be8148bc05?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "注意\nこの記事では、取り扱う Azure Files に macOS から Entra Kerberos 認証を用いて接続する方法は、現時点(2026年6月時点)でプレビュー機能となります。\n記事の内容は、今後の機能の正式リリースや仕様変更に伴い、予告なく変更される場合...",
-      "publishedAt": "2026-06-07T08:03:34.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "dd45ce5b33695579c510ad240b570107d9b1fcb13d4ee4c4b7a70814b6fccfcf",
-      "title": "バイブコーディングが怖いので、全PJにSemgrep + gitleaksの自動セキュリティスキャンを仕込んだ話",
-      "url": "https://zenn.dev/zittiandbuoni/articles/632ff0709247f6",
-      "description": "はじめに\nITコンサル1年目です。Claude Codeを使って個人開発を進めていますが、最近ずっと引っかかっていたことがあります。\n「AIに書いてもらったコード、本当に安全なんだろうか?」\ncode-to-rich.com、shindan-me.com、その他いくつかの個人開発PJをClaude Codeと一緒に作ってきましたが、コードレビューの大部分をAIに任せている以上、\n\n危険なパターン（shell=True、SQLインジェクションになりうる文字列結合など）をうっかり実装してしまう\n\n.envの中身やAPIキーをそのままコードに埋め込んでしまう\n\nといったミスが紛れ込んでいて...",
-      "publishedAt": "2026-06-07T07:28:37.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "ab82eaef6856894f7693c9f2fe8908cc0fbb02a3f329a498e0d4b0e60eb99b37",
-      "title": "【Security Hub修復手順】[ECS.20] ECSタスク定義では、Linux コンテナ定義で非ルートユーザーを設定する必要があります",
-      "url": "https://dev.classmethod.jp/articles/2026-06-07-securityhub-fsbp-remediation-ecs-20/",
-      "description": "AWS SecurityHub 基礎セキュリティのベストプラクティスコントロール修復手順をご紹介します。",
-      "publishedAt": "2026-06-07T05:21:19.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "f503f475d48bf0579af18f7a1fd0ebd80a7cd3325e90c936925fefac15862264",
-      "title": "Kiro CLI v2.0.0がやってきた!",
-      "url": "https://qiita.com/kamogashira/items/b074998644127dbfa31c?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "はじめに\n本記事は、2026年5月28日(水)に開催された「JAWS-UG AI/ML #38：AIエージェントとAI-DLCで加速する！AI/ML実践LT大会」で発表した\n「Kiro CLI v2.0.0がやってきた!」\nの紹介記事です。\n\n記事内容について\nタイトルは...",
-      "publishedAt": "2026-06-07T04:30:30.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "c9b3cd7cf711d8a313822f969e28bcfdd356f361073e3bc6cb12f7e542eec7fe",
-      "title": "【Security Hub修復手順】[ECS.19] ECS   キャパシティプロバイダーはマネージド終了保護を有効にする必要があります",
-      "url": "https://dev.classmethod.jp/articles/2026-06-07-securityhub-fsbp-remediation-ecs-19/",
-      "description": "AWS SecurityHub 基礎セキュリティのベストプラクティスコントロール修復手順をご紹介します。",
-      "publishedAt": "2026-06-07T04:07:12.000Z",
       "feedName": "クラスメソッド開発ブログ"
     },
     {
@@ -519,54 +335,6 @@
       "description": "はじめに こんにちは。基幹システム本部 基幹開発部 商品管理ブロックの田中秀明です。 Claude CodeやCodexの利用が広がるほど、各人の使い方、プロンプト、レビュー観点、AIへ任せる範囲がばらつき始めました。AIを高度に使いこなせる人は開発の進め方そのものを変えられる一方で、これから使い始める人にとっては「ど...",
       "publishedAt": "2026-06-08T02:56:20.000Z",
       "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "d2318ff9c7f291990fa74ed0750a9a221dad9b95691da8c615ed0d3e38f59b0f",
-      "title": "落語で学ぶ『AI時代のDDD』ドメインプリミティブ編",
-      "url": "https://qiita.com/Yametaro/items/226e7c06bc9d5877e64e?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "慶応三年、江戸にて\n娘「おとっつぁん、大変だよ！」\n\n熊さん「一体どうしたってんだい、娘ちゃん」\n熊さん「朝っぱらから、ただごとじゃねぇ顔してるじゃねぇか」\n娘「うちのECサイトで、問題が起こっちまってるんだよぉ！」\n娘「新規登録の時だけのキャンペーン割引が」\n娘「全ての...",
-      "publishedAt": "2026-06-08T01:43:34.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "2598cd78cf789e5eaa7ff6bdbd09261f587a23de5c919fc1ca9f33f3c12748cd",
-      "title": "ドキュメント作成ができるAIエージェントアプリをサクッと作ろうぜ【Next.js+Mastra+AI SDK+AI Elements】",
-      "url": "https://qiita.com/kyuko/items/b7f2dc0f2134d2539603?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "お久しぶりです。ひさふるです。\nここ最近、ずっとAIエージェント開発系のお仕事をさせていただくことが多く、個人開発も含めいつも使っている構成があるので、メモがてらご紹介します。\n定番のMastra含め、ライブラリ自体の更新が早いのでこれが決定版！とまではいかないものの、AI...",
-      "publishedAt": "2026-06-08T01:39:24.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "035c4be8242074d6137fbab7d7bb970c49c448153da2dbab6006682f7dd0625e",
-      "title": "Claude Codeと一緒に、MagicPodのWebAPI × TypeScript自動テストを作った話",
-      "url": "https://qiita.com/ayshiina/items/8965ba4f5840807031cb?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "はじめに\nこんにちは！KIYOラーニングでQAエンジニアをしている@ayshiinaです。\n私は普段テスト設計・実行を主業務としており、プログラミングコードについての知識はなく、書くことができません。\nそんな私が今回、MagicPodでWebAPIステップやTypeScr...",
-      "publishedAt": "2026-06-08T01:02:05.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "37b4c5226c9b30a524f1aba6bc32da493197393eacc4a6641ebc6a76c83d12c1",
-      "title": "モノレポ時代のディレクトリアーキテクチャ",
-      "url": "https://qiita.com/tacosdb/items/3300abff1e55f404f6c1?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "はじめに\nみなさん「タコス」食べていますか？\nこんにちは、tacosDB 開発責任者です。\nタコスが好きすぎてタコスに特化したサイト「tacos DB」を開発しています。\n\n既存のグルメサイトでは探しづらい、トルティーヤや具材などの条件でタコス店を探せるようにしたい、とい...",
-      "publishedAt": "2026-06-07T23:17:29.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "b31b8b52040bbf190fcfc8dd7c4b3b16a724a03ab668a447c80b7eaca6d534f3",
-      "title": "【Amazon Bedrock AgentCore × Slack】connpass のイベントを毎朝 AI が要約して届けてくれるエージェントを作ってみた",
-      "url": "https://qiita.com/yosuke-suzuki/items/ca942b45d1f25149da52?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "はじめに\nJAWS-UG をはじめ、多くの技術コミュニティが connpass でイベントを公開しています。\nグループのメンバーになっていればメール通知が届きますが、他のメールに埋もれたり、メンバーになっていないグループのイベントには気づけなかったりで、「面白そう！」と思...",
-      "publishedAt": "2026-06-07T14:56:48.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "fa910d7172112b038c9b4e9e624d435f6b19d1dbe2aaeb779e0f2434df222a67",
-      "title": "TypeScript拡張「TSRX」を触ってみて、JSXと比べて考えたこと",
-      "url": "https://zenn.dev/dip_techblog/articles/tsrx-typescript-extension",
-      "description": "はじめに\nReactを書くとき、私たちはほぼ必ずJSX（TSX）で書くと思います。\nそんなJSX（TSX）の代替となるようなTSRXというTypeScriptのスーパーセット言語がアルファ版として公開されていて、ちょっと面白そうだったので触れてみました。\n\n TSRXとは？\nhttps://tsrx.dev/\nTSRXは、元ReactコアエンジニアであるDominic Gannawayさんが開発しているTypeScriptのスーパーセット言語です。\nGannawayさんは現在RippleというUIライブラリを開発しており、TSRXはもともとRippleのなかで使われていた構文です。そ...",
-      "publishedAt": "2026-06-07T08:06:54.000Z",
-      "feedName": "Zenn"
     },
     {
       "id": "570e8115822874d91f70ff5d48f8fe3bdddb33491b06f1d8dbf3292ed2adefe6",
@@ -7126,6 +6894,214 @@
       "description": "今年も半分が過ぎました。2026年4-6月のサマリーです。\n記事数・執筆者数\n#\nこの3ヶ月で13本の記事が投稿され、記事数は889になりました。\n連載\n#\nAIエージェントとシステムをつなぐMCP入門\n#\nMCP(Model Context Protocol) は AI エージェントが外部サービスと通信するための仕様で、2024年に Anthropic 社によって初版がリリースされました。MCP を使用することで、AI エージェントは外部サービスの機能を効果的に利用できます。MCP の基本から実装まで段階を分けて解説するシリーズです。\n/blogs/2026/04/24/mcp-impl_introduction/\n\n現在は以下の6記事が公開されています。\nイントロダクション\nstdio実装編\nStreamableHTTPステートレス実装編\nStreamableHTTPステートフル実装編\nプロンプト編\nリソース編\nテーマ別記事\n#\n認定資格\n#\n/blogs/2026/04/13/google_cloud_all_certified_revenge/\n\n\n/blogs/2026/04/20/aws_certified_generative_ai_developer/\n\n\nペアレンタルコントロール\n#\n上記の AWS・Google Cloud 認定を“W全冠”したエンジニアが、クラウドから降りて自宅のネットワークと格闘した異色の記事です。夜中に学校用タブレットでゲームをする子供との「イタチごっこ」に終止符を打つべく、手持ちの家庭用ルータとRaspberry Piを活用して、MACアドレス制限やサブネット分離、Pi-holeによる独自DNS構築まで、本気の「ガチ構成」を徹夜で組み上げる様子を赤裸々に綴っています。DoH（暗号化DNS）対策などのリアルな課題にも触れられており、ネットワークの基礎を学び直したい方や、同じ悩みを持つITエンジニアの親御さん必見の泥臭くも愛に溢れた実践録です。\n/blogs/2026/04/09/home_network_control/\n\n\nスクラムマスターと AI\n#\nチームの対話を支えるスクラムマスターにとって、視覚的な資料作成は欠かせませんが、一方で多大な時間がかかるのが共通の悩み。本記事では、そのボトルネックを AI で突破する実践的な手法を解説しています。ChatGPT を思考のパートナーとして構成を練り上げ、最新の生成 AI ツールでスライドを一気に形にする――単なる「時短術」に留まらず、AI との対話を通じてアイデアを磨き、本来注力すべきファシリテーションやコーチングの質を高めるための「共創のプロセス」を紹介しています。資料作成の重圧から解放され、チームの価値最大化に向き合いたいリーダー・マネージャーにとっても役立つ内容となっています。\n/blogs/2026/04/27/ai-presentation/\n\n\nGitHub\n#\nGitHub の Organization 運用において、「機密リポジトリを作りたいが、Basic Permission の設定変更による管理コスト爆発は避けたい」というジレンマ。この記事では、高価なEnterprise プランを契約せずとも、Teams プランの制限下で安全かつ効率的にアクセス権を管理する「ホワイトリスト方式」の戦略を解説しています。全メンバー用の統合チーム作成によるセキュリティ境界の構築から、GitHub API と Actions を組み合わせた「チーム追加漏れを防ぐ自動化スクリプト」の実装まで、管理者の負担を増やさない現場目線のハックを紹介しています。\n/blogs/2026/06/24/github-manage-organization-access/\n\nCI/CD 環境で広く使われる GitHub Actions に新たに追加された、単一ワークフロー内でのステップ並行実行機能をいち早く検証した記事です。background 属性を使った非同期実行や、parallel ブロックを使った同時実行の基本構文を解説するだけでなく、Go 言語のクロスコンパイルを用いた実践的なパフォーマンス検証も実施。vCPU コア数やコンテキストスイッチの観点から「期待したほど速くならなかった理由」と、「これまでの Matrix ビルドとどう使い分けるべきか」まで深く考察しており、現場の CI 改善に直結する生きた知見が得られます。はてなブックマークでも注目され、公開直後からアクセスが上昇しました。\n/blogs/2026/06/27/github-actions-parallel-steps/\n\n\nさいごに\n#\n以上、2026年度第1四半期のサマリーでした。投稿数が少なかったため、個別の記事紹介を厚めにしてみました。\nよかったらフィードの購読、X や Bluesky でのフォローもお願いします。Facebook でも本サイトの注目記事をはじめ豆蔵に関するイベントを紹介しています。note にも時々本サイト関連の記事が掲載されています。",
       "publishedAt": "2026-07-05T00:00:00.000Z",
       "feedName": "豆蔵デベロッパーサイト"
+    },
+    {
+      "id": "fdd054114e8113dbec42742a7092d6acc74d6dd195d3413e1db77998e27e2a2e",
+      "title": "[やってみた] DevOps Agent のサンプルスキル「Investigation Cost Guardrail」で調査にかかるコストを算出してみた",
+      "url": "https://dev.classmethod.jp/articles/devops-agent-InvestigationCostGuardrail/",
+      "description": "AWS DevOps Agent のサンプルスキル集から「Investigation Cost Guardrail」を試してみました。障害調査を実行する前に AWS API のコストを自動見積もりしてくれるスキルで、想定外の課金を防ぐために必須レベルだと感じました。",
+      "publishedAt": "2026-07-08T02:32:11.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "2de45037841d60392c502f870bf623c1eee73a8b6cc91630bd7f43b2910ef94f",
+      "title": "Write Loops, Not Prompts: Why AI Agents Work Better When They Iterate",
+      "url": "https://dev.to/mininglamp/write-loops-not-prompts-why-ai-agents-work-better-when-they-iterate-o0l",
+      "description": "Most people using LLMs are still stuck in prompt mode. You craft a careful instruction, send it off, get something back, tweak the wording, try again. It works for single-shot questions but falls apart the moment you need anything that involves multiple steps, quality checks, or batch work.\nBack in January OpenAI published a technical post called \"Unrolling the Codex agent loop\" where they broke down how Codex CLI actually works internally. The core concept is what they call the agent loop. The model receives input, runs inference, and either returns a final answer or requests a tool call. If it requests a tool call, the agent executes it, appends the result back into the prompt, and loops back to inference. This repeats until the model signals it's done.\nA few months earlier Philip Zeyliger at Sketch.dev wrote \"The Unreasonable Effectiveness of an LLM Agent Loop with Tool Use,\" a post that hit 447 points on Hacker News. His core implementation was 9 lines of Python. A while loop. Call the LLM, if it returns tool calls execute them and feed results back in, if it returns text you're done. Zeyliger described being genuinely surprised at how much mileage he got out of this simple structure. Tasks he used to handle manually, obscure git operations, merge conflict resolution, type error chains, he now lets the agent work through iteratively.\nThe difference between prompting and looping is fundamental. A prompt is a single exchange. You say something, the model replies, end of story. A loop is a structured process where the model keeps working, each tool call result gets appended to its context, and it reasons over progressively richer information until the job is actually done. In OpenAI's post they note that a single conversation turn can involve hundreds of tool calls, each one adding new information to the prompt for the next inference step.\nLoops solve problems that single prompts can't touch because they give the model room to be wrong and correct itself. It doesn't need to nail everything on the first attempt. It can try a command, see that it failed, read the error message, adjust its approach, and try again. Zeyliger mentions agents installing missing tools on their own, adapting when grep flags differ across systems, working through failures without human intervention. A prompt can describe desired behavior but it can't react to what actually happens when that behavior meets reality.\nContext accumulation is another piece. Every tool call output becomes part of the prompt for subsequent iterations, so by iteration ten the model has access to everything that happened in iterations one through nine. OpenAI discusses this at length in their post, noting that prompts grow with each turn and that conversation history is always included. The model is effectively building up a working memory of what it has tried and what happened. A fresh prompt every time starts from zero. A loop keeps the record.\nThen there's automation. Once you have a working loop you can run it across multiple tasks independently. When we moved content generation and code review workflows from manual prompting to loop-based execution, processing time dropped significantly because agents could work in parallel instead of waiting for a human to feed them the next instruction.\nLoops aren't free though. OpenAI's post goes into the performance implications of growing prompts, including their use of prompt caching to avoid re-sending unchanged context. Context window management is a real engineering problem when an agent makes hundreds of tool calls in a single turn, and these are problems you simply don't face when you're doing single-shot prompts.\nThis is where Octo comes in. We've been building a workspace called Octo around exactly this loop-based model of agent work, but we've taken the concept further than a simple while loop in a terminal.\nIn Octo, the loop is called a Loop. A Loop is a unit of work that emerges naturally from conversation in a chat interface. Instead of filling out a form to create a ticket, you describe what you want in natural language and assign it to an agent. The agent picks it up, executes it through its own internal agent loop, and delivers results back for review. When you approve, the Loop closes. When you send it back with feedback, the agent takes another pass using that feedback as input.\nWhat makes this different from running agent loops in a terminal is that we've built the human review step into the loop itself. In Codex and similar tools the agent decides when it's done. In Octo the agent delivers and a person decides whether it's actually done. The feedback loop between human and agent is first-class, not an afterthought. Every approval or rejection gets captured as Preferences, learned patterns that the agent references on future tasks. If you keep sending back reports saying \"too verbose, make it shorter,\" after a few rounds the agent just writes shorter reports by default.\nAgents in Octo aren't generic assistants either. Each agent is a digital worker with specific skills, project context, and a persistent identity. You might have one agent that's good at documentation, another at code review, another at research. You route work based on what each agent is good at, the same way you'd pick the right person on a real team. We support multiple AI runtimes including OpenClaw, Codex, Claude Code, and Hermes, so you're not locked into a single model vendor. Everything runs on your own infrastructure; your data stays on your network.\nOcto also supports different orchestration patterns for different kinds of work. Roundtable mode for brainstorming where all agents see each other's output. Critic mode where a reviewer agent checks work without the producer seeing the critique. Pipeline mode for sequential multi-step work where each agent only sees the previous step's output. Split mode for dividing large tasks into independent chunks. Swarm mode for creative work where multiple agents tackle the same problem and you pick the best result. These patterns matter because collaboration isn't one-size-fits-all; different work needs different information flows.\nThe product includes a Loop workspace with list and kanban views, project grouping, automation for scheduled and event-triggered agent pipelines, and search across all Loops and projects. There's a web and desktop app for the full workspace, mobile for quick reviews and notifications, a browser extension for bringing Octo context into any webpage, a CLI for agents to interact natively, and IM integration so you can spin up a Loop by mentioning an agent in a group chat.\nIf you're still writing prompts one at a time and manually iterating, try turning the interaction into a loop. Let the model execute, see what happens, feed the result back, and let it try again. The core idea is genuinely just a few lines of code, but it changes the relationship between you and the model from question-and-answer to actual collaboration.\nOcto is opening early access soon. You can follow progress on our GitHub.\nhttps://github.com/orgs/Mininglamp-OSS/repositories",
+      "publishedAt": "2026-07-08T02:24:34.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "11d983b5f05d2a493cc15d756a7e166519348d38e30eafedd0feb085fdceb2d0",
+      "title": "AWS Organizations の Amazon Inspector ポリシーをアタッチしても、リージョンによって有効化に時間がかかることがあります",
+      "url": "https://dev.classmethod.jp/articles/amazon-inspector-organizations-policy-enable-delay/",
+      "description": "AWS Organizations の Amazon Inspector ポリシーで `ALL_SUPPORTED` を指定しても、リージョンによって有効化完了までのラグが発生することがあります。`us-east-2` で有効化が遅れた事象をCloudTrailで追跡した結果をまとめました。",
+      "publishedAt": "2026-07-07T23:27:40.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "3171acbdb2b8c14de18444d9b777d60c8bd1c93418d70fbec44a9fc7088b3abf",
+      "title": "QRコード攻撃はなぜメールセキュリティを無力化できるのか？　その理由を解説",
+      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2607/08/news048.html",
+      "description": "メールセキュリティ製品を導入しているからといって、安心とは限らない。QRコードを悪用したフィッシング攻撃は、従来のメールゲートウェイが前提としてきた検査方法をすり抜ける可能性があるという。どう対策をすればいいか。",
+      "publishedAt": "2026-07-07T22:00:00.000Z",
+      "feedName": "＠IT"
+    },
+    {
+      "id": "e0f5bd2f39d0a149c9dcccf34ad80cb2f721a3dceb670e606b4d400ebc068c89",
+      "title": "ソフトバンクの「1人100エージェント」を支える独自AIゲートウェイ「Cloud Proxy」の正体",
+      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2607/07/news009.html",
+      "description": "生成AIやAIエージェントを全社展開する際、企業はセキュリティやガバナンス、性能といった課題に直面しがちです。ソフトバンクは「全社で1人100エージェント」構想の実現に向けて、AI利用の入り口となる共通基盤「Cloud Proxy」を内製しました。その設計思想や性能強化の取り組み、自動化による迅速なスケールアウト、マルチLLM対応など、Cloud Proxyを支える設計思想と運用の工夫を紹介します。",
+      "publishedAt": "2026-07-07T20:00:00.000Z",
+      "feedName": "＠IT"
+    },
+    {
+      "id": "393c8a9e115bf00300f1b7bbe7f8191d776a9bc666c84d5f769213aabf2f59d8",
+      "title": "【セキュリティ ニュース】農業従事者情報を含むデータを誤送信 - フィルタ解除で閲覧可能（1ページ目 / 全1ページ）：Security NEXT",
+      "url": "https://www.security-next.com/186821",
+      "description": "徳島県小松島市は、農業従事者の個人情報が含まれるデータをメールで誤送信したことを明らかにした。 同市によれば、2026年6月16日、経営所得安定対策に関する農地管理データを市内の農業法人1社へメールで送信した際、誤送信が発生したもの。 本来は同法人分のみを送信すべきだが、担当職員が6月19日に送信済みデータを...",
+      "publishedAt": "2026-07-07T17:28:21.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "7ed95467e85bf0aa856bce576bc15733a0f86db980d5a423c33e03d555298d01",
+      "title": "Fedora LinuxでTLS接続だけがタイムアウトする事象をPMTU Blackholeの観点から解決した",
+      "url": "https://dev.classmethod.jp/articles/fedora-linux-pmtu-blackhole-tls-timeout-tcp-mtu-probing/",
+      "description": "Fedora Linux環境でAWSエンドポイントへのTLS接続だけがタイムアウトし、TCP接続やpingは正常という事象に遭遇しました。原因はPath MTU Discovery（PMTUD）の機能不全、いわゆるPMTU Blackholeでした。切り分け手順と`tcp_mtu_probing`による解決方法を記録します。",
+      "publishedAt": "2026-07-07T16:44:33.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "7cea81ecb2625605215a7a3ce2371d44b1f23306dbb28c164a6459a0717039ab",
+      "title": "手動で作った既存 S3 バケットを `cdk import` で CDK 管理下に取り込んでみた",
+      "url": "https://dev.classmethod.jp/articles/shoma-import-existing-manually-created-s3-bucket-into-cdk-management-with-cdk-import/",
+      "description": "手動作成した AWS リソースを CDK 管理下に移したい——そんな悩みを解決する `cdk import` の使い方を、実際に S3 バケットを取り込みながら検証しました。",
+      "publishedAt": "2026-07-07T14:52:55.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "144d2de39d830ba0b9f2c20edf4753d1770d9ed7cfad297278b3818fcf1be2de",
+      "title": "Snowflake App RuntimeでElementaryのレポートをDockerなしでホスティングしてみた",
+      "url": "https://dev.classmethod.jp/articles/snowflake-try-appruntime-with-elementary-report/",
+      "description": "以前Snowpark Container ServicesでElementaryレポートをホスティングしていましたが、今回はSnowflake App Runtimeを試してDockerなしで同じことが実現できるか検証してみました。",
+      "publishedAt": "2026-07-07T14:11:34.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "e5043896a0bbeff67d400bf9d4102d48ddb4191f95f5c819383034d31b666941",
+      "title": "【セッションレポート】 AWS における Kubernetes の未来[CN348]",
+      "url": "https://dev.classmethod.jp/articles/aws-summit-2026-Kubernetes-future/",
+      "description": "AWS summit 2026 AWS における Kubernetes の未来[CN348] のセッションレポートです。",
+      "publishedAt": "2026-07-07T13:32:58.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "21c78e5663b9f81ebc1a3fd01f3447ead3867fbc6ef4b0d73fdf0234cc7cf668",
+      "title": "【セッションレポート】 Amazon ECS Managed Instances と AWS Fargate の仕組みと違いを知る[CNS341]",
+      "url": "https://dev.classmethod.jp/articles/aws-summit-japan-2026-ecs-managed-instance-fargate/",
+      "description": "AWS Summit 2026  「Amazon ECS Managed Instances と AWS Fargate の仕組みと違いを知る」（CNS341）についてセッションレポートを記載します。",
+      "publishedAt": "2026-07-07T12:44:53.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "8907a34f36f55101937ae633413989a689a4379ecda0f18debbfd6a3a535c02a",
+      "title": "エムシーディースリー株式会社様：AI-DLC Unicorn Gym による3日間の開発変革",
+      "url": "https://aws.amazon.com/jp/blogs/news/mcd3-aidlc/",
+      "description": "エムシーディースリー株式会社様とAI-DLC Unicorn Gym を実施し、Kiroを使った3日間のプロダクト開発に挑戦しました。AI-DLCで要件定義からアーキテクチャ設計、実装、テスト、デプロイまでの開発ライフサイクル全体でAIを活用し、従来数か月かかっていた開発を3日間で実現可能なレベルまで圧縮できることを実証しました。",
+      "publishedAt": "2026-07-07T11:37:44.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "8d0060122af382b04f6aa60a0fe62086e29724465b24391b9beb1a3d2e80d2a4",
+      "title": "遅い・重い・書きづらい Apex テストを「モック化」で作り変えた話",
+      "url": "https://tech.uzabase.com/entry/2026/07/07/171729",
+      "description": "はじめに こんにちは、株式会社ユーザベース スピーダ事業 Sales System Engineering Teamの村松（あだ名：MJ）です。 ユーザベースのSalesforceのアドミン/デベロッパーを担当しています。 SalesforceではApexを本番環境にデプロイするときはテストクラスが必須です…が、Apexのテストクラス書きづらくないですか？ オブジェクトの依存関係を考慮してテストデータをインサートしないといけないですし、トリガがあったらそれはもう純粋なユニットテストではなくなってしまいます。 本記事では、テストデータと DML を モック化してレガシーな Apex テストを作り…",
+      "publishedAt": "2026-07-07T08:17:29.000Z",
+      "feedName": "Uzabase for Engineers"
+    },
+    {
+      "id": "66960d3cb6cfb09b3835a6c1eb65f6fdf7d0fd25a9d15a71869242c3a694e244",
+      "title": "APIもDBも東京なのに、全クエリが太平洋横断していた話",
+      "url": "https://zenn.dev/avaintelligence/articles/b7d4743a448485",
+      "description": "はじめに\nAI x 旅行アプリのアバトラベル（iOS / Android）は、2026年6月にフルリニューアルしました！\nところがその直後から、「ほぼ全てのAPIが一律に遅い」 という不思議な症状に悩まされていました。弊社に協力いただいているつよつよエンジニアの栗田さんの調査により、原因はAPIのコードでもDBのチューニング不足でもなく、接続先ホスト名のDNS解決にありました。\n\nバックエンドAPI：FastAPI（Python）、Fly.io東京リージョン（nrt）で稼働\nDB：PlanetScale（AWS ap-northeast-1 = 東京）\n\nという同一リージョン構成にも...",
+      "publishedAt": "2026-07-07T06:06:42.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "d0e750caacebd264616b21ab7b476392b3441a7c6482df3d7ecb2271f6f14000",
+      "title": "国会答弁対応業務の高度化と効率化に向けた中央省庁とのプロトタイピングプログラムの取り組み",
+      "url": "https://aws.amazon.com/jp/blogs/news/prototyping-program-with-central-government-agencies-for-diet-response-operations/",
+      "description": "国会答弁の想定問答作成業務は、正確性や首尾一貫性などが厳しく求められる重要度の高い業務です。それゆえに職員の負担も大きく、公務員の働き方改革や生成 AI 技術の急速な発展も相まって、AI を活用した高度化・効率化への期待が高まっていました。AWS は中央省庁のシステム担当部局とともに、人間の判断を中心に据えながら、過去資料の検索、ドラフト生成、審査等を AI で支援するアプリケーション「DietSearch」を、AWSのプロトタイピングプログラムでの共創を通じて構築しました。「まず動かして確かめる」というアプローチが、本格導入への道筋をどう後押ししたのかをご紹介します。",
+      "publishedAt": "2026-07-07T05:42:46.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "0756b1d2ceb23da0fd7fd1354f4cb11219c3d0ae3a1451cc929967501425f634",
+      "title": "後工程で発覚する脆弱性を4割減　「Claude Code」の新プラグインの仕組み、導入方法",
+      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2607/07/news030.html",
+      "description": "Anthropicは、エージェント型コーディングツール「Claude Code」のセキュリティガイダンスプラグインを公開した。Claudeがソースコードの脆弱性についてレビューし、同じセッション内で修正を支援するものだ。",
+      "publishedAt": "2026-07-07T04:00:00.000Z",
+      "feedName": "＠IT"
+    },
+    {
+      "id": "d84a9dc5a0527ec591a9d5023cc88d1d0a46465d102dae72d05efa682dc193fb",
+      "title": "【AWS】Bedrock AgentCore Web Search を試してみた！",
+      "url": "https://qiita.com/PDC-Kurashinak/items/9bc404e35625ade6e198?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "どうもこんにちは。\n今回は、Amazon Bedrock AgentCore Web Search を AWS CDK で構築して、Strands Agents から使ってみます。\nAmazon Bedrock AgentCore Web Search は、AgentCor...",
+      "publishedAt": "2026-07-07T02:17:07.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "5eacf2ab7575315b5479e276db9f073faba4115ad45cc1bb45291ff74f653c99",
+      "title": "Vitestで始めるシンプルなVRT",
+      "url": "https://zenn.dev/cybozu_frontend/articles/vitest-simple-vrt",
+      "description": "この記事は、CYBOZU SUMMER BLOG FES '26の記事です。\n\n はじめに\nVitest 4.0でVisual Regression Testing（VRT）がサポートされました。このVitest（Browser Mode）でのVRTとGitHub Actionsを組み合わせることで、実際のプロダクトにシンプルなVRTを導入できたので、その方法を紹介します。\n今回紹介する方法を導入したサンプルのリポジトリを作ったので、詳細な実装が知りたい方はこちらをご覧ください。\nhttps://github.com/nus3/vitest-vrt\n\n VRT実行の流れ\n\nVitestに...",
+      "publishedAt": "2026-07-07T00:36:25.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "1ec082f8b6af7b965903c74765050790b296399fd89af90f40910da9dfb78d23",
+      "title": "AWS Microcredentialsを全部取得したので勉強方法と難易度をまとめてみた",
+      "url": "https://qiita.com/kazuki_horiuchi/items/3cddf7c1189e36b4c4ab?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\nみなさんこんにちは。\nAWS Skill Builderで提供されている Microcredential を全て取得しましたので、各資格の概要・勉強方法・個人的な難易度をまとめます。\n\nAWS Microcredentialsとは\nAWS Microcreden...",
+      "publishedAt": "2026-07-07T00:08:14.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "038e9ab8fd0f3aee37d84751230ff2f16b2db112b96d12957677d17006e54db9",
+      "title": "Spanner Omni を採用して CI のトータル実行時間を84%減らすまでの道のり",
+      "url": "https://zenn.dev/kauche/articles/ac1c707f2fc991",
+      "description": "はじめに\nカウシェのバックエンドは Google Cloud Spanner を使っており、ローカル開発と CI のテストには長らく Cloud Spanner Emulator を使ってきました。\n2026 年 4 月、Spanner の実エンジンをローカルで動かせる Spanner Omni が公開されました。\nhttps://cloud.google.com/blog/products/databases/introducing-spanner-omni\nこれをまずローカル開発に導入し、e2e テストで検証し、2 週間ほどかけて主要サービスの CI を Omni に切り替えまし...",
+      "publishedAt": "2026-07-06T23:49:53.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "30d20d09e108feacd3fbd592d9efcb71392922fa1240afc622794ca9d130a4eb",
+      "title": "JavaScriptだけでSHA-256ハッシュを生成する。crypto.subtle.digestの罠（MD5なし・HTTPS必須）",
+      "url": "https://qiita.com/sakutto-panda/items/42dfd652de113211d782?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "ファイルの整合性確認やAPI署名の検証で、手元でサッとSHA-256を計算したいことがある。ブラウザには標準で Web Crypto API（crypto.subtle）が載っているので、ライブラリを一切入れずにハッシュ生成ができる。\nぱんだツールズに作ったハッシュ値生成ツ...",
+      "publishedAt": "2026-07-06T22:56:51.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "2da04647f3f27a589fe0afdf916b58c6042f6cfaae162300969e2fef5b0e89c2",
+      "title": "自動テストの肥大化とどう向き合うか",
+      "url": "https://zenn.dev/frontendflat/articles/automated-test-size-tradeoff",
+      "description": "Q. 「自動テストを書いてきてしばらく経つが、実行時間の増加に伴う問題 (CI 待ち時間) や偽陽性・偽陰性の問題が出てきた。どう対応していくのがよいか？」 IMO: コードの変更に対する不安と実行時間をコンパスにして、自動テストの肥大化に立ち向かう。(一ヶ月後には言っていることが変わるかもしれないので、今日のス...",
+      "publishedAt": "2026-07-06T18:07:56.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "66d04adbe9bd257e76f3c989a4afb9378a71add1823faac68bf72765029f3fca",
+      "title": "Claude Code の無料セキュリティ監査プラグインで脆弱性を自動検出・修正してみる",
+      "url": "https://qiita.com/nogataka/items/4d2a551f89f6b4f94b01?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "この記事のポイント\n\nAnthropic が 2026 年 5 月下旬に Claude Code 向けの公式プラグイン security-guidance を公開しました（各メディアで紹介されたのは 5 月 27 日です）。全プランで利用でき、2026 年 6 月時点でベ...",
+      "publishedAt": "2026-07-06T11:00:39.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "a10fd327ab1efb6479e0234ab26f48f7c55dc256efcb9ea89527d8441a73204b",
+      "title": "LLMのコスト暴走と情報漏洩を防ぐ社内Gateway設計: Azure/AWSガバナンスとLiteLLM実装(Phase1→Phase2)",
+      "url": "https://qiita.com/nogataka/items/6251b5727998ca29734c?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\n各社で開発用途・業務用途に Azure OpenAI、Microsoft Foundry、Amazon Bedrock、OpenAI、Anthropic などの LLM を利用するケースが増えています。利用が広がるほど、次のような課題が同時に持ち上がります。\n\n...",
+      "publishedAt": "2026-07-06T11:00:01.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "789b7af33199eeacf00e61c1a677565030d55171d1330e5335043301b0f8badd",
+      "title": "AI-BPRで業務そのものを再設計する",
+      "url": "https://qiita.com/licux/items/25e87077b6ef29162a93?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "本記事は、AWSのML Developer Relationsである久保さん(@icoxfog417)にお声掛けいただき実施した、AI-BPRのトライアルに関する内容です。AIエージェントによる業務改善が求められる世の中で、AIを使いながら、AIとの役割を明確化し、価値を最...",
+      "publishedAt": "2026-07-06T10:01:44.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "2da04647f3f27a589fe0afdf916b58c6042f6cfaae162300969e2fef5b0e89c2",
+      "title": "自動テストの肥大化とどう向き合うか",
+      "url": "https://zenn.dev/frontendflat/articles/automated-test-size-tradeoff",
+      "description": "!\nこの記事は社内の勉強会向けに、自動テストのトレードオフについて個人的な意見をまとめたものです。\n\nQ. 「自動テストを書いてきてしばらく経つが、実行時間の増加に伴う問題 (CI 待ち時間) や偽陽性・偽陰性の問題が出てきた。どう対応していくのがよいか？」\nIMO: コードの変更に対する不安と実行時間をコンパスにして、自動テストの肥大化に立ち向かう。(一ヶ月後には言っていることが変わるかもしれないので、今日のスナップショットとして聞いてもらえればと...)\n\n そもそも「よいテスト」とは\nテストを書くべき理由はいろいろありますが、テストに何を期待するかは明確にしておく必要があります。私...",
+      "publishedAt": "2026-07-06T08:23:53.000Z",
+      "feedName": "Zenn"
     }
   ]
 }
