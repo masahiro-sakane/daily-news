@@ -1,54 +1,6 @@
 {
   "articles": [
     {
-      "id": "c2fc7ca01ec87a53195db9b72454d3d9bb5fce2898dcf9d026964fdbf7c02a6e",
-      "title": "Build Your Own AI Automation with n8n: Self-Hosted, No-Code Agent",
-      "url": "https://dev.to/merbayerp/build-your-own-ai-automation-with-n8n-self-hosted-no-code-agent-56mg",
-      "description": "Automating workflows has always been a priority for me, especially for repetitive and error-prone manual processes. Recently, integrating AI capabilities into these automations offers a great opportunity for those, like me, who seek practical solutions. However, this integration often requires coding or complex API integrations. This is where \"low-code/no-code\" tools like n8n come into play. I used n8n to set up AI-powered agent flows on my own servers, without compromising data privacy and control. In this post, I will share my experience and explain how to do it step-by-step.\nA few years ago, I experimented with different automation tools, especially for simple data transfers and notification flows. But when AI capabilities became involved, I either found them too expensive or avoided cloud-based solutions due to data security concerns. Especially in a client project where we needed to set up an automation handling sensitive financial data, a self-hosted solution became inevitable. n8n offers a wide range of integrations and, thanks to Docker support, I can easily host it on my own server.\nFor me, self-hosting is not just about cost advantage; it also means having complete control over my data. Especially when using AI agents, the question of how much of the data you send to LLMs is logged or used for training is always a concern. With an n8n setup under my control, I minimized these worries. Moreover, n8n's flexible structure gives me the freedom to add as many custom integrations or LLM providers as I want. This is a significant advantage for someone like me who enjoys testing different LLMs.\nℹ️ Data Privacy Priority\nEspecially when working with sensitive data, it's crucial to carefully review the data usage policies of cloud-based AI services. Self-hosted n8n offers more control in this regard, making it my preferred choice for critical workflows.\nThe easiest way to run n8n on your own server is by using Docker Compose. I usually write the docker-compose.yml file myself for simple setups. This gives me flexibility and makes debugging easier in case of potential issues. The example below will be sufficient for a basic n8n setup. Here, I'm using PostgreSQL as the database because n8n working with SQLite can lead to issues like WAL bloat, especially under high load or unexpected shutdowns. I also added Redis for caching and queueing, which improves performance.\nFirst, create a directory on your server and place the docker-compose.yml file inside it:\nmkdir n8n-ai-automation\ncd n8n-ai-automation\nnano docker-compose.yml\n\nThe docker-compose.yml content might look like this:\nversion: '3.8'\n\nservices:\n  n8n:\n    image: n8nio/n8n\n    restart: always\n    ports:\n      - \"5678:5678\"\n    environment:\n      - N8N_HOST=${N8N_HOST:-localhost}\n      - N8N_PORT=5678\n      - N8N_PROTOCOL=${N8N_PROTOCOL:-http}\n      - WEBHOOK_URL=${WEBHOOK_URL:-http://localhost:5678/}\n      - DB_TYPE=postgresdb\n      - DB_POSTGRESDB_HOST=postgres\n      - DB_POSTGRESDB_DATABASE=${POSTGRES_DB:-n8n}\n      - DB_POSTGRESDB_USER=${POSTGRES_USER:-n8n}\n      - DB_POSTGRESDB_PASSWORD=${POSTGRES_PASSWORD:-n8n}\n      - N8N_BASIC_AUTH_ACTIVE=true\n      - N8N_BASIC_AUTH_USER=${N8N_USER:-admin}\n      - N8N_BASIC_AUTH_PASSWORD=${N8N_PASSWORD:-admin_password_change_me}\n      - QUEUE_BULL_REDIS_HOST=redis\n      - QUEUE_BULL_REDIS_PORT=6379\n      - N8N_METRICS_ENABLED=true # For monitoring metrics with tools like Prometheus\n    volumes:\n      - n8n_data:/home/node/.n8n\n    depends_on:\n      - postgres\n      - redis\n    # Resource limits are important to protect against OOM killer\n    deploy:\n      resources:\n        limits:\n          memory: 2G\n        reservations:\n          memory: 1G\n\n  postgres:\n    image: postgres:15\n    restart: always\n    environment:\n      - POSTGRES_DB=${POSTGRES_DB:-n8n}\n      - POSTGRES_USER=${POSTGRES_USER:-n8n}\n      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-n8n}\n    volumes:\n      - postgres_data:/var/lib/postgresql/data\n    deploy:\n      resources:\n        limits:\n          memory: 512M\n        reservations:\n          memory: 256M\n\n  redis:\n    image: redis:7\n    restart: always\n    volumes:\n      - redis_data:/data\n    deploy:\n      resources:\n        limits:\n          memory: 256M\n        reservations:\n          memory: 128M\n\nvolumes:\n  n8n_data:\n  postgres_data:\n  redis_data:\n\nThis file defines the n8n, PostgreSQL, and Redis services. I configure n8n's database connection information and basic authentication settings using environment variables. Don't forget to use N8N_BASIC_AUTH_ACTIVE and the user/password variables for security. Additionally, I specified the amount of memory to be allocated to each service with limits and reservations under deploy.resources. This is critical, especially in VPS environments, to prevent excessive resource consumption and OOM-killed errors. Last month, I saw a build container for one of my side products get OOM-killed due to a sleep 360 command in its CI/CD pipeline, so defining resource limits from the start has become a habit.\nAfter saving the file, you can start the services with the docker compose up -d command:\ndocker compose up -d\n\nWithin a few minutes, you can access the n8n interface at http://localhost:5678. If you are using a reverse proxy (like Nginx), you will need to adjust the N8N_HOST and N8N_PROTOCOL variables accordingly. I usually set up SSL termination with Nginx and publish n8n under an address like https://automations.mysite.com.\nn8n's power comes from its ability to create complex workflows through a visual interface without writing code. We can set up our first AI agent flow using a scenario where an incoming email is summarized and a notification is sent to Slack. This was a simple but effective method I used in a client project to quickly triage support emails.\nTrigger: To start the workflow, we can use an \"Email\" trigger. I usually set up a \"Webhook\" trigger and route emails from another service (e.g., Mailgun or a simple email parser I wrote) to this webhook. However, n8n also has its own \"IMAP Email\" or \"Gmail\" nodes. For simplicity, let's start with a \"Manual Trigger\" and then connect it to a real trigger later.\n\n\nLLM Node: Under the \"AI\" category, you will find many LLM (Large Language Model) nodes. I usually use \"OpenAI\" or \"Generic LLM\" nodes. The \"Generic LLM\" node provides access to different LLMs via OpenRouter or your own custom APIs. Drag and drop this node onto the canvas.\n\n\nPrompt Engineering: Inside the LLM node, we will enter a System Prompt and User Prompt to instruct it to summarize the email. Prompt engineering is critical here. While using AI for production planning in a manufacturing company's ERP, I repeatedly tested how detailed and guiding the prompts needed to be.\nSystem Prompt example:\nYou are an AI assistant that summarizes incoming customer support emails.\nFocus on the main issue, the customer's name (if available), and any urgent requests.\nKeep the summary concise, maximum 3 sentences.\n\nUser Prompt example:\nSummarize the following email:\n---\nSubject: About the Defective Product\nFrom: Ayşe Yılmaz <ayse.yilmaz@example.com>\nDate: 2026-06-15\nBody: Hello, the X brand product I purchased with order number 12345 turned out to be defective. I have been using it for a week, and it suddenly stopped working yesterday. I urgently request a replacement. Please contact me as soon as possible. Thank you, Ayşe Yılmaz.\n---\n\nYou can dynamically link the content of the incoming email to this example using expressions like {{ $json.body.text }}.\nSlack Node: Add a \"Slack\" node to send the summary from the LLM to a Slack channel. When configuring the Slack node, you will need to provide a Webhook URL or Bot Token. You can link the output from the LLM node to the message part using {{ $node[\"LLM Node\"].json[\"text\"] }}.\n\n\n\nAfter creating this flow, you can check if it works by clicking the \"Test Workflow\" button or by triggering a test email. As you can see, we have set up an AI-powered automation with a few drag-and-drop operations, without writing any code.\n💡 Prompt Development Tips\nDevelop your prompts iteratively. You won't always get perfect results on the first try. Test for different scenarios and add specific instructions to guide the LLM's behavior. For example, \"if the customer's name is not in the email, write 'Anonymous Customer'\".\nIn more complex scenarios, our AI agents need access not only to general knowledge but also to our specific datasets. This is where RAG (Retrieval-Augmented Generation) comes in. In a client project, while building a knowledge base for a bank's internal platform, I used a RAG architecture to ensure LLMs had access to accurate and up-to-date information. We can do this with n8n without writing any code.\nThe basic idea for RAG is to retrieve the most relevant information from our own data sources before asking the LLM a question, and then adding this information to the prompt.\nData Source: Your internal documents (PDFs, text files, database records) should be embedded in a vector database (e.g., Pinecone, Weaviate, Qdrant, or even PostgreSQL's pg_vector extension). n8n has direct integration nodes for these vector databases. On my end, I usually prefer PostgreSQL with pg_vector because using a technology I already have eliminates additional costs.\n\n\nGenerating Embeddings: Before uploading your documents to the vector database, you need to create their \"embeddings\" (numerical vector representations). You can use nodes like \"OpenAI Embeddings\" or \"Cohere Embeddings\" for this.\n\n\nVector Search: When a question comes in (e.g., from a Webhook trigger), you search for the most relevant document chunks related to the question using the appropriate vector database node from the \"Vector Store\" category.\n\n\nEnriching the Prompt: You enrich the prompt by adding the information from the search results (usually text snippets) to the LLM node's User Prompt. For example:\nHere is some relevant information from our internal knowledge base:\n---\n{{ $node[\"Vector Search\"].json[\"results\"] }}\n---\nBased on the information above, answer the following question:\n{{ $json.query }}\n\nThis way, the LLM can generate more accurate and contextual answers by being fed not only general information but also your corporate knowledge.\nRelying on a single LLM provider can be risky in terms of both cost and performance. Different providers offer different models, and the costs, speeds, and performances of these models vary. With n8n, I can integrate multiple LLM providers and set up fallback mechanisms to switch to another provider based on the situation or if one provider fails. I typically use providers like Groq, Gemini Flash, and OpenRouter together. Groq stands out for its speed, Gemini Flash might be more affordable, and OpenRouter offers various models through a single API.\nExample of a multi-LLM flow:\n Main LLM Attempt: First, I use my primary preferred LLM provider (e.g., Groq).\n Error Checking: If an error occurs from the Groq node (e.g., API timeout or rate limit), I check this condition with an \"IF\" node.\n Fallback LLM: In case of an error, I switch to another LLM node (e.g., Gemini Flash via OpenRouter) from the \"true\" branch of the \"IF\" node.\n Result Merging: I can then merge the results from both LLMs with a \"Merge\" node and present them as a single output to the rest of the flow.\nThis architecture is vital for ensuring continuity, especially in critical workflows. I use this fallback mechanism in the AI-based predictions for financial calculators in one of my side products. This way, if there's an issue with one provider, the user experience isn't interrupted.\nSetting up a self-hosted system brings with it operational responsibilities. I take some basic precautions to ensure n8n runs smoothly and securely.\nNginx Reverse Proxy and SSL: Instead of exposing n8n directly to the internet, I place an Nginx reverse proxy in front of it. With Nginx, I perform SSL termination (free with Let's Encrypt) and add basic security layers. For example, I use rate limiting to create the first line of defense against DDoS attacks. I also set HTTP security headers like X-Content-Type-Options and X-Frame-Options.\nExample Nginx configuration:\nserver {\n    listen 80;\n    server_name automations.mysite.com;\n    return 301 https://$host$request_uri;\n}\n\nserver {\n    listen 443 ssl http2;\n    server_name automations.mysite.com;\n\n    ssl_certificate /etc/letsencrypt/live/automations.mysite.com/fullchain.pem;\n    ssl_certificate_key /etc/letsencrypt/live/automations.mysite.com/privkey.pem;\n\n    # Security headers\n    add_header X-Frame-Options \"SAMEORIGIN\";\n    add_header X-Content-Type-Options \"nosniff\";\n    add_header X-XSS-Protection \"1; mode=block\";\n\n    location / {\n        proxy_pass http://localhost:5678;\n        proxy_set_header Host $host;\n        proxy_set_header X-Real-IP $remote_addr;\n        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;\n        proxy_set_header X-Forwarded-Proto $scheme;\n        # Rate limiting example\n        # limit_req zone=one burst=5 nodelay;\n    }\n}\n\nFail2ban: I use fail2ban to prevent brute-force attacks on my server via SSH. I can also track failed login attempts to n8n's web interface from logs and block them with fail2ban. For this, I centralize n8n logs with journald and write a custom jail rule for fail2ban.\nExample fail2ban jail rule (for n8n):\n[n8n-auth]\nenabled = true\nport = http,https\nfilter = n8n-auth\nlogpath = /var/log/syslog # Or where logs from journald are stored\nmaxretry = 5\nbantime = 3600\n\nAnd filter.d/n8n-auth.conf file:\n[Definition]\nfailregex = .*n8n.*authentication failed for user.*<HOST>.*\nignoreregex =\n\nThis rule detects failed login attempts by searching for the \"authentication failed for user\" pattern in n8n logs and blocks the IP address for one hour.\nKernel Module Blacklist: To protect against security vulnerabilities, I blacklist kernel modules I don't use. Taking such precautions is especially important when modules like algif_aead have old CVEs (like CVE-2026-31431). This improves overall system security.\n\n\n\n\n  \n  \n  Monitoring and Maintenance\n\n\n\n  Log Management: I centralize all Docker container logs with journald. This is crucial for troubleshooting and security auditing. In case of an error, I monitor live logs with journalctl -u docker.service -f or check past logs with journalctl -u docker.service --since \"1 hour ago\".\n  Resource Monitoring: I keep memory and CPU usage under control by specifying cgroup limits in the Docker Compose file. Additionally, I monitor n8n's own metrics (enabled with N8N_METRICS_ENABLED=true) and the server's overall resource usage with tools like Prometheus and Grafana. I particularly track database and cache server metrics to detect issues like PostgreSQL WAL bloat or Redis OOM eviction policy proactively.\n  Backup: I take regular backups for the PostgreSQL database. I automate this process with the pg_dump command or a backup tool. n8n workflows can also be exported as a JSON file, which helps in recovery scenarios.\n⚠️ Don't Forget Your Responsibilities\nAll security and maintenance responsibilities for a self-hosted system lie with you. Tasks such as regularly applying security patches, monitoring logs, and performing backups are critically important. The \"it'll be fine\" mentality may not work in disaster scenarios.\nSetting up my own AI automations self-hosted with n8n has provided me with both flexibility and cost advantages. The ability to create complex agent flows without writing code, use my own data with RAG, and integrate different LLM providers is a huge plus. I use these types of AI automations in many different scenarios, such as production planning in a manufacturing ERP, prioritizing customer support emails on an e-commerce site, or making financial predictions in my own side product.\nThis setup was a project that brought together my experience in many areas, not just AI integration, but also system administration, network security (Nginx, fail2ban), and database optimization (PostgreSQL). Although I initially encountered insidious issues like MTU/MSS mismatches or DNS negative caching, I debugged and resolved them step-by-step.\nIf you also want to build your own AI automations but don't want to write code and data control is a priority for you, a self-hosted n8n setup is definitely worth trying. As a next step, I'm exploring how to use \"agent patterns\" (planning, tool use, memory) more effectively within n8n to make these AI agents even smarter. Perhaps I'll cover this topic in my next post.",
-      "publishedAt": "2026-06-16T03:58:03.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "d0a66dff0b265fb3a9f5ef8f96b0b5387476652a69791bc105c43014da07b901",
-      "title": "[Boost]",
-      "url": "https://dev.to/csswoman/-1gbm",
-      "description": "Clean Architecture on Frontend\n\n\n  \nAlex Bespoyasov\n                    \n                  \n\n                \nSep 1 '21\n        \n#typescript\n            #react\n            #architecture\n        \n2542 reactions\n            \n comments\n            \n        \n        \n          \n            35 min read",
-      "publishedAt": "2026-06-16T03:48:50.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "1bbdf8fa1e3e46e6d6e135c22076d3d2bedaf53d348e99aa8487ae0601170c98",
-      "title": "OpenAPI Specs automatisch in saubere Markdown-Doku konvertieren",
-      "url": "https://dev.to/emree_demir/openapi-specs-automatisch-in-saubere-markdown-doku-konvertieren-1165",
-      "description": "Ihre OpenAPI-Datei ist die Quelle der Wahrheit für Ihre API: Pfade, Parameter, Request-Bodies, Responses und Schemas. Für Entwickler im Alltag ist rohes YAML oder JSON aber selten das beste Lesematerial. Backend-Teams brauchen eine schnelle Endpunkt-Referenz im Repository, Frontend-Teams wollen Request- und Response-Felder im Pull Request prüfen, und technische Redakteure möchten Inhalte in Wiki- oder Docs-Systeme übernehmen, ohne Schemas abzutippen.\nTesten Sie Apidog noch heute\n\n\nMarkdown ist dafür das praktischste Zielformat. Es funktioniert in GitHub, Confluence, Notion, Docusaurus, MkDocs, Hugo und jedem Texteditor. Die Aufgabe lautet also: Aus einer vorhandenen openapi.yaml automatisch sauberes Markdown erzeugen. Manuell ist das zu langsam und driftet beim nächsten API-Change auseinander. Automatisch generiertes Markdown bleibt dagegen Teil Ihres Release-Prozesses.\nEin OpenAPI-Dokument ist primär für Maschinen gedacht. Tools parsen es, um Clients zu generieren, Contract-Tests auszuführen, Requests zu validieren oder interaktive Dokumentation zu rendern. Diese Maschinenlesbarkeit sollten Sie beibehalten. Wenn Sie zuerst die Qualität Ihrer Spezifikation prüfen möchten, hilft der Leitfaden zu OpenAPI-Validierungstools.\nMarkdown löst ein anderes Problem: Es macht die API dort lesbar, wo kein OpenAPI-Renderer läuft.\nTypische Einsatzfälle:\nREADME.md oder /docs im Repository\nPull-Request-Beschreibungen für neue oder geänderte Endpunkte\nConfluence- oder Notion-Seiten für Team-Reviews\nStatische Dokumentationsseiten mit Docusaurus, MkDocs oder Hugo\nOffline- oder interne Referenzdateien für Support und QA\nWichtig ist: Markdown sollte ein abgeleitetes Artefakt sein. Die OpenAPI-Spezifikation bleibt kanonisch, Markdown wird bei Änderungen neu erzeugt.\nEs gibt keinen offiziellen OpenAPI-Befehl für Markdown-Export. In der Praxis nutzen Teams entweder Konverter, ein eigenes Skript oder eine API-Plattform.\n\n\n\nMethode\nAm besten geeignet für\nErgebnis\n\n\n\n\n\nopenapi-to-md / openapi-markdown\n\nSchneller Markdown-Dump ohne viel Konfiguration\nEinzelne Markdown-Datei oder Schematabellen\n\n\nWiddershins\nSlate-/Docusaurus-ähnliche Dokumentation mit Code-Tabs\nAnpassbares Markdown mit Sprachbeispielen\n\n\nEigenes Skript\nExaktes internes Layout\nVollständig kontrollierte Ausgabe\n\n\nApidog\nSpezifikationsimport, gerenderte Docs und Tests in einem Arbeitsbereich\nGehostete Dokumentation plus Markdown-Inhaltsblöcke\n\n\n\nWählen Sie nach Ziel: einfache Repository-Referenz, statische Docs, internes Format oder vollständig integrierter API-Workflow.\nFür eine schnelle Repository-Referenz reicht oft ein dedizierter Konverter.\nopenapi-to-md\n\n\nopenapi-to-md nimmt OpenAPI v2 oder v3 in YAML oder JSON und erzeugt eine Markdown-Datei.\nnpx openapi-to-md openapi.yaml api-reference.md\n\nTypischer Einsatz im Projekt:\nmkdir -p docs\nnpx openapi-to-md openapi.yaml docs/api-reference.md\n\nDanach können Sie die Datei direkt ins Repository committen:\ngit add docs/api-reference.md\ngit commit -m \"docs: generate API reference\"\n\nopenapi-markdown\n\n\nFür Python-basierte Toolchains können Sie openapi-markdown verwenden:\npip install openapi-markdown\nopenapi2markdown openapi.yaml api-reference.md\n\nBeide Varianten lesen Pfade, Operationen, Parameter und Schemas aus der Spezifikation und erzeugen daraus Markdown mit Überschriften und Tabellen.\nWann diese Methode passt:\nSie brauchen schnell eine lesbare Datei.\nDas Standardlayout reicht aus.\nSie wollen die Ausgabe regelmäßig neu generieren.\nSie benötigen keine stark angepassten Templates.\nGrenze: Sie bekommen das Layout des Tools. Wenn Ihr Team bestimmte Abschnitte, Codebeispiele oder Dateiaufteilungen benötigt, ist Widdershins oder ein eigenes Skript besser.\nWiddershins ist ein etabliertes Node-Tool, das OpenAPI oder Swagger in Slate-kompatibles Markdown umwandelt. Es eignet sich besonders, wenn Sie Code-Tabs und anpassbare Templates brauchen.\nInstallation:\nnpm install -g widdershins\n\nBasis-Konvertierung:\nwiddershins openapi.yaml -o api-reference.md\n\nMit Sprachbeispielen:\nwiddershins \\\n  --language_tabs 'shell:cURL' 'python:Python' 'javascript:JavaScript' \\\n  openapi.yaml \\\n  -o api-reference.md\n\nOhne automatisch erzeugten Header, wenn Ihr Docs-Framework eigenen Front Matter verwendet:\nwiddershins \\\n  --language_tabs 'shell:cURL' 'python:Python' 'javascript:JavaScript' \\\n  --omitHeader \\\n  openapi.yaml \\\n  -o api-reference.md\n\nWann Widdershins passt:\nSie bauen eine statische Dokumentationsseite.\nSie möchten Codebeispiele für mehrere Sprachen.\nSie brauchen mehr Kontrolle als bei einfachen Konvertern.\nSie akzeptieren einen zusätzlichen Build-Schritt.\nDer Trade-off: Sie besitzen jetzt ein Template und müssen es pflegen. Für ein Docs-Repository ist das meist sinnvoll, für eine einfache README oft zu viel.\nWenn kein Konverter Ihr gewünschtes Format erzeugt, parsen Sie die OpenAPI-Datei selbst. Die Spezifikation ist strukturierte YAML- oder JSON-Daten.\nBeispiel: Ein minimales Node.js-Skript, das jede Operation in Markdown schreibt.\nimport { readFileSync, writeFileSync } from \"node:fs\";\nimport yaml from \"js-yaml\";\n\nconst spec = yaml.load(readFileSync(\"openapi.yaml\", \"utf8\"));\n\nconst lines = [\n  `# ${spec.info.title}`,\n  \"\",\n  spec.info.description ?? \"\",\n  \"\",\n];\n\nfor (const [path, methods] of Object.entries(spec.paths)) {\n  for (const [method, op] of Object.entries(methods)) {\n    lines.push(`## ${method.toUpperCase()} ${path}`);\n    lines.push(\"\");\n\n    if (op.summary) {\n      lines.push(op.summary);\n      lines.push(\"\");\n    }\n\n    const params = op.parameters ?? [];\n\n    if (params.length) {\n      lines.push(\"| Name | In | Required | Description |\");\n      lines.push(\"| ---- | -- | -------- | ----------- |\");\n\n      for (const p of params) {\n        lines.push(\n          `| ${p.name} | ${p.in} | ${p.required ? \"yes\" : \"no\"} | ${p.description ?? \"\"} |`\n        );\n      }\n\n      lines.push(\"\");\n    }\n  }\n}\n\nwriteFileSync(\"api-reference.md\", lines.join(\"\\n\"));\n\nBenötigte Abhängigkeit:\nnpm install js-yaml\n\nAusführen:\nnode generate-api-docs.js\n\nDiese Variante gibt Ihnen volle Kontrolle über:\nÜberschriften\nTabellen\nReihenfolge der Abschnitte\nDateiaufteilung\ninterne Styleguides\nzusätzliche Hinweise oder Links\nDer Nachteil ist Wartung. Wenn Sie mehr OpenAPI-Features unterstützen möchten, etwa requestBody, responses, oneOf, allOf, securitySchemes oder Beispiele, müssen Sie diese selbst implementieren.\nWenn Sie abwägen, ob Sie selbst skripten oder ein Tool verwenden sollen, vergleicht die Übersicht der API-Dokumentationsgeneratoren mit Markdown-Export verschiedene Optionen.\nEinmalige Konverter haben ein typisches Problem: Die Spezifikation ändert sich, aber das Markdown wird nicht neu erzeugt. Dann driftet die Dokumentation.\nApidog verfolgt einen anderen Ansatz. Sie importieren Ihre vorhandene openapi.yaml in einen Arbeitsbereich. Apidog liest Pfade, Schemas und Beispiele ein und erzeugt daraus gerenderte, gehostete API-Dokumentation. Der Import-Workflow wird im Artikel Import von Swagger oder OpenAPI und Generierung von Anfragen beschrieben. Der Weg von der Spezifikation zur veröffentlichten Referenz steht in Automatisches Generieren von API-Dokumentation aus OpenAPI.\nDer praktische Vorteil liegt in zwei Punkten:\nGenerierte Referenz plus handgeschriebenes Markdown\n\nDie Endpunkt-Referenz kommt aus der Spezifikation. Zusätzlich können Sie eigene Markdown-Inhalte ergänzen, etwa Startseiten, Authentifizierungshinweise oder Changelog-Einträge. Die Tipps zum Erstellen von Dokumentation mit Apidog Markdown zeigen diesen Workflow.\n\n\nTests auf Basis derselben Spezifikation\n\nDie importierte Spezifikation kann auch Grundlage für Testszenarien sein. Sie erstellen Requests und Assertions gegen die definierten Endpunkte. Wenn sich die Live-API anders verhält als der Vertrag, schlagen die Tests fehl.\n\n\n\nZum Ausprobieren: Laden Sie Apidog herunter, importieren Sie Ihre OpenAPI-Datei und öffnen Sie die generierte Dokumentation im selben Projekt.\nWichtig: Hier geht es nicht darum, nur eine .md-Datei zu exportieren. Der Mehrwert ist, dass Spezifikation, Dokumentation und Tests nicht mehr getrennt gepflegt werden.\nEin Konverter, den Sie manuell ausführen, wird irgendwann vergessen. Besser: Regenerieren Sie Markdown automatisch, sobald sich openapi.yaml ändert.\nBeispiel für GitHub Actions:\nname: Generate API docs\n\non:\n  push:\n    paths:\n      - \"openapi.yaml\"\n\njobs:\n  docs:\n    runs-on: ubuntu-latest\n\n    steps:\n      - uses: actions/checkout@v4\n\n      - uses: actions/setup-node@v4\n        with:\n          node-version: \"20\"\n\n      - name: Convert spec to Markdown\n        run: npx openapi-to-md openapi.yaml docs/api-reference.md\n\n      - name: Commit regenerated docs\n        run: |\n          git config user.name \"docs-bot\"\n          git config user.email \"docs-bot@users.noreply.github.com\"\n          git add docs/api-reference.md\n          git diff --staged --quiet || git commit -m \"docs: regenerate API reference\"\n          git push\n\nDamit ist docs/api-reference.md höchstens einen Commit von der Spezifikation entfernt.\nWenn Sie Widdershins verwenden, ersetzen Sie nur den Konvertierungsschritt:\n- name: Convert spec with Widdershins\n  run: |\n    npm install -g widdershins\n    widdershins --omitHeader openapi.yaml -o docs/api-reference.md\n\nFür ein eigenes Skript:\n- name: Generate custom Markdown\n  run: |\n    npm ci\n    node scripts/generate-api-docs.js\n\nNeu generierte Dokumentation ist nur so zuverlässig wie die Spezifikation. Deshalb lohnt es sich, Tests gegen die API in derselben Pipeline auszuführen.\nMit der Apidog CLI können Sie Testszenarien ohne UI starten:\nnpm install -g apidog-cli\napidog run --access-token $APIDOG_ACCESS_TOKEN -t 605067 -e 1629989 -r cli\n\nWenn eine Assertion fehlschlägt, beendet sich der Befehl mit einem Wert ungleich null. Dadurch schlägt auch der Build fehl.\nWeitere Details stehen in der apidog run Befehlsreferenz und im vollständigen Apidog CLI-Leitfaden.\nDas Muster ist einfach:\nOpenAPI-Spezifikation ändern.\nMarkdown neu generieren.\nContract-Tests ausführen.\nNur veröffentlichen, wenn Spezifikation und API zusammenpassen.\nGeneriertes Markdown ist selten perfekt. Diese Regeln helfen:\nNicht manuell im generierten Abschnitt editieren.\n\nÄnderungen werden beim nächsten Lauf überschrieben.\n\n\nHandgeschriebene Inhalte trennen.\n\nLegen Sie Einführung, Authentifizierung, Changelog oder Tutorials in separate Markdown-Dateien.\n\n\nBeispiele in OpenAPI pflegen.\n\nViele Generatoren übernehmen example oder examples direkt aus der Spezifikation. Gute Beispiele in OpenAPI ergeben bessere Dokumentation.\n\n\nFront Matter kontrollieren.\n\nWenn Ihr Zielsystem keinen Header erwartet, entfernen Sie ihn. Bei Widdershins geht das mit --omitHeader.\n\n\nDateien sinnvoll aufteilen.\n\nEine große Datei ist für eine README akzeptabel. Für Docs-Websites ist eine Aufteilung nach Tags, Ressourcen oder Produktbereichen meist besser.\n\n\nSpezifikation linten.\n\nUnklare Beschreibungen, fehlende Response-Schemas oder inkonsistente Parameter führen zu schlechter Ausgabe. Prüfen Sie die Quelle mit OpenAPI-Validierungstools.\n\n\n\n\n  \n  \n  Welche Methode sollten Sie wählen?\n\n\nNutzen Sie diese Entscheidungshilfe:\nSchnelle Repository-Referenz:\n\nVerwenden Sie openapi-to-md oder openapi-markdown.\n\n\nStatische Docs mit Codebeispielen:\n\nVerwenden Sie Widdershins.\n\n\nStrikter interner Styleguide:\n\nSchreiben Sie ein kleines Skript über die geparste Spezifikation.\n\n\nSpezifikation, Dokumentation und Tests in einem Workflow:\n\nImportieren Sie die Spezifikation in Apidog.\n\n\n\nDiese Optionen schließen sich nicht aus. Viele Teams halten die Spezifikation und gehostete Dokumentation in Apidog und generieren zusätzlich Markdown in CI für das Repository.\nOpenAPI nach Markdown zu konvertieren ist einfach, wenn Sie die Rollen klar trennen: Die OpenAPI-Datei ist die Quelle, Markdown ist das generierte Artefakt.\nFür eine schnelle Referenz reicht ein Einzeilen-Konverter wie openapi-to-md. Für anpassbare Docs mit Code-Tabs ist Widdershins passend. Für ein eigenes Layout schreiben Sie ein kleines Skript. Wenn Sie Spezifikation, gerenderte Dokumentation und Tests zusammenhalten möchten, importieren Sie die Spezifikation in Apidog.\nDer wichtigste Schritt bleibt unabhängig vom Tool gleich: Automatisieren Sie die Generierung in CI. Dann liest Ihr Team Dokumentation, die zur tatsächlichen API passt.",
-      "publishedAt": "2026-06-16T03:37:16.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "87bbac13d0dfef59ea941eee5a9ddac685a3b9d53a413c825c0e15e588063117",
-      "title": "I Open-Sourced MarketEye — Here's Why (and the GitHub Link)",
-      "url": "https://dev.to/orange-big/i-open-sourced-marketeye-heres-why-and-the-github-link-2aop",
-      "description": "I open-sourced MarketEye today.\nFor anyone who missed the first post: MarketEye is a self-hosted competitor price monitor I built because I didn't want to pay $99/month for Prisync.\nThe code is now up on GitHub under MIT license.\nGitHub: github.com/dachengzi065-gif/marketeye\nThree reasons:\n1. People actually asked for it.\nAfter my first post here, a few people DM'd me asking to see the code. They're developers too — they want to modify it, extend it, make it their own. That's fair. Selling source code to devs is like selling ice to eskimos.\n2. Trust.\nA closed-source price tracker that \"runs on your machine\" — you either trust the author or you don't. Open source removes that doubt. You can read every line, check what data leaves your machine (nothing), and build it yourself if you want.\n3. Longevity.\nSelf-hosted tools have a dirty secret: if the developer disappears, you're stuck with a broken tool. Open source changes that. Even if I get hit by a bus tomorrow, you can fork the repo and keep going.\nThe Gumroad package still exists. It includes:\nThe same code, pre-packaged\nEmail support (I'll help you set it up)\nA clear conscience subscription (you're paying for convenience, not software)\nBut honestly? If you can run pip install, just clone the repo. It's free.\nI'm actively working on:\nDocker image (one-command deploy)\nMore scrapers (plugins for different sites)\nDiscord/Telegram bot alerts (requested by several people)\nPRs welcome. Issues welcome. Feedback welcome.\n👉 github.com/dachengzi065-gif/marketeye",
-      "publishedAt": "2026-06-16T03:35:29.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "946522bcc001320bf37db5a3c52b8cc6c7394a38af8e038c8a149bac81eb86ec",
-      "title": "AWS Management Console Private Access でインターネット接続なしにコンソールへアクセスしてみた",
-      "url": "https://dev.classmethod.jp/articles/console-private-access-without-internet/",
-      "description": "AWS Management Console Private Access が 2026/6/15 に、サポート対象のコンソール画面について、インターネット接続なしでのアクセスに対応しました。IGW/NAT なしの VPC から VPC エンドポイント経由でサインインし、S3 / DynamoDB などのコンソール画面を表示できることを、CloudFormation で構築した検証環境で確認しました。",
-      "publishedAt": "2026-06-16T03:22:47.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "318af47245016d44d5579fee991eecb33fb87c5bf57d3451cda3d8121a5c52d4",
-      "title": "HTTP vs HTTPS — What Actually Happens When You Visit a Website",
-      "url": "https://dev.to/sailee_shingare/http-vs-https-what-actually-happens-when-you-visit-a-website-28dl",
-      "description": "By Sailee Shingare | M.S in Computer Science, Northern Illinois University\nEvery time you visit a website, your browser and the server have a conversation. That conversation happens over a protocol — either HTTP or HTTPS.\nYou’ve seen both in your browser’s address bar. But what’s actually different between them, and why does it matter?\nLet’s break it down.\nWhat is HTTP?\n\n\nHTTP stands for HyperText Transfer Protocol. It’s the foundation of data communication on the web — the set of rules that defines how your browser requests information and how servers respond.\nWhen you visit a website over HTTP, here’s what happens:\nYou type a URL in your browser\nYour browser sends a request to the server\nThe server sends back the webpage\nYour browser displays it\nSimple. But there’s a problem — everything is sent in plain text. Anyone sitting between you and the server can read it. Your passwords, your credit card numbers, your messages — all visible.\nThis is where HTTPS comes in.\nWhat is HTTPS?\n\n\nHTTPS stands for HyperText Transfer Protocol Secure. It’s HTTP with an extra layer of security called TLS (Transport Layer Security) — previously known as SSL.\nThe S in HTTPS means everything between your browser and the server is encrypted. Even if someone intercepts the data, they see nothing but scrambled gibberish.\nWhat Actually Happens When You Visit an HTTPS Website\n\n\nWhen you visit an HTTPS site, your browser and the server perform a TLS Handshake before any data is exchanged. Here’s what happens step by step:\nStep 1 — Client Hello Your browser says hello to the server and shares which encryption methods it supports.\nStep 2 — Server Hello The server picks an encryption method and sends back its SSL certificate — a digital document that proves the server is who it claims to be.\nStep 3 — Certificate Verification Your browser checks the certificate against a list of trusted authorities. If it’s valid, the connection proceeds. If not, you see a warning — “Your connection is not private.”\nStep 4 — Key Exchange Your browser and the server agree on a secret key used to encrypt the session. This key is never sent over the internet — both sides calculate it independently.\nStep 5 — Encrypted Communication Begins From this point on, everything is encrypted. Your data is safe.\nThis entire handshake happens in milliseconds — you never notice it.\nWhy Does Google Prefer HTTPS?\nranking signal. Websites using HTTPS rank higher in search results than HTTP equivalents.\nAdditionally, since 2018, Google Chrome marks all HTTP sites as “Not Secure” in the address bar. This immediately reduces user trust and increases bounce rates.\nIf you run a website, HTTPS is no longer optional — it’s essential.\nWhat is an SSL Certificate?\n\n\nAn SSL certificate is a digital document issued by a trusted Certificate Authority (CA) like Let’s Encrypt, DigiCert, or Comodo. It contains:\nThe website’s domain name\nThe certificate’s expiration date\nThe public key used for encryption\nThe CA’s digital signature\nWhen your browser sees a valid certificate from a trusted CA, it displays the padlock icon. When the certificate is missing, expired, or from an untrusted source — you get a security warning.\nGetting HTTPS for Free\n\n\nYou don’t need to pay for HTTPS anymore. Let’s Encrypt is a free, automated Certificate Authority trusted by all major browsers.\nMost hosting providers — AWS, Azure, Cloudflare, Netlify — offer free SSL certificates with one-click setup. There’s no excuse for running an HTTP website in 2024.\nThe Bottom Line\n\n\n\n\nHTTP = fast but insecure, data sent in plain text\nHTTPS = secure, encrypted, trusted by browsers and Google\nThe TLS handshake happens in milliseconds and protects everything you send\nAlways look for the padlock before entering passwords or payment details\nIf you run a website, use HTTPS — it’s free and essential\nNext time you see that padlock in your browser, you’ll know exactly what’s happening behind the scenes.",
-      "publishedAt": "2026-06-16T03:14:12.000Z",
-      "feedName": "Dev.to"
-    },
-    {
       "id": "ec00f0e272c92e1d866c015d74e1d0d228da8fc33e7f05963bcdf5d1e13b3e64",
       "title": "How I Use Qwen Code Slash Commands to Build Achu App",
       "url": "https://dev.to/qainsights/how-i-use-qwen-code-slash-commands-to-build-achu-app-5cm9",
@@ -135,125 +87,6 @@
       "description": "エンタープライズにおけるモダナイゼーションは、大きな転換点を迎えています。1 つのリポジトリを変換するだけなら容易です。AWS Transform custom でも、他の既存のツールでも、個別のリポジトリに対して十分に機能し、プロセスも確立されています。しかし、50 のリポジトリではどうでしょうか。100、200 ではどうでしょうか。エンタープライズ規模でモダナイゼーションを進めようとすると、コードを変換することは課題全体の一部にすぎません。人員の調整、ナレッジの蓄積、そしてポートフォリオ全体における品質の維持も重要になります。本記事では、AWS Transform custom の大規模な自動化の仕組みが、インテリジェントな学習とスケール実行によって、エンタープライズにおける組織内連携の課題をどう解決するかをご紹介します。",
       "publishedAt": "2026-06-17T02:41:36.000Z",
       "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "915a0470b5dfded47bf6f1826c29fc800cada6ab40850f1237718143541d2e77",
-      "title": "AWS におけるコスト効率の現状レポート",
-      "url": "https://aws.amazon.com/jp/blogs/news/the-aws-state-of-cost-efficiency-report/",
-      "description": "re:Invent 2025 でコスト効率（Cost Efficiency）メトリクスを発表して以来、お客様か […]",
-      "publishedAt": "2026-06-17T00:54:11.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "42b3ac0ec010e510b9abde53183bf2f9e56c619798e363e4a0392e4fbc268345",
-      "title": "「Android 17」が正式リリース ～「バブル」で快適マルチタスク、画面録画に自撮りを重ねる「スクリーン リアクション」／まずは対象「Pixel」から順次展開。折りたたみ向けゲーミングモードやセキュリティ強化も",
-      "url": "https://forest.watch.impress.co.jp/docs/news/2117697.html",
-      "publishedAt": "2026-06-16T23:30:16.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "fc5165d9125a5a660da971791e06f697f47727f4c62d7184ed74080360c93c06",
-      "title": "脆弱性を見つけるだけでは終わらない　AIが修正作業まで支援するOSSセキュリティ基盤とは？",
-      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2606/17/news049.html",
-      "description": "脆弱性を発見するツールは数多く存在するが、その後の対応は依然として人手に頼る場面が多い。こうした課題に対し、オープンソースの新たなセキュリティプラットフォームが登場した。OSINTや脆弱性診断に加え、AIによる分析や修復支援も統合するという。その実力とは。",
-      "publishedAt": "2026-06-16T23:00:00.000Z",
-      "feedName": "＠IT"
-    },
-    {
-      "id": "592a134d6748b79aee2e75101b98a392edae5b29d6a5203f9a061f99bc64c601",
-      "title": "脆弱性修正の猶予は「125日から0.5日」へ激減。セーフガード付き「Claude Fable 5」と最上位「Mythos」がもたらす激震",
-      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2606/17/news014.html",
-      "description": "次世代AI「Claude Mythos」の登場と、その一般公開版「Claude Fable 5」のリリースが、サイバーセキュリティの前提を根底から覆した。この種の最先端のAIモデルが未知の脆弱性を自律的に見つけ出し、1時間足らずでデータを奪取するという、新たな脅威が生じている。セーフガードを巡る開発ベンダーの葛藤と、国家安全保障をも巻き込む激変の最前線、日本のIT管理者が取り得る対策について解説する。",
-      "publishedAt": "2026-06-16T20:00:00.000Z",
-      "feedName": "＠IT"
-    },
-    {
-      "id": "fd118d6d0fefbe59e85bf0a59bd306b5d3f6a55057b85d2ab994cf46b4ee9d55",
-      "title": "AWS SDK for Java1.xの利用状況をデータイベントOFFでも調べられるか試してみた",
-      "url": "https://dev.classmethod.jp/articles/aws-sdk-java-1x-usage-investigation/",
-      "description": "AWS SDK for Java1.xの利用状況をデータイベントOFFでも調べられるか試してみた",
-      "publishedAt": "2026-06-16T17:14:22.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "21be51e2d8bd8f6d287ccce559860495d720acbbc85e8f31b90a77a6c6e911dd",
-      "title": "AWS HealthOmics が Nextflow バージョンの実行時固定をサポートしたので試してみた",
-      "url": "https://dev.classmethod.jp/articles/aws-healthomics-nextflow-runtime-version-pinning/",
-      "description": "AWS HealthOmics が Nextflow バージョンの実行時固定をサポートしたので試してみた",
-      "publishedAt": "2026-06-16T11:08:15.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "8513ba04b257356805e483cafd4e9a5b19273c1de2a3c8dbb5b7de0fc5906c14",
-      "title": "【手順付き】AWS ルートユーザーのコンソールログインをメール通知する方法",
-      "url": "https://dev.classmethod.jp/articles/eventbridge-sns-root-user-login/",
-      "description": "【手順付き】AWS ルートユーザーのコンソールログインをメール通知する方法",
-      "publishedAt": "2026-06-16T09:24:11.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "2174b646b63c2b9c42020b663be65a3a2461f899d1b871f12939eece7c38d013",
-      "title": "AWSのPhysical AI Scaffolding Kit (PASK)を試す① — SageMaker HyperPodでSlurmクラスタを構築する",
-      "url": "https://dev.classmethod.jp/articles/try-aws-pask-01-build-slurm-cluster-with-hyperpod/",
-      "description": "AWSのPhysical AI Scaffolding Kit (PASK)を試す① — SageMaker HyperPodでSlurmクラスタを構築する",
-      "publishedAt": "2026-06-16T09:02:40.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "49ed9f7f2f33c5134f053359778e87c21171ba50a0b5d1f20157d239b8f3234d",
-      "title": "累計1,500万リクエストの大量ボットにAWS WAF Monetizeで402 Payment Requiredを返してみた",
-      "url": "https://dev.classmethod.jp/articles/aws-waf-monetize-402-large-scale-bot-15m-requests/",
-      "description": "本番環境で観測された累計約1,500万リクエスト規模の大量ボットに対し、AWS WAF Monetizeで402 Payment Requiredを返す構成を適用しました。RateBasedルールとの組み合わせ、WAFログでの確認内容、適用時の判断を紹介します。",
-      "publishedAt": "2026-06-16T08:58:19.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "eb913a1673d81b3e68e7b0036926f1dbe342efe68e8bbd9676167417f41d6b23",
-      "title": "【開催報告 & 資料公開】AWSメディアセミナー NAB Show 2026 recap",
-      "url": "https://aws.amazon.com/jp/blogs/news/jpmne-bb-nab-show-2026-recap/",
-      "description": "AWS は 2026 年 4 月 18 日 – 22 日にラスベガスで開催された世界最大の放送機器展「NAB […]",
-      "publishedAt": "2026-06-16T07:00:23.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "d952db3acf5de99d72779a347c2a0dc073575a1fcc8bb1eb6a838d6ad96a88d7",
-      "title": "やることが多そうで実はシンプル。CopyFail/DirtyFragのAWS影響確認と対応について",
-      "url": "https://dev.classmethod.jp/articles/copyfail-dirtyfrag-aws-impact-and-mitigation/",
-      "description": "Linux カーネルの脆弱性「CopyFail」と「DirtyFrag」について、その概要から AWS サービス別の対応方法まで詳しく調査しました。本記事では、脆弱性の詳細と対応策を実例を交えて紹介します。",
-      "publishedAt": "2026-06-16T06:42:51.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "0fa91a508ff898f7026031292f29779e8db4de28fc6df4c2678d1da3f35aecd5",
-      "title": "Hatena Engineer Seminar #37 「サービスを支える技術基盤編」を2026年6月30日にオンライン開催します #hatenatech",
-      "url": "https://developer.hatenastaff.com/entry/engineer-seminar-37",
-      "description": "こんにちは。CTOのid:motemenです。\n2026年6月30日（火）に Hatena Engineer Seminar #37 「サービスを支える技術基盤編」を開催しますので、お知らせします。\n\nHatena Engineer Seminar #37 では、「サービスを支える技術基盤」をテーマに、はてなのサービスを技術で支えつづけるエンジニア4名が登壇します。表からは見えにくいものの、サービスの信頼性と進化を支える土台と技術的な挑戦について、現場におけるリアルな取り組みと技術的な詳細をお話しする予定です。\n開催はオンラインです。（詳しくはconnpassのイベントページをご確認ください）。皆様のご参加をお待ちしております！\nイベント概要\n日時: 2026年6月30日(火) 14:00-15:10（予定）\n参加費: 無料\n開催形式: オンライン配信 YouTube Live\n\n\nYouTube Live HatenaTech チャンネルにて https://www.youtube.com/channel/UCwqsFJGxzAZQdcT1xYZhhbw\n開催当日に connpass に登録されているメールアドレスや X の @hatenatech アカウントにて配信 URL を共有いたします\nお申し込みURL: https://hatena.connpass.com/event/397502/\nハッシュタグ: #hatenatech\n\n\nブログを書く際や SNS投稿の際にぜひお使いください\nHatena Engineer Seminar は、はてなのサービスを開発する上で、エンジニアがどのような事を考えているのか、どのような働き方をしているのかを語るイベントです。過去にも様々な技術レイヤーやサービスを軸としたテーマなどで開催してきました。\n過去の Hatena Engineer Seminar に関する記事一覧\n発表内容詳細\n（※ 内容は変更になる可能性がございます）\nはてなアカウント基盤 State of the Union（id:cockscomb）\nはてなサービスの認証・認可を司るアカウント基盤は、2024年に多要素認証とパスキーをサポートし、2025年にはパスキーへの自動アップグレードを導入しました。これらの目に見える変更の裏で、私たちのチームは認証・認可を全面的に見直し、改善してきました。今回は、はてなのアカウント基盤の現状を通して、現代の認証・認可に纏わる様々な視点を紹介します。\n言語モデルの活用に関する研究（id:SlashNephy）\n私たちのチームでは、生成AIを活用した技術に積極的に投資しています。AIエージェントが効率的に機能するには、検索基盤の整備が不可欠です。Amazon OpenSearch Service上に構築したテキスト埋め込みの検索基盤をご紹介します。また、文章の意味を理解できる言語モデルをテキストコンテンツの分類に応用する検証もおこなっています。その品質を継続的に改善するためのMLOpsパイプラインの構築までお話しします。\nはてなのサービス基盤を支えるKubernetes《足腰》（id:masayosu）\nはてなのサービスプラットフォームチームでは少人数のチームで約40のサービスが稼働するKubernetes基盤を運用しています。安定したサービス提供を続けるためには基盤の継続的な改善が欠かせません。今回はサービスを支える「足腰」としてKubernetes基盤をどのように運用しているのかアップグレードや監視、運用改善などの例を交えながら、少人数のチームで基盤を支えるための工夫や考え方について紹介します。\nはてな匿名ダイアリーのすべて、お話しします……（id:jj1uzh）\nはてな匿名ダイアリーは2006年のサービス開始以来、Perlアプリケーションによって稼働していました。この度、そのアプリケーションを全面的にGoに移植し、2026年5月末から新生アプリケーションに完全に切り替わっています。Claude Codeを使ったコード移植、その（ほとんど）全てをお話しします。\nタイムテーブル\n 時刻 \n id \n タイトル \n\n\n\n\n 14:00 \n  \n 開会のご挨拶 \n\n\n 14:05 \n id:cockscomb \n はてなアカウント基盤 State of the Union \n\n\n 14:20 \n id:SlashNephy \n 言語モデルの活用に関する研究 \n\n\n 14:35 \n id:masayosu \n はてなのサービス基盤を支えるKubernetes《足腰》 \n\n\n 15:50 \n id:jj1uzh \n はてな匿名ダイアリーのすべて、お話しします…… \n\n\n 15:05 \n   \n 閉会のご挨拶 \n\n\n\n\n\nお申し込み方法\nHatena Engineer Seminar #37 サービスを支える技術基盤編 - connpass\n諸注意\n発表内容や時間は場合により変更となる可能性がございます。ご了承ください。\nお申し込み時やアンケートなどでいただいた個人情報は、個人情報の取り扱いについて - 採用情報 - 株式会社はてな に準じ、セミナーの管理・品質改善・調査・採用のご案内目的に利用いたします。\nみなさまのご参加をお待ちしております！",
-      "publishedAt": "2026-06-16T05:55:24.000Z",
-      "feedName": "Hatena Developer Blog"
-    },
-    {
-      "id": "9a93e6e21cbff4ad80b86a25f62a97c6ec9a11ed406d9357de25ac3e50d7b269",
-      "title": "AWS WAF AI Traffic MonetizationでBot UAを再現して402 Payment Requiredを返してみた",
-      "url": "https://dev.classmethod.jp/articles/aws-waf-ai-traffic-monetization-402-evaluation/",
-      "description": "AWS WAFに追加されたAI Traffic Monetization機能を検証しました。Bot UAを指定した模擬リクエストや、Rate-basedルールでしきい値を超えたリクエストに対して、402 Payment Requiredとx402 price manifestが返る動作を確認しています。",
-      "publishedAt": "2026-06-16T05:49:25.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "818a8bdc22094565ab2c1ba9de0386bb33563456004eaaa8f99735a40024296a",
-      "title": "対話システムの評価を LLM にどこまで任せられるか（前編）：5 つの落とし穴",
-      "url": "https://zenn.dev/ivry/articles/2c298614d0ee85",
-      "description": "TL;DR 対話システムを「エンドユーザーが使えるか」の観点で受け入れテストするとき、シナリオ生成も評価も LLM に任せたくなります。 しかし、LLM によるシミュレーション／評価には、生成発話のクオリティ、LLM as a Judge の限界、LLMベースシミュレーターの持つ譲歩問題など大きく5つの落とし穴が存在します。 合成...",
-      "publishedAt": "2026-06-16T05:38:58.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "14d82868acd5ab82161e9352557467e9672f3671e9a41c604c3f574b96307880",
-      "title": "AIアバターシステムのアーキテクチャ分析  - AI・多言語NLPと日本国内の厳格な運用基準を両立する課題への挑戦",
-      "url": "https://qiita.com/TOMOSIA-HieuNT/items/c5a194e66c817381a8f2?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "はじめに\nTOMOSIA VIETNAM が技術面を担当した 「AI ＋ アバター（人間らしい対話アシスタント）」 システムが、日本のある地方自治体の窓口 にて実証実験を開始し、日本放送協会（NHK） に取材・放送されました。これは、研究開発フェーズから実運用可能なプロダ...",
-      "publishedAt": "2026-06-16T04:26:11.000Z",
-      "feedName": "Qiita"
     },
     {
       "id": "9f83571bf7c175f64266af22d354fd5f48959350993e1c77d653ab932a09ee16",
@@ -518,54 +351,6 @@
       "description": "AI Agent が企業のワークフローに組み込まれ始めている中で、「エージェントにどこまでの権限を持たせるべきか」「ユーザーの操作として実行されるべきなのか、エージェント自身の権限で実行されるべきなのか」といった設計判断に悩まれている方は多いのではないでしょうか。従来のアプリケーションとは異なり、エージェントは自律的にツールを呼び出し外部リソースへアクセスするため、認証・認可の設計にも新しい考え方が必要になります。こうした課題に取り組む開発者・セキュリティエンジニアの皆様を対象に、2026 年 5 月 22 日、AWS 麻布台ヒルズオフィスにて「Security for App Builders #2」を開催しました。ご参加いただきました皆様には、改めて御礼申し上げます。 本ブログでは、当日の各セッションの概要をお伝えするとともに、発表資料を公開いたします。AI Agent のアイデンティティ制御に関心をお持ちの方にとって、設計の出発点となる情報が得られる内容になっていますので、ぜひご覧ください。",
       "publishedAt": "2026-06-17T04:12:00.000Z",
       "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "c8b352c61cd34ed61515f4634b6da92810ea7b3e3a08ade24779c7f1270d41bc",
-      "title": "Cookie の `__Host-` / `__Secure-` プレフィックスとは？ 名前でセキュリティを強制する仕組み",
-      "url": "https://qiita.com/11akajet/items/61e352a3a07d5cc7a433?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "はじめましての方ははじめまして、そうでない方はこんにちは。社内では「じぇっと」と呼ばれています。なぜそう呼ばれているかは追々お伝えできればいいかなと思います。\n\n「cookie名に __Host- が付いてる」— これは何？\n開発中のアプリやブラウザの開発者ツールで他社サイ...",
-      "publishedAt": "2026-06-17T00:18:51.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "b91259980c6d26ca66c7b2de301996a5a0abc5bab2632d3ee2b07fde86119d53",
-      "title": "「セキュリティスコア 90/100」を CI で仕組み的に強制する — 個人開発で品質を守る最終防衛線",
-      "url": "https://qiita.com/teppei19980914/items/1231a2fec5d5eb7b2647?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "この記事は約 5 分で読めます。\n\n筆者プロフィール: ソフトウェアエンジニア。「知った気にならない。いつまでも学び続ける」を信条に、業務と個人開発の両輪で技術を磨いています。AI 駆動開発で複数の個人開発アプリを構築・運用中。\n👉 ポートフォリオ: 筆者ホームページ\n個...",
-      "publishedAt": "2026-06-16T14:52:34.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "38097aa739636928661f566d527605820dcac1d803deb96b6bd43e8cce38e77c",
-      "title": "ReactとかNext.jsとか、あたかも言語みたいな顔でこちらを見てくるJavaScript周辺技術をまとめてみた",
-      "url": "https://qiita.com/miruky/items/b892d9ff73495ca4b68d?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "はじめに\n\nこんばんは、mirukyです。\n私は元文系の人間なので、プログラミングを学び始めたころ「ReactとかNext.jsってプログラミング言語なの？何？」とよく思っていました。なにせ、非常によく使われているのをいいことに、もはやプログラミング言語かのごとき堂々たる...",
-      "publishedAt": "2026-06-16T14:46:52.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "ec02a8d3ae39cc04c94e212acc56b2cff56ebb456be110decf99f7572d6fb789",
-      "title": "Apache Iceberg入門：誕生の背景から特徴、アーキテクチャまとめ",
-      "url": "https://qiita.com/yushibats/items/b6e4b74006c5133442f7?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "■ はじめに\n今回はIceberg入門として、\n\n背景\nApache Iceberg誕生の目的\nApache Icebergの基本的な考え方\nApache Icebergのアーキテクチャ\nApache Icebergの主な機能\n\nをまとめてみました。\n\n■ 背景\nまず前提...",
-      "publishedAt": "2026-06-16T13:44:52.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "b6e0aaa274c0f9345539d49fdfb104c4f661d8aed51871762be81cc7af2b4773",
-      "title": "テスト駆動開発（TDD）をやってみた",
-      "url": "https://zenn.dev/wwwave/articles/fba5f88cf5f52b",
-      "description": "はじめに\n初めてTDDを聞いた時は「テストから書き始めて手戻りを減らす手法」程度に思ってしまっていました。\nそのような認識でいた時にAIエージェントが流行り、「TDDで実装させた方が品質が良くなる」ことをTwitterで見ました。\n自分の認識していたTDDから「TDDがAIが開発するときになぜ良い影響がもたらすのか」という疑問がずっと存在していて、ようやくTDDについて調べ、実践してみました。\n\n やってみたTDDのお題\nrubyで探したら以下のサイトを発見したのでお題にしました。\nエンジニアのスキルを伸ばす“テスト駆動開発”を学んでみよう | 初学者のためのTDD（テスト駆動開発）...",
-      "publishedAt": "2026-06-16T08:24:03.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "e8727373edacfdbb08b798af3cddcf979792b8e475a6fc68340285f66a96874e",
-      "title": "Reactをビギナーに教える前に知っておきたかった「技術より大切なこと」",
-      "url": "https://qiita.com/monotein/items/789b0b2250d1ed2e8acf?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "「どこから始めればいい？」という問いの前に\n以前教えていた生徒の中には、シニアやテックリードのポジションにいる人もいます。\n新年度には、新卒エンジニアへのReact研修にアサインされる方もいるようです。\nそういう方たちからよく聞く言葉があります。\n「どこから始めて、何を教...",
-      "publishedAt": "2026-06-16T05:54:56.000Z",
-      "feedName": "Qiita"
     },
     {
       "id": "88e56f215c0e2e0e61fa464bbfbe8824226546f1158893ed84d3a2f2f39e3cf2",
@@ -7180,6 +6965,246 @@
       "description": "はじめに\nこんにちは！\n@piacerex さんが制作された噂のNotebookLMクローンプロジェクト 「notex」 を、Docker（Ubuntu 24.04 LTSベース）環境で動かしてみました。\n\nローカルで動かすための準備から、起動中に遭遇したちょっとした...",
       "publishedAt": "2026-07-13T01:52:13.000Z",
       "feedName": "Qiita"
+    },
+    {
+      "id": "34ca9b411feb55bf43d67c50ddfcdafb61c143f1915f411ddcce81a4ea946171",
+      "title": "Sveltekit การทำงานกับ remote function [Part 3]",
+      "url": "https://dev.to/nnutnonn/sveltekit-kaarthamngaankab-remote-function-part-3-5218",
+      "description": "สวัสดีครับเพื่อนๆ! 👋 กลับมาเจอกันอีกแล้วในซีรีส์ SvelteKit Remote function! จากบทความก่อนๆ ที่เราลุยตระกูล query กันไปแบบจัดเต็ม ทั้งดึงข้อมูลธรรมดา มัดรวมรีเควสต์ (batch) และดึงแบบเรียลไทม์ (live) หวังว่าเพื่อนๆ คงจะสนุกกับการ \"ดึง\" ข้อมูลกันไปแล้วนะครับ 😎\nแต่วันนี้... เราจะมาเปลี่ยนโหมดกันบ้าง! เพราะเมื่อมี \"ดึง\" ก็ต้องมี \"ดัน\"!! เอยย \"ส่ง\" ถูกไหมครับ? 😅 ถ้าเราอยากจะส่งข้อมูล เพื่อบันทึก (POST) หรืออัปเดต (PUT) อะไรบางอย่างกลับไปที่ Server ผ่าน FormData ล่ะจะต้องทำยังไง?\nขอต้อนรับทุกคนเข้าสู่โลกของ Remote function ประเภท form 📝 เจ้าตัวนี้เกิดมาเพื่อช่วยเราจัดการกับการส่งข้อมูลโดยเฉพาะ (Mutation) โดยในบทความนี้ เราจะมาค่อยๆ ปูพื้นฐานทำความเข้าใจกันตั้งแต่เรื่องการจัดการช่องรับข้อมูล (Fields) กันก่อนสำหรับบทความนี้ และในบทความถัดๆไปจะเล่าถึงการ Validate ข้อมูลใน form, การนำค่าใน form มาแสดงผล รวมถึงการจัดการกับข้อมูลที่ถูกส่งกลับมาหรือการเปลี่ยนเส้นทางไปยังส่วนอื่นๆของเว็บ (Returns and redirects) กันอีกทีนะครับ\nเอาละ!! พร้อมที่จะบอกลาความยุ่งยากของการจัดการฟอร์มแบบเดิมๆ แล้วหรือยังครับ? ถ้าพร้อมแล้ว เตรียมนิ้วให้พร้อมโค้ดแล้วลุยกันเลย! 🚀\n📄form\n\n\nด้วยฟังก์ชัน form ของเราอย่างที่บอกมันเกิดมาเพื่อจัดการกับการส่งข้อมูลไปยัง server โดยเฉพาะซึ่งโดยหลักแล้ว ตัว callback function ที่มันรับมาจะมี parameter ที่รับค่าจาก form ที่ส่งเข้ามาเป็นประเภทข้อมูล FormData \nimport * as v from 'valibot';\nimport { error, redirect } from '@sveltejs/kit';\nimport { form } from '$app/server';\nimport * as db from '$lib/server/database';\nimport * as auth from '$lib/server/auth';\n\nexport const createPost = form(\n        // ส่วนของ Validation schema\n    v.object({\n        title: \"v.pipe(v.string(), v.nonEmpty()),\"\n        content:v.pipe(v.string(), v.nonEmpty())\n    }),\n        //Callback function ที่รับค่า data ที่เป็น FormData เข้ามา\n    async ({ title, content }) => {\n        // เช็ค auth เรื่องของ User ว่าถูกต้องไหม\n        const user = await auth.getUser();\n        if (!user) error(401, 'Unauthorized');\n\n        const slug = title.toLowerCase().replace(/ /g, '-');\n\n        // ทำการ Insert เข้าไปยัง Database\n        await db.sql`\n            INSERT INTO post (slug, title, content)\n            VALUES (${slug}, ${title}, ${content})\n        `;\n\n        // ทำการ Redirect ผู้ใช้ไปยังหน้า blog ใหม่ที่ถูกสร้าง\n        redirect(303, `/blog/${slug}`);\n    }\n);\n\nและในทางกลับกันเจ้าฟังก์ชัน form ก็จะคืนค่า object ที่เราสามารถนำไป spread ใส่เข้าไปยัง <form> element ในส่วนของ client ได้ด้วย ซึ่งเจ้าตัว Callback function ด้านบนนั้นจะทำงานก็ต่อเมื่อเกิด event ประเภท form submit เท่านั้น\n<script>\n    import { createPost } from '../data.remote';\n</script>\n\n<h1>Create a new post</h1>\n     <!-- vvvvvvvvvvv สามารถนำ `form` มา spread ได้เลย -->\n<form {...createPost}>\n    <!-- คอนเท้นต์ของ form ก็ใส่เข้ามาตรงส่วนนี้ -->\n\n    <button>Publish!</button>\n</form>\n\nซึ่งใช่แล้วครับ เจ้าตัวฟังก์ชัน form ที่ถูกส่งกลับมานั้นมันเป็น object ที่จะมี properties ของ method รวมถึง action อยู่ด้วยซึ่งนั้นสามารถทำให้การส่งข้อมูลฟอร์ม ของเราจะทำงานได้แม้ว่าเราจะไม่มีสามารถเข้าถึง JavaScript ได้นั้นเอง ที่มากไปกว่านั้นมันยังมี attachment ที่จะทำให้ฟอร์มของเรามีความสามารถแบบ progressively enhances อยู่ด้วย ซึ่งเจ้านี้แหละมันเหมือนเวทมนต์เลยก็ว่าได้ เพราะว่าเมื่อไหร่ที่เราสามารถเข้าถึง JavaScript ได้ การส่งข้อมูลฟอร์มของเราจะป้องกันและไม่ทำให้หน้าเว็บของเราเกิดการโหลดใหม่ซ้ำ (reload)\nและเหมือนกับฟังก์ชัน query ที่เคยกล่าวไว้ในบทความก่อน ๆ นั้น เมื่อไหร่ที่ callback function ของเราทำการรับค่าข้อมูลเข้าไปกับมันด้วย เราจะต้องทำการ Validate ข้อมูลนั้น ซึ่งนั้นก็สามารถทำได้ง่ายๆเช่นกัน โดยการใส่ Validation schema ที่เป็น Standard Schema ให้เป็น argument ตัวแรกของเจ้าฟังก์ชัน form\n📊Fields\n\n\nโดยตัวฟอร์มของเราเนี่ย จะประกอบไปด้วยช่องกรอกข้อมูล (fields) หลายๆ ช่องรวมกัน ซึ่งหน้าตาและประเภทของช่องพวกนี้จะถูกกำหนดโดยตัว schema ที่เราตั้งไว้นั่นเองครับ 📝\nอย่างในกรณีของฟังก์ชัน createPost เราก็จะมีอยู่ 2 ฟิลด์หลักๆ คือ title (หัวข้อ) และ content (เนื้อหา) ซึ่งข้อมูลทั้งสองตัวนี้ก็จะเป็นประเภทข้อความ (strings) ทั้งคู่เลย ✍️\nทีนี้ เวลาที่เราอยากจะดึงพวก attributes ต่างๆ ของแต่ละฟิลด์ออกมาแปะใช้งาน เราก็แค่เรียกใช้ method ที่ชื่อว่า .as(...) แล้วระบุประเภทของช่อง input ที่เราอยากจะใช้งานลงไปได้เลย 🛠️\nและสำหรับช่อง input ส่วนใหญ่นั้น เรายังสามารถแอบส่งค่าที่ 2 (second argument) พ่วงเข้าไปเพิ่มได้ด้วยนะ หน้าตาจะเป็นแบบนี้เลย 👉 .as(type, value) ซึ่งเจ้านี่จะเอาไว้ใช้สำหรับควบคุมค่า (value) ที่จะถูกแสดงผลออกมาบนหน้าเว็บนั่นเองครับ: ✨\n<form {...createPost}>\n    <label>\n        <h2>Title</h2>\n        <input {...createPost.fields.title.as('text')} />\n    </label>\n\n    <label>\n        <h2>Write your post</h2>\n        <textarea {...createPost.fields.content.as('text')}></textarea>\n    </label>\n\n    <button>Publish!</button>\n</form>\n\nซึ่งเจ้าพวก attribute เหล่านี้แหละที่จะเป็นตัวช่วยให้ SvelteKit รู้ว่าต้องตั้งค่าช่อง input เป็นประเภทไหน กำหนดชื่อ (name) สำหรับแพ็คข้อมูลส่งไปให้ handler จัดการต่อ และที่เจ๋งสุดคือมันช่วยเติมค่า (value) กลับลงไปในฟอร์มให้แบบอัตโนมัติด้วย! (อย่างเช่น เวลาผู้ใช้กด submit แล้วเกิด error กรอกข้อมูลไม่ผ่าน เขาจะได้ไม่ต้องมานั่งพิมพ์ใหม่ทั้งหมดให้เมื่อยมือยังไงล่ะ 😌) แถมยังช่วยเซ็ตสถานะ aria-invalid เพื่อบอกระบบได้ด้วยนะว่าช่องนี้ข้อมูลพังหรือกรอกผิด 🚨\nและในส่วนการที่เราส่งค่าที่ 2 พ่วงเข้าไปใน .as(...) เนี่ย จะมีประโยชน์สุดๆ เวลาที่เราต้องเรนเดอร์ฟอร์มโดยดึงข้อมูลที่มีอยู่แล้วมาแสดงครับ อย่างเช่นตอนทำ \"ฟอร์มแก้ไขข้อมูล\" (edit form) หรือเวลาที่เราต้องเสกฟอร์มหน้าตาเหมือนกันออกมาหลายๆ อันผ่านลูป for(...) 🔄\nซึ่งนอกจากมันจะช่วยตั้งค่าเริ่มต้นตอนที่ฟอร์มถูกเรนเดอร์ขึ้นมาครั้งแรกแล้ว เจ้านี่ยังเป็นตัวคุมค่าของช่อง input นั้นๆ เวลาที่ฟอร์มถูกสั่ง reset (ล้างค่า) กลับไปเป็นค่าตั้งต้นอีกด้วยนะ 🧹\n📝 จุดที่ต้องโน้ตไว้เพิ่มเติมคือ:\ninput ประเภท radio, submit และ hidden จะบังคับว่า ต้องใส่ ค่าที่ 2 นี้เสมอนะครับ\ncheckbox จะต้องใส่ก็ต่อเมื่อมันทำหน้าที่เป็นหนึ่งในตัวเลือกของฟิลด์ข้อมูลแบบ array\ninput ประเภท file (อัปโหลดไฟล์) ได้นะครับ 📁❌\nตัว attribute name ที่ระบบสร้างขึ้นมาให้ จะใช้รูปแบบการเขียนอ้างอิงแบบ JS object เลยครับ (หน้าตาก็ประมาณนี้ nested.array[0].value)\nแต่มีข้อควรระวังนิดนึงคือ ตอนนี้มัน ยังไม่รองรับ พวก key ที่เป็น string แบบที่ต้องใช้เครื่องหมายคำพูด (quotes) ครอบนะครับ อย่างเช่น object['nested-array'][0].value แบบนี้จะยังเอามาใช้ไม่ได้เด้อ 🚫\nและถ้าเราแอบไปแงะดูการทำงานหลังบ้าน (Under the hood) ⚙️ สำหรับช่อง input ประเภทติ๊กถูก (boolean checkbox) และช่องตัวเลข (number) ตัวแอตทริบิวต์ชื่อ (name) ของมันจะถูกแอบเติมคำนำหน้าด้วย b: และ n: ตามลำดับครับ\nถามว่าทำไปทำไม? ก็เพื่อเป็นการส่งซิก 🤫 กระซิบบอก SvelteKit ให้รู้ว่า \"เฮ้ย! ช่วยแปลงค่าพวกนี้จาก string ให้กลับมาเป็น boolean หรือ number ตามที่มันควรจะเป็นให้หน่อยนะ\" ก่อนที่ข้อมูลจะถูกส่งข้ามไปสู่ขั้นตอนการตรวจสอบ (validation) อีกทีนั่นเองครับ ระบบเขาคิดมาเผื่อแล้ว ✨\nซึ่งไอ้เจ้า Fields ทั้งหลายที่เราทำเนี่ยมันสามารถถูกซ้อนเข้าไปอยู่ใน object (nested object)  หรือ array (nested array) ได้ ซึ่งค่า (value) ของมันก็สามารถเป็นได้ทั้งข้อความ (string) ตัวเลข (number) ค่า True/False (boolean) หรือจะเป็น object ของไฟล์ (File objects) ได้เช่นกัน เช่นตัวอย่างถ้าเรามีข้อมูล schema ดังนี้\nconst datingProfile = v.object({\n    name: v.string(),\n    photo: v.file(),\n    info: v.object({\n        height: v.number(),\n        likesDogs: v.optional(v.boolean(), false)\n    }),\n    attributes: v.array(v.string())\n});\n\nexport const createProfile = form(datingProfile, (data) => { /* ... */ });\n\nพวกเราก็จะมีฟอร์มที่หน้าตาประมาณนี้\n<script>\n    import { createProfile } from './data.remote';\n\n    const { name, photo, info, attributes } = createProfile.fields;\n</script>\n\n<form {...createProfile} enctype=\"multipart/form-data\">\n    <label>\n        <input {...name.as('text')} /> Name\n    </label>\n\n    <label>\n        <input {...photo.as('file')} /> Photo\n    </label>\n\n    <label>\n        <input {...info.height.as('number')} /> Height (cm)\n    </label>\n\n    <label>\n        <input {...info.likesDogs.as('checkbox')} /> I like dogs\n    </label>\n\n    <h2>My best attributes</h2>\n    <input {...attributes[0].as('text')} />\n    <input {...attributes[1].as('text')} />\n    <input {...attributes[2].as('text')} />\n\n    <button>submit</button>\n</form>\n\nและเนื่องจากฟอร์มของเราในรอบนี้ดันมีช่องให้อัปโหลดไฟล์ (file input) รวมอยู่ด้วย เราเลยต้องไม่ลืมแปะ attribute  enctype=\"multipart/form-data\" เข้าไปที่ตัวฟอร์มด้วยนะครับ ส่วนพวกค่าข้อมูลอย่าง info.height และ info.likesDogs ระบบก็จะจัดการแปลงร่าง (coerce) ให้กลับไปเป็นตัวเลข (number) และค่าความจริง (boolean) ให้เองตามลำดับเลย สบายใจได้! ✨\n💡 แวะโน้ตไว้นิดนึงเรื่อง Checkbox:\nFormData ที่ SvelteKit เอามาใช้ประกอบร่างข้อมูลนะครับ\nv.optional(v.boolean(), false) แทนที่จะใช้แค่ v.boolean() เพียวๆ\nz.coerce.boolean<boolean>()\nและในกรณีที่พวกเราใช้งานช่อง input แบบกลุ่มอย่าง radio และ checkbox (ที่เป็นตัวเลือกหลายๆ อันภายใต้ฟิลด์หัวข้อเดียวกัน) กฎเหล็กก็คือ การบังคับต้องระบุค่า (value) เข้าไปเป็น argument ตัวที่สองในคำสั่ง .as(...) เสมอ แบบนี้เลย 👇\nexport const operatingSystems = /** @type {const} */ (['windows', 'mac', 'linux']);\nexport const languages = /** @type {const} */ (['html', 'css', 'js']);\n\nimport { operatingSystems, languages } from './constants';\n\nexport const survey = form(\n    v.object({\n        operatingSystem: v.picklist(operatingSystems),\n        languages: v.optional(v.array(v.picklist(languages)), []),\n    }),\n    (data) => { /* ... */ },\n);\n\n<form {...survey}>\n    <h2>Which operating system do you use?</h2>\n\n    {#each operatingSystems as os}\n        <label>\n            <input {...survey.fields.operatingSystem.as('radio', os)}>\n            {os}\n        </label>\n    {/each}\n\n    <h2>Which languages do you write code in?</h2>\n\n    {#each languages as language}\n        <label>\n            <input {...survey.fields.languages.as('checkbox', language)}>\n            {language}\n        </label>\n    {/each}\n\n    <button>submit</button>\n</form>\n\nหรือจะเขียนอีกแบบโดยใช้ select หรือ select multiple ก็ได้นะ โค้ดหน้า +page.svelte ก็จะกลายเป็น\n<form {...survey}>\n    <h2>Which operating system do you use?</h2>\n\n    <select {...survey.fields.operatingSystem.as('select')}>\n        {#each operatingSystems as os}\n            <option>{os}</option>\n        {/each}\n    </select>\n\n    <h2>Which languages do you write code in?</h2>\n\n    <select {...survey.fields.languages.as('select multiple')}>\n        {#each languages as language}\n            <option>{language}</option>\n        {/each}\n    </select>\n\n    <button>submit</button>\n</form>\n\nและก็เหมือนกับกรณีของช่อง checkbox ที่ไม่ได้ถูกติ๊กนั่นแหละครับ... ถ้าผู้ใช้ไม่ได้เลือกตัวเลือกอะไรมาเลย ข้อมูลที่วิ่งส่งมาก็จะหายวับและมีค่ากลายเป็น undefined ไปโดยปริยาย 👻\nด้วยเหตุผลนี้เอง สำหรับฟิลด์อย่าง languages (ที่อาจจะให้เลือกได้หลายภาษา) เราเลยต้องเขียนตัว schema เผื่อทางหนีทีไล่ไว้โดยใช้คำสั่ง v.optional(v.array(...), []) (เพื่อให้มันแอบเซ็ตค่าเริ่มต้นเป็น array ว่างๆ [] ให้ถ้าไม่มีคนเลือก) แทนที่จะไปบังคับโหดๆ ว่าต้องมี array ส่งมาเสมอด้วยคำสั่ง v.array(...) เพียวๆ ครับ 🛡️✨\nเป็นยังไงกันบ้างครับเพื่อนๆ กับการใช้งาน form แบบฉบับ SvelteKit Remote function 🤩 ในส่วนของการจัดการฟิลด์ข้อมูลต่างๆ มันดูคลีนและสมูทขึ้นกว่าเดิม ไหมครับ? หรือมันเพิ่มความลำบากกว่าเดิมนะเนี่ย 😵‍💫😵‍💫\nแต่เดี๋ยวก่อน... มหากาพย์เรื่องฟอร์มของเรายังไม่จบลงง่ายๆ แค่นี้ครับ! เพราะสิ่งที่เราทำกันไปวันนี้เป็นเพียงแค่จุดเริ่มต้นเท่านั้น\nถ้าใครกำลังมีคำถามในหัวว่า \"แล้วถ้าอยากให้ฟอร์มมีการ Validate แบบ ทั้งฝั่ง Client ด้วยจะทำยังไงละ ?? แล้วจะเอาข้อมูลในฟอร์มมาแสดงได้ยังไง ??\" 🤯\nเก็บคำถามนั้นไว้ครับ! เพราะในบทความถัดไป เราจะมาจัดกันต่อในหัวข้อของการ Validate 🔍 รวมถึงการ Get/Set ข้อมูลจาก form และสุดท้ายก็จะเป็นเรื่องการนำค่าที่ถูกส่งกลับ (Return Data) มาใช้งานได้อย่างไรด้วย ↩️ \nรับรองว่าบทความหน้าจะช่วยปลดล็อกสกิลให้เพื่อนๆ จัดการฟอร์มบน SvelteKit ได้อยู่หมัดในทุกสถานการณ์แน่นอน! เตรียมตัวรอติดตามกันได้เลยครับ แล้วเจอกันใหม่นะเพื่อนๆ 😉✨",
+      "publishedAt": "2026-07-17T02:00:00.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "3f992f3300c267e8e5f1918a492be628f216d8ae484c8132106a51125473fbd4",
+      "title": "A Full 3D Live Weather World in One HTML File — No Frameworks, No Build Step.",
+      "url": "https://dev.to/phoenix_analysis_593be33c/a-full-3d-live-weather-world-in-one-html-file-no-frameworks-no-build-step-4n83",
+      "description": "Live Engine: https://bruvic62.github.io/weather-diorama/\nhttps://github.com/bruvic62/weather-diorama\nI deliberately stayed inside very tight constraints (single file, no frameworks, no build step) and still got something that feels premium. Here's how, and here's why more people should remember this is still possible.\"\nTo be clear, I'm not knocking modern tools like React or WebGL pipelines. They are great for massive applications. But I’m running on a 2.5-year-old i5 laptop with integrated graphics, and I just wanted to see what could be done if I slowed down and worked purely with the raw materials of the browser.\nI used a live weather dashboard as the test case because it gave me rich, real-time data to drive the visuals. When I looked into adding a 3D-styled UI or realistic sun tracking, the default advice was always to pull in a heavy library. I didn't want to weigh down my machine for a background app, so I just kept digging for lighter alternatives.\nInstead of heavy 3D models, it just relies on CSS backdrop filters. Instead of a physics engine, it uses standard Vanilla JS math to track celestial coordinates and update the sky's CSS colors based on local time.\nIt’s just one HTML file. Zero dependencies. Zero build steps.\nI’m sharing this because the final performance genuinely surprised me. It’s a reminder that the browser is still a very capable engine on its own if you’re willing to work directly with it.",
+      "publishedAt": "2026-07-17T01:31:59.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "47e45d200cb058918c260113956df71cd800281795ef59973e5950f4045a3b91",
+      "title": "[小ネタ] メンバーアカウントで IAM Identity Center のアカウントインスタンスを作成してみた",
+      "url": "https://dev.classmethod.jp/articles/iam-identity-center-member-account-instance-create/",
+      "description": "AWS Organizations のメンバーアカウントで IAM Identity Center のアカウントインスタンスを有効にし、ユーザーを作成・セットアップしてみました",
+      "publishedAt": "2026-07-17T01:27:57.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "507a054172c48c52a9834fc72abeb2dcb88dc368e2246cad13ee97d7a06d9666",
+      "title": "Claude Code v2.1.212 の主要アップデート",
+      "url": "https://dev.classmethod.jp/articles/20260717-cc-updates-v2-1-212/",
+      "description": "Claude Code v2.1.212 がリリースされました。`/fork` の刷新や暴走防止機能、セキュリティ修正など、48件の変更が入った内容濃いアップデートの内容をご紹介します。",
+      "publishedAt": "2026-07-17T01:21:48.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "d6eddf979d61008ca3b75787e0d51c3cebd49a7444ab90db59c95e32b17a5533",
+      "title": "フロンティアAIで攻撃が高度化／国家間のサイバー戦もAIで激化　企業が構築すべき「動的防御」の姿とは",
+      "url": "https://enterprisezine.jp/article/detail/24694",
+      "description": "米国時間2026年6月8日〜11日に開催された「Zenith Live 2026」。2日目の基調講演では、「GPT-5.5」などに代表されるフロンティアAIモデルの脅威などが紹介された。また、AIは国家間のサイバー戦でも悪用されており、企業が見るべき観点は実に多様化している。本記事では、イベントの基調講演の内容や個別取材、最新の地政学リスクに焦点を当てたセッションのレポートなどを通じて、企業が備えておくべきセキュリティ対策のヒントをお届けする。",
+      "publishedAt": "2026-07-17T00:00:00.000Z",
+      "feedName": "EnterpriseZine"
+    },
+    {
+      "id": "d7f9ef58c38450fccde9c552de366e7c780514f592ccc3016d89e06d4e720481",
+      "title": "S3イベント通知に追加されたaws-generated-tagsをEventBridgeでフィルタリングしてみた",
+      "url": "https://dev.classmethod.jp/articles/s3-event-notifications-aws-generated-tags/",
+      "description": "S3イベント通知に追加された`aws-generated-tags`の内容を、CloudFormationで作成したバケットで検証しました。さらに、EventBridgeでスタック名を条件にし、同一スタックにEventBridge通知を有効化したバケットを追加しても、ルール変更なしで`Object Created`イベントを捕捉できることを確認しました。",
+      "publishedAt": "2026-07-16T22:25:09.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "e0c9369b44789d5546643a930fcd7480c78538fd7bd5881779c80297cf022fd0",
+      "title": "Firefoxをブラウザのタブ内で丸ごと動かす「Firefox in WebAssembly」が登場、開発におけるAIコストは合計400万円以上に相当",
+      "url": "https://gigazine.net/news/20260716-firefox-in-webassembly/",
+      "description": "ウェブブラウザのタブ内でMozilla Firefoxを丸ごと起動できる「Firefox in WebAssembly」をPuter Labsが公開しました。外観だけを再現したFirefox風の画面ではなく、ウェブページを描画するGeckoやJavaScriptを実行するSpiderMonkeyまでWebAssemblyとして動作します。開発にはAIが大量に使われ、開発に費やしたトークン...",
+      "publishedAt": "2026-07-16T15:12:14.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "ac6282844c1ecf984c2a164b992aee0c20d516b36521d2380ec60eefff0974d7",
+      "title": "競技プログラミング（ヒューリスティック部門）世界大会で優勝した私が人生を振り返る - Shun_PI’s blog",
+      "url": "https://shun-pi.hatenablog.com/entry/2026/07/16/195647",
+      "description": "自己紹介 初めまして、しゅんぴー（Shun_PI）と申します。 自己紹介を兼ねて、主な経歴と実績を簡単に記載しておきます。 World Tour Finals 2026 Heuristic 優勝 （競技プログラミングの一分野である「ヒューリスティックコンテスト」の世界大会） Kaggle Grandmaster （世界で最も有名な機械学習コンテストプラットフ...",
+      "publishedAt": "2026-07-16T12:02:25.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "2baa5b9aaf1a6fee5d9c7607678d1104d5b0964befcc5cc794c075198d3bdce1",
+      "title": "Running a self-hosted LLM in Kubernetes with vLLM",
+      "url": "https://www.cncf.io/blog/2026/07/16/running-a-self-hosted-llm-in-kubernetes-with-vllm/",
+      "description": "Running large language model (LLM) workloads in-house is one of several patterns teams adopt alongside managed API services. Managed API services are convenient and well suited to many workloads. Self-hosting is a complementary option that some...",
+      "publishedAt": "2026-07-16T11:00:00.000Z",
+      "feedName": "Cloud Native Computing Foundation"
+    },
+    {
+      "id": "356665d6013d8f43a9421280ebef89887642175aca2ee7c19a54040d3116646c",
+      "title": "Oracle Database@AWS のトラフィック集中検査",
+      "url": "https://aws.amazon.com/jp/blogs/news/centralized-traffic-inspection-for-oracle-databaseaws/",
+      "description": "Oracle Database@AWS 環境で AWS Transit Gateway の集中検査 VPC または AWS Cloud WAN のサービス挿入を使用して、東西・南北ネットワークトラフィックを集中検査する 2 つのパターンを解説します。",
+      "publishedAt": "2026-07-16T09:55:12.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "41d9de52b3e28719fb66bf5ef313de51469ad8a0cb4bdf094715d4e534e5b12f",
+      "title": "Terraform を使用した Oracle Database@AWS リソースのプロビジョニング",
+      "url": "https://aws.amazon.com/jp/blogs/news/provision-oracle-databaseaws-resources-using-terraform/",
+      "description": "本記事では、Terraform を使用して Oracle Database@AWS の主要コンポーネント（ODB ネットワーク、Exadata インフラストラクチャ、Exadata VM クラスター、Autonomous VM クラスター）をプロビジョニングする方法を説明します。サンプルの Terraform テンプレートとステップバイステップの手順により、Oracle Database@AWS 環境の自動デプロイを実現できます。",
+      "publishedAt": "2026-07-16T09:50:52.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "1a3db2ec5414dc13610965626d83ca2a5401d257aa48b1fa6759aae242d2df28",
+      "title": "JavaScriptの日付処理が変わる！ DateからTemporalへ - ICS MEDIA",
+      "url": "https://ics.media/entry/260715/",
+      "description": "JavaScriptで日付を扱ったことのある方なら、「3月のつもりでnew Date(2026, 3, 15)と書いたら4月になっていた」という経験が一度はあるのではないでしょうか。月だけが0始まりであることはDateクラスの仕様の一例ですが、そのほかにも、日付の計算やフォーマット、タイムゾーンの処理には手間がかかります。そうした扱...",
+      "publishedAt": "2026-07-16T09:45:14.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "eba17d8448a03d148afe5392df144e6363f93f21b228a2fd3d8bf12ab873eabd",
+      "title": "AWSで障害　「CloudFront」世界規模で不調　PayPayに影響、noteやニコニコ生放送もつながりにくく【復旧】",
+      "url": "https://www.itmedia.co.jp/news/articles/2607/16/news096.html",
+      "description": "AWSで障害　「CloudFront」世界規模で不調　PayPayに影響、noteやニコニコ生放送もつながりにくく【復旧】（1/2 ページ） 7月16日午後5時40分ごろから、AWSで障害が発生している。CDNサービス「Amazon CloudFront」が世界規模で不調という。日本ではPayPayが影響を明らかにしている他、ニコニコ生放送、はてなブログ、no...",
+      "publishedAt": "2026-07-16T09:10:39.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "4e87f379900a62457e9a6d883a5729c3e5301a32cb55f1fc4d6ae0ab73c7e433",
+      "title": "Oracle Database@AWS を読み解く: Oracle ワークロードに最適な選択肢の見極め方",
+      "url": "https://aws.amazon.com/jp/blogs/news/oracle-databaseaws-decoded-determining-the-right-fit-for-your-oracle-workloads/",
+      "description": "2025 年 7 月に GA となった Oracle Database@AWS (ODB@AWS) が Oracle ワークロードに適しているかを判断する 5 つの質問と、ビジネス・技術・ライセンス面での利点、Amazon RDS for Oracle や EC2 との使い分けを解説します。",
+      "publishedAt": "2026-07-16T09:00:52.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "4548499d5de001675e0017f27b17f0ed96b999967e0af8f2160f929708de6de5",
+      "title": "Oracle Database@AWS のクロスアカウント共有のベストプラクティスとアーキテクチャパターン",
+      "url": "https://aws.amazon.com/jp/blogs/news/best-practices-and-architecture-patterns-for-cross-account-sharing-in-oracle-databaseaws/",
+      "description": "AWS RAM によるリソース共有と AWS License Manager によるエンタイトルメント共有を使い、AWS アカウント間で Oracle Database@AWS リソースを共有する 6 つのアーキテクチャパターンとベストプラクティスを解説します。",
+      "publishedAt": "2026-07-16T08:20:29.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "63bf6a63e7242a77cbb2cf683b0ecaeefcdf9680665bf2bb6c6d78665907db83",
+      "title": "Oracle Database@AWS の高性能ネットワーキング入門",
+      "url": "https://aws.amazon.com/jp/blogs/news/getting-started-with-the-oracle-databaseaws-high-performance-networking/",
+      "description": "Oracle Database@AWS の高性能ネットワーキング機能を使い、EC2 上のアプリケーションと ODB@AWS データベース間で安定したサブミリ秒のネットワークレイテンシーを実現する設定手順を解説します。",
+      "publishedAt": "2026-07-16T08:10:52.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "c2e52f9c35b1732f03868878edc07419856a3b0174c67766d21f89845ea68b9b",
+      "title": "Oracle Database@AWS のバックアップとリカバリオプションを理解する",
+      "url": "https://aws.amazon.com/jp/blogs/news/navigating-backup-and-recovery-options-for-oracle-databaseaws/",
+      "description": "Oracle Database@AWS (ExaDB-D / ADB-D) で利用できる自動・手動・ユーザー管理・長期バックアップの各オプションと、Amazon S3、OCI Object Storage、Autonomous Recovery Service へのバックアップ先の選択、リストアオプション、ベストプラクティスを解説します。",
+      "publishedAt": "2026-07-16T08:06:11.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "6f101f5d7267e750c5f6d0a8f4e1730a9dfe7bf95813286b0e6e76c0558a791a",
+      "title": "AWS CloudFormation を使った Oracle Database@AWS スタックのプロビジョニング",
+      "url": "https://aws.amazon.com/jp/blogs/news/provision-oracle-databaseaws-stack-using-aws-cloudformation/",
+      "description": "AWS CloudFormation テンプレートを使って Oracle Database@AWS の主要コンポーネント (ODB ネットワーク、Exadata インフラストラクチャ、VM クラスター) をプロビジョニングする手順を解説します。",
+      "publishedAt": "2026-07-16T07:53:54.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "ea8f395cded941c9cd15c2b10d7176285a4adc816eba6327d96c34fcfb2a1ebd",
+      "title": "【AWS CloudShell】AWS CLI を最新版にアップデートする方法",
+      "url": "https://dev.classmethod.jp/articles/aws-cloudshell-cli-update-guide/",
+      "description": "AWS CloudShell で AWS CLI を最新バージョンにアップデートする方法をご紹介します。古いバージョンで API が認識されない場合は、手動または自動でのアップデート方法を参考にしてみてください。",
+      "publishedAt": "2026-07-16T07:17:33.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "76233e96dca5cde7e27171f96db86a9879962eff64dc904079025a0e8d66a864",
+      "title": "React初学者のための全体像解説",
+      "url": "https://dev.classmethod.jp/articles/kash_react_all/",
+      "description": "Reactを学ぶときに登場するNode.js、npm、Vite、react-domなど、次々と現れる用語の全体像を整理します。これらが「何の役割で、どこで働くのか」を理解することで、常に現在地を把握しながら学習できるようになります。",
+      "publishedAt": "2026-07-16T05:58:10.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "b73a0bf5f058e4eb3dbfe470d21c9113ce8be0d885b6323a2aa1166c7f0f3edd",
+      "title": "SQL MCP Server が GA したらしい",
+      "url": "https://zenn.dev/microsoft/articles/1113250e1e63dc",
+      "description": "2026 年 6 月に、 SQL MCP Server が GA しました。特にブログなどもなく、Azure Update\nでひっそりアナウンスされてました。ちょっと時間があったので、どんなものかいじってみた内容をシェアできればと。\n例によって例のごとく、GitHub Copilot さんと一緒にやってみただけなので、参考程度として頂ければと。\n\n SQL MCP Server とは\nData API Builder という、SQL Server、Azure Cosmos DB、PostgreSQL、MySQL など、サポートされているデータベース用の REST API および Grap...",
+      "publishedAt": "2026-07-16T04:43:35.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "9e6cc21c1a8be33c37512d9d9cca8884db577a36dc9bb6088c363d641677ab37",
+      "title": "Search ConsoleとGA4をターミナルから操作するCLI「gsc-ga4-cli」を作りました（Python / Node.js・Claude Codeスキル同梱）",
+      "url": "https://qiita.com/nogataka/items/889db458e66c3ea7b343?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "要点（最初に結論）\n\nGoogle Search Console と Google Analytics 4（GA4）を、ターミナルから操作できる CLI「gsc-ga4-cli」を作って OSS として公開しました。\n検索パフォーマンス取得・URL検査・サイトマップ管理・...",
+      "publishedAt": "2026-07-16T04:43:31.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "836d2d201376db051bda8ab516ef2c3053d4824950a4abbf22e296e19c7702a7",
+      "title": "Claude CodeでVue2→3をやってみたら、Javaのメジャーアップより苦労した話",
+      "url": "https://qiita.com/ntaka329/items/47b45beeb283bb989de5?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\nGMOコネクトの永田です。\n少し前、Java のメジャーアップ（11→21）を Claude Code でやったら、かなり楽でした。「これなら、ずっと後回しにしていた Vue 2→3 もいけるのでは」——そう思って手を付けたら、意外と苦労した、という話です😇。\n...",
+      "publishedAt": "2026-07-16T03:39:02.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "b2edc4e0ee8d2105e93c9d895f7c733c48f8983a9d4a427912c24677ae9cb06d",
+      "title": "【2026年7月版】 増え続ける AWS Security Hub CSPM のセキュリティ基準を、目的別に選べるよう整理してみた",
+      "url": "https://dev.classmethod.jp/articles/security-hub-cspm-standards-selection-guide/",
+      "description": "AWS Security Hub CSPM のセキュリティ基準が13個に増えて「どれを選べばいいの？」と迷っていませんか。本記事では、現在選べるすべての基準を整理し、目的別に有効化すべき基準をフローチャートで判断できるようにまとめました。",
+      "publishedAt": "2026-07-16T03:21:03.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "7b51366b52ec998331c84532beb7ea9ac2a771e3d28d3aec9cf67710780e518f",
+      "title": "Claude Codeのskillをskillでレビューする ― 静的チェック×LLMレビュー×git hooksの3層ゲート",
+      "url": "https://zenn.dev/aldagram_tech/articles/c407ae672c9c0e",
+      "description": "こんにちは！アルダグラムでQAエンジニアをしている千葉です。\n私たちのQAチームでは、テスト分析からテスト設計までのQAプロセスをClaude Codeのskill（スキル）として整備し、チームで共同運用しています。\nその中心が、これらのQAプロセスを丸ごと任せられるAIエージェント「qa-orchestrator」です。\n仕組みと効果は、弊社QAメンバーが記事にしていますのでそちらもご参考ください。\nhttps://zenn.dev/aldagram_tech/articles/4aea4b13671ae3\n今ではqa-orchestratorの存在を前提に、固定制インプロセスQAから...",
+      "publishedAt": "2026-07-16T01:00:09.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "d021dd24ea5d1fe860c73991147f439ac216b8467500310d38b2f2ada8488e60",
+      "title": "【衝撃】GPT-5.6のReact習熟度を測った結果……",
+      "url": "https://zenn.dev/uhyo/articles/react-profession-bench-11",
+      "description": "皆さんこんにちは。React習熟度シリーズの11記事目です。今回は、先日登場したGPT-5.6のReact習熟度を測ってみました。Effort=highとmaxでのベンチマークを予定していますが、この記事ではhighでの結果をお届けします。\n前回の記事はこちらです。\nhttps://zenn.dev/uhyo/articles/react-profession-bench-10\n次回の記事はこちらです。\nhttps://zenn.dev/uhyo/articles/react-profession-bench-12\n\n 結果\n今回はGPT-5.6の3種類のモデル、Sol, Terra, ...",
+      "publishedAt": "2026-07-16T00:50:56.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "9a10d21a32b776be6d097e4cb4e8f41c68b3591cc9d5d93fd5e7ca003f6daf9c",
+      "title": "Claude Codeで技術面接の壁打ち相手を作ってみませんか",
+      "url": "https://qiita.com/kuma_3838/items/e07a4d45ca5cf2ff14ef?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\n先日、Xで技術面接の質問集を紹介するポストが流れてきました。\n\n「SQLインジェクションが発生する仕組みと対策を説明してください。」\n「TypeScriptにおける anyと unknownの違いと、それぞれをどのような場面で使うべきか説明してください。」\n\n眺...",
+      "publishedAt": "2026-07-15T23:39:44.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "d4b37c1daf0743c2042d745ac6406862d98bebd4f0bcd8ade76854f013747193",
+      "title": "Kiro でテスト駆動開発（TDD）：こうあるべき体験 | Amazon Web Services",
+      "url": "https://aws.amazon.com/jp/blogs/news/kiro-how-tdd-should-feel/",
+      "description": "Amazon Web Services ブログ Kiro でテスト駆動開発（TDD）：こうあるべき体験 本記事は 2026 年 5 月 21 日に公開された Mike George 氏の “Test Driven Development (TDD) with Kiro: this is how it should feel” を翻訳したものです。 私のキャリアの初期に、所属していた組織は、コード品質の向上と自信を持ってリ...",
+      "publishedAt": "2026-07-15T11:07:00.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "7ae96cc36cc02c29e470decd86db3288e3ce7b12e3522de19b622cc1817d19e1",
+      "title": "Amazon S3の大量ログ分析、まずParquetに整えてから 〜 Autonomous AI Lakehouse の外部表・SQL・Vector Search・RAG使い分け",
+      "url": "https://qiita.com/shirok/items/2eafd347f90e80c46005?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "AWS S3上に大量のログがあり、Amazon Athenaで検索・分析している環境に対して、Oracle Autonomous AI Lakehouseを使ってさらに AI分析できないか、という相談を受けることがあります。\nたとえば、S3上に以下のようなログがあるケース...",
+      "publishedAt": "2026-07-13T22:59:11.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "8b90b0c3c4594634f01e469940f4d653314403255b370429789d6274cb72ee09",
+      "title": "0から始めるローカルAIエージェント（Win11 + Docker + LM Studio + Hermes Agent） - Qiita",
+      "url": "https://qiita.com/pocokhc/items/eef04a3d6104c0ee03db",
+      "description": "はじめに LLMの進化がすごくてついていくだけで大変ですね。 最近は、ある程度まとまった仕事をする自律型AIエージェントが注目されるようになりました。 それをローカルで試してみたいなと思っていたところ Hermes Agent や OpenClaw という名前を見かけたので気になって使ってみました。 この記事はその備忘録です。 0...",
+      "publishedAt": "2026-07-12T02:13:11.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
     }
   ]
 }
