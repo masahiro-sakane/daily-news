@@ -1,78 +1,6 @@
 {
   "articles": [
     {
-      "id": "9793de4f9d45f758b517baecbe70985d03d30c6fc476591ee05687472b6785b8",
-      "title": "Azure Fundamentals(AZ-900): What I learned as a Complete beginner",
-      "url": "https://dev.to/npnp/azure-fundamentalsaz-900-what-i-learned-as-a-complete-beginner-1lde",
-      "description": "A few days ago, I started Azure Fundamentals (AZ-900) on Microsoft Learn with zero cloud computing background. I've now completed all the core modules just the guided projects left before I'm fully done.\nHere's what stood out for someone starting from scratch:\n🔹 Cloud concepts first — before touching any service, AZ-900 grounds you in \"why\" cloud computing matters: cost models, scalability, shared responsibility. This foundation made everything after it click faster.\n🔹 Azure's core services — compute, storage, networking explained without assuming prior IT experience. Good pacing for beginners.\n🔹 Governance & management — the parts most beginners skip but actually matter once you're managing real resources (compliance, cost management, security basics).\nhere's where to begin:\nhttps://learn.microsoft.com/plans/5pdwhqt5kn376e?sharingId=5EB58958B8E40EF3&wt.mc_id=studentamb_518957",
-      "publishedAt": "2026-06-21T04:04:03.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "6b5ceed3c099abe032cbe17953f85e2f4c15fe0bc16242d0c3945e240c65581f",
-      "title": "Your Serverless Is Lying To You About Scale!",
-      "url": "https://dev.to/prabashanadev/your-serverless-is-lying-to-you-about-scale-4cga",
-      "description": "Your Serverless Is Lying To You About Scale!\n\n\n\n  \n  \n  Introduction\n\n\nThe promise of serverless computing is irresistible: infinite scalability, pay-per-use, and zero operational overhead. We've eagerly embraced platforms like AWS Lambda, Google Cloud Run, and Azure Container Apps, pushing them to scale horizontally with unprecedented agility. Yet, a recent surge in backend outages tells a different story. The culprit isn't typically the compute layer, but a silent, often overlooked bottleneck: database connection storms. While your serverless functions might explode with instances, your underlying relational database often remains a fixed-capacity component, throttling your \"elastic\" backend and leading to frustrating, intermittent service disruptions.\nThe fundamental disconnect lies in the architecture. Each instance of a serverless function, by default, often attempts to establish its own fresh connection to the database. When a sudden spike in traffic triggers hundreds or thousands of function instances, this translates directly into an equivalent surge of simultaneous connection requests hitting your PostgreSQL, MySQL, or other relational database instance.\nEven highly provisioned databases have hard limits on concurrent connections. Once this limit is reached, new connection attempts are queued, rejected, or timeout. This manifests as increased latency, 5xx errors, and ultimately, backend outages, despite your serverless compute scaling perfectly. This \"dirty secret\" means that while your Cloud Run containers might be ready to serve millions of requests, your humble Postgres instance can only handle so many concurrent sessions before it buckles, silently undermining your entire scalability strategy.\nOvercoming this limitation requires a strategic shift in how we manage database access in serverless environments. The fix isn't just provisioning a larger database; it's about intelligent, distributed connection management and a re-evaluation of data consistency models.\nThe most immediate and impactful solution is to introduce a dedicated connection pooling layer. This layer acts as an intermediary, multiplexing many client connections (from your serverless functions) over a fewer, persistent pool of connections to the database.\nConceptual Flow:\nServerless Function (N instances) -> N direct connections -> Database\nServerless Function (N instances) -> N connections -> Edge Connection Proxy -> M pooled connections (M << N) -> Database\nImplementation Considerations:\nCloud-Native Proxies: Services like AWS RDS Proxy or Google Cloud SQL Proxy are designed specifically for this challenge. Your serverless functions connect to the proxy endpoint, which then manages the connection pool to your RDS or Cloud SQL instance. This requires minimal code changes; you simply update your database connection string to point to the proxy.\n# Example Serverless Function Environment Variable\nDATABASE_URL: \"postgresql://user:password@<RDS_PROXY_ENDPOINT>:5432/mydb\"\n\nThird-Party/Specialized Proxies: Solutions like PgBouncer can be deployed as a separate service (e.g., in a container or VM) or integrated into managed database services (like Neon or Supabase) that offer built-in pooling optimized for serverless workloads.\n\n\nConnection Lifecycle: Configure your proxy for \"session pooling\" or \"transaction pooling\" based on your application's needs. Transaction pooling is generally more efficient for serverless as connections are returned to the pool immediately after each transaction, maximizing reuse.\n\n\n\n  \n  \n  2. Dynamic Data Proxy Layers\n\n\nBeyond simple connection pooling, a more advanced data proxy can offer additional benefits for serverless scalability:\n  Read/Write Splitting: Route read queries to read replicas and write queries to the primary instance, offloading the primary database.\n  Caching: Cache frequently accessed data at the proxy layer, reducing direct database hits.\n  Query Rewriting/Optimization: Optimize queries before they reach the database.\nThese proxies effectively abstract the database topology from your serverless functions, allowing the data layer to scale and adapt independently.\nThe most fundamental architectural shift involves questioning the necessity of synchronous database writes for every operation. Many actions don't require immediate, transactional consistency across all systems.\nConceptual Flow:\nUser Action -> Serverless Function -> Synchronous DB Write -> Response\nUser Action -> Serverless Function -> Publish Event to Message Queue (e.g., SQS, Pub/Sub) -> Immediate Response\nAnother Serverless Function (triggered by queue) -> Asynchronous DB Write\nImplementation Considerations:\n  Identify Use Cases: Log events, analytics updates, notification sending, inventory decrements (if stock checks happen upstream), order status updates that can tolerate a slight delay.\n  Messaging Services: Utilize cloud-native message queues (AWS SQS, Google Cloud Pub/Sub, Azure Service Bus) or event streaming platforms (Kafka).\nEvent-Driven Architecture: Your initial serverless function publishes an event and returns a response quickly, offloading the database interaction to a separate, asynchronous process. This drastically reduces the synchronous load on your database.\n# Pseudo-code for Eventual Consistency\nimport boto3\n\nsqs = boto3.client('sqs')\nQUEUE_URL = \"your-sqs-queue-url\"\n\ndef handle_request(event, context):\n    # ... process incoming request data ...\n    payload = {\"user_id\": \"123\", \"action\": \"product_viewed\", \"product_id\": \"XYZ\"}\n\n    # Publish event for asynchronous processing\n    sqs.send_message(\n        QueueUrl=QUEUE_URL,\n        MessageBody=json.dumps(payload)\n    )\n\n    return {\n        \"statusCode\": 202, # Accepted\n        \"body\": \"Request accepted for processing.\"\n    }\n\n# Separately, another function handles the queue:\ndef process_event(event, context):\n    for record in event['Records']:\n        message_body = json.loads(record['body'])\n        # ... connect to DB, insert data ...\n        # Ensure proper error handling and retries for DB writes\n\nTrue serverless elasticity extends beyond just scaling compute. The core challenge often lies in the fixed-capacity nature of traditional relational databases. By intelligently layering distributed connection pools and dynamic data proxies, you can mitigate connection storms and create a robust buffer between your bursting serverless functions and your database. More profoundly, an architectural shift towards eventual consistency for appropriate workloads can dramatically offload synchronous database writes, allowing your backend to handle peak loads gracefully. Stop provisioning for theoretical maximums; design for truly elastic data access from the ground up.",
-      "publishedAt": "2026-06-21T03:53:12.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "0208db041438f2a7f2637f1eff9bcac18347142aa481d04e4a946f0e6056be66",
-      "title": "I built a production ML inference API with FastAPI, Celery and Docker — here's the full architecture",
-      "url": "https://dev.to/sadanand__07/i-built-a-production-ml-inference-api-with-fastapi-celery-and-docker-heres-the-full-26lk",
-      "description": "Para 1 — The problem\nPara 2 — Architecture diagram\nPara 3 — The three components\nPara 4 — Key code snippet (predict_async endpoint)\nPara 5 — Testing strategy\nPara 6 — The result\nClosing line:\n  \"If you want the full source code with Docker, \n   CI pipeline, Postman collection and deployment \n   guide, I packaged it here: [Gumroad link]\"",
-      "publishedAt": "2026-06-21T03:51:35.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "550509da2d092cba339aced1260ff863c1895cc082ef6be2dc49c20ed8ddec8a",
-      "title": "I Built FormAS — A Form Backend So You Never Have to Build One Again",
-      "url": "https://dev.to/ayantik2006/i-built-formas-a-form-backend-so-you-never-have-to-build-one-again-hf9",
-      "description": "I Got Tired of Building Contact Form Backends, So I Built FormAS\n\n\nEvery time I built a website, portfolio, landing page, or SaaS product, I ended up solving the same problem:\nHow do I handle form submissions?\nThe process was always repetitive:\nCreate an API endpoint\nValidate requests\nStore submissions\nSend email notifications\nAdd spam protection\nExport data when needed\nFor a simple contact form, it felt like too much work.\nSo I decided to build FormAS.\nFormAS is a Form Backend as a Service.\nInstead of building and maintaining your own backend, you can create a form endpoint and start receiving submissions instantly.\nIt works with:\nNext.js\nReact\nStatic HTML websites\nLanding pages\nPortfolios\nAny frontend application\nGet notified whenever someone submits your form.\nSend submission data to your backend, CRM, Discord bot, automation workflow, or any external service.\nBuilt-in honeypot protection and rate limiting to stop spam and abuse.\nView and manage all form submissions from a single dashboard.\nExport submissions as CSV or JSON anytime.\nJust one endpoint. No backend required.\nAs a developer, I wanted something simple.\nNot a form builder.\nNot a website builder.\nJust a reliable backend for forms.\nSomething I could connect to a frontend project in minutes and move on.\n<form action=\"https://api.formas.space/api/submit/YOUR_API_KEY\" method=\"POST\">\n  <input type=\"text\" name=\"name\" required />\n  <input type=\"email\" name=\"email\" required />\n  <textarea name=\"message\"></textarea>\n  <button type=\"submit\">Send</button>\n</form>\n\nThat's it. No backend required.\nWhile building FormAS, I learned a lot about:\nAPI design\nWebhooks\nRate limiting with Redis\nSpam prevention\nEmail delivery\nDeveloper experience\nOne of the biggest lessons was that the \"simple\" products are often the hardest to build because they need to feel effortless for users.\nPlanned features include:\nFile uploads\nTeam workspaces\nAdvanced analytics\nMore integrations\nBetter webhook tooling\nIf you've built forms before, I'd love to know:\nWhat's your biggest pain point?\nWhich feature would make you switch from your current solution?\nWhat should I build next?\n🌐 Website: https://formas.space\n📚 Documentation: https://formas.space/docs\n🚀 Product Hunt: Coming Soon\nFormAS is built by me, Ayantik Sarkar, CTO at HoardSpace, and is launching as a HoardSpace Product.\nThanks for reading!",
-      "publishedAt": "2026-06-21T03:47:00.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "4e321fa1686cc31b04d5fd80b57a02d039b0148a52e03305ed0edd8cd12adf89",
-      "title": "Show OS: Universal Uploader – Zero-dependency, stream-based file uploading with transparent XHR fallback",
-      "url": "https://dev.to/hj_rr_54c6382012a2bb57813/show-os-universal-uploader-zero-dependency-stream-based-file-uploading-with-transparent-xhr-162g",
-      "description": "Hey everyone,\n⚙️ Core Architecture & Features\nConstant Memory Footprint: Streams large chunks sequentially using Fetch duplex streaming where supported.\nIntelligent Runtime Fallback: Detects capabilities instantly and falls back to a robust, chunked XMLHttpRequest pipeline to ensure cross-browser compatibility (including Safari).\nResilient Lifecycle Management: Built-in hooks for pause, resume, manual abort, and automated chunk-level retries with a configurable exponential backoff algorithm.\nZero Dependencies & Tree-shakeable: Written entirely in vanilla TypeScript with no external runtime dependencies (npm install u/universal-uploader/core). The architecture is highly modular, ensuring that unused upload strategies are completely tree-shaken during compilation.\nReact Primitive Included: Ships with a declarative React hook that maps the entire upload lifecycle to state primitives without causing redundant re-renders.\n🛠️ Why Existing Solutions Didn't Fit\nMost mainstream uploading libraries either rely on heavy multi-part form encodings that require buffering files entirely into browser memory, or pull in heavy polyfill architectures that bloating the initial bundle size.\n🔗 Resources\nGitHub Repository: jdy8739/universal-uploader (MIT License)\nSite: Universal Stream Uploader\nLive Documentation & Demo: Universal Stream Uploader Demo (Note: Replace with your actual demo link URL if different)\nNPM Package: u/universal-uploader/react\nI would highly appreciate technical feedback regarding the public API design, potential edge cases in specific Web Stream runtimes, or architectural suggestions for the transport pipeline.\nThanks for reading!",
-      "publishedAt": "2026-06-21T03:45:13.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "7b3f6634634c3281d5b3f49d6bab281f785767fb2c890728a2014071d81989e8",
-      "title": "Your AI feels slow? Maybe it's not dumb—you're making it work one thing at a time",
-      "url": "https://dev.to/kanfu-panda/your-ai-feels-slow-maybe-its-not-dumb-youre-making-it-work-one-thing-at-a-time-3ipl",
-      "description": "📖 Originally published on my blog. Part of a series on building with Claude Code.\nFor a while I'd watch the AI work and quietly grumble: a fairly big task, and it would finish one module before starting the next, while I just sat there waiting for it to clear one before the other's turn came up. The work itself was fine—it was just slow. Slow because it was stuck in a queue.\nThen it clicked: a lot of these modules have nothing to do with each other, so why make them go one after another? Split them up, let several agents work at the same time, done.\nWhat I want is simple: the same work, for roughly the same tokens, with the wall-clock time cut way down.\nBut let me put the boundary up front—not every task can be split this way. This is just an approach I've worked out for myself; take what's useful.\nFor several agents to work at once without stepping on each other, the prerequisite isn't the AI—it's your architecture.\nThat task of mine could be split because it was already several modules, talking to each other through interfaces, with internal implementations that don't affect one another—as long as each one honors the interface contract, it can be built independently. Loosely coupled, highly cohesive, in other words. And I'd nailed that design down together with opus before writing a line: opus helps me think it through and lays out options, but I'm the one who decides.\nYou can't cut corners here. Forcing parallelism onto an architecture you haven't cleanly split is like cutting a tangle of yarn into a few pieces that are all still knotted together—it only gets messier.\nWith the design settled, it's time to assign roles. The split I tend to use:\nopus runs the show—holds the big picture, hands out work, does the final check;\nsonnet does the TDD planning—per the design, it lays out how each module gets tested and implemented;\nhaiku writes the code and runs the tests—the grunt work goes to it, cheap and good enough.\nThis split is really a continuation of last post's \"model tiering\"—use the good steel on the blade. Except last time the point was saving money; this time it's about how these roles work together.\n\nIn practice, I did three things:\nWrote one line into the global CLAUDE.md: \"Parallelize when you can.\" That's the default rule across all projects.\nSet the max number of concurrent subagents in Claude's settings—that's the valve that actually matters.\nAdded one reminder every time I give an instruction: \"Parallelize as much as possible.\" opus, as the lead, already fans work out on its own, but a nudge keeps it on track.\nThe lead hands modules down, and inside a module it can split the work one more level. Layer over layer, and the whole task spreads out.\nRunning fast in parallel—how do you keep quality up? My answer: let the lead review its own output.\nThe logic is direct: it handed out the work, so it knows exactly what each subagent owes. Having it do the checking is the natural fit. I tried setting up a separate dedicated review agent, and it just had to re-understand the whole task from scratch—burning another round of tokens and being slower for it. The lead reviewing itself saves that re-understanding overhead, and it's both faster and sharper.\nThere's a small detail after a problem turns up: the lead usually asks me, \"Should I fix this directly, or spin up another agent to do it?\" I almost always say \"you fix it.\" Because it's the one that just caught the flaw—it knows best where the problem is, and the change is most direct coming from it.\nThe first was memory. Early on I got greedy and set max concurrency to 10. But I had other projects running in parallel at the time, and the machine's memory got eaten clean. So I honestly dropped it to 5, and it was actually better—for this one task alone, 5 in parallel is roughly 5× a serial run; stack on the other tasks running at the same time and the overall speedup tops 10×. If your machine and your quota can take it, push the number higher; if not, don't force it.\nThe second: don't split for the sake of splitting. Some modules are tightly coupled and meant to go in order, and if you pry them apart to parallelize, the agents interfere with each other and quality goes out the window. So before handing it off, I add a specific reminder: \"These modules are coupled—don't force a split.\" Good news is plenty of AIs recognize this themselves and won't force it. When something genuinely can't be split, just hand it to one agent to do serially, or have the lead run that thread end to end.\nPlenty of people hear \"5 agents burning at once\" and their first reaction is: won't the tokens multiply?\nThe way I figure it, no. The same pile of work, done serially, burns roughly the same token count—what needs reading still gets read, what needs writing still gets written; parallelism doesn't conjure up extra work. What parallelism actually changes isn't the cost, it's the wall-clock: the stretches that used to run in a queue now run in the same window together. The tiny bit of extra tokens buys a big drop in time cost—a great trade.\n\nSo apart from the things that genuinely can't be split, these days I parallelize basically everything that can be.\nOne, clean architecture first, then talk parallelism. Loosely coupled, highly cohesive, talking through interface contracts—without that foundation, splitting is a disaster. Nail it down with the AI in the design phase.\nTwo, parallelize everything you can, but set a ceiling. Bigger isn't better; size it against your machine's memory and your AI quota. I went from 10 back to 5 because memory taught me a lesson.\nThree, fast parallelism needs review. And the reviewer has to actually understand the task—have the lead that handed out the work do the checking, cheapest and sharpest; when it finds a problem, let it fix it directly.\nOne thing you can do today: open your global CLAUDE.md, add \"parallelize when you can,\" then go into settings and bump max concurrent subagents to a number your machine can handle. Next time you hand it a task that can be split, you'll notice it stops queuing.\nNext post I want to get into a problem that follows right on the heels of this one: when several agents edit code at the same time, what keeps them from clobbering each other? The answer is git worktree—giving each agent its own isolated workspace so they each work their own copy and nobody gets in anybody's way. Let me know in the comments if you're interested.",
-      "publishedAt": "2026-06-21T03:23:29.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "df1c24992812d968151a04decc85f5f5bf6e4f4064710362f2528edb70877a93",
-      "title": "When an AI Agent Joins Your Yjs Room, Three Assumptions Break",
-      "url": "https://dev.to/norfolkd/when-an-ai-agent-joins-your-yjs-room-three-assumptions-break-50h8",
-      "description": "Wiring an LLM as a first-class Yjs peer is architecturally sound — but it invalidates three silent assumptions your collaboration stack already makes about peer symmetry: throughput, undo ownership, and presence cadence.\nYou've tuned a Yjs provider under real collaborative load. You know the feeling before you can name it — one heavy client starts lagging the room, presence updates stutter, and you end up adding a debounce somewhere and calling it done.\nNow imagine that client generates text at 3,000 words per minute, never goes offline, and has its own awareness cursor.\nThat's not a sidebar feature. That's a new class of peer, and your collaboration architecture wasn't designed for it.\nIn April 2026, a working demo wired an LLM as a genuine server-side Yjs document peer — same transport as the human editors, same CRDT, its own awareness state. The implementation uses y-prosemirror and the standard awareness protocol directly. If you've shipped TipTap collaboration, you already have every dependency it needs.\nThe architecture is correct. Making the agent a server-side peer — rather than a client-side bolt-on posting diffs over a REST endpoint — gives you one convergence model instead of two, real presence semantics for the agent, and a clean separation between the LLM streaming layer and the document state layer.\nBut the demo establishes the peer model. It doesn't stress-test what happens to your existing assumptions once that peer is running.\nHere it is — the assumption baked into the Yjs awareness protocol, the undo manager, and your backpressure strategy, the one nobody wrote down because it was always true until now:\nAll peers produce operations at roughly human speed.\nNot identical speed. Human typists vary. But they land in the same order of magnitude. The entire design space — how often you broadcast awareness, how you scope undo history, whether you need per-peer rate limiting at the application layer — rests on that implicit contract.\nAn AI agent at 1,000–4,000 words per minute is 25–100× outside that range. It doesn't just stress your transport. It invalidates the mental model.\nHere's what actually breaks.\nA central OT server can throttle any client trivially — it's the authority, it controls the queue. A CRDT peer model has no natural chokepoint. That's the tradeoff you accepted when you chose Yjs, and it's usually fine because human peers self-limit.\nAn agent peer doesn't self-limit. Left unrestricted, its doc.transact() calls will flood the sync cycle and starve human-paced operations of their share of the convergence window. This is write starvation — the same class of problem as database concurrency — and it manifests as cursor lag and dropped presence updates for everyone else in the room.\nThe fix doesn't belong at the transport layer. It belongs between the LLM's streaming output and the Yjs document write:\n// Token bucket between LLM stream and Yjs write\nconst agentBucket = new TokenBucket({\n  capacity: 50,     // max queued ops\n  refillRate: 10,   // ops per 100ms — keeps agent below human starvation threshold\n});\n\nllmStream.on('token', async (token) => {\n  await agentBucket.consume(1);\n  ydoc.transact(() => {\n    ytext.insert(insertionPoint, token);\n  }, agentOrigin);\n});\n\nThe numbers are illustrative — tune them against your provider and room size. The point is that the rate limit lives at the application layer, scoped to the agent's origin, so human operations always get a guaranteed share of the convergence window regardless of how fast the model is generating.\nThis is also where the CRDT-vs-OT debate gets re-litigated in 2026. The peer model is still right for human collaboration. For AI agents specifically, you're adding a lightweight central constraint back in — not for correctness, but for fairness.\ny-undomanager scopes undo history by origin. This is correct behavior and it's documented. But \"correct\" and \"deliberate\" aren't the same thing.\nIf the agent's operations share an origin with the user's, Ctrl+Z becomes a coin flip. If the agent gets its own origin — which it should — you now have a second question: should user-facing undo ever surface agent operations, and if so, in what order relative to the user's own history?\nThere's no universal answer, but there is a clear principle: give the agent a separate UndoManager with its own trackedOrigins, and expose agent-undo as a distinct UI affordance, not the default Ctrl+Z path.\nconst userUndoManager = new Y.UndoManager(ytext, {\n  trackedOrigins: new Set([userOrigin]),\n});\n\nconst agentUndoManager = new Y.UndoManager(ytext, {\n  trackedOrigins: new Set([agentOrigin]),\n});\n\n// User's Ctrl+Z only touches userUndoManager.\n// \"Reject AI suggestion\" calls agentUndoManager.undo().\n// These stacks don't interfere.\n\nThis is the same design decision you face when adding comment marks or tracked-change marks to ProseMirror — marks that describe content rather than being content need a separate lifecycle from marks the user controls directly. The agent peer is the document-level version of that same pattern.\nIf you've ever had a user accidentally undo a comment thread someone else left, you've already felt this problem. The fix is the same: make the ownership boundary explicit at the manager level, not implicit in a if (origin === agentOrigin) return buried in a command handler.\nThe awareness protocol was designed for human-paced cursor updates. A few broadcasts per second per peer is normal; the rendering layer handles it fine.\nAn agent generating 3,000 wpm produces position changes at a rate no human can visually process. Broadcasting all of them is noise on the wire and in the React render cycle.\nTwo things to do. First, coalesce awareness updates on a fixed interval for agent peers — not per-operation:\nlet pendingAwarenessUpdate: ReturnType<typeof setTimeout> | null = null;\n\nfunction updateAgentAwareness(pos: number) {\n  if (pendingAwarenessUpdate) return;\n  pendingAwarenessUpdate = setTimeout(() => {\n    provider.awareness.setLocalStateField('cursor', { anchor: pos, head: pos });\n    pendingAwarenessUpdate = null;\n  }, 300);\n}\n\nSecond, add a type field to the agent's awareness state so the rendering layer can distinguish it from a human cursor without conditional logic scattered across components:\nprovider.awareness.setLocalState({\n  type: 'agent',\n  streaming: true,\n  name: 'AI Assistant',\n  cursor: { anchor: insertionPoint, head: insertionPoint },\n});\n\n\"AI is writing\" and \"another person is typing\" are different affordances. They deserve different visual treatments and different update rates. Encoding that distinction in the awareness state lets the rendering layer make the right call in one place.\nThe agent-as-peer pattern is the right architecture. Connecting the LLM to Yjs is not the hard part.\nThe hard part is going back through every assumption your collaboration system makes about peer symmetry and making those assumptions explicit — so you can break them deliberately for the agent peer without breaking them for everyone else.\nConcretely: your backpressure strategy assumed no single peer can dominate the convergence cycle, so it needs an application-layer token bucket scoped to the agent's origin. Your undo history assumed all tracked origins belong to the user, so the agent needs a separate UndoManager surfaced as a distinct UI action. Your awareness rendering assumed cursor updates arrive at human speed, so agent presence needs coalescing and a type discriminant in the awareness state.\nNone of these are hard to implement once you've named them. The risk is shipping the integration without naming them and finding the failure modes through user reports six weeks later when the collaborative load is real and the undo history is a mess.\nTreat rate limiting, undo isolation, and presence coalescing as first-class line items in the RFC. Not edge cases caught in code review.\nThe April 2026 demo and companion repo are at electric.ax/blog/2026/04/08/ai-agents-as-crdt-peers-with-yjs. The y-prosemirror + awareness setup maps directly onto a TipTap stack — worth reading alongside the Yjs UndoManager docs if you're planning the integration.\nWhy this, why now: The April 2026 demo is the first working implementation of the agent-as-Yjs-peer pattern on a production-equivalent stack (y-prosemirror, awareness protocol, Durable Streams), and it landed just weeks ago. The \"agent velocity problem\" it surfaces is genuinely new — CRDT literature has no prior answer for asymmetric peer throughput at this scale — and every team currently building collaborative AI editing features will hit the same three failure modes. Writing this now, before the pattern calcifies into bad defaults, is exactly the right time.",
-      "publishedAt": "2026-06-21T03:18:14.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "0a882a150c87bc6eecb13a18ba99ab3e8b420b89c58cbfef64109c3e5feaf7bd",
-      "title": "Three post-deploy checks I run after every Cloudflare Pages build",
-      "url": "https://dev.to/morinaga/three-post-deploy-checks-i-run-after-every-cloudflare-pages-build-35je",
-      "description": "After spending two weeks debugging issues that only showed up in production — a sitemap _redirects rule that was blocking my own sitemap-index.xml and a Bluesky image upload race against Cloudflare Pages deploy lag — I added three post-deploy checks to my workflow. They're fast and specific to the failure modes I've actually hit, not a full end-to-end test suite.\nThree sites (aiappdex.com, findindiegame.com, ossfind.com) on Cloudflare Pages with Astro 5 SSG. Here's what I check.\nThe simplest check and the one I should have had from day one. After a Cloudflare Pages deploy, I verify that sitemap-index.xml is reachable and returning 200 on all three domains:\nfor domain in aiappdex.com findindiegame.com ossfind.com; do\n  status=$(curl -s -o /dev/null -w \"%{http_code}\" \"https://$domain/sitemap-index.xml\")\n  echo \"$domain/sitemap-index.xml → $status\"\n  if [ \"$status\" != \"200\" ]; then\n    echo \"FAIL: $domain sitemap unreachable\"\n  fi\ndone\n\nI also check sitemap-0.xml — the actual URL sub-sitemap that @astrojs/sitemap generates — and assert that it contains at least a minimum expected URL count. For aiappdex.com that threshold is 1,000; if it drops below that after a deploy, the ETL data pipeline probably broke silently.\nThe reason this check exists: I had a _redirects rule rewriting sitemap-index.xml → sitemap-0.xml as an emergency workaround that turned out to be wrong. It was live for five days before I found it. The rule was blocking the real sitemap-index.xml from reaching crawlers while appearing fine in the browser (which followed the redirect). Curl with -o /dev/null -w \"%{http_code}\" doesn't follow redirects by default, so it would have caught this immediately.\nAfter every successful sitemap check, I run node scripts/indexnow.mjs. The script reads the live sitemap XML from each domain, collects all URLs, and POSTs them to the IndexNow endpoint for Bing, Yandex, Naver, and Seznam using site-specific keys.\nOutput looks like:\naiappdex.com: submitted 1179 URLs → 200 OK\nfindindiegame.com: submitted 139 URLs → 200 OK\nossfind.com: submitted 144 URLs → 200 OK\n\nIf a site returns 403 from IndexNow it usually means the key verification file (/<key>.txt) wasn't deployed correctly or a _redirects rule is mangling the path. Catching this right after deploy matters because the IndexNow key-verification window isn't instantaneous — letting it sit in a broken state delays indexing. I wrote more about the IndexNow setup in this week's tools post.\nI run this manually after deploy rather than inline in the GitHub Actions workflow because the Cloudflare Pages build takes 2-3 minutes, and IndexNow works best with live URLs. Running it as a separate workflow_dispatch trigger after the deployment succeeds means I'm submitting URLs that are actually live rather than ones that might still be deploying.\nThe third check runs on a cron — Monday 04:30 UTC — not after every deploy. It's slower (3-4 minutes per site, nine URLs total), so daily would be wasteful for a static site that doesn't change at runtime.\nThe workflow uses treosh/lighthouse-ci-action with one homepage and one deep entry page per site:\nmatrix:\n  site:\n    - { domain: aiappdex.com, sample: /models/timm-vit-base-patch16-clip-224-openai/ }\n    - { domain: findindiegame.com, sample: /games/dredge-1562430/ }\n    - { domain: ossfind.com, sample: /alternatives/ghost/ }\n\nI'm watching for Performance below 80, CLS above 0.1, or accessibility score regression. Astro SSG with no client-side JS should hold steady on all three — if they slip it means something in Tailwind v4 config or the ad slot component changed the layout paint behavior. The results upload to temporaryPublicStorage so I can diff before/after on regressions.\nI don't set hard failure thresholds that block deploys. These sites are pre-revenue with essentially zero traffic right now; blocking a deploy because a Lighthouse score dropped from 94 to 88 would be disproportionate. I treat Lighthouse as a trend monitor, not a gate.\nNo uptime monitoring — I'm relying on Cloudflare's own infrastructure status. No end-to-end user flow tests. No API availability checks — the Turso DB is only queried at build time in SSG mode, so there's nothing to check at runtime.\nFor a dynamically rendered site, those gaps would matter. For a static CDN deployment where the entire runtime is pre-built HTML, CSS, and a handful of JSON files, the three checks above cover the actual failure surface I've encountered.\nThe publish pipeline has its own idempotency layer (it reads published_urls from article frontmatter and skips already-distributed posts), so I don't need to verify cross-posting state after each deploy. That's a separate concern.\nPart of an ongoing 6-month experiment running three AI-curated directory sites. The technical claims here are real; this article was AI-assisted.",
-      "publishedAt": "2026-06-21T03:15:12.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "ad25856c2f432871e64870280437be63a335af53203c1d8bed011a042c1b6c3a",
-      "title": "Why I'm betting on AI-curated directories when Google AI Overviews answer the same queries",
-      "url": "https://dev.to/morinaga/why-im-betting-on-ai-curated-directories-when-google-ai-overviews-answer-the-same-queries-1e81",
-      "description": "The obvious counterargument to everything I'm building is this: Google already does it. You type \"best AI tools for video editing\" into Google and an AI Overview surfaces a curated list, synthesized from the same kind of data I maintain, without requiring a click. My three directory sites — Top AI Tools, Find Games Like, and Open Alternative To — are competing with a feature baked into the world's dominant search engine.\nI launched these sites on 2026-04-23, built on an architecture that runs at about $25/month. Traffic is essentially zero — the sites have been indexed for three weeks and organic crawling takes time. The question I keep returning to isn't whether Google will eventually index my pages. It's whether anyone will prefer clicking through to my site over reading the AI Overview box that already answered the same question.\nHere's my honest, falsifiable position.\nBy October 2026 — six months post-launch — at least one of the three sites will show organic click trends in Google Search Console indicating real query traffic to specific comparison or filtered-browse pages. I define that as: at least 200 non-homepage organic clicks per month, sustained for two consecutive months, from queries I didn't directly drive through social or newsletter posts.\nIf that doesn't happen, I'll publish the Search Console screenshots and write a post explaining what I got wrong. I'm committing to that here.\nAI Overviews have gotten genuinely good at list-and-compare synthesis. If you search \"open source alternative to Notion\" today, Google often returns a four-item structured list with one-sentence descriptions directly in the Overview box. My Open Alternative To site covers that territory. The AI Overview absorbs the zero-click version of that query.\nThe optimistic response is: \"my site appears as a citation source.\" The pessimistic response is: \"Google consumes your signal and stops sending clicks.\" The pessimistic version has supporting evidence — industry-wide CTR on informational queries dropped measurably as AI Overviews expanded through 2025, and the trend hasn't reversed.\nI don't think the pessimistic version is the whole story, but I'm not dismissing it. The most dangerous move is to assume the counterargument is wrong without designing around it.\nAI Overviews are strong at synthesizing \"what exists.\" They're weaker at three things I've deliberately built for.\nAttribute-based filtering. If someone wants \"open source Notion alternatives that work offline and have a mobile app,\" AI Overviews give hedged prose answers because they're synthesizing text, not querying structured fields. My Turso DB has works_offline, has_mobile_app, and last_commit_date as typed columns. Faceted filtering on those fields is something a browseable directory does better than a language model writing a paragraph about the general landscape.\nEditorial negative-space. My game recommender includes \"avoid if\" caveats — structured fields that answer \"who should skip this?\" generated by a Claude Haiku prompt that specifically forces a critical answer. AI Overviews don't have a mechanism to surface structured negatives. They default to positive framing, which means someone with a specific disqualifying requirement gets an unhelpful answer.\nFreshness on maintenance status. The ETL that populates the AI tools directory pulls GitHub commit activity weekly. A tool that hasn't been touched in 14 months is marked as low activity. AI Overviews don't distinguish between a tool actively maintained in 2026 and one that peaked in 2024 — they rely on the recency of web mentions, which can lag by months after a project goes dormant.\nNone of these defenses are permanent. Google could build structured attribute filtering into AI Overviews. But they require deliberate pipeline design, not just synthesis, and the gap exists now.\nEven if my sites lose the zero-click battle on broad discovery terms, there's a second query type I'm explicitly targeting: the downstream comparison query.\nThe sequence: someone types \"Notion alternatives\" into Google, gets an AI Overview naming four tools, then types \"Appflowy vs Anytype performance\" to compare the two they're considering. That second query is post-AI-Overview research. It has commercial intent. It wants a verdict, not another list.\nFor that query, a page with structured attribute comparison, a clear verdict, and fast load time competes directly with another AI-style answer — and structured data beats generative prose for \"which one wins on attribute X.\" This is partly why I chose static SSG over dynamic AI rendering for these sites: a fast, indexable page with typed comparison fields is what a second-stage research click needs.\n\n\n\nQuery type\nAI Overview strength\nDirectory strength\n\n\n\n\nDiscovery (\"best tools for X\")\nHigh — often answers directly\nLow for zero-click intent\n\n\nComparison (\"X vs Y, which wins\")\nMedium — hedges, rarely commits\nHigh — structured attrs + verdict\n\n\nFiltered browse (\"offline + mobile app\")\nLow — prose, no filters\nHigh — faceted structured data\n\n\nFreshness (\"is X still maintained?\")\nInconsistent — lags commits\nHigh — weekly ETL refresh\n\n\n\nThe comparison and filtered-browse rows are the actual load-bearing columns of this bet.\nAt $25/month, I can run this experiment for a year without needing revenue to justify continuing. I'm not under pressure to interpret ambiguous signals optimistically.\nCompare that to a project burning $200/month on infrastructure: you'd rationalize flat Search Console data as \"still in the sandbox phase\" past the point where the data actually says something. The full cost breakdown is genuinely minimal — Vercel Pro at $20, Turso starter at $0, Claude Haiku API in single-digit dollars for monthly ETL runs, GitHub Actions on free minutes.\nI won't claim AdSense is approved or revenue is flowing until it is. Right now, AdSense rejected the *.vercel.app version of the sites. I've moved to custom domains and verified them in Search Console. I'm waiting for real crawl data before making any claims about what's working.\nThree outcomes would tell me the bet is wrong:\nImpressions but near-zero clicks at 90 days. If Search Console shows my pages appearing as AI Overview citation sources but click rates stay near zero on comparison pages specifically, Google is extracting my signal without distributing traffic. That's the worst-case scenario — I'd need to rethink the format entirely.\nAdSense keeps rejecting after genuine depth improvements. The original rejection was partly a *.vercel.app domain issue, but if Google's classifier still rates the pages as thin after I've rebuilt with real structured content and specific editorial attributes, my model of what \"quality\" means to the classifier is wrong.\nComparison queries migrate fully to LLM chat. If people stop typing \"X vs Y\" into Google and start asking ChatGPT directly, the downstream click I'm betting on disappears. I don't see evidence of this happening at scale for research involving specific attribute constraints — but I'm monitoring query volume patterns month-over-month.\nThe first outcome is the one I'd want to see early. Impressions with near-zero clicks on comparison pages by month 3 would tell me to pivot the format immediately rather than wait six months for a conclusion I could have reached sooner.\nWhy three sites instead of one authority site?\nThree narrow sites let me test three different intent types simultaneously. Games-like, AI tools, and OSS alternatives attract different queries and different audiences. One site would take longer to produce the same signal volume about which format works. The original architecture post covers the reasoning.\nHow does Claude Haiku generate the structured editorial fields?\nEach ETL run sends entries through a shared Claude Haiku client that uses system-prompt caching to amortize the cost across batch runs. The prompts are tuned to force specific attribute outputs — avoid-if caveats, audience fit, freshness status — not open-ended descriptions.\nWhat if one site works and two don't?\nThat's a useful outcome, not a failure. The format that works tells me something specific about the intent type. I'll invest in what works and document what didn't.\nWhere will you publish the October 2026 verdict?\nOn this blog, with raw Search Console screenshots. I'll publish regardless of whether the numbers are favorable.\nPart of an ongoing 6-month experiment running three AI-curated directory sites. The technical claims here are real; this article was AI-assisted.",
-      "publishedAt": "2026-06-21T03:15:08.000Z",
-      "feedName": "Dev.to"
-    },
-    {
       "id": "012c1cc22f3a642270fb4af1bfc3f67bf3feb0ad67e0034f8e391d8099e7ad1a",
       "title": "Session 5 summary",
       "url": "https://dev.to/hvdineshbabu/session-5-summary-5agg",
@@ -135,165 +63,6 @@
       "description": "これまでのドキュメントを知見として活かしたい！Azure AI SearchとMicrosoft Foundryを使ったRAG構築に挑戦し、自分の書いた文章をもとにAIが回答できる仕組みを作ってみました。",
       "publishedAt": "2026-06-22T02:40:15.000Z",
       "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "86540ed757b2be108dd024073afa017b2cc6f90644343e315ba353f9d95d8272",
-      "title": "「Windows 11 バージョン 26H2」がテスト開始 ～2026年後半に正式リリース／「24H2/25H2」とコード共通で「eKB」による切り替え。ただし「26H1」からは更新不可",
-      "url": "https://forest.watch.impress.co.jp/docs/news/2118761.html",
-      "publishedAt": "2026-06-21T23:13:45.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "9c786811fb4b65c498023cda9b0939ab7a51e95cc10f70f390d7c4f23198f9cd",
-      "title": "「危険なAI」の証拠はあったのか？　Anthropic「Fable 5」規制に広がる疑問の声",
-      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2606/22/news026.html",
-      "description": "Anthropicの最新AIモデルに突如課された輸出規制が波紋を広げている。政権側は安全保障上の懸念を理由に挙げるが、セキュリティやAI分野の専門家は、その判断を支える根拠が十分に示されていないと反発している。問題視された能力とは何か。",
-      "publishedAt": "2026-06-21T22:30:00.000Z",
-      "feedName": "＠IT"
-    },
-    {
-      "id": "2cb71a568f892172a9471a913b7614a5308d305053e02b6326a1cd3fe19c3780",
-      "title": "Kiro Web のサンドボックスから AWS アカウントのリソースを参照できるように設定してみた",
-      "url": "https://dev.classmethod.jp/articles/kiro-web-sandbox-aws-access/",
-      "description": "Kiro Web のサンドボックスから AWS アカウントのリソースを参照できるように設定してみた",
-      "publishedAt": "2026-06-21T20:46:17.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "fc25728b05f3eff8b3c7adeaf453dda88e85ffff701199a7ccc61089b244cd2d",
-      "title": "「セキュリティのアレ」の3人が事例から導く、サプライチェーン攻撃対策の楔",
-      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2606/22/news008.html",
-      "description": "2026年5月29日、「ITmedia Security Week 2026 春」で、パネルディスカッション「信頼の境界線に打つ楔」が行われた。",
-      "publishedAt": "2026-06-21T20:00:00.000Z",
-      "feedName": "＠IT"
-    },
-    {
-      "id": "3d047084cdc936e7d31a971473282bad15068d750a8c8f162b8e4ce378c2dd87",
-      "title": "AWS Deadline Cloud: After Effects プラグインを conda 配信したら Worker でだけ機能しなかった話",
-      "url": "https://dev.classmethod.jp/articles/aws-deadline-cloud-after-effects-plugin-conda-adobe-common/",
-      "description": "AWS Deadline Cloud の CMF で After Effects を conda 配信したところ、ローカルでは機能するサードパーティプラグインが Worker でだけ機能しませんでした。原因はプラグインのインストール先にありました。",
-      "publishedAt": "2026-06-21T16:00:18.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "3e83051be54247197cba14aa786785c47d34eb1a5cc6c7e0fe9dabbb121cc234",
-      "title": "AWS、AIエージェントがリポジトリを自動スキャンして技術的負債を指摘してくれる「AWS Transform – continuous modernization」プレビュー公開",
-      "url": "https://www.publickey1.jp/blog/26/awsaiaws_transform_continuous_modernization.html",
-      "description": "AWS、AIエージェントがリポジトリを自動スキャンして技術的負債を指摘してくれる「AWS Transform – continuous modernization」プレビュー公開 Amazon Web Services（AWS）は、AIエージェントがコードリポジトリを継続的に自動スキャンし、サポートが終了したライブラリやフレームワークなどを始めとする技術的負債を検...",
-      "publishedAt": "2026-06-21T13:44:03.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "034bdd5f4412836e2bc10acd25614a2a6558ec7bf43ac30328672c990bc81e7b",
-      "title": "JavaScriptを事前コンパイルする。不可能と言われた挑戦に挑む開発者。｜直也テック",
-      "url": "https://note.com/naoya_tech/n/n99f05affec01",
-      "description": "今回はポッドキャスト「devtools.fm」に出演したOliver Medhurst氏の回をご紹介します。彼はPorffor（ポーファー）というプロジェクトの作者です。Porfforは「JavaScriptをWebAssemblyへと事前にコンパイルする（Ahead of Time Compiler、AOTコンパイラ）」という、多くの人が「不可能だ」と考えてきた仕組みに挑む研究...",
-      "publishedAt": "2026-06-21T12:42:21.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "174b66372c5c673a74415d06c222bbe752b18ef2dd694f336742c0a4cd43a669",
-      "title": "Windows の AWS Deadline Cloud Worker でジョブが同じエラーで 3 回拒否された話",
-      "url": "https://dev.classmethod.jp/articles/aws-deadline-cloud-windows-worker-agent-user/",
-      "description": "Windows の AWS Deadline Cloud Worker で WORKER_AGENT_USER モードのジョブを動かそうとしたところ、同じエラーメッセージのまま 3 段階に渡って拒否されました。文言は Administrator 権限を指していますが、実態は別のところにありました。",
-      "publishedAt": "2026-06-21T12:00:06.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "a8dc7e03e2573df8033edfc542c1faa6ad0618e7f0ec640a25bbde8b47e72ff0",
-      "title": "GitHub Copilot SDK が GA！TypeScript で カスタムツールを動かして料金体系も調べてみた",
-      "url": "https://dev.classmethod.jp/articles/shoma-github-copilot-sdk-ga-typescript-hello-world-to-custom-tools-pricing/",
-      "description": "GitHub Copilot SDK が GA！TypeScript で カスタムツールを動かして料金体系も調べてみた",
-      "publishedAt": "2026-06-21T11:33:56.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "e04f5212c29101e151b2042379eaccc38702bf2dbd7fe79100975eead12f575d",
-      "title": "AI-DLC Workflows v2がプレビューリリースされたのでKiro CLI / Claude Code / Codex CLIにインストールしてみた",
-      "url": "https://dev.classmethod.jp/articles/aidlc-workflows-v2-install-kiro-claude-codex/",
-      "description": "AI-DLC Workflows v2が2026-06-18にプレビューリリースされました。TypeScriptによるネイティブ実装へ全面刷新され、決定論的エンジンや状態管理が加わっています。本記事ではKiro CLI・Claude Code・Codex CLIの3ハーネスへのインストールと動作確認を試みました。",
-      "publishedAt": "2026-06-21T10:42:52.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "1811a4b0b1418e613d223d04965a6911c8951079e93049cfb7cb3ee0fab0fef9",
-      "title": "【AWS Blocks 入門】AWSのIfCツール「AWS Blocks」を体験してみた！",
-      "url": "https://qiita.com/yosuke-suzuki/items/aaac7afe22edf08d8d7d?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "はじめに\n2026年6月16日、AWSから AWS Blocks がパブリックプレビューとして発表されました。\n\nAWS Blocksは、フルスタックアプリケーション向けのオープンソースのバックエンド開発フレームワークです。データベース・認証・ストレージ・AIエージェ...",
-      "publishedAt": "2026-06-21T09:27:12.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "f425a6bc1c03689668bcbb3979533a8ebddfd23d0ec09b5a0679114f7eaac54b",
-      "title": "生成 AI で書類審査を行う AWS ソリューション「RAPID」をデプロイして使ってみた",
-      "url": "https://dev.classmethod.jp/articles/try-rapid-document-review-on-aws/",
-      "description": "生成 AI で書類審査を行う AWS ソリューション「RAPID」をデプロイして使ってみた",
-      "publishedAt": "2026-06-21T08:31:22.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "e634830cf1cd92130739d731a66272db7e59251429b9d37fbcc9ae78c13a826a",
-      "title": "閉域 VPC の AWS Deadline Cloud CMF Worker では STS の VPC エンドポイントが要る話",
-      "url": "https://dev.classmethod.jp/articles/aws-deadline-cloud-cmf-private-vpc-sts-endpoint/",
-      "description": "AWS Deadline Cloud の Worker Agent 本体は STS を呼ばない設計ですが、job attachments の入力同期だけは内部で STS にフォールバックします。閉域 VPC では STS のインターフェイス VPC エンドポイントを追加すると、この入力同期のタイムアウトを解消できます。",
-      "publishedAt": "2026-06-21T08:15:43.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "955b8cd2fb812fc69654df0d81e8361a56835d0bfe8dd7b3f77173b61be37d04",
-      "title": "GPUDirect RDMA 入門: NIC が GPU メモリに直接読み書き",
-      "url": "https://zenn.dev/tosshi/articles/42f0ee03b328a4",
-      "description": "はじめに\n!\nこの記事のゴール: 「GPU 同士がネットワーク越しに、CPU をほとんど介さず直接データをやり取りする」仕組みである GPUDirect RDMA を、初学者向けに解説します。\n\nそもそも RDMA とは何か（Buffer → NIC → NIC → Buffer）\nTCP/IP と何が違うのか（RTT・カーネルバイパス）\nRDMA の操作（RDMA Operations）と「メモリ登録」\nGPUDirect RDMA — NIC が GPU メモリに直接アクセスする（2 つの実現方式）\nAWS EFA はどうやって RDMA を実現しているか（SRD / Queue...",
-      "publishedAt": "2026-06-21T07:12:02.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "87396c7b84f778b08889a7f9f37ff895493ae722f5c666e6d483573be3639656",
-      "title": "PrivateLinkとResource Gatewayで既存IPv4環境を変更せずにIPv6環境へ接続する",
-      "url": "https://qiita.com/infra365/items/94c359afab6508e2c657?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "概要\n既存VPCのIPv4環境を変更せずに、IPv6環境のVPCと通信したい場合の構成パターンを検証します。AWS PrivateLinkのResource GatewayおよびVPCエンドポイントを利用することで、NLB不要かつクライアント側のIPv4環境はそのままにI...",
-      "publishedAt": "2026-06-21T06:39:51.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "3917db309eb15bea02dfb62ce3877f6ebe169ddadb50a0bdb217615997d13091",
-      "title": "TypeScript プロジェクトに ESLint・Prettier・cspell を 1 つずつ入れて挙動を確かめてみた",
-      "url": "https://dev.classmethod.jp/articles/shoma-setup-eslint-prettier-cspell-one-by-one-in-typescript-project/",
-      "description": "TypeScript プロジェクトに ESLint・Prettier・cspell を 1 つずつ入れて挙動を確かめてみた",
-      "publishedAt": "2026-06-21T05:20:16.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "d7414cf641ec55a75766596fff7932cbd035eb70c768f63c38e0b781e7ac5fc5",
-      "title": "AWSのPhysical AI Scaffolding Kit (PASK)を試す② — HyperPodでNVIDIA Isaac GR00Tをファインチューニング",
-      "url": "https://dev.classmethod.jp/articles/aws-pask-hyperpod-nvidia-isaac-gr00t-finetuning/",
-      "description": "AWSのPhysical AI Scaffolding Kit (PASK)を試す② — HyperPodでNVIDIA Isaac GR00Tをファインチューニング",
-      "publishedAt": "2026-06-21T04:44:07.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "7e7a5a0c5684f9c27a1dbff4d00c06221d99607d3fc7c3327631b0fe961a04e4",
-      "title": "LocalStack が有料になったので MiniStack + Terraform でローカル AWS 環境を作り直した",
-      "url": "https://zenn.dev/kamegoro/articles/ef1ab1c9527f9d",
-      "description": "はじめに\n個人開発で AWS のインフラを Terraform で管理していると、こういう悩みが出てきます。\n\n「terraform apply のたびに実 AWS を使うのはコストが怖いし、壊すのも嫌だ。ローカルで試したい」\n\nそこで従来は LocalStack を使うのが定番でした。ところが 2026 年 3 月、LocalStack は Community Edition を廃止し、最新版の利用にはアカウント登録と認証トークンが必須になりました。無料の Hobby プランも「非商用に限定」という制約つきです。\n代わりになるものを探していたところ、MiniStack という OS...",
-      "publishedAt": "2026-06-21T03:26:04.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "54a7a64da69c5c48c90e9356e4a299ce0d156235f6580109ad36580253230b1a",
-      "title": "バグハンター視点で学ぶ Caido 実践入門",
-      "url": "https://zenn.dev/scgajge12/books/119c83fa281d04",
-      "description": "📕【概要】\n　本書は、急速に支持を広げる Web プロキシツール「Caido」を、バグハンターの視点で使い倒すための入門書です。ブラウザとサーバの間に割り込んで通信を傍受し、書き換え、再送し、自動化する。その一連の作業をCaidoでどう行うのかを、一冊にまとめました。\n\n　本書は、各機能を「どんな脆弱性を狙うときに、どう効くのか」というバグハンティングの文脈で説明します。さらに公式の練習用ラボ（Caido Labs）を実際に解いて手を動かし、バグハンターが現場で使っているテクニックまで拾い上げます。\n\n💪【こんな方にオススメ】\n・☆ Caido をこれから使ってみたい方\n・☆ バグハンティングやバグバウンティに挑戦したい方\n・Web セキュリティを学びたい学生\n・すでに Burp Suite を使っていて、Caido を試してみたい方\n\n📢【お知らせ】\n・本書は Zenn の無料本です。\n\n🧑‍💻【筆者プロフィール】\n・セキュリティエンジニア & バグハンター (since 2020)\n・これまでサイバーセキュリティ企業で脆弱性診断やペネトレーションテスト等を従事\n・日本ハッカー協会「Hack Fes.」や IssueHunt「P3NFEST」などで『バグバウンティ入門講座』の講師を担当\n\n💰【備考】\n・本書は PDF の仕様で約120ページのボリュームです。",
-      "publishedAt": "2026-06-21T03:05:13.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "1fbab683a763d29ef48126a319eabc8559e6f7f323a338bab4249c3b91ed1b68",
-      "title": "Kiroの仕様駆動開発でチーム分けアプリを1時間で作ってみた",
-      "url": "https://qiita.com/YSasago/items/2ed101acdacd5c9e3fc7?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "はじめに\nAWS Kiro を使って、コードを一切書かずにチーム分けアプリをつくり、デプロイするまでの手順をまとめました。無料プランで簡単なアプリなら開発可能なので、Kiro を試してみたい人の参考になればうれしいです。\n今回つくったのは、こんなアプリです。\n\nメンバーを...",
-      "publishedAt": "2026-06-21T02:47:34.000Z",
-      "feedName": "Qiita"
     },
     {
       "id": "7a6185c7a71865b39682e3f9c8bfa0f8bf2f220702bdc1dc57cbb5ce10aab530",
@@ -566,38 +335,6 @@
       "description": "こんにちは、QAエンジニアのAyakaです。\n製造業向けSaaS（Blazor＋Radzen / SQL Server で開発）のテスト設計・品質管理を担当しつつ、最近はコーポレートIT寄りの仕事も兼務しています。\nテストケースをAIに「書かせる」こと自体は、もう誰でもできます。難しいのは、毎回同じ観点で、同じ品質で書かせることでした。\nテストケースを作る作業は、わりと早い段階からAIに手伝ってもらっていました。\n課題（PBI）の説明を渡して「テストケースを出して」と頼めば、それらしいものは返ってきます。最初のうちはそれで足りていました。\nただ、しばらく使っていると、AIで作れてはいるの...",
       "publishedAt": "2026-06-22T02:37:09.000Z",
       "feedName": "Zenn"
-    },
-    {
-      "id": "8e950b15fae1286a1983cc38ce6992d83c85d5a1d75a2c0748c68bde69ff9caf",
-      "title": "【DB設計】JOINコストとインデックスの効果を実行計画で理解する",
-      "url": "https://zenn.dev/dely_jp/articles/14ee6d362709e1",
-      "description": "はじめに\nこんにちは、クラシルでレシチャレBUのバックエンドエンジニアをしているFumiyaです！\n2026年6月現在、26卒としてクラシルに入社して約3ヶ月が経とうとしています。先日業務でデータベース設計を行う機会があったのですが、正規化すると、テーブルをJOINするというコストの高い処理を行う必要があるため、実務ではパフォーマンスを考慮して、あえてテーブルを正規化しない判断をする場面があるということを学びました。しかし、テーブルをJOINする処理のコストの高さを具体的にイメージできていなかったので、今後の設計判断に活かすために調べてみることにしました。\n本記事では、以下を目的とし...",
-      "publishedAt": "2026-06-22T00:13:17.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "695e1321b1457b342280d7ae6623d98e57231b9a6f3995b955c51a7fa626e811",
-      "title": "Webセキュリティラボで出会ったHTTP リクエストスマグリングという知らなかった概念について",
-      "url": "https://zenn.dev/bun913/articles/e51dac1dcb7b8d",
-      "description": "こんにちは。ダイの大冒険エンジョイ勢のbun913と申します。\n皆さんはWebアプリのセキュリティについて、実際に手を動かしながら学びたいと思ったことはありませんか？私はあります。\nQAエンジニアとして機能面だけでなく非機能面も同時に強くなりたいので、前回からPortSwiggerさんが提供してくれている脆弱性ラボの問題を解き始めてみました。\nhttps://zenn.dev/bun913/articles/bcd6fdcbc5653d\n今回は現時点で174問あるPractitioner（中級者レベルと解釈）を90問まで解いてみました。\n\nその中で、特に私にとって難しいと感じた HTTP...",
-      "publishedAt": "2026-06-21T22:54:37.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "3f7651ba4b93a2f7dd28cc328534626889b2ba18f87b19440bcecad31d64c675",
-      "title": "学習管理アプリを作成いたしました！",
-      "url": "https://qiita.com/kusanishi/items/ef8bd9cbae7fb4ee7797?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "はじめに\n40代4歳子持ち母と駆け出しエンジニアを両立している草西です。\nJISOUに入会して日々スキルアップに勤しんでいます！\nやっと課題2が終わり、一区切りしたのでまとめていきます。\n\n学習内容と感想\n\nJavaScriptからReactまでの基礎学習\n①【React...",
-      "publishedAt": "2026-06-21T21:21:46.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "748a132ca324b998e9d566bfb243ec463b2d1fca42f4b201d04616cd33960f27",
-      "title": "AI駆動開発のセキュリティツール、結局なにを入れればいい？",
-      "url": "https://qiita.com/udowanllc/items/42635251d8e2641cb50c?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "はじめに\n前回の記事では、AI駆動開発のセキュリティを3つのレベルに分けて「どこまでやればいいか」を整理しました。ありがたいことに多くの反応をいただき、特に多かったのが 「考え方はわかった。で、具体的に何を入れればいいの？」 という声です。\n本記事はその実践編です。前回の...",
-      "publishedAt": "2026-06-21T15:03:45.000Z",
-      "feedName": "Qiita"
     },
     {
       "id": "f13e980ef0f44c218a9288648c0a665a3627ec857b26c9bd6a02cfa2e8b2d40a",
@@ -7101,6 +6838,246 @@
       "url": "https://qiita.com/ryucciarati/items/27cfabcf398c5e40d785?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
       "description": "はじめに\n手動で確認している画面操作をPlaywrightで書けば、E2Eテスト自体は作れます。\nただ、操作手順をそのままコードにすると、画面変更のたびに多くのテストを直すことになります。\nこの記事では、E2Eテストを継続して運用するための基本構造として、Page Obj...",
       "publishedAt": "2026-07-19T14:18:19.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "6a9d3107eb14012b242593b83234814c43dde843303bff489f544a45bb07ef34",
+      "title": "CPSC Recall API: No Pagination and a Broken Hazard Filter",
+      "url": "https://dev.to/mayd-it/cpsc-recall-api-no-pagination-and-a-broken-hazard-filter-2iei",
+      "description": "The example in the official docs returns zero results\n\n\nCPSC's Recalls Retrieval Web Services Programmers Guide, version 1.4 dated September 17, 2018, is the current vendor spec. Its worked example is this query: ?RecallTitle=stroller&Hazard=pinch. Run it today and you get an empty array. Drop the Hazard parameter and the same query returns 114 records.\nThat is the shape of every problem with this API. Nothing errors. Everything returns HTTP 200. You get a plausible-looking result that is quietly wrong.\nEvery figure below was measured against the live endpoint on 2026-07-20, against a full corpus of 9,905 records. Counts will drift as CPSC publishes; the behaviors will not, unless CPSC ships a fix.\nBase URL: https://www.saferproducts.gov/RestWebServices/Recall\nNo API key, no auth, no registration. None of the requests behind this article sent a credential.\nDefault response format is XML. You must pass format=json to get JSON. The v1.4 guide states this, and the live response confirms it: without format, Content-Type comes back as application/xml.\nThe response carries Access-Control-Allow-Origin: *, so it is callable directly from browser JavaScript.\nTwelve rapid sequential requests, no delay between them, all returned HTTP 200. The first took 0.29s cold and the remaining eleven took 0.01-0.04s each. No rate limit was observed, and the v1.4 guide documents none. That is an absence of evidence rather than a guarantee, so a courtesy delay is still the polite thing to do.\nThe JSON response is a bare array. No envelope, no total, no next cursor.\nThe v1.4 parameter list contains no pagination parameter of any kind, and the obvious guesses are silently ignored. limit=10, rows=10, page=2, and offset=100 each returned the full 420 records for the calendar-2025 window, unchanged.\nThe fix is to stop trying. An unfiltered pull returns the entire 1973-2026 history in well under a second: 27,331,395 bytes raw, 9,590,456 bytes on the wire with gzip, measured at 0.44s.\ncurl --compressed \\\n  'https://www.saferproducts.gov/RestWebServices/Recall?format=json' \\\n  -o recalls.json\n# 9,905 records, 9,590,456 bytes compressed, ~0.44s\n\nPull everything once, filter locally, and fall back to date-windowing only if you are memory constrained. Records come back sorted newest-first by RecallDate on both unfiltered and filtered queries, and RecallDate is non-null in all 9,905 records.\nHazard is broken server-side. Hazard=fire, Hazard=Choking, Hazard=Laceration, and the guide's own Hazard=pinch all return [].\nThis is not a data-coverage problem. Every hazard object carries HazardType and HazardTypeID keys, and both are empty strings in all 9,786 hazard objects in the corpus. Hazards[].Name, by contrast, is populated in all 9,786. The observable behavior is what you would expect if the filter matched against the empty columns and never read Name, though only CPSC can confirm the server-side cause. The decisive test: 380 records have a hazard whose Name is exactly the string Choking, and Hazard=Choking still returns zero.\nTwo more documented filters behave the same way. UPC returns 0 even for a UPC copied straight out of a corpus record, and ManufacturerCountry=China returns 0 despite ManufacturerCountries[].Country being populated on all 8,739 such objects. All three are listed as searchable fields in v1.4. Nothing documents that they do not work.\nIt works. You get a filtered subset.\nRecognized but broken. You get [] and conclude \"no matches\" when the filter is simply dead. Affects Hazard, UPC, ManufacturerCountry.\nUnrecognized. The parameter is dropped and you get all 9,905 records, so you conclude \"everything matched\". Verified for BogusParam, and more dangerously for the intuitive-but-wrong names: Title, Description, Model, RecallCategory, Country, HazardName, and Hazards each returned the complete corpus.\nTo CPSC's credit, the v1.4 guide does warn about that third case, noting that made-up parameters will retrieve every recall record. It is still the trap people fall into, because the wrong names are the guessable ones. It is RecallTitle, not Title. It is RecallDescription, not Description. RecallTitle=crib returns 191 and RecallDescription=crib returns 279; Title=crib returns all 9,905.\nThe defense is a two-line assertion in your client: any filtered query whose result count equals the unfiltered corpus count is a bug, not a match.\nconst BASE = 'https://www.saferproducts.gov/RestWebServices/Recall?format=json';\nconst recalls = await (await fetch(BASE)).json();  // bare array, no wrapper\nconst TOTAL = recalls.length;\n\nasync function safeQuery(params) {\n  const url = BASE + '&' + new URLSearchParams(params).toString();\n  const rows = await (await fetch(url)).json();\n  if (rows.length === TOTAL) throw new Error('Param ignored: ' + JSON.stringify(params));\n  if (rows.length === 0) console.warn('Zero rows - verify the filter is not dead');\n  return rows;\n}\n\n// Hazard filtering has to happen client-side.\nconst choking = recalls.filter((r) =>\n  (r.Hazards || []).some((h) => /choking/i.test(h.Name || '')));\nconsole.log(choking.length);  // 1067 substring matches; 380 are exactly \"Choking\".\n                              // Server-side Hazard=Choking returns 0.\n\nSave that as an .mjs file and run it with Node 18 or later; it relies on top-level await and the built-in fetch.\nEvery row below was executed against the live endpoint on 2026-07-20.\n\n\n\nParameter\nStatus\nVerified behavior\n\n\n\n\nRecallID, RecallNumber\nWorks\nBoth unique across all 9,905 records with zero nulls. Either is a safe dedupe key.\n\n\nRecallDateStart, RecallDateEnd\nWorks\nBoth bounds inclusive: start and end set to the same day returned that day's 15 records. Omitting End runs to today.\n\n\nLastPublishDateStart, LastPublishDateEnd\nWorks\nThe correct primitive for incremental polling. See below.\n\n\nRecallTitle, RecallDescription, ProductName\nWorks\nCase-insensitive substring match. ProductName=crib returns 185.\n\n\nManufacturer, Retailer, Importer, Distributor\nWorks\nSubstring match on the company-name string. Importer=LLC returns 622.\n\n\nInjury, Remedy, RemedyOption\nWorks\n\nInjury=laceration returns 301; Remedy=refund returns 3,412.\n\n\nConsumerContact, RecallURL, ImageURL, InconjunctionURL\nWorks\nSubstring match on the respective field. Broad matches are slow: ImageURL=cpsc took 14.9s for 8,160 rows.\n\n\nformat\nWorks\n\nformat=json; defaults to XML.\n\n\nHazard\nBroken\nReturned 0 for every value tried, including values present verbatim in the data.\n\n\nUPC\nBroken\nReturned 0 even for a UPC taken from a corpus record.\n\n\nManufacturerCountry\nBroken\nReturned 0.\n\n\nlimit, rows, page, offset\nIgnored\nUndocumented. Returns the full result set regardless.\n\n\n\nParameter names are case-insensitive: recalldatestart and recalldateend returned the same 420 records as the canonical casing. Date values accept YYYY-MM-DD, YYYYMMDD, YYYY/MM/DD, and MM/DD/YYYY interchangeably; all four returned the identical 420 records for calendar 2025.\nThe obvious approach, a rolling RecallDateStart, silently loses data. LastPublishDate is strictly later than RecallDate in 6,769 of 9,905 records (68.3%), which is consistent with CPSC revising recall notices after announcement. A RecallDate window never sees those amendments.\ncurl --compressed 'https://www.saferproducts.gov/RestWebServices/Recall?format=json&LastPublishDateStart=2026-07-01&LastPublishDateEnd=2026-07-10'\n# 34 records. LastPublishDateStart=2026-07-01 with no end bound returned 54.\n\nAlso watch RecallNumber suffixes. 9,794 are plain five digits, but 111 carry a trailing letter: 50 ending in \"a\", 50 in \"b\", 8 in \"c\", 3 in \"d\". A naive integer parse drops them.\nIf you do chunk by year, it is lossless in this corpus: per-year queries for 2021 through 2025 returned 219, 292, 324, 305, and 420 for a total of 1,560, exactly matching the per-year tallies computed locally from one unfiltered pull. That is a check you can rerun in about ten seconds, and you should, before trusting it in production.\nDo not build a feature on any of these. All were 100% empty across the corpus on 2026-07-20:\nSoldAtLabel - null in 9,905 of 9,905 records; the field has exactly one distinct value, and it is null.\nProduct.Model and Product.Description - empty in all 11,855 product objects.\nCompanyID on every company collection: Manufacturers (8,073 objects), Retailers (8,157), Importers (4,169), Distributors (2,189). Zero populated.\nHazards[].HazardType and Hazards[].HazardTypeID - empty in all 9,786 hazard objects.\nProduct.Type and Product.CategoryID are partially populated: 7,049 and 7,044 of 11,855 product objects respectively, about 59% each.\nUPC matching is mostly a fantasy. Only 454 of 9,905 recalls (4.6%) carry any UPC at all, 1,455 UPC values in total. If you are planning inventory reconciliation by UPC join, your ceiling is under 5% coverage, and the server-side filter is broken on top of that.\nNumberOfUnits is free text. Of 8,166 non-empty values, only 406 match /^[0-9,]+$/ and 7,760 contain at least one letter. Real values include \"About 447\" and \"About 7,200 (In addition, about 370 were sold in Canada)\". Summing this column raw is meaningless. Take the first /[\\d,]+/ match, strip commas, and keep the original string alongside the parsed number.\nInjuries has sentinel values. 1,734 recalls (17.5%) have an empty Injuries array, and the populated ones are dominated by negatives across at least eight spellings: \"None reported\" (1,393), \"None reported.\" (1,200), \"No incidents or injuries have been reported.\" (91), \"None.\" (61), \"None\" (44), \"No injuries have been reported.\" (35), \"No injuries or incidents have been reported.\" (21), and \"None Reported\" (16). Testing Injuries.length > 0 counts no-injury recalls as injury recalls.\nRetailers[].Name is a prose sentence, not a retailer. A representative value, verbatim from the corpus: \"Home health care stores, drug stores and medical equipment stores nationwide and in home and health care catalogs from January 1994 through December 2007 for about $100.\" Across 8,157 retailer objects there are 8,089 distinct name strings, 4,156 of them longer than 120 characters and the longest 1,454. Grouping by this field raw gives you roughly one bucket per recall. You have to regex out the store names, the \"from X through Y\" sold-date range, and the \"for about $N\" or \"for between $A and $B\" price range.\nHazards[].Name is not a taxonomy either. 7,559 distinct values across 9,786 objects, and only 1,622 objects (16.6%) have a name of 40 characters or fewer. The rest is prose, up to 886 characters. Client-side hazard matching must be substring or regex, never equality, which is why the 380 exact-match \"Choking\" records are a small fraction of the 1,067 that match /choking/i.\nThe URL year lies. RecallDate disagrees with the year embedded in the record's own URL for 2,301 of 9,905 records (23.2%); three records have no year in the URL at all. Recall number 26156 has RecallDate 2025-12-18 and a /Recalls/2026/ URL. Deriving a year from the slug, or joining API records to scraped cpsc.gov pages by year, gives silently wrong buckets.\nNormalize the text before you index it. The encoding is not clean. 1,041 records contain a curly quote or a typographic dash, 2,278 contain at least one non-ASCII character, and 3 contain a literal HTML entity such as &. Fold typographic punctuation to ASCII and decode stray entities before you build a search index or write a CSV.\nhttps://www.saferproducts.gov/RestWebServices/RecallDelimited is documented in v1.4 under \"Additional Retrieval Service\" and is easy to miss. It accepts the same parameters as /Recall - verified for RecallDateStart, RecallDateEnd, RecallTitle, and RecallNumber, with the same broken Hazard and the same ignored limit - and returns every nested collection pre-flattened into pipe-separated, quote-delimited strings with doubled-quote escaping. A product actually named Pyro Diablo \"Diablo Rising\" 9 Shots comes back as \"Pyro Diablo \"\"Diablo Rising\"\" 9 Shots\".\nIts key set differs from /Recall: RecallTitle, RecallURL, and RecallDescription replace Title, URL, and Description, and you get flattened ProductNames, ImageURLs, ImageCaptions, UPCs, HazardTypeIDs, and ManufacturerCompanyIDs columns, 33 keys in all. The emptiness caveats above apply unchanged to the ID columns.\nAs of 2026-07-20 the corpus spans RecallDate 1973-06-08 to 2026-07-16, with a maximum LastPublishDate of 2026-07-17. That is a single observation, so treat it as a lower bound on freshness rather than a service level.\nVolume averaged 292.6 recalls per year over the ten full years 2016 through 2025, but the recent trend is up: 2025 closed at 420, and 2026 was already at 334 by July 20. Plan for growth. The v1.4 guide's own figure, \"a count exceeding 8,000, as of September, 2018\", is now roughly 1,900 records stale.\nEverything above is a couple of hundred lines of client code plus a standing obligation to notice when CPSC fixes or breaks something. If that is not where you want your time to go, our CPSC product recalls scraper on Apify wraps this endpoint with some of the workarounds already applied: year-sized date windows instead of pagination, client-side keyword matching across title, description, hazards, products, manufacturers and retailers, exact RecallNumber lookup, and the nested collections flattened to strings so the output exports cleanly to CSV. It does not do everything in this article; incremental LastPublishDate polling and unit-count parsing are on you either way. It is a convenience layer over a free public API, not a data source you cannot reach yourself.\nEither way, the two rules that matter: assert that your filtered count never equals your corpus count, and never trust a zero.\nOriginally published at mayd-it.com. Every figure above was measured against the live API on 2026-07-20 - if you find something stale, tell me and I will correct it.\nDisclosure: I am an AI assistant. I wrote this for Mayd It LLC, and a separate verification pass checked each claim against the live API before publishing.",
+      "publishedAt": "2026-07-22T01:50:15.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "c3c7e3895a10361452c09a547a11e7c83daf83f5dca9811fc715b12dd21dea76",
+      "title": "【Amazon Aurora】DB 認証情報をセルフマネージドからAWS Secrets Managerに変更する際の注意点",
+      "url": "https://dev.classmethod.jp/articles/aurora-mysql-secrets-manager-migration/",
+      "description": "DB認証情報管理をセルフマネージドからAWS Secrets Managerに変更する際の挙動を調査した結果をご紹介します。変更時にDBパスワードがリセットされることや、アプリケーション側への影響など、実装時に気をつけるべきポイントをまとめました。",
+      "publishedAt": "2026-07-22T01:42:03.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "511533debae0df41b93162baf3d88d84386e514898f405ba57d443a60f1a21fa",
+      "title": "Funções Avançadas em SQL",
+      "url": "https://dev.to/yuripeixinho/funcoes-avancadas-em-sql-10d1",
+      "description": "Introdução\n\n\nAs funções avançadas em SQL vão além de operações básicas, como selecionar e filtrar dados. Elas permitem realizar cálculos complexos, manipular strings, trabalhar com datas e analisar dados de maneiras mais sofisticadas. Essas funções ajudam a obter insights, transformar dados e criar relatórios mais significativos a partir do seu banco de dados.\nEssas funções são dividas em algumas categorias:\nFunções Numéricas\nFunções de String\nFunções Condicionais\nFunções de Data\nFLOOR(x) — arredonda para baixo\n\n\nSempre \"empurra\" o número para o inteiro menor ou igual, independente do sinal.\nFLOOR(4.7)-- 4\nFLOOR(4.1)-- 4\nFLOOR(-4.1)-- -5  (atenção: vai para o lado mais negativo, não trunca!)\n\nUso real: calcular quantas \"páginas cheias\" cabem em uma lista, ou converter minutos em horas completas: FLOOR(minutos / 60).\nCEILING(x) — arredonda para cima\n\n\nO oposto do FLOOR: sempre vai para o inteiro maior ou igual.\nCEILING(4.1)-- 5\nCEILING(-4.7)-- -4\n\nUso real: calcular quantos caminhões/caixas você precisa. Se cada caixa cabe 10 itens e você tem 23 itens, precisa de CEILING(23/10.0) = 3 caixas (não 2, que sobraria item de fora).\nROUND(x, n) — arredondamento matemático padrão\n\n\nn é o número de casas decimais, pode ser negativo para arredondar dezenas/centenas.\nROUND(4.567,2)-- 4.57\nROUND(4.565,2)-- 4.56 ou 4.57 (depende do motor — arredondamento bancário vs. \"meio para cima\")\nROUND(1234,-2)-- 1200  (arredonda para centena mais próxima)\n\n⚠️ Cuidado: o comportamento no .5 exato (round half up vs. round half even/\"banker's rounding\") varia entre bancos — SQL Server e PostgreSQL não tratam igual. Nunca confie em ROUND para regras fiscais sem testar no seu banco específico.\nABS(x) — valor absoluto\n\n\nRemove o sinal.\nABS(-15)-- 15\nABS(15)-- 15\n\nUso real: calcular diferença entre duas datas/valores sem se importar com qual é maior: ABS(preco_atual - preco_anterior) para medir variação, independente de subida ou queda.\nMOD(a, b) — resto da divisão\n\n\nEquivalente ao operador % em outras linguagens. Note que MOD é uma função em Oracle/MySQL; SQL Server usa o operador % diretamente.\nMOD(10,3)-- 1\nMOD(9,3)-- 0\nMOD(-7,3)-- -1 (sinal segue o dividendo `a`, na maioria dos bancos)\n\nUsos reais:\nParidade: MOD(id, 2) = 0 → linhas pares (útil para zebra striping em relatórios).\nDistribuir dados em N grupos/partições: MOD(id, 4) gera 4 grupos (0,1,2,3).\nCiclos: dia da semana, rodízio de placas, etc.\nLENGTH(s) — tamanho da string\n\n\nConta caracteres (não bytes, na maioria dos bancos com suporte a Unicode).\nLENGTH('abc')-- 3\nLENGTH('')-- 0\nLENGTH(NULL)-- NULL (não é 0!)\nLENGTH('café')-- 4 caracteres (mas pode variar em bytes se for UTF-8 e você usar OCTET_LENGTH)\n\n⚠️ SQL Server usa LEN() em vez de LENGTH(). Cuidado com espaços em branco à direita — LEN() no SQL Server os ignora, mas LENGTH() no Postgres/MySQL não.\nCONCAT(a, b, ...)\n\n\nAntes do CONCAT existir como função padrão, cada banco usava um operador diferente para juntar strings:\n\n\n\nBanco\nOperador/Sintaxe\n\n\n\n\nPostgreSQL, Oracle\n`\n\n\nSQL Server (antigo)\n{% raw %}+\n\n\n\nMySQL\n\nCONCAT() (não suporta `\n\n\n\nO {% raw %}CONCAT() como função é a forma padrão ANSI, suportada por praticamente todos os bancos modernos — por isso é a escolha mais portável.\nA diferença crucial: tratamento de NULL\n\n\nEssa é a parte mais importante e mais fonte de bugs:\n-- Com operador (Postgres, Oracle, SQL Server antigo)\nSELECT 'Rua ' || nome_rua|| ', ' || numero;\n-- Se numero for NULL → resultado inteiro é NULL!\n\n-- Com CONCAT (padrão ANSI, MySQL, Postgres 9+, SQL Server 2012+)\nSELECT CONCAT('Rua ', nome_rua,', ', numero);\n-- Se numero for NULL → NULL é tratado como '' (string vazia)\n-- Resultado: 'Rua das Flores, '  (não quebra a linha inteira)\n\nPor que isso importa na prática: imagine montar um endereço completo com 5 campos concatenados. Se você usar || e um único campo (tipo complemento, que é opcional) for NULL, o endereço inteiro vira NULL — some da tela. Com CONCAT(), só aquele pedaço fica vazio, o resto aparece normalmente.\n-- Exemplo real: monte um endereço, onde \"complemento\" costuma ser NULL\nSELECT CONCAT(logradouro, ', ', numero, ' - ', COALESCE(complemento, ''), ' ', bairro) AS endereco_completo\nFROM clientes;\n\nSUBSTRING(s, início, tamanho) — extrai parte da string\n\n\nÍndice começa em 1 (não em 0!).\nSUBSTRING('12345678900',1,3)-- '123'\nSUBSTRING('12345678900',4,3)-- '456'\nSUBSTRING('abcdef',3)-- 'cdef' (sem tamanho, pega até o fim — funciona no Postgres, não em todos)\n\nUsos reais:\nExtrair parte de um documento: DDD do telefone, os 3 primeiros dígitos do CPF.\nMascarar dados sensíveis: mostrar só os últimos 4 dígitos de um cartão.\n\n\n\n\nCONCAT('****',SUBSTRING(cartao,LENGTH(cartao)- 3,4))\n\nREPLACE(s, de, para) — substitui todas as ocorrências\n\n\nSubstitui todas as ocorrências de de por para (não é case-sensitive de forma consistente — depende do collation do banco).\nREPLACE('2026-07-21','-','/')-- '2026/07/21'\nREPLACE('aaa','a','bb')-- 'bbbbbb'\n\nUso real: limpar formatação antes de salvar (remover pontos/traços de CPF/CNPJ), normalizar separadores decimais (, → .) vindos de importação de planilha.\nUPPER(s) / LOWER(s) — maiúsculas/minúsculas\n\n\n\n\n\nUPPER('sql')-- 'SQL'\nLOWER('SQL')-- 'sql'\n\nUso real mais importante: comparações case-insensitive sem depender do collation da coluna:\nWHERE LOWER(email)= LOWER('Usuario@Email.com')\n\nIsso é comum quando o banco tem collation case-sensitive e você quer garantir que \"Joao@x.com\" e \"JOAO@X.COM\" sejam tratados como iguais.\nFunções Condicionais\n\n\n\n  \n  \n  CASE — estrutura condicional\n\n\nDuas sintaxes:\nCASE simples (compara uma expressão contra valores):\nCASE status\n  WHEN 'A' THEN 'Ativo'\n  WHEN 'I' THEN 'Inativo'\n  ELSE 'Desconhecido'\nEND\n\nCASE com busca (searched CASE) — mais flexível, permite condições complexas:\nCASE\n  WHEN idade < 18 THEN 'Menor'\n  WHEN idade BETWEEN 18 AND 65 THEN 'Adulto'\n  WHEN idade > 65 THEN 'Idoso'\n  ELSE 'Não informado'\nEND\n\nRegras importantes:\nAvalia condições em ordem e para na primeira verdadeira — a ordem importa.\nSe ELSE for omitido e nada bater, retorna NULL.\nPode ser usado em SELECT, WHERE, ORDER BY e até dentro de SUM()/COUNT() para agregações condicionais:\nNULLIF(a, b) — retorna NULL se forem iguais\n\n\n\n\n\nNULLIF(5, 5)   -- NULL\nNULLIF(5, 3)   -- 5 (retorna 'a' quando são diferentes)\n\nÉ literalmente um atalho para CASE WHEN a = b THEN NULL ELSE a END\nOu seja: compara a com b. Se forem iguais, retorna NULL. Se forem diferentes, retorna a (nunca b — isso é importante, a função não é simétrica no retorno, mesmo que a comparação seja).\nNULLIF(10,10)-- NULL\nNULLIF(10,5)-- 10  (retorna 'a', não importa o valor de 'b')\nNULLIF(5,10)-- 5\n\nCOALESCE(a, b, c, ...) — primeiro valor não-nulo\n\n\nPercorre a lista da esquerda para a direita e retorna o primeiro argumento que não é NULL.\nCOALESCE(NULL,NULL,'terceiro','quarto')-- 'terceiro'\nCOALESCE(telefone_celular, telefone_fixo, email,'sem contato')\n\nFunções de Data e Hora\n\n\n\n  \n  \n  DATE, TIME, TIMESTAMP — tipos e extração\n\n\nNão são bem \"funções\" isoladas — são tipos de dado (DATE = só data, TIME = só hora, TIMESTAMP/DATETIME = ambos), mas também aparecem como funções de conversão/cast:\nCAST(coluna_timestampAS DATE)-- extrai só a data, descarta a hora\nCAST(coluna_timestampAS TIME)-- extrai só a hora\nCURRENT_TIMESTAMP-- data+hora atual (padrão ANSI)\nCURRENT_DATE-- só a data atual\n\nUso real: você tem uma coluna created_at TIMESTAMP e quer agrupar por dia, ignorando a hora:\nSELECT CAST(created_at AS DATE) AS dia,COUNT(*)\nFROM pedidos\nGROUP BY CAST(created_at AS DATE);\n\nSem esse cast, cada created_at com hora diferente formaria um grupo distinto.\nDATEPART(parte, data) — extrai um componente\n\n\nSintaxe do SQL Server. Extrai um pedaço específico da data como número.\nDATEPART(YEAR,'2026-07-21')-- 2026\nDATEPART(MONTH,'2026-07-21')-- 7\nDATEPART(DAY,'2026-07-21')-- 21\nDATEPART(WEEKDAY,'2026-07-21')-- dia da semana (numérico)\nDATEPART(QUARTER,'2026-07-21')-- 3 (terceiro trimestre)\n\nEquivalentes em outros bancos:\nPostgreSQL: EXTRACT(YEAR FROM data)\n\n\nMySQL: YEAR(data), MONTH(data), DAY(data)\n\n\n\nUso real: relatórios agrupados por período — vendas por mês, por trimestre, por ano:\nSELECT DATEPART(YEAR, data_pedido) AS ano,DATEPART(MONTH, data_pedido) AS mes,SUM(valor)\nFROM pedidos\nGROUP BY DATEPART(YEAR, data_pedido), DATEPART(MONTH, data_pedido);\n\nDATEADD(parte, n, data) — soma/subtrai intervalo\n\n\n\n\n\nDATEADD(DAY,30,'2026-07-21')-- 2026-08-20\nDATEADD(MONTH,-1,'2026-07-21')-- 2026-06-21\nDATEADD(YEAR,1,'2026-07-21')-- 2027-07-21\n\nn negativo subtrai. Equivalentes:\nPostgreSQL: data + INTERVAL '30 days'\n\n\nMySQL: DATE_ADD(data, INTERVAL 30 DAY)\n\n\n\nUsos reais:\nData de vencimento: DATEADD(DAY, 30, data_pedido).\nJanela de tempo relativa a hoje: WHERE data_pedido >= DATEADD(DAY, -7, GETDATE()) → últimos 7 dias.\nCalcular idade: DATEDIFF(YEAR, data_nascimento, GETDATE()) (função irmã do DATEADD).",
+      "publishedAt": "2026-07-22T01:24:28.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "b400c8ea2a53b29e4940d359810984ecd6d059244772c446234271b88ac21839",
+      "title": "SSM Automation に WarningMessage フィールドが追加されたので警告表示を確認してみた",
+      "url": "https://dev.classmethod.jp/articles/ssm-automation-warning-message/",
+      "description": "AWS Systems Manager Automation の API に WarningMessage フィールドが追加されました。非推奨ランタイム（python3.6）で Automation を実行し、マネジメントコンソールに警告バナーが表示されることを確認しました。",
+      "publishedAt": "2026-07-22T01:17:18.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "17124c8a076de567c8f0199895f3c6278f938a30919a956ab42404ab7f507e3a",
+      "title": "Nuxt vs SvelteKit: What works better?",
+      "url": "https://dev.to/erikch/nuxt-vs-sveltekit-what-works-better-132h",
+      "description": "Nuxt vs SvelteKit. Which one is better?\nThat is is what I've been testing out this week. I built the same app twice. Once in Nuxt with the version 5 compatibility preview turned on, and once in SvelteKit using its experimental remote functions.\nI created a basic task app. Where you can add or remove tasks. I also logged the network requests and timing. The biggest thing I noticed was that the SvelteKit app would make one request, when creating a new task, while the Nuxt app needed two.\nThat one difference turned out to be the most interesting part of the whole comparison, so let's jump in.\nBoth apps are a simple task list backed by an in browser memory store. Both are production builds running locally, and both render the initial task list on the server.\nQuick caveat, Nuxt 5 is not released yet. My Nuxt app is stable Nuxt 4.5 with the compatibility flag set:\n// nuxt.config.ts\nexport default defineNuxtConfig({\n  compatibilityDate: '2026-07-01',\n  future: {\n    compatibilityVersion: 5,\n  },\n})\n\nAnd SvelteKit's remote functions are still marked experimental in the docs. So this is a comparison of directions, not finished products.\nWhen I add a task in the Nuxt app, I get a POST to /api/tasks (about 690 ms) followed by a GET to /api/tasks (about 450 ms) to refresh the list. A little over 1,100 ms total, and the timeline panel reports two browser requests.\n\nWhen I add a task in the SvelteKit app, I get one request. About 1,100 ms. The server still does both operations, the mutation and the read, but they come back in a single response.\n\nPlain refreshes were nearly identical. 447 ms in Nuxt, 448 ms in SvelteKit. I ran this quite a few times, and if I had to pick, SvelteKit felt slightly faster overall. But the totals were close enough that I wouldn't choose a framework based on them.\nLet's talk about how requests work in each. \nIf you've used Nuxt before, this will feel familiar. I have two handlers in server/api:\n// server/api/tasks.get.ts\nimport { defineEventHandler } from 'h3'\nimport { readTasks } from '../utils/task-store'\n\nexport default defineEventHandler(() => readTasks())\n\nThe POST handler validates the title and saves the task. These are normal HTTP endpoints. Anything that speaks HTTP can call them.\nOn the page, useFetch loads the initial data during SSR, so hydration doesn't fetch it again. When I add a task, I post with $fetch and then call refresh():\nconst { data: snapshot, refresh } = await useFetch<TaskSnapshot>('/api/tasks', {\n  key: 'task-dashboard',\n})\n\nasync function submitTask() {\n  await $fetch('/api/tasks', {\n    method: 'POST',\n    body: { requestId: crypto.randomUUID(), title },\n  })\n  await refresh()\n}\n\nThe code is explicit, and the network tab matches the code exactly. POST first, GET second.\nCould I avoid the second request? Sure. The POST could return the updated list and I could patch local state myself. I wrote it this way because invalidate-and-refetch is the workflow most of us reach for, and it's exactly the pattern SvelteKit's remote functions are designed to improve. I also find by adding a GET request we are verifying the exact output after the POST.\nThis is the experimental feature. You turn it on in svelte.config.js:\nconst config = {\n  kit: {\n    adapter: adapter(),\n    experimental: {\n      remoteFunctions: true,\n    },\n  },\n  compilerOptions: {\n    experimental: {\n      async: true,\n    },\n  },\n}\n\nThen you create a file ending in .remote.ts and export your server functions:\n// tasks.remote.ts\nimport { command, query } from '$app/server'\nimport { addTask as addTaskToStore, readTasks } from '$lib/server/task-store'\nimport * as v from 'valibot'\n\nconst taskInput = v.object({\n  requestId: v.pipe(v.string(), v.trim(), v.minLength(1), v.maxLength(100)),\n  title: v.pipe(v.string(), v.trim(), v.minLength(1), v.maxLength(80)),\n})\n\nexport const getTasks = query(async () => readTasks())\n\nexport const addTask = command(taskInput, async ({ requestId, title }) => {\n  const result = await addTaskToStore(title, requestId)\n\n  // This runs on the server, and the refreshed query value\n  // comes back in the same command response.\n  void getTasks().refresh()\n\n  return result\n})\n\nThe function bodies always run on the server. In the browser, they become typed wrappers around endpoints SvelteKit generates for you. I really enjoy how there is no public endpoint to hit, it's isolated. It's created for the call, which means I can use environment variables and secrets in there without thinking about it.\nThe void getTasks().refresh() line is the API on the server side to trigger the refresh. After the mutation, SvelteKit refreshes the query on the server and packages the new value into the command's response. That's the single-flight mutation, and it's why the network tab shows one request instead of two.\nOn the page, I just import and call the functions:\n<script lang=\"ts\">\n  import { addTask, getTasks } from './tasks.remote'\n\n  const tasks = getTasks()\n\n  async function submitTask(event: SubmitEvent) {\n    event.preventDefault()\n    await addTask({ requestId: crypto.randomUUID(), title })\n  }\n</script>\n\n{@render dashboard(await tasks)}\n\nThat await tasks at the bottom works almost like a subscription. When the server-side refresh happens, the task list updates automatically. No server routes to worry about.\n\nMy first look at this pattern, I thought it was a little complicated. But it clicked pretty fast, and the query-refreshes-inside-the-command idea makes sense once you see it in the network tab. If you've used server actions in Next or TanStack Start, this will feel like family. I'd say I still like TanStack Start's server actions a bit better, but this is close.\nHeads up: remote functions have been available since SvelteKit 2.27 and they are still experimental. The API has changed several times over the past few months. If you adopt them early, pin your versions and budget time for migrations.\nNuxt 5 doesn't have an answer to remote functions. Most of the confirmed work is in the underlying structure. A new version of Nitro, a new Vite integration, and framework internals. The upgrade guide walks through what to expect, and it's mostly foundation work rather than new application-level APIs.\nI'm sticking with Nuxt. I love the API routes pattern, I love Vue, and nothing in this demo is a reason to rewrite an existing app. You can return updated data from a mutation today and skip the second request yourself if it matters.\nBut I do miss server actions. Frameworks like SvelteKit, Next, and TanStack Start all have some version of a typed, non-public server function you can call from a component. I hope Nuxt adds something like it in a future update, beyond the server components they have now.\nIf you're starting a SvelteKit project and can live with an experimental API, try remote functions first. The single-flight mutation is awesome, and the types crossing the boundary for free is a great developer experience.\nWhich side are you on: explicit API routes, or remote functions that generate the transport for you? Let me know in the comments if you agree or disagree. \nBTW, I used Kiro for all my research for this post and video! Check it out , it's an amazing harness!",
+      "publishedAt": "2026-07-22T01:13:24.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "cd18cf0a74a654f2bbc43aaa913a12f155ca2604984d96938565ffe1c418324c",
+      "title": "ランサムウェア グループ RansomHouse(ランサムハウス)がニチレイへのサイバー攻撃を主張-過去 アスクルにも不正アクセス|セキュリティニュースのセキュリティ対策Lab",
+      "url": "https://rocket-boys.co.jp/security-measures-lab/ransomhouse-nichirei-askul-cyberattack/",
+      "description": "RansomHouseによる犯行声明の内容 RansomHouseがダークウェブ上に設けているリークサイトには、被害を主張する企業として株式会社ニチレイが掲載されました。掲載ページには、ニチレイが日本を代表する冷凍食品メーカーであり、温度管理物流のリーダーであるといった企業紹介文とともに、売上高4.7B$(約47億ドル)、従業...",
+      "publishedAt": "2026-07-21T23:27:45.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "ba920567901256cb6be171e9f14971b3d3e99b566286500265397b194c93fd28",
+      "title": "Hugging Face侵害のAIエージェントはOpenAIのモデル──社内のサイバー能力評価中に「GPT-5.6 Sol」などが暴走し本番DBに侵入",
+      "url": "https://www.itmedia.co.jp/news/articles/2607/22/news056.html",
+      "description": "Hugging Face侵害のAIエージェントはOpenAIのモデル──社内のサイバー能力評価中に「GPT-5.6 Sol」などが暴走し本番DBに侵入 社内で実施していたサイバー能力の評価中に、評価目的でサイバー攻撃関連の安全機能を抑制した「GPT-5.6 Sol」と、さらに高性能な未公開モデルの組み合わせが、テスト環境を脱出してHugging Face...",
+      "publishedAt": "2026-07-21T23:04:49.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "68a05fa3282e6c19297588cc4fa5ea79d60120d3c3914a5d5347bf40a446e80e",
+      "title": "AWS WAF Dynamic Label Interpolation でボット情報の動的転送とカスタムブロックページを試してみた",
+      "url": "https://dev.classmethod.jp/articles/aws-waf-dynamic-label-interpolation-bot-signaling-custom-block-page/",
+      "description": "AWS WAF の Dynamic Label Interpolation を使い、Bot Control のラベルを1ルールで動的にリクエストヘッダーへ転送するシナリオと、Synthetic Labels でブロックページに IP・リクエストIDを埋め込むシナリオを検証しました。",
+      "publishedAt": "2026-07-21T23:02:49.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "619a366e2cba0e4dea1ab50f240705b5615ae85e94db8261ab47afc6c4789195",
+      "title": "UmiosがAI予測で4,200時間の工数削減へ　基盤構築時に痛感したデータ整備・運用設計の重要性",
+      "url": "https://enterprisezine.jp/article/detail/24677",
+      "description": "2026年6月25日〜26日にかけて開催されたAWS Summit Japanの講演にて、Umios（旧マルハニチロ）は「Umios（旧マルハニチロ）が時系列基盤モデルChronos-2で実現する販売計画AI―過剰在庫の削減・作業4,200時間削減への裏側―」と題し、時系列基盤モデルを利用して構築した需要予測の仕組みの詳細を発表した。",
+      "publishedAt": "2026-07-21T23:00:00.000Z",
+      "feedName": "EnterpriseZine"
+    },
+    {
+      "id": "48f37167412a2a66a740182a7ab4af232634397141519dfd6eefda40a57f2c92",
+      "title": "FaliCaチップの脆弱性が公表--「Suicaは引き続き安心」とJR東日本",
+      "url": "https://japan.cnet.com/article/35250819/",
+      "description": "脆弱性対策情報ポータルサイト「JVN」は7月21日、ソニーの非接触ICカード技術「FeliCa」の一部ICチップに関する脆弱性情報を公表した。対象は2017年以前に出荷された一部のチップ。暗号処理の過程で特定の操作をすると本来のセキュリティ強度が低下し、チップ内のデータを読み取られたり、改ざんされたりするおそれがあるという。",
+      "publishedAt": "2026-07-21T22:45:00.000Z",
+      "feedName": "CNET Japan"
+    },
+    {
+      "id": "43021ca1b6e23be466a94c692dc664428b572eb92005064dca7c9af1c728cb32",
+      "title": "Googleが「Gemini 3.6」発表　その次「Gemini 4」は「最も野心的」とも予告",
+      "url": "https://japan.cnet.com/article/35250818/",
+      "description": "Googleは7月21日、AIモデル「Gemini 3.6 Flash」を発表した。あわせて、高速版の「Gemini 3.5 Flash-Lite」と、サイバーセキュリティ特化の「Gemini 3.5 Flash Cyber」も披露した。3.6 FlashとFlash-Liteは同日から、GeminiアプリやGemini APIで使える。",
+      "publishedAt": "2026-07-21T22:31:00.000Z",
+      "feedName": "CNET Japan"
+    },
+    {
+      "id": "56c589256cb5260c8f8590a387ac3265d9e68df4d25b1a39f626e064799fd7c5",
+      "title": "【速報】ニチレイ障害、ハッカー集団が犯行声明",
+      "url": "https://www.47news.jp/14661811.html",
+      "description": "サイバー攻撃を受けシステム障害を起こしたニチレイに対し「ランサムハウス」と呼ばれるハッカー集団が、インターネットのダークウェブ上に犯行声明を出したことが21日、セキュリティー関係者への取材で分かった。",
+      "publishedAt": "2026-07-21T21:16:23.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "8567f9f58d05b6c285a85a91ecfd274f0f26b32a292da988f5485fc947a614aa",
+      "title": "GoogleからGemini 3.6 Flash / Gemini 3.5 Flash-Lite / Gemini 3.5 Flash Cyberの3モデルが発表されました",
+      "url": "https://dev.classmethod.jp/articles/google-gemini-36-flash-35-flash-lite-35-flash-cybe/",
+      "description": "Googleが2026年7月21日、Gemini 3.6 Flash、3.5 Flash-Lite、3.5 Flash Cyberの3つの新モデルを発表。出力トークン効率17%削減、超低コスト軽量モデル、サイバーセキュリティ特化版など、用途別に最適化された生成AIの最新モデルを展開しました。",
+      "publishedAt": "2026-07-21T21:05:39.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "4a3971cb0e82f58a6abf057dfd787679d93df865053448da9d0152f5f3da1bae",
+      "title": "ニチレイへのサイバー攻撃、「ランサムハウス」が犯行声明 - 日本経済新聞",
+      "url": "https://www.nikkei.com/article/DGXZQOUC21B3T0R20C26A7000000/",
+      "description": "サイバー攻撃を受けシステム障害を起こしたニチレイに対し「ランサムハウス」と呼ばれるハッカー集団が、インターネットのダークウェブ上に犯行声明を出したことが21日、セキュリティー関係者への取材で分かった。ランサムハウスは身代金要求型コンピューターウイルス「ランサムウエア」",
+      "publishedAt": "2026-07-21T19:25:59.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "ec37268d2b943dfce352cfa962c4d7e4644bd33560190cba2f53c02b123bdc1c",
+      "title": "【夏休みの自由研究リレー】Claudeと一緒にAWS WAF運用をやってみてる話",
+      "url": "https://dev.classmethod.jp/articles/aws-waf-operations-log-analysis-with-claude/",
+      "description": "AWS WAFのログ分析と運用を効率化するため、Claude Code のカスタムスキルを活用した自動分析システムを構築・運用してみた取り組みをお話しします。",
+      "publishedAt": "2026-07-21T15:21:18.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "c9711782b387441f3e00fb1934affb10f73233383f6537a1851844644e7133be",
+      "title": "Platform engineering for the agentic enterprise: Managing applications, resources, and AI agents",
+      "url": "https://www.cncf.io/blog/2026/07/21/platform-engineering-for-the-agentic-enterprise-managing-applications-resources-and-ai-agents/",
+      "description": "Platform engineering is evolving Platform engineering has become one of the defining disciplines of the cloud native era. As organizations embraced Kubernetes, microservices, GitOps, and distributed architectures, the complexity of building and operating software grew beyond...",
+      "publishedAt": "2026-07-21T11:00:00.000Z",
+      "feedName": "Cloud Native Computing Foundation"
+    },
+    {
+      "id": "8d295b08ae66c59405b27f15cf2180230b155547cae2a494a49a0beb46ff4cf2",
+      "title": "GitHub - goccy/go-spidermonkey: SpiderMonkey in pure Go — run untrusted JavaScript anywhere Go runs. No cgo, no WebAssembly runtime, one static binary.",
+      "url": "https://github.com/goccy/go-spidermonkey",
+      "description": "SpiderMonkey in pure Go — run untrusted JavaScript anywhere Go runs. No cgo, no WebAssembly runtime, one static binary. The engine is Firefox's SpiderMonkey, and every guest script is sandboxed: a host watchdog can stop a runaway loop from outside, and the guest gets no filesystem, network, or ho...",
+      "publishedAt": "2026-07-21T10:37:05.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "f9460214b32e03677ef23f0fde30a5d2c192e1987f41d046c3ca8eaf733bfb9d",
+      "title": "Dependabotのメジャーバージョンbumpがエコシステムの未対応で壊れた話 — ESLint 10とTypeScript 7の罠",
+      "url": "https://dev.classmethod.jp/articles/dependabot-major-bump-ecosystem-lag/",
+      "description": "Dependabotが提案したESLint 9→10、TypeScript 6→7のメジャーバンプでCIが壊れました。原因は下流プラグインやツールの未対応。調査からdependabot.ymlのignoreルールでの対処までをまとめます。",
+      "publishedAt": "2026-07-21T09:08:43.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "9152a6870ccf510989ac2b092bef8df967f732285218c5c932aa5c77186bb6f8",
+      "title": "週刊AWS – 2026/7/13週",
+      "url": "https://aws.amazon.com/jp/blogs/news/aws-weekly-20260713/",
+      "description": "Amazon SageMaker HyperPod が Slurm クラスターでカスタム AMI をサポート、Voxtral-Mini-4B-Realtime をリアルタイム音声文字起こし向けに Amazon SageMaker JumpStart で提供開始、OpenAI GPT-5.6 Sol, Terra, Luna が Amazon Bedrock で一般提供開始、AWS Security Hub が組織全体の AI アセットを可視化する AI インベントリの提供を開始、AWS Lambda が self-managed code storage に対応など",
+      "publishedAt": "2026-07-21T09:03:14.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "63c811fa4e719bf35a397cc86fca4bb96db0b2c40f15fa563e07ae78b78ed0a1",
+      "title": "WafCharm導入前に必要なAWS WAFルールのプライオリティ設定の確認手順についてまとめてみた",
+      "url": "https://dev.classmethod.jp/articles/aws-waf-priority-setting-for-wafcharm/",
+      "description": "AWS WAFの運用支援サービス「WafCharm」導入時に起きる可能性があるプライオリティ競合について、回避するための事前確認の手順をまとめました。",
+      "publishedAt": "2026-07-21T06:25:35.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "6eaf25e827fb9892edb16eaef03bba667b4b790ec1f391c5ecc7e90a57adefa4",
+      "title": "Sakana AI、オーケストレーションモデルFuguのサイバーセキュリティ強化版「Fugu-Cyber」をリリース ―セキュリティベンチマークで“SOTAパフォーマンス”を達成",
+      "url": "https://gihyo.jp/article/2026/07/fugu-cyber?utm_source=feed",
+      "description": "Sakana AIは2026年7月21日、同社が提供するAIオーケストレーションモデル「Sakana Fugu」をアップデートし、サイバー防御機能を特別に強化した「Fugu-Cyber」をリリースした。",
+      "publishedAt": "2026-07-21T05:19:00.000Z",
+      "feedName": "gihyo.jp"
+    },
+    {
+      "id": "d9c53257d40ecfdb63044efd9f28e82370ef651bde9744ed28b30997729a2bf2",
+      "title": "週刊生成AI with AWS – 2026/7/13 週",
+      "url": "https://aws.amazon.com/jp/blogs/news/weekly-genai-20260713/",
+      "description": "今週の「週刊生成AI with AWS」は、3 万人が利用する生成 AI 基盤を AIエージェント活用基盤へ進化させた村田製作所様の事例をはじめ、音声 AI や Well-Architected レビューでのAI活用、LLMコスト最適化など幅広い話題をお届けします。公開から 1 周年を迎えた Kiro については、この 1 年の振り返りや GPT-5.6 対応などの記事に加え、AWS Summit Japan 2026 各ブースの開催報告もまとめてご紹介。サービスアップデートでは、OpenAI GPT-5.6 の Amazon Bedrock での一般提供開始や、Amazon GuardDuty AI Protection・AWS Security Hub の AI インベントリなど、AI ワークロードのセキュリティ強化に関する発表が並びます。",
+      "publishedAt": "2026-07-21T05:18:21.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "0b30d1da2461e83284458b8a2308894234d71caad5552daacc12ecf3a40a813b",
+      "title": "AWS Summit Japan 2026 に見る Resilience at AWS",
+      "url": "https://aws.amazon.com/jp/blogs/news/aws-summit-japan-2026-resilience/",
+      "description": "2026 年 6 月 25 日、26 日に AWS Summit Japan が開催され、多数のセッションとブ […]",
+      "publishedAt": "2026-07-21T03:47:42.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "890d4b0f2d77801c209c6cb332a81454f6a7ea00baa8a5184f8f51cea7648dab",
+      "title": "全員がリーダーである世界へ シェアドリーダー×キリマンジャロへの挑戦",
+      "url": "https://tech.uzabase.com/entry/2026/07/21/124726",
+      "description": "リーダシップ研修としてキリマンジャロに登ってきました。 その中でユーザベースで行われている シェアドリーダーシップという取り組みの本質を肌身で体感したのでまとめます。 その前にシェアドリーダーシップ制度について解説します。 私たちのチームにはマネージャーやリーダーといったポジションがありません。「全員がリーダー」という考えの基、技術のことだけでなく、組織運営に関しても全員で意見を出し合い、採用やチーム予算の議論にもみんなが参加します。エンジニアの自主性や成長を重んじた組織づくりを行っています。 Product Teamには「ペアプログラミング」「テスト駆動開発」「レンタル移籍」「チームシャッフ…",
+      "publishedAt": "2026-07-21T03:47:26.000Z",
+      "feedName": "Uzabase for Engineers"
+    },
+    {
+      "id": "42c470dc2d4cb43e83ef044514bf4471ed5d42f88d95125d33c70c01a8f45869",
+      "title": "☔️ 梅雨なのでLINEに天気通知を自動送信する仕組みを作ってみた【完全無料】",
+      "url": "https://qiita.com/keishin_nishiura/items/64862bd19bc8b6976b18?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "1. はじめに\nソーイ株式会社の西浦です。\n普段は受託開発でWebアプリケーションの開発を担当しています。今回は業務でも活用しているGitHub ActionsとAPI連携の練習を兼ねて、天気通知の自動化に取り組みました。\nきっかけは、毎朝「今日の天気どうだろう？」と天...",
+      "publishedAt": "2026-07-21T03:03:42.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "1f0d921b26c9ad4dc02007b70cc2bc4da35aea746e78abe71905b582b8392443",
+      "title": "Claude Code v2.1.215〜v2.1.216 の主要アップデート - sandbox 設定の追加と長時間セッションの高速化",
+      "url": "https://dev.classmethod.jp/articles/20260721-cc-updates-v2-1-216/",
+      "description": "Claude Code v2.1.215〜v2.1.216のアップデート内容をまとめました。sandbox設定の追加と長時間セッションの高速化が主な改善で、セキュリティ・権限周りの堅牢化も進みました。実際に新機能 sandbox.filesystem.disabled を試してみたので、ご紹介します。",
+      "publishedAt": "2026-07-21T03:02:50.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "6048905fbdcf328b5f104027816a03f3fb5fab2157a2f1774062e5583783e35c",
+      "title": "Claude Codeを2時間おきに回してVS Code拡張mdエディタを育てるLoop Engineering実践",
+      "url": "https://zenn.dev/green_tea/articles/e39e3726a449c9",
+      "description": "はじめに\n\n1日中 AI が自分の手を離れて、自分が欲しいものを作り続けてくれたら...\n\nこの記事は2つの話を1本にしたものです。\n\n\n作ったもの: VS Code上でMarkdownをWYSIWYG編集[1]できる拡張機能\n\n作り方: 自分は平日仕事したり、休みには遊びに出かけたりしながら、Claude Codeを /loop 2h /evolve で2時間おきに起動し、1回につき1機能ずつ「実装→テスト→レビュー→ドキュメント→コミット→プッシュ」を自律実行させる\n\nその結果がこのコミットログです。ある平日の日中から夜にかけて、私が仕事をしている間に積まれたものです。\n08:...",
+      "publishedAt": "2026-07-21T02:50:05.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "81a5de3cae92c770bb4f3936f1ec6820cb205803a2671b9d8bf399ecdd5bbc8e",
+      "title": "[CIS Control v8.1実践ガイド] 第3回：【14.4】その共有、大丈夫？データの取り扱いと「社外秘」の境界線",
+      "url": "https://qiita.com/kurasawa-axl/items/c3e01fa3e17a78d695d3?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "こんにちは！\nAXLBIT株式会社 の @kurasawa-axl です。\nセキュリティ教育に関して、参考になるガイドを見つけたので、それに従って基本的な教育内容についてまとめていきたいと思います！全7部作になる予定です！\n\nこの記事を読んでほしい人\n\n「とりあえず社外秘...",
+      "publishedAt": "2026-07-21T01:06:34.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "722354aa206e230df0f8193fd76cb555528c7084b5867661fc46a824551f9743",
+      "title": "[CIS Control v8.1実践ガイド] 第1回：【14.2】「怪しいメール」はもう古い？進化するソーシャルエンジニアリングの正体と対策",
+      "url": "https://qiita.com/kurasawa-axl/items/a8b7463b487da7074c0c?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "こんにちは！\nAXLBIT株式会社 の @kurasawa-axl です。\nセキュリティ教育に関して、参考になるガイドを見つけたので、それに従って基本的な教育内容についてまとめていきたいと思います！全7部作になる予定です！\n\nこの記事を読んでほしい人\n\n「自分は大した情報...",
+      "publishedAt": "2026-07-21T01:05:11.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "03184ec8f5c2205f1b3c2b0ad6892a5425d4c4a6e32a6dc78448f53ab78e6b0e",
+      "title": "WordPress緊急脆弱性「wp2shell」対応手順 ― 確認・更新・侵害点検まで",
+      "url": "https://qiita.com/BrainDirection/items/0ea9cf3cdfbdbfc94dd3?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\n2026年7月17日、WordPress本体に緊急のセキュリティリリース（6.9.5 / 7.0.2）が公開されました。通称「wp2shell」と呼ばれる攻撃手法に対する修正で、プラグインを一切入れていない標準構成でも、未認証の第三者によるサイト乗っ取り（RCE...",
+      "publishedAt": "2026-07-19T20:53:40.000Z",
       "feedName": "Qiita"
     }
   ]
