@@ -1,62 +1,6 @@
 {
   "articles": [
     {
-      "id": "f13e980ef0f44c218a9288648c0a665a3627ec857b26c9bd6a02cfa2e8b2d40a",
-      "title": "How I Built a WhatsApp AI Bot in 2026 Without the Lock-In",
-      "url": "https://dev.to/fiercedash/how-i-built-a-whatsapp-ai-bot-in-2026-without-the-lock-in-4h5",
-      "description": "How I Built a WhatsApp AI Bot in 2026 Without the Lock-In\nI still remember the first time I tried to wire up an AI chatbot to WhatsApp. It was 2023, and every tutorial I found pushed me toward the usual suspects: Google's closed ecosystem, Meta's own barely-documented Business API, or some proprietary chatbot platform that wanted me to sign over my firstborn child in exchange for a dashboard. Three years later, I finally have a setup I actually like. It runs on permissive licenses, doesn't trap me in any walled garden, and costs roughly half what I used to pay. Let me walk you through it.\nHere's the thing nobody tells you when you start building AI products: the moment you commit to a single provider, you've already lost half the battle. You're locked into their SDK, their pricing model, their rate limits, their notion of \"fair use,\" and—most painfully—their idea of what a \"deprecation schedule\" should look like. I've watched three different providers retire models I depended on, with about six weeks of notice. That's not a partnership. That's a hostage situation.\nSo when I started my WhatsApp bot project last year, I made myself a promise. I would use open source models wherever possible (the kind that ship under Apache 2.0 or MIT licenses, where I can read the source, fork it, and run it on my own hardware if I have to), and I would route everything through a single unified endpoint that doesn't care which model I'm actually calling. The endpoint I landed on is Global API at global-apis.com/v1, which exposes 184 AI models through one OpenAI-compatible interface. The pricing ranges from $0.01 to $3.50 per million tokens depending on the model, which is wild when you compare it to the $10.00 per million output that GPT-4o charges.\nI'm not exaggerating when I say this changed how I think about the whole stack.\nLet me just lay the comparison out plainly, because this is the part that actually convinced me. Here are the models I've been rotating through in production:\nDeepSeek V4 Flash — $0.27 input / $1.10 output per million tokens, 128K context\nDeepSeek V4 Pro — $0.55 input / $2.20 output per million tokens, 200K context\nQwen3-32B — $0.30 input / $1.20 output per million tokens, 32K context\nGLM-4 Plus — $0.20 input / $0.80 output per million tokens, 128K context\nGPT-4o — $2.50 input / $10.00 output per million tokens, 128K context\nWhen I ran my actual production traffic through these models for a month, the WhatsApp bot setup came out 40-65% cheaper than my previous \"just use the default everyone uses\" approach. The quality was comparable or, in a few benchmarks, actually better. We're talking 84.6% average benchmark score across the suite, 1.2 second average latency, and 320 tokens per second throughput. For a chat interface, those numbers feel instant.\nThe kicker? I'm not even pinned to one model. Some queries go to GLM-4 Plus because they're simple and cheap. Others go to DeepSeek V4 Pro when I need that 200K context window for a long conversation. The whole point of the open source ethos is composability—using the right tool for the job instead of letting a vendor decide for you.\nHere's where the rubber meets the road. The whole reason Global API is interesting to me is that it speaks OpenAI's API dialect. That means I can use the official openai Python SDK, point it at a different base_url, and suddenly I'm talking to 184 different models without rewriting my application code. This is the polar opposite of vendor lock-in. It's a universal adapter.\nHere's a minimal example that connects to DeepSeek V4 Flash through Global API:\nimport openai\nimport os\n\nclient = openai.OpenAI(\n    base_url=\"https://global-apis.com/v1\",\n    api_key=os.environ[\"GLOBAL_API_KEY\"],\n)\n\nresponse = client.chat.completions.create(\n    model=\"deepseek-ai/DeepSeek-V4-Flash\",\n    messages=[{\"role\": \"user\", \"content\": \"Summarize the last 5 messages in this chat.\"}],\n)\n\nprint(response.choices[0].message.content)\n\nThat's it. That's the whole integration on the model side. I drop this into a webhook handler, point Twilio or the WhatsApp Business API at my server, and suddenly I have a working AI-powered WhatsApp bot. Total setup time: under 10 minutes, which is roughly the length of a coffee break.\nIf you want streaming so the user sees the response appear word-by-word (which, trust me, makes a huge UX difference in a chat context), it's one extra flag:\nimport openai\nimport os\n\nclient = openai.OpenAI(\n    base_url=\"https://global-apis.com/v1\",\n    api_key=os.environ[\"GLOBAL_API_KEY\"],\n)\n\nstream = client.chat.completions.create(\n    model=\"deepseek-ai/DeepSeek-V4-Flash\",\n    messages=[{\"role\": \"user\", \"content\": \"Explain quantum entanglement like I'm 12.\"}],\n    stream=True,\n)\n\nfor chunk in stream:\n    delta = chunk.choices[0].delta.content\n    if delta:\n        print(delta, end=\"\", flush=True)\n\nNotice what's not in that code: vendor-specific imports, secret handshakes, or any \"feature flag\" that turns off if I exceed some usage tier. The Apache-licensed openai SDK just works.\nAfter about eight months of running my WhatsApp bot for a real user base (a small community of about 2,000 active users), here's what actually moved the needle. These are the tweaks I wish someone had told me on day one.\n1. Cache like your margins depend on it. Because they do. I added a Redis layer in front of my model calls, keyed on a hash of the incoming message plus a tag for the conversation context. Hit rate hovers around 40%, which means 40% of my model calls are basically free. For FAQs and common questions, this is a no-brainer.\n2. Stream everything. I cannot overstate this. A response that arrives in 1.2 seconds but renders all at once feels slower than a 2-second response that streams. Humans are weird like that. Show the words as they come.\n3. Route simple queries to the cheap models. This is where the multi-model setup really shines. If a user sends \"what are your hours?\" there's no reason to fire that at a $10/M output model. I route it to GLM-4 Plus at $0.80/M, or even a smaller GA-Economy tier when I'm dealing with genuinely trivial lookups. That alone cut my costs by another 50% on top of the baseline savings.\n4. Track quality, not just costs. It's tempting to optimize purely for price. Don't. I keep a small satisfaction score in every conversation (a thumbs up/down reaction button in the chat) and I review the negative feedback weekly. The cheapest model that still passes my quality bar is the one I default to. The expensive model that's slightly better is reserved for the queries I know matter.\n5. Have a fallback, always. Rate limits happen. Providers hiccup. Models get retired with two weeks of notice (ask me how I know). My webhook tries DeepSeek V4 Pro first, falls back to Qwen3-32B if that fails, and only escalates to a third option if both are down. Graceful degradation is the difference between \"the bot is sometimes flaky\" and \"the bot is a complete disaster.\"\nI want to take a step back and talk about philosophy for a second, because I think it's relevant. The reason the current AI landscape makes me uncomfortable isn't the technology—it's the business model. When one company controls the model, the API, the pricing, the terms of service, and the ecosystem of tools around it, that's not a market. That's a fiefdom. And fiefdoms don't innovate; they extract.\nOpen source models like DeepSeek, Qwen, and GLM—many released under Apache 2.0 or MIT licenses—mean that the weights are out there. You can audit them, fine-tune them, deploy them on your own metal if you want. That pressure is what keeps the closed-source players honest. And the existence of aggregation layers like Global API means you don't have to give up that flexibility just because you want a clean developer experience. You get the OpenAI-style SDK ergonomics and the freedom to switch models in a single config change. That's the dream.\nI ran a small experiment last quarter where I moved 100% of my traffic from one closed provider to a mix of open-weights models. My cost dropped by 58%. My latency improved. My users didn't notice a thing except, according to my satisfaction scores, they were slightly happier. The wall around the garden turned out to be made of cardboard the whole time.\nIf you're about to build a WhatsApp AI bot in 2026, here's my honest advice. Don't start with the model—start with the architecture. Pick an abstraction layer (for me, that's the OpenAI-compatible interface at global-apis.com/v1) that lets you swap models the way you'd swap databases. Then pick the cheapest model that meets your quality bar. Then optimize from there. Resist the urge to reach for the \"premium\" option just because it's the one you've heard of.\nAlso: cache aggressively, stream everything, monitor what your users actually think, and keep a fallback ready. The boring infrastructure work is what separates a toy from a product.\nThe open source community has given us an embarrassment of riches in the model department. The least we can do is build our products in a way that honors that freedom—using permissive licenses, portable code, and interfaces that don't hold us hostage. A WhatsApp bot is one of the simplest ways to start. It took me less than a weekend to get a working prototype, and under 10 minutes once I'd already done the integration work once.\nIf any of this resonated with you, go poke around at Global API. They have 184 models accessible through a single endpoint, pricing that beats the big names in most cases, and an interface that won't trap you. I believe they have a free credits thing for new users—100 credits, I think—so you can test the whole catalog without committing a cent. No lock-in, no \"request access\" forms, no mysterious \"contact sales\" buttons. Just an API key and a base_url.\nThat's how it should work.",
-      "publishedAt": "2026-06-24T03:05:46.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "46f8436abd7eafe42a34f677abf783afb44fcdb79cd23d1db007903a5db67a17",
-      "title": "もぐもぐ AWS – 現場の SA が語るお昼 30 分の技術トーク",
-      "url": "https://aws.amazon.com/jp/blogs/news/mogmog/",
-      "description": "昼休み30分でAWSの最新AI技術をキャッチアップ。現場のソリューションアーキテクトが配信。AIエージェント、Bedrock、セキュリティまで。参加無料。",
-      "publishedAt": "2026-06-24T03:02:32.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "b672e19900a0d57cb304b2951e51af0195ceeb94473a3d9a9e6aa998c82d3e80",
-      "title": "[アップデート] AWS Glue の Intaractive Serssion の Spark Connect 対応を VS Code からノートブックで試してみた",
-      "url": "https://dev.classmethod.jp/articles/20260624-glue-interactive-sessions-spark-connect/",
-      "description": "AWS Glue のインタラクティブセッションが Apache Spark Connect に対応し、VS Code などのIDE から直接 PySpark を実行できるようになりました。実際に手元の開発環境から接続して試してみた実装手順と、使用時の注意点についてまとめます。",
-      "publishedAt": "2026-06-24T03:01:58.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "08d8f47aec00d16e2282abc3e1e2a9aa005d2c8576cbd73051a1516a0f51d1c9",
-      "title": "相次ぐGitHub Actions 侵害から学ぶ、初期アクセス手法と開発者が知っておきたい対策 - GMO Flatt Security Blog",
-      "url": "https://blog.flatt.tech/entry/2026-github-actions-security-part1",
-      "description": "はじめに:なぜ今、GitHub Actionsのセキュリティなのか GitHub Actionsが侵害されると何が起きるか GitHub Actionsに対する攻撃の事例分析 脆弱なトリガー構成を悪用したインジェクション Ultralytics(2024年12月) nx(2025年8月) タグ汚染によるサプライチェーン tj-actions/changed-files(2025年3月) trivy(2026年2月) ...",
-      "publishedAt": "2026-06-24T02:59:52.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "4c9f6a7d6cb13c9ee0afca168fcdd6041c3afab0b9814bcfd037caedc06b84f1",
-      "title": "AWS 週間まとめ：NY Summit の振り返り、ハノイでのローカルゾーン、Bedrock での Grok 4.3、価格引き下げなど（2026年6月22日）",
-      "url": "https://aws.amazon.com/jp/blogs/news/aws-weekly-roundup-ny-summit-recap-local-zone-in-hanoi-grok-4-3-in-bedrock-price-reductions-and-more-june-22-2026/",
-      "description": "2026 年 6 月 15 日週、AWS Summit New York City では、何千人ものお客様、パ […]",
-      "publishedAt": "2026-06-24T02:48:23.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "aac5f0405fd826bbae44b607903e0c26db5414e2dc826a88971072d9f4d4e816",
-      "title": "A 27B model on an AMD mini-PC fixed a bug in our operator. Then it overreached.",
-      "url": "https://dev.to/defilan/a-27b-model-on-an-amd-mini-pc-fixed-a-bug-in-our-operator-then-it-overreached-39ob",
-      "description": "Originally published at llmkube.com/blog/operator-fixed-its-own-bug-on-amd. Cross-posted here for the dev.to audience.\n(LLMKube is an open-source, Apache-2.0 Kubernetes operator for self-hosted LLM inference across NVIDIA, Apple Silicon, and AMD. Foreman is its agentic harness.)\nLast time Foreman built a feature for itself. This is the sequel, and it is a better story: this time it fixed a bug I had just shipped, the model doing the fixing ran on a consumer AMD box on my desk, and the most useful moment in the whole run is where the model got it wrong.\nWiring up Claude Code against one of my own local models surfaced a real bug in the operator: a hardcoded 60-second timeout that silently capped every request regardless of what you configured.\nI handed it to Foreman with a 27B dense coder (Qwopus, a Qwen3.6 distill) on a consumer AMD Strix Halo machine over Vulkan. No datacenter, no NVIDIA, no cloud GPU.\nThe model produced the correct fix and the gate confirmed it compiled, vetted, linted, and passed. It also quietly wrote two tests for unrelated code, and the gate passed those too. I caught that on review and trimmed them. That gap is the whole point.\nVerified end-to-end: a request that used to die at exactly 60 seconds now completes in 128 seconds. Shipped in 0.8.16.\nEvery step of the loop ran on hardware I own.\nThe fleet here is deliberately mixed: an NVIDIA box, a couple of Apple Silicon machines, an AMD Strix Halo machine with 128 GB of unified memory. The point of LLMKube is to serve models across all of it from one spec. So the obvious experiment was to stop renting a frontier model for agentic coding and point Claude Code at one of my own models, through the gateway, on my own hardware.\nShort tasks worked. Then I gave it a real one, and after about twelve minutes of churning it died with an opaque API error. Not the model's fault. Mine. The agent had just walked straight into a bug in the operator the hard way.\nThe ModelRouter compiles onto an Envoy AI Gateway, and when it generated the retry policy it hardcoded the per-attempt timeout:\n\"perRetry\": map[string]interface{}{\n    \"timeout\": \"60s\", // <- hardcoded\n},\n\nEnvoy applies that per-attempt timeout on top of the route-level request timeout. So no matter that the route was set to 30 minutes for long generations, every request was silently capped at 60 seconds, and the resulting 504 was not in the retry list, so it failed outright instead of retrying. Short turns finished under a minute and looked healthy. The first turn whose prefill grew past a minute fell off the cliff.\nClean, embarrassing, entirely self-inflicted. Exactly what Foreman is for.\nForeman is the agentic harness built into LLMKube: point it at an issue, a coder model works the fix in a sandbox under a set of rails, and a verification gate checks the result before anything counts. The choice worth dwelling on here is the hardware.\nThe coder was Qwopus3.6-27B-Coder, a dense 27B Qwen3.6 distill trained on Claude-Opus traces, 4-bit quantized, served through llama.cpp's TurboQuant fork on a consumer AMD Strix Halo machine (gfx1151, Vulkan). Not an H100. Not even an NVIDIA card. A mini-PC class box.\nI filed the bug as #817, scoped the task to the one file and its test, and dispatched it. The coder found the function and made the right change: a small helper that derives the per-attempt timeout from the largest timeout actually configured across the router's rules and backends, with a named-constant fallback. It wrote tests and submitted GO. The gate ran gofmt, go vet, go build, a Linux-target golangci-lint, and the full suite in a clean room. All green.\nHere is the part the \"AI fixed my bug\" posts skip.\nThe fix was correct, and its own two tests were good: one asserts the policy uses the configured 30-minute timeout, one asserts the 60-second fallback. But the model had also written two more tests for a completely unrelated function, default-route compilation, that the change never touched. They compiled. They passed. The gate had no opinion, because they were green, and green is all a gate measures.\nScope is not something a compiler or a linter can judge. That is a human call, and on review I made it: trimmed the two unrelated tests so the change was exactly the fix plus its own tests, and pushed the clean version.\nThis is why I build harnesses instead of waiting for a bigger model. A 27B model on a desktop is not Claude, and the trick is not pretending it is. What it does reliably is produce a correct, compiling, tested change inside a gate that guarantees a verified floor. What it cannot do is judge scope and intent. The harness gives you the floor for free; you bring the judgment. Trust the harness, not the model. That division of labor is what makes a model this size genuinely useful instead of a parlor trick.\nA passing test is not a working system, so I verified before believing it.\nI built the patched operator the way everything gets built here: in-cluster, a kaniko job on my own node, from the fix branch. Deployed it, watched the operator regenerate the gateway policy, and confirmed the per-attempt timeout flipped from 60s to 30m0s live. Then I fired the request that used to die at the one-minute mark:\nHTTP 200 in 128.1s\n\nBefore the fix, a 504 at exactly sixty seconds. After it, two minutes of clean generation. That is the difference between a green checkmark and a fixed bug, and it is worth the extra ten minutes every time. Shipped in 0.8.16.\nLook at where every piece of that loop lived. The coder: a consumer AMD box on my desk. The build: a job on my own node. The deploy and verification: my own cluster. The model behind the original coding session: an Apple Silicon machine in the same house. Nothing touched a cloud GPU, a rented datacenter fleet, or a control plane sitting above someone else's clusters.\nThat is the thesis, not a footnote. Most tooling around self-hosted inference still assumes \"self-hosted\" means a rack of datacenter accelerators operated at scale. LLMKube assumes the opposite: that the frontier worth building for is making inference, and now agentic work on top of it, run well across the heterogeneous hardware you already own. Apple Silicon, consumer AMD, a couple of NVIDIA cards, an edge box at a remote site. One operator, one model spec, hardware you control.\nA 27B model on a mini-PC fixing a real bug in the operator that serves it, verified on the cluster, is the smallest concrete proof of that. As of today it is also a true story.\nQuickstart: serve a model on your GPU, Apple Silicon, or AMD box in a few minutes.\nThe fix: #817, PR #818.\nThe cost math behind any of this: InferCost.\nIf you run it on hardware I haven't tried, I want to hear about it. A star helps more people find it.",
-      "publishedAt": "2026-06-24T02:43:32.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "b019e6721c1a61fc1335066cd844de80be7aeb4222ef00481ecde39745a331bf",
-      "title": "Why Every Developer Should Learn Browser Automation in 2026",
-      "url": "https://dev.to/annalilith/why-every-developer-should-learn-browser-automation-in-2026-238k",
-      "description": "Why Every Developer Should Learn Browser Automation in 2026\n\n\nBrowser automation is the most underrated skill in a developer's toolkit. Here's why you should learn it in 2026.\nBrowser automation means controlling a web browser programmatically — clicking buttons, filling forms, navigating pages, extracting data — all without human intervention.\nfrom selenium import webdriver\nfrom selenium.webdriver.common.by import By\nfrom selenium.webdriver.chrome.options import Options\n\noptions = Options()\noptions.add_argument(\"--headless=new\")\noptions.add_argument(\"--no-sandbox\")\n\ndriver = webdriver.Chrome(options=options)\ndriver.get(\"https://example.com\")\ntitle = driver.find_element(By.TAG_NAME, \"h1\").text\nprint(f\"Page title: {title}\")\ndriver.quit()\n\nUnlike requests, browser automation handles JavaScript-rendered content:\nfrom selenium.webdriver.support.ui import WebDriverWait\nfrom selenium.webdriver.support import expected_conditions as EC\n\ndef scrape_dynamic_page(url, selector):\n    driver = webdriver.Chrome(options=options)\n    driver.get(url)\n\n    element = WebDriverWait(driver, 10).until(\n        EC.presence_of_element_located((By.CSS_SELECTOR, selector))\n    )\n\n    data = element.text\n    driver.quit()\n    return data\n\nTrack prices across e-commerce sites:\ndef monitor_price(url, price_selector):\n    driver = webdriver.Chrome(options=options)\n    driver.get(url)\n\n    price_text = driver.find_element(By.CSS_SELECTOR, price_selector).text\n    price = float(price_text.replace(\"$\", \"\").replace(\",\", \"\"))\n    driver.quit()\n\n    if price < 50:\n        send_alert(f\"Price dropped to ${price}!\")\n    return price\n\nAutomate repetitive form submissions:\ndef fill_application_form(url, data):\n    driver = webdriver.Chrome(options=options)\n    driver.get(url)\n\n    field_map = {\n        \"name\": \"input[name='full_name']\",\n        \"email\": \"input[name='email']\",\n        \"message\": \"textarea[name='message']\",\n    }\n\n    for field, selector in field_map.items():\n        if field in data:\n            element = driver.find_element(By.CSS_SELECTOR, selector)\n            element.clear()\n            element.send_keys(data[field])\n\n    driver.find_element(By.CSS_SELECTOR, \"button[type='submit']\").click()\n    driver.quit()\n    return {\"submitted\": True}\n\n# Install Chrome (no sudo needed)\nar x google-chrome-stable_*.deb\ntar xf data.tar.xz\n\n# Install Selenium\npip3 install selenium\n\n# Install CAPTCHA solver\npip3 install ddddocr\n\nFor simple image CAPTCHAs, use ddddocr:\nimport ddddocr\n\nocr = ddddocr.DdddOcr(show_ad=False)\n\ndef solve_captcha(image_path):\n    with open(image_path, \"rb\") as f:\n        img_bytes = f.read()\n    return ocr.classification(img_bytes)\n\n# In Selenium:\ncaptcha_element = driver.find_element(By.CSS_SELECTOR, \"img.captcha\")\ncaptcha_screenshot = captcha_element.screenshot_as_png\n\nwith open(\"/tmp/captcha.png\", \"wb\") as f:\n    f.write(captcha_screenshot)\n\nsolution = solve_captcha(\"/tmp/captcha.png\")\ndriver.find_element(By.NAME, \"captcha\").send_keys(solution)\n\nRespect robots.txt\nRate limit yourself — add delays between requests\nDon't create spam\nRead Terms of Service\nBrowser automation opens doors that traditional APIs can't reach. From price monitoring to automated account setup to dynamic web scraping — it's an essential skill for any developer who wants to build autonomous systems.\nStart with Selenium 4.x, add ddddocr for CAPTCHAs, and you're ready to automate almost anything on the web.",
-      "publishedAt": "2026-06-24T02:37:24.000Z",
-      "feedName": "Dev.to"
-    },
-    {
       "id": "7b1d7b42d58d22001a4c83ae23b48b77f246328721d24c4cbe7b317a3f044021",
       "title": "When --cap-drop ALL Broke the Gate Socket",
       "url": "https://dev.to/jeremy_longshore/when-cap-drop-all-broke-the-gate-socket-1p6h",
@@ -310,78 +254,6 @@
       "url": "https://qiita.com/sewiihidekikudo/items/047cde263bc5e833fb66?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
       "description": "はじめに\nこんにちは。ソーイ株式会社の工藤です。\n本記事では、API実装時の動作確認やテストでよく利用しているPostmanについて、APIの基本からPostmanで実務的によく使う機能までを整理しました。\n\n結論\nPostmanを使うと、Method・Headers・B...",
       "publishedAt": "2026-06-25T02:56:39.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "957b3c1f3db2861143290192ba92cbd39b6140ba0ec2ea9aa6ff491969a3afb6",
-      "title": "AWS Summit Japan 2026 : Physical AI – Spatial Computing 関連展示の紹介",
-      "url": "https://aws.amazon.com/jp/blogs/news/aws-summit-japan-2026-physical-ai-spatial-computing/",
-      "description": "こんにちは。AWS プロフェッショナルサービスの Spatial Computing (空間コンピューティング […]",
-      "publishedAt": "2026-06-25T00:40:50.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "6e65c8cbca839916f0b24571aec0c72b35aa7b1985b605794df43975bb780ca5",
-      "title": "AI時代のコードレビューは人に向けるな、仕組みに向けろ",
-      "url": "https://zenn.dev/manalink_dev/articles/ai-coding-era-review-to-dev-process-not-human",
-      "description": "人間がコードを書いていた時代は、\n「こんな酷いコードを書いたのは誰だ？」\nという疑問が出てくる時代でした。しかしAIがコード実装の大半を担う時代は\n「こんな酷いコードが出力されたのはどの仕組みのせいだ？」\nという疑問こそが芯を食っています。\n\n Claude Codeがコードを生み出す全体像を抑える\n仕組みと一言に言っても、具体的にどこのことなんだ？GitHub Actionsのことか？といった質問が出てくるかもしれません。\nそこで以下の図を見てください。\n\n相当簡略化していますが、この図はClaude Codeに実装指示を出し、具体的に実装に入る前に参照される仕組みから、編集後にリモー...",
-      "publishedAt": "2026-06-24T23:31:43.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "f3dc9c2b8f2875ffa2f9cafa5a48940c7a299fa423b0f648924584603f826f85",
-      "title": "AI が経営するお店で買い物しませんか？ — AWS Summit Japan 2026 Builders’ Fair で「Living Mart」体験",
-      "url": "https://aws.amazon.com/jp/blogs/news/ai-%E3%81%8C%E7%B5%8C%E5%96%B6%E3%81%99%E3%82%8B%E3%81%8A%E5%BA%97%E3%81%A7%E8%B2%B7%E3%81%84%E7%89%A9%E3%81%97%E3%81%BE%E3%81%9B%E3%82%93%E3%81%8B%EF%BC%9F-aws-summit-japan-2026-builders/",
-      "description": "6 体の AI エージェントが、仕入れ・値付け・サイト運営・接客・広告までを人間の指示なしに動かすお店。AWS Summit Japan 2026（幕張メッセ／ブース A080）で、AI 運営の EC サイトでのお買い物と、当選者向け AI デザインのオリジナルステッカーを体験できます。",
-      "publishedAt": "2026-06-24T16:04:41.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "177dd3b0a8fed135f80be194078f7e4ee1f98d33e00faeb4f72d68ff81d7b3e7",
-      "title": "AWS Summit Japan 2026 ブース紹介 — 生成 AI 時代の製品設計開発",
-      "url": "https://aws.amazon.com/jp/blogs/news/aws-summit-japan-2026-mfg-productengineering/",
-      "description": "みなさんこんにちは。ソリューションアーキテクトの山田です。2026 年 6 月 25 日(木)、26 日(金) […]",
-      "publishedAt": "2026-06-24T07:27:14.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "a8c94d9a3344365d61830e59c030dc49e8bf5f2ee8ae03cddb936ce3a18be420",
-      "title": "AWS Summit Japan 2026 ブース紹介 ソフトウェア定義型ファクトリー",
-      "url": "https://aws.amazon.com/jp/blogs/news/aws-summit-japan-2026-mfg-sda-with-ai-agent/",
-      "description": "こんにちは、ソリューションアーキテクトのシャルノ ミカエルです。 本記事では、2026 年 6 月 25 日（ […]",
-      "publishedAt": "2026-06-24T06:12:48.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "b85aa9b7eeff53f25464e0d79d227d2a0ad49dcac3f295d49b792a26e559d207",
-      "title": "日立ソリューションズ、各サプライヤーで異なるSBOMを一元管理するシステム提供開始",
-      "url": "https://enterprisezine.jp/news/detail/24544",
-      "description": "日立ソリューションズは、ソフトウェアサプライチェーンのセキュリティリスクを継続的に管理する「SBOM（ソフトウェア部品表）管理システム」を提供開始した。同システムの特徴は以下のとおり。\n\n\n  \n ...",
-      "publishedAt": "2026-06-24T04:50:00.000Z",
-      "feedName": "EnterpriseZine"
-    },
-    {
-      "id": "e6230cd25a9992e64d1f81846ff465467d2798f9dc553e4814cf5ce65055ef89",
-      "title": "東急不動産HDが脱VMware、「使用料が契約時の2倍以上」からコストを何％削減できたのか？",
-      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2606/24/news056.html",
-      "description": "Nutanix Japanは、東急不動産ホールディングスが基幹業務システム基盤を「Nutanix Cloud Clusters（NC2）on AWS」に移行したと発表した。",
-      "publishedAt": "2026-06-24T04:00:00.000Z",
-      "feedName": "＠IT"
-    },
-    {
-      "id": "b7e079fff33084ed17179f4cb2ef54ad54b0840ab955c94564ee12418373718e",
-      "title": "AWS Config を使用したポスト量子暗号 (PQC) 対応の自動化",
-      "url": "https://aws.amazon.com/jp/blogs/news/automating-post-quantum-cryptography-readiness-using-aws-config/",
-      "description": "TLS エンドポイントをポスト量子暗号 (PQC) に移行する第一歩は、現状のインベントリと状態把握です。本記事では、ALB、NLB、Amazon API Gateway のエンドポイントを継続的に監視する PQC Readiness Scanner を紹介します。AWS Config コンフォーマンスパックを活用し、各エンドポイントを 3 階層フレームワークに分類して移行の優先順位付けを自動化する方法を、シングルアカウントおよび Organizations でのデプロイ手順とあわせて解説します。",
-      "publishedAt": "2026-06-24T03:57:57.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "f5a083bf5353c692b2d72eb3072334ac71fcaa189947a6df87cf18213170bf3e",
-      "title": "AWSの\"俯瞰\"構成図を自動生成する ── 見やすさを機械チェックしながら量産した話",
-      "url": "https://qiita.com/ntaka329/items/d457f309e33c4602a693?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "はじめに\nGMOコネクトの永田です。\n提案や要件整理の場で、AWSの構成図を描くことが度々あります。ただ、都度ていねいに手で描くと時間がかかります。それなら構成案から自動で生成できればと思い、既存のAWS公式スキルなども試しました。ところが出てくるのは細部まで描き込んだ実...",
-      "publishedAt": "2026-06-24T03:02:25.000Z",
       "feedName": "Qiita"
     },
     {
@@ -6959,6 +6831,222 @@
       "description": "「クリーンアーキテクチャというアーキテクチャはない」——大事なのは図の形を真似ることではなく、依存の向きを設計し、変更に強いサービスを育てることです。本書は、Go でサービスを設計・運用する中で得た判断基準を、原則の理解、層ごとの設計判断、ドメインの表現、CI での維持、そして読書ログサービスを題材にしたハンズオンまで一冊にまとめました。読み終えたとき、自分のサービスを設計して作りはじめられる状態になることがゴールです。",
       "publishedAt": "2026-07-23T03:08:48.000Z",
       "feedName": "Zenn"
+    },
+    {
+      "id": "7aa99c51616e61c0beec4285430c79b1b899a41967462aae7c4aa219848be307",
+      "title": "Stop Saying \"Just Use Redis\": A Key-Value Store Cheat Sheet for System Design Interviews",
+      "url": "https://dev.to/the_infinity/stop-saying-just-use-redis-a-key-value-store-cheat-sheet-for-system-design-interviews-5fmf",
+      "description": "We’ve all been there. You sketch out a flawless high-level architecture on the whiteboard, and the interviewer leans in:\n“Alright, what database are we using for this component, and why?”\nMy go-to response used to be a nervous, “Uh, Redis? Because it’s fast?”\nLet me tell you from experience, that answer will get you a red flag faster than a race condition.\n\"Key-Value store\" is a massive umbrella. Caching, configuration management, petabyte-scale storage—they all fall under KV, but choosing the wrong one exposes a lack of depth to your interviewer.\nWith so many databases out there, I always got tired comparing the nuances between different databases, so I distilled everything into a quick cheat sheet. Here are the 9 Key-Value stores you must understand for your next system design interview:\nRedis isn’t just a cache, it’s an in-memory data structure store that natively understands lists, sets, sorted sets, and hashes.\nDeploy when: Building rate limiters, leaderboards, or job queues where data structures matter and you need persistence across restarts.\nAvoid when: Your dataset vastly exceeds available RAM.\nAmazon’s fully managed NoSQL database that guarantees single-digit millisecond latency whether you have 1 megabyte or 1 petabyte of data.\nDeploy when: You’re entrenched in AWS, need predictable performance at massive TPS, and want zero infrastructure management.\nAvoid when: You require complex aggregations/joins.\nWhile most NoSQL databases sacrifice consistency for availability, FoundationDB maintains strict ACID transactions.\nDeploy when: You need absolute correctness at scale (e.g., financial systems).\nAvoid when: You just need a simple cache.\nTechnically a wide-column store, Cassandra thrives on massive ingest rates using LSM trees.\nDeploy when: Handling write-heavy workloads (IoT sensors, chat logs) where high availability and eventual consistency are acceptable.\nAvoid when: Your workload involves frequent updates/deletes or requires ACID transactions.\nRiak prioritizes availability above all else. If a node goes down, Riak simply routes the write to a neighbor.\nDeploy when: The system must stay up during network partitions (e.g., e-commerce shopping carts).\nAvoid when: You need strict, immediate consistency for your reads and writes.\nIf you’ve ever touched Kubernetes, you’ve interacted with Etcd. It exists to store system state, configuration, and metadata.\nDeploy when: Building service discovery, managing distributed locks, or storing cluster configuration data.\nAvoid when: You need to store large volumes of data.\nRocksDB isn’t a standalone server; it’s a C++ library you embed directly into your application to squeeze every ounce of performance out of modern SSDs.\nDeploy when: Building a custom database engine or needing blazingly fast, local, persistent storage.\nAvoid when: You require a standalone networked database.\nCreated by Google legends Jeff Dean and Sanjay Ghemawat, LevelDB is the predecessor to RocksDB.\nDeploy when: You need a lightweight embedded store for low-concurrency environments, like a mobile app or browser.\nAvoid when: You have a high-concurrency server workload (pick RocksDB instead).\nLong before Redis dominated the scene, Memcached was the undisputed king of caching.\nDeploy when: You need pure, raw caching power for simple, static objects and have vertical scaling capabilities.\nAvoid when: You need persistence, advanced data types, or crash recovery.\nDon’t just drop names in a system design interview—talk about the trade-offs. If you propose Cassandra, explicitly state that you are trading strong consistency for high availability. If you choose Redis, acknowledge the RAM limitations.\nNext time you’re asked to design a notification service, skip the generic “I’ll use a database.” Say “I’ll use Redis Pub/Sub.” That simple pivot shows senior-level engineering maturity.\n💡 Want to dive deeper into the architecture, profiles, and exact \"deploy vs. avoid\" scenarios for each of these databases?\n👉 Read the complete blog post on Medium here!",
+      "publishedAt": "2026-07-25T02:21:13.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "c48089f336f332259fea0e43ec487bb47f020ce8ce3d98feb703b6abdebba9bb",
+      "title": "A Practical Guide to Azure PostgreSQL: Migration, Replicas, and Tuning ☁️🐘",
+      "url": "https://dev.to/luisenr/hands-on-azure-configuring-migrating-and-optimizing-postgresql-flexible-server-3fpl",
+      "description": "In this post, I summarize my hands-on experience completing the Microsoft Applied Skills: Configure and migrate to Azure Database for PostgreSQL assessment. \nUsing Azure Portal, pgAdmin, and PostgreSQL, I walked through the core architectural tasks of setting up, securing, migrating, replicating, and optimizing a managed relational database in the cloud.\nAuthentication: Configured dual authentication on Azure Database for PostgreSQL Flexible Server (psql63693133), enabling Microsoft Entra ID alongside native PostgreSQL authentication.\nNetwork Isolation: Isolated server traffic within VNET1/subnet1 by creating a Private Endpoint (psql63693133-pe).\nDiagnostics: Configured Diagnostic Settings (logs-to-loganalytics) to route PostgreSQL Sessions data logs to an Azure Log Analytics Workspace (loganalytics1).\nData Restore: Restored the adventureworks sample database to Azure using pgAdmin's restore tool.\nReal-World Error: During pg_restore, a known error occurred due to the PostgreSQL B-tree index row size limit:\n\n\n\n\nERROR: index row size 2896 exceeds btree version 4 maximum 2704 for index \"IX_ProductReview_ProductID_Name\"\n\nResolution & Impact: This error was non-fatal. Because PostgreSQL restores table rows before creating secondary indexes, all schema structures and data were successfully imported. Only the secondary index on productreview.comments failed due to text size limits.\nHigh Availability: Created a Read Replica (psql63693133-replica) to offload read-heavy workloads and increase resiliency.\nPaired Region: Deployed the replica in Canada Central (the paired region for the primary server located in Canada East).\nEXPLAIN Plan: Analyzed the public.address1() function in pgAdmin, extracted its underlying SQL query, generated the EXPLAIN execution plan, and exported the visual output.\nIndex Creation: Identified a sequential scan bottleneck on person.address and resolved it by creating a targeted index:\n\n\n\n\nCREATE INDEX IX_Address_StateProvinceID \nON person.address (stateprovinceid);\n\nPrivate Endpoints First: Always restrict database traffic to private virtual networks before migrating production data.\nUnderstand Migration Logs: Non-critical index failures (like B-tree row limits on text columns) do not invalidate full data restores.\nAnalyze Before Scaling: Using EXPLAIN to spot missing indexes solves query bottlenecks without needing to increase expensive server compute tiers.\nPut your hands-on cloud skills to the test with the official assessment module on Microsoft Learn:\n👉 Microsoft Applied Skills: Configure and migrate to Azure Database for PostgreSQL",
+      "publishedAt": "2026-07-25T02:12:00.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "deda2a04fc817188fd6ac393f4bd6f6b45bcde98144a1496cdbfd4c28958a38c",
+      "title": "Composing micro-frontends with import maps and native ES modules",
+      "url": "https://dev.to/vageez/composing-micro-frontends-with-import-maps-and-native-es-modules-397o",
+      "description": "This strategy grew out of my attempt to design an architecture around value streams: independent teams needed to own, develop, test, deploy their own code. Once changes were ready for release, they just need to promote their work. At which point the runtime dynamically loads their latest changes into the product. But independence alone wasn’t enough. If achieving it required every team to understand a complex composition framework or maintain layers of specialized configuration, the architecture would simply exchange delivery friction for cognitive load. I wanted a strategy built around a small, shared convention—one that preserved team autonomy while keeping the overall system understandable. That search eventually led me to browser-native primitives, particularly ES modules and import maps, as the foundation for Runtime Module Composition.\nIf you've worked on a large web product, you've probably lived through this: five teams, one page, and a build pipeline that's grown a webpack config nobody fully understands anymore, with small changes triggering an entire suite of tests. Splitting a page into independently built, independently deployed pieces are supposed to solve the \"five teams, one page\" problem. In practice, most micro-frontend tooling solves it by adding another layer of build-time complexity on top.\nThere's a simpler answer sitting in every modern browser already: import maps. They let a page say \"when someone imports react, actually fetch it from this URL\", no bundler required, no custom module loader, no iframes. Runtime Module Composition is a small toolkit (rmc-toolkit) built entirely around that one browser feature. This post walks through what it does and why the browser-native approach ends up simpler than it sounds.\nA page made of pieces built by different teams needs two things: a way to find the right piece for the current URL, and a way to load it without shipping five copies of React. Most solutions build both of those from scratch. Import maps give you both for free.\nStrip away the name and it's just a lookup table, written as a <script> tag:\n<script type=\"importmap\">\n{\n  \"imports\": {\n    \"react\": \"https://esm.sh/react@19.1.0\",\n    \"@fastflights/search/\": \"https://assets.fastflights.com/search/\"\n  }\n}\n</script>\n\nWhen any JavaScript on the page later writes import React from \"react\", the browser looks up \"react\" in that table and fetches the real URL instead, a plain HTTP request, no build step involved. This is a real, standardized part of the web platform, not something a library invented. It's supported in every major browser today.\nThat's the entire trick. Everything else in this post is really just: what do you build on top of that lookup table to make it useful for a real product?\nInstead of hand-writing that JSON table, rmc-toolkit generates it from a single manifest. One plain object that's also the only thing you configure:\nimport { defineManifest } from \"@rmc-toolkit/core\";\n\nexport const manifest = defineManifest({\n  namespace: \"@fastflights\",\n  assetsOrigin: \"https://assets.fastflights.com\",\n  externalDepsOrigin: \"https://esm.sh\",\n  externalDeps: [\n    { name: \"react\", version: \"19.1.0\", peerDeps: false },\n    { name: \"react-dom/client\", version: \"19.1.0\" },\n  ],\n  defaultPeerDeps: [\"react\"],\n});\n\nThat's it! That one object is what generates the import map above, what tells the build tooling which imports to leave alone instead of bundling, and what a router uses to figure out which piece of the page owns which URL. There's no separate integration layer to keep in sync by hand: change a version number here, and every consumer of the manifest; the import map, the build, the router - picks it up automatically, because they're all reading the same object.\nA lot of micro-frontend tooling works by shipping its own module-loading runtime — code that intercepts import, tracks what's loaded, and stitches pieces together at runtime. That runtime is one more thing that can have bugs, one more thing to keep updated, one more black box between your code and what actually runs.\nRuntime Module Composition doesn't have one. Loading a piece of the page is just:\nconst searchModule = await import(\"@fastflights/search/index.mjs\");\n\nThat's the same import() you'd write to lazy-load anything else. The browser resolves it through the import map, fetches it, and runs it — the exact same mechanism it uses for every other module on the page. There's nothing custom to audit, because there's nothing custom involved.\nHere's a detail that's easy to miss but has a real, measurable effect on page weight. When a bundler doesn't know two independently-built pieces share a dependency, it bundles that dependency into both of them. Ship five micro-frontends built with a typical setup and you can end up shipping five copies of React.\nBecause rmc-toolkit knows — from that same manifest — which imports are meant to come from the import map, it tells the bundler to leave them alone entirely:\n// vite.config.ts, inside a slice's own project\nimport { defineConfig } from \"vite\";\nimport { createRollupExternal } from \"@rmc-toolkit/vite\";\nimport { manifest } from \"./runtime-composition.manifest.js\";\n\nexport default defineConfig({\n  build: {\n    lib: {\n      entry: [\"src/index.ts\"],\n      formats: [\"es\"],\n      fileName: () => \"index.mjs\",\n    },\n    rollupOptions: {\n      external: createRollupExternal(manifest),\n    },\n  },\n});\n\nThe result: a slice's build output contains only its own code. React, React DOM, whatever else is shared — all of it comes from the one URL every piece of the page already agrees on, fetched once by the browser and reused everywhere it's referenced. More independently-built pieces on a page doesn't mean more copies of the same dependency; it just means more small files.\nPut it all together and here's what happens when someone visits fastflights.com/search:\nThe page loads with its import map already in place, inlined into the HTML by the build, so it's ready before any module script runs.\nA small router matches /search against the manifest and gets back a module specifier: @fastflights/search/index.mjs.\nThe host calls import() on that specifier. The browser checks the import map, finds the real URL, and fetches it from a completely different origin than the host's own page, if that's how it's deployed.\nThe loaded module mounts into the page. If it needs React, it imports it the same prefixed way, and gets back the exact same instance every other piece is already using.\nEvery step past step 2 is the browser doing what it already does for any other dynamic import. Nothing here is bespoke.\nnpm install @rmc-toolkit/core @rmc-toolkit/vite @rmc-toolkit/react\n\nThe Quick Start walks through wiring up a small React (or Vue) host and one slice end to end, running locally in under a dozen steps.\nArchitecture Diagrams — visual walkthroughs of everything covered above\nTechnical Implementation — the pattern itself, independent of this specific toolkit\nGlossary — every term used across these docs, defined once\nAPI Reference — every exported method, with usage examples",
+      "publishedAt": "2026-07-25T01:17:56.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "a719e0472d090a3e0dbc244e0c61ae352bccb96965078162f04f839be5f15015",
+      "title": "A Smarter Way to Deep Clone in React: Introducing useDeepClone",
+      "url": "https://dev.to/saurav_tb_pandey/a-smarter-way-to-deep-clone-in-react-introducing-usedeepclone-1n30",
+      "description": "Deep cloning objects in React has always been a tightrope walk between performance and correctness. If you use JSON.parse(JSON.stringify(obj)), you lose dates, maps, sets, and circular references. If you use third-party libraries, you risk bloating your bundle. And if you clone on every single render, you shatter React's reference stability, triggering infinite render loops.\nIn the latest release of react-hook-lab, we are addressing these problems directly with the addition of the highly optimized deepClone utility and its companion React hook, useDeepClone.\nHere is a technical deep dive into how these additions work, how they are optimized, and how you can use them today.\nuseDeepClone?\n\n\nThe useDeepClone hook solves two problems at once:\nPerformance-Optimized Cloning: Under the hood, our custom cloning engine handles circular references, preserves prototype chains, supports modern native types (like Map, Set, Date, RegExp, and TypedArrays), and protects against prototype pollution.\nReference Stability: The hook maintains an internal cache. If the input reference does not change between renders, the hook completely skips the cloning logic and returns the cached, reference-stable cloned object.\nYou can import the standalone deepClone utility to handle complex data manipulation inside events, state transitions, or utility functions.\nimport { deepClone } from 'react-hook-lab';\n\n// Create a complex object with circular references and modern JS types\nconst original = {\n  name: 'React Hook Lab',\n  created: new Date(),\n  tags: new Set(['react', 'hooks']),\n  metadata: new Map([['version', '1.2.0']]),\n  self: null\n};\n\n// Create a circular reference\noriginal.self = original;\n\n// Deep clone safely without losing types or throwing circular dependency errors\nconst clone = deepClone(original);\n\nconsole.log(clone !== original); // true\nconsole.log(clone.created instanceof Date); // true\nconsole.log(clone.self === clone); // true (circular reference is preserved!)\n\nuseDeepClone\n\n\nIn React components, passing a newly cloned object down as a prop can cause child components to re-render unnecessarily. The useDeepClone hook ensures that you only generate a new clone if the incoming data actually changes its reference.\nimport React, { useState } from 'react';\nimport { useDeepClone } from 'react-hook-lab';\n\nfunction ComplexDashboard({ data }) {\n  // useDeepClone will only re-clone if the reference of 'data' changes.\n  // If this component re-renders for other reasons, the clone is skipped.\n  const safeConfig = useDeepClone(data);\n\n  return (\n    <div>\n      <h3>Configuration Explorer</h3>\n      <p>Config Name: {safeConfig.name}</p>\n      <p>Last Evaluated: {safeConfig.created?.toLocaleTimeString()}</p>\n    </div>\n  );\n}\n\nAlongside the cloning utility, we've standardized code formatting, resolved several minor ESLint warnings, and refined our internal JSDoc comments (marking state-sharing engine helpers as @internal) to keep autocompletion clean and focused for end-users across our standard browser hooks like useCamera, useLocation, useMicrophone, useIdle, and useTimezone.\nNPM Package: react-hook-lab on NPM\n\n\nGitHub Repository: Saurav-TB-Pandey/react-hook-lab\n\n\nConnect with me: LinkedIn Profile\n\n\n\n\n\n\nOriginally published on my blog. You can read the alternative breakdown here.",
+      "publishedAt": "2026-07-25T01:17:23.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "6fd3f485c09ff52ef8fc1f126b53633ab72f5d513e9f3c87daff5d82678bdaa2",
+      "title": "Dependabotバージョンアップデートのデフォルトのcooldown期間が3日間になりました",
+      "url": "https://dev.classmethod.jp/articles/dependabot-default-cooldown-3-days/",
+      "description": "Dependabotのバージョンアップデートにデフォルト3日のcooldownが導入。セキュリティアップデートは即時のまま",
+      "publishedAt": "2026-07-25T00:05:05.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "6e8786a227e3a86a6b1475ee694b6ae6a576b5f822df8fbeaa8d2d5bb3e853dc",
+      "title": "SQLiteでクロススタックオブザーバビリティを実現する：Next.js + FastAPIのトレースID連携ログ基盤",
+      "url": "https://dev.classmethod.jp/articles/cross-stack-observability-sqlite-nextjs-fastapi/",
+      "description": "ELKやDatadogを導入するほどではない社内ツールで、SQLite（WALモード）にNode.jsとPythonの両方から書き込み、trace_idでクロスプロセスのリクエストトレーシングとFTS5全文検索付きログビューアーを実現した方法を紹介します。",
+      "publishedAt": "2026-07-24T22:00:10.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "8de5ede9853d58b41fb0cfdea3ddfb31f20a81609a122354452ec8960038e6d2",
+      "title": "AWS OrganizationsのRCPクォータが倍増したので、2,000件の上限を確認してみた",
+      "url": "https://dev.classmethod.jp/articles/aws-organizations-rcp-quota-doubled-2000/",
+      "description": "AWS Organizationsのリソースコントロールポリシー（RCP）の組織あたり上限が1,000から2,000に引き上げられました。テスト用Organizationで実際にRCPを2,000件作成し、新クォータの上限到達と2,001件目のエラーを確認しました。",
+      "publishedAt": "2026-07-24T16:07:03.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "4fa60b3eaf2314e063fdd76c3c0ea8759a46441bfc1083002720f550fefcedfa",
+      "title": "My LFX mentorship journey with kgateway",
+      "url": "https://www.cncf.io/blog/2026/07/24/my-lfx-mentorship-journey-with-kgateway/",
+      "description": "Open source has been a defining part of my career for many years. As an engineer working in the cloud native ecosystem, I have spent the last five years building and contributing to technologies around Kubernetes,...",
+      "publishedAt": "2026-07-24T11:00:00.000Z",
+      "feedName": "Cloud Native Computing Foundation"
+    },
+    {
+      "id": "1b2cd9542ada72baab7c9b95f87c601f5e975721c19d121624041012e879fcc0",
+      "title": "OpenTelemetry has graduated… Now what?",
+      "url": "https://www.cncf.io/blog/2026/07/24/opentelemetry-has-graduated-now-what/",
+      "description": "In case you missed it: OpenTelemetry (OTel) has officially achieved CNCF graduated status! It now stands proudly alongside amazing open source projects such as Kubernetes and Prometheus, to name just a few. It’s been a long journey, and we’re very...",
+      "publishedAt": "2026-07-24T11:00:00.000Z",
+      "feedName": "Cloud Native Computing Foundation"
+    },
+    {
+      "id": "e329fe595c313688c3013f8978ff8f695b2b78308a4a4a0a23d9470739298a80",
+      "title": "【Amazon Connect Customer】オペレーション時間をカレンダーとして AWS Lambda で配送可能日を判定させてみた",
+      "url": "https://dev.classmethod.jp/articles/amazon-connect-delivery-date-judgment/",
+      "description": "Amazon Connect Customer のオペレーション時間と AWS Lambda を活用して、配送可能日を自動判定する仕組みを実装してみました。顧客からの入力日付に対して営業日判定を行い、適切な処理分岐を行う方法について紹介します。",
+      "publishedAt": "2026-07-24T10:17:09.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "9e44b21338ac4d5f610572851503cf97646d6aea789edfec86335a5c2dd952cf",
+      "title": "AI時代におけるテストの基礎の再定義 / Rethinking the Fundamentals of Testing in the AI Era",
+      "url": "https://speakerdeck.com/mineo_matsuya/rethinking-the-fundamentals-of-testing-in-the-ai-era",
+      "description": "AI時代到来です。 AIの台頭によって「このままテストをやっていて大丈夫なのか」「学んできたテスト技術は通用し続けるのか」と不安を感じているテストエンジニアも多いのではないでしょうか。 この講演では、AIを過度に恐れず、かといって過信もしないために、テストエンジニアとして押さえておきたい考え方を整理…",
+      "publishedAt": "2026-07-24T09:38:38.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "afcade6b9f05499e7e4ca85f97afd87f88928c3d0e3393498196298c8d531ed0",
+      "title": "【開催報告】Neuron Community – 2026 Vol.1",
+      "url": "https://aws.amazon.com/jp/blogs/news/neuron-community-2026-vol-1/",
+      "description": "2026年7月15日 (水) に開催された「Neuron Community - 2026 Vol.1」の様子をレポートします。このイベントは、「Neuron Community」の協力のもと開催しました。Neuron Community は、ユーザー間で AWS Trainium / AWS Inferentia エコシステムに関する情報や知見の共有を促進するための場として発足したものです。今回は、AWS Summit Japan 2026 開催後ということもあり、AWS Summit Japan の振り返りや、AWS Neuron のアップデート情報が多めの内容となりました。",
+      "publishedAt": "2026-07-24T09:14:38.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "63b2fd8a9894c0572fcf7efb6cf5e539fef043f9da72642b37b79d747073cea5",
+      "title": "【研修備忘録】Spring Boot 開発＆テストでよく使ったアノテーション・メソッドまとめ ",
+      "url": "https://qiita.com/otokoumeKM/items/ebe23656e7ac5876365d?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "Spring Boot 開発＆テストでよく使ったアノテーション・メソッドまとめ\n新人エンジニアが研修のアプリケーション開発を経て（真っ最中）、よく見るけどよくわからんといったアノテーションやメソッドについて備忘録としてまとめました。\n\n本記事で扱う内容↓\n・verify\n...",
+      "publishedAt": "2026-07-24T08:25:29.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "e386a38a3d2488113966bf8ae11bd96d1e956433bceb38378c6b0cc7d1539f94",
+      "title": "[アップデート] AWS HealthOmics が東京リージョンに来ました",
+      "url": "https://dev.classmethod.jp/articles/aws-healthomics-tokyo-region/",
+      "description": "AWS HealthOmics のプライベートワークフローが東京リージョンで利用可能になりました。ゲノムデータを国内に留めたまま解析できるようになった意義と、実際の動作確認について紹介します。",
+      "publishedAt": "2026-07-24T08:12:25.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "7598bcb165079c5b6e4d928dea83e8298f056a056dec2cee98b7ef32bcada919",
+      "title": "ISA/IEC 62443を踏まえたAWSでのOTとクラウドの接続設計",
+      "url": "https://aws.amazon.com/jp/blogs/news/isaiec62443/",
+      "description": "本記事では、製造業のお客様が OT をクラウドに接続する際に特に重要となるISA/IEC 62443 の様々な概念を、AWS サービスを使ってどのように実現するのかをご紹介します。お客様は、AWS サービスを活用した製造現場向けのクラウドアーキテクチャを構成することで、ISA/IEC 62443 に沿ったクラウド側のセキュリティ対策を実装できます。",
+      "publishedAt": "2026-07-24T07:21:25.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "b1c85aaac9b9a82cad158ced64356968cadac8459188fb7c99878e53120e0aa4",
+      "title": "【セッションレポート】『Relink』を拡張せよ - 『GRANBLUE FANTASY: Relink - Endless Ragnarok』の開発速度と品質を守るCI運用 #CEDEC2026",
+      "url": "https://dev.classmethod.jp/articles/cedec-2026-relink-ci/",
+      "description": "CEDEC2026 のセッションレポートです。『GRANBLUE FANTASY: Relink - Endless Ragnarok』の開発で、増え続ける物量に対して開発速度と品質を守った Cygames の CI 運用を、Datadog による可視化、静的解析、画像比較自動テストの 3 つの取り組みから紹介します。",
+      "publishedAt": "2026-07-24T06:29:46.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "7c44e05bfd589c7fca3e81afc3ea311124235ef66de0c6bc211d2141a95b37bc",
+      "title": "【セッションレポート】テスト自動化環境の運用で見えた課題と、再設計による解決事例 ～テスト回数、端末台数、テスト内容、プラットフォームのスケールアップ事例～ #CEDEC2026",
+      "url": "https://dev.classmethod.jp/articles/cedec-2026-test-automation/",
+      "description": "CEDEC2026 のセッションレポートです。長期運営中の Unity 製対戦アクションゲームを対象に、テスト自動化環境を運用しながら再設計し、テスト回数や端末台数などをスケールさせてきたセガの事例を紹介します。",
+      "publishedAt": "2026-07-24T06:02:45.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "1b3756c71bf32fa1f13110e6b4eeadccbd31ef0ffcda51af7e695fff989a5a22",
+      "title": "『生成AIガイドライン、誰か作って』と言われたときに読む実務メモ",
+      "url": "https://zenn.dev/gangy/articles/0c6c2153784bd8",
+      "description": "この記事について 「生成AIの利用ガイドライン、誰か作っておいて」──情シスやセキュリティ担当なら、一度は言われた（言われそうな）お題だと思います。この記事は、そのガイドラインをゼロから実務で回る形に落とすための手順メモです。 前提として、ガイドラインの目的は「使わせないこと」ではありません。安全に使...",
+      "publishedAt": "2026-07-24T05:35:58.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "d45dc43a6a33ca2a89165f740d269dc8527da159679a2374ba9445a158a1c117",
+      "title": "「中高生Rubyプログラミングコンテスト2026」開催決定、作品募集開始～2026年9月30日まで",
+      "url": "https://gihyo.jp/article/2026/07/ruby-procon2026-07?utm_source=feed",
+      "description": "「中高生Rubyプログラミングコンテスト2026」第16回大会の開催が発表されました。16回目となる今回も、昨年に続き会場（三鷹産業プラザ）での対面開催が予定されています。",
+      "publishedAt": "2026-07-24T05:22:14.000Z",
+      "feedName": "gihyo.jp"
+    },
+    {
+      "id": "f9120cc0fe197b1864059998edc8c62f49158898fca170f2f709f255d25ed6a9",
+      "title": "AWS Batch で MultiQC を実行して RNA-seq の QC レポートをまとめてみた",
+      "url": "https://dev.classmethod.jp/articles/ohorig-aws-rnaseq-multiqc/",
+      "description": "RNA-seq 解析の品質管理を効率化する方法を紹介します。\nAWS Batch を用いて複数の FASTQ ファイルを FastQC で品質チェックし、MultiQC で結果を 1 つのレポートに集約する方法をご紹介します。",
+      "publishedAt": "2026-07-24T04:46:29.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "a0483553d4293e3280e78d2f75d2f3fa3e73aa3d49237a59b6468539a97af94e",
+      "title": "【開催報告】AWS Summit Japan 2026 – AWS for Telcom 展示ブース",
+      "url": "https://aws.amazon.com/jp/blogs/news/aws-summit-japan-2026-telcom/",
+      "description": "2026 年 6 月 25 日(木)、26 日(金)の 2 日間にわたって幕張メッセで開催された AWS Summit Japan 2026 では、AWS Expo の Industry Zone に「AWS for Telecom」として通信業界に関する展示ブースを出展しました。",
+      "publishedAt": "2026-07-24T03:58:11.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "4406170a88f1be40e52986d102b2dd0d93c17fee711c26cf2d1561059c8106b5",
+      "title": "【Amazon Connect Customer】入力してもらった電話番号の登録有無を AWS Lambda で判定して処理を分岐してみた",
+      "url": "https://dev.classmethod.jp/articles/amazon-connect-lambda-data-branch/",
+      "description": "Amazon Connect Customer で顧客から入力された電話番号の登録有無を AWS Lambda で判定し、処理を分岐させる方法を実装してみました。サンプルコードと実行結果をもとに、その流れをご紹介します。",
+      "publishedAt": "2026-07-24T03:14:50.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "a3d1d81dcbb4154704efb253fefa1d23211f62397c37834e14eae3bf64dcb7e6",
+      "title": "『もっと早く知りたかった』Excelショートカット10選",
+      "url": "https://qiita.com/ari_sora/items/979ade968999b0108bb3?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\nどうも、そらです。\n私はデータインフラエンジニアとして、SQLの実装だけでなく、Excelを使ったテスト仕様書や証跡の作成も行っています。\nExcel作業では、セルを選択してマウスを動かし、メニューから機能を探す操作が何度も発生し、実装より長い時間を取られる日も...",
+      "publishedAt": "2026-07-23T23:58:59.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "654b4d3cae8266edb94b7d8d45126d4a29ca2eaadcb9a7152f0e908c7e9e3e5f",
+      "title": "テスト前日、HTML1ファイルだけで自分用の単語カードアプリを作った（ビルドなし・localStorage）",
+      "url": "https://qiita.com/tarou_0818/items/0f16a29a94c357c7539a?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "この記事の要点（TL;DR）\n\n英語テストの前日に、自分用の単語カードアプリが欲しくなって作りました。\nフレームワークもビルドも使わず、HTMLファイル1個（index.html）だけで作りました。\n「覚えた」の記録は localStorage に保存したので、ページを閉...",
+      "publishedAt": "2026-07-23T22:45:39.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "2b98737b742d59f6216116b135c4747d20aac9575188cfec150b5289e279ae9d",
+      "title": "ローカルネットワークでDockerサーバーを常時稼働させる方法｜npaka",
+      "url": "https://note.com/npaka/n/n22cc3f0986ea",
+      "description": "ローカルネットワークでDockerサーバーを常時稼働させる方法をまとめました。 1. はじめに自宅や社内のローカルネットワークで、サーバーを常時稼働させたい場面があります。Dockerを利用すると、アプリケーションと必要なライブラリをコンテナとしてまとめて管理できます。 ただし、単にコンテナを起動しただけでは、PC...",
+      "publishedAt": "2026-07-23T21:28:20.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "1923b5ccccb1dfa3b248e79ee42058a076ea434fb41ecb781832d057c1dc5527",
+      "title": "ソフトウェア設計は、「誰がどこまで考えるか」を決める仕事である - 変数名からDDD、DB設計、マイクロサービス、組織構造までを同じ枠組みで",
+      "url": "https://zenn.dev/kanaria007/articles/c392cbd1c1fc21",
+      "description": "ソフトウェア開発には、多くの設計原則があります。\n\nわかりやすい変数名を付ける\n関数を小さくする\n単一責任にする\n凝集度を高くする\n結合度を低くする\n情報を隠蔽する\nDBを正規化する\nドメインの言葉を使う\nBounded Contextを分ける\nモノリスとマイクロサービスを使い分ける\nチームの責任範囲を明確にする\n\nそれぞれに歴史があり、説明の仕方も違います。\nしかし、実際に設計していると、こういう疑問が出てきます。\n「関数は、どのくらいの大きさなら小さいのか」\n「クラスは、何個の責務までなら持ってよいのか」\n「テーブルは、どこまで分けるべきなのか」\n「一つのサービスが大きすぎるとは、ど...",
+      "publishedAt": "2026-07-23T09:00:06.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "114b20b13f46802bcc8cd08256b886444d619d6c609596b9664647c2a785a7b9",
+      "title": "CSRFの仕組みを丁寧に解説 — なぜCookieだけでは「本人からのリクエスト」と言えないのか",
+      "url": "https://qiita.com/gts/items/1e9c395aee83bf30e03a?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "概要・この記事で伝えること\nWebアプリケーションのセキュリティ用語として「CSRF（Cross-Site Request Forgery、クロスサイトリクエストフォージェリ）」という言葉を耳にしたことがある方は多いと思います。しかし、「XSSと何が違うの?」「Cooki...",
+      "publishedAt": "2026-07-22T22:09:27.000Z",
+      "feedName": "Qiita"
     }
   ]
 }
