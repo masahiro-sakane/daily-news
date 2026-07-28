@@ -1,22 +1,6 @@
 {
   "articles": [
     {
-      "id": "64859a3c614eeb58d504f4e8e5934777a6cb146242948c6467d62dd71caf29b7",
-      "title": "SEO Services for Developers: What Actually Matters in 2026",
-      "url": "https://dev.to/aboah/seo-services-for-developers-what-actually-matters-in-2026-34bd",
-      "description": "Most developers treat SEO like that one dependency you know you need but keep putting off. You build a fast, clean site with solid architecture, then hand it off to a \"marketing person\" who asks you to add keyword-stuffed meta descriptions.\nHere's what changed in 2026: search engines place heavy emphasis on Core Web Vitals, which measure loading performance, interactivity, and visual stability of web pages. The technical foundation you're already building? That's 80% of modern SEO.\nLet me break down what actually matters when evaluating SEO services as a developer.\nThe Technical Reality Check\nTechnical SEO is the foundation that everything else sits on. On-page optimization and link building amplify a technically sound site. Applied to a technically broken site, they produce unpredictable, often disappointing results.\nIf an SEO service can't speak your language about INP metrics, structured data, or mobile-first indexing, run.\nWhat Dev-Focused SEO Services Should Cover\nCore Web Vitals (Not Just PageSpeed Scores)\nCore Web Vitals (LCP, CLS, INP) are confirmed ranking factors — INP replaced FID in March 2024. Any SEO service still talking about First Input Delay is using outdated information.\nWhat to look for:\nField data analysis from real users (not just lab tests)\nCrawlability and Rendering\nGoogle now clarifies that pages returning non-200 status codes (like 4xx or 5xx) may be excluded from the rendering queue entirely. If you're running a JavaScript-heavy framework, this matters.\nRed flag: SEO services that don't understand Server-Side Rendering (SSR) or Static Site Generation (SSG).\nStructured Data Implementation\nStructured data helps search engines understand what your content is about, not just what it says. In 2026, this matters for traditional search and AI search alike.\nSchema markup isn't just about rich snippets anymore. It's how AI systems like ChatGPT and Perplexity decide whether to cite your content.\nMobile-First Reality\nSince 2023, Google has been mobile-first for all sites — meaning it uses the mobile version of your site for crawling, indexing, and ranking. Your desktop experience doesn't matter if mobile is broken.\nHere's where it gets interesting for developers. \nTechnical SEO is no longer just about ranking on Google. Your site also needs to be legible to AI engines like ChatGPT, Perplexity, Gemini, and Claude.\nWhat this means:\nClean HTML structure matters more than ever\nRed Flags to Avoid\nWhen evaluating SEO services, watch for these:\nGuaranteed rankings: Avoid providers who promise immediate results or guarantee specific rankings, as these claims typically indicate outdated or potentially harmful practices.\nOne-size-fits-all packages: Effective SEO strategies should be tailored to align with the specific goals, audience, and structure of your business. A customized approach ensures maximum impact while optimizing the use of time and resources.\nNo technical audit: Any SEO service that doesn't start with a crawl audit, Core Web Vitals analysis, and indexation review is missing the foundation.\nOutdated metrics focus: If they're still hyping traffic and rankings instead of key metrics for conversions, engagement, and revenue, they're stuck in 2015.\nHere's the reality: When SEO is integrated into the development process, the cost of customer acquisition (CAC) drops. Instead of spending thousands on monthly PPC ads to get traffic, an seo web developer builds an organic engine that brings in \"free\" traffic 24 hours a day.\nYou're already building fast, accessible, well-structured sites. The gap between that and SEO-optimized sites is smaller than you think.\n\"How do you approach INP optimization for React/Next.js/[your framework]?\"\n\"Can you explain your structured data implementation process?\"\n\"How do you handle JavaScript rendering for crawlers?\"\n\"What's your process for managing crawl budget on sites with 10k+ pages?\"\n\"How do you optimize for AI search engines vs. traditional search?\"\nThe Bottom Line\nYour SEO strategy can no longer be static or quarterly. You need real time monitoring dashboards and rapid decision making. That means SEO services need to integrate with your development workflow, not exist as a separate silo.\nLook for services that understand:\nYour tech stack\n\n\nGit workflows and deployment cycles\n\n\nThe difference between build-time and runtime optimization\n\n\n\nThe best SEO services for developers don't just audit and recommend. They provide implementation paths that fit your architecture.",
-      "publishedAt": "2026-06-27T03:17:23.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "956f09c4f7c05cf4c1acc24652e4ce0b65a189216684b84a80c33e07980b3519",
-      "title": "Three Months with Java 26: My Thoughts After Using the Latest Release",
-      "url": "https://dev.to/deividas-strole/three-months-with-java-26-my-thoughts-after-using-the-latest-release-61c",
-      "description": "Java 26 was officially released in March 2026, and after spending the past three months exploring its new features, experimenting with preview APIs, and using it in personal projects, I think it's a good time to share my impressions.\nUnlike launch-day articles that simply list every new feature, this is a practical look at what actually stood out to me after having some time to work with Java 26.\nSome improvements are immediately useful, while others feel like building blocks for the future of the language. Java continues its predictable six-month release cycle, and Java 26 is another example of gradual, thoughtful evolution rather than dramatic change.\nIn this article, I'll cover the features I found most interesting, what I like, what I probably won't use right away, and whether I think Java 26 is worth upgrading to.\nEvery Java release makes the platform:\nFaster\nMore secure\nEasier to write\nBetter for cloud applications\nEven if you don't immediately use every new feature, upgrading allows you to benefit from JVM optimizations and improved tooling.\nJava 26 continues improving the JVM with optimizations for:\nFaster startup\nBetter garbage collection\nReduced memory usage\nImproved JIT compilation\nMost applications will benefit automatically without changing a single line of code.\nPattern matching keeps becoming more powerful.\nInstead of writing:\nif (obj instanceof String) {\n    String text = (String) obj;\n    System.out.println(text.length());\n}\n\nYou can simply write:\nif (obj instanceof String text) {\n    System.out.println(text.length());\n}\n\nCleaner code with less casting.\nRecords remain one of Java's best additions for immutable data.\npublic record User(\n    Long id,\n    String name,\n    String email\n) {}\n\nInstead of writing dozens of lines containing:\nconstructor\ngetters\nequals()\nhashCode()\ntoString()\nJava generates them automatically.\nBuilding strings becomes much easier.\nInstead of:\nString message = \"Hello \" + name + \", age: \" + age;\nJava's String Templates make code more readable.\nExample:\nString message = STR.\"Hello \\{name}, age: \\{age}\";\nThis feature is still in preview but demonstrates the future direction of Java.\nInteracting with native libraries becomes significantly easier.\nInstead of relying on JNI, Java now provides a modern API for calling native code safely and efficiently.\nBenefits include:\nsimpler native integration\nbetter performance\nimproved memory safety\nVirtual Threads continue improving scalability.\nCreating thousands of concurrent tasks is now remarkably simple.\ntry (var executor = Executors.newVirtualThreadPerTaskExecutor()) {\n\n    executor.submit(() -> {\n        System.out.println(\"Running...\");\n    });\n\n}\n\nPerfect for:\nREST APIs\nmicroservices\nweb servers\nbackground processing\nSwitch expressions remain one of Java's nicest language improvements.\nString result = switch(day) {\n    case MONDAY -> \"Work\";\n    case SATURDAY, SUNDAY -> \"Weekend\";\n    default -> \"Unknown\";\n};\n\nNo more missing break statements.\nJava collections continue receiving small but useful improvements.\nCreating immutable collections remains simple:\nList<String> colors = List.of(\n    \"Red\",\n    \"Green\",\n    \"Blue\"\n);\n\nJava 26 includes numerous security updates, including:\nstronger cryptography\nupdated TLS support\nsecurity bug fixes\nimproved certificate handling\nMost improvements happen behind the scenes.\nDevelopers also benefit from improvements to:\ncompiler diagnostics\ndebugging\nJVM monitoring\nprofiling\nruntime performance\nSmall improvements add up to a smoother development experience.\nIf you're currently using Java 21 (the latest LTS), you don't necessarily need to migrate immediately.\nHowever, Java 26 is worth exploring if you:\nenjoy using the newest Java features\nbuild high-performance applications\nwant to experiment with preview features\nprepare for future LTS releases\nJava continues evolving without sacrificing backward compatibility. Java 26 focuses on refining the platform rather than introducing massive changes, making applications faster, cleaner, and easier to maintain.\nWhether you're building enterprise software, Spring Boot applications, or backend APIs, Java 26 provides another step toward a more modern development experience.\nWhat feature are you most excited about in Java 26? Let me know in the comments!\nDeividas Strole is a Full-Stack Developer based in California, specializing in Java, Spring Boot, JavaScript, React, SQL, and AI-driven development. He writes about software engineering, modern full-stack development, and digital marketing strategies.\nConnect with me:\nPortfolio Website\nLinkedIn\nGitHub\nYouTube\nMedium\nX (Twitter)\nStack Overflow\nReddit\nLake Apps",
-      "publishedAt": "2026-06-27T02:53:28.000Z",
-      "feedName": "Dev.to"
-    },
-    {
       "id": "83873da1c9574e4ff179b6397a4396d27764ee18bdef2b9cacddfe48ef4cd7eb",
       "title": "Moving Your On-Premises Database to the Cloud",
       "url": "https://dev.to/fuadhusnan_f44f3e13/moving-your-on-premises-database-to-the-cloud-1189",
@@ -47,62 +31,6 @@
       "description": "A few weeks back I shared some early Zen code examples. Since then, a lot has changed. We're now at v1.1.1 and the language actually has real tooling.\nWhat's new:\nFull CLI with package management\nzen publish - publish packages directly from CLI\nzen install -  install packages from the registry\nzen list - browse all published packages with pagination\nLanguage improvements\nStruct support with literals and returns\nRegex with POSIX ERE (matchRegex)\nFile I/O with binary support\nFFI bindings to C functions\n162 stdlib functions across math, strings, fs, os, http, crypto, path utilities\nPackage Registry (v1.0.0)\nJWT-based authentication\nGitHub-hosted packages\nSupport for both runnable apps and libraries\nSemantic versioning\nThe reactive variables concept from the first post is still there (that was my favorite feature), and now you can actually write real programs and share them with the community.\nFull docs: https://jishith-dev.github.io/zen-doc/site/\nInstall: curl -fsSL https://raw.githubusercontent.com/jishith-dev/Zen/main/install.sh | bash\nNext up: HTTP server APIs, better imports, and whatever the community asks for.\nOpen to feedback and collaborators 💻 \n✨ \n\n\n  \n  \n  zen #programming #compiler #llvm #packagemanager #opensource #programminglanguage",
       "publishedAt": "2026-06-28T03:12:42.000Z",
       "feedName": "Dev.to"
-    },
-    {
-      "id": "3d59628b76b335d1489dba5901460e8084d187a28e1a72015ecaa87ad6543c4b",
-      "title": "【登壇レポート】AWS Summit Japan 2026 Builder Community Loungeで「AgentCoreの機能、全部要る？ ユースケース別にAWSサービスとの組み合わせ方を一緒に整理しよう」というタイトルでチョークトークしました",
-      "url": "https://dev.classmethod.jp/articles/aws-summit-japan-2026-chalktalk-bedrock-agentcore-usecase-design/",
-      "description": "AWS Summit Japan 2026でAmazon Bedrock AgentCoreについてチョークトーク形式で登壇した際のアーキテクチャ設計のディスカッション内容をまとめました。",
-      "publishedAt": "2026-06-27T14:15:47.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "6f6df32c89cacbad13b141e68b30d2438b70d625ab07db1006c7ed4c139f9baa",
-      "title": "AWS Summit Japan 2026公式ページでセッション資料が公開。オンデマンド視聴も可能になりました",
-      "url": "https://dev.classmethod.jp/articles/aws-summit-japan-2026-session-materials-and-ondemand/",
-      "description": "AWS Summit Japan 2026のセッション資料ダウンロードとオンデマンド視聴が公式ページで利用可能になりました。オンデマンド視聴にはイベント参加登録とは別にサインアップが必要です。本記事ではアクセス方法と現時点で公開中のセッション一覧を紹介します。",
-      "publishedAt": "2026-06-27T11:50:05.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "e1ea33948b42c79eba87ceeaffe356c24058a08e8714007a8184e448da68d3dd",
-      "title": "【セッションレポート】Amazon Connect Customer の AI 機能で顧客一人ひとりに最適化された体験を大規模に提供する [BIZ233]",
-      "url": "https://dev.classmethod.jp/articles/aws-summit--2026-session-report-connect-customer-ai-personalization/",
-      "description": "AWS Summit Japan 2026の「Amazon Connect Customer の AI 機能を活用し、顧客一人ひとりに最適化された体験を大規模に提供する方法」についてのセッションレポートです。パーソナライゼーションの重要性から最新機能、実際のデモまで、コンタクトセンターを収益貢献型の戦略拠点へ転換する方法が紹介されました。",
-      "publishedAt": "2026-06-27T11:37:56.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "ac2e7c4274e8a5be2ee4c7cbf8d32f49506d85358c0e47bea3f2f74ff2aa2594",
-      "title": "Deno で Desktop アプリを作れるようになっていた",
-      "url": "https://azukiazusa.dev/blog/deno-desktop-app/",
-      "description": "Deno v2.9.0 以降で `deno desktop` コマンドが使えるようになりました。`deno desktop` コマンドは単一の TypeScript ファイルから Next.js プロジェクトまで、デスクトップアプリに変換できます。この記事では Deno でデスクトップアプリを作る方法について紹介します。 Deno v2.9.0 以降で deno desktop コマンドが使...",
-      "publishedAt": "2026-06-27T08:48:02.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "1751f157a608abda5a21acb24cf7cc3ce6b6b4f15572e45df4c537e373ec1d11",
-      "title": "【IVR から AI 会話へ】 AWS Summit Japan 2026 カスタマーサポートセッション横断レポート",
-      "url": "https://dev.classmethod.jp/articles/aws-summit-2026-ivr-ai-contact-center-report/",
-      "description": "AWS Summit Japan 2026で、電力・銀行・自治体の3組織によるコンタクトセンター変革のセッションに参加しました。共通していたのは、従来のボタン選択型IVRから、AIが顧客と自然に会話して用件を分類する新しい形のIVRへの移行です。各組織の実例と共通トレンドをまとめます。",
-      "publishedAt": "2026-06-27T08:43:51.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "5c1ebd46975256d214b2037a1b2ef4a803b0a67ed752bb259d1b94b54f94b367",
-      "title": "【小ネタ】AWS CLIのAssumeRoleとマネジメントコンソール（マルチセッション無効）のスイッチロールでは使用される認証情報が異なる",
-      "url": "https://dev.classmethod.jp/articles/aws-console-switch-role-no-role-chaining/",
-      "description": "【小ネタ】AWS CLIのAssumeRoleとマネジメントコンソール（マルチセッション無効）のスイッチロールでは使用される認証情報が異なる",
-      "publishedAt": "2026-06-27T08:23:13.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "f3994c419a083f0f6da1f228c2b9b4dccaa57ad4a48addaf3b05a211d838e884",
-      "title": "GitHub Actions ワークフローのステップが並行実行可能になりました | 豆蔵デベロッパーサイト",
-      "url": "https://developer.mamezou-tech.com/blogs/2026/06/27/github-actions-parallel-steps/",
-      "description": "はじめに # 先日、GitHub Actions ワークフローで background 機能が実装され、単一のワークフロー内でステップを並行で実行可能になったことが発表されました。 https://github.blog/changelog/2026-06-25-actions-steps-can-now-be-run-in-parallel/ これまでも、Strategy Matrix を使うと複数のランナーを使って並行...",
-      "publishedAt": "2026-06-27T03:08:23.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
     },
     {
       "id": "da604b469cb087b3fa13b565c11e74f7b6ad05a15f978dde69fccb011430b832",
@@ -302,54 +230,6 @@
       "url": "https://qiita.com/inorin__62/items/38acc7d01417b647eb13?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
       "description": "みなさんこんにちは。\nアクセスキー流出していますか？\n6/13にハイブリットで開催された、JAWS-UG神戸支部のCTFイベントに参加したので、2週間以上経過してしまいましたが、その感想を書いていきたいと思います。\n（JAWS-UG神戸支部のみなさん遅くなって大変申し訳あり...",
       "publishedAt": "2026-06-28T02:35:29.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "e916511519438e5dbc15f75805c5ad58e41a5630c281fd110f25f921ba83bcb3",
-      "title": "【AWS Summit Japan 2026】1日目参加レポート（AWS Jamにも参加！）",
-      "url": "https://qiita.com/eureka_/items/4fa9a7efcbcd841014c7?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "はじめに\nAWS Summit Japan 2026に参加しました！\n本記事は、1日目の参加レポートになります！\n事前予約が一瞬で埋まってしまった「AWS Jam」にも参加できたので、そちらの様子もお伝えしていきます🙌\n\nAWS Summit Japanとは？\n\nAWS ...",
-      "publishedAt": "2026-06-28T01:27:28.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "3ab4555f75b7d83df018007ac0e4c5c6d7e37054983c071136afe41b2ec3a582",
-      "title": "【めざせカードマスター】Kaggleコンペ紹介 Pokémon Trading Card Game AI Battle Challenge",
-      "url": "https://zenn.dev/kkj/articles/85a3a0a08f193c",
-      "description": "Kaggleで「The Pokemon Company - PTCG AI Battle Challenge」が始まりました。ポケモンカードといえば、初期のオーキド博士が強かった想い出があります。\nhttps://ptcg-abc.pokemon.co.jp/\nhttps://www.youtube.com/watch?v=nQqv5dGrJ1A\n\n コンペ概要\nこのコンペは、ポケモンカードゲームで対戦するAIエージェントを開発し、その強さと戦略を競うコンテストです。株式会社ポケモン・HEROZ株式会社・株式会社松尾研究所の3社共催で、現金賞金だけで最大32万ドル規模の大会です。\n\n コ...",
-      "publishedAt": "2026-06-27T23:20:31.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "4d4363d486e2badbfc00fca8e7e345d17f496c0c5f8432ef8d1f0fe82f542050",
-      "title": "AWS DevOps Agentの設計ベストプラクティスから考えるガバメントクラウドでの活用",
-      "url": "https://qiita.com/infra365/items/b0417a9a18c8a0983657?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "概要\n最近注目しているサービスの一つがAWS DevOps Agentです。先日のAWS SummitでもDevOps Agentについてディスカッションさせていただいたり、下記のセッションを聞きました。\nセッションの中で設計のベストプラクティスの話がありましたので、ガバ...",
-      "publishedAt": "2026-06-27T20:17:23.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "0a24a55f7238fce79cbf3220ee00e75d285ac86314cf99ad71fc6661df2934b5",
-      "title": "SynologyのNASにメディアサーバーを構築した話",
-      "url": "https://qiita.com/hiroakikka/items/79df75b0b701dad03a24?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "自宅のSynology NAS（DSM7）の中に、Jellyfinを使ったメディアサーバーを構築しました。Container Manager（Docker）でコンテナを立てるだけなので、思っていたよりずっと手軽でした。公式の手順書はオプション設定も含めて結構ボリュームがあ...",
-      "publishedAt": "2026-06-27T14:51:48.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "9a49690154f936f83bad9d6adf75bfc7be94ce249080c9f502f34d435a30ae24",
-      "title": "弟が脳梗塞で倒れたので家族情報整理用LINEアプリをAWSメインで作った話",
-      "url": "https://qiita.com/zatrie78/items/32f93d32bdfa190efee4?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "はじめに\n「弟が脳梗塞で倒れた。」\nあまりにも非日常なLINEが突然来ました。\nちょうどAWSSummitで基調講演を聴いているところでした。\n何ができるか分からないもやもゆ\nそこからの２４時間、ありとあらゆる情報が飛んできました。\n\n先生が言っていたこと\n次に聞くべき...",
-      "publishedAt": "2026-06-27T10:01:40.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "f9ca2700dc2fd69ce345d3ad97c88e212816964bb1480ee863d4b51c62fc4f74",
-      "title": "Claude Codeは「コードを書くAI」で終わらせるな：公式 document-skills でPDF・Excel・Word・PowerPointまで自動化する",
-      "url": "https://qiita.com/4q_sano/items/2c9d2686bdbc5e085191?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "はじめに\nClaude Codeはコードを書く・直す・テストする・PRを確認するといったコード作業のためのツール、というイメージが強いと思います。\nただ、Anthropic公式の anthropics/skills リポジトリを見ると、Claude Codeはコード作業...",
-      "publishedAt": "2026-06-27T05:39:13.000Z",
       "feedName": "Qiita"
     },
     {
@@ -659,14 +539,6 @@
       "url": "https://qiita.com/lexuanhieu/items/e5b000c69368762b7080?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
       "description": "はじめに\nAWSパートナー企業で活躍するエンジニアの皆様、日々の技術研鑽お疲れ様です。\n2026年6月25日〜26日の2日間にわたり、幕張メッセにて国内最大のクラウドカンファレンス 「AWS Summit Japan 2026」 が開催されました。生成AIやAIエージェン...",
       "publishedAt": "2026-06-28T04:40:00.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "a24b7bdd802828d787839cf86d593754591ba9582a525dc5724957895d3f871d",
-      "title": "おうちKubernetesを約3年運用してみた",
-      "url": "https://qiita.com/takumiida1/items/39907f41be86431a58e7?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "Summary\n\n自宅・実家・クラウドの3拠点にまたがる分散Kubernetes環境を3年かけて構築・運用した際の気づきを共有\nRaspberry Pi単独構成から始まり、RAID崩壊・マスター消滅・NFSボトルネック・連鎖障害という痛い失敗を繰り返しながら、現在の安定...",
-      "publishedAt": "2026-06-28T01:01:22.000Z",
       "feedName": "Qiita"
     },
     {
@@ -6837,6 +6709,285 @@
       "url": "https://zenn.dev/akari1106/articles/ea85f0a245bb8b",
       "description": "はじめに\n前段として「個人サイト、結局何で作る？元SEOがAstro + GitHub Pagesに決めるまで」を書いています。趣味の個人サイトを作るにあたって、Astro + GitHub Pagesに決めるまでの思考の記録。Cloudflare Pagesとの比較、PSLとゼロスタートの話も込みで。\n今回はその続き、実装編です。\n\n Astroって何\nAstro はコンテンツ中心のWebサイト向けの静的サイトジェネレータです。\nMarkdownで書いた記事をHTMLに変換してくれる、という点ではHugoやJekyllと同じ。\n違うのは、デフォルトでクライアントJavaScript...",
       "publishedAt": "2026-07-23T14:15:58.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "cf67aa34095f9d7a8b7ed63aa0ef60eb316dff39a20ee4caf51b8403a6e1ce80",
+      "title": "Which OCR Should I Use for Handwritten Math Answers?",
+      "url": "https://dev.to/mrzhu/which-ocr-should-i-use-for-handwritten-math-answers-3em5",
+      "description": "I am building an English website for a Gaokao math paper. Gaokao is the university entrance exam in China.\nChecking the objective questions is easy. Written questions give me a headache.\nFor a written math question, a student may fill half a page with fractions, square roots and small notes. Chinese students write very fast in the exam, so the handwriting can be squeezed together. There may be crossed-out formulas, arrows, or a new step added between two old steps. A geometry question can also have a diagram.\nMy first idea was to let the student take a photo and upload it. Then I thought about one simple problem. If OCR reads x + 1 as x - 1, everything after that is useless. The system may still give a very confident-looking grade.\nThis is the part I have not solved.\nMathpix looks closest to this problem. It is made for math and other STEM content. It can read images, PDFs and stroke data. I think I will test it first for paper photos.\nMyScript iink is a different choice. It uses pen strokes when the user writes on a screen. This may be more accurate, but it also means I need to build a writing canvas and ask the student not to use paper.\nI also checked Google Cloud Vision and Azure Document Intelligence Read. They can return handwriting and page layout. Maybe they can handle the Chinese or English notes while another service handles the formulas.\nTrOCR is another direction if I want an open-source model. I have not found a clear answer about a whole page with mixed text, formulas and diagrams.\nA vision model may help after OCR. I am careful about this idea. If a line is unclear, I want the system to mark it as unclear. I do not want the model to fill in the line because it knows what a normal solution should look like.\nI will first reject photos that are blurred, cropped or badly tilted. After that, I may use one recognizer for formulas and another one for normal handwriting. I also want to keep the position and confidence of every recognized part, instead of saving only a cleaned-up answer.\nThe recognized work can then be compared with a solution and scoring rubric that I reviewed before the exam starts. When one important line cannot be read, the written score should stay provisional. It should not quietly become zero.\nI have not tested this plan yet. I need to make a small test set with real Gaokao-style handwriting, including bad handwriting and crossed-out work. Testing only the clean examples from a service demo will tell me very little.\nHas anyone here used these tools for handwritten mathematics from phone photos?\nI mainly want to know:\nIs Mathpix good enough for multi-line calculation?\nIs keeping the pen strokes worth the extra work?\nWhat open-source model should I put into the test?\nHow do you decide that an answer is too unclear to grade?\nThe project is here: gaokaoexam.org\nAt present I still do not know whether photo upload is practical, or whether I should ask students to write on a screen. If you have worked on a similar problem, I would like to hear what failed in your first attempt.",
+      "publishedAt": "2026-07-28T02:17:11.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "f8f8e8616ebbbfbca9961f274bb5e03479b1a846f59fe1a2df4a7441bb68e044",
+      "title": "O alerta que dizia Error: {}",
+      "url": "https://dev.to/alexandre_guimaresfilho/o-alerta-que-dizia-error--2a8h",
+      "description": "Caiu um alerta avisando que uma integração tinha falhado. Fui ver o que era:\nIntegration failed\nError: {}\n\nError: {}.\nSó isso. Duas chaves. O sistema avisou que algo quebrou e, no mesmo movimento, decidiu não contar o quê.\nE o pior é que o alerta funcionou. Disparou na hora certa, chegou onde devia, alguém leu. Cumpriu todas as etapas, menos a única que importava.\nO reflexo aqui — e eu já fiz isso — é reprocessar o que falhou e tocar o dia. Deu certo, ninguém reclamou, bola pra frente. Só que tem uma conta que a gente não faz nessa hora: se o alerta não diz nada hoje, ele também não vai dizer nada da próxima vez. E vai ter próxima vez.\nEntão vale parar e tratar o alerta vazio como o bug. Porque ele é.\nEste texto tem duas partes. A primeira é por que isso acontece — e a resposta é mais irritante do que parece. A segunda é o tipo de bug que esse log costuma estar cobrindo, que no meu caso era um retry que eu jurava estar funcionando.\nCabe em duas linhas:\nconst err = new Error(\"timeout of 30000ms exceeded\");\n\nJSON.stringify(err);   // '{}'\n\nNão é bug do Node. Não é bug do seu logger. É a especificação da linguagem fazendo exatamente o que foi escrito pra fazer.\nJSON.stringify só serializa propriedades próprias e enumeráveis. E num Error, tanto message quanto stack são não-enumeráveis:\nObject.keys(err);                                          // []\nObject.getOwnPropertyDescriptor(err, \"message\").enumerable; // false\nObject.getOwnPropertyDescriptor(err, \"stack\").enumerable;   // false\n\nObject.keys num erro devolve array vazio. O objeto tem mensagem, tem stack trace, tem tudo — e do ponto de vista do JSON.stringify, está vazio.\nToda propriedade em JavaScript carrega uma flag chamada enumerable, que responde uma pergunta só: \"quando alguém percorrer as propriedades deste objeto, eu apareço na lista?\"\nNão é sobre existir. É sobre aparecer quando alguém varre o objeto:\nconst user = { nome: \"Ana\" };\n\nObject.defineProperty(user, \"senha\", {\n  value: \"123456\",\n  enumerable: false,      // ← a única diferença\n});\n\nuser.senha;              // '123456'   — existe e funciona normalmente\nObject.keys(user);       // ['nome']   — mas não aparece na lista\nJSON.stringify(user);    // '{\"nome\":\"Ana\"}'\n\"senha\" in user;         // true       — e ainda assim está lá\n\nA propriedade está no objeto. Ela só não se apresenta quando chamam a lista.\nIsso existe por um motivo razoável: se tudo fosse enumerável, um for...in qualquer listaria também toString, hasOwnProperty e toda a herança do objeto. Então a linguagem marca como não-enumerável o que é encanamento, não dado — e decidiu que message e stack são encanamento do Error.\nO problema é quem segue essa regra:\n\n\n\n\nvê enumeráveis\nvê não-enumeráveis\n\n\n\n\nObject.keys()\n✅\n❌\n\n\nfor...in\n✅\n❌\n\n\nJSON.stringify()\n✅\n❌\n\n\n{...spread}\n✅\n❌\n\n\nObject.getOwnPropertyNames()\n✅\n✅\n\n\nacesso direto (err.message)\n✅\n✅\n\n\n\nAs quatro primeiras linhas explicam este artigo inteiro. E dá pra ver os dois mundos lado a lado no mesmo objeto:\nObject.keys(err);                  // []\nObject.getOwnPropertyNames(err);   // ['stack', 'message']\n\nGuarda essa tabela, porque ela volta a importar daqui a pouco.\nO que torna isso especialmente cruel é que em todo lugar, menos no JSON, funciona. err.message te dá a mensagem. console.error(err) imprime o stack inteiro, bonitinho. Você testa no terminal, vê que está tudo lá, conclui que o log está bem. Aí vai pra produção, onde o log passa por JSON no caminho — e some.\nE some do jeito mais silencioso possível. Se virasse undefined, seu olho pegava. {} parece dado. Parece que tem alguma coisa ali.\nQuase ninguém escreve JSON.stringify(err) diretamente. O que a gente escreve é isto:\nlogger.error(JSON.stringify({\n  message: \"falha ao chamar serviço externo\",\n  orderId: order.id,\n  provider: provider.name,\n  error,                       // ← esse aqui\n}));\n\nLog estruturado, campos organizados, tudo certo. E o resultado é este:\nJSON.stringify({ msg: \"falhou\", error: new Error(\"boom\") });\n// '{\"msg\":\"falhou\",\"error\":{}}'\n\nRepare: todo o resto serializou perfeitamente. O msg está lá, o orderId estaria lá, o provider também. O único campo que morreu foi justamente o que você abriria primeiro.\nSe você usa axios — ou qualquer lib que pendura propriedades no erro — segura, que aqui piora:\nconst err = new Error(\"Request failed with status code 500\");\nerr.code = \"ERR_BAD_RESPONSE\";\nerr.config = { url: \"https://api.exemplo.com/pedidos\" };\n\nJSON.stringify(err);\n// '{\"code\":\"ERR_BAD_RESPONSE\",\"config\":{\"url\":\"https://api.exemplo.com/pedidos\"}}'\n\nOlha o que aconteceu. code e config foram anexados depois que o erro nasceu — e atribuição normal (err.code = ...) cria a propriedade como enumerável, que é o padrão. Então elas sobrevivem. Já message veio de fábrica marcada como não-enumerável, e morre.\nNão é inconsistência da linguagem: é a mesma regra aplicada a duas propriedades que nasceram de jeitos diferentes.\nAgora o log tem conteúdo. Tem código de erro, tem URL. Parece informativo. E não tem a mensagem.\nIsso é pior que o {} puro. O {} pelo menos grita que tem algo errado; esse aqui passa na sua frente e você segue em frente.\nE antes que você pense \"ah, mas eu uso classe de erro própria\":\nclass AppError extends Error {\n  constructor(message, code) {\n    super(message);\n    this.name = \"AppError\";\n    this.code = code;\n  }\n}\n\nJSON.stringify(new AppError(\"saldo insuficiente\", \"E_BALANCE\"));\n// '{\"name\":\"AppError\",\"code\":\"E_BALANCE\"}'\n\nMesma história. name e code você atribuiu no construtor — sobrevivem. message veio do super() — morre. Você fica sabendo que foi um AppError de código E_BALANCE, e não fica sabendo que o saldo era insuficiente.\nOu seja: praticamente todo erro de domínio que a gente escreve tem esse furo.\nAs duas primeiras coisas que a gente tenta:\nJSON.stringify({ ...err });              // '{\"code\":\"E_TIMEOUT\"}'\nJSON.stringify(Object.assign({}, err));  // '{\"code\":\"E_TIMEOUT\"}'\n\nOs dois copiam só propriedades enumeráveis. Mesmo problema, mais teclas apertadas.\nError.cause, ele vai junto\n\n\n\n\n\nconst inner = new Error(\"timeout of 30000ms exceeded\");\nconst outer = new Error(\"falha ao processar pedido\", { cause: inner });\n\nJSON.stringify(outer);   // '{}'\n\nVocê encadeou os erros certinho pra não perder o contexto. A cadeia inteira evapora.\nSerializando o erro na mão. A versão mínima:\nconst serializeError = (err) =>\n  err instanceof Error\n    ? { name: err.name, message: err.message, stack: err.stack }\n    : String(err);\n\nAquele String(err) no final não é paranoia. Em JavaScript qualquer coisa pode ser lançada — uma string, um objeto de erro que veio da API de terceiro, um undefined. Se você assumir que sempre é Error, o dia em que não for você perde o log exatamente no incidente mais estranho. Que é justamente quando você mais precisava dele.\nA versão que eu levaria pra produção também guarda as propriedades extras e a cadeia de causas:\nconst serializeError = (err) => {\n  if (!(err instanceof Error)) return String(err);\n\n  const out = { name: err.name, message: err.message, stack: err.stack };\n\n  // props que a lib pendurou (code, status, config...) — essas são enumeráveis\n  for (const key of Object.keys(err)) out[key] = err[key];\n\n  if (err.cause) out.cause = serializeError(err.cause);\n\n  return out;\n};\n\nAgora sim:\nconst inner = new Error(\"timeout of 30000ms exceeded\");\nconst outer = new Error(\"falha ao processar pedido\", { cause: inner });\nouter.code = \"E_PEDIDO\";\n\nserializeError(outer);\n// {\n//   name: \"Error\",\n//   message: \"falha ao processar pedido\",\n//   stack: \"Error: falha ao processar pedido\\n    at ...\",\n//   code: \"E_PEDIDO\",\n//   cause: { name: \"Error\", message: \"timeout of 30000ms exceeded\", stack: \"...\" }\n// }\n\nSe você não confia em lembrar de chamar isso em todo log — eu não confio —, dá pra plugar globalmente com um replacer:\nconst replacer = (key, value) =>\n  value instanceof Error ? serializeError(value) : value;\n\nJSON.stringify({ msg: \"falhou\", error: err }, replacer);\n// '{\"msg\":\"falhou\",\"error\":{\"name\":\"Error\",\"message\":\"boom\",\"stack\":\"...\"}}'\n\nDá também pra definir um toJSON no seu erro de domínio, e aí o JSON.stringify passa a se comportar sozinho:\nclass AppError extends Error {\n  toJSON() {\n    return { name: this.name, message: this.message, stack: this.stack };\n  }\n}\n\nJSON.stringify(new AppError(\"agora vai\"));\n// '{\"name\":\"AppError\",\"message\":\"agora vai\",\"stack\":\"...\"}'\n\nSó que isso cobre os erros que você escreveu. O TypeError que o runtime lança e o erro que vem do axios continuam mudos. É complemento, não solução.\nE se você usa pino ou winston: essas libs já vêm com serializer de erro (pino.stdSerializers.err, por exemplo). Vale conferir se está ativo e pra qual chave — costuma valer pra err, e um erro que você logou em error pode passar batido. É uma linha de config que resolve tudo isso. Se for o seu caso, você acabou de economizar uma tarde.\nBeleza. Log consertado, mensagem aparecendo. Agora vem a parte que eu não esperava.\nCom o erro finalmente visível, o alerta seguinte veio assim:\ntimeout of 30000ms exceeded\n\nÓtimo — agora dá pra investigar. Fui nos traces reconstruir a timeline, e o desenho que apareceu foi este (os tempos são ilustrativos; o que importa é o formato):\n12:00:00.000   início da execução\n12:00:00.050   chama a API externa  →  tentativa 1 do retry\n12:00:30.000   timeout of 30000ms exceeded            ← exatos 30s depois\n12:00:30.001   \"integration failed\"                    ← 1 ms depois\n12:00:30.080   \"erro na chamada, tentativa 1/3\"        ← ...opa\n\nOlha a última linha. O retry loga que a tentativa 1 falhou depois que o chamador já tinha desistido. Ele estava anunciando uma segunda tentativa que nunca ia acontecer.\nA causa é a relação entre dois timeouts em saltos encadeados:\nserviço A  ──30s──▶  serviço B  ──30s──▶  API externa\n\nOs dois saltos com o mesmo timeout. E aqui está a pegadinha: os dois relógios começam juntos. Quando a API externa trava, a tentativa 1 estoura no limite — no mesmo instante em que o chamador lá de cima também estoura e derruba a conexão.\nO retry tinha maxRetries: 3 configurado, bonitinho, no lugar certo. E era decorativo. Não importava o número ali: a primeira tentativa consumia todo o orçamento de tempo do chamador. As tentativas 2 e 3 eram inalcançáveis por construção.\nEsse é o tipo de bug que envelhece bem. Não aparece em dashboard nenhum: tem retry configurado, tem alerta disparando, tudo parece saudável. Só que o alerta chegava vazio — e ninguém tinha o menor motivo pra desconfiar do retry.\nSe você guardar uma linha só deste texto, guarde esta:\ntentativas × timeout_por_tentativa  +  delays  <  timeout de quem te chama\n\nSe essa desigualdade não vale na sua stack, seu retry é enfeite.\nFoi a primeira coisa que me passou pela cabeça: dá mais tempo pro chamador, aí o retry cabe. Antes de mexer, fui olhar a distribuição real da chamada — coisa que qualquer APM entrega em dois cliques.\nO padrão que costuma aparecer em integração com API externa é este:\n\n\n\nMétrica\nTempo\n\n\n\n\np50\n~2s\n\n\np95\n~3s\n\n\np99\n~5s\n\n\nmax\n= o próprio timeout\n\n\n\nRepare no formato, não nos números. 99% das chamadas legítimas terminam em poucos segundos. E aí tem um abismo entre o p99 e o máximo — não tem nada no meio do caminho. Aquele max não é uma chamada lenta: é uma chamada travada, cortada no teto.\nQuando a distribuição tem essa cara, ela já respondeu a pergunta: ou a API responde rápido, ou ela trava de vez. Não existe meio-termo.\nE isso vira \"aumentar o timeout\" de cabeça pra baixo. Esperar mais não transforma falha em sucesso — só segura recurso por mais tempo numa requisição que já morreu. É literalmente o oposto do que um timeout existe pra fazer.\nA correção é o contrário do instinto: encolher o orçamento de cada tentativa pra que todas caibam no teto que já existe. Com um chamador de 30s:\ntimeout por tentativa:   8s      (~1,6× o p99 — folga sem exagero)\nmaxRetries:              3\ndelay entre tentativas:  2s\n\ntotal = 3 × 8 + 2 × 2 = 28s   <   30s do chamador  ✓\n\nAgora o retry funciona de verdade: tentativa 1 falha rápido, espera, tentativa 2 responde nos 2s de sempre (99% de chance), fluxo segue.\nE o melhor: nenhum timeout novo precisa ser criado. O default do framework continua lá, intacto. Só a chamada externa passa um timeout curto, sobrescrevendo pra ela mesma:\n// em vez de mexer no timeout global do HttpModule\nawait this.http.post(url, body, { timeout: ATTEMPT_TIMEOUT_MS });\n\nLog ruim não é dívida cosmética. É multiplicador do tempo de diagnóstico de todo incidente futuro naquela região do código. Um Error: {} pode segurar um bug estrutural por meses — e o custo não é o bug, é ninguém conseguir enxergar o bug.\nRetry só é retry se o orçamento couber. Se o total do retry não é menor que o timeout de quem te chama, aquele maxRetries: 3 é enfeite de código. Dá pra conferir em cinco minutos, e a falha é silenciosa — ninguém vai te avisar.\nDistribuição decide timeout, não intuição. Se o p99 e o max estão a duas ordens de grandeza de distância, você não tem chamada lenta: tem chamada travada. São problemas diferentes, e confundir os dois faz você aumentar exatamente o número que devia diminuir.\ngrep por JSON.stringify no código de log e de alerta. Todo objeto com erro dentro está mudo.\nConfere se o serializer de erro do seu logger está ativo — e pra qual chave.\nSoma o orçamento do seu retry (tentativas × timeout + delays) e compara com o timeout de quem chama.\nOlha o p99 e o max da sua chamada externa mais crítica. Muito distantes? Seu timeout provavelmente está calibrado pro caso errado.\nSe você achar alguma dessas aí, me conta nos comentários. Tenho quase certeza de que não sou o único.\nTodo o código deste artigo foi rodado e verificado em Node 20. Os tempos dos exemplos são ilustrativos: o que importa é o formato da distribuição e a relação entre os timeouts, não os números em si.\nAlexandre Guimarães — desenvolvedor back-end (Node.js · TypeScript · AWS)\ngithub.com/xandguima · linkedin.com/in/alexandreguimaraes-dev",
+      "publishedAt": "2026-07-28T02:03:10.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "a49813467acd688e313f08f965f6c6f667eb91a9e2d7c5dc6785aa17d1be2d67",
+      "title": "Python + AWS Lambda: Build Serverless Apps for Free",
+      "url": "https://dev.to/qingluan/python-aws-lambda-build-serverless-apps-for-free-i1d",
+      "description": "Python + AWS Lambda: Build Serverless Apps for Free\n\n\ntags: python, aws, serverless, tutorial\ntags: python, aws, serverless, tutorial\nAre you tired of managing servers, scaling infrastructure, and dealing with the overhead of traditional application deployments? Do you want to focus on writing code and shipping products quickly without worrying about the underlying infrastructure? Look no further than serverless computing with Python and AWS Lambda.\nAWS Lambda is a serverless compute service provided by Amazon Web Services (AWS) that allows you to run code without provisioning or managing servers. With Lambda, you can write and deploy functions that execute in response to events, such as HTTP requests, changes to data in a database, or updates to a file in an S3 bucket. The best part? You only pay for the compute time consumed by your functions, so you can build and deploy applications without worrying about the costs.\nPython is a popular language for building serverless applications on AWS Lambda. Its simplicity, flexibility, and extensive libraries make it an ideal choice for writing Lambda functions. In this post, we'll explore the benefits of using Python with AWS Lambda, walk through a step-by-step example of building a serverless app, and provide tips for optimizing your code for maximum performance.\nBefore you can start building your serverless app, you need to set up your development environment. Here's a step-by-step guide to getting started:\nTo build and deploy serverless apps with Python and AWS Lambda, you'll need to install the following tools:\nAWS CLI: The AWS CLI is a command-line interface that allows you to interact with AWS services. You can install it using pip: pip install awscli\n\n\nAWS SAM CLI: The AWS SAM CLI is a tool that helps you build and deploy serverless applications. You can install it using pip: pip install aws-sam-cli\n\n\nPython: Make sure you have Python 3.6 or later installed on your machine\nTo use AWS Lambda and other AWS services, you need to create an AWS account and set up IAM roles. Here's a brief overview of the steps:\nCreate an AWS account at aws.amazon.com\n\nSet up an IAM user with the necessary permissions to access Lambda and other services\nCreate a new IAM role with the necessary permissions to execute Lambda functions\nNow that you have your development environment set up, let's build a serverless app with Python and AWS Lambda. Here's a step-by-step example of building a RESTful API using Python and AWS Lambda:\nYour first step is to define the API endpoints for your app. In this example, we'll build a simple RESTful API that allows users to create, read, update, and delete (CRUD) users.\nfrom flask import Flask, request, jsonify\nfrom pytz import timezone\n\napp = Flask(__name__)\n\n# Define the API endpoints\n@app.route('/users', methods=['GET', 'POST'])\ndef users():\n    if request.method == 'GET':\n        # Return a list of all users\n        return jsonify({'users': [{'name': 'John', 'email': 'john@example.com'}, {'name': 'Jane', 'email': 'jane@example.com'}]})\n    elif request.method == 'POST':\n        # Create a new user\n        data = request.get_json()\n        user = {'name': data['name'], 'email': data['email']}\n        return jsonify({'user': user}), 201\n\n@app.route('/users/<int:user_id>', methods=['GET', 'PUT', 'DELETE'])\ndef user(user_id):\n    if request.method == 'GET':\n        # Return the user with the specified ID\n        return jsonify({'user': {'name': 'John', 'email': 'john@example.com'}})\n    elif request.method == 'PUT':\n        # Update the user with the specified ID\n        data = request.get_json()\n        user = {'name': data['name'], 'email': data['email']}\n        return jsonify({'user': user})\n    elif request.method == 'DELETE':\n        # Delete the user with the specified ID\n        return jsonify({'message': 'User deleted'})\n\nOnce you've defined your API endpoints, you need to deploy your app to AWS Lambda. Here's a step-by-step guide:\nCreate a new directory for your project and navigate to it in your terminal or command prompt\nCreate a new file called requirements.txt and add the necessary dependencies, including Flask and pytz\nCreate a new file called handler.py and copy the code from above into it\nCreate a new file called serverless.yml and configure the AWS SAM CLI to build and deploy your app to AWS Lambda\nRun the following command to build and deploy your app to AWS Lambda: aws sam build --target hello_world && aws sam deploy\n\n\n\n\n  \n  \n  Step 3: Test the App\n\n\nOnce your app is deployed to AWS Lambda, you can test it using a tool like Postman or cURL. Here's an example of how to test the app using cURL:\ncurl -X POST \\\n  http://localhost:3000/users \\\n  -H 'Content-Type: application/json' \\\n  -d '{\"name\": \"John\", \"email\": \"john@example.com\"}'\n\nThis should create a new user and return a JSON response with the user's details.\nNow that you've built and deployed your serverless app, you can optimize your code for maximum performance. Here are some tips to get you started:\nWSGI (Web Server Gateway Interface) is a specification for web servers to interface with web applications written in Python. Using a WSGI server like Gunicorn or uWSGI can help you deploy your app to a production environment and improve performance.\nCaching is a technique where you store frequently accessed data in memory to improve performance. You can use a caching library like Redis or Memcached to store frequently accessed data in your app.\nA load balancer is a tool that distributes incoming traffic across multiple servers to improve performance and availability. You can use a load balancer like ELB (Elastic Load Balancer) to distribute traffic across multiple instances of your app.\nBuilding serverless apps with Python and AWS Lambda is a powerful way to build and deploy applications quickly and efficiently. By following the steps outlined in this post, you can build a serverless app with Python and AWS Lambda and optimize it for maximum performance. Whether you're building a simple RESTful API or a complex enterprise application, serverless computing with Python and AWS Lambda is a great way to get started.\nSo what are you waiting for? Get started building your serverless app today!\nIf you found this helpful, consider buying me a coffee ☕ — it keeps these articles coming!\nAlso check out my AI tools collection: AI 次元世界 — free AI tools for developers.",
+      "publishedAt": "2026-07-28T02:01:05.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "8a590baac26b0a9a757570239528a1f9acb26aaf5f22c89c1574f4590400a7b9",
+      "title": "LLM学習データの準備：FineWebの100GBスライスをS3に置いてみた",
+      "url": "https://dev.classmethod.jp/articles/llm-data-prep-hf-fineweb-100g-to-s3/",
+      "description": "LLMの学習データセットFineWebを自分のS3に置く際、HuggingFace側の情報は多いですが、AWS側の実装・認証・インフラ面での詰まりどころはあまり情報がありません。この記事では、100GBのスライスをS3に置き、manifestで再現性を検証するまでの実装と、ぶつかった5つのポイントを紹介します。",
+      "publishedAt": "2026-07-28T01:55:18.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "9ca2981ce22a862ab79a987b4f8354e4dca48187d905f47961db85ae4ba2819b",
+      "title": "Dev Log: 2026-07-23 — a portfolio-wide SEO pass",
+      "url": "https://dev.to/nasrulhazim/dev-log-2026-07-23-a-portfolio-wide-seo-pass-51b0",
+      "description": "TL;DR\n\n\n\nRan the same SEO + analytics checklist across five public repos and a couple of private ones in one day.\nDifferent stacks (Laravel, Next.js, Astro), same shopping list: meta/OG, canonical, sitemap, robots, JSON-LD, env-driven analytics.\nLesson: SEO is a checklist you port, not a feature you invent per project.\nToday was a theme day. Instead of one repo getting a big feature, nearly the whole portfolio got the same treatment: search-engine and analytics plumbing. Doing it across stacks back to back made the pattern obvious — the concepts are identical, only the syntax changes.\nEvery site got the same items. What differed was just how each framework expresses them:\n\n\n\nItem\nLaravel\nNext.js\nAstro\n\n\n\n\nSitemap\nartisan command / route\nsitemap.ts\n@astrojs/sitemap\n\n\nRobots\ndynamic /robots.txt\n\nrobots.ts\n\npublic/_redirects + file\n\n\nCanonical + OG\nBlade head partial\n\nlayout.tsx metadata\nBaseLayout.astro\n\n\nStructured data\nJSON-LD Blade partial\n\n<JsonLd> component\ninline <script type=\"ld+json\">\n\n\n\nAnalytics\nenv-driven GA/GTM\nNEXT_PUBLIC_GA_ID\nenv-driven GA\n\n\n\nSame five rows, three languages. Once you've done it once, the rest is translation.\nThe Laravel starter kit Kickoff got the meatiest change — a full admin-editable SEO & analytics baseline (I wrote that up as its own post today). Its marketing site kickoff-web got a landing-page redesign plus the SEO infra, canonical domain, and hreflang/schema graph.\nOn the Astro side, g8suite-web picked up a structured-data graph (WebSite / WebPage / Breadcrumb / SoftwareApplication), an OG image, and a sitemap index. gatherhub-web got sitemap, robots, canonicals, JSON-LD and GA — plus a satisfying cleanup pass dropping dead template code. And the DevHub website shipped per-route SEO, a generated sitemap, env-gated GA4, and a new trainings catalogue with proper FAQ schema on each page.\nOn a private Laravel events platform I ran the same SEO phases — meta/OG plumbing, JSON-LD structured data on public pages, admin-configurable analytics — then a performance phase: WebP image conversions, lazy loading, and LCP priority hints. The reusable idea there: build JSON-LD via small invokable action classes (BuildEventJsonLd, BuildSitemap) so the schema logic is testable and out of the views.\nI also spent time drafting course content and marketing image packs for an upcoming training programme — organising material, not shipping code.\nTreating SEO as a portable checklist rather than a per-project scramble turned a full day of \"boring infra\" into fast, repeatable work. Write the list once, keep it in your head (or a doc), and every new project starts three steps ahead.",
+      "publishedAt": "2026-07-28T01:33:04.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "9685b9ff180dfb1de5533d5203e67c1c72effac2e929cb4f40b85e8149885f10",
+      "title": "The AI Summary Said \"It's Not a Scam.\" The Springboard Was Your Site's Search Box",
+      "url": "https://dev.to/kenimo49/the-ai-summary-said-its-not-a-scam-the-springboard-was-your-sites-search-box-3iao",
+      "description": "Last August, a man planning a cruise googled Royal Caribbean's customer service number. Google's AI Overview served him a phone number at the top of the results. He called it, handed over his card details, and the number belonged to scammers. Similar cases hit Southwest Airlines searches. That variant, fake support numbers planted where AI summaries would pick them up, got plenty of coverage.\nLast week, Japan's Metropolitan Police announced a quieter variant that I think deserves more attention from developers, because the attack surface sits on legitimate sites: the search box. Possibly the one on yours.\nHere's the scene the police described: someone gets invited into an investment group on social media. Before sending money, they do the sensible thing and search the group's name. The results show \"XX is not a scam\" and \"I made money with XX.\" The AI summary at the top of the page agrees: \"XX is not a scam.\" Reassured, they transfer the money.\nThe victim's verification habit -- \"let me search before I trust this\" -- has been folded into the trap.\nWhen I read the report, my first question was: how? I work on LLMO (optimizing sites to get cited by AI search) day to day, so I suspected one of the search-pollution techniques floating around SEO circles. The trail led to something older and dumber than I expected: site-search spam, documented by the Japanese SEO firm JADE back in February 2023.\nThis post covers the mechanism, why AI summaries repeat the lie, and the defenses you can ship this week (noindex, X-Robots-Tag, 404-on-zero-hits).\nMost sites with a search box return results at a URL like /search?q=keyword. Two properties of a typical implementation set up the attack:\nAnyone can put an arbitrary string in the query parameter\nThe page reflects that query into its <title> or <h1> (\"Search results for 'keyword' | Acme Corp\")\nThe attack:\nThe attacker composes a search URL on a trusted domain: acme.com/search?q=XX+is+not+a+scam. No need to touch the search box. The URL alone does the job.\nThey link to that URL from sites they control.\nGooglebot follows the link, crawls the results page, and indexes it. From then on, web search can show \"XX is not a scam | Acme Corp\" under a legitimate domain.\nThe victimized site was never breached. No malware, no intrusion, no tools. The attacker built a URL and placed a link. When I first understood this, I said \"wait, that's it?\" out loud. What's being exploited is not a vulnerability. It's a spec.\nTo the person searching, it looks like Acme Corp's website says \"not a scam.\" The trust the domain spent years earning gets subleased to a stranger's sentence.\nAI Overviews and similar features are structurally close to RAG: retrieve pages relevant to the query from the search index, then compose an answer from them. The internals aren't public, but the dependency is observable: the summary is built downstream of the index.\nThe AI has no way to smell the setup. What it retrieved is, as far as it can tell, text on a trusted domain. It doesn't verify claims; it weighs source authority and cross-source agreement. So if an attacker seeds the same sentence into search URLs on several reputable domains, the AI sees multiple independent authoritative sources agreeing.\nThat's the ugly part: the more seriously an AI weights authority signals, the better this attack works on it. The diligent ones are the easiest marks.\nThe pipeline is simple: search index upstream, AI summary downstream. Poison the upstream and the downstream poisons itself. You could wait for AI vendors to filter better (Google said it \"took action\" on the fake phone numbers; new ones kept popping up), or you could close the reflection surface on your own site, which is faster and actually under your control.\nCan your site be used as a springboard? Three checks:\n# 1. Are your search result pages indexed? (in Google)\nsite:example.com inurl:search\nsite:example.com inurl:\"?s=\"\n\n# 2. Indexed under suspicious phrases?\nsite:example.com scam\nsite:example.com refund\n\n# 3. Do your search result pages carry noindex?\ncurl -sI \"https://example.com/search?q=test\" | grep -i x-robots-tag\n\n# No header? Check the HTML meta tag\ncurl -s \"https://example.com/search?q=test\" | grep -i '<meta name=\"robots\"'\n\nsite: queries are a quick smoke test; Google doesn't guarantee exhaustive results. For a definitive answer, open Search Console and check Indexing > Pages and Performance > Pages for URLs containing /search or ?s=.\nAlso look at your search results template: does it reflect the query into <title> or <h1>? Reflection plus indexability is the combination that makes you a target.\nOne reassurance: client-side search (JS filtering in the browser, common on static sites) doesn't have this attack surface at all, because the server never returns different HTML per query.\nTwo viable strategies, based on JADE's recommendations:\n\n\n\nMeasure\nEffect\nCaveat\n\n\n\n\n<meta name=\"robots\" content=\"noindex\">\nReliably keeps result pages out of the index\nNeutralized if robots.txt blocks the page\n\n\n\nX-Robots-Tag: noindex header\nSame, applied at infra level without touching templates\nSame caveat\n\n\nnoindex (or 404) on zero-hit queries\nKeeps search-page SEO traffic while blocking spam\n404 can hurt UX for legitimate zero-hit queries\n\n\n\nrobots.txt Disallow: /search\n\nSuppresses crawling\nIncomplete alone -- blocked URLs can still get indexed via external links\n\n\n\nChoosing is simple:\nNot chasing SEO traffic on search result pages? noindex all of them. Simplest, most reliable.\nWant to keep that traffic? Return noindex on zero-hit queries. Spam phrases like \"XX is not a scam\" almost always hit zero results, so this alone kills most of the attack.\nThere is one trap worth internalizing: noindex only works if the crawler can read the page. Block the URL in robots.txt and the crawler never sees your noindex, which un-neutralizes the whole defense. Google's docs state it outright: for noindex to be effective, the page must not be blocked by robots.txt. Never combine the two on the same URL.\nImplementation examples.\nWordPress search pages (?s=) get noindex by default if you run Yoast or similar. On a bare theme, use the wp_robots filter (WordPress 5.7+, plays nicely with core and plugin output):\n// functions.php\nadd_filter('wp_robots', function ($robots) {\n    if (is_search()) {\n        $robots['noindex'] = true;\n    }\n    return $robots;\n});\n\nNext.js (App Router):\n// app/search/page.tsx\nexport const metadata = {\n  robots: { index: false, follow: true },\n};\n\nAt the infra layer, nginx. Two gotchas in this snippet: it matches path-style search URLs (/search), not query-style (?s=); for those you'd branch on $arg_s instead. And nginx's add_header has inheritance rules that bite: a single add_header inside a location cancels all headers defined at upper levels, so re-declare your security headers there.\nlocation /search {\n    add_header X-Robots-Tag \"noindex\" always;\n    # re-declare upper-level add_header lines (security headers etc.) here\n    proxy_pass http://app;\n}\n\nEven setting the scam angle aside, noindexing search result pages is standard SEO hygiene: it prevents duplicate-content bloat and crawl budget waste. This is a good excuse to finally do it.\nThe \"not a scam\" poisoning that Japanese police warned about is explained by site-search spam. What's exploited is the spec: reflect the query, allow indexing.\nAI summaries are RAG over the search index. Upstream poison becomes the downstream answer. Closing your reflection surface is faster than waiting for AI-side filters.\nnoindex is the backbone. Never robots.txt-block a URL you want noindexed. Keep search traffic if you want it, but noindex on zero hits.\nIf you run a site, try site:yourdomain inurl:search today. If anything comes back, the defense section above is your afternoon. Is your search box carrying someone's \"it's not a scam\"?\nMetropolitan Police Department (Japan), Cyber Security Countermeasures Division advisory, July 24, 2026. Coverage: ITmedia NEWS, July 27, 2026 (Japanese)\nYusuke Murayama, Site-search spam abusing other companies' sites, JADE blog, February 8, 2023 (Japanese)\nWashington Post via Slashdot: Google's AI Overview pointed him to a customer service number. It was a scam. (August 2025)\nGoogle Search Central, Block Search indexing with noindex",
+      "publishedAt": "2026-07-28T01:28:17.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "fb1a27aa9059f49916fdad2b947934ca0e1b90aff69a2a610b78cddf40503ad4",
+      "title": "CCoEとしてマルチアカウント環境 GuardDuty 検知運用を AWS DevOps Agent で効率化しようとした話",
+      "url": "https://dev.classmethod.jp/articles/aws-devops-agent-guardduty-triage-ccoe/",
+      "description": "GuardDutyの検知を起点にDevOps Agentが自動で調査を実行し、結果をSlackに通知する仕組みを構築しました",
+      "publishedAt": "2026-07-28T01:04:23.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "7d0b75ac7c07e3bc868f918e52ecbf270ea24cc87337d1b2b7e925fe241bb780",
+      "title": "AWSにおけるデータ移行・転送・ハイブリッドストレージの関連サービスをまとめてみた",
+      "url": "https://dev.classmethod.jp/articles/aws-data-transfer-services/",
+      "description": "オンプレミスからAWSへのデータ移行方法に迷っていませんか？この記事では、Storage Gateway、Transfer Family、DataSync、Snowball Edgeの4つのサービスの特徴と、それぞれに最適なユースケースについて紹介します。",
+      "publishedAt": "2026-07-27T23:44:27.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "a3e17f4f6a2fe44a6064b3a81fd6d56a1c4d3fd874c119fa7ed0d9a087b9a1b8",
+      "title": "SCS評価制度で選別される時代へ　受注企業が今すぐやるべきサイバー対策",
+      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2607/28/news041.html",
+      "description": "価格や品質だけでは、取引先に選ばれない時代が始まるのか。ガートナーは「SCS評価制度」の導入を背景に、セキュリティ対策を客観的に示せる企業ほど優位になるとの見方を示した。受注企業は何を準備し、何を証明すべきなのか。",
+      "publishedAt": "2026-07-27T22:00:00.000Z",
+      "feedName": "＠IT"
+    },
+    {
+      "id": "531b18d1f79437f7ff79d71f27475be8cc9ddafed4f16d101abb4007c7bc2477",
+      "title": "Microsoft、ミュトス超えの新セキュリティAI「MAI-Cyber-1-Flash」発表",
+      "url": "https://japan.cnet.com/article/35251000/",
+      "description": "米Microsoftが、サイバーセキュリティ向けの新しいAIモデル「MAI-Cyber-1-Flash」を発表した。エージェント型セキュリティシステム「MDASH」と米OpenAIの「GPT-5.4」を組み合わせた構成で、主要ベンチマークで米Anthropicの「Claude Mythos 5」を12ポイント上回ったという。Microsoftはこの製品を「AIからの攻撃をAIで防ぐ」ためのものと位置づけている。",
+      "publishedAt": "2026-07-27T21:40:00.000Z",
+      "feedName": "CNET Japan"
+    },
+    {
+      "id": "4a83a73e1887bb05b74ec640319f53f2b0d470658f1e692bd3dab130f2a644b2",
+      "title": "iPhoneに「iOS 26.6」配信開始　連絡先の「ブロックしすぎ」を知らせる新機能も",
+      "url": "https://japan.cnet.com/article/35250999/",
+      "description": "米Appleは、iPhone向けの最新アップデート「iOS 26.6」の配信を開始した。バグ修正と多数のセキュリティ問題への対処が中心となる。あわせて「iPadOS 26.6」「macOS Tahoe 26.6」「watchOS 26.6」「tvOS 26.6」も公開されている。",
+      "publishedAt": "2026-07-27T21:34:00.000Z",
+      "feedName": "CNET Japan"
+    },
+    {
+      "id": "fc8f970f4fa0ab0ec784fc21eed4994140d2b481b6ee4036a81c95f0763f70c4",
+      "title": "AWSの公式オンラインワークショップ、無料のAWSサンドボックス環境を提供開始。学習用にAWSのサービスやコード実行など利用可能に",
+      "url": "https://www.publickey1.jp/blog/26/awsawsaws.html",
+      "description": "Amazon Web Services（AWS）は、同社がAWSのオンライン学習教材として提供している「ワークショップ」において、無料でAWSのサービスやコードの実行などを試すことができるサンドボックス環境の提供開始を発表しました。 AWSアカウントもクレジットカードの登録も不要で、無料のビルダーIDを登録することで利用可能。 こ...",
+      "publishedAt": "2026-07-27T21:22:01.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "b695840e9a51068f51ba7c898238550f4901788728275a078cd77b2af33dbf34",
+      "title": "エージェンティック AI と AWS Transform でメインフレームアプリケーションを再構想 (reimagine) する",
+      "url": "https://aws.amazon.com/jp/blogs/news/reimagine-your-mainframe-applications-with-agentic-ai-and-aws-transform/",
+      "description": "本ブログでは、reimagine パターンによってメインフレームのレガシーアプリケーションをモダナイズする AWS のアプローチの概要を説明し、組織がレガシー COBOL アプリケーションをモダンなクラウドネイティブアーキテクチャに変換する方法を紹介します。",
+      "publishedAt": "2026-07-27T20:21:44.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "bad4df89aed267bb07ce2ea94f81308191c780ed3d4b606f74e565cc84d9dfc2",
+      "title": "Vercel、TypeScriptをC言語に変換してからネイティブな実行ファイルにコンパイルする「scriptc」、オープンソースで公開",
+      "url": "https://www.publickey1.jp/blog/26/verceltypescriptcscriptc.html",
+      "description": "Webアプリケーションのホスティングサービス「Vercel」で知られるVercel社は、Node.jsで実行可能なTypeScriptコードを、変更することなく同じ機能を備えたネイティブな実行ファイルにコンパイルするコンパイラ「scriptc」をオープンソースで公開しました。 TypeScriptをC言語へ変換しCコンパイラでコンパイル Node.jsで...",
+      "publishedAt": "2026-07-27T18:03:40.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "432a168b80e62292673c93ac68c27d48aa796f220c593c213443ce0d62adfcbc",
+      "title": "NVIDIA、オープンなAIセキュリティで新連合　MSやIBM、SpaceXAIら参加",
+      "url": "https://www.watch.impress.co.jp/docs/news/2128306.html",
+      "publishedAt": "2026-07-27T15:19:15.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "094c6349871a394c3cf1c1325e55c61c4697a73db0fcd0db46dd290374941892",
+      "title": "Claude Code Actionで使うSkillを、リポジトリにコミットせずgh skill installで実行時に入れる - $shibayu36->blog;",
+      "url": "https://blog.shibayu36.org/entry/2026/07/27/163000",
+      "description": "GitHubでPull Requestを作った瞬間に、Claude Code Actionを使って最低限セキュリティレビューをさせる仕組みを導入したいことがあった。またこの仕組みは特定リポジトリだけでなく、他のリポジトリにも簡単に展開していきたいと考えていた。 このときどうやって他リポジトリに展開しやすくしておくか悩んだが、Skillを...",
+      "publishedAt": "2026-07-27T14:02:17.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "786693b837d5b5b196528eb393fc7e61e4490ca7fd99078916efd1b02a6984cb",
+      "title": "セキュリティ研修【MIXI 26新卒技術研修】",
+      "url": "https://speakerdeck.com/mixi_engineers/2026_new_grad_training_security",
+      "description": "本スライドは、MIXIの2026年度新卒向け技術研修で使用された資料です。 MIXI 2026新卒技術研修 『セキュリティ研修』 ─────────────────────────────── ※皆様へのお願い※ 資料・動画・リポジトリのご利用につい…",
+      "publishedAt": "2026-07-27T13:31:58.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "6ec0dc848db308dd4e8bbb2e175f8675cf6c87247b79330009857924722c7ab6",
+      "title": "GitHub MCPのRead-only modeを使う",
+      "url": "https://dev.classmethod.jp/articles/github-mcp-read-only-mode-verification/",
+      "description": "Github MCPのRead-only modeがどのようなセキュリティ機能なのか、実装の仕組みも含めて調査してみました。書き込み権限を与えずにMCPを活用したい場合の選択肢として、その仕組みを紹介します。",
+      "publishedAt": "2026-07-27T12:14:32.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "faf8718ed845b480142e5543bbe78a42637aa7e678aec18734fda2e7d5849a27",
+      "title": "AWS公式のVLAシミュレータがREADME通り動かなかったので、原因を突き止めて直したらGR00TとOpenVLAが完走した",
+      "url": "https://dev.classmethod.jp/articles/aws-vla-simulator/",
+      "description": "AWS公式のVLA評価サンプルをGR00Tで動かしてみたところ、依存パッケージのバージョン不整合でセットアップが失敗しました。原因を突き止めてmujocoを固定することで、GR00TとOpenVLA-OFTの両方を完走させ、成功率1.0でロボットアームのタスク実行を確認できました。",
+      "publishedAt": "2026-07-27T12:03:22.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "7ca1c3f0f1479686fbdcc2c24e20798cce19e055f90d425e052de8bcdb213e31",
+      "title": "Federating clusters for zero-downtime Kubernetes",
+      "url": "https://www.cncf.io/blog/2026/07/27/federating-clusters-for-zero-downtime-kubernetes/",
+      "description": "Every multi-region setup eventually meets the same awkward moment: a whole cluster goes away, and the identical copy of your service running two regions over might as well not exist, because nothing is wired to treat...",
+      "publishedAt": "2026-07-27T11:00:00.000Z",
+      "feedName": "Cloud Native Computing Foundation"
+    },
+    {
+      "id": "c040ed4352a1dbff69b5b26984de71ff282b255099cf989e887ddfbcea8fb923",
+      "title": "[アップデート] Agent Toolkit for AWS の新スキル「amazon-opensearch-service」で自然言語でのログ分析を試してみた",
+      "url": "https://dev.classmethod.jp/articles/20260727-amazon-opensearch-service-skill/",
+      "description": "Claude Code + OpenSearch Serverless NextGen 環境で、Agent Toolkit for AWS の amazon-opensearch-service スキルを使ったログ分析を試してみました。PPL を書いた経験がなくても、日本語プロンプト 1 行でインシデント調査を完結できる実例を紹介します。",
+      "publishedAt": "2026-07-27T10:11:23.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "cf312a13a04b1e14489f06a109d0a97127635f84072e5bbdf1b03410ee3ffa74",
+      "title": "ステージング環境をセルフサービス化しチームの開発速度を向上させた方法",
+      "url": "https://zenn.dev/fusic/articles/83c6b9a1e7c7d0",
+      "description": "はじめに\n現在、複数人の開発メンバーで新規のWebアプリケーションを開発しています。\n開発メンバーは5人、さらに、仕様駆動開発の考えを導入した上でDevinも実装者に加わっています。\nインフラの構築が落ち着き、ある程度の開発基盤も整った段階で、運用上以下の状況が発生していました。\n\nチーム内でリリース前の動作確認として単一のStaging環境(AWS環境)を払い出していた。\n各自の動作確認をstagingブランチに取り込んでいたが、AI前提の開発速度が速すぎて待ちが発生し、そのブランチ運用がボトルネックとなってしまっていた。\nStaging環境の取り合いによりチーム内での余計なコミュ...",
+      "publishedAt": "2026-07-27T09:46:14.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "765961ea26730250b49742fcad8112d66ec6b6bd2af3ee8d75be2481b7d8764c",
+      "title": "「アーキテクチャ」と「設計」って同じじゃないの?と思ってた話 - Qiita",
+      "url": "https://qiita.com/TACAMP/items/f5cd215833b3b9db5d39",
+      "description": "「アーキテクチャ」と「設計」って同じじゃないの?と思ってた話 恥ずかしながら今まで「設計」と「アーキテクチャ」は同じ意味だと思っていました。しかし、とある書籍を読んで明確には違うことが分かりましたので内容を簡単にまとめていきます。 そもそも何が違うの 一言でいうと、設計は「どう作るか」を決めること、...",
+      "publishedAt": "2026-07-27T08:42:03.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "f2ea5f240846cc6fb7d33c2bfade35567271e836c7be9c3e09e1492d3ce58ab2",
+      "title": "週刊生成AI with AWS – 2026年7月20日週",
+      "url": "https://aws.amazon.com/jp/blogs/news/weekly-genai-20260720/",
+      "description": "週刊生成AI with AWS, 事例と Summit 開催報告が揃った 2026 年 7 月 20 日号 - 弁護士ドットコム株式会社様の AWS DevOps Agent 活用事例と、株式会社NTTドコモ様・KDDI株式会社様・ソフトバンク株式会社様の展示レポートを紹介。また、9 社合同 AI-DLC Unicorn Gym や Claude・Kiro 実践ワークショップなどのブログ記事も。サービスアップデートでは Claude Opus 5 の AWS 提供開始や Amazon CloudWatch のコーディングエージェントインサイトをはじめとする 12 件を紹介。",
+      "publishedAt": "2026-07-27T08:24:33.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "2b7f02856ac13e23d3ab3cf0ba6563edf411622605d28243abc561dfa66ef5e2",
+      "title": "MIXI、新卒エンジニア向け研修資料＆動画を無料公開　「実践的なAI活用術」を12科目で紹介",
+      "url": "https://www.itmedia.co.jp/aiplus/article/2607/27/2000000223/",
+      "description": "MIXIは7月27日、2026年度入社の新卒エンジニア向けに実施した技術研修の資料とアーカイブ動画を公開した。全12科目を通じ、業務におけるAIの活用法などを紹介している。 Gitやコンテナ技術、セキュリティ、モバイルアプリ開発、データ活用などのテーマごとに実施した全12科目の研修資料と一部のアーカイブ動画を公開した...",
+      "publishedAt": "2026-07-27T06:47:19.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "55107ac5c949197a00606735e079e8168bf290c6169303787bcf2a8ecddf2d50",
+      "title": "【2026年版】MIXI 新卒向け技術研修を公開しました。",
+      "url": "https://zenn.dev/mixi/articles/fd62f8ddc178f6",
+      "description": "2026年度新卒向け技術研修の資料と動画を公開しました。\nMIXIの新卒向け技術研修では、一部の科目を除き、実際の開発現場で活躍するエンジニアが講師を務めています。技術や開発環境の変化に合わせて毎年カリキュラムを見直し、現場で必要となる知識や技術を学べる研修を目指しています。\nまた、職種や配属先にかかわらず、エンジニアとして必要となる幅広い技術的な土台を身につけられるよう、モバイルやWebフロントエンドなどのアプリケーション開発に加え、データベース、セキュリティ、クラウド、データ活用など、多様な領域を扱ってきました。\n近年は、生成AIやAIエージェントの登場により、開発業務におけるAI活...",
+      "publishedAt": "2026-07-27T04:26:35.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "6fffa90547f267e296d51c97007297e7d1a171d317879d2bdad018b63c9de9ff",
+      "title": "Amazon GuardDuty 調査エージェントのご紹介: オンデマンドの AI を活用した脅威評価",
+      "url": "https://aws.amazon.com/jp/blogs/news/introducing-the-amazon-guardduty-investigation-agent-on-demand-ai-powered-threat-assessment/",
+      "description": "Amazon GuardDuty 調査エージェントのパブリックプレビューを発表しました。AI を活用してセキュリティ検出結果の調査を自動化し、調査時間を数時間から数分に短縮します。リスクレベル、信頼度スコア、MITRE ATT&CK 手法マッピング、推奨アクションを含む構造化された評価を提供します。本記事では、コンソールと AWS CLI による有効化と調査の実行手順、AWS MCP サーバーとの統合、AWS Security Incident Response との使い分けを解説します。",
+      "publishedAt": "2026-07-27T03:57:52.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "d3b6bf297a4ab2300ae3e87ff06e0e38b99ce31bd62387342054ee08f896764b",
+      "title": "Security Hub が AI ワークロード保護と Microsoft Azure 対応のマルチクラウドサポートを追加",
+      "url": "https://aws.amazon.com/jp/blogs/news/security-hub-adds-ai-workload-protection-and-multicloud-support-for-microsoft-azure/",
+      "description": "AWS Security Hub の 2 つの大きな拡張を発表します。マルチクラウドセキュリティ管理の対象を Microsoft Azure に拡大し、Azure の検出結果を AWS と統合して優先順位付けできるようになりました。さらに GuardDuty AI Protection による Amazon Bedrock や SageMaker の脅威検出、GuardDuty AI-powered investigations による調査の自動化、Security Hub AI inventory による AI 資産の可視化など、AI ワークロード保護の新機能も紹介します。",
+      "publishedAt": "2026-07-27T03:53:57.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "15ea30492205831a957a7db78821312c6f58c098e83549b7328279c112c14e07",
+      "title": "AWS Summit Japan 2026：完全自律型 AI Agent が変える SaaS の世界",
+      "url": "https://aws.amazon.com/jp/blogs/news/multitenant-ai-agent-saas-architecture-aws-summit-japan-2026/",
+      "description": "AWS Summit Japan 2026 のブース展示にて、Amazon Bedrock AgentCore を活用したマルチテナント AI CRM のデモを展示しました。AI Agent の台頭により SaaS に求められる要素が変わりつつある中、SaaS に AI Agent を組み込むことで顧客体験をどう変えられるか、その設計上の 4 つのポイントを動くデモを通じて具体的に示しています。",
+      "publishedAt": "2026-07-27T02:59:49.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "32559428e59d9a82ebf401cd1d9c13f028b82bbd62db2aa7648c49429db5cd26",
+      "title": "寄稿：弁護士ドットコムにおける AWS DevOps Agent の活用事例 – インシデント対応の自動化と属人化の解消 | Amazon Web Services",
+      "url": "https://aws.amazon.com/jp/blogs/news/bengo4com-devops-agent-case-study/",
+      "description": "Amazon Web Services ブログ 寄稿：弁護士ドットコムにおける AWS DevOps Agent の活用事例 – インシデント対応の自動化と属人化の解消 本稿は、弁護士ドットコム株式会社 CTO 田中 慎司 氏、プロダクト開発本部 Platform & Reliability Engineering 部 (以下、PRE 部) 部長 熊谷 晃 氏、同 PRE 部 原口 慎太郎 氏による...",
+      "publishedAt": "2026-07-27T02:05:08.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "1bdee77a6afb3ee84412e51a50ea741e9e7689b97b2f675f4b3d3cee6d5ba3d5",
+      "title": "PrivateLink で別アカウントの VPC に接続されているオンプレミスの名前解決が必要なリソースにアクセスする",
+      "url": "https://qiita.com/takeda_h/items/1dd5b788c07b474509c7?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "AWS の VPC 間をネットワーク接続する方法はいくつかあります。\n地方自治体がガバメントクラウドの閉域 AWS 環境に基幹業務システムを構築する場合、地方自治体のオンプレミス環境と複数の AWS アカウントの VPC を接続するケースが多いため、Transit Gate...",
+      "publishedAt": "2026-07-26T15:38:57.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "00dd5407b6954f2c7190103092441341eb579844017f69d33cb51fe1f32792a2",
+      "title": "[AWS] Managed KB ACLをRDBと自動同期させる",
+      "url": "https://qiita.com/kikuziro/items/85f0b4b6e7715f4ef92d?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "📝 TL;DR\n\nManaged KBのACLメタデータは、リアルタイム反映を頑張るより定期的バッチ反映がお勧め\nどうしても即時に近い反映が必要ならセルフでメタデータフィルタ実装がお勧め\n\n👋 はじめに\nAWSのManaged　KBに文書単位のアクセス制御を効かせるAC...",
+      "publishedAt": "2026-07-26T15:34:04.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "8bb00de395d8009d9c7f8459af7d5bb5483a74a138630a9583bb566f66a182ca",
+      "title": "Agent Skillsを備えたAntigravity CLIとアーキテクチャ設計対決した",
+      "url": "https://qiita.com/satoshi-sugiyama/items/467e10f4af6ff5cb84d5?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "Google Cloud公式Skillsを備えたAntigravity CLIとアーキテクチャ設計力を競いたくなった\nAIエージェントの進化が目覚ましく、アーキテクチャ設計もある程度AIエージェントがこなせるようになってきました。\nGoogle CloudでもAgent ...",
+      "publishedAt": "2026-07-26T15:11:20.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "afe04f5e9a4f88c0ea433e39c60507870763f9718ff16a60ae52815abf46748a",
+      "title": "AI時代のプロジェクトコミュニケーション構造を考える",
+      "url": "https://qiita.com/AoraNow_Yoshiyuki_Ito/items/5382a77aae04fd77343a?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "先日、「開発が速く安くなった後の話――AI時代のソフトウェアエンジニアリング組織論」を読みました。\nAIによって実装が速く、安くなったとき、開発全体のボトルネックはどこへ移るのか。実際の事例を起点に、開発プロセス、アーキテクチャ、組織、そして維持保守まで考察した、とても示唆...",
+      "publishedAt": "2026-07-26T04:47:30.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "68e0f85855913e871c8ca60305f3cf6c1dbf252c5d835b18299f179195178b54",
+      "title": "「ソフトウェアアーキテクチャの基礎」を読んで設計判断の引き出しが増えた",
+      "url": "https://zenn.dev/raamenwakamatu/articles/software-architecture-fundamentals-review",
+      "description": "!\n書籍情報\n\n\n書名：ソフトウェアアーキテクチャの基礎 第2版 ―エンジニアリングに基づく体系的アプローチ\n\n著者：Mark Richards, Neal Ford\n\n訳者：島田浩二\n\n出版社：オライリー・ジャパン\n\n\n\n はじめに\n「ソフトウェアアーキテクチャの基礎」を読んだ。\nAIエージェントの普及によって、開発者一人がカバーする範囲が広がっている。社内アプリであればフロント・バック・インフラをひとりで担当するケースも珍しくなくなってきた。実装はAIに任せる分、自分たちに求められるのはインフラ構成の判断・コードレビュー・セキュリティの担保など、より上位の視点だと感じている。いわばA...",
+      "publishedAt": "2026-07-26T03:47:06.000Z",
       "feedName": "Zenn"
     }
   ]
