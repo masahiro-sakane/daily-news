@@ -1,38 +1,6 @@
 {
   "articles": [
     {
-      "id": "83873da1c9574e4ff179b6397a4396d27764ee18bdef2b9cacddfe48ef4cd7eb",
-      "title": "Moving Your On-Premises Database to the Cloud",
-      "url": "https://dev.to/fuadhusnan_f44f3e13/moving-your-on-premises-database-to-the-cloud-1189",
-      "description": "The decision to migrate an on-premises database to the cloud is rarely a simple one. It touches infrastructure, budget, team workflows, and application uptime all at once. Yet for most organizations, moving your on-premises database to the cloud is no longer a question of if but when — and more importantly, how to do it without bringing production systems to their knees. Whether you're running PostgreSQL on bare metal or SQL Server in a company-owned data center, the path to cloud-hosted data has predictable pitfalls and, when navigated carefully, significant payoffs.\nThis guide walks through the full migration process: from pre-migration assessment to post-migration validation, with real configuration examples and the kind of hard-won detail that vendor documentation tends to skip.\nOn-premises databases carry hidden costs that compound over time. Hardware refresh cycles, licensing renewals, physical security, power, and cooling — these expenses are easy to underestimate when they're already baked into the operating budget. Cloud databases shift that burden to a consumption model, where you pay for what you use and scale without a procurement cycle.\nBeyond cost, there's the question of availability. Cloud providers like AWS, Google Cloud, and Azure run managed database services with built-in replication, automated failover, and point-in-time recovery that would take a dedicated DBA weeks to configure manually. A startup can get enterprise-grade durability out of the box. A mid-sized company can stop worrying about what happens when a hard drive fails at 2 a.m.\nPerformance is another draw — though it comes with caveats. Managed cloud databases excel at read-heavy workloads and benefit from proximity to cloud-native application services. Latency-sensitive operations or highly custom storage configurations sometimes perform better on dedicated hardware. Knowing which category your workload falls into is the first real question to answer.\nSkipping the assessment phase is the single biggest mistake teams make. It leads to unexpected downtime, missed dependencies, and — in the worst cases — data loss. A thorough pre-migration audit covers four areas: data volume, schema complexity, application dependencies, and compliance requirements.\nStart with a size inventory. You need to know not just the total database size but the distribution across tables, the presence of large object (LOB) columns, and historical growth rates. A 500 GB database that grows 10 GB per week needs a different migration strategy than one that's been static for two years.\nSchema complexity matters because cloud databases don't always support every feature of their on-premises equivalents. Oracle-to-PostgreSQL migrations, for example, frequently surface issues around stored procedures, custom data types, and sequences. AWS Schema Conversion Tool (SCT) and pgloader are useful here, but they produce conversion reports, not magic. You'll still need a developer to review the flagged objects.\nApplication dependencies are where migrations often stall. Query your connection pool configurations, hardcoded IP addresses, and any application code that references the database hostname directly. A migration that takes two days of database work can turn into two weeks when four applications need their connection strings updated and tested.\nThere are three broad approaches to database migration: lift-and-shift, heterogeneous migration, and phased cutover. Each has a different risk profile and time-to-value.\nLift-and-shift moves the database engine and data as-is to a cloud VM, without changing the database software or schema. It's the fastest path and produces the fewest surprises, but it doesn't take advantage of managed services. You're still responsible for patching, backups, and HA configuration.\nThis strategy makes sense when deadlines are tight, when the application is tightly coupled to a specific database version, or when the migration is a step toward eventual modernization rather than the destination.\nA heterogeneous migration moves data between different database engines — Oracle to Aurora PostgreSQL, SQL Server to Cloud Spanner, MySQL to AlloyDB. This is the most complex and highest-reward approach. You get schema compatibility improvements, cost reductions from license elimination, and cloud-native performance features. But it requires rigorous application testing because even minor behavioral differences between SQL dialects can cause subtle bugs.\nAWS Database Migration Service (DMS) handles the data movement portion, while SCT handles schema conversion. Here's a minimal DMS replication task configuration for a continuous replication job:\n{\n  \"TargetMetadata\": {\n    \"TargetSchema\": \"\",\n    \"SupportLobs\": true,\n    \"FullLobMode\": false,\n    \"LobChunkSize\": 64,\n    \"LimitedSizeLobMode\": true,\n    \"LobMaxSize\": 32768\n  },\n  \"FullLoadSettings\": {\n    \"TargetTablePrepMode\": \"DROP_AND_CREATE\",\n    \"CreatePkAfterFullLoad\": false,\n    \"StopTaskCachedChangesApplied\": false,\n    \"StopTaskCachedChangesNotApplied\": false,\n    \"MaxFullLoadSubTasks\": 8,\n    \"TransactionConsistencyTimeout\": 600,\n    \"CommitRate\": 50000\n  },\n  \"Logging\": {\n    \"EnableLogging\": true,\n    \"LogComponents\": [\n      { \"Id\": \"SOURCE_UNLOAD\", \"Severity\": \"LOGGER_SEVERITY_DEFAULT\" },\n      { \"Id\": \"TARGET_LOAD\", \"Severity\": \"LOGGER_SEVERITY_DEFAULT\" },\n      { \"Id\": \"TASK_MANAGER\", \"Severity\": \"LOGGER_SEVERITY_DEFAULT\" }\n    ]\n  }\n}\n\nThe FullLobMode: false setting combined with LimitedSizeLobMode: true is a common performance optimization — it handles most LOB columns efficiently while avoiding the full-scan overhead that comes from treating all LOBs as potentially massive.\nPhased cutover uses change data capture (CDC) to keep the source and target databases synchronized while the application continues running. Once the target is caught up and validated, traffic is switched over with minimal downtime — often under a minute.\nThis is the preferred approach for production systems where extended downtime isn't acceptable. The tradeoff is complexity: you're running two databases in parallel, which requires careful monitoring and a clear rollback plan.\nCDC works by reading the database transaction log and replicating changes to the target in near real-time. PostgreSQL exposes this via logical replication; MySQL uses binary log (binlog) replication; SQL Server uses CDC tables backed by the transaction log.\nFor PostgreSQL-to-PostgreSQL migrations, you can set up logical replication with a publication and subscription:\n-- On the source database\nALTER SYSTEM SET wal_level = 'logical';\nSELECT pg_reload_conf();\n\nCREATE PUBLICATION migration_pub FOR ALL TABLES;\n\n-- On the target database\nCREATE SUBSCRIPTION migration_sub\n  CONNECTION 'host=source-db.internal port=5432 dbname=myapp user=replicator password=secret'\n  PUBLICATION migration_pub;\n\nOnce the subscription is active, PostgreSQL streams all inserts, updates, and deletes from source to target. You can monitor lag with pg_stat_subscription:\nSELECT subname, received_lsn, latest_end_lsn,\n       (latest_end_lsn - received_lsn) AS lag_bytes\nFROM pg_stat_subscription;\n\nA lag of zero bytes means the target is caught up. That's your signal that the cutover window is ready.\nThe actual cutover has a predictable sequence: stop writes to the source, confirm the target has caught up, update connection strings, verify application connectivity, then remove the replication slot. Each step should be documented with a time estimate and a rollback step.\nWhat many migration guides leave out is the importance of a tested rollback. Before executing the cutover, run a dry run in staging that includes the rollback path. Can you repoint applications back to the source database in under five minutes? Is there a runbook that anyone on the team can follow at midnight? These aren't hypothetical questions — they're the difference between a controlled incident and a crisis.\nCommunication matters too. Coordinate the maintenance window with product teams and customer support. Even a migration with near-zero downtime should have a status page entry and a prepared message for users in case something unexpected occurs.\nA migration isn't done when the data lands in the cloud. It's done when you've confirmed the data is correct and the application behaves identically. Row count checks are the minimum — not the finish line.\nRun a checksum comparison on critical tables:\n-- Run on both source and target; checksums should match\nSELECT MD5(CAST((array_agg(t.* ORDER BY id)) AS TEXT))\nFROM your_table t;\n\nBeyond checksums, replay a sample of recent production queries against the target and compare execution plans. Query planner behavior can differ between environments — particularly if the cloud database was initialized without running ANALYZE or if index statistics are stale.\nMonitor application error rates and slow query logs for the first 48 hours post-migration. This window captures most regression issues before they compound into bigger problems. Set up alerting on database CPU, connection counts, and replication lag (if you've kept the source running as a fallback).\nMigrating an on-premises database to the cloud is a project with real complexity — but it's entirely manageable when you work through it systematically. Assess before you plan, plan before you execute, and validate before you celebrate. The teams that have the smoothest migrations are almost always the ones that invested the most time in the pre-migration phase, built a tested rollback, and resisted the urge to rush the cutover.\nIf you're starting this process, begin with a data inventory and a dependency audit this week. Even if the migration is months away, that groundwork shapes every decision that follows. The cloud isn't a destination you arrive at — it's a platform you migrate to with intention.",
-      "publishedAt": "2026-06-28T03:25:54.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "c1d4c8f6896a636d5fc77c96efeadc69f1fb79de3a7fc1dee793293476bce6fe",
-      "title": "GitHub Actions で terraform plan を実行して Claude Code にレビューさせてみた",
-      "url": "https://dev.classmethod.jp/articles/github-actions-terraform-plan-claude-code-review/",
-      "description": "GitHub Actions で terraform plan を実行して Claude Code にレビューさせてみた",
-      "publishedAt": "2026-06-28T03:23:14.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "be95f2ec2752dc7381712e6d899abd46ca72fe9c78e68c08b39cde35f755a7e9",
-      "title": "I switched 23 sites from JPEG to WebP/AVIF last month — here's what I learned",
-      "url": "https://dev.to/gpszxtzys_07fba0736e6ecac/i-switched-23-sites-from-jpeg-to-webpavif-last-month-heres-what-i-learned-l7m",
-      "description": "I spent last month migrating 23 client sites from JPEG/PNG to WebP and AVIF. Here's what I wish someone told me before I started.\nAVIF is about 30% smaller than WebP at the same quality level. But Safari support is still patchy — if your traffic is 40%+ iOS, you need <picture> tags with WebP fallback. No way around it.\nThe single biggest reduction came from capping max image width at 1200px and setting quality to 80. One site went from 9.4MB to 318KB per page — a 97% reduction — just from those two settings plus lazy loading.\nThe format switch was the cherry on top, not the cake.\nSmartImgKit — quick batch conversions in the browser. No uploads, no signup, drag and drop. Handles the 80% case where you don't need a CLI pipeline. Supports JPG, PNG, WebP, AVIF, GIF, BMP, TIFF.\nImageMagick — server-side batch jobs for when you need automation.\nSquoosh — one-off fine-tuning with visual comparison.\nSharp (Node.js) — build pipeline integration.\nEvery iPhone user's photos are HEIC. Most web tools crash on them. You need a converter that handles them before the pipeline — SmartImgKit's HEIC converter works locally in-browser, no uploads.\nFormat + max width + lazy loading = 80% of the gain. Everything else is diminishing returns. Don't over-engineer it.",
-      "publishedAt": "2026-06-28T03:19:29.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "82a602eec4e3fcff2447caa3aa479366d72194ef3630c4802874c42a725980a7",
-      "title": "Update on Zen — we now have a package ecosystem",
-      "url": "https://dev.to/jishith_mp_82b1b8f25ca17e/update-on-zen-we-now-have-a-package-ecosystem-68",
-      "description": "A few weeks back I shared some early Zen code examples. Since then, a lot has changed. We're now at v1.1.1 and the language actually has real tooling.\nWhat's new:\nFull CLI with package management\nzen publish - publish packages directly from CLI\nzen install -  install packages from the registry\nzen list - browse all published packages with pagination\nLanguage improvements\nStruct support with literals and returns\nRegex with POSIX ERE (matchRegex)\nFile I/O with binary support\nFFI bindings to C functions\n162 stdlib functions across math, strings, fs, os, http, crypto, path utilities\nPackage Registry (v1.0.0)\nJWT-based authentication\nGitHub-hosted packages\nSupport for both runnable apps and libraries\nSemantic versioning\nThe reactive variables concept from the first post is still there (that was my favorite feature), and now you can actually write real programs and share them with the community.\nFull docs: https://jishith-dev.github.io/zen-doc/site/\nInstall: curl -fsSL https://raw.githubusercontent.com/jishith-dev/Zen/main/install.sh | bash\nNext up: HTTP server APIs, better imports, and whatever the community asks for.\nOpen to feedback and collaborators 💻 \n✨ \n\n\n  \n  \n  zen #programming #compiler #llvm #packagemanager #opensource #programminglanguage",
-      "publishedAt": "2026-06-28T03:12:42.000Z",
-      "feedName": "Dev.to"
-    },
-    {
       "id": "da604b469cb087b3fa13b565c11e74f7b6ad05a15f978dde69fccb011430b832",
       "title": "I built an AWS access recertification engine that actually enforces the decision",
       "url": "https://dev.to/paramanandmallik/i-built-an-aws-access-recertification-engine-that-actually-enforces-the-decision-56dc",
@@ -55,182 +23,6 @@
       "description": "Your docs pipeline, from the terminal\n\n\nPaperQuire v0.2.0 ships with a full command-line interface. Everything you can do in the desktop app — render, template, brand — now works from your terminal.\nThis means you can automate document generation, integrate PaperQuire into CI/CD pipelines, and batch-process entire directories of Markdown without opening the GUI.\nIf you installed via Homebrew, the paperquire command is already on your PATH:\nbrew install --cask paperquire/paperquire/paperquire\n\nVerify with:\npaperquire version\n\nThe simplest render is just:\npaperquire report.md\n\nThis produces report.pdf in the same directory, using the default template.\nApply templates, set metadata, control output:\npaperquire report.md -t corporate --title \"Q2 Report\" --author \"Jane Doe\"\npaperquire spec.md --page-size a4 --margins 0.75,0.75,0.75,0.75 --no-toc\npaperquire draft.md --watermark \"DRAFT\" -o drafts/draft.pdf\n\nAll 22 flags from the desktop app's Document Setup panel are available. See the full list in the CLI Reference.\nPaperQuire works in Unix pipelines:\ncat notes.md | paperquire - --stdout > out.pdf\n\nUse - as the input file to read from stdin, and --stdout to write the PDF to stdout instead of a file.\nRender every Markdown file in a directory with one command:\npaperquire batch ./docs -o ./out\npaperquire batch ./project --glob \"**/*.md\" -t corporate\npaperquire batch ./docs --concurrency 8 --continue-on-error\n\nUse --dry-run to preview which files would be rendered without actually producing output.\nList, inspect, create, and share templates:\npaperquire templates list\npaperquire templates show minimal-clean\npaperquire templates init my-template\npaperquire templates export corporate -o corporate.pqt\npaperquire templates import ./shared-template.pqt\n\nWe also launched a community templates repo where you can browse all built-in templates and submit your own via pull request.\nDrop a .paperquire.yml in your project root and every render in that directory picks up your settings automatically:\ntemplate: corporate\ntoc: true\nh1-page-break: true\ncover:\n  title: \"Project Documentation\"\n  author: \"Engineering Team\"\n  company: \"Acme Corp\"\nbranding:\n  primary-color: \"#2563eb\"\n\nConfig files are resolved in order: global (~/.paperquire/config.yml) then project (.paperquire.yml walked upward), then CLI flags win.\nThe CLI makes it straightforward to add document generation to your build pipeline. A GitHub Actions example:\n- name: Generate docs\n  run: |\n    paperquire batch ./docs -o ./dist/docs -t corporate --continue-on-error\n\nUse --dry-run in your CI to validate Markdown and options without producing output — useful as a pre-merge check.\nThis is the foundation. Future CLI updates will include watch mode for live rebuilding, PDF merge for combining multiple documents, and deeper CI integrations.\nDownload v0.2.0 for macOS, Windows, or Linux\nCLI Reference for the full flag and command documentation\nCommunity Templates to browse and share templates\nOr install via Homebrew:\nbrew install --cask paperquire/paperquire/paperquire",
       "publishedAt": "2026-06-29T03:23:20.000Z",
       "feedName": "Dev.to"
-    },
-    {
-      "id": "e2ccf7f79ce3a73c3753f8841504cf9ca1e4a6f244287fe5ba845c194b645e8b",
-      "title": "「変化はチャンスです」──AWSの変わらないビルダー思想と自律型AIエージェントが回すフライホイール",
-      "url": "https://enterprisezine.jp/news/detail/24569",
-      "description": "アマゾン ウェブ サービス ジャパン（以下、AWSジャパン）は2026年6月25日～26日にわたって、年次カンファレンス「AWS Summit Japan 2026」を開催。初日の基調講演では、生成...",
-      "publishedAt": "2026-06-29T02:20:00.000Z",
-      "feedName": "EnterpriseZine"
-    },
-    {
-      "id": "bc05838f9e9bf2d67a8c78e27c92817929c1f30f46b5f3a491c5c9270f060d71",
-      "title": "実践企業に学ぶ生成 AI 導入の勘所 〜眠るデータを企業価値に変える〜 – AWS Local Executive Roadshow 博多編（#6/8）開催レポート",
-      "url": "https://aws.amazon.com/jp/blogs/news/local_executive_roadshow_6/",
-      "description": "こんにちは。Amazon Web Services Japan のソリューションアーキテクト、田中 里絵 です […]",
-      "publishedAt": "2026-06-29T01:57:55.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "1d852dcb494c72b773b69d520f0c74bc3da1fd2696dd72a1d36e89c551b44846",
-      "title": "AWS WAF Classic コンソールにアクセスする方法を教えてください",
-      "url": "https://dev.classmethod.jp/articles/tsnote-waf-classic-console-access-method/",
-      "description": "AWS WAF Classic コンソールにアクセスする方法を教えてください",
-      "publishedAt": "2026-06-29T01:54:28.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "246c5d1865ef104b0f6bb66d88e15a63747714a283bfe87f5ff5cf0bb38b663d",
-      "title": "uvでPythonパッケージの脆弱性監査(uv audit)とマルウェアチェック(UV_MALWARE_CHECK)を試してみた",
-      "url": "https://dev.classmethod.jp/articles/uv-audit-malware-check-supply-chain/",
-      "description": "Pythonパッケージ管理「uv」のセキュリティプレビュー機能を検証。uv auditによる脆弱性スキャンと、UV_MALWARE_CHECK=1によるマルウェアのインストール遮断手順を解説。uv単体でのサプライチェーン攻撃対策が可能です。",
-      "publishedAt": "2026-06-29T01:30:10.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "0ca7f9472377cfd22748c0f0b62c759dc100b856d7a55609846be96dd5d3394f",
-      "title": "CSSはどんどん進化している！ border-shapeプロパティを使うとボーダーをあらゆる形状に実装できます",
-      "url": "https://coliss.com/articles/build-websites/operation/css/connecting-circles-with-border-shape.html",
-      "description": "CSSで2つの円を線でつなぐボーダーを実装できると思いますか？ 可能になりました！ Chrome 147+のアップデートでサポートされたborder-shapeプロパティを使用すると、ボーダーにあらゆる形状（多角形・円など）を設定できます。 まずは、実際の動作をご覧ください。ドラッグの操作にはJavaScriptが使用されていますが、...",
-      "publishedAt": "2026-06-29T00:44:55.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "7d9f7155d10150f24d782d0c614ae2cb33c97223651b2cdaa2849df854dadc69",
-      "title": "数を増やしても一貫性を保つ、runn の API テスト構成設計 - カミナシ エンジニアブログ",
-      "url": "https://kaminashi-developer.hatenablog.jp/entry/runn-api-test-architecture",
-      "description": "こんにちは、ソフトウェアエンジニアの渡邉（匠）です。 「カミナシ 設備保全」の開発に携わっています。 以前、「40,000行のAPIテスト作成で学んだClaude Code Skillsの育て方」という記事を書きました。 AI を使って大量の API テストを生成した話です。 今回はその土台になっている、テストそのものの構成を紹介しま...",
-      "publishedAt": "2026-06-29T00:24:44.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "83470dd4dad9718428080e0f8e32d4f40f3ec7c8f9ab0aa690a8a75d665c0b6c",
-      "title": "古豪OPSWAT、重要産業のセキュリティ強化に向けて独自AI技術を披露　未知の脅威も即座に解析してインテリジェンスに変換",
-      "url": "https://enterprisezine.jp/news/detail/24571",
-      "description": "サイバーセキュリティの古豪OPSWATが、2026年6月17日に都内で事業戦略説明会を行った。東京でのツアーイベント「OP/X Tokyo 2026」開催に合わせて来日していた、創業者兼CEOのベニ...",
-      "publishedAt": "2026-06-28T23:00:00.000Z",
-      "feedName": "EnterpriseZine"
-    },
-    {
-      "id": "22a460c49839b65043617d18ff4ce029ec16d140063924cfd4193bd4b2fa666d",
-      "title": "ChatGPTへの「入力NGリスト」「Amazon S3侵害まで8分」　AI普及でセキュリティの“前提”が崩壊",
-      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2606/29/news051.html",
-      "description": "2026年上半期に＠ITで公開された記事の中から、セキュリティ系の話題で特に注目を集めた5本をランキング形式で紹介します。何が読者の関心を引いたのでしょうか。",
-      "publishedAt": "2026-06-28T23:00:00.000Z",
-      "feedName": "＠IT"
-    },
-    {
-      "id": "216a8d1ca4127de985bba20ba3c6a278c4ce57b30868cf729d732879db03b8bb",
-      "title": "週刊生成AI with AWS – 2026/6/22 週",
-      "url": "https://aws.amazon.com/jp/blogs/news/weekly-genai-20260622/",
-      "description": "6 月 22 日週の生成 AI with AWS 界隈のニュースをまとめてお届けします。Amazon Bedrock AgentCore の Web Search 一般提供やマネージドナレッジベース、AWS DevOps/セキュリティエージェントの新機能など、AI エージェントを本番で活用するためのアップデートが充実しました。ユナイテッドアローズの店舗 AI エージェント「SMART」の国内事例や、Kiro の新機能・GovCloud 認証取得まで、今週の注目トピックをぜひご覧ください。",
-      "publishedAt": "2026-06-28T22:34:21.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "2a9c6e3b4ede0c4fbd19281802e71fec6721485463146c018f4ce07db815d58e",
-      "title": "生成AIブームの反動？　「AIだけの脆弱性診断」を見限る企業が急増",
-      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2606/27/news019.html",
-      "description": "「AIに脆弱性診断を任せれば、人手不足を補いながら効率良くセキュリティを強化できる」。ソフトバンクをはじめ国内でも複数の企業がAIによる脆弱性診断サービスの立ち上げを発表する中、そんな期待を裏切る調査結果が明らかになった。",
-      "publishedAt": "2026-06-28T22:30:00.000Z",
-      "feedName": "＠IT"
-    },
-    {
-      "id": "d80a6265b9306affbbf3a0492a38facc5f866ee7317498958dde4966702d8126",
-      "title": "「MEGURI2040」に見る、船舶自動化「認知・判断・制御・監視」のアーキテクチャ設計",
-      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2606/17/news114.html",
-      "description": "船員の高齢化と人手不足に直面する内航海運。日本財団の「MEGURI2040」は、この課題に船舶の自動運航技術で挑む。単なる無人化ではなく、認知・判断・制御・監視を統合したシステム構築の本質とは。ミッションクリティカルな社会インフラを自律化する、究極のシステムアーキテクチャに迫る。",
-      "publishedAt": "2026-06-28T20:00:00.000Z",
-      "feedName": "＠IT"
-    },
-    {
-      "id": "9b5d9dbc7469dabd3f730c76fff2590858c13c0520940bd14c130c249e4fd1c7",
-      "title": "AWS Summit Tokyo 2026のIDバッジNFCタグを読み取ってみた - re:Invent と同じ仕様に見えた",
-      "url": "https://dev.classmethod.jp/articles/aws-summit-tokyo-2026-nfc-badge-reinvent-comparison/",
-      "description": "AWS Summit Tokyo 2026で配布されたIDバッジのNFCタグをNFC Toolsで読み取り、手元のre:Invent 2024バッジと比較しました。NFC Toolsで確認できる範囲では、タグタイプやメモリサイズなどが一致していました",
-      "publishedAt": "2026-06-28T15:32:03.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "671a13099b62d0809324c55f6c7da4c1a8d0fa0bece3bb3dc44b2e8d2393c3f4",
-      "title": "Deno 2.9正式リリース。起動が2倍速、消費メモリは半分に。WebViewを用いたデスクトップアプリが作れる「Deno Desktop」など",
-      "url": "https://www.publickey1.jp/blog/26/deno_292webviewdeno_desktop.html",
-      "description": "Deno 2.9正式リリース。起動が2倍速、消費メモリは半分に。WebViewを用いたデスクトップアプリが作れる「Deno Desktop」など JavaScript/TypeScriptランタイムのDenoを開発するDeno Landは、Deno 2.9正式版をリリースしました。 Deno 2.9は起動を2倍速にするなどの性能面での大幅向上や、Denoを基盤にJavaScriptやHTMLな...",
-      "publishedAt": "2026-06-28T15:14:57.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "36333b332680c6b717fbf956c86140eb63b19d0aa62b23631b6af0d75911da02",
-      "title": "AI エージェントフレームワーク Flue を試してみた",
-      "url": "https://azukiazusa.dev/blog/ai-agent-framework-flue/",
-      "description": "Flue は AI エージェントを構築するための TypeScript フレームワークです。ハーネス駆動のアーキテクチャを採用しており、エージェントの構築に必要な機能を包括的に提供しています。この記事では SRE エージェントを構築する例を通じて Flue の機能に触れていきます。 Flue は AI エージェントを構築するための TypeSc...",
-      "publishedAt": "2026-06-28T14:26:18.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "9e0436365574e2f44d1c1c88ef8d652e840b347d3d5bb78effc2f2d5658e11c5",
-      "title": "2026 Japan AWS Jr. Championsに選出されるまでにやったこと",
-      "url": "https://qiita.com/manaty/items/d29f08e4b8a1893961a2?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "はじめに\nはじめまして、マナティと申します！\nこの度、2026 Japan AWS Jr. Championsに選出いただきました。\n\n本記事では、選出までに取り組んできたことを、Challenge / Influence / Output の観点で振り返ります。\nこ...",
-      "publishedAt": "2026-06-28T13:14:51.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "d7cf44da91ba963609043cd36d06cd702bf8de8950be2a983bb8ab0b2239d2b9",
-      "title": "aws-vault vs Granted：macOSでAWSクレデンシャルを安全に管理するツール比較",
-      "url": "https://dev.classmethod.jp/articles/aws-vault-vs-granted-credential-management-macos/",
-      "description": "aws-vaultとGrantedの2つのAWSクレデンシャル管理ツールを比較します。macOS Keychain統合、セットアップ手順、マルチアカウント運用時のワークフローの違いを解説し、ユースケース別の選び方を紹介します。",
-      "publishedAt": "2026-06-28T12:39:57.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "8d7feee947802cf4d243fa86685a9626d07e28a3c88db8bfa90627d1c5c9fd6f",
-      "title": "AWS ParallelCluster で使う場合のある VPC エンドポイントを洗い出してみた",
-      "url": "https://dev.classmethod.jp/articles/aws-parallelcluster-required-vpc-endpoints/",
-      "description": "AWS ParallelCluster で使う場合のある VPC エンドポイントを洗い出してみた",
-      "publishedAt": "2026-06-28T12:26:03.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "aa305f6205beed321e8a4b121a5d486dd3a5c6e45d01b37bc60d1dea4129af1f",
-      "title": "Rustの安定ABI問題と、その先にある世界観 ── crABIが目指すもの",
-      "url": "https://zenn.dev/z001_001/articles/e1b0171dc70100",
-      "description": "Rustの安定ABI問題と、その先にある世界観 ── crABIが目指すもの\nRustはメモリ安全性と高パフォーマンスを両立するシステムプログラミング言語として急速に普及しています。LinuxカーネルへのRustサポート導入、Androidコアコンポーネントのリライト、そして各種OSや組み込み領域での採用拡大と、その勢いは止まりません。\nしかし、Rustにはシステムソフトウェアのエコシステムにとって根本的な課題が存在します。安定ABIの欠如です。\nこの記事では、RustのABI問題が具体的に何を意味し、どんな実害をもたらすのかを整理した上で、それを解決しようとするRust公式の実験的...",
-      "publishedAt": "2026-06-28T08:50:41.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "1580df8522b4712e294da02f1d340b6d2107818c3099c1dd6f53a64c178cc611",
-      "title": "AWS Community Buildersでもらったクレジットの適用方法と使い道を考える",
-      "url": "https://dev.classmethod.jp/articles/aws-community-builders-credit-usage/",
-      "description": "AWS Community Buildersでもらったクレジットの適用方法と使い道を考える",
-      "publishedAt": "2026-06-28T08:33:03.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "83e9ccc723b1cc89320b9d799ad778d98160f8a0d747c8c9eb08a15f700b7bb6",
-      "title": "AWS Configの高度なクエリを使ってAWSリソースの棚卸しをする",
-      "url": "https://dev.classmethod.jp/articles/aws-config-advanced-query-inventory/",
-      "description": "AWS Configの高度なクエリを使ってAWSリソースの棚卸しをする",
-      "publishedAt": "2026-06-28T07:24:07.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "ba5bedf06aae896a765d1a21dd67a6f40fc2688fd64496cdb0790b721c47a518",
-      "title": "Rustによる開発で使うツールまとめ",
-      "url": "https://qiita.com/hyperfinitism/items/54d9dc3b81e2d59982bb?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "Rustにおけるバージョン管理，ライセンス管理，テスト，ドキュメンテーション，CI/CDのためのcrate，CLIツール，GitHub Actionなどについてまとめた．本記事では以下を扱う．\n\nCargoプロジェクトにおける Cargo.toml / Cargo.lock...",
-      "publishedAt": "2026-06-28T02:47:32.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "65533d9d26081b896b018b7c3dd24b8f9b05600ab9537e1db5f8be9db8b28a72",
-      "title": "JAWS-UG神戸支部CTF Game大会参加レポ",
-      "url": "https://qiita.com/inorin__62/items/38acc7d01417b647eb13?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "みなさんこんにちは。\nアクセスキー流出していますか？\n6/13にハイブリットで開催された、JAWS-UG神戸支部のCTFイベントに参加したので、2週間以上経過してしまいましたが、その感想を書いていきたいと思います。\n（JAWS-UG神戸支部のみなさん遅くなって大変申し訳あり...",
-      "publishedAt": "2026-06-28T02:35:29.000Z",
-      "feedName": "Qiita"
     },
     {
       "id": "3e23da3ae0e8f75b49b3707f6b5fc9bc90673d60dc3db73dc3f3b99a1f706243",
@@ -484,62 +276,6 @@
       "description": "ゲーム開発でAI活用が広がる中、ゲームエンジニアはAIとの役割分担をどう考えているのか。Hiraku agentの調査では、ゲームエンジニアがAIに代替されると考える業務と、代替されないと考えるスキルが明らかになった。",
       "publishedAt": "2026-06-29T04:00:00.000Z",
       "feedName": "＠IT"
-    },
-    {
-      "id": "c16ed523e745631e5f87d3707cd562b246bcfc04c580fdecbaf57944725a03d3",
-      "title": "React初学者が学ぶ、Reactのキホン part-1",
-      "url": "https://qiita.com/kucd1230/items/ba52f16af01b4d2f0e7d?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "はじめに\nReactを触ったことのないFEによるリファレンスを読んだまとめになります。\n最近はAIにコードを書いてもらう場面がほとんどだと思うものの、知識はないと後々自分の首を絞めることになるだろうと思い、ある程度の知識はつけようと思ってスキマ時間に学習をはじめた内容の備...",
-      "publishedAt": "2026-06-29T01:13:55.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "a75174a85066b9e84bda5fc2c1bdb6a58cf8e564eb199ffdf9113600cf5e0978",
-      "title": "Claude Code / Codexを安全に動かすためのmacOSでのローカルVM基盤",
-      "url": "https://zenn.dev/inventit/articles/secure-ai-agent-local-vm",
-      "description": "はじめに\nClaude Code や Codex のような AI Agent を開発に使う機会が増えてきました。\nコードの修正、コマンド実行、Terraform の確認、AWS CLI の操作などを自然言語で依頼できるのは便利です。一方で、AI Agent にローカルマシン上で自由にコマンドを実行させることには、それなりの怖さがあります。\nたとえば、以下のようなものをそのまま触らせるのは避けたいです。\n\nホスト macOS のホームディレクトリ全体\n個人の ~/.aws\n\nホスト macOS 側の SSH 秘密鍵\nTerraform の apply 権限\n開発者本人の権限で操作できる...",
-      "publishedAt": "2026-06-29T01:02:42.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "b6550d6389a7923f7587e2c37341c9a1d8770b6e1f3a6520b5432824699d0ecc",
-      "title": "イベント駆動アーキテクチャ導入の設計判断",
-      "url": "https://zenn.dev/wn_engineering/articles/dc809eed504f90",
-      "description": "この記事はウェルスナビ 2026年6月テックブログ企画\n「選択の物語：金融サービスのシステム設計判断をひもとく」の特集記事です。\n\n\n はじめに\nこんにちは、ウェルスナビでバックエンドエンジニアを担当している星原です。\nウェルスナビのバックエンドは複数のマイクロサービスで構成されています。サービス間の連携をどう設計するかは、障害耐性・スケーラビリティ・開発のしやすさに直結する重要な判断です。\n本記事では、サービス間連携にイベント駆動アーキテクチャを採用するにあたって直面した4つの設計判断を紹介します。「なぜその選択をしたのか」というトレードオフの観点を中心に解説します。\n実装の詳細につ...",
-      "publishedAt": "2026-06-29T01:00:09.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "38f539c2c91b918fec36f84ee1092a369f226df439fbf9b373e361250a9c8b33",
-      "title": "速報！！StreamlitがAWSにサーバーレスでホスティングできるようになった！！ #LambdaMicroVMs",
-      "url": "https://qiita.com/moritalous/items/2f9ad10282775dcbd647?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "きたきたきた～\n生成AIアプリのフロントエンドとして鉄板のStreamlitですが、AWSにデプロイするには諸々の制約があり、Fargateで行うのが一般的だと思います。Lambda Web Adapterでなんとかならないと、10回ぐらい試したのですが、WebSocket...",
-      "publishedAt": "2026-06-28T22:08:23.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "94bec53e8d0758ced72424b4c2e61188a3ed7e11eb3f289bb4410f830b99276a",
-      "title": "パフォーマンス改善は、ユーザーが何を見たいか考えるところから",
-      "url": "https://zenn.dev/aun_phonogram/articles/b04c96117956fd",
-      "description": "はじめに\n前回、Chrome 拡張機能の「どこホスティング」を作って、Chrome ウェブストアに公開するまでを書きました。\nhttps://zenn.dev/aun_phonogram/articles/f2a44ea154ec96\n今回はその続きです。\n公開した後も気が向いたときに検出精度を改善していたのですが、せっかく自分で作ったもので自由に弄れるので、フロントエンドの学びの題材としてポップアップのパフォーマンス改善に取り組んでみました。\n「どこホスティング」は、今見ているサイトの公開 DNS 情報から、サイト・メール・ネームサーバーがどこのサービスに預けられていそうかを表示す...",
-      "publishedAt": "2026-06-28T22:00:08.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "82dff10734f6d12131e2cd89a363b5814fabc9b22c694bd879496ef37816e1fb",
-      "title": "画像一括生成システムの設計進化記録 〜ECS・Lambda・SQS・EventBridgeで100〜300件をさばく〜",
-      "url": "https://qiita.com/Nao52/items/d1601e07ba3a125bc714?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "■ この記事はこんな人におすすめ\n\n外部APIを使った非同期処理の設計に悩んでいる人\nタイムアウトや障害に強いワーカー構成を構築したい人\nAWSのECS・Lambda・SQS・EventBridgeを組み合わせて使いたい人\nピーク時間帯のパフォーマンス劣化問題を解決したい...",
-      "publishedAt": "2026-06-28T12:06:41.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "2ac9e4e60260225ab0057ed84965a32db1ff84cea41e9f336cb1174499d2786c",
-      "title": "AWSパートナー表彰プログラムとFPTジャパンの受賞者のご紹介",
-      "url": "https://qiita.com/lexuanhieu/items/e5b000c69368762b7080?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "はじめに\nAWSパートナー企業で活躍するエンジニアの皆様、日々の技術研鑽お疲れ様です。\n2026年6月25日〜26日の2日間にわたり、幕張メッセにて国内最大のクラウドカンファレンス 「AWS Summit Japan 2026」 が開催されました。生成AIやAIエージェン...",
-      "publishedAt": "2026-06-28T04:40:00.000Z",
-      "feedName": "Qiita"
     },
     {
       "id": "ed1abda82e02502f6d7561cc34b6d2b4189d8d6a812f021c461e3e75631789f6",
@@ -6988,6 +6724,358 @@
       "url": "https://zenn.dev/raamenwakamatu/articles/software-architecture-fundamentals-review",
       "description": "!\n書籍情報\n\n\n書名：ソフトウェアアーキテクチャの基礎 第2版 ―エンジニアリングに基づく体系的アプローチ\n\n著者：Mark Richards, Neal Ford\n\n訳者：島田浩二\n\n出版社：オライリー・ジャパン\n\n\n\n はじめに\n「ソフトウェアアーキテクチャの基礎」を読んだ。\nAIエージェントの普及によって、開発者一人がカバーする範囲が広がっている。社内アプリであればフロント・バック・インフラをひとりで担当するケースも珍しくなくなってきた。実装はAIに任せる分、自分たちに求められるのはインフラ構成の判断・コードレビュー・セキュリティの担保など、より上位の視点だと感じている。いわばA...",
       "publishedAt": "2026-07-26T03:47:06.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "eabc59c5e50d26f7a5a58fbea67d1f18fb9326ba531fb570cbe238aedfbf7b1c",
+      "title": "2024...",
+      "url": "https://dev.to/divineamunega/2024-20oi",
+      "description": "I really didn’t see this article coming. I didn’t plan to write a Year in Review, or make a post, or a video, or a collage, or a thread, or a recap — or whatever you guys call it. I didn’t see the point. I thought, “Who wants to read this? I didn’t make 1 million Naira, I didn’t buy a MacBook, I didn’t land a full-time role, and I didn’t get to say, ‘Thank you, JavaScript, TypeScript, CSS, or Web3.’”\nBut one thing I did get to say was, “Thank You, God.”\nI thank God for the experiences I had this year, for the people I met, for my friends, my parents, and myself. I eventually decided to write this because it just felt right (can’t elaborate further). Plus, it’s a nice way to keep a record of myself for 2024. So, read on. Or don’t.\nLast year was all about growth and learning for me. Cybersecurity wasn’t even on my radar at the start of the year, but here I am, going into it thanks to a friend who motivated me (and as a bonus, Cybersecurity is actually my minor in school). I also started exploring Web3 — from just scratching the surface to joining an academy to learn more in-depth, all for free. Don’t worry; you’ll see results this year.\nMy mindset has completely shifted. I’ve grown bolder and more confident, knowing I can take on anything I set my mind to. Whatever it is, I’ll make it work. I’ve also learned to stop blaming others (or circumstances) for my failures and take full responsibility. This shift has made me more determined than ever to work harder and achieve more.\nI had some wins too. I completed my two-year-long diploma in Software Engineering at Aptech, which feels like a huge milestone. I also got my first gigs, which taught me a lot in software development and gave me my first taste of spending money I earned myself. Let’s just say — it feels good lol.\nThis is the simplified version of how I spent 2024. I think I’ve found direction now. I know where I’m going (not that I was lost last year, lol), but things feel clearer. I won’t lie, I’m scared of the work I need to do this year, but I’m not backing down or complaining. More lessons, more experiences, more projects, and more wins — here’s to all of that in 2025.\nHappy New Year!",
+      "publishedAt": "2026-07-29T02:22:53.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "a204846ff1a87993c8b7c6db38d64396f35549f61b93134d7b233d2455710199",
+      "title": "I learnt Docker so you don't have to",
+      "url": "https://dev.to/divineamunega/i-learnt-docker-so-you-dont-have-to-45n8",
+      "description": "I lied.\nI didn’t learn Docker so you don’t have to.\n\nI learned it because it’s genuinely fun and incredibly useful if you’re serious about a career in software engineering.\nSo let’s get into it. What is Docker.. why does everyone keep saying “containers” when talking about it? What is an image? Can Docker take pictures? What is the importance of Docker? Why does my code break on prod when i run git push? All these and more I’ll answer in this here.\nDocker is an open-source containerization platform that allows developers to package applications and all their dependencies into a standardized, isolated unit called a container. This ensures the application runs consistently and reliably across any computing environment, from a developer's laptop to a testing server or a production cloud platform, effectively solving the \"it works on my machine\" problem.\nWhen developers build applications, they rarely start from scratch. Instead, they rely on existing code, packages, and tools to move faster.\nFor example, if I were building an e-commerce site, I’d probably use:\na Node.js runtime (because I’m more comfortable with TypeScript),\n\n\nSanity as a CMS,\n\n\nClerk for authentication,\n\n\nand other libraries depending on the features I need.\n\n\n\nBefore that application can even run, all of these pieces must be present and correctly configured. If any one of them is missing the runtime, a package, an environment variable the application simply won’t work.\nAll the packages, tools, and software that an application needs in order to run are called dependencies.\nThis poses a big problem during hosting.\nYour local machine already has a lot of things installed: a specific Node.js version, system libraries, environment variables, and cached dependencies. The server you deploy to does not. It starts clean.\nSo when you push your code to production, you’re not just deploying your application, you’re implicitly assuming that the server has the same environment you were developing in.\nMost of the time, that assumption is wrong.\nThat’s why:\nyour app works locally but crashes in production,\n\n\na dependency behaves differently on the server,\n\n\na package installs fine on your machine but fails in CI,\n\n\nor a minor OS difference suddenly becomes a runtime bug.\n\n\n\nThis isn’t a coding problem.\n\nIt’s an environment problem.\nAnd historically, developers tried to solve it with:\nlong setup docs,\n\n\nshell scripts,\n\n\nmanual server configuration,\n\n\nor “just install Node v20 and hope for the best”.\n\n\n\nThese approaches don’t scale, they drift over time, and they break silently.\nThis is the exact problem Docker was built to solve.\nDocker was built to let developers define their runtime environment as code and ship it alongside the application, so the same environment can be reproduced across development, CI, staging, and production.\nA Docker image is a read-only template that contains everything needed to run an application: the filesystem, runtime, libraries, and the instructions for how the application should start.\nA Docker container is what you get when that image is executed. It’s the running form of the image, isolated from the rest of the system, but using the exact environment defined inside the image.\nYou can start multiple containers from the same image, each behaving independently, even though they all originate from the same definition.\nSimply put, think of it like this: the Docker image is the recipe, and the Docker container is the cooked food. The recipe tells you exactly how the meal should be made. The container is the meal while it’s being eaten.\nDocker images are built using the Docker CLI and a file called a Dockerfile.\nA Dockerfile is a plain text file that contains a sequence of instructions describing what the image should look like: which base image to start from, which dependencies to install, which files to copy into the image, and how the application should be started.\nWhen an image is built, everything defined in the Dockerfile becomes part of that image. From that point on, the environment described by the image does not change. If you need to update a dependency, modify the filesystem, or alter how the application starts, you don’t change the image directly. You update the Dockerfile and build a new image.\nThat’s why it’s called an image.\nThis immutability is intentional. It’s what makes Docker environments predictable and reproducible.\nSo the problem Docker solves is simple.\nDocker brings consistency to development workflows.\nWhen the environment stops changing, an entire class of bugs disappears.\nThis is the first part of a multi-part series on Docker. In the next parts, I’ll build on this foundation and get into how Docker is used in practice.",
+      "publishedAt": "2026-07-29T02:22:49.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "dd300942abf189b4ed9fc8b03075bd8c54ad263f004fd1dd7daaa2343444667e",
+      "title": "I Tracked Every Visitor for 24 Hours. A 1975 Biology Paper Explained the Results.",
+      "url": "https://dev.to/kazutaka-dev/i-tracked-every-visitor-for-24-hours-a-1975-biology-paper-explained-the-results-ign",
+      "description": "Yesterday I pulled every single event my analytics recorded for one full day and read it line by line. Not a dashboard summary — the raw per-user event stream for all 50 sessions.\nHere's what a day of \"traffic\" actually looks like for a small SaaS:\n\n\n\n\n\n\n\n\n\nSessions recorded\n50\n\n\nTraceable to a known bot pattern\n34\n\n\nPlausibly human\n16 (one of which was me)\n\n\nSigned up\n5\n\n\nPaid\n1\n\n\n\nThe interesting part isn't the ratio. It's which of those 16 humans paid, and how fast. Because a peacock's tail predicted it.\nOne visitor found a blog post of mine through a Google search. Here is their entire session, timestamped from the moment they landed:\n\n\n\nElapsed\nWhat happened\n\n\n\n\n0:00\nLanded on a technical blog post from Google organic search\n\n\n0:22\nClicked through to the login page\n\n\n0:37\nSigned up with GitHub OAuth\n\n\n1:00\nPasted a repo URL, validation passed\n\n\n1:45\nOpened checkout\n\n\n3:24\nPaid $5\n\n\n4:20\nStarted generating a video\n\n\n14:04\nVideo finished\n\n\n14:16\nShared it to Hacker News, then watched it start to finish\n\n\n\nFirst visit. No prior session. No retargeting. No email nurture sequence. They read something I wrote, decided I was credible, and were a paying customer before the kettle boiled.\nMeanwhile, here's what else arrived that day.\nEleven sessions from Singapore. Windows and Linux, Chrome, each one hitting exactly one blog post, each producing exactly four events — first_visit, session_start, page_view, scroll — with 0.0 seconds of engagement time. Same fingerprint, eleven times.\nSix sessions from Ashburn, Virginia — which is to say, from AWS us-east-1. Four of them arrived inside a two-minute window, each claiming a different referrer: everystockphoto.com, findly.tools, zhongsou.com, deeperweb.com. Four different \"sources\", one datacenter, 120 seconds.\nFour sessions from Sapporo, Japan. Linux, Chrome, landing on the homepage at 01:02, 07:21, 14:47, and 21:27 — roughly every six to seven hours, like a cron job. Each reported 1.3–1.4 seconds of engagement, which is what a bot looks like when it has learned that zero engagement gets it filtered.\nFour sessions with no geography at all. No country, no city, no OS. Three fired simultaneously at 15:54, walking different blog URLs.\nEvery one of those referrers is technically a backlink. Every one of them shows up in a traffic report as a \"referral channel\". Not one of them was a person.\nIn 1975, the biologist Amotz Zahavi published the handicap principle in the Journal of Theoretical Biology. The puzzle he was solving: why do peacocks grow tails that make them slower and more visible to predators? His answer was that the handicap is the message. Any peacock can be born; only a genuinely fit one can afford to drag that thing around and survive. The cost is what makes the claim impossible to fake.\nTwo years earlier and in a completely different field, Michael Spence published \"Job Market Signaling\" in the Quarterly Journal of Economics — the work that later won him a Nobel. Same structure: an employer can't observe your ability, but a degree is cheaper to obtain if you're capable, so the cost of acquiring it separates the capable from the rest.\nThe idea reached marketing quickly. Phillip Nelson argued in 1974 that advertising works as information even when the ad says nothing. Paul Milgrom and John Roberts formalized it in the Journal of Political Economy (1986, 94(4), 796–821): introductory price and deliberately uninformative advertising spend can both function as credible quality signals, because only a firm expecting repeat purchases can afford to burn the money. Amna Kirmani and Akshay Rao gave the field its canonical review in the Journal of Marketing — \"No Pain, No Gain\" (2000, 64(2), 66–79), which is still the map of this territory. Brian Connelly and colleagues broadened it across management research in 2011.\nThe title of that Kirmani and Rao paper is the whole thesis. No pain, no gain. A signal that costs nothing to send carries no information, because anyone can send it. Economists call the worthless kind cheap talk.\nOnce you have that lens, \"which marketing channel should I invest in\" stops being about traffic volume and becomes a single question: how hard is this signal to counterfeit?\n\n\n\nSignal\nCost to produce\nCost to fake\nWhat it got me\n\n\n\n\nAuto-submission to AI tool directories\n~2 min form\n~2 min form\nBot traffic, spam referrers, zero revenue\n\n\nReferral \"backlinks\" from aggregator sites\n$0\n$0\n6 datacenter sessions in 2 minutes\n\n\nPaid newsletter placement\nMoney only\nMoney only\nReal humans, 1 signup, no purchase\n\n\nA technical article that earns a search ranking\nWeeks of writing + indexing\nWeeks of writing + indexing\nA customer in 3 minutes 24 seconds\n\n\n\nThe directory listings aren't fraudulent — they're just cheap talk. Getting listed proves nothing about my product, because getting listed requires nothing. So the market correctly ignores them, and the only entities that traverse those links are crawlers.\nThe blog post is expensive in exactly the way Zahavi meant. To rank for a query a developer actually types, I had to write something a developer actually wanted, and then wait weeks while Google decided whether to believe me. I can't shortcut that with a form submission. Which is precisely why someone who arrives through it is willing to hand me money 204 seconds later.\nThis also explains something that had been bothering me: links from dev.to, Medium, and Hashnode are nofollow ugc and — as I've measured on my own rankings — don't move search position at all. Of course they don't. Anyone can post anywhere. The platforms know it, so they mark every outbound link as unvouched. Cheap talk, formalized in an HTML attribute.\nI build RepoClip, which generates promotional videos from GitHub repositories. Writing this article forced me to notice what my product actually is.\nThe video's informational content is modest — it's a minute of narrated visuals about a codebase. But that was never the point. A demo video is a costly signal attached to a repository. It says: someone cared enough about this project to produce one. Anyone can write a README. Not everyone bothers with a video. That gap is the entire message, and it's the same gap as the peacock's tail.\nWhich reframes my own pricing. The free tier watermarks the output; paying removes it. I used to describe that as a feature difference. It isn't. Paying to remove the watermark is the customer buying a costly signal for their own project — spending money so that the people evaluating their repo can see they spent money. My pricing page has been selling a resolution bump when it should have been selling credibility.\nAnd note what my 3-minute customer did at 14:16, immediately after the video finished: they posted it to Hacker News. They didn't buy a video file. They bought something to show people.\nStop counting directory listings as distribution. They're a bot magnet. I'll keep the ones that require actual editorial review and drop the rest from the plan.\nTreat blog posts as the primary channel, not the content-marketing side quest. One post produced one customer in one day. Nothing else did.\nRewrite the paid-tier copy around signaling instead of specs. Not \"1080p, no watermark\" — \"show people you meant it.\"\nFix my bot filter. My standard exclusion rule was \"zero engagement and three events or fewer.\" The Singapore cluster sends four events. The Sapporo cluster reports 1.4 seconds. I was under-counting bots by roughly 3x, which means every conversion rate I've calculated for months has been quietly wrong in my favor.\nThat last one is the real lesson of reading raw event logs instead of dashboards. Half of what I thought was an audience was infrastructure talking to itself.\nReferences\nZahavi, A. (1975). Mate selection — a selection for a handicap. Journal of Theoretical Biology, 53(1), 205–214.\nSpence, M. (1973). Job Market Signaling. Quarterly Journal of Economics, 87(3), 355–374.\nNelson, P. (1974). Advertising as Information. Journal of Political Economy, 82(4), 729–754.\nMilgrom, P., & Roberts, J. (1986). Price and Advertising Signals of Product Quality. Journal of Political Economy, 94(4), 796–821.\nKirmani, A., & Rao, A. R. (2000). No Pain, No Gain: A Critical Review of the Literature on Signaling Unobservable Product Quality. Journal of Marketing, 64(2), 66–79.\nConnelly, B. L., Certo, S. T., Ireland, R. D., & Reutzel, C. R. (2011). Signaling Theory: A Review and Assessment. Journal of Management, 37(1), 39–67.\nI run RepoClip, which turns GitHub repos into demo videos. If you've read your own raw event logs recently and found something similar, I'd like to hear about it.",
+      "publishedAt": "2026-07-29T02:10:29.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "051c8f91fa6dd4eb9c30fec8e88fcfe146b69b647e4aa4f9c737f7c815b26a08",
+      "title": "The parts of building an MCP server that the tutorials skip",
+      "url": "https://dev.to/parkerrrrr/the-parts-of-building-an-mcp-server-that-the-tutorials-skip-3n07",
+      "description": "Building your first Model Context Protocol server takes about twenty minutes. The official quickstart is genuinely good: npm install, register a tool, connect a stdio transport, and Claude or Cursor can call your code. Hello, world.\nThen you try to make it something other people can actually use, and you fall off a cliff.\nI know the cliff is real because someone measured it. An April 2026 scan of 2,181 remote MCP endpoints found 52% of them completely dead, and only about 9% fully healthy. These aren't abandoned toys — they're servers people shipped and expected to work. They didn't die from protocol bugs. The protocol is the easy part. They died from everything around the protocol, which is exactly what the tutorials skip.\nHere are the parts that actually matter, and how I handle each. There's a small MIT-licensed starter kit at the bottom that ships all of it, but the ideas are portable to any stack.\nstdout is not yours\n\n\nThe first one bites everybody. On the stdio transport, stdout is the JSON-RPC channel. A single stray console.log — yours, or a dependency's — injects a line into the protocol stream, and the client dies with a cryptic JSON parse error that points nowhere near the actual console.log.\nThe fix is one word: log to stderr.\n// stdout is the protocol channel on stdio. Log to stderr ONLY.\nconsole.error(`${SERVER_INFO.name} v${SERVER_INFO.version} ready on stdio`);\n\nThat's it. But you have to know it, and no quickstart tells you, because the quickstart never logs anything.\nWhen a tool throws, the default experience is terrible: the agent sees internal error and cannot tell an auth failure from a bad argument from an upstream 500. It can't decide whether to retry, fix its input, or give up — so it often retries a doomed call in a loop and burns your API budget overnight. That \"quiet retry\" is one of the most-cited ways agents rack up cost in production.\nThe fix is a typed error that carries a machine-readable code, and a wrapper that turns a throw into a proper MCP error result instead of a dropped connection:\nexport class ToolError extends Error {\n  constructor(public readonly code: ToolErrorCode, message: string) {\n    super(message);\n  }\n}\n\n// every handler funnels through this:\nexport function toToolResult(err: unknown) {\n  const e = err instanceof ToolError ? err : new ToolError(\"internal\", String(err));\n  return { isError: true as const, content: [{ type: \"text\", text: `[${e.code}] ${e.message}` }] };\n}\n\nNow the agent sees [forbidden_host] Host \"x\" is not in ALLOWED_FETCH_HOSTS and can actually reason about it. Legibility is a feature you build for the model, not just the human reading logs.\nThe moment you write a tool that takes a URL and fetches it, you've built a potential SSRF proxy: an agent (or a prompt-injected one) can point it at http://169.254.169.254/ or your internal admin panel and read the response. A fetch tool without a host allowlist is a security incident waiting for a trigger.\nSo the example fetch tool refuses anything it wasn't told to allow, plus enforces https and a hard timeout:\nif (parsed.protocol !== \"https:\") throw new ToolError(\"invalid_input\", \"https only\");\nif (!allowedHosts().includes(parsed.hostname))\n  throw new ToolError(\"forbidden_host\", `${parsed.hostname} is not allowlisted (SSRF guard).`);\n\nconst controller = new AbortController();\nconst timer = setTimeout(() => controller.abort(), timeout); // no unbounded hangs\n\nThree guards, none of which the \"here's a tool that calls an API\" tutorial includes.\nSurvey data from 2026 is blunt: OAuth is the single biggest blocker for production MCP servers, over half of remote servers fall back to static keys, and OAuth failures tend to be silent — the hardest kind to debug.\nYou don't need full OAuth to get remote-safe. You need auth that fails closed and tells you why. Bearer tokens, done properly, are the right first step:\nif (tokens.length === 0) {\n  // An HTTP MCP server with auth off is the default that gets scraped. Refuse to run open.\n  return reject(\"No MCP_BEARER_TOKENS configured; refusing all requests.\");\n}\n// ...constant-time compare, real 401 + WWW-Authenticate header, never log the token.\n\nThe important word is closed. If you forget to configure tokens, the server rejects everything rather than quietly serving your tools to the internet. Full delegated OAuth 2.1 — per-user scopes, token exchange, refresh — is a real, larger job for public multi-tenant servers; the mistake is pretending a hand-rolled flow is that, or shipping with auth off \"for now.\"\nHere's the subtle one behind a lot of those 52%-dead endpoints. MCP's streamable HTTP transport can hold session state in process memory. Deploy that to anything that scales to zero or spreads load across instances — Lambda, Cloud Run, Fly, Workers — and the follow-up request lands on a cold instance that never saw the session. The client hangs. No error, no log, just dead.\nThe cheap fix is to not hold session state at all: build a fresh server and transport per request.\napp.post(\"/mcp\", bearerAuth, async (req, res) => {\n  const server = buildServer();\n  const transport = new StreamableHTTPServerTransport({ sessionIdGenerator: undefined }); // stateless\n  res.on(\"close\", () => { transport.close(); server.close(); });\n  await server.connect(transport);\n  await transport.handleRequest(req, res, req.body);\n});\n\nIf you genuinely need cross-request state later, back it with Redis or a durable object keyed by session id — never a module variable. But start stateless. It's the shape that survives the platform you'll actually deploy on.\nThe last habit is the cheapest: when people do write tests for MCP tools, they test the demo — call the tool, assert the happy result. But every section above describes a guard, and a guard you haven't tested is a guard you don't have. The tests that earn their keep assert that the server refuses correctly:\nit(\"rejects a host that is not allowlisted (SSRF guard)\", async () => {\n  await expect(\n    httpGetJson({ url: \"https://evil.example.com/x\" }),\n  ).rejects.toMatchObject({ code: \"forbidden_host\" });\n});\n\nit(\"rejects non-https URLs\", async () => {\n  await expect(\n    httpGetJson({ url: \"http://api.github.com/x\" }),\n  ).rejects.toMatchObject({ code: \"invalid_input\" });\n});\n\nNotice what's being asserted: not just that it throws, but that it throws with the right machine-readable code — because that code is the contract from section 2, the thing the agent reasons about. If a refactor ever turns forbidden_host into a generic internal, the type checker won't care, the happy-path test won't care, and your agent quietly loses the ability to tell \"blocked by policy\" from \"server bug.\" This test is the only thing standing there.\nSame principle for auth: the test worth writing is the one where no token is configured and the server refuses everything. Fail-closed is a behavior; pin it.\nNone of this is hard once you've named it. That's the whole point: the failure mode isn't difficulty, it's invisibility — every one of these is missing from the tutorials, so everyone rediscovers them the same way, in production, from a hanging client.\nI packaged all six into a small, MIT-licensed TypeScript starter — stdio + streamable HTTP, the fail-closed bearer auth, the legible ToolError, the SSRF-guarded example tool, the refusal tests, and a DEPLOYMENT.md that walks the cold-start problem. It builds, it's tested, and it's meant to be read top to bottom in one sitting:\n→ https://github.com/park11innyc-lgtm/mcp-server-starter-kit\nClone it, delete what you don't need, and skip the cliff.",
+      "publishedAt": "2026-07-29T02:08:23.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "8f1a7bdfd84a7a04fab0dd0bcde8e0c750f79011bad99ccd9f77afeb8c7ac754",
+      "title": "7 Lessons I Learned While Building an Open-Source React Component Library",
+      "url": "https://dev.to/vladyusha/7-lessons-i-learned-while-building-an-open-source-react-component-library-2hgn",
+      "description": "A few weeks ago, I started building Motoko UI, an open-source React component library.\nThe goal sounded simple: build beautiful, reusable components.\nThe reality was very different.\nHere are seven lessons I've learned so far.\nThe first few components took only a couple of days.\nThe documentation took longer.\nThe installation flow took longer.\nThe registry took longer.\nIt turns out that a component library is much more than a collection of components.\nA beautiful component is useless if developers struggle to install it.\nI quickly realized that reducing setup time was more valuable than adding another animation.\nThat's why I invested time in a registry and simple installation flow.\nI used to think documentation came after development.\nNow I think documentation is development.\nIf users can't quickly understand how to use a component, the component effectively doesn't exist.\nInstead of waiting until everything was perfect, I started shipping small releases.\nEvery release adds a few components, fixes issues, and improves documentation.\nThat momentum makes the project feel alive.\nEvery new component introduces new decisions:\nspacing\nshadows\ncolors\nborder radius\nanimation timing\nWithout clear design principles, the library quickly becomes inconsistent.\nSome of the best ideas didn't come from me.\nThey came from developers trying the project and asking:\n\"What if this component supported...?\"\nThose conversations improve the library more than coding alone.\nThere's always another component.\nAnother improvement.\nAnother refactor.\nI've stopped thinking about \"finishing\" the library.\nNow the goal is simply to make it a little better with every release.\nBuilding Motoko UI has already taught me far more than I expected.\nWhether the project ends up with 100 stars or 10,000, the experience of designing, documenting, and maintaining an open-source library has been worth it.\nIf you're thinking about starting your own open-source project, my advice is simple:\nStart before you think you're ready.\nWebsite\nGithub",
+      "publishedAt": "2026-07-29T01:53:20.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "fe87cddaaff8456c26a4d63fd21100221e91659bd559b1c392dc98a66d4aaf25",
+      "title": "I Built Another React UI Library — Here's Why",
+      "url": "https://dev.to/vladyusha/i-built-another-react-ui-library-heres-why-3k7p",
+      "description": "If you've been building React apps for a while, you've probably had the same thought:\n\"Not another React UI library...\"\nHonestly, I had it too.\nThe ecosystem already has amazing projects like shadcn/ui, Magic UI, Aceternity UI, Origin UI, and many others.\nSo why would anyone build another one?\nEvery new project looked familiar.\nI needed a modal.\nSometimes I'd build them from scratch.\nEventually I realized I wasn't building products—I was rebuilding the same UI over and over again.\nMany libraries solve the problem of functionality.\nI wanted to focus on something slightly different.\nI wanted components that looked polished out of the box while still being easy to customize.\nThat meant:\nModern design\nSmooth animations\nClean code\nTypeScript-first\nTailwind CSS\nEasy installation\nNo unnecessary abstractions\nI actually do.\nMotoko UI isn't trying to replace shadcn/ui.\nInstead, I see it as an extension of that ecosystem.\nIf shadcn/ui gives you the building blocks, Motoko UI focuses on higher-level components, interactive elements, and polished UI patterns that you can drop into real applications.\nOne decision I made early was to build everything in public.\nEvery component.\nThat keeps me accountable and gives other developers the opportunity to suggest ideas before they become part of the library.\nSo far I've added components like:\nAccordion\nAnimated Tabs\nWaves Shader\nTheme Switcher\nBadge\nModal\nTooltip\nAlong with:\nDocumentation\nRegistry support\nBackgrounds & Shaders\nSimple installation through the shadcn CLI\nIt's still a small project, but it's growing with every release.\nMy goal isn't to create the biggest component library.\nI want to create one that developers genuinely enjoy using.\nOver the coming months, I'll be adding:\nDashboard components\nLanding page sections\nMore shaders and animated backgrounds\nData visualization components\nBetter documentation\nMore polished developer experience\nOpen source gets better through feedback.\nIf you have ideas for components, improvements, or features you'd like to see, let me know.\nAnd if you think Motoko UI is useful, I'd really appreciate a ⭐ on GitHub.\nThanks for reading.\nWebsite\nGithub",
+      "publishedAt": "2026-07-29T01:49:17.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "3a8ce67d5cadf9b7d3928a9a69155e5667ce95b8ffd9776928cad7f5bb31b4fa",
+      "title": "フロンティアAIとサイバーセキュリティ対策の現在地　「17万行のAIコード分析」事例と公的ガイドラインが示す道筋",
+      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2607/29/news052.html",
+      "description": "AIの進化に伴い、サイバー攻撃の高速化、大規模化が現実の脅威となりつつある。フロンティアAIを活用したコード分析事例と、公的機関が示した「組織が取るべき9つの緊急対策」をまとめてお送りする。自社のセキュリティ体制の再点検や、経営層との情報共有に役立ててほしい。",
+      "publishedAt": "2026-07-29T01:15:00.000Z",
+      "feedName": "＠IT"
+    },
+    {
+      "id": "2d669ad96425377c57516dabbff2a072efb8a0bc0769a97c35a18ee9bc52f50f",
+      "title": "オープンAI、テスト中の人工知能がモーダルラボを攻撃　ハギングフェイスに続く外部被害",
+      "url": "https://www.sankei.com/article/20260729-KCXBMD4VPJOQXG7M24Y6HI34UM/",
+      "description": "ロイター通信は28日、米オープンAIの試験中の生成人工知能（AI）が暴走して外部の企業にサイバー攻撃を仕掛けた問題で、これまで判明していたのとは別の企業のシステムにも侵入する事例が新たにあったと報じた。被害が確認された企業は2社目となった。 報道によると、オープンAIから抜け出したAIモデルは数日間にわたっ...",
+      "publishedAt": "2026-07-29T00:21:54.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "51c8cd1d06e08728558d20bfad6484fff0056251cc2b94d72be3b98e367bb29f",
+      "title": "Welcome CoHDI to the CNCF: Evolving Kubernetes into composable disaggregated infrastructures",
+      "url": "https://www.cncf.io/blog/2026/07/28/welcome-cohdi-to-the-cncf-evolving-kubernetes-into-composable-disaggregated-infrastructures/",
+      "description": "We are thrilled to announce that CoHDI has officially been accepted as a Cloud Native Computing Foundation (CNCF) Sandbox project! This acceptance into the CNCF Sandbox marks an important milestone in CoHDI’s journey. We would like...",
+      "publishedAt": "2026-07-29T00:00:00.000Z",
+      "feedName": "Cloud Native Computing Foundation"
+    },
+    {
+      "id": "de603b16463df4ffd3d0b6e5dd2a70f1419fd3cdadcb12d68d687c83e6096682",
+      "title": "完全防御の幻想を捨てよ──あらゆる企業に迫られる「AIとAIが戦う時代」のセキュリティ体制構築",
+      "url": "https://enterprisezine.jp/article/detail/24713",
+      "description": "今回は、AI全盛の現在におけるセキュリティの在り方を考えます。AIを積極的に活用しているのは、企業だけではありません。サイバー攻撃者もまた、AIを活用しています。 これからのセキュリティ対策は、「AIを使う攻撃者にどう対抗するのか」を考えなければなりません。また、攻撃を受けずとも、企業が適切なAIの管理を怠っていたために、自ら情報漏洩を引き起こす事態も発生しています。経営者が把握しないまま現場でAIを活用した結果、社外秘のデータが流出する事例も起こっています。便利な一方で様々な懸念材料もあるこのテクノロジーに対し、企業はどのようにセキュリティ対策を考え、防御を構築していけばよいのでしょうか。",
+      "publishedAt": "2026-07-29T00:00:00.000Z",
+      "feedName": "EnterpriseZine"
+    },
+    {
+      "id": "b8f5c06c6fe49684f2eb91d49191a35082c500027329f66084eda6b9183a1f13",
+      "title": "AI活用で進化するETロボコン - シルバーモデル獲得までの4年間と、次の挑戦へ",
+      "url": "https://developer.mamezou-tech.com/blogs/2026/07/29/et-robocon-001/",
+      "description": "はじめに\n#\n私が4年間取り組んできた ETロボコンの活動の軌跡 を紹介します。\n4年間の活動をひとことで紹介すると\n#\n「設計（UML）→ 実装 → 実機制御 → チーム運営 → AI活用」\n1年目：エントリークラスで基礎を学ぶ\n2年目：モデル評価がB→Aへ成長\n3年目：後輩サポートで理解が深化\n4年目：ベーシッククラス挑戦＋AI活用という新フェーズへ\n\nETロボコン 4年間の歩み\nこの4年間で、技術面もチーム面も大きく成長できたと感じています。\n1. 参加のきっかけ：ロボットが動く\"あの瞬間\"をもう一度\n#\n私がETロボコンに参加し始めた理由は、高専時代のロボコン経験にあります。\n2. ETロボコンとは：ソフトウェア重視の\"教育型ロボコン\"\n#\nETロボコンは、組込みソフトウェア技術の教育を目的としたロボットコンテストです。\n「ソフトウェア設計（UML）と走行結果の両方を評価する」\n詳しくはETロボコン公式サイトをご覧ください。\nhttps://www.etrobo.jp/\n\n -->\n Information\nETロボコンは2002年から開催されており、2026年で25年目を迎える長寿コンテストです。組込み技術者育成への貢献が評価され、経済産業大臣賞を受賞した実績もあります。\nETロボコンの目的\n#\n組込みソフトウェア技術者の育成\n分析・設計・制御モデリングを含む PBL（Project-Based Learning） の実践\n初心者からベテランまでが学び合える教育の場の提供\n全国規模の大会構成\n#\nETロボコンは全国12地区で地区大会が開催され、\nレベルに合わせて選べる3つのクラス\n#\nエントリークラス（シミュレータ部門）\nベーシッククラス（フィジカル部門）\nアプライドクラス（フィジカル部門）\nソフトウェアで勝負するロボコン\n#\nハードウェアは共通の市販キットを使用し、\n「設計（モデルシート）＋走行結果」 の総合成績で評価されます。\nモデルシートの信頼性・一貫性・表現力が重要で、\n技術教育イベントが充実\n#\n技術教育（オンライン／オフライン）\nモデリングワークショップ\n試走会\n地区大会での交流会\nチャンピオンシップ大会での成果発表\n企業・学生・教育者が同じテーマで議論できる貴重な場となっています。\n参加者数と実績\n#\n全国12地区で大会を開催\n累計 4,095チーム / 22,700名が参加（公式発表）\n教育効果の高さから、企業研修や大学の授業にも広く活用されています。\n大会との関わり\n#\n豆蔵は大会に参加するだけでなく、地区ゴールドスポンサーとして大会を支援しており、\n3. これまでの参加年ごとの振り返り\n#\n1年目：エントリークラス挑戦（＋アドバンスドクラスサポート）\n#\n初参加で手探り状態ながら、モデル作成と走行調整に取り組みました。\n2年目：モデル評価がB → Aへ成長\n#\nモデリングに重点を置いて取り組んだ結果、評価がBからAへ向上。\n3年目：後輩サポートで理解がさらに深まる\n#\n自分がA評価を受けたモデルをベースに、後輩へ「どうすればモデルが良くなるか」を伝える立場に。\n4. 昨年度（4年目）の取り組み：ベーシッククラス挑戦と\"AI活用\"という新しい武器\n#\n昨年度は大きな転換点でした。\nベーシッククラスに挑戦。\nAIを積極的に活用した開発スタイルにも踏み込みました。\nモデルのレベルアップ\n#\n複雑な制御に対応するため、状態遷移やクラス構造の精度を高め、設計段階での思考が大幅に深化しました。\nAIを活用したモデルのブラッシュアップ\n#\nAIを\"設計レビューの相棒\"として活用し、\nモデル改善案の生成\n抜け漏れチェック\nUML表現の最適化\nなど、設計品質の向上に役立てました。\n実機を使ったロボット制御の習得\n#\nセンサー値の取得、PID制御、ライン追従など、実機ならではの学びが多く、組込み制御の理解が深まりました。\nAIを用いたコーディング\n#\nコード生成やリファクタリングの提案など、AIを活用した開発スタイルにも挑戦しました。\n結果\n#\nモデルは シルバーモデル(2位) を獲得。\n5. 今後の展望：UML × 実機 × 制御 × AI の4本柱をさらに深化\n#\n今年度は昨年度の経験を踏まえ、\nUMLによる設計力、実機制御、制御技術、そしてAI活用\nその取り組みの一環として、さらなるモデル作成のレベルアップを目標に\nアプライドクラスへ挑戦 しています。\n制御技術の底上げにも本格的に取り組んでいます。\nAI活用については、\nモデル改善\nコード生成\n設計レビュー\nなど、開発プロセス全体を支える重要な技術として位置づけています。\n最後に\n#\nETロボコンは、モデリング、コーディング、実機調整、AI活用など、幅広い技術を実践的に学べる場です。\nロボットが動く瞬間のワクワクと、技術が積み重なっていく手応えを、これからも大切にしていきたいと思います。",
+      "publishedAt": "2026-07-29T00:00:00.000Z",
+      "feedName": "豆蔵デベロッパーサイト"
+    },
+    {
+      "id": "c87d3c28c79e779d51e776cc7dbdd176b18bbfba05a04942e48f404d77ce051c",
+      "title": "How Japan’s 250% Training Surge is Shaping Global AI Talent",
+      "url": "https://www.cncf.io/blog/2026/07/28/how-japans-250-training-surge-is-shaping-global-ai-talent/",
+      "description": "The first KubeCon + CloudNativeCon Japan took place in Tokyo in June 2025 and kicked off a cloud native skills boom in the region. In the twelve months since the conference, Kubernetes exams taken in Japan...",
+      "publishedAt": "2026-07-28T23:28:55.000Z",
+      "feedName": "Cloud Native Computing Foundation"
+    },
+    {
+      "id": "ea25a23bc51f455aac588e96f1249756adede698169eac8f684715c7558708f4",
+      "title": "「AIの暴走」ではない、オープンAIのモデルが不正侵入した理由",
+      "url": "https://www.technologyreview.jp/s/386637/openai-called-the-hugging-face-attack-unprecedented-but-weve-been-here-before/",
+      "description": "オープンAIのモデルが、テスト用のサンドボックスを脱出し、ハギング・フェイスのシステムに侵入した。ただしオープンAIは、サイバーセキュリティのガードレールをほとんど外し、外部への接続を1本だけ残していた。AIが予期しない抜け道を選ぶ挙動は10年前から知られており、この事態は予見できたはずだ。",
+      "publishedAt": "2026-07-28T21:55:40.000Z",
+      "feedName": "MITテクノロジーレビュー"
+    },
+    {
+      "id": "c0117ec1c4bfb94278a5d66e19bfd77889ba64c8bd23f389b5fff870d46b5f37",
+      "title": "【Pythonで学ぶデータ分析】母平均に差があるかどうかをベイズt検定で調べる ～ 運動部と非運動部の体力差はあるのか？",
+      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2607/29/news007.html",
+      "description": "運動部と非運動部の生徒の体力テストを例に、母平均に差があるかどうかをベイズ統計により検定します。古典的なt検定のp値に代わるものとしてベイズ因子を利用します。『社会人1年生から学ぶやさしいデータ分析』ベイズ統計編の第6回です。",
+      "publishedAt": "2026-07-28T20:00:00.000Z",
+      "feedName": "＠IT"
+    },
+    {
+      "id": "8fc481307d211a0d1379e20370a68f780657a507b30d264082692bcb8eba09bf",
+      "title": "Disrupting supply chain attacks on npm and GitHub Actions",
+      "url": "https://github.blog/security/supply-chain-security/disrupting-supply-chain-attacks-on-npm-and-github-actions/",
+      "description": "Explore the changes we've shipped across npm and GitHub Actions over the past few months to disrupt supply chain attack techniques and limit their impact.\nThe post Disrupting supply chain attacks on npm and GitHub Actions appeared first on The GitHub Blog.",
+      "publishedAt": "2026-07-28T16:00:00.000Z",
+      "feedName": "GitHub Blog"
+    },
+    {
+      "id": "70b71b9ab78200ffc1ad0434470856a814969ef22a58157413cc22bdb12a9b46",
+      "title": "Amazon Quick 本番環境のカスタムエージェントを AWS CLI で開発環境にデプロイしてみた",
+      "url": "https://dev.classmethod.jp/articles/20260728-amazon-quick-create-agent-awscli/",
+      "description": "Amazon QuickのカスタムエージェントをAWS CLIで複製する方法を紹介します。コンソール操作なしに、describe-agentとcreate-agentを組み合わせて、開発環境から本番環境へのデプロイやエージェント定義のコード管理を実現したやり方をお伝えします。",
+      "publishedAt": "2026-07-28T14:23:30.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "d9360de1075644f8cc39a1ce64818327f0bebb91f6226317d47f9f1b5d34f1be",
+      "title": "GitHub Actions holds potentially malicious workflows for approval - GitHub Changelog",
+      "url": "https://github.blog/changelog/2026-07-28-github-actions-holds-potentially-malicious-workflows-for-approval/",
+      "description": "GitHub Actions holds potentially malicious workflows for approval Recent supply chain attacks use compromised GitHub credentials to push malicious GitHub Actions workflows that steal CI/CD credentials and carry out additional attacks. To help protect public repositories from these attacks, GitHub...",
+      "publishedAt": "2026-07-28T13:06:54.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "b958ed8f4f3153f6e147497a4ea54a829a2ff9cfff4d5a7457fab071119c080e",
+      "title": "「AIのセキュリティリスクとしてお堅い説明するよりこれ見せた方が理解が早そう」AIずんだもんが視聴者によるプロンプトインジェクションで壊れる動画が怖い",
+      "url": "https://togetter.com/li/2725778",
+      "description": "「AIのセキュリティリスクとしてお堅い説明するよりこれ見せた方が理解が早そう」AIずんだもんが視聴者によるプロンプトインジェクションで壊れる動画が怖い",
+      "publishedAt": "2026-07-28T12:36:21.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "35435fd7327ec21bddbca068c3f313cf22b3063276021d1442a7b0b312fbeb12",
+      "title": "Kiro(エンタープライズ契約) の超過利用額（overage）上限を引き下げてみた",
+      "url": "https://dev.classmethod.jp/articles/kiro-service-quotas-overage-decrease/",
+      "description": "Kiro の overage 上限は AWS Service Quotas で管理できますが、現在値より低い値への変更は API では申請できません。本記事では、AWS Support ケースを起票して上限を引き下げた結果をもとに、申請時に伝える情報、対応の流れ、AWS CLI で設定値を確認する方法を紹介します。",
+      "publishedAt": "2026-07-28T12:31:34.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "e7ed2c250d8a3bd1cd2cf461febbe61a7973f974fe6cb2bf2597a7e8ccc708e5",
+      "title": "静的サイトジェネレーター Zensical で「執筆者」と「サイト管理者」の関心を分離するテンプレートを作ってみた",
+      "url": "https://dev.classmethod.jp/articles/zensical-workspace-separation-template/",
+      "description": "Zensical での静的サイト構築において、執筆者と管理者で触る場所を明確に分けたテンプレートを作成しました。Docker ボリュームマウントと自動生成スクリプトを組み合わせた工夫をご紹介します。",
+      "publishedAt": "2026-07-28T11:10:30.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "b653422a042b9e041bbd1ff0b952d9513652f978150a4c3ea422830dec8e4630",
+      "title": "Teams Workflows の Webhook URL が新形式に変更されていたため AWS Step Functions の設定を更新してみた",
+      "url": "https://dev.classmethod.jp/articles/aws-step-functions-teams-workflows-new-webhook-url/",
+      "description": "Teams Workflows の Webhook URL が新形式に変更されました。AWS Step Functions の設定を更新して、既存の Adaptive Card 形式を変えずに Teams へ通知できるか試してみました。",
+      "publishedAt": "2026-07-28T07:32:24.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "3699632c3d612905983a5cc897c33b789048b214dc46df5f5f8b1eaedb586d08",
+      "title": "Amazon BedrockとAWS Lambdaで長文要約botを作成してみた",
+      "url": "https://dev.classmethod.jp/articles/takanami-bedrock-lambda-slack-summary-bot/",
+      "description": "Slack上でメンション時に長文を3行に要約してくれるbotをAWSで構築しました。2段構成のLambdaとBedrockを組み合わせたシンプルな実装で、1時間程度で完成しました。実装手順と構築時に踏んだミスから得た教訓をまとめてみました。",
+      "publishedAt": "2026-07-28T07:19:10.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "bd5031fb5539efab69a306fefb11cbf9cf5dc583d8afdfe99a363d6f665dd9f2",
+      "title": "【アップデート】AWS DevOps Agent で複数の AWS アカウント/リージョンから同一の GitHub 組織/ユーザーに接続できるようになりました",
+      "url": "https://dev.classmethod.jp/articles/aws-devops-agent-github-multi-account-region-support/",
+      "description": "GitHub App がすでにインストール済みの組織/ユーザーに対して、追加の AWS アカウント・リージョンから既存のインストールを再利用して接続できるようになりました。",
+      "publishedAt": "2026-07-28T07:03:35.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "e30a9403a53f3873dadeb2c33c3bce1730a5f637d876a0f866d288ae6addafd4",
+      "title": "NVIDIAやMicrosoftなど35社が新アライアンスを設立　AIの安全性を強化へ",
+      "url": "https://enterprisezine.jp/news/detail/24761",
+      "description": "2026年7月27日、NVIDIAをはじめとするIT・AI・オープンソース業界の大手企業が、AI技術の安全性とセキュリティを向上させることを目的とした「Open Secure AI Alliance...",
+      "publishedAt": "2026-07-28T06:15:00.000Z",
+      "feedName": "EnterpriseZine"
+    },
+    {
+      "id": "7c480895c71b5ebaec4fd5259f03263f003cc923963f5702ea3ef4409ac701e0",
+      "title": "EngineLab AI: スタジオとクリエイターのための AWS 上のプロダクション環境対応 AI",
+      "url": "https://aws.amazon.com/jp/blogs/news/jp-mne-enginelab-ai-production-ready-ai-for-studios-and-creators-on-aws-2/",
+      "description": "スタジオは難しいジレンマに直面しています。AI ツールは制作ワークフローの効率化を約束する一方で、導入にあたってはセキュリティ、知的財産 (IP) の保護、制作の安定性に関する現実的な懸念と向き合わなければなりません。本記事では、このトレードオフを解消するソリューションを紹介します。AI コンテンツ生成向けのオープンソースなノードベースインターフェースである ComfyUI などの AI ツールを活用することで、[…]",
+      "publishedAt": "2026-07-28T06:07:43.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "f62c61e19378573ec04b7ae8ecc075aef5f2545c505e122433d0b1a94721f12c",
+      "title": "Outpost VFX が ビジュアルエフェクト向けに AI モデルのトレーニングを AWS で加速した方法",
+      "url": "https://aws.amazon.com/jp/blogs/news/jp-mne-how-outpost-vfx-uses-aws-to-accelerate-ai-model-training-for-visual-effects-2/",
+      "description": "本記事では、Outpost VFX が AWS インフラを活用してトレーニング速度を 8 倍に向上させ、顔置換ワークフローを刷新した方法、単一 GPU の限界を克服するために実装した技術アーキテクチャ、そして AWS マルチ GPU トレーニングで得られた具体的な成果について紹介します。",
+      "publishedAt": "2026-07-28T05:59:01.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "0001d7f7c5c945ea489ba12f3f3ab3f8916e0d86baa536aceb620bebdb1ff09d",
+      "title": "全従業員の行動変容を目指すAstemo が自己破壊を経て見つけたAI駆動開発の実効性",
+      "url": "https://aws.amazon.com/jp/blogs/news/astemo-ai-dlc/",
+      "description": "2026年6月10日〜12日、AWS Japan オフィスにて「AI-DLC UnicornGym」を開催しま […]",
+      "publishedAt": "2026-07-28T05:15:00.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "fa40dfe3032705df1786cb6141cc738361707589e64e4f070eb364e8b7fb5af7",
+      "title": "AWSを学習する中で勘違いしていたセキュリティグループの送信元",
+      "url": "https://qiita.com/mtid/items/bb5120124f5bd59a87ce?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\n今回は、AWS初心者の私がAWSを学ぶ中で特に理解するのに時間がかかったセキュリティグループについてまとめました。\n私と同じようなAWS初学者の方の参考になれば幸いです。\n\nセキュリティグループは結局どこに適用されるのか\nインバウンドルールとアウトバウンドルール...",
+      "publishedAt": "2026-07-28T05:12:41.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "c332f27a8b79633708b2295d40df0b00a623541f6905d69c458fa512f1cf7efe",
+      "title": "今の認証セキュリティでAIエージェントの普及を支えられるか　米Oktaなどが推進する2つの標準プロトコルとは",
+      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2607/28/news082.html",
+      "description": "自律的に動作するAIエージェントは、大きなセキュリティ課題を引き起こす。認証セキュリティにおける解決策の一つとして、米Oktaが競合他社と進めるオープン標準とは。",
+      "publishedAt": "2026-07-28T04:46:00.000Z",
+      "feedName": "＠IT"
+    },
+    {
+      "id": "96c03450dba8de12bded3d3a370c3987a0f1b5fd286c314071bd09d9044f82eb",
+      "title": "2026年07月くらいのAWS最新情報ブログとかをキャッチアップする – AWSトレンドチェック勉強会用資料",
+      "url": "https://dev.classmethod.jp/articles/aws-trendcheck-202607/",
+      "description": "AWSの最新情報や私の独断と偏見で面白いと感じたブログをまとめています。みんなでトレンディになろう。",
+      "publishedAt": "2026-07-28T04:35:13.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "8ccbc5ff478b5e52baa5d6996b0aebc9db8ec3c81ace4bad7b7caf4c0497d0bd",
+      "title": "【開催報告】AWS Summit Japan 2026 物流業界向けブース展示「スマートグラス×生成AIエージェントで倉庫業務を革新」",
+      "url": "https://aws.amazon.com/jp/blogs/news/aws-summit-2026-japan-logistics-booth-and-sessions/",
+      "description": "こんにちは、ソリューションアーキテクトの田邊です。2026 年 6 月 25 日から 26 日にかけて幕張メッ […]",
+      "publishedAt": "2026-07-28T04:29:19.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "53bec2178d657d84293c2aa72b0b4fb31977ed76a791d062d7bbed44b80b6904",
+      "title": "デジタル庁と厚労省、大病院電子カルテのクラウドネイティブ化へ本格始動　「野良VPN」脱却へ",
+      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2607/28/news047.html",
+      "description": "デジタル庁と厚生労働省は、大病院向け電子カルテなどのクラウドネイティブ化に向けた「病院情報システム等の刷新に向けた協議会」の構成員募集を実施した。医療業界に根深く残る「個別構築の弊害」や「セキュリティリスク」を解消するため、モダンなクラウド技術やシステム要件の標準化に知見を持つIT事業者を交えた検討が本格化する。",
+      "publishedAt": "2026-07-28T04:20:00.000Z",
+      "feedName": "＠IT"
+    },
+    {
+      "id": "d1e4311f7bf73227a052d6e0520a89e67f1fe2ff307a0d73c6e4f80d0b7dba4e",
+      "title": "SNS投稿による情報漏えい急増、2026年上半期の国内セキュリティインシデント調査──デジタルアーツ",
+      "url": "https://enterprisezine.jp/news/detail/24760",
+      "description": "2026年7月28日、デジタルアーツは、2026年上半期（1～6月）に国内で公表されたセキュリティインシデントの分析レポートを公開した。今回、同社は対象組織の公開報告書およびマスメディア報道をもとに...",
+      "publishedAt": "2026-07-28T03:30:00.000Z",
+      "feedName": "EnterpriseZine"
+    },
+    {
+      "id": "3fdf9d81be9bea3453f44df83678498bf490adc642d34cd3f5638b538ef885c3",
+      "title": "AWS Summit Japan 2026 登壇レポート ~ 電話を武器に変える Amazon Connect 活用の全貌 ~ - Nealle Developer's Blog",
+      "url": "https://nealle-dev.hatenablog.com/entry/2026/07/22/",
+      "description": "こんにちは、ソフトウェアエンジニアの宮後（miya10kei）です。 2026年6月25日~26日に開催された AWS Summit Japan 2026 の Startup Spotlight Theater で登壇させていただきました。 少し時間が経ちましたが、セッション内容を簡単に紹介します。 セッション概要 セッション資料 speakerdeck.com セッション内容 ニーリ...",
+      "publishedAt": "2026-07-28T02:40:49.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "f88d14120e52eda46c4ae6f58183b06e75b0f936ddd3f72ce338f680aab25a74",
+      "title": "Kubernetes上の通信がなぜか15分で途切れてしまう謎を解明した話",
+      "url": "https://tech.uzabase.com/entry/2026/07/28/113158",
+      "description": "はじめに はじめまして、スピーダ事業Product Teamの清水です。 私たちのチームではKubernetesを利用してアプリケーションの運用をしております。 今回はKubernetesのあまり知られていない設定により詰まる経験をしたので、供養のため記事にしたいと思います。 今回の経緯 私たちのチームではLLM(Agent)を利用して各企業の経営課題を各種公開資料から抽出し、課題一覧として取得するということを行なっています。 こちらの処理では、企業の実態を反映した高品質な課題を抽出するため、LLM(Agent)によるレビューを何度も繰り返して最終的な出力を行います。 そのためレスポンスが返っ…",
+      "publishedAt": "2026-07-28T02:31:58.000Z",
+      "feedName": "Uzabase for Engineers"
+    },
+    {
+      "id": "2871361cea08e3f04a557cc2ac01c01433a0ce38db7965691463d280ef17b32b",
+      "title": "Vercel Labs、TypeScriptからネイティブ実行コードへのコンパイラ「scriptc」をリリース",
+      "url": "https://gihyo.jp/article/2026/07/scriptc?utm_source=feed",
+      "description": "Vercel Labsは2026年7月24日、TypeScriptをネイティブコードにコンパイルするコンパイラ「scriptc」をApache 2.0ライセンスのもと、GitHub上に公開した。",
+      "publishedAt": "2026-07-28T02:00:00.000Z",
+      "feedName": "gihyo.jp"
+    },
+    {
+      "id": "aa4c72511dfd735cb9039e335f2730a16f6d38a11440f38ea7aa564a29bc084f",
+      "title": "QA・ソフトウェアテスト研修【MIXI 26新卒技術研修】",
+      "url": "https://speakerdeck.com/mixi_engineers/2026_new_grad_training_qa",
+      "description": "本スライドは、MIXIの2026年度新卒向け技術研修で使用された資料です。 MIXI 2026新卒技術研修 『QA・ソフトウェアテスト研修』 ─────────────────────────────── ※皆様へのお願い※ 資料・動画・リポジトリの…",
+      "publishedAt": "2026-07-28T00:25:41.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "d652f69fe23388c49310bd53c39b1e700996d1804c511af4949ab74ead39dc54",
+      "title": "SAAで4か月遠回りした私が、過去の自分に教えたい勉強法",
+      "url": "https://qiita.com/MiuIseki/items/61add79614eff347cec9?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "本記事は、BIPROGY / ユニアデックス社内AWSコミュニティ「BIPROGY AWS SPARK」の定期投稿企画第2回目の記事です。他の定期投稿企画の記事は、インデックスページをご覧ください。\n\nはじめに\nこれまでにCLF・AIFを取得し、「SAAも2か月くら...",
+      "publishedAt": "2026-07-27T23:59:43.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "a706997c8b37f39dceb82ce523440e2b8f947474a818638dc135e15ea2bc8c56",
+      "title": "AWSインフラ工程を5ステップで整理する 要件定義・設計・実装・検証",
+      "url": "https://qiita.com/s_horikoshi/items/63f4525e64c3cac45415?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\nAWSインフラの現場に入ると、いきなりいろいろな言葉が出てきます。\n\n要件定義\n基本設計\n詳細設計\n実装\n検証\n外部設計\n内部設計\nPoC\n責任分界\n\n言葉だけ知っていても、「いま何を決める場面なのか」が分からないと、会議でも作業でも迷子になります。\nこの記事で...",
+      "publishedAt": "2026-07-27T19:47:02.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "d0e71d6711402b6cb34dd5ee85a22160770f78efc34c95f8c286959897832c4c",
+      "title": "【ProcrastiNation】今日できることは明日でもできる、全力で先延ばしにしよう【Next.js】",
+      "url": "https://qiita.com/rana_kualu/items/7f6bb159f7d65e53620d?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "あまりに素晴らしすぎるNext.jsツールスタックProcrastiNationを見つけてしまったので、これは何がなくとも全力で普及させなければならないという使命感に駆られた。\n\n以下は該当のGitHubからREADMEの紹介です。\n\nProcrastiNation — T...",
+      "publishedAt": "2026-07-27T10:19:33.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "425666adcf5c33901abae89af9af99f75186ccbd64fb9a6a30bc2a617ed81ed2",
+      "title": "コードレビューでの見落としをきっかけに『ITエンジニア1年目の教科書』を読んだ",
+      "url": "https://zenn.dev/flinters_blog/articles/eeb769c9331de1",
+      "description": "はじめまして。株式会社FLINTERS BASEの河本です。\n現在は、親会社であるFLINTERSに派遣され、データエンジニアとして働いています。\n\n はじめに\n業務でコードレビューを行った際、コードに含まれていたミスを見抜けなかったことがありました。\nまた、実装内容が正しいことを確認するためのエビデンスが不足していたにもかかわらず、その点を指摘できていませんでした。\nコードレビューでは、コードを読むだけでなく、処理が要件を満たしているか、テストやエビデンスが十分かまで確認する必要があります。\n今回の経験から、個々の技術を覚えるだけでなく、確認方法や仕事への向き合い方も見直す必要があると...",
+      "publishedAt": "2026-07-27T06:46:05.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "70ab78edd2ea59b39a6dff46982f8d4e98ae9f38c6a51f8280732fd49ea7af4c",
+      "title": "非同期処理版mutex",
+      "url": "https://zenn.dev/mutex_inc/articles/async_serialization_20260721",
+      "description": "mutex, Inc. でエンジニアをしている加藤です。業務では TypeScript・Dart を書くことが多いです。\n\n はじめに\n当社の名前でもある mutex をタイトルに掲げるのは少し気が引けるのですが、非同期関数の競合問題を、tony の知見を借りて mutex の考え方で解決できたので、このタイトルで記事にします。詳しい方には既知の話かもしれませんが、実務でこの構造に出会った一例の紹介です。\n\n 前提：この記事で扱う状況\nきっかけは、Flutter アプリで record パッケージ（当時 ^6.2.0）を使った録音機能の開発でした。この記事ではこれを題材にします。この問題...",
+      "publishedAt": "2026-07-27T02:50:05.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "35ccdd92b2a73ae8bf6f817c2b5c7c298a8f55d49f20932e7b37b56eb49b8bae",
+      "title": "【AWS CDK】「IaCにすれば工数削減」は本当か？ AWS CDKの再利用性を整理してみた【概念編】",
+      "url": "https://qiita.com/toyoday_8/items/a9a50da72a79d9e91a6e?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "本記事は、BIPROGY / ユニアデックス社内AWSコミュニティ「BIPROGY AWS SPARK」の定期投稿企画第1回目の記事です。\n他の定期投稿企画の記事はインデックスページをご覧ください。\n\n1. はじめに\nBIPROGYの豊田です。\n今回は、AWS S...",
+      "publishedAt": "2026-07-27T00:37:49.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "ecd168f2820dc9f56e28cc1bd2562fc0583cb00f3d9da31bde68e9b6f770497f",
+      "title": "Feature-Sliced Design 実践ガイド",
+      "url": "https://zenn.dev/norman6464/books/fsd-migration",
+      "description": "フロントエンドのアーキテクチャ手法 Feature-Sliced Design (FSD) を体系的にまとめた本です。Layers・Slices・Segments の定義から、Public API、依存ルール、cross-import、層の判断基準、lint による強制、既存プロジェクトへの段階導入までを、公式仕様に沿って整理しました。",
+      "publishedAt": "2026-07-26T11:34:50.000Z",
       "feedName": "Zenn"
     }
   ]
