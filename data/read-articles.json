@@ -1,54 +1,6 @@
 {
   "articles": [
     {
-      "id": "ed1abda82e02502f6d7561cc34b6d2b4189d8d6a812f021c461e3e75631789f6",
-      "title": "ITbook 株式会社様のAWS 生成 AI 活用事例：Amazon Bedrock を活用し、要件文書から提案書を自動生成する仕組みを構築し、提案書のドラフト作成を十日から半日に短縮",
-      "url": "https://aws.amazon.com/jp/blogs/news/case-study-genai-itbook/",
-      "description": "本ブログは ITbook 株式会社様とAmazon Web Services Japan 合同会社が共同で執筆 […]",
-      "publishedAt": "2026-07-01T03:29:47.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "d599ae836cd1c1d6fc6fec7eeb4df2495593bc99dfa64503de66c1ef61a34413",
-      "title": "从思想到工程：FROST 与 FROST-SOP 的双生之旅",
-      "url": "https://dev.to/llimage/cong-si-xiang-dao-gong-cheng-frost-yu-frost-sop-de-shuang-sheng-zhi-lu-19fc",
-      "description": "从思想到工程：FROST 与 FROST-SOP 的双生之旅\n\n\n你知道吗？每一个伟大的工程背后，都有一个简单而深刻的起点。\n在开源世界里，我们见过太多\"大而全\"的框架——它们功能丰富，却让人望而生畏。今天我想分享一个反其道而行之的项目：FROST。\nFROST（Fractal Runtime of Orchestrated Skills & Tasks）最初只是一个 500 行的教学框架，用最朴素的代码讲述 Agent 的本质。它的核心哲学只有一句话：\n细胞会死，但谱系会存续。Agent 会消亡，但宪法会传承。资产会永存。\n而今天我要介绍的，是 FROST 思想\"开花结果\"后的工程实践——FROST-SOP，一个拥有 5000+ 行代码的完整 Agent 工程平台。\nFROST 不是什么复杂的框架。它的设计哲学是最小原子集 + 分形宪法：\n\n\n\n原子\n职责\n生物学类比\n\n\n\n\nStore\n记忆容器，只做 save/load/delete\n细胞核\n\n\nSkill\n纯能力单元，无状态无副作用\n蛋白质\n\n\nAgent\n膜包裹的细胞，拥有 Store + Skills\n神经细胞\n\n\nSOP\n有序步骤列表，可教学、校验、优化\n宪法文本\n\n\n\nfrom core import Store, Agent, skill_set, skill_get\n\nstore = Store()\nagent = Agent(\"cell\", store, skills={\n    \"set_context\": skill_set,\n    \"get_context\": skill_get\n})\n\nresult = agent.run(\n    sop_steps=[\"set_context\", \"get_context\"],\n    initial_context={\"key\": \"message\", \"value\": \"FROST is alive\"}\n)\n# result[\"_result\"] == \"FROST is alive\"\n\n5 行代码，你就能理解整个 Agent 系统的运作原理。这就是 FROST 的魔力——用最少的代码，讲述最深的道理。\nFROST V4.0 引入的五维元模型，将框架从扁平升级为多维度 Agent 编排系统：\n武器注册表：能力的元数据管理与发现\n任务注册表：DAG 任务编排与图谱 SOP\n事件编目：态势感知与双模式事件分析\n平台注册表：外部能力的发现、调用与健康检查\n规则注册表：可版本化的治理约束与合规检查\n197 个测试用例保障质量，最新 Release：FROST v5.0.0\nFROST 教会我们理解，FROST-SOP 教会我们构建。\nFROST-SOP 实现了完整的祖辈 → 父辈 → 子辈三层递归架构：\nimport asyncio\nfrom core.event_bus import get_async_event_bus, Event, EventType\nfrom agents.ancestor import create_ancestor\nfrom agents.parent import create_parent\n\nasync def main():\n    bus = get_async_event_bus()\n\n    # 创建事件驱动的 Agent 家族\n    ancestor = create_ancestor(constitution, asset, event_driven=True)\n    parent = create_parent(\"parent-1\", store, event_driven=True, \n                          asset_store=asset, sop_id=\"DEV-001\")\n\n    # 发布任务，Agent 家族自动响应\n    await bus.publish(Event(\n        event_type=EventType.TASK_CREATED,\n        source=\"user\",\n        data={\"task_id\": \"task-001\", \"task_description\": \"开发一个用户登录功能\"}\n    ))\n\n    await asyncio.sleep(10)\n\nasyncio.run(main())\n\n\n\n\n特性\n说明\n\n\n\n\n19 个内置 Skill\n任务分解、SOP 搜索、Agent 组装、知识归档\n\n\nAsyncEventBus\n事件总线，Agent 间解耦通信\n\n\n双前端界面\nNext.js + Streamlit，可视化监控\n\n\n零核心依赖\nFROST 内核独立运行\n\n\n84 个测试\n全量覆盖核心功能\n\n\n\n为什么需要两个项目？\nFROST 解决的是\"认知问题\"：\n帮助开发者理解 Agent 的本质\n用最少的代码讲述最深的道理\n适合学习、教学、概念验证\nFROST-SOP 解决的是\"工程问题\"：\n帮助开发者构建真实的 Agent 系统\n提供完整的生产级功能\n适合产品开发、企业应用\n它们不是竞争关系，而是互补关系：\n理解 FROST  ──→  概念清晰\n     │\n     ▼\n构建 FROST-SOP  ──→  工程可靠\n\n如果你想学习 FROST 生态，我建议：\n第一阶段：阅读 FROST 源码（500 行）\n理解四个原子\n理解家族治理模型\n理解五维元模型\n第二阶段：运行 FROST-SOP 示例（5000+ 行）\n体验事件驱动架构\n理解层级 Agent 协作\n掌握工程实践\n第三阶段：构建自己的应用\n使用 FROST-SOP 作为底座\n定制自己的 Agent 家族\n实现自己的 SOP 工作流\n开源世界的美妙之处在于：每一个伟大的工程，都始于一个简单的问题。\nFROST 问的是：\"Agent 的本质是什么？\"\n如果你对 Agent 系统感兴趣，不妨从 FROST 开始，从 500 行代码开始，理解本质，然后让 FROST-SOP 帮你把思想变成现实。\n相关链接：\nFROST（教学框架）：https://gitee.com/liao_liang_7514/frost\n\nFROST-SOP（工程平台）：https://gitee.com/liao_liang_7514/frost-sop\n\n\n\nTags: python agent ai opensource frost",
-      "publishedAt": "2026-07-01T03:24:52.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "ced61e28cc37c20bcff1178c5dcfb92ced9d2f47d440ed89c6810a8835be0c52",
-      "title": "The Token Bucket Algorithm: Build Server-Side API Rate Limiting in ~40 Lines",
-      "url": "https://dev.to/apikumo/the-token-bucket-algorithm-build-server-side-api-rate-limiting-in-40-lines-25f6",
-      "description": "The Token Bucket Algorithm: Server-Side API Rate Limiting in ~40 Lines\n\n\nPlenty of tutorials teach you how to survive someone else's rate limit with retries and backoff. Far fewer show you how to build one. If you run an API, you need rate limiting on your side too — to protect your database from a runaway client, keep one noisy tenant from starving everyone else, and give abusive traffic a polite 429 instead of a melted server.\nThe cleanest algorithm for the job is the token bucket. Let's implement it from scratch, then make it production-ready.\nPicture a bucket that holds up to capacity tokens. Every request removes one token. The bucket refills at a steady refillRate (tokens per second), up to its cap. If a request arrives and the bucket is empty, it's rejected.\nThis gives you two useful properties at once:\nA sustained rate — the long-run average, set by refillRate.\nA burst allowance — clients can spend the whole bucket at once, set by capacity.\nThat burst tolerance is why token bucket feels fair. A user who's been quiet for a minute can fire off a batch of requests without being punished for it.\nHere's a self-contained bucket in JavaScript. No dependencies, no timers — we compute refill lazily based on elapsed time, which is both simpler and more accurate than a background interval.\nclass TokenBucket {\n  constructor(capacity, refillRatePerSec) {\n    this.capacity = capacity;\n    this.refillRate = refillRatePerSec;\n    this.tokens = capacity;\n    this.lastRefill = Date.now();\n  }\n\n  _refill() {\n    const now = Date.now();\n    const elapsedSec = (now - this.lastRefill) / 1000;\n    this.tokens = Math.min(\n      this.capacity,\n      this.tokens + elapsedSec * this.refillRate\n    );\n    this.lastRefill = now;\n  }\n\n  take(cost = 1) {\n    this._refill();\n    if (this.tokens >= cost) {\n      this.tokens -= cost;\n      return { ok: true, remaining: Math.floor(this.tokens) };\n    }\n    const deficit = cost - this.tokens;\n    const retryAfter = Math.ceil(deficit / this.refillRate);\n    return { ok: false, remaining: 0, retryAfter };\n  }\n}\n\nNotice take() returns a retryAfter in seconds when it rejects — that's the value your clients need, and we'll hand it straight to them.\nGive each API key its own bucket and enforce it as middleware. Ten requests/second sustained, with a burst of up to 20:\nconst buckets = new Map();\n\nfunction rateLimit(req, res, next) {\n  const key = req.header(\"x-api-key\") || req.ip;\n  if (!buckets.has(key)) {\n    buckets.set(key, new TokenBucket(20, 10)); // capacity 20, 10/s\n  }\n\n  const result = buckets.get(key).take();\n  res.set(\"X-RateLimit-Limit\", \"10\");\n  res.set(\"X-RateLimit-Remaining\", String(result.remaining));\n\n  if (!result.ok) {\n    res.set(\"Retry-After\", String(result.retryAfter));\n    return res.status(429).json({\n      type: \"https://example.com/errors/rate-limit\",\n      title: \"Too Many Requests\",\n      detail: `Rate limit exceeded. Retry in ${result.retryAfter}s.`,\n    });\n  }\n  next();\n}\n\napp.use(\"/api\", rateLimit);\n\nTwo details that matter: always emit the Retry-After header on a 429 so well-behaved clients know exactly when to come back, and return a structured error body (this one follows RFC 9457 Problem Details) instead of a bare status code.\nThe in-memory Map above works great for a single process, but it breaks the moment you scale horizontally — each instance keeps its own bucket, so a client behind a load balancer effectively gets N× the limit. Move the state to Redis and every instance shares one bucket:\n// Atomic check-and-decrement via a Lua script (runs server-side in Redis)\nconst LUA = `\nlocal tokens = tonumber(redis.call('get', KEYS[1]) or ARGV[1])\nlocal last   = tonumber(redis.call('get', KEYS[2]) or ARGV[4])\nlocal now    = tonumber(ARGV[4])\ntokens = math.min(ARGV[1], tokens + (now - last) / 1000 * ARGV[2])\nif tokens >= 1 then\n  redis.call('set', KEYS[1], tokens - 1)\n  redis.call('set', KEYS[2], now)\n  return 1\nend\nredis.call('set', KEYS[2], now)\nreturn 0\n`;\n// KEYS = [tokensKey, timestampKey]; ARGV = [capacity, refillRate, cost, now]\n\nRunning the refill-and-take logic as a single Lua script keeps it atomic — no race between reading the token count and decrementing it, even under thousands of concurrent requests.\nA few more things worth doing before you ship: bound your key map (or set a Redis TTL) so idle clients get evicted, decide whether the limit is per-key, per-IP, or per-endpoint, and consider a higher cost for expensive routes so a single heavy query counts as several cheap ones.\nThe tricky part of rate limiting isn't the happy path — it's the boundary. Does the 21st burst request actually get a 429? Is Retry-After accurate? Does the bucket refill on schedule? You want to fire controlled bursts and inspect the exact headers that come back, which is exactly the kind of thing APIKumo makes easy: send repeated requests against your endpoint, watch the X-RateLimit-Remaining and Retry-After headers tick down in real time, and save the whole scenario so you can re-run it every time you touch your limiter. Build the bucket, then prove it behaves.",
-      "publishedAt": "2026-07-01T03:18:35.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "6942925d665e31866a8d204236d808c7194492fc14c3109374e62d776068f1d4",
-      "title": "Web Scraping with Python in 2026: Best Libraries and Anti-Bot Strategies",
-      "url": "https://dev.to/etriti00_19/web-scraping-with-python-in-2026-best-libraries-and-anti-bot-strategies-4p62",
-      "description": "Web Scraping with Python in 2026: Best Libraries and Anti-Bot Strategies\n\n\nWeb scraping in 2026 looks very different from 2020. Sites are smarter, anti-bot systems are more aggressive, and the legal landscape has evolved. Here's what actually works now.\n\n\n\nChallenge\n2020 Solution\n2026 Solution\n\n\n\n\nBot detection\nRotate User-Agent\nFingerprint randomization + residential proxies\n\n\nCAPTCHAs\nManual solving\nTurnstile/hCaptcha solvers\n\n\nJavaScript rendering\nSelenium\nPlaywright (faster, more reliable)\n\n\nRate limiting\nSleep between requests\nAdaptive pacing + request signing\n\n\nIP blocking\nVPN rotation\nResidential proxy pools\n\n\n\nfrom playwright.sync_api import sync_playwright\n\ndef scrape_with_playwright(url):\n    with sync_playwright() as p:\n        browser = p.chromium.launch(headless=True)\n        page = browser.new_page()\n        page.goto(url, wait_until=\"networkidle\")\n\n        data = page.query_selector_all(\".job-item\")\n        results = []\n        for item in data:\n            title = item.query_selector(\"h2\").text_content()\n            results.append(title)\n\n        browser.close()\n    return results\n\nimport httpx\nfrom selectolax.parser import HTMLParser\n\ndef scrape_static(url):\n    resp = httpx.get(url, headers={\"User-Agent\": \"Mozilla/5.0\"})\n    tree = HTMLParser(resp.text)\n\n    for node in tree.css(\".listing\"):\n        print(node.text())\n\nMany sites have hidden or public APIs that make scraping unnecessary:\nurl = \"https://www.freelancer.com/api/projects/0.1/projects/active/?query=python\"\ndata = httpx.get(url).json()\n\nimport random\n\ndef get_random_headers():\n    browsers = [\n        \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36\",\n        \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36\",\n    ]\n    return {\n        \"User-Agent\": random.choice(browsers),\n        \"Accept\": \"text/html,application/xhtml+xml\",\n        \"Accept-Language\": \"en-US,en;q=0.9\",\n        \"DNT\": \"1\",\n    }\n\nimport time\n\nclass AdaptiveLimiter:\n    def __init__(self, min_delay=1.0, max_delay=5.0):\n        self.min_delay = min_delay\n        self.max_delay = max_delay\n        self.current_delay = min_delay\n\n    def wait(self):\n        time.sleep(self.current_delay)\n\n    def on_success(self):\n        self.current_delay = max(self.min_delay, self.current_delay * 0.9)\n\n    def on_block(self):\n        self.current_delay = min(self.max_delay, self.current_delay * 1.5)\n\nAlways check for APIs first — scraping should be the fallback\nPlaywright for JS sites, httpx for static\nRandomize fingerprints — headers, timing, viewport\nAdapt your rate — slow down when blocked, speed up when clear\nStay legal — public data only, respect robots.txt\nBuilding scraping tools? Follow for more practical guides. See my projects on GitHub.",
-      "publishedAt": "2026-07-01T03:06:35.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "85f089e17a4b30d5103be7b832758d8e3bbd5288e41a26f24d1fa7862b58bcc7",
-      "title": "I found 10 bugs in my own security scanner. Here's what they taught me about false positives.",
-      "url": "https://dev.to/zein_saleh_866d073614f017/i-found-10-bugs-in-my-own-security-scanner-heres-what-they-taught-me-about-false-positives-4o8m",
-      "description": "I found 10 bugs in my own security scanner. Here's what they taught me about false positives.\n\n\nI built a VS Code extension that scans code for leaked secrets, PII, and security vulnerabilities before you commit. A few weeks in, I sat down and did something most tool builders put off: I went looking for everywhere my own scanner was wrong.\nNot \"wrong\" as in crashing. Wrong as in flagging things that weren't actually problems, and — worse — missing things that were.\nFor a security tool, false positives aren't a minor annoyance. They're the thing that gets a tool uninstalled. The first time a scanner cries wolf on loginToken because it contains the substring \"log,\" a developer stops trusting every other finding it makes, including the real ones. So I spent a focused pass hunting for exactly this kind of bug. Found 10. Here they are, with the actual root cause for each — because \"we fixed some bugs\" isn't useful to anyone, but the specific ways pattern-matching security tools go wrong might be.\nA rule meant to catch sensitive data in log statements was matching any variable name containing \"log\" — including loginToken, which has nothing to do with logging. The regex was checking for the substring, not for an actual logging function call. Fixed by requiring the pattern to match a real log-call shape (logger.info(...), console.log(...), etc.), not just nearby text.\nAn \"unpinned dependency\" check was broad enough that it lit up on files that had nothing to do with dependencies at all. It needed to be scoped specifically to requirements/manifest-style files, not applied repo-wide.\nThe private key detector only recognized the old BEGIN RSA PRIVATE KEY PEM header. Real-world GCP service account keys use PKCS#8 format (BEGIN PRIVATE KEY), which the pattern didn't cover. This wasn't a false positive — it was a false negative, arguably worse, since it means real leaked keys were silently passing through.\nAny 16-digit number was getting flagged as a potential credit card. Any 16-digit number. Order IDs, invoice numbers, random test fixtures — all of it. Added Luhn checksum validation, the same algorithm real payment systems use to validate card numbers, so only mathematically plausible card numbers get flagged.\nAn unanchored regex for passport number formats was broad enough to match product SKUs and vehicle plates. Now it requires a nearby label (\"passport,\" \"passport no.,\" etc.) before it fires.\nThe IPv6 detector only matched the full 8-group form. Real-world IPv6 addresses are almost always written in compressed shorthand using ::, which the original pattern missed entirely. Another false negative.\nimport random\n\n\nA rule meant to catch insecure random number generation (using random instead of a cryptographically secure source for things like tokens or session IDs) was flagging the import itself, regardless of what it was actually used for. Scoped it down to the specific insecure call sites, not the import statement.\nAny call to open(data) was getting flagged as a path traversal risk, even when data had nothing to do with user input. Scoped to cases where the path actually derives from request data.\nThis one's almost funny in hindsight: SSH public keys were being flagged as critical leaked secrets. They're called public keys because they're meant to be shared. Pulled them out of the secrets detector entirely.\nA JS eval() call was tripping both the Python-oriented rule and the JS-oriented rule for unsafe eval usage, so it showed up as two separate findings for one line of code. Language-scoped the rules so each finding only fires once.\nAlmost every bug on this list comes down to the same root cause: a pattern that matched text instead of matching meaning. \"Contains the word log,\" \"is 16 digits,\" \"is inside a BEGIN...END block\" — these are all proxies for the thing you actually care about, and proxies break in both directions. They flag things that aren't real problems (noise), and they miss things that are (the actually dangerous outcome for a security tool).\nThe fix, in almost every case, wasn't a smarter model or more data. It was going back and asking \"what's the actual signal here?\" — a checksum instead of a digit count, a call-site instead of a substring, a label instead of a bare pattern.\nI also added a zero-dependency test suite so these specific regressions can't silently come back, and fixed a handful of consistency bugs where the editor and the commit-hook CLI were enforcing different rules on the same code — which is its own quiet source of false trust (\"it didn't complain in my editor\" ≠ \"it won't block my commit\").\nNone of this makes the scanner perfect. But I'd rather ship \"we found 10 ways this was wrong and fixed them\" than pretend it was right from day one. If you're evaluating any static analysis or secret-scanning tool, \"have they published their false positive fixes\" is a better trust signal than any accuracy percentage on a landing page.\nVeilo is a free VS Code extension — detection runs 100% locally, nothing leaves your machine. If you want to see if it catches anything in your own repo: marketplace.visualstudio.com/items?itemName=veilo.veilo",
-      "publishedAt": "2026-07-01T02:54:46.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "67efc8cdba051c3518aa569665a6bc7b9abf2428ff5c8222bfeaf372eb912441",
-      "title": "GitHub Trending Digest — 2026-07-01",
-      "url": "https://dev.to/muildev/github-trending-digest-2026-07-01-3if8",
-      "description": "GitHub Trending Digest — 1 Juli 2026: Efisiensi, Vision AI, dan Kolaborasi Agentik\n\n\nSelamat pagi, para pengembang! Kembali lagi dengan rangkuman repositori paling panas di GitHub. Minggu ini, lanskap open source menunjukkan pergeseran signifikan dari sekadar \"membuat hal baru\" menjadi \"mengoptimalkan proses yang ada\". Dua tema besar mendominasi: efisiensi kode melalui kecerdasan buatan (AI-driven efficiency) dan kemampuan pemrosesan visual yang luar biasa.\nDari alat yang membantu programmer \"bekerja lebih sedikit\" hingga sistem visi komputer yang bisa membaca dokumen seukuran buku sekaligus, berikut adalah lima repositori yang paling banyak mendapat bintang (stars) minggu ini.\nApa itu?\nponytail hadir dengan janji yang provokatif: membuat agen AI berpikir seperti pengembang senior yang paling malas di ruangan. Filosofinya sederhana tetapi powerful: kode terbaik adalah kode yang tidak pernah kamu tulis. Ini adalah ekosistem atau toolkit yang berfokus pada otomatisasi ekstrem, memungkinkan AI untuk merangkum, menghapus, dan menyederhanakan basis kode Anda secara agresif tanpa kehilangan fungsionalitas inti.\nKenapa Trending?\nboilerplate dan kerumitan arsitektur modern, ponytail menjawab kebutuhan akan kesederhanaan. Dengan mendapatkan nearly 70k stars, ini menunjukkan bahwa komunitas developer sangat lapar untuk solusi yang mengurangi beban kognitif. Ini bukan lagi soal menulis kode lebih cepat, tapi menulis kode lebih sedikit.\nUse Case Praktis:\nlegacy refactoring. Jika Anda memiliki basis kode JavaScript raksasa yang berantakan, ponytail dapat secara otomatis mengidentifikasi fungsi redundan, menggabungkan modul, dan menghapus dead code, memberikan struktur yang bersih seolah-olah ditulis ulang oleh tim top tier.\nApa itu?\nUnlimited-OCR. Berbeda dengan OCR tradisional yang terbatas pada gambar resolusi tinggi atau dokumen pendek, model ini dirancang untuk One-shot Long-horizon Parsing. Artinya, ia dapat memproses dan mengekstrak teks dari dokumen sangat panjang atau gambar beresolusi tinggi secara langsung, tanpa perlu memotong-motong gambar terlebih dahulu.\nKenapa Trending?\nimage slicing) adalah titik nyeri besar dalam pemrosesan dokumen digital. Solusi yang menangani dokumen utuh dalam satu batch menghemat waktu komputasi dan meningkatkan akurasi konteks. Dengan dukungan dari raksasa teknologi seperti Baidu, adopsi teknisnya diyakini akan luas di industri publikasi dan hukum.\nUse Case Praktis:\nApa itu?\nMiMo-Code merevolusi cara kita berinteraksi dengan Large Language Models (LLM). Konsep utamanya adalah Co-Evolution of Models and Agents. Alih-alih hanya menggunakan AI sebagai asisten pasif, framework ini memungkinkan model AI dan agen otonom saling belajar dan berkembang bersama dalam lingkungan eksekusi kode.\nKenapa Trending?\nAgentic AI yang dapat melakukan debugging dan pengujian secara mandiri, bukan hanya menyarankan kode.\nUse Case Praktis:\npull request dikirim, MiMo-Agent tidak hanya menjalankan tes, tetapi juga menganalisis kegagalan tes, mempelajari pola error, dan menyarankan perbaikan kode yang lebih elegan, lalu mengajarkan diri sendiri agar tidak membuat kesalahan serupa di masa depan.\nApa itu?\nAstrid OS. Repositori book berfungsi sebagai referensi kanonik bagi kernel, kapsul, host ABI, bus sistem, dan model keamanan dari OS ini. Sementara itu, handbook berisi panduan teknis tentang bagaimana berkontribusi, mulai dari kebijakan polyrepo, hukum \"kernel yang bodoh\" (kernel-is-dumb law), hingga prosese rilis dan tingkatan kontribusi.\nKenapa Trending?\nUse Case Praktis:\nsystems engineer) yang tertarik pada desain keamanan berbasis microkernel, dokumentasi ini adalah sumber primer. Bagi perusahaan yang ingin membangun sistem tertanam (embedded systems) yang kritis, memahami filosofi \"kernel-is-dumb\" (di mana logika bisnis ada di pengguna/kausal, bukan di kernel) sangat berharga untuk meminimalkan attack surface.\nDari digest minggu ini, tiga arah utama teknologi 2026 terlihat jelas:\n Efisiensi Melalui Pengurangan: Dengan ponytail, tren bergerak menjauh dari penambahan fitur baru menuju penyederhanaan dan penghapusan kompleksitas yang tidak perlu.\n Visi Komputer Universal: Unlimited-OCR menunjukkan bahwa batasan pemrosesan dokumen akan runtuh, memungkinkan integrasi data visual ke dalam alur kerja digital secara instan dan tanpa hambatan resolusi.\n Otonomi Agen: Baik MiMo-Code maupun Antrean Astrid OS menunjukkan bahwa fokus bergeser dari sekadar \"tools\" menjadi \"sistem otonom\" yang dapat berkembang dan bekerja sama dengan manusia.\nBagi developer, tahun ini adalah saat untuk memahami bagaimana Anda dapat memanfaatkan AI bukan hanya sebagai alat ketik, tetapi sebagai mitra evolusioner dalam membangun sistem yang lebih cerdas, lebih aman, dan lebih efisien.",
-      "publishedAt": "2026-07-01T02:48:37.000Z",
-      "feedName": "Dev.to"
-    },
-    {
       "id": "c139404bc564c3abce6270c5d20e7814705ee46ef2262722bc47a916eadfed24",
       "title": "العودة إلى Fable 5: كيفية إعادة توجيه أحمال عمل API بأمان",
       "url": "https://dev.to/yusuf_khalidd/lwd-l-fable-5-kyfy-d-twjyh-hml-ml-api-bmn-3654",
@@ -79,262 +31,6 @@
       "description": "AI database solutions are usually presented as one single idea: type a question in English, get a SQL query back. Text-to-SQL is impressive, but it is only one corner of a much larger space. In real teams, AI can help databases in at least four different ways:\nGeneration — turning natural language into SQL (text-to-SQL).\nValidation — reviewing SQL before it touches the database.\nOptimization — suggesting indexes, rewriting slow queries, explaining execution plans.\nGovernance — enforcing read-only policies, blocking dangerous statements, auditing access.\nThis article focuses on the second and fourth categories, using a real, runnable project as the case study: an AI SQL Validation Agent built with Node.js and TypeScript.\nFull source code here:\n👉 github.com/cs2026086510-a11y/sql-ai-validator-agent\nMy teammate Cristian Soto already wrote a great walkthrough of the REST API layer and the Codex Skill (read it here). So instead of repeating that, this article goes inside the engine: how the validation rules actually work, why string literals must be stripped before anything else, how SQL dialect differences are detected, and how this kind of agent fits into real-world workflows like CI pipelines and LLM tool-calling.\nA database will always tell you when a query is broken — after you run it. That has three problems in real projects:\nThe error arrives too late. In a CI pipeline or a code review, you want feedback before merge, not in production logs.\nThe error is cryptic. syntax error at or near \"FORM\" is accurate but unhelpful; a junior developer still has to figure out what went wrong.\nThe database has no policy opinion. It will happily execute DROP TABLE users; if the credentials allow it.\nAn AI-style validation agent flips the model: SQL is treated as untrusted input, analyzed statically, and returned with a structured, human-readable review — the same way a senior developer would comment on a pull request.\nDeveloper / CI / LLM\n        |\n        v\n   REST API (Express + Zod)\n        |\n        v\n   Rule Engine  ←  this article\n        |\n        v\n   Explanation Agent\n        |\n        v\n   Structured JSON review\n\nThe agent never connects to a database. That is a feature, not a limitation: it can run anywhere (CI runners, editors, serverless functions) with zero credentials and zero risk.\nHere is the most underrated part of the whole engine. Before any rule runs, the SQL string is normalized and its string literals are stripped:\nconst stringLiteralPattern = /'(?:''|[^'])*'|\"(?:\\\\\"|[^\"])*\"/g;\n\nexport function normalizeSql(sql: string): string {\n  return sql.replace(/\\s+/g, \" \").trim();\n}\n\nexport function stripStringLiterals(sql: string): string {\n  return sql.replace(stringLiteralPattern, \"''\");\n}\n\nWhy does this matter? Consider this perfectly valid query:\nSELECT 'FORM is mentioned inside a string' AS note;\n\nA naive validator that scans for the typo FORM would flag it as an error — a false positive. By replacing every literal with an empty '' first, keyword checks only ever see structural SQL, never user data. The regex even handles escaped quotes ('' inside single-quoted strings), which is the classic edge case that breaks homemade SQL scanners.\nThis is the same principle behind SQL injection defense: data and structure must never be confused. Any AI database tool — including LLM-backed ones — needs this separation, otherwise a malicious string literal could manipulate the analysis (a form of prompt injection).\nEvery rule in src/validation/rules.ts follows the same contract — it either stays silent or emits a structured error object:\nif (/\\bFORM\\b/i.test(literalSafeSql)) {\n  errors.push({\n    code: \"TYPO_FORM\",\n    message: \"Possible typo detected.\",\n    suggestion: \"FROM\",\n    severity: \"error\"\n  });\n}\n\nThe interesting rules are the ones that need actual parsing logic, not just a regex. Two examples:\nYou cannot detect an unclosed quote with a single regex, because single quotes, double quotes, escaped quotes and doubled quotes ('') all interact. The engine walks the string character by character, tracking quote state:\nexport function hasClosedQuotes(sql: string): boolean {\n  let singleQuoteOpen = false;\n  let doubleQuoteOpen = false;\n\n  for (let index = 0; index < sql.length; index += 1) {\n    const current = sql[index];\n    const next = sql[index + 1];\n\n    if (current === \"'\" && !doubleQuoteOpen) {\n      if (next === \"'\") { index += 1; continue; } // escaped '' inside a literal\n      singleQuoteOpen = !singleQuoteOpen;\n    }\n    if (current === '\"' && !singleQuoteOpen) {\n      doubleQuoteOpen = !doubleQuoteOpen;\n    }\n  }\n  return !singleQuoteOpen && !doubleQuoteOpen;\n}\n\nThis is a tiny state machine — the same technique real SQL lexers use, just scoped down to one job.\nSELECT id name email FROM users; is one of the most common beginner mistakes. The engine extracts the SELECT list and applies a heuristic: multiple bare identifiers, no commas, and no alias keywords like AS or DISTINCT that would legitimize the pattern:\nfunction looksLikeMissingComma(sql: string): boolean {\n  const match = /^\\s*SELECT\\s+(.+?)\\s+FROM\\s+/i.exec(sql);\n  if (!match) return false;\n\n  const selectList = match[1].trim();\n  if (!selectList || selectList === \"*\" || selectList.includes(\",\")) return false;\n\n  const parts = selectList.split(/\\s+/).filter(Boolean);\n  if (parts.length < 2) return false;\n\n  const aliasMarkers = new Set([\"AS\", \"DISTINCT\"]);\n  return !parts.some((part) => aliasMarkers.has(part.toUpperCase()));\n}\n\nNotice the design philosophy: the rule prefers staying silent over being noisy. SELECT id AS user_id FROM users passes untouched. A validator that cries wolf gets disabled within a week — precision matters more than recall for developer tools.\nOne of the most valuable things an AI database solution can teach (or enforce) is that SQL is not one language. The same pagination intent is written four different ways:\n\n\n\nEngine\nSyntax\n\n\n\n\nPostgreSQL / MySQL\nSELECT * FROM users LIMIT 5;\n\n\nSQL Server\nSELECT TOP 5 * FROM users;\n\n\nOracle\nSELECT * FROM users FETCH FIRST 5 ROWS ONLY;\n\n\nANSI standard\nFETCH FIRST 5 ROWS ONLY\n\n\n\nThe engine encodes these differences as engine-specific rules. For example:\nif (engine === \"postgresql\" && /\\bTOP\\s+\\d+\\b/i.test(sql)) {\n  errors.push({\n    code: \"ENGINE_SPECIFIC\",\n    message: \"TOP is not valid PostgreSQL SELECT syntax.\",\n    suggestion: \"Use LIMIT in PostgreSQL.\",\n    severity: \"error\"\n  });\n}\n\nif (engine === \"oracle\" && /\\bLIMIT\\s+\\d+\\b/i.test(sql)) {\n  errors.push({\n    code: \"ENGINE_SPECIFIC\",\n    message: \"LIMIT is not valid Oracle syntax.\",\n    suggestion: \"Use FETCH FIRST n ROWS ONLY.\",\n    severity: \"error\"\n  });\n}\n\nThere is a nice detail in ANSI mode: dialect-specific syntax is reported as a warning, not an error. The query might run fine on your engine — the agent is just telling you it is not portable. Severity levels turn a binary validator into a nuanced reviewer.\nThe agent also enforces policy. A tokenizer splits the (literal-stripped) SQL and checks every token against a denylist:\nconst forbiddenStatements = [\n  \"ALTER\", \"CREATE\", \"DELETE\", \"DROP\", \"EXEC\",\n  \"EXECUTE\", \"INSERT\", \"MERGE\", \"TRUNCATE\", \"UPDATE\"\n];\n\nconst forbidden = upperTokens.find((token) => forbiddenStatements.includes(token));\n\nCombined with the multiple-statement check, this blocks the classic piggyback attack pattern before it exists:\nSELECT * FROM users; DROP TABLE users;   -- rejected: MULTIPLE_STATEMENTS + FORBIDDEN_STATEMENT\n\nThis is exactly the kind of layer you want in front of any LLM that generates SQL: even if the model hallucinates a destructive statement, the deterministic validator kills it before execution.\nFail the build if any .sql file in the repo has blocking errors:\n- name: Validate SQL files\n  run: |\n    for f in $(git ls-files '*.sql'); do\n      body=$(jq -n --arg q \"$(cat $f)\" '{engine:\"postgresql\", query:$q}')\n      valid=$(curl -s -X POST http://localhost:3000/api/validate \\\n        -H \"Content-Type: application/json\" -d \"$body\" | jq '.valid')\n      if [ \"$valid\" != \"true\" ]; then\n        echo \"❌ SQL validation failed in $f\"; exit 1\n      fi\n    done\n\nBecause the API returns structured JSON (code, message, suggestion, explanation), a bot can post readable review comments with zero extra parsing:\n🤖 SQL Review — migration_2026_07.sql\nIssue: TOP is not valid PostgreSQL SELECT syntax.\nSuggestion: Use LIMIT in PostgreSQL.\n\nThis is where \"AI database solutions\" gets truly interesting. A text-to-SQL model should never self-certify its own output. Instead, register the validator as a tool:\n{\n  \"name\": \"validate_sql\",\n  \"description\": \"Validate a SQL statement before execution. Returns structured errors and a corrected version when possible.\",\n  \"input_schema\": {\n    \"type\": \"object\",\n    \"properties\": {\n      \"engine\": { \"enum\": [\"ansi\", \"mysql\", \"postgresql\", \"oracle\", \"sqlserver\"] },\n      \"query\": { \"type\": \"string\" }\n    },\n    \"required\": [\"engine\", \"query\"]\n  }\n}\n\nThe workflow becomes: LLM generates SQL → deterministic validator reviews it → only validated SQL is ever considered for execution. The probabilistic and deterministic layers check each other — which is the safest architecture we know today for AI + databases.\nA real parser (AST-based). Regex heuristics are perfect for teaching and for a first line of defense, but nested subqueries, CTEs and window functions need a genuine grammar. Libraries like node-sql-parser would be the natural next step.\nLine/column positions. IDE diagnostics and PR comments become 10× more useful when they point at the exact character.\nConfigurable policy. INSERT should be blocked in a dashboard context but allowed in a migrations/ folder.\nAn optional LLM explanation layer — but always after the deterministic rules, explaining structured findings rather than inventing them.\nThe AI database conversation is dominated by generation, but validation and governance are where AI-style tooling delivers immediate, low-risk value: no credentials, no execution, deterministic and testable behavior, and output structured enough for humans, CI systems and LLMs to consume alike.\nIf text-to-SQL is the accelerator, a validation agent is the brake and the seatbelt. Any serious AI database solution needs both.\nRepository: github.com/cs2026086510-a11y/sql-ai-validator-agent\nCompanion article (API + Codex Skill): Building an AI SQL Validation Agent with Codex and a REST API by Cristian Soto",
       "publishedAt": "2026-07-02T02:46:36.000Z",
       "feedName": "Dev.to"
-    },
-    {
-      "id": "d4d03c3e6482a359cc8783b776fd0addc12c7cc6331086ab438af93826f904ea",
-      "title": "Building a Search Modal for a Membership-Gated WordPress Site",
-      "url": "https://dev.to/highcenburg/building-a-search-modal-for-a-membership-gated-wordpress-site-b92",
-      "description": "Most \"add search to WordPress\" tutorials stop at dropping a widget in the header. That's fine until the site has gated content — membership videos, paid courses — and you realize the default search will happily leak the titles of member-only material to logged-out visitors. That's the interesting part of this build, and the part the tutorials skip.\nThis is a walkthrough of a live search feature I built for a fitness-membership platform running WordPress, WooCommerce, Divi, LearnDash, and WishList Member. The stack matters, because every one of those plugins had an opinion about how search should behave. The final result: an icon-triggered modal with debounced live results, grouped by content type, access-aware, styled to the brand, and working on mobile.\nThe site had four distinct content types worth searching, each with different access rules:\nBlog posts — public\nOn-Demand videos — membership-gated\nCourses and lessons — gated via LearnDash + WishList Member\nStore products — public WooCommerce\nSo the real architectural decision wasn't the UI. It was whether to run one unified index with access-aware filtering, or scope search per content type. I went with unified, enforcing gating at query time so a logged-out user never sees the title or excerpt of member-only content bleeding through results. That single decision drove most of the backend design.\nThe UI decision was quicker. The navbar was already dense, so an inline expanding input would have felt cramped at the breakpoint where the menu collapses. An icon that opens a full-screen overlay with live results sidesteps the space problem entirely and reads as more polished.\nEverything runs through a single custom REST route. This lives in the child theme's functions.php — deliberately not in a snippets plugin, because search is a hot path and shouldn't depend on a plugin's eval loader staying healthy.\nadd_action('rest_api_init', function () {\n    register_rest_route('rev6/v1', '/search', [\n        'methods'             => 'GET',\n        'permission_callback' => '__return_true',\n        'args' => [\n            's' => ['sanitize_callback' => 'sanitize_text_field', 'required' => true],\n        ],\n        'callback' => function (WP_REST_Request $req) {\n            $term = $req->get_param('s');\n            if (mb_strlen($term) < 2) return rest_ensure_response([]);\n\n            $args = [\n                's'              => $term,\n                'post_type'      => ['post', 'product', 'sfwd-courses'],\n                'posts_per_page' => 8,\n                'no_found_rows'  => true,\n            ];\n\n            if (function_exists('relevanssi_do_query')) {\n                $args['relevanssi'] = true;\n                $q = new WP_Query($args);\n                relevanssi_do_query($q);\n            } else {\n                $q = new WP_Query($args); // fallback: core search\n            }\n\n            $out = array_map(fn($p) => [\n                'title' => get_the_title($p),\n                'url'   => get_permalink($p),\n                'type'  => get_post_type($p),\n                'thumb' => get_the_post_thumbnail_url($p, 'thumbnail'),\n            ], $q->posts);\n\n            return rest_ensure_response($out);\n        },\n    ]);\n});\n\nThe function_exists('relevanssi_do_query') guard is doing more than it looks. Relevanssi is the search plugin that replaces WordPress's weak default search with a proper relevance-ranked index that respects membership access. But wrapping the call in a capability check means the feature degrades gracefully to core WP search if the plugin is inactive, missing, or not yet loaded in a given request context. During the build, an unguarded relevanssi_do_query() call was fataling the endpoint with a white screen — the guard turns that into a working (if less clever) fallback instead of a broken site.\nThat's the general principle: a search endpoint should never be able to take down the page. Degrade, don't die.\nHere's the part worth dwelling on. Relevanssi indexes what you tell it to, and by default it will index gated content and return it in results. On a membership site, that means a logged-out visitor searching for a topic covered only in a paid course sees that course's title and excerpt in the results. That's a content leak — you're advertising exactly what's behind the paywall, with the specifics.\nThe fix is enforced server-side, in two layers:\nConfigure Relevanssi's index so protected post types respect the membership plugin's visibility rules.\nWhere the plugin's filtering isn't clean, add a relevanssi_post_ok filter to drop posts the current user can't access before they ever reach the response.\nThe critical rule: never filter this in JavaScript. The overlay hiding a result client-side means the data already left the server — it's in the network response, visible to anyone who opens devtools. Access control that lives in the frontend isn't access control. It has to happen before rest_ensure_response.\nThis also interacts with caching, which I'll come back to.\nThe client is vanilla JS — no framework needed for this. It's enqueued from the child theme with the endpoint URL localized in, rather than hardcoded, so it survives sites where the REST root isn't at the default path.\nlet ctrl;\nconst search = debounce(async (term) => {\n  if (term.length < 2) return (results.innerHTML = '');\n  ctrl?.abort(); ctrl = new AbortController();\n  results.innerHTML = '<div class=\"rev6-loading\"><span class=\"rev6-spinner\"></span>Searching…</div>';\n  try {\n    const res = await fetch(`${REV6_SEARCH.endpoint}?s=${encodeURIComponent(term)}`,\n      { signal: ctrl.signal });\n    render(await res.json());\n  } catch (e) {\n    if (e.name !== 'AbortError') {\n      console.error(e);\n      results.innerHTML = '<p class=\"rev6-empty\">Something went wrong. Try again.</p>';\n    }\n  }\n}, 250);\n\nThree things are load-bearing here:\nDebounce (250ms). Without it, every keystroke fires a request. On a slow query that's a pile-up of in-flight fetches racing each other.\nAbortController. When the user keeps typing, the previous request is cancelled. This prevents the classic race where an earlier, slower query resolves after a later one and overwrites the correct results with stale ones. The if (e.name !== 'AbortError') check keeps those intentional cancellations out of the error path.\nExplicit error state. A failed fetch used to leave the spinner spinning forever. On a search that can take a couple of seconds, timeouts and dropped requests are likely enough that silent failure is a real UX hole. Now it shows a message and stops.\nThe render step groups results by content type so \"Articles / Store / Courses\" read as sections rather than a flat, confusing list. And the titles get escaped before injection:\nconst escapeHtml = s => s.replace(/[&<>\"']/g, c =>\n  ({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',\"'\":'&#39;'}[c]));\n\nThis is not optional. The response strings go into innerHTML, so an unescaped post titled with an <img onerror=...> payload would be stored XSS. Escape anything from the API before it touches the DOM as HTML.\nAdding a spinner was a requested UX fix — the modal sat blank for a beat on slower queries and read as broken. But a spinner treats the symptom. The real question was why the query took seconds.\nA properly indexed Relevanssi query across a few post types should return in well under 200ms. Multi-second responses almost always mean one of:\nThe index needs rebuilding — a stale or partial index is the number-one cause.\nThe query is silently falling through to the core WP fallback, which does an unindexed LIKE across the post table. On a large table, that genuinely is slow.\nSo the spinner shipped, but the actual fix was confirming Relevanssi was active and its index freshly built. Worth checking the endpoint's response time in the network tab before accepting \"a bit slow\" as normal — the spinner should be covering a 150ms gap, not a 3-second one.\nThe site sits behind a Varnish + page-cache stack. This creates a subtle and serious failure mode: if the search endpoint gets cached, one user's access-filtered results can be served to a different user. A logged-in member's search, cached, then served to a logged-out visitor — leaking exactly the gated content the server-side filtering was designed to protect.\nThe fix is to exclude the REST route from the page cache entirely. The access filtering only works if every request is evaluated fresh against the current user. This is the same leak from the backend section, wearing a different hat — and it's why the whole \"never trust the client, evaluate server-side\" principle has to extend to the cache layer too.\nDesktop was straightforward. Mobile was a grind, and the lesson is more useful than the code.\nThe trigger started life injected into the nav menu via wp_nav_menu_items. On desktop, fine. But when Divi collapsed the menu into a hamburger, the injected button got swallowed into the dropdown and — worse — became unclickable. Divi binds its own touch handlers to the collapsed menu items, and they intercepted the tap before the button's handler could run. I tried stopPropagation, z-index bumps, scoped CSS. Each one was a patch on a symptom.\nThe actual fix was to stop fighting the theme's menu. Instead of living inside the hamburger, the mobile trigger gets injected as a standalone icon in the header, outside the menu entirely:\nfunction mountMobileTrigger() {\n  if (document.querySelector('#rev6-search-mobile')) return;\n  const header =\n    document.querySelector('#main-header .container') ||\n    document.querySelector('#main-header') ||\n    document.querySelector('.et-l--header .container') ||\n    document.querySelector('header');\n  if (!header) { console.warn('[search] header not found'); return; }\n  const btn = document.createElement('button');\n  btn.id = 'rev6-search-mobile';\n  btn.setAttribute('aria-label', 'Search');\n  btn.innerHTML = '<svg viewBox=\"0 0 24 24\" width=\"22\" height=\"22\" ...></svg>';\n  btn.addEventListener('click', openOverlay);\n  header.appendChild(btn);\n}\n\nBecause it's no longer a child of the menu, none of Divi's collapsed-menu handlers can eat the tap. It also fixed the real UX problem — search was one tap from any page instead of buried at the bottom of an expanded menu.\nThe general takeaway: when a page builder's component keeps resisting your changes, the move is usually to stop modifying its component and place your own element beside it, not inside it. Chained patches against a theme's behavior are a signal you're solving the problem at the wrong layer.\nA couple of smaller mobile details that mattered: the input font-size is set to 16px, because anything smaller triggers iOS Safari's auto-zoom on focus. And the modal is a contained card with side margins and a capped height rather than a full-bleed sheet — a preference call, but it reads as a modal rather than a takeover.\nDecide your gated-content policy first. Fully invisible to non-members, or visible-but-locked? That one answer drives the entire index configuration. Everything else is downstream of it.\nAccess control is server-side or it doesn't exist. Filter before the response, exclude the endpoint from cache, and never rely on the UI to hide anything sensitive.\nMake search un-crashable. Guard optional dependencies, fall back to core, and give it an explicit error state.\nDebounce and abort. They're four lines that eliminate whole categories of race conditions and wasted requests.\nEscape everything from the API. innerHTML plus unescaped strings is stored XSS waiting to happen.\nStop fighting the page builder. If you're on your third patch against a theme's component, put your element next to it instead of inside it.\nThe feature itself is small — an icon, an overlay, an endpoint. But most of the engineering was in the parts you can't see: the access filtering, the cache exclusion, the race handling, the graceful degradation. That's usually where the real work is.",
-      "publishedAt": "2026-07-02T02:36:34.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "4b3dc438b61894ec0b38ef09311bbe47bbd5195b38d5b098c31a4122da2915ba",
-      "title": "OIDC・Trusted Publishing でも残る、GitHub Actions ランナーの認証情報リスクを正しく理解する - GMO Flatt Security Blog",
-      "url": "https://blog.flatt.tech/entry/2026-github-actions-security-part3",
-      "description": "はじめに こんにちは。GMO Flatt Security株式会社 セキュリティエンジニアの佐藤(@Nick_nick310)と佐藤(@teppay_sec)です。 本シリーズでは全4回にわたり、GitHub Actionsのセキュリティについて体系的に解説します。まだお読みでない方は、Vol.1からご覧いただくことをお勧めします。 Vol.1: 相次ぐGitHub Actions 侵...",
-      "publishedAt": "2026-07-02T02:32:32.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "4249a3f6cd9102963a6629847136be87322564e7dde42e812c8eff2420dab628",
-      "title": "開発プロセスに組み込む継続的なセキュリティ対策 ～ヒアリングの標準化からAI活用、PoCによる現場定着まで",
-      "url": "https://gihyo.jp/article/2026/07/continuous-security?utm_source=feed",
-      "description": "『Software Design 2026年7月号』の第1特集「セキュリティバイデザイン入門」から第4章「開発プロセスに組み込む継続的なセキュリティ対策」を公開します。",
-      "publishedAt": "2026-07-02T02:00:00.000Z",
-      "feedName": "gihyo.jp"
-    },
-    {
-      "id": "fece316ce073fbb4306dff6cf253cf0626bde7c7ca6ae1458e196c9f5f805666",
-      "title": "Xboxで「ゲームのディスク版をデジタル化」する新機能をテストか、ディスク終焉の流れ？",
-      "url": "https://japan.cnet.com/article/35249884/",
-      "description": "マイクロソフトが「Xbox Series」や「Xbox One」向けパッケージ版ゲームでデジタル版コピーを得られる新機能をテスト中だと、The Vergeが報じた。",
-      "publishedAt": "2026-07-02T01:47:00.000Z",
-      "feedName": "CNET Japan"
-    },
-    {
-      "id": "391805086816010862745fdd1ee0a42c332cfb281f349f7cf865058e6a90914c",
-      "title": "GitHub Actions で Terraform の plan 結果を Conftest（OPA）でポリシーチェックしてみた",
-      "url": "https://dev.classmethod.jp/articles/github-actions-terraform-plan-conftest-opa/",
-      "description": "GitHub Actions で Terraform の plan 結果を Conftest（OPA）でポリシーチェックしてみた",
-      "publishedAt": "2026-07-02T01:35:35.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "eb1605bdaed134722cbc28e35d090001b47ba865ab015e39b583378b0352912e",
-      "title": "AWS GlueとSnowflake AI_REDACTで、文中の機密性のある文字列のマスキングを試してみた",
-      "url": "https://dev.classmethod.jp/articles/glue-job-snowflake-ai-redact-pii-masking/",
-      "description": "AWS GlueとSnowflake AI_REDACTを使い、テキストデータに含まれる氏名や電話番号などの機密情報をマスキングする方法を試してみました。ルールベースとAIベースの2つのアプローチの精度や使い勝手の違いをご紹介します。",
-      "publishedAt": "2026-07-02T01:18:38.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "51a1875d295353238706320f80a9bf7d83811f454fb799fce4a653f6a04735de",
-      "title": "AWS Summit Japan 2026 参加レポート - Findy Tech Blog",
-      "url": "https://tech.findy.co.jp/entry/2026/07/02/070000",
-      "description": "こんにちは。ファインディのPlatform開発チーム（以降、SREチーム）でSREを担当している原（こうじゅん）、富田（@Cooking_ENG）、松本（@mozumasu）です。 2026年6月25日・26日に幕張メッセで開催された「AWS Summit Japan 2026」に、SREチームの3名で参加してきました。 aws.amazon.com それぞれが印象に残ったセッシ...",
-      "publishedAt": "2026-07-02T00:43:12.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "fe4d7cbb3ab0a7f8e8e58127d62227e844842cd085f6ae8fd55f83e8398592ca",
-      "title": "[小ネタ] Health イベント ARN を AWS マネジメントコンソールから確認する方法",
-      "url": "https://dev.classmethod.jp/articles/aws-health-event-arn-console/",
-      "description": "Health イベント ARN はイベントの URL に含まれています。",
-      "publishedAt": "2026-07-02T00:28:53.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "f70167c7569b48bb8e13b26962ff20d83bc1281966ab318bbcc6b5e80d91a635",
-      "title": "Claudeプロジェクトでダブルチェック作業を半自動化してみた",
-      "url": "https://dev.classmethod.jp/articles/claude-azure-double-check-tried/",
-      "description": "Azure のリソースグループ作成後のダブルチェック作業を、Claude と Azure CLI を使って半自動化してみました。手作業では15〜20分かかっていた確認が、5〜10分に短縮できた工夫をご紹介します。",
-      "publishedAt": "2026-07-01T23:30:10.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "0830156c8b7080ba3f675cb3d40521b17bb6992124dc53e8ac2bc263507ff1fc",
-      "title": "その製品、本当に\"国産\"？　セキュリティ製品を評価する新指標「日本度」が始動",
-      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2607/02/news040.html",
-      "description": "その製品、本当に\"国産\"？　セキュリティ製品を評価する新指標「日本度」が始動：名乗るだけでは不十分 国産セキュリティ製品とは、条件をどこまで満たせば「国産」と言えるのか。日本サイバーセキュリティ産業振興コミュニティは、製品やサービスが国内でどの程度自律的に運用・統制・継続・保護できるかを評価する新指...",
-      "publishedAt": "2026-07-01T23:02:58.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "d4bc362a8a166ca7f4b71d3ed4374e66aa48fc20afbe98c057e280dbef0004ee",
-      "title": "AMDのCIOに尋ねる──企業の価値をAIが左右する今、その裏方を支えるIT部門をどう評価すべきか？",
-      "url": "https://enterprisezine.jp/article/detail/24578",
-      "description": "AIが普及する一方で、ITインフラの運用には新たな重荷が課されている。そして、その実行を担うIT部門はどうなってしまうのか。また、膨らむ負荷とコストをどう統制すればよいのか。米国ラスベガスで開催された「Cisco Live! 2026」にて、AMDのCIOとCiscoのCPOという、AIインフラの構成を担う重要なファクター同士が対談する一幕があった。AIインフラのパフォーマンス問題、IT部門の運用負荷と評価問題、そしてAIのトークンが高すぎる問題について意見が交わされた。",
-      "publishedAt": "2026-07-01T23:00:00.000Z",
-      "feedName": "EnterpriseZine"
-    },
-    {
-      "id": "0830156c8b7080ba3f675cb3d40521b17bb6992124dc53e8ac2bc263507ff1fc",
-      "title": "その製品、本当に\"国産\"？　セキュリティ製品を評価する新指標「日本度」が始動",
-      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2607/02/news040.html",
-      "description": "国産セキュリティ製品とは、条件をどこまで満たせば「国産」と言えるのか。日本サイバーセキュリティ産業振興コミュニティは、製品やサービスが国内でどの程度自律的に運用・統制・継続・保護できるかを評価する新指標「日本度」の概要を公開した。一体これはどのようなものか。",
-      "publishedAt": "2026-07-01T22:30:00.000Z",
-      "feedName": "＠IT"
-    },
-    {
-      "id": "eb3976d4944e39e99f067e608397d74654ad9fed4ba9e77312b605fd2fa6f78d",
-      "title": "Anthropicの営業はAIエージェントをこう使う！　日本法人メンバーが明かす手の内",
-      "url": "https://www.itmedia.co.jp/news/articles/2607/02/news017.html",
-      "description": "Anthropicの営業はAIエージェントをこう使う！　日本法人メンバーが明かす手の内：AWS Summit Japan 2026（1/2 ページ） 生成AIサービス「Claude」を手掛け、AIエージェントの分野で世間の注目を集める米Anthropic。ITエンジニアのみならず、非エンジニアまでもが同社のサービスで業務の改革を図り、日々その手法を模索...",
-      "publishedAt": "2026-07-01T22:12:09.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "d1cfc5b71e396aeb48627562854352194fca25bbdccc7638bf2e692691978464",
-      "title": "[アップデート] AWS Artifact に AI がコンプライアンスの質問に回答する「Assurance Assistant」が追加されました",
-      "url": "https://dev.classmethod.jp/articles/aws-artifact-assurance-assistant/",
-      "description": "[アップデート] AWS Artifact に AI がコンプライアンスの質問に回答する「Assurance Assistant」が追加されました",
-      "publishedAt": "2026-07-01T22:03:53.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "67fede6570fc7377e4013173e839f02314c780e170559e767f62019cc1ef8d07",
-      "title": "Windows 11移行で悩む人に朗報？　Windows 10「拡張セキュリティ更新（ESU）」が期間延長へ",
-      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2607/02/news010.html",
-      "description": "サポート終了を迎えたWindows 10だが、個人向けの「拡張セキュリティ更新プログラム（ESU）」の提供期間が2027年10月まで1年間延長されることが明らかになった。PC高騰などでWindows 11への移行が進まない中、Windows 10を使い続けたいユーザーにとってこの延命措置は大きな朗報だ。本稿では、ESUの概要や無料登録の条件、具体的な手続きについて解説する。",
-      "publishedAt": "2026-07-01T20:00:00.000Z",
-      "feedName": "＠IT"
-    },
-    {
-      "id": "84666ae41058a2815715d707ada046a3ee4f9fb459e655f102c76f290cc8d9ac",
-      "title": "CDKでも「Expressモード」がサポートされたので、デプロイ時間を計測してみた",
-      "url": "https://dev.classmethod.jp/articles/dk-express-mode-deploy-time/",
-      "description": "aws-cdk v2.1129.0で`cdk deploy --express`が追加されました。前回CloudFormation APIで検証したExpressモードと同じ構成をCDKで再現し、デプロイ所要時間が183秒から40秒（4.6倍）に短縮されることを確認しました",
-      "publishedAt": "2026-07-01T16:54:01.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "633832b24941c06f2c505dd64a4df34f0ea4b06515b8a8fe6726daa57517e8a2",
-      "title": "クラスメソッド データアナリティクス通信(AWSデータ分析編) – 2026年7月号",
-      "url": "https://dev.classmethod.jp/articles/cm-news-analytics-202607/",
-      "description": "2026年6月のAWSデータ分析関連のアップデート情報をお届けします。Amazon Quickの自律エージェント、AWS Glueのセマンティック検索、Spark Connect対応など、自然言語・エージェント・対話的な開発が同時に進んだ月の見どころをご紹介します！",
-      "publishedAt": "2026-07-01T14:34:19.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "ff230247485e476ae5cc4b8ce21af209bc687e64df14f4e4bcb496433f601df7",
-      "title": "[Amazon Chime SDK] PSTN AudioとAWS CLIを使って日本宛ての架電を試してみた",
-      "url": "https://dev.classmethod.jp/articles/amazon-chime-sdk-autocall/",
-      "description": "[Amazon Chime SDK] PSTN AudioとAWS CLIを使って日本宛ての架電を試してみた",
-      "publishedAt": "2026-07-01T11:08:10.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "6e1aa88c6ff28f1944dda314dc2ce50c0c177a38f550fae1d4caa2b70cec6bd0",
-      "title": "Understanding dynamic resource allocation in Kubernetes",
-      "url": "https://www.cncf.io/blog/2026/07/01/understanding-dynamic-resource-allocation-in-kubernetes/",
-      "description": "Dynamic Resource Allocation (DRA) recently reached GA in Kubernetes v1.35, and I believe many of us are eager to give it a try. Adding to the momentum, NVIDIA has moved dra-driver-nvidia-gpu into Kubernetes SIGs, with the...",
-      "publishedAt": "2026-07-01T11:00:00.000Z",
-      "feedName": "Cloud Native Computing Foundation"
-    },
-    {
-      "id": "5e17be51284b5fc99a2ee6f62c38fa681cd85129a4febf9c0838a80b2b64eca1",
-      "title": "ISUCON2026 開催決定と参加受付日程のお知らせ : ISUCON公式Blog",
-      "url": "https://isucon.net/archives/59917350.html",
-      "description": "いつもISUCONを応援いただき、ありがとうございます。 このたび、プログラミング競技イベント「ISUCON2026 〜Second Stage 変わらない情熱、新たな挑戦〜」を、2026年10月31日(土)に開催いたします。 ISUCONは、お題となるWebサービスをレギュレーションの範囲内で高速化し、そのスコアを競うチューニングコンテストです...",
-      "publishedAt": "2026-07-01T10:07:29.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "989bf72c0fab3fe7ac4412c0ea69d3e4b09afc1fb459b70653b3111386fa04c2",
-      "title": "はてなブログに Amazon CloudFront SaaS Manager を導入した話",
-      "url": "https://developer.hatenastaff.com/entry/2026/07/01/183904",
-      "description": "はじめに\nこの記事は SRE 連載です。\n前月の記事は id:k1s1eee さんの社内にLiteLLM Proxy（OSS版）を導入してマルチプロバイダLLM運用基盤を作った話でした。\nid:hagihala です。\n去年から今年の上半期にかけてはてなブログに Amazon CloudFront SaaS Manager (以下 SaaS Manager) を導入し、ブログへのトラフィックを CloudFront 経由に移行しています。2025年9月にはてな所有のワイルドカードドメインの移行 (第1段階) を完了、2026年3月には独自ドメインの CNAME 方式の移行 (第2段階) を完了しました。\nこの記事でははてなブログへの SaaS Manager 導入の経緯や設計時に考えたこと、遭遇したハマりどころなどを紹介します。\nなお、この記事の投稿時点ではネイキッドドメイン / A レコード方式の移行 (第3段階) は進行中です。本記事は第2段階完了時点の知見として読んでください。\nはじめに\n背景\nはてなブログの現行構成\n導入の動機\nなぜ今まで CDN を入れていなかったか\nSaaS Manager を選んだ理由\nSaaS Manager の仕組み\nSaaS Manager によって解決される問題\nSaaS Manager が向くワークロードの条件\n当時の不安と踏み込んだ理由\n移行戦略\n段階分けの判断軸\n第1段階\n複数のワイルドカードドメインを1 Tenant にまとめる\nOrigin 構成\nRoute 53 加重ルーティングによる切り替え\n第2段階\n1ブログ1 Tenant の判断\nStep Functions を用いた Tenant のライフサイクル\nマネージド証明書のバリデーション方式の選択について\n移行の際に発生した問題\nドメインの有効性のフラッピング\n代替ドメイン名の重複 (CNAMEAlreadyExists)\nACM が発行できない ccTLD\nCAA レコードの追加依頼\nこれからの話\n第3段階\nキャッシュの有効化\nまとめ\nSaaS Manager は「多ドメイン・均質なルーティング」のワークロードに強い\nクォータは早めに確認・引き上げる\n既存の CloudFront distribution との代替ドメイン名の重複はユーザー所有のものも含め移行前に調査する\n背景\nはてなブログの現行構成\nはてなブログへのリクエストは大まかに以下のような経路を辿ります。\n\n  \n  はてなブログの現行構成（CloudFront 導入前）\n\nブログへのリクエストは公開 NLB を経由して nginx で動くプロキシサーバに届きます。nginx がクライアントとの TLS を終端し、 HTTP キャッシュおよびバックエンドへ HTTP でリクエストを転送します。独自ドメインの TLS 証明書は nginx が内製の証明書発行・管理システムである CertKeeper から動的に取得して使用します。\nCertKeeper については以下の記事で詳しく解説されています。\nブログサービスのHTTPS化を支えたAWSで作るピタゴラスイッチ / The construction of large scale TLS certificates management system with AWS - Speaker Deck\nなお、画像・CSS・JavaScript などの静的アセットについては以前から CDN を導入しており、現在は CloudFront + S3 で配信しています。\nこの構成で長らくブログを運用してきましたが、いくつかの課題がありました。\n導入の動機\n主な目的は WAF の導入によるセキュリティ強化です。 CloudFront で AWS WAF を使用することで DDoS 対策や不正アクセスへの対応がしやすくなります。\nまた今回は副次的なものですが、通信の最適化や将来的には CloudFront でコンテンツをキャッシュすることによるパフォーマンスの向上や転送コストの削減も見込んでいました。\nなぜ今まで CDN を入れていなかったか\n「なぜ今まで CDN を入れなかったのか」と思われるかもしれません。最大の理由は、はてなブログが大量の独自ドメインを扱うサービスだからです。\n独自ドメインを持つブログの数字は非公開なので詳細な数字は避けますが、万単位の規模で存在しています。独自ドメインそれぞれに CloudFront ディストリビューションを作るのは現実的ではありません。また1つのディストリビューションに追加できる代替ドメイン名には上限があり、全てを収めることはできません。\nそれらのドメインの TLS 証明書を適切に発行、管理する仕組みも必要になります。\nSaaS Manager を選んだ理由\nSaaS Manager の仕組み\n\n  \n  SaaS Manager の用語関係図 (はてなブログの例)\n\nAmazon CloudFront SaaS Manager は、SaaS プロバイダが多数のテナント (顧客の独自ドメイン等) を1つの CloudFront ディストリビューションで管理できるようにするサービスです。主な概念は次のとおりです。\nMulti-tenant distribution: テンプレートとなる CloudFront ディストリビューション。キャッシュ設定やオリジン設定はここで一元管理する\nDistribution Tenant (以下 Tenant): Multi-tenant distribution のインスタンス。ドメインと ACM 証明書を持つ\nConnection group: Tenant を束ねる単位。DNS のレコードが向く先\nShared certificate: 複数の Distribution Tenant 間で共有される ACM の TLS 証明書\nManaged certificate: Tenant に紐づく ACM の TLS 証明書。CloudFront と連携して HTTP 方式のバリデーションを行い自動で発行・更新される\n証明書は場面によって使い分けます。Shared certificate は第1段階のワイルドカードドメインのように複数 Tenant で同じ証明書を使い回す可能性がある (例えば特定のサブドメインの Tenant を切り出すことも可能) 場面で、Managed certificate は第2段階以降の独自ドメインのように Tenant ごとに個別の証明書を発行する場面で利用します。\nマルチテナントディストリビューションの仕組みを理解する - Amazon CloudFront\nSaaS Manager によって解決される問題\n先程述べた通り CloudFront の通常のディストリビューション (Standard distribution) では、1つのディストリビューションに追加できる代替ドメイン名 (Alternate Domain Name) に上限があります。たくさんある独自ドメインをこの上限以内に収めることはできません。\nまた独自ドメインごとに自動で1つのディストリビューションを作って割り当てることも (AWS クォータ次第で) 可能かも知れませんが、大量のディストリビューションを管理するのは運用負荷が高く、アプリケーション側から個別に操作するコードも煩雑になります。\nSaaS Manager の Multi-tenant distribution はまさにこの問題のために設計されています。1つのテンプレートに対してドメインごとに Tenant を作る構造です。設定は Multi-tenant distribution 側で一元管理でき、個別ドメインの差異は Tenant レベルでの最小限の設定に留まります。\nSaaS Manager が向くワークロードの条件\nSaaS Manager は「多ドメインだが挙動はほぼ共通」なワークロードに強くフィットします。はてなブログは典型的にこの条件に当てはまります。\n逆に向かないケースもあります。ドメインごとに異なるキャッシュ設定やオリジン設定を入れたいというケースがその一つです。このケースではパラメータ機能で対応可能なものも一部ありますが、 Multi-tenant distribution のテンプレートで表現しきれなくなります。プラン毎などパターンが限られていればそれぞれに別の Multi-tenant distribution を用意して Tenant を割り振る方法も取れますが、パターンが多くなると管理が煩雑になります。\n当時の不安と踏み込んだ理由\n2025年4月にリリースされ、5月に SaaS Manager の検証を始めた時点では、国内での導入事例はほぼなく、ドキュメントも整備途上の部分がありました。「現在運用しているブログ数に対してクォータが足りるのか」という不確実性がありました。\nそれでも踏み込んだのは、検証の過程で「はてなブログのワークロードに合致している」と確信できた、そして WAF の導入によるセキュリティ強化や転送量のコスト削減が見込めるためでした。クォータや機能のロードマップについて AWS 側と早い段階から会話し、必要な上限引き上げの見通しを立ててから本格導入に進みました。\n移行戦略\n全体の移行を3段階に分けて進めています。\n 段階 \n 対象 \n 主な技術課題 \n 状態 \n\n\n\n\n 第1段階 \n はてな所有のワイルドカードドメイン \n Tenant 設計、X-Forwarded-For、proxy 改修 \n 完了 (2025/9) \n\n\n 第2段階 \n 独自ドメイン (CNAME 方式) \n Tenant 自動ライフサイクル管理、ACM 共有証明書、CAA 周知 \n 完了 (2026/3) \n\n\n 第3段階 \n 独自ドメイン (A レコード方式) \n Anycast Static IP、ユーザー DNS 変更のための長い移行期間 \n 進行中 \n\n\n\n\n\n段階分けの判断軸\n段階を分けるにあたって、blog.hatenablog.com のような非独自ドメイン (はてな提供ドメイン) と独自ドメインという区別で段階を分けました。また独自ドメインの中でもその提供方法によって段階を分け、移行の効果が高く、かつ移行に必要な工数の小さいものから手を付けることにしました。\n第1段階のはてな所有ワイルドカードドメインは、ユーザーへの周知なしにはてな側で完全にコントロールできます。問題があれば即座に切り戻せる、最もリスクの低い出発点でした。\n第2段階の独自ドメイン CNAME 方式は、アプリケーション側での自動テナント管理が必要になります。ユーザーへの告知 (既存 CloudFront ディストリビューションとの重複の確認と解消) も必要でした。\n第3段階の A レコード方式 (ネイキッドドメイン向け) は、ユーザーが自分で DNS レコードを変更しなければならないという性質上、移行期間が長期間になる見通しです。Anycast Static IP の確保という技術的・コスト的な課題もあり現在進行中となっています。\nなお「これからの話」の節で説明しますが、CloudFront のキャッシュ有効化はスコープ外としています。\n第1段階\n複数のワイルドカードドメインを1 Tenant にまとめる\nはてなブログが使うワイルドカードドメインは *.hatenablog.com、*.hatenablog.jp、*.hateblo.jp など数種類あります。これをどのように Tenant に割り当てるかを最初に検討しました。\n検討の結果、これらのワイルドカードドメインを1つの Tenant にまとめることにしました。この時点では分けるメリットが実質ゼロに近かったことが理由です。\nOrigin 構成\n\n  \n  VPC Origin を使用した CloudFront 構成\n\nCloudFront の Origin として何を使うか、次の選択肢がありました。\n 選択肢 \n メリット \n デメリット \n\n\n\n\n 既存の Public NLB をそのまま使う \n 構成変更が最小限 \n CloudFront 以外のアクセスを分離しづらい \n\n\n VPC Origin + 内部 NLB を新設 \n CloudFront 以外からのアクセスを遮断しやすい、将来の Public IP 縮退が可能 \n NLB 追加による固定費 \n\n\n\n\n\nVPC Origin + 内部 NLB 構成を取ることにしました。\n決め手はセキュリティと将来性でした。内部 NLB と VPC Origin を組み合わせると NLB にはインターネットからのアクセスが届かなくなります。CloudFront を経由しないリクエストを構造的に遮断できる構成です。\nPublic NLB で既存のトラフィックを受け入れつつ CloudFront 経由のトラフィックは全て VPC Origin + 内部 NLB 構成を通すようにして、 CloudFront 移行が進むにつれて Public NLB 経由のトラフィックが減っていくようにしました。\nRoute 53 加重ルーティングによる切り替え\n切り替えはワイルドカードドメイン単位で Route 53 の加重ルーティングを使って段階的に行いました。\n手順の概要：\n既存の NLB 宛 A レコード (Alias) を加重ルーティングに変換\nCloudFront 宛 A レコード (Alias) を Weight: 1 で追加\nCloudFront 宛のウエイトを段階的に上げ、最終的に全て置き換える\n問題がなければ NLB 宛レコードを削除してシンプルルーティングに戻す\nキャッシュを使わない設定のため「キャッシュを温める」配慮は不要でした。影響を小さくするため、リクエスト数の少ないドメインから順に切り替えて様子を見ながら進めました。\n第2段階\n第1段階は手動で作成した数個の Tenant へのトラフィック切り替えでした。第1段階で扱うはてな所有のワイルドカードドメインは数種類のみで代替ドメイン名の上限にも収まるため、この時点の構成は Standard distribution でも実現可能なものであり、 SaaS Manager を使用する必然性は特にありません。\n第2段階ではその様子が変わり、アプリケーション側で Tenant のライフサイクルを管理するフェーズに入ります。具体的には「はてなブログに独自ドメインを登録すると専用の Tenant を自動的に作成して証明書を発行・設置し、ドメインが解除されたら削除する」という処理が必要になります。\n1ブログ1 Tenant の判断\n導入するにあたって、 Tenant とブログ・独自ドメインの対応関係をどう設計するか最初に決める必要がありました。\n採用した設計は「1 Distribution Tenant = 1ブログ = 1独自ドメイン」です。機能上は1つの Tenant に複数ドメインを割り当てることも可能ですが、それはしないという判断です。理由は2点あります。\n1つ目は管理の単純さです。「このドメインを持つ Tenant はどれか」を一意に決定できる構造は、運用操作や障害時の調査を簡単にします。\n2つ目は将来のキャッシュ Invalidation のためです。「これからの話」の節で説明しますが、キャッシュを有効化したとき、ブログ単位のキャッシュ削除は Tenant 単位の Invalidation で行う設計になります。1ブログ = 1 Tenant の対応があってはじめて、この Invalidation が成立します。\nStep Functions を用いた Tenant のライフサイクル\nTenant の作成フローは次の手順を踏みます。\nアプリケーションが独自ドメインの有効性を検証する\nTenant を作成する\n\n\nAWS 側でもドメインの有効性検証が行われる\n(切り替え前) self-hosted 方式でバリデーショントークンファイルを取得して公開する\nACM がマネージド証明書を発行するのを待つ (数十秒〜十数分)\n証明書を Tenant に適用する\n\n  \n  Distribution Tenant 作成フロー\n\nこの「数分待ちながら状態を管理する」処理を誰が担うか検討が必要でしたが、 AWS Step Functions を採用することで解決しました。Step Functions は状態管理と待機をネイティブにサポートしています。証明書発行待ちのウェイト、失敗時のリトライ設定、タイムアウト処理がステート定義で表現できます。アプリケーション側からは「State machine を起動する」だけで済み、状態管理の責任を AWS に委ねることができました。\n作成用 State machine は冪等になるようにしたので、途中で失敗した場合や別のドメインに切り替えたい場合も作成用 State machine を実行するだけで済みます。\nマネージド証明書のバリデーション方式の選択について\nTenant 作成時のマネージド証明書発行の際のバリデーション (ドメイン所有確認) は HTTP で行われます。\n方式 (validationTokenHost) には cloudfront と self-hosted の選択肢があり、通常運用では cloudfront を採用します。cloudfront 方式では CloudFront がバリデーション用のトークンを配信し、ACM と連携してドメイン所有確認を進めてくれます。\nただ、今回のケースのように既存のブログを無停止で SaaS Manager 経由に切り替えたい場合は事前に証明書を発行しておく必要がありますが、切り替え前のタイミングではまだ DNS が CloudFront を向いていないため、そのままでは CloudFront が配信するトークンに到達できません。\nそこで、 self-hosted 方式で ACM が払い出したバリデーショントークンを取得し、既存のブログのプロキシが /.well-known/pki-validation/{validation-token}.txt で配信できるよう S3 バケットに設置し、対象ドメインで配信することで、切り替え前でも HTTP 検証が通るようにしていました。\n移行の際に発生した問題\n独自ドメインを移行する過程では、想定外の出来事がいくつか発生しました。\nドメインの有効性のフラッピング\n独自ドメインの設定時にはドメインの有効性の確認のために対象ドメインの CNAME または A レコードが正しく設定されているかの確認が行われるようになっています。また、その後も定期的に有効性の確認が行われます。\nこの有効性がフラッピング、つまりネームサーバの返すレコードが時とともに変化するため独自ドメインの有効性が valid と invalid を行き来しているブログが散見されました。\n原因は DNS 設定変更直後の反映のラグによる一時的なものの他、おそらくネームサーバの設定の誤りによってネームサーバごとに異なる値を返すケースもありました。\nこれにより以下のような問題が発生しました。\nアプリケーション側のドメイン有効性検証に通って Tenant 作成処理が開始されても Tenant 作成時の AWS 側の検証が通らず InvalidArgument エラーで作成失敗することがあった\n当初は独自ドメインの有効性が失われたブログの Tenant は即削除するようになっていたが、このフラッピングにより Tenant の作成・削除が繰り返されていた\n前者については Tenant 作成をリトライすることで発生をほぼ防ぐことができました。 Step Functions の State の Retry フィールドを設定するだけで簡単に実装できます。\n後者については Tenant 作成後にドメインの有効性が失われたタイミングでは削除せず、独自ドメイン設定が解除された時にのみ削除するよう変更することで対処しました。\n代替ドメイン名の重複 (CNAMEAlreadyExists)\n独自ドメインの Tenant を作成しようとしたとき、そのドメインが別の CloudFront ディストリビューションに既に代替ドメイン名として登録されていると CNAMEAlreadyExists エラーになります。\n過去にユーザー自身がディストリビューションを作成し、DNS は既に向いていないものの Distribution は削除されず残っているといったケースがこれに当たります。解決には2つの経路があります：\nユーザー側で対象のディストリビューションを削除または代替ドメイン名を削除してもらう\nドメインの所有証明のための TXT レコードを設定していただいた上で、はてなが代理で AWS サポートに移行の申請を行う\n後者について、今回は実施しませんでしたが、重複先が AWS Amplify など AWS の別サービスが内部的に管理するディストリビューションである場合は通常の CloudFront ディストリビューションと異なる手順が必要となります。\nACM が発行できない ccTLD\n非常にレアなケースですが、一部の国別トップレベルドメイン (ccTLD) について ACM が証明書を発行できないケースに遭遇しました。このようなドメインには Let's Encrypt で発行した証明書を ACM にインポートする手段を用意しました。\nCAA レコードの追加依頼\nCAA レコードはドメインの証明書を発行できる認証局 (CA) を DNS で制限する仕組みです。はてなブログではこれまで独自ドメインの証明書を Let's Encrypt で発行してきたため、CAA レコードを設定しているユーザーには letsencrypt.org の追加をお願いしていました。\nSaaS Manager 経由では ACM が証明書を発行するため CAA に amazon.com の追加が必要になりますが、 CNAME 方式の場合は独自ドメインの親ドメインにも CNAME レコードが設定されているケースにおいてユーザー側での対応が困難であることが分かったため hatenablog.com に CAA レコードを設定することになりました。\n【追記あり：独自ドメインをご利用中の方】はてなブログへの CloudFront 導入に伴う設定確認・変更のお願い - はてなブログ開発ブログ\nこれからの話\n第3段階\n第3段階はネイキッドドメイン (A レコード方式) の移行です。ここには第1・第2段階にはない大きな課題があります。\nAnycast Static IP の確保が必要です。CloudFront では通常固定 IP アドレスを使いません。しかし A レコードは CNAME と異なり名前解決の結果が IP アドレスである必要があります。CloudFront SaaS Manager では Anycast Static IP に対応しているため、これを使う方向で検討しています。ただし、既存インフラで使っている IP アドレスをそのまま流用できないため、IP アドレスの確保と切り替え計画が必要です。\nもう一つの課題はユーザー側の DNS 変更です。CNAME 方式では CNAME レコードのターゲットである hatenablog.com. の向き先を変更するだけで移行できましたが、A レコード方式ではユーザー側で設定している A レコードの IP アドレスを変更してもらう必要があります。ユーザーが任意のタイミングで変更するため、全員の移行が完了するまでに長い移行期間が必要になると見ています。\nキャッシュの有効化\n今回の移行では CloudFront のキャッシュ有効化を見送りました。\n理由はキャッシュの Invalidation の仕様にあります。SaaS Manager の環境では、キャッシュの削除対象をパス + クエリパラメータの組み合わせで指定します。しかし Host ヘッダ (つまり「どのブログのキャッシュを消すか」) を指定する仕組みがありませんでした。\nはてなブログでは記事の更新時にそのブログのキャッシュを一括削除したいケースがあります。これを実現するには「1ブログ = 1 Tenant」の対応関係が前提で、はてな所有ドメインのブログにも Tenant を1対1で割り当てることが必要でした。そのためその前提が整ってからキャッシュを有効化する計画としていました。\nなお2026年4月29日に実装された以下の機能によってこの前提が変わり、実装の選択肢が増えました。ただ現行の HTTP キャッシュの Invalidation 頻度がそのまま CloudFront にスライドする想定だと料金がボトルネックになる見込みです。\n Amazon CloudFront がキャッシュタグによる無効化のサポートを開始 - AWS\nまとめ\nこれまでの移行を振り返ると、以下3点が同様の取り組みをするチームへの知見として残ります。\nSaaS Manager は「多ドメイン・均質なルーティング」のワークロードに強い\nこれまで CDN の導入が困難だったはてなブログのワークロードに上手く嵌まりました。\nその一方で、インフラ側の設計よりもアプリケーション側への Tenant ライフサイクルの組み込みが最も設計工数を要しました。Step Functions の採用でアプリケーション側の実装がシンプルになりましたが、「大量のドメインを自動管理する」ための設計の試行錯誤はそれなりの量になりました。\nクォータは早めに確認・引き上げる\nTenant 数、ACM の証明書発行レート、証明書の上限数は、大規模な移行では必ずボトルネックになり得ます。移行計画を立てる段階で上限を確認し、必要なら早めに引き上げを依頼しておくことをお勧めします。\n既存の CloudFront distribution との代替ドメイン名の重複はユーザー所有のものも含め移行前に調査する\n代替ドメイン名の重複問題は、ユーザーが使い終えて放置していたリソースに起因することが多く、事前の一括調査・告知が後の個別対応を大幅に減らします。\nはてなブログの CloudFront 化はまだ道半ばです。第3段階のネイキッドドメイン対応、キャッシュの有効化と最適化と、やるべきことはまだあります。引き続き取り組んでいきます。\n\n▲ SRE（Site Reliability Engineer）職 転職・中途 - 採用情報\nSRE（Site Reliability Engineer）職の新卒採用 - 採用情報",
-      "publishedAt": "2026-07-01T09:39:04.000Z",
-      "feedName": "Hatena Developer Blog"
-    },
-    {
-      "id": "7cd6800f69486665c47841b21e3554b20d4eba54b5e15ae1c8fba3079e1c0b55",
-      "title": "ACMの新機能「ACMEエンドポイント」でパブリック証明書を取得し、EC2上のNginx / Apacheに適用してみた",
-      "url": "https://dev.classmethod.jp/articles/acm-acme-endpoint-certbot-ec2-nginx-apache/",
-      "description": "AWS Certificate Managerに追加されたACMEエンドポイント機能を使い、CertbotでAmazon Trust Services発行のパブリック証明書を取得しました。取得した証明書をEC2上のNginxとApacheに設定し、TLS終端できることを検証しています。",
-      "publishedAt": "2026-07-01T09:35:35.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "1122c778cc0d9cd97ebf5071e19d5d0efa60bc207c803074ec2b3c58b63929af",
-      "title": "Amazon RDSのIAMデータベース認証で接続レートがスケールするようになったので、RDS for MySQLで負荷テストしてみた",
-      "url": "https://dev.classmethod.jp/articles/rds-iam-db-auth-connection-rate-scaling-verification/",
-      "description": "Amazon RDSのIAMデータベース認証に、インスタンスリソースに応じてパフォーマンスがスケールするアップデートが入りました。従来は固定的な接続レート上限があるとされていたため、RDS for MySQLで新規接続を大量に発生させ、どこまでIAM認証エラーなく接続できるか確認しました。",
-      "publishedAt": "2026-07-01T09:13:57.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "45b6ef94a7bffcbcd589e3d71df2ef62eba21012529b4334c99a645b6468baad",
-      "title": "PHPUnitからPestに変わったことで悩んだこと",
-      "url": "https://qiita.com/skuro-yzrh/items/c1618dc775dee697a927?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "今までの業務ではPHPのテストコードを PHPUnit で書いてきましたが、今年になってLaravel11からデフォルトのテストフレームワークとなった Pest でコードを書くことになりました。\nPHPUnitからPestへの移行は内部でPHPUnitが動いていることもあり...",
-      "publishedAt": "2026-07-01T08:07:02.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "de420baa6f910f64765d6415509236bf2b8ae303fd3a55d94f7dc61dbf1981d4",
-      "title": "AWS Weekly Roundup: Amazon Connect Customer 向け Agentic CX Designer、EC2 AMI ウォーターマーク、MySQL 向けのオープンガバナンスなど (2026 年 6 月 29 日)",
-      "url": "https://aws.amazon.com/jp/blogs/news/aws-weekly-roundup-agentic-cx-designer-for-amazon-connect-customer-ec2-ami-watermarks-open-governance-for-mysql-and-more-june-29-2026/",
-      "description": "AWS Summit が各地で開催されており、多忙な日々を過ごしています。私は New York City S […]",
-      "publishedAt": "2026-07-01T07:26:37.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "ad85d50267e1c09657ae4f3d6a5bf14fbecc04b31e6c07eea7ff5fc356a45b80",
-      "title": "業務で生成AI利用の約4割が「禁止後も利用継続」か──サイバーセキュリティクラウド調査",
-      "url": "https://enterprisezine.jp/news/detail/24603",
-      "description": "サイバーセキュリティクラウドは2026年6月23日、業務で生成AIを利用する会社員360人を対象とした「生成AI利用実態調査2026 -生成AIブラックボックス化-」の結果を発表した。同調査は、業務...",
-      "publishedAt": "2026-07-01T06:15:00.000Z",
-      "feedName": "EnterpriseZine"
-    },
-    {
-      "id": "a939e1478d261e34a46a7ab2a4b40948f894a83c94464fdde999869fc59a09c8",
-      "title": "AIエージェントにWeb開発の「最新ベストプラクティス」を伝えるスキル　Googleが公開",
-      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2607/01/news050.html",
-      "description": "Googleは、AIコーディングエージェントに最新のWeb実装ガイダンスを提供するスキル集「Modern Web Guidance」をプレビュー公開した。アクセシビリティー、パフォーマンス、セキュリティに優れたWeb体験の構築をAIエージェント経由で支援する。",
-      "publishedAt": "2026-07-01T04:00:00.000Z",
-      "feedName": "＠IT"
-    },
-    {
-      "id": "1b8af4b3077b0eaa1e8de9395f033a04c4c98e9b2728af5a08c0cd1a8b88b82b",
-      "title": "「悪意あるnpmパッケージをインストールさせない」　GitHubが発表した2つの防止策",
-      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2607/01/news051.html",
-      "description": "CI/CDを乗っ取り「悪意あるnpmパッケージ」を流通させる攻撃が深刻化。GitHubは、2つの機能追加を発表した。",
-      "publishedAt": "2026-07-01T04:00:00.000Z",
-      "feedName": "＠IT"
-    },
-    {
-      "id": "c449c5bd03e5b6ac21013a2ca8ee719ad6f38504f182239722761ed79c0fd623",
-      "title": "Railsで学ぶ レースコンディション 〜二重登録の罠〜",
-      "url": "https://qiita.com/akachiryo/items/42ff4d8f736f45eb8c59?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "お疲れ様です！\nシリーズで並行性・パフォーマンスの話を書いてきましたが、今回は レースコンディション（競合状態） をまとめてみました \n「ローカルでは再現しないのに、本番でたまに二重登録される…」の正体です。\n興味ある方は読んでいただけると嬉しいです \n\nレースコンディショ...",
-      "publishedAt": "2026-07-01T03:38:36.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "cfd957bed76f85b18640da3fa6b6797f21a4b958efb026f196c9226f7ddd8475",
-      "title": "「Claude Sonnet 5」が登場、Opus 4.8に近い性能で安価＆無料プランでも使用可能",
-      "url": "https://gigazine.net/news/20260701-claude-sonnet-5/",
-      "description": "AnthropicがAIモデル「Claude Sonnet 5」を現地時間の2026年6月30日にリリースしました。Claude Sonnet 5は無料プランでも使用可能なコストパフォーマンスに優れたモデルで、ベンチマークテストではClaude Opus 4.8に近いスコアを記録しています。 Introducing Claude Sonnet 5 \\ Anthropic https://www.anthropic.com/n...",
-      "publishedAt": "2026-07-01T03:14:46.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "b49106437c8bbb814bf6269953282d5156378014ac5e643b4ea713d1d4fc435a",
-      "title": "WSL Containersに触れてみた",
-      "url": "https://zenn.dev/user_thebigslee/articles/wsl-container-trial",
-      "description": "1. はじめに\nWindowsでLinuxコンテナを動かす際、これまではDocker DesktopやPodman Desktopを利用するのが一般的でした。\nあるいはWSL 2内にDocker Engineを独自インストールして使用するケースも多くありました。\nしかし、Microsoftが新たに発表した 「WSL Containers」 は、こうしたサードパーティ製ランタイムを必要としません。\nWindowsおよびWSLの標準機能だけで、Linuxコンテナを直接起動・管理できる画期的な機能です。\nOSがネイティブでLinuxコンテナをサポートするケースは、AppleのApple C...",
-      "publishedAt": "2026-07-01T03:08:24.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "de565e7afba0fb089116d617f993fec53f8961d1cd9b5561f1a0afea4b4432a1",
-      "title": "モデルは“使い捨て”でいい 〜AI時代のモデルベースドテスト〜",
-      "url": "https://zenn.dev/edash_tech_blog/articles/ea57d16a4a9a97",
-      "description": "こんにちは！e-dashでQAエンジニアをしている10mo8です。\nAIエージェントにテスト設計をさせると、同じ仕様書を渡しているのに、出力されるテストスコープやテスト観点が毎回ぶれる——そんな経験はないでしょうか。AIは非決定的なので、ある程度のばらつきが出るのは仕方ありません。とはいえ、「どこを・何の観点で見るか」というテストの勘所まで毎回ずれるのは避けたい。このばらつきを最小限にしたくて、モデルベースドテストの考え方を取り入れてみたので、その内容について書きたいと思います。\n!\n本記事で紹介する検証結果は、あくまで弊社の環境における結果です。テスト対象の特性やモデルの生成方法、プロ...",
-      "publishedAt": "2026-07-01T03:00:19.000Z",
-      "feedName": "Zenn"
     },
     {
       "id": "8184ab7beb1d416c72d52c3fb4204815a52d3ab4634c38e2c6dbc81a6bcca712",
@@ -653,62 +349,6 @@
       "url": "https://qiita.com/chaochire/items/a17119d3d9487d5379a6?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
       "description": "こんにちは\nソーイ株式会社Webエンジニア2年目の村上です。\n最近私事ですがAWSの初級資格であるAWS Certified AI Practitionerに合格しました。\n今回はその振り返りと有効だった手を記す合格体験記になります。\n業務でAWSの生成AIサービスを扱う機...",
       "publishedAt": "2026-07-02T03:00:43.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "5fdb2aa94b0c387217a351fa1c905a874f2466b99eed28cd715c2d9cf080e218",
-      "title": "Azure 担当になった新人さんへ。Azure に触れ始める最初の一歩",
-      "url": "https://qiita.com/KoheiKushida/items/4ce8e917e09bf5f74939?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "1.はじめに\n4月に入社した新人の方も、そろそろ3か月。\n企業や組織によっては、すでに配属されている方もいれば、これから配属という方もいる頃でしょうか。\nAzure 関連の部署に配属されて「何から始めればいいんだろう？」「Azure って難しそう…」と感じている方もいると...",
-      "publishedAt": "2026-07-01T23:49:37.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "c1b513cf2b4cd481aa2598293ffefa72a0474785d36b477743c848b2df39ae92",
-      "title": "【AWS×Java】S3 + CloudFront + Lambdaでサーバーレスな動的サイトを組み込んだデジタル名刺を作る",
-      "url": "https://qiita.com/usanchuu/items/2c5dbeed9c22dad0b7ad?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "1. はじめに\nAWS Summitに向けて、スマホをかざすだけで自分のポートフォリオが開く「NFC搭載のデジタル名刺」を作成しました。\n普段AWSやJavaをメインに学習していることから、「せっかくなら裏側で動的な処理を持たせたWebアプリケーションにしたい！」と考えま...",
-      "publishedAt": "2026-07-01T20:33:43.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "7800c3913d4b0f036a5134e6ed0c01951deeef42ec5b184e58f25400a694e6d2",
-      "title": "【ハンズオン】AgentCore最新機能でRAG & AIエージェント構築に入門！",
-      "url": "https://qiita.com/minorun365/items/7d06434cf830df9c54ff?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "このイベント用のハンズオン手順ですが、どなたでも好きなときに試せます！（30分〜1時間目安）\n\nこれをローコードでサクッと作ります。\n\n残念なことに最近、新規作成したばかりのAWSアカウント（特に会社契約でないもの）では、Bedrockのモデル呼び出しクォータが既定で0...",
-      "publishedAt": "2026-07-01T16:32:50.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "608acc72f9cceffa180f918514b6f684db22d36380b28584b596c4d73d981013",
-      "title": "正規化はパフォーマンスの敵？非正規化との付き合い方を徹底解説",
-      "url": "https://qiita.com/Nao52/items/8568574542a4ca58a92e?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "■ この記事はこんな人におすすめ\n\nSQLを書き始めて、JOINを多用するようになってきた人\n「正規化って本当に正しいの？」と疑問を感じたことがある人\nパフォーマンスチューニングに興味がある初・中級エンジニア\n非正規化という言葉は聞いたことあるけど、具体的にどんなものかわ...",
-      "publishedAt": "2026-07-01T13:25:40.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "e2b8e73f9fd86800c05f707c1dab19f3c0cb009073c9f434e16d25fdb494175b",
-      "title": "政府のセキュリティガイドライン改定から学ぶ、5つの対策",
-      "url": "https://qiita.com/criminalip/items/f1cba62b8f59a7245985?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "はじめに\n2026年6月12日、内閣官房 国家サイバー統括室が「政府機関等の対策基準策定のためのガイドライン」を一部改定しました。\n対象は政府機関や独立行政法人ですが、改定の内容を読むと、民間のシステム運用でも普通に参考になる話が多かったです。特に「なぜこの改定が必要にな...",
-      "publishedAt": "2026-07-01T08:47:47.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "b6613fed4d1e6a7ea3ab5bcc9b82cbb7aaf947f8f0c1f7475e4f20321492b909",
-      "title": "LakebaseがAWS東京リージョンに対応: 改めて整理するLakebaseとDatabricksでの位置付け",
-      "url": "https://qiita.com/taka_yayoi/items/62ec97c5fb31621b4142?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "東京リージョン対応で何が変わるのか\n2026年6月30日、Lakebase Autoscaling が AWS 東京リージョン (ap-northeast-1 / Asia Pacific - Tokyo) で利用可能になりました (2026年6月のリリースノート)。地味...",
-      "publishedAt": "2026-07-01T07:54:56.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "dcba415f1e63ace6d7159d96ce8d1cfb8cc42d30f638a7883a0125dbe8364f11",
-      "title": "「VPC内通信もTLSにすべき？」と聞かれて ── そもそもAWS内で盗聴できるのか脅威モデルで確かめた話",
-      "url": "https://qiita.com/ntaka329/items/de23144fdf7305a2e0c1?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "はじめに\nGMOコネクトの永田です。\n公共系の案件で「ゲートウェイ（ALB）までは暗号化されているけど、その内側、VPCの中は平文ですよね。それで問題ないんですか？」と指摘されました。\nVPCがSDN（Software Defined Network）でできていて、他人の...",
-      "publishedAt": "2026-07-01T03:26:19.000Z",
       "feedName": "Qiita"
     },
     {
@@ -7167,6 +6807,302 @@
       "url": "https://qiita.com/ham-nao/items/25a0693d50978ad80522?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
       "description": "Spring Boot(Gradle)× ECSのバックエンドで、CIをGitHub Actions、CDをAWS CodePipelineという別基盤で構成しています。同じCI/CDパイプラインの中に統合することも技術的には可能ですが、あえて分離する場合にどう責務を割り振...",
       "publishedAt": "2026-07-28T12:26:58.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "4f580601d4e7e44799f20af599233bd78925abebc48db1a03154ae374e8a12e3",
+      "title": "Alchemy: GJS UI Framwork",
+      "url": "https://dev.to/softwareishappiness/alchemy-gjs-ui-framwork-4j25",
+      "description": "Gnome Application Framework\n\n\nI just added to Alchemy (GJS UI Framework) inspired by Quasar Framework and VueJS:\nQWebView (Native WebKit 6.0 integration with reactive URL/HTML bindings)\nQAudioPlayer (Extensible, HTML5-like audio player powered by GStreamer for advanced multimedia and WebRTC integration)\n / \n        Alchemy\n      \n    \n\nAlchemy Framework ⚗️\nAlchemy Framework is a lightweight, highly-reactive UI component library for GNOME/GJS, heavily inspired by the beloved Quasar Framework (VueJS).\nAlchemy bridges the gap between modern web development ergonomics and native Linux desktop application development. It allows you to build GNOME applications using a familiar, Vue-like composition API, while rendering 100% native GTK4 widgets.\nMethodology\n1. The Reactivity Engine\nAt the core of Alchemy is a lightweight, dependency-tracking reactivity engine modeled after Vue 3.\nref: Creates a reactive reference to primitive values (or objects).\ncomputed: Creates derived reactive state that automatically re-evaluates when its dependencies change.\neffect: Tracks dependencies and automatically executes a callback whenever bound ref values update.\n2. Native GTK4 Abstractions\nAlchemy does not use a webview or render custom DOM nodes. Instead, every Alchemy component (like QBtn or QInput) is a thin, reactive wrapper around a native Gtk4 widget.\nState…\n\n  \nView on GitHub",
+      "publishedAt": "2026-08-01T02:25:49.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "7dffce943462daee041475ca8fc2995297d4badcc394937c96769709786e9cc9",
+      "title": "You baked the model into the image. One env var can silently un-bake it",
+      "url": "https://dev.to/ownstackhq/you-baked-the-model-into-the-image-one-env-var-can-silently-un-bake-it-4dno",
+      "description": "On serverless GPU, cold start is image pull plus model load. The single biggest win is usually to stop downloading weights at boot: download them at build time so they ship inside the image and load from local disk instead.\nThe setup is two lines. Point the cache at a path inside the image, then fetch during the build:\nENV HF_HOME=/opt/huggingface\nRUN python -c \"from huggingface_hub import snapshot_download; snapshot_download('<repo>', revision='<pinned>')\"\n\nsnapshot_download writes into HF_HOME, that directory becomes an image layer, and at runtime the loader finds everything already on disk.\nHere's the part worth knowing. The loader resolves weights through HF_HOME at runtime. So if anything in your runtime environment sets HF_HOME to a different path — a network volume, a mount, a leftover template variable — the loader looks there, finds an empty cache, and quietly falls back to downloading from the network.\nNothing errors. Your image still contains the weights, sitting in a directory nobody reads anymore. You just paid to bake them, and you're paying the download on every cold start anyway. The only symptom is that cold starts went back to what they were before you did the work, which is easy to blame on the platform.\nAttach no volume at all. If the worker has no volume, there's no tempting path to point the cache at. In my setup the endpoints run with volume size zero for exactly this reason: everything the worker needs is in the image, so a volume is not an optimization, it's a way to reintroduce the network.\nVerify at boot, not by feel. Watch a cold worker's log. If you see download progress for weights, the bake is being bypassed, full stop. A baked image reaching the network for weights is always a misconfiguration, never a normal path.\nTreat the cache path as part of the build contract. The Dockerfile that baked the weights and the runtime env that reads them have to agree. That agreement is invisible in both files individually, so write it down where whoever edits the template env will see it.\nBaking has real costs: the image gets large, builds take much longer, and updating the model means rebuilding and redistributing the whole thing. If your weights are small or your traffic keeps workers warm, a volume or a runtime fetch may genuinely be the better trade. This is about the case where you already chose to bake — because then paying the build cost and the download cost is the worst of both.",
+      "publishedAt": "2026-08-01T02:05:53.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "536c164d93a1f7b58f20716e57205de98f21838fa50c0d1189b61c6a2a79753a",
+      "title": "Data Consistency in Microservices — Saga Pattern",
+      "url": "https://dev.to/gouranga-das-khulna/data-consistency-in-microservices-saga-pattern-4b4d",
+      "description": "One-liner: In microservices, you can't use a single database transaction across services — the Saga pattern breaks it into a sequence of local transactions with compensating rollbacks on failure.\nIn a monolith, you can wrap everything in one DB transaction:\nBEGIN;\n  UPDATE orders SET status='confirmed' WHERE id=1;\n  UPDATE inventory SET stock=stock-1 WHERE product_id=5;\n  INSERT INTO payments (order_id, amount) VALUES (1, 99.99);\nCOMMIT; -- all or nothing\n\nIn microservices, each service owns its own DB. You cannot do a cross-service ACID transaction. If the payment service fails after inventory was deducted, you're in an inconsistent state.\nA Saga is a sequence of local transactions. Each step publishes an event triggering the next. If any step fails, compensating transactions undo the previous steps.\nStep 1: Order Service      → Create order (PENDING)\nStep 2: Inventory Service  → Reserve items\nStep 3: Payment Service    → Charge customer\nStep 4: Shipping Service   → Schedule delivery\nStep 5: Order Service      → Mark order CONFIRMED\n\nHappy path ✅:\nOrder Created → Items Reserved → Payment Charged → Shipping Scheduled → Done ✅\n\nFailure at Payment ❌:\nOrder Created → Items Reserved → Payment FAILED\n                                       ↓\n                          Compensate: Release inventory\n                          Compensate: Cancel order\n\nEach service listens for events and reacts. No central coordinator.\nOrderService    ──publishes──► \"OrderCreated\"\nInventoryService ──listens──► reserves stock, publishes \"StockReserved\"\nPaymentService  ──listens──► charges card, publishes \"PaymentProcessed\"\nShippingService ──listens──► schedules delivery, publishes \"Shipped\"\n\nOn failure:\nPaymentService publishes \"PaymentFailed\"\nInventoryService listens, releases stock, publishes \"StockReleased\"\nOrderService listens, marks order CANCELLED\n\nPros: Simple, decoupled, no single point of failure\n\nCons: Hard to track overall saga state, cyclic dependencies possible\nA dedicated Saga Orchestrator tells each service what to do.\n                    ┌─────────────────────┐\n                    │   Saga Orchestrator  │\n                    │   (Order Saga)       │\n                    └──────────┬──────────┘\n                               │\n         ┌─────────────────────┼──────────────────────┐\n         ▼                     ▼                       ▼\n  InventoryService       PaymentService          ShippingService\n  \"Reserve stock\"        \"Charge $99\"            \"Ship to addr\"\n  → \"Reserved\" ✅        → \"Failed\" ❌           (not called)\n         │                     │\n         └─────────────────────┘\n                    Orchestrator receives \"Failed\"\n                    → tells InventoryService: \"Release stock\"\n                    → marks saga FAILED\n\nPros: Clear saga state, easy to audit and debug\n\nCons: Orchestrator is a bottleneck / SPOF if not designed carefully\n\n\n\n\nChoreography\nOrchestration\n\n\n\n\nControl\nDecentralized\nCentralized\n\n\nCoupling\nLoose (events)\nTighter (direct calls)\n\n\nVisibility\nHard to trace end-to-end\nEasy — one place to look\n\n\nComplexity\nLow per-service, high overall\nHigh orchestrator logic\n\n\nBest for\n3-4 step sagas\nComplex, many-step flows\n\n\n\nTrack saga state to survive crashes:\nCREATE TABLE sagas (\n  id UUID PRIMARY KEY,\n  type VARCHAR(50),          -- 'order_saga'\n  current_step VARCHAR(50),  -- 'awaiting_payment'\n  status VARCHAR(20),        -- 'IN_PROGRESS', 'COMPLETED', 'FAILED'\n  payload JSONB,             -- order details\n  created_at TIMESTAMP,\n  updated_at TIMESTAMP\n);\n\nMaintains data consistency without distributed transactions\nWorks with polyglot persistence (each service uses its own DB)\nChoreography scales well horizontally\nOrchestration provides clear audit trail\nEventual consistency — data temporarily inconsistent between steps\nCompensating transactions are complex to implement correctly\nHard to debug when something fails mid-saga\nIdempotency required for every step (retries happen)\n✅ Use when:\nMulti-service workflows that must be atomic (order → payment → shipping)\nDifferent services own different databases\nLong-running business processes (insurance claims, loan approvals)\n❌ Avoid when:\nSingle service with one DB (just use a DB transaction)\nSimple async operations that don't need rollback\nYou can redesign to avoid the distributed write entirely",
+      "publishedAt": "2026-08-01T02:00:00.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "9837931320916f6bbb4bd160c10a3e92a9346588ec851d80d57f26d0d87a270a",
+      "title": "Updates in Next.js 16.3: AI-Native Development, Better Security, and Instant Navigation",
+      "url": "https://dev.to/kyl67899/whats-new-in-nextjs-163-ai-native-development-better-security-and-instant-navigation-2fm0",
+      "description": "The Next.js team continues to push the boundaries of modern web development with the Next.js 16.3 Preview. While previous releases focused on performance and caching, version 16.3 shifts its attention toward AI-native development, developer security, and instant application navigation.\nAs AI coding assistants become a core part of the development workflow, Next.js is evolving into a framework that not only builds applications but also helps AI agents understand, debug, and improve them safely.\nLet's explore the biggest improvements in Next.js 16.3.\nOne of the most exciting additions in Next.js 16.3 is its first-class support for AI coding assistants.\nInstead of treating AI as an external tool, Next.js now includes built-in capabilities that help agents understand your project structure, documentation, and runtime behavior.\nKey improvements include:\nVersion-aware documentation through AGENTS.md, ensuring AI assistants reference the correct framework version.\nFirst-party Skills that guide AI through multi-step development workflows.\nAgent Browser with React introspection, allowing compatible AI tools to inspect component state and application behavior.\nActionable errors with copy-ready prompts that make troubleshooting faster.\nThese enhancements reduce hallucinations from AI assistants and provide more accurate, context-aware code suggestions.\nAs developers increasingly rely on AI to generate and modify code, security has become a critical concern.\nAdded 'skills' that would be useful for multi-step workflow. Visit skills.sh\nThe Skill requires agent-browser version 0.27 or later.\nnpx skills add vercel/next.js --skill next-dev-loop\nNext.js 16.3 introduces several improvements that make AI interactions safer and more reliable:\nThe built-in Model Context Protocol (MCP) server now exposes only the tools required for build diagnostics while separating larger knowledge-base functionality.\nBenefits include:\nReduced attack surface\nBetter isolation of tooling\nMore predictable AI interactions\nImproved maintainability\nInstead of allowing AI to freely inspect an application, Next.js now provides structured diagnostic capabilities that expose only the information necessary for debugging.\nThis improves both developer productivity and security by limiting unnecessary access to project internals.\nPerhaps the most noticeable user-facing feature is Instant Navigations.\nInstead of waiting for an entire page to load, Next.js intelligently streams or caches route content to make navigation feel nearly instantaneous.\nHighlights include:\nInstant route transitions\nStreaming page updates\nIntelligent route caching\nConfigurable navigation strategies\nApplications now feel much closer to native desktop or mobile experiences.\nBuilding on previous routing improvements, Next.js 16.3 introduces Partial Prefetching.\nRather than downloading an entire route ahead of time, the framework caches reusable layout shells and streams only the dynamic content when users navigate.\nBenefits include:\nLower bandwidth usage\nFaster perceived performance\nReduced redundant downloads\nImproved scalability for large applications\nDebugging AI-generated code is often harder than writing it.\nNext.js 16.3 addresses this by introducing:\nMore descriptive compiler diagnostics\nActionable error messages\nCopy-ready prompts for AI assistants\nBetter build insights\nThese improvements help developers quickly identify problems and collaborate more effectively with AI coding tools.\nDocumentation has traditionally been written for humans.\nWith Next.js 16.3, documentation is also optimized for AI systems.\nNew capabilities include:\nMarkdown versions of documentation pages\nEasier machine-readable content\nVersion-specific references\nBetter retrieval for coding assistants\nThis helps reduce outdated or incorrect suggestions from AI tools by ensuring they consume the most relevant documentation.\nAlthough AI is the headline feature, developers also benefit from continued performance improvements.\nNext.js 16.3 includes:\nPersistent Turbopack caching\nFaster incremental builds\nReduced compilation times\nBetter memory management during development\nLarge projects see noticeable improvements in rebuild speed and overall responsiveness.\nThe 16.3 Preview represents a shift in how frameworks are built.\nRather than simply optimizing rendering performance, Next.js now embraces a future where AI coding assistants are part of every developer's toolkit. By combining AI-aware documentation, structured diagnostics, secure tooling, and faster navigation, the framework helps teams build applications more efficiently without sacrificing reliability or security.\nNext.js 16.3 is more than an incremental update. It introduces a new direction for modern web development—one where AI assistants, developers, and the framework work together seamlessly.\nThe standout additions include:\nAI-native development tools\nImproved security through a more focused MCP server\nVersion-aware documentation for AI agents\nInstant Navigations\nPartial Prefetching\nBetter diagnostics and debugging\nFaster Turbopack builds\nWhile still in Preview, these features provide a glimpse into the future of full-stack React development and position Next.js as one of the most forward-looking frameworks in the ecosystem.\nOfficial Next.js 16.3 AI Improvements announcement: https://nextjs.org/blog/next-16-3-ai-improvements\n\nOfficial Next.js 16.3 Instant Navigations announcement: https://nextjs.org/blog/next-16-3-instant-navigations\n\nNext.js Blog: https://nextjs.org/blog\n\nNext.js Documentation: https://nextjs.org/docs\n\n\n\nSource:\nhttps://nextjs.org/blog",
+      "publishedAt": "2026-08-01T01:57:30.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "5ffbc87e611ed961c1e8c93f32f0243f7a4fd7efe9c36283092c7b98531d380f",
+      "title": "Reviving K6's StatsD Extension for Datadog Observability",
+      "url": "https://dev.to/osnibjunior/reviving-k6s-statsd-extension-for-datadog-observability-299m",
+      "description": "A lot gets said about how data can help us with observability, but much less gets said about how much we can shape the collection itself to actually help us make decisions.\nUnfortunately, K6 v0.55.0 dropped support for sending metrics via StatsD, which happens to be Datadog's recommended way of receiving them. We looked into other ways of getting K6 metrics into Datadog, but every alternative came with trade-offs, including the absence of some extremely important p95 metrics.\nWhile going through K6's documentation, I found a path forward: it's possible to build a custom K6 binary and re-enable the StatsD extension through xk6. So that's exactly what I did.\nDockerfile, and after a few failed builds, I landed on a version that worked end to end, sending every metric to the local Datadog Agent and having it show up correctly in the platform.\nFor the client, I handed over everything: the full explanation of the problem and the original Dockerfile, so their team could build the image themselves and keep it internalized within their corporate environment.\nYou can find it here: osnijunior/k6-statsd on Docker Hub",
+      "publishedAt": "2026-08-01T01:54:34.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "f57e5f68ef2b0c571ed5753e4258c7d76998dcc007b6b5becb27de45178d0ac3",
+      "title": "[アップデート] AWS IAM Identity Center のマルチリージョンサポートが Identity Center ディレクトリをIDソースとして使用するインスタンスにも対応しました",
+      "url": "https://dev.classmethod.jp/articles/iam-identity-center-extends-multi-region-support-to-identity-center-directory/",
+      "description": "IAM Identity Center のマルチリージョンサポートが Identity Center ディレクトリにも拡張されました。外部 IdP 不要でセットアップできる新機能を、実際に東京リージョンを追加して試してみたので紹介します。",
+      "publishedAt": "2026-07-31T22:17:06.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "af06dbee62055ea2be44e6f8e94c2ba9bd17488548f0e0619edfa6a43813b1b9",
+      "title": "aws-benchのCloudFormation復旧タスクで実行できる手順を答えたKiro CLIが不合格になった理由を確認してみた",
+      "url": "https://dev.classmethod.jp/articles/aws-bench-fix-cfn-kiro-cli-17models/",
+      "description": "aws-bench の公開データセットから CloudFormation の復旧タスク1本を取り出し、Kiro CLI で選べる17モデルに同じ条件で3周ずつ解かせました。スタックの実状態では実行できない手順が正答とされ、実行できる手順を答えた回答は不合格になりました。判定理由と回答、公式ドキュメントから、その分かれ目を確認します。",
+      "publishedAt": "2026-07-31T18:05:54.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "dd141fac8411e477e34f5b270b06a3ce2457f091894d98cb9728cef983ac1cbf",
+      "title": "aws-benchのVPC Flow Logs診断タスクでKiro CLI 17モデルの合否が分かれた理由を確認してみた",
+      "url": "https://dev.classmethod.jp/articles/aws-bench-check-vpc-kiro-cli-17models/",
+      "description": "aws-bench の公開データセットから VPC Flow Logs の診断タスク1本を取り出し、Kiro CLI で選べる17モデルに同じ条件で3周ずつ解かせました。有効な Flow Log を正しく指摘した回答でも不合格が続き、合否は紛らわしいロググループ2本に気付けたかどうかで分かれました。判定理由と回答、実行ログから、その境目を確認します。",
+      "publishedAt": "2026-07-31T16:58:09.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "ff61659278ba20ccdc5b8ade591c8d7a6961bc96eca5e3ffcc0ce64eedcbafe7",
+      "title": "「コンテナはもう要らない」は本当か？ AWS Lambda の provided.al2023 で WebAssembly を動かしてみた",
+      "url": "https://dev.classmethod.jp/articles/20260731-lambda-wasm/",
+      "description": "WebAssembly（Wasm）が本当に「軽量・小さい・高速起動・移植性が高い」のか、AWS Lambda上で実際に動かして確かめてみました。机上の論点を実測で検証します。",
+      "publishedAt": "2026-07-31T14:39:14.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "5dd5b7172d22d3bc7b26a3888e24dcd1ba0a69eb23c811291392af9375a8060f",
+      "title": "シンプルな生成 AI チャットボットを Amazon Bedrock AgentCore で作る（2）FastAPI BFF を ECS Fargate にのせて Runtime を SSE で中継する",
+      "url": "https://dev.classmethod.jp/articles/bedrock-agentcore-bff-ecs-sse/",
+      "description": "このシリーズでは、Amazon Bedrock AgentCore を使ってブラウザから使える生成 AI チャットボットを AWS 上に構築しています。今回は FastAPI で BFF を書き、ECS Fargate にデプロイして、BFF から Runtime のエージェントを呼び出します。ALB 経由で curl からチャットが動く状態まで作ります。",
+      "publishedAt": "2026-07-31T14:33:06.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "670d66bfc4337bd87ab0832dd5836c38c3437b34a3e85fc2eef87543c6530563",
+      "title": "シンプルな生成 AI チャットボットを Amazon Bedrock AgentCore で作る（1）Runtime に Strands エージェントをのせる",
+      "url": "https://dev.classmethod.jp/articles/bedrock-agentcore-runtime-deploy-strands-agent/",
+      "description": "Amazon Bedrock AgentCore を使ってブラウザから操作できるチャットボットを AWS 上に構築するシリーズの第 1 回です。まずは Strands で最小のエージェントを書き、AgentCore Runtime にデプロイして CLI から応答が返るところまでを実装します。",
+      "publishedAt": "2026-07-31T14:22:11.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "5ea0b4415b01720dd2f0786df18a5b621224506b1e7661b5bb8c3680212b863e",
+      "title": "【Security Hub修復手順】[ECS.9] ECS タスク定義にはログ設定が必要です。",
+      "url": "https://dev.classmethod.jp/articles/securityhub-fsbp-remediation-ecs-9/",
+      "description": "AWS Security HubのECS.9コントロール違反を修復するため、ECSタスク定義へのログ設定追加手順をご紹介します。",
+      "publishedAt": "2026-07-31T13:27:31.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "8f960b04b33148fddc1c102799f5215f6953a84af01ea041c2234d45eb950073",
+      "title": "AI時代の強いチームの作り方",
+      "url": "https://speakerdeck.com/yuukiyo/building-strong-teams-in-the-age-of-ai",
+      "description": "「それ、どこに出しても恥ずかしくないTerraformコードになってるか？」 / Terraform AWS Best Practices",
+      "publishedAt": "2026-07-31T13:23:13.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "88b7f5e55df6a65d38fb61233aa76e1b8dc76434ee825c9fe31fc9fa7cc6c8ea",
+      "title": "aws-benchのStep Functions診断タスクをKiro CLIの17モデルで試してみた",
+      "url": "https://dev.classmethod.jp/articles/aws-bench-diagnose-sfn-kiro-cli-17models/",
+      "description": "aws-bench の公開データセットから Step Functions の診断タスク1本を取り出し、Kiro CLI で選べる17モデルに同じ条件で3周ずつ解かせました。タスクの内容と判定のしくみを説明し、全モデルが正答したうえで正解1件あたりのクレジットに大きな差が付いたこと、そしてこの課題に見合うモデルを紹介します。",
+      "publishedAt": "2026-07-31T13:07:25.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "f5e853ea1c268ebacd9a316d248c9a1b57f6efeb0943ed03152dfd210e4916f8",
+      "title": "AnthropicのAIモデルが評価中に不正アクセスしていた事案についてまとめてみた - piyolog",
+      "url": "https://piyolog.hatenadiary.jp/entry/2026/07/31/214935",
+      "description": "Anthropicは2026年7月30日、自社AIモデル「Claude」がサイバーセキュリティ評価の実施中に評価環境からインターネットへ到達し、実在する3組織へ不正アクセスしていたと公表しました。評価パートナーとの認識の齟齬により、隔離されているはずの環境がインターネットに接続できる状態になっていたとしています。ここでは...",
+      "publishedAt": "2026-07-31T12:57:11.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "b6d5446733e66fbc3a71399f8089713470ec976b9c244ab6e8acbd3ee27f5f1f",
+      "title": "AWS WAFで海外IPをブロックしているサイトのGoogle広告が審査落ち（403）したときの対処方法をまとめてみた",
+      "url": "https://dev.classmethod.jp/articles/aws-waf-allow-google-crawler-ip-ranges-geoblock/",
+      "description": "AWS WAF で海外IPをブロックしていると、Google広告の審査落ちや検索クローラーのブロックが起きてしまうことがあります。今回はその原因と解決方法を、実際の対応手順ベースでご紹介します。",
+      "publishedAt": "2026-07-31T12:01:26.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "47b173dc24e5118c179b4b1fea6f81ab3e8357285ccfd4e8d313d9bda3f11975",
+      "title": "Scaling Kubernetes pods with KEDA based on Amazon SQS queue depth",
+      "url": "https://www.cncf.io/blog/2026/07/31/scaling-kubernetes-pods-with-keda-based-on-amazon-sqs-queue-depth/",
+      "description": "In event-driven Kubernetes architectures, CPU and memory utilization often fail to reflect real system pressure. A worker pod may sit idle from a CPU perspective while thousands of messages pile up in an Amazon SQS queue....",
+      "publishedAt": "2026-07-31T11:00:00.000Z",
+      "feedName": "Cloud Native Computing Foundation"
+    },
+    {
+      "id": "b364dd6dc644f660eee0061d627578f144f8ad55dccb641b2f410e735019d230",
+      "title": "ロシアの「.ru」ドメインが実質使えなくなりそう？　本人確認義務化でユーザー悲鳴、関連事業者は対応急ぐ",
+      "url": "https://www.itmedia.co.jp/news/article/2607/31/2000000340/",
+      "description": "ロシア政府が「.ru」ドメインなどの管理者に本人確認を義務付ける方針を示し、同ドメインに関連する事業者が対応を迫られている。国内では、ドメイン取得・管理サービスを手掛けるGMOデジロックやGMOブランドセキュリティなどが対応を案内。SNSでは、対象のドメインを使うユーザーから不安の声も出ている。 ロシア政府は...",
+      "publishedAt": "2026-07-31T10:52:35.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "743e3726d2fd385b2b805ee37fd049f82ce777c6758b054532651625579b8226",
+      "title": "[登壇レポート]  Ops-JAWS Meetup41 運用 LT 大会で「Control Tower を CloudFormation で管理する前に知っておきたいこと」というタイトルで登壇しました",
+      "url": "https://dev.classmethod.jp/articles/202607-ops-jaws-41-control-tower-cfn-resource-import-tips/",
+      "description": "AWS Control Tower の設定を CloudFormation で管理する前に知っておくと良さそうなことをまとめてみました。",
+      "publishedAt": "2026-07-31T10:29:20.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "b292d1cbb64a06b5b7a7294a87df46ba5b5a12202ee9941dd5b4d5a227c73ad6",
+      "title": "Dev Container の Lockfile がGAになっていました",
+      "url": "https://dev.classmethod.jp/articles/devcontainer-lockfile/",
+      "description": "Dev Container CLI の Lockfile が Preview から Stable へ昇格する提案の内容と、実装状況を確認しました。`devcontainer-lock.json` がどのように Features のバージョンを固定し、再現性とセキュリティを担保しているのか、実際に CLI を動かしながら解説します。",
+      "publishedAt": "2026-07-31T10:02:45.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "2ba57811b9672c2d7be79df417580bd3843b7f55d069e7b0cf8bb5df0a35a2d3",
+      "title": "Pythonで書いた関数デコレータをTypeScriptで再現する",
+      "url": "https://dev.classmethod.jp/articles/convert-python-decorator-to-typescript-decorator/",
+      "description": "Pythonで使っていたログ出力デコレータをTypeScriptに移植してみました。オプション引数の実装方法やthis の扱い、非同期関数への対応など、言語間での違いを詳しく紹介します。",
+      "publishedAt": "2026-07-31T09:30:08.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "d6db425d86ab5a6a4cc075ecb4823651a00c4e331e931ad2cb633d40e385790e",
+      "title": "AWS環境のセキュリティレベルを可視化する ！ AWSセキュリティ成熟度モデル活用ガイド",
+      "url": "https://dev.classmethod.jp/articles/aws-security-enhancement-program-guide/",
+      "description": "AWSが公式に提供するセキュリティ成熟度モデルと、それをベースにしたクラスメソッドの支援サービスについて、専門知識がなくても分かるよう解説します。",
+      "publishedAt": "2026-07-31T09:27:51.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "d8339c34a37b2b38fe0a7c5dcf23c19d9bf12d7f5e93382ee2019fba9c732590",
+      "title": "AuditアカウントからAssumeできる組織横断のReadロールを各アカウントに配置する",
+      "url": "https://dev.classmethod.jp/articles/aws-organization-readonly-role-cross-account-inventory/",
+      "description": "AWS Organizationsのマルチアカウント環境で、組織横断の棚卸しを効率化するためのReadロール配置とその活用法を紹介します。StackSetsを使った一括デプロイから実践的な運用例まで、検索ツールでは対応できないケースをカバーする方法をまとめました。",
+      "publishedAt": "2026-07-31T09:24:27.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "38df86f467b4592d92db7ed855b8bd1e6a5e3f44c85253a904721f79dab3aed2",
+      "title": "AWS DevOps Agent のエージェント応答言語を AWS CDK で日本語に設定してみた",
+      "url": "https://dev.classmethod.jp/articles/aws-devops-agent-locale-cdk/",
+      "description": "Agent Space の Locale プロパティで応答言語を指定できる。CloudFormation / CDK では 2026 年 5 月から設定可能。効くのは調査出力でチャットは入力言語に追従した。",
+      "publishedAt": "2026-07-31T09:12:56.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "07bd738da7570dd7d1786aaedb05e62960c8e386837fd723891a6fad19176e61",
+      "title": "AGENTS.mdでAWS DevOps Agentの不要なリージョンアクセスを止めてみた",
+      "url": "https://dev.classmethod.jp/articles/agents-md-region-filter-aws-devops-agent/",
+      "description": "AWS DevOps Agentの調査時間とコストを削減するため、AGENTS.mdの書き方を工夫してリージョン制約をきちんと遵守させる方法を試してみました。",
+      "publishedAt": "2026-07-31T09:01:30.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "034dd386d7e245e44b857b5e0ecd13610444394b6d42d23f938269caa6bce559",
+      "title": "AWS Lambda から Google スプレッドシートに OAuth 2.0 で行を追記してみた",
+      "url": "https://dev.classmethod.jp/articles/lambda-google-sheets-oauth-append/",
+      "description": "AWS Lambda から Google スプレッドシートへ書き込みたいとき、組織の設定でサービスアカウントが使えない場合があります。その時は個人アカウントの OAuth 2.0 で解決できます。認証設定からリフレッシュトークンの管理まで、実装のポイントをまとめました。",
+      "publishedAt": "2026-07-31T09:00:18.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "55a407df651724d24ffb07c4a16646e8f9433f0b633eeca88a7aaa0744c41a9b",
+      "title": "AWS Summit Japan 2026 行ってみた！",
+      "url": "https://dev.classmethod.jp/articles/aws-summit-2026-went-koty-mousa/",
+      "description": "AWS Summit Japan 2026に参加してきました！基調講演で心に残った「Why not?」というメッセージと、AI展示、そして自分自身の成長を振り返りながら感じたことをお伝えします。",
+      "publishedAt": "2026-07-31T08:18:00.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "730c961b2bf10e3b608877beda35f1d053c3a37426d2701f55e07a2e21697178",
+      "title": "【登壇レポート】 100名で参加のクラスメソッドが教えるAWS re:Inventへ行くべき理由と効果的な参加術で「re:Inventへの学びを、成果に変えるコツ」というタイトルで登壇しました",
+      "url": "https://dev.classmethod.jp/articles/reinvent-webinar-report-3years-consecutive-participant/",
+      "description": "AWS re:Invent に3年連続参加して見えた、現地での動き方と帰国後の初速が「学びを成果に変える」すべてを決めるというお話を、実体験からお伝えします。",
+      "publishedAt": "2026-07-31T08:16:55.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "a44ca8a65d2fbf891f1a397f98710cc9fda47b08c13d6d1b7249089bc25b407d",
+      "title": "Playwrightで業務E2Eテストのアーキテクチャを設計する — Screen Object Model、Fluent Chaining、日本語メソッド名、ロケーター辞書の統合パターン",
+      "url": "https://dev.classmethod.jp/articles/playwright-e2e-test-architecture-patterns/",
+      "description": "Playwright + TypeScriptで業務B2BポータルのE2Eテストを設計した際に採用した、Screen Object Model、Fluent Chaining、日本語メソッド名、ロケーター関数辞書、ポップアップ処理のファクトリメソッド封じ込めなど、複数パターンの統合アーキテクチャを紹介します。",
+      "publishedAt": "2026-07-31T08:00:16.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "5c872b262c7e9449df719edc30514792cd6d517c1c3639a5e8f92292fa2da63c",
+      "title": "【開催！】2026 Japan AWS Jr. Champions 真夏のQiitaリレー",
+      "url": "https://qiita.com/ys-yoshida/items/6f7c7f85155a993e2c86?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "みなさん、こんにちは！\nNTT西日本株式会社の吉田です。\nこの度、114名の2026 Japan AWS Jr. Championが選出されました👏👏\n\n「Japan AWS Jr. Champion Partner Program」とは、AWS Partner Ne...",
+      "publishedAt": "2026-07-31T06:59:06.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "ebfab4b2751c198cd56be9433d02f81e1e3e88bef527a42a7669276aaa8eff78",
+      "title": "AWS DOPが楽しかった話",
+      "url": "https://qiita.com/Rabbit_booK/items/2c17461a2149028d9593?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "DOP合格しました\n勉強期間：ちょうど1週間くらい\n経験・スキル：\nSREに配属されてもう少しで1年\n取得済み資格はCLF, AIF, SAA, SOA, DVA\n\n例によって、誇れるほどの点数ではないです。\n\n対策など\n\n使用教材\n\nUdemyBusiness：Maru...",
+      "publishedAt": "2026-07-31T06:15:32.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "ff09a0b003e0e84a066c32744ea11a9caacd488159b9cccf2dc6c0c4b60f5ab4",
+      "title": "「アーキテクチャ」って結局何？ITパスポートのEAを調べてみた",
+      "url": "https://qiita.com/prumnn/items/da1cd811a3a7408472d2?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\n\n本屋の技術書コーナーでよく見かける「〇〇アーキテクチャ」というタイトルの本。なんとなくスルーしていたぷらむんが、ITパスポートの勉強中についに「アーキテクチャ」の文字に出会って、調べずにいられなくなった話です。\n\nこんにちわ、会社で自称マスコットキャラをや...",
+      "publishedAt": "2026-07-31T05:20:25.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "315066a6e0839c9ff20e3869a0e94b709ba6a15deb274a2e5c54ea44732496e4",
+      "title": "AWS Mainframe Modernization Day Tokyo 2026 (2026年9月17日開催)",
+      "url": "https://aws.amazon.com/jp/blogs/news/aws-m2-day-20260917/",
+      "description": "メインフレーム基幹系システムの AWS 移行を真剣にご検討中のお客様向けの対面イベントを 2026/09/17(木) に麻布台ヒルズで開催します。参加費は無料です。詳細・お申し込みはブログをご覧ください。",
+      "publishedAt": "2026-07-31T05:11:54.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "02e739aaf5e62a9028fba069fe89bed1d2eb6e2f6f3bd87ee28c8964f8c0b107",
+      "title": "「AlmaLinux 9.2」がセキュリティ認証取得、企業の“OS選定”にどう影響する？",
+      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2607/31/news057.html",
+      "description": "サイバートラストは「AlmaLinux 9.2」が国際標準規格「CC認証」を取得したと発表した。背景には企業が考慮すべきセキュリティリスクがあるという。",
+      "publishedAt": "2026-07-31T04:00:00.000Z",
+      "feedName": "＠IT"
+    },
+    {
+      "id": "161bfceeb733aea5dd0758763d478a8fd7939d1142f7a9f631a39b0819726de4",
+      "title": "Vue.js 入門編",
+      "url": "https://qiita.com/nt_fujita/items/a19e7ae778504941e563?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\nVue.js（ビュージェイエス）とは、Webサイトのユーザーインターフェース（UI）を構築するためのJavaScriptフレームワークです。\nオープンソースとして提供されており、Webアプリケーションの「見た目」や「動き」を効率的かつモダンに開発できます。\n\n主...",
+      "publishedAt": "2026-07-31T00:53:47.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "6ac7d9882175d644cc368e7299341911be40c841aec56c629899ae2eefd4548f",
+      "title": "EKS における EKS アドオンと組み込みアドオンの整理",
+      "url": "https://qiita.com/YuNagura/items/07e3a57eb39fe3f4fe3c?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "本記事は、BIPROGY / ユニアデックス社内AWSコミュニティ「BIPROGY AWS SPARK」の定期投稿企画第5回目の記事です。他の定期投稿企画の記事は、インデックスページをご覧ください。\n\n1. はじめに\n先日、ある検証環境にて Amazon EKS ク...",
+      "publishedAt": "2026-07-31T00:18:41.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "66aeecb1a5520268a3f52314ff294f53af46d516ac00b4951493d333d7fc303c",
+      "title": "数クリックで作成できるVPC、その裏側はどうなっている？",
+      "url": "https://qiita.com/inorin__62/items/aa78b1fe770ee437ba59?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\n2026年7月4日に開催されたJAWS-UG栃木で表題の通り初の技術ネタで登壇しました。\n登壇時に話したことと、時間の制約上話せなかった細かい点などをまとめていきたいと思います。\n以下のイベントで登壇しました。\n\n登壇時に使用したスライドのリンクも共有するの...",
+      "publishedAt": "2026-07-30T22:22:33.000Z",
       "feedName": "Qiita"
     }
   ]
