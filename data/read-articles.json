@@ -353,14 +353,6 @@
       "feedName": "Qiita"
     },
     {
-      "id": "4faa050514935a5b5b7e524a69a548ea5f253531cb3a1f9ccb7edec0a3217c71",
-      "title": "豆蔵デベロッパーサイト 2026年4-6月のサマリー",
-      "url": "https://developer.mamezou-tech.com/blogs/2026/07/05/2026-1q-retrospective/",
-      "description": "今年も半分が過ぎました。2026年4-6月のサマリーです。\n記事数・執筆者数\n#\nこの3ヶ月で13本の記事が投稿され、記事数は889になりました。\n連載\n#\nAIエージェントとシステムをつなぐMCP入門\n#\nMCP(Model Context Protocol) は AI エージェントが外部サービスと通信するための仕様で、2024年に Anthropic 社によって初版がリリースされました。MCP を使用することで、AI エージェントは外部サービスの機能を効果的に利用できます。MCP の基本から実装まで段階を分けて解説するシリーズです。\n/blogs/2026/04/24/mcp-impl_introduction/\n\n現在は以下の6記事が公開されています。\nイントロダクション\nstdio実装編\nStreamableHTTPステートレス実装編\nStreamableHTTPステートフル実装編\nプロンプト編\nリソース編\nテーマ別記事\n#\n認定資格\n#\n/blogs/2026/04/13/google_cloud_all_certified_revenge/\n\n\n/blogs/2026/04/20/aws_certified_generative_ai_developer/\n\n\nペアレンタルコントロール\n#\n上記の AWS・Google Cloud 認定を“W全冠”したエンジニアが、クラウドから降りて自宅のネットワークと格闘した異色の記事です。夜中に学校用タブレットでゲームをする子供との「イタチごっこ」に終止符を打つべく、手持ちの家庭用ルータとRaspberry Piを活用して、MACアドレス制限やサブネット分離、Pi-holeによる独自DNS構築まで、本気の「ガチ構成」を徹夜で組み上げる様子を赤裸々に綴っています。DoH（暗号化DNS）対策などのリアルな課題にも触れられており、ネットワークの基礎を学び直したい方や、同じ悩みを持つITエンジニアの親御さん必見の泥臭くも愛に溢れた実践録です。\n/blogs/2026/04/09/home_network_control/\n\n\nスクラムマスターと AI\n#\nチームの対話を支えるスクラムマスターにとって、視覚的な資料作成は欠かせませんが、一方で多大な時間がかかるのが共通の悩み。本記事では、そのボトルネックを AI で突破する実践的な手法を解説しています。ChatGPT を思考のパートナーとして構成を練り上げ、最新の生成 AI ツールでスライドを一気に形にする――単なる「時短術」に留まらず、AI との対話を通じてアイデアを磨き、本来注力すべきファシリテーションやコーチングの質を高めるための「共創のプロセス」を紹介しています。資料作成の重圧から解放され、チームの価値最大化に向き合いたいリーダー・マネージャーにとっても役立つ内容となっています。\n/blogs/2026/04/27/ai-presentation/\n\n\nGitHub\n#\nGitHub の Organization 運用において、「機密リポジトリを作りたいが、Basic Permission の設定変更による管理コスト爆発は避けたい」というジレンマ。この記事では、高価なEnterprise プランを契約せずとも、Teams プランの制限下で安全かつ効率的にアクセス権を管理する「ホワイトリスト方式」の戦略を解説しています。全メンバー用の統合チーム作成によるセキュリティ境界の構築から、GitHub API と Actions を組み合わせた「チーム追加漏れを防ぐ自動化スクリプト」の実装まで、管理者の負担を増やさない現場目線のハックを紹介しています。\n/blogs/2026/06/24/github-manage-organization-access/\n\nCI/CD 環境で広く使われる GitHub Actions に新たに追加された、単一ワークフロー内でのステップ並行実行機能をいち早く検証した記事です。background 属性を使った非同期実行や、parallel ブロックを使った同時実行の基本構文を解説するだけでなく、Go 言語のクロスコンパイルを用いた実践的なパフォーマンス検証も実施。vCPU コア数やコンテキストスイッチの観点から「期待したほど速くならなかった理由」と、「これまでの Matrix ビルドとどう使い分けるべきか」まで深く考察しており、現場の CI 改善に直結する生きた知見が得られます。はてなブックマークでも注目され、公開直後からアクセスが上昇しました。\n/blogs/2026/06/27/github-actions-parallel-steps/\n\n\nさいごに\n#\n以上、2026年度第1四半期のサマリーでした。投稿数が少なかったため、個別の記事紹介を厚めにしてみました。\nよかったらフィードの購読、X や Bluesky でのフォローもお願いします。Facebook でも本サイトの注目記事をはじめ豆蔵に関するイベントを紹介しています。note にも時々本サイト関連の記事が掲載されています。",
-      "publishedAt": "2026-07-05T00:00:00.000Z",
-      "feedName": "豆蔵デベロッパーサイト"
-    },
-    {
       "id": "fdd054114e8113dbec42742a7092d6acc74d6dd195d3413e1db77998e27e2a2e",
       "title": "[やってみた] DevOps Agent のサンプルスキル「Investigation Cost Guardrail」で調査にかかるコストを算出してみた",
       "url": "https://dev.classmethod.jp/articles/devops-agent-InvestigationCostGuardrail/",
@@ -6928,6 +6920,310 @@
       "description": "概要\nClaude CodeやCodexのようなAIコーディングエージェントは、コードの調査、実装、テスト、ドキュメント更新などをまとめて進められます。\n小さな修正であれば、「この不具合を直してください」という指示だけでも十分な結果が得られることがあります。\n一方、数十〜...",
       "publishedAt": "2026-08-01T23:38:39.000Z",
       "feedName": "Qiita"
+    },
+    {
+      "id": "c710f9c66bd548470e0bddc2df99bbc51fb5a7422ba3d0f82953c57761eee9ac",
+      "title": "【開催報告＆資料公開】AWS メディア業界向け勉強会開催報告 – リアルタイムの翻訳生成や基幹システムの移行などのメディア業界事例",
+      "url": "https://aws.amazon.com/jp/blogs/news/jpmne-media-seminar-local-july-2026/",
+      "description": "AWS メディア業界向け勉強会 #9（2026 年 7 月 10 日開催） 2026 年 7 月 10 日（金 […]",
+      "publishedAt": "2026-08-04T02:09:27.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "e99de000eaf65bfb766bc6251f7bc643ec48607e430b48452953baf51be5d810",
+      "title": "\"Your Search Backend Speaks MCP Now\"",
+      "url": "https://dev.to/jon_handler_9bb3e6b4a2fd0/your-search-backend-speaks-mcp-now-4d03",
+      "description": "Every MCP-compatible agent in the world needs the same three things from a search backend: discover what data is available, run queries against it, and get structured results back. Claude, Amazon Q, Cursor, Kiro, Strands Agents, and a growing list of open-source frameworks all speak MCP natively now. The protocol side is settled. Your search infrastructure can now speak it back.\nAmazon OpenSearch Service now does. Your domain exposes a native MCP endpoint, and agents connect directly. No custom connectors, no middleware, no per-agent integration code. This post walks through what that looks like in practice: what the endpoint exposes, how to secure it, and why the M×N integration problem disappears when your data source speaks the same protocol your agents already understand.\nThe Model Context Protocol (MCP) is a standard JSON-RPC interface that lets AI agents discover and call tools on external systems. An MCP server advertises what it can do (search an index, check cluster health, run an aggregation), and any MCP-compatible agent can call those tools without custom integration code. One protocol replaces all the bespoke connectors.\nThe problem MCP solves is combinatorial. If you have M agents connecting to N data sources, custom integrations mean M×N connectors to build and maintain. Three agents talking to five OpenSearch Service domains means fifteen connectors. Each one handles authentication, query formatting, and response parsing in its own way. Add a sixth domain or a fourth agent, and the cycle starts over. MCP collapses that to M+N: each agent speaks one protocol, each data source exposes one server, and any agent can talk to any server without additional code.\nThink of it like USB. Before USB, every peripheral needed its own cable and driver. After USB, you plug in and it works. MCP is that standardization applied to the AI integration layer. Your agents are the peripherals. Your data sources are the computer. MCP is the port.\nYour OpenSearch Service domain exposes the MCP endpoint at /_plugins/_ml/mcp as part of the ML Commons plugin. Agents connect directly. The endpoint advertises three types of components. Resources provide data context from your indexes. Prompts are reusable instruction templates for recurring analyses. Tools are executable functions: searching indexes, checking cluster health, analyzing performance metrics, running aggregations.\nHere is what a tool call looks like. A Python agent connecting with fastmcp:\nfrom fastmcp import Client\n\nasync with Client(\"https://your-domain.us-east-1.es.amazonaws.com/_plugins/_ml/mcp\") as client:\n    # discover what the domain exposes\n    tools = await client.list_tools()\n    print([t.name for t in tools])  # ['SearchIndexTool', 'ListIndexTool', 'ClusterHealthTool', ...]\n\n    # call a tool by name\n    result = await client.call_tool(\"SearchIndexTool\", {\n        \"index\": \"products\",\n        \"query\": {\"match\": {\"category\": \"electronics\"}}\n    })\n\nThe agent discovers available tools, calls them by name, and gets structured results back. No custom SDK, no REST client boilerplate. Any MCP-compatible agent (Amazon Q CLI, Claude, Cursor, Strands Agents) connects the same way.\nFor the built-in endpoint, there is nothing to configure on the server side. Your domain already exposes the MCP endpoint. What matters is getting authentication right: IAM roles and backend role mapping determine what each agent can see. Once those are in place, connecting a new agent is a configuration change. I built a domain, enabled MCP, registered tools, and used the SearchIndexTool to query my data on OpenSearch Service. The agent discovered available tools through the protocol's capability negotiation and ran queries without any custom integration code.\nAccess requires two layers. First, an IAM resource-based policy that lets the agent role reach the domain:\n{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [{\n    \"Effect\": \"Allow\",\n    \"Principal\": {\n      \"AWS\": \"arn:aws:iam::123456789012:role/ai-agent-role\"\n    },\n    \"Action\": [\"es:ESHttpGet\", \"es:ESHttpPost\"],\n    \"Resource\": \"arn:aws:es:us-east-1:123456789012:domain/my-domain/*\"\n  }]\n}\n\nSecond, with fine-grained access control enabled, map the IAM role to an OpenSearch backend role that has permissions on the ML Commons APIs and the indexes your agent needs to search. In OpenSearch Dashboards, go to Security > Roles, create or choose a role with cluster permissions for ml_full_access (or a narrower custom permission set), add index permissions for the target indexes, then map your agent IAM role ARN to that backend role under Mapped users. Every agent that assumes the same IAM role inherits the same access. One security boundary instead of one per connector.\nThe built-in MCP endpoint scales with your OpenSearch Service domain. If your domain handles the query load, the MCP endpoint handles it too. No separate scaling layer to worry about. For teams using the AgentCore-hosted path, AgentCore handles auto-scaling independently.\nAdding a new AI agent takes nothing on the server side. The agent connects to your domain’s MCP endpoint and discovers available tools automatically through the protocol’s built-in capability negotiation. This is the M+N property in practice: each new agent is O(1) work, not O(N).\nConsider a team with four AI agents connecting to three OpenSearch Service domains. Under the old model, that is twelve custom integrations. With MCP, each agent points at the domain’s endpoint and discovers tools automatically. Adding agent number five is a configuration entry, not a development sprint. Adding a fourth domain means the existing agents can reach it immediately. The complexity stays linear.\nThe open-source OpenSearch MCP server is part of the OpenSearch project. Community-driven improvements and security updates mean you are not maintaining proprietary integration code. And because the built-in MCP endpoint on your OpenSearch Service domain uses the same protocol, agents that work with one path work with the other—no code changes required.\nIf your agents already speak MCP, your OpenSearch Service domain is ready to answer. Enable the ML Commons plugin (set plugins.ml_commons.mcp_server_enabled to true), register the tools you want agents to access, configure IAM and backend role mapping, and point your agent at the /_plugins/_ml/mcp endpoint. The second agent costs nothing. The tenth agent costs nothing. The protocol does what protocols are supposed to do: make the next connection free.",
+      "publishedAt": "2026-08-04T01:54:30.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "38e2cf2db30ab2b963b5cb84529c221864833d1e64ca0fb8e46721d31dc6e361",
+      "title": "Debugging API JSON in the Browser: A Practical Workflow",
+      "url": "https://dev.to/min_yi_e5fbf986e24f1c42df/debugging-api-json-in-the-browser-a-practical-workflow-2mcf",
+      "description": "When an API response looks wrong, the problem is often not the endpoint itself. A missing field, an unexpected string, or a content-type mismatch can be hidden inside a large JSON payload. A repeatable browser-based workflow makes these issues much easier to isolate.\nStart in your browser's Network panel. Reload the page, select the request, and inspect three things:\nthe request URL and query parameters\nthe response status and response headers\nthe raw response body\nDo not rely only on the rendered UI. A frontend may silently ignore fields it cannot parse, while the Network panel shows the data that actually crossed the wire.\nCheck the Content-Type header as well. A JSON response should normally use application/json. If the server returns HTML or plain text with a 200 status, the real problem may be a proxy, authentication redirect, or server-side error page.\nMinified JSON is difficult to inspect and easy to misread. Format it first so nested objects and arrays become visible. Then look for:\nfields that are present in one item but absent in another\nnumbers returned as strings\nnull values where the client expects an object\nduplicate keys\narrays that are empty because a filter was applied upstream\nA formatter is most useful when it preserves the original value types and clearly reports invalid syntax. If formatting fails, copy the smallest failing fragment into a validator instead of guessing where the error is.\nMany “API bugs” are contract mismatches. Compare the actual response with the interface your code expects.\nFor example, the client may expect:\n{\n  \"total\": 3,\n  \"items\": [\n    { \"id\": 42, \"name\": \"Ada\" }\n  ]\n}\n\nBut the server may return total as a string:\n{\n  \"total\": \"3\",\n  \"items\": [\n    { \"id\": 42, \"name\": \"Ada\" }\n  ]\n}\n\nThat difference can break sorting, arithmetic, or runtime validation even though the JSON is syntactically valid. Document the expected shape with TypeScript types or a schema validator, then validate at the boundary where data enters your application.\nIf a value contains a URL, Base64 string, Unicode text, or user-generated content, inspect encoding separately from structure. Common symptoms include:\nplus signs or slashes changing after a round trip\nspaces appearing where percent-encoding was expected\nUnicode characters becoming replacement symbols\na token being decoded twice\nTest the smallest representative value in both directions. This is faster than debugging the entire response and helps identify whether the issue is in the API, transport, or client code.\nOnce you find a suspicious field, create a minimal JSON example containing only the relevant structure. A reduced case helps you answer three questions:\nIs the payload invalid JSON?\nIs it valid JSON with the wrong type or shape?\nIs the payload correct, but the application reading it incorrectly?\nKeep the original response for reference, but use the reduced case in bug reports and tests. It makes the issue reproducible without exposing unrelated data.\nYou do not need a large local setup for every inspection task. A few focused browser utilities can help with formatting JSON, converting JSON to TypeScript, encoding URLs, testing regular expressions, and checking timestamps.\nFor example, Yaya Tools provides free browser-based utilities for these small jobs at yayatool.com. The useful part is not the branding; it is having quick, disposable tools available while you investigate a request. No installation or account is required.\nFinish by writing down the request, the observed response shape, the expected shape, and the fix. If the issue is a contract mismatch, update the API documentation or type definition so the same bug does not return later.\nA good debugging workflow separates transport problems, syntax problems, schema problems, and application logic. Capture the raw response, format it, compare it with the expected contract, test encoding independently, and reduce the failure to a small reproducible example. That process turns a vague “the API is broken” report into a fixable technical issue.",
+      "publishedAt": "2026-08-04T01:50:02.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "67b30988d27654047f9603f997c2ef1525ceee812f940944715257051bbd53e0",
+      "title": "Gained a new insight.",
+      "url": "https://dev.to/willycheah/gained-a-new-insight-2a8h",
+      "description": "Skills vs MCP: How AI tools have evolved\n    \n\n    \nThe cookbook metaphor for MCP versus skills\nTilde A. Thurium\n                    \n                  \n\n                \n for Google AI\n            \n          \nJul 30\n        \n#ai\n            #agents\n            #mcp\n            #agentskills\n        \n52 reactions\n            \n comments\n            \n        \n        \n          \n            1 min read",
+      "publishedAt": "2026-08-04T01:44:31.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "dde21c81a166a66faa9849bcb5263758fff16bd4588f5f3e90eb269a0897573c",
+      "title": "Secure Your Health Data: Mastering Privacy-Preserving Inference with Intel SGX and Gramine 🛡️💊",
+      "url": "https://dev.to/wellallytech/secure-your-health-data-mastering-privacy-preserving-inference-with-intel-sgx-and-gramine-ep4",
+      "description": "Let’s be honest: the cloud is just \"someone else’s computer.\" When it comes to sensitive health data—think genomic sequences, heart rate patterns, or medical imaging—handing that data over to a cloud provider feels like giving a stranger your house keys and hoping they don’t look in the drawers. \nIn the world of Confidential Computing, we don't rely on \"hope.\" We rely on hardware. Today, we’re diving deep into Privacy Computing and Trusted Execution Environments (TEE). We’ll build a secure inference pipeline using Intel SGX, Gramine, and C++ to ensure that your health models stay private and your user data stays encrypted, even from the root user of the host machine. 🚀\nIn a standard cloud environment, the OS, Hypervisor, and Root Admin have total visibility into your application's memory. If you're running a sensitive health model, that's a massive attack surface. \nIntel SGX (Software Guard Extensions) changes the game by creating an Enclave—a protected area in memory. Even if the OS is compromised, the data inside the enclave remains encrypted. \nTo understand how we protect the inference process, let's look at the lifecycle of a request:\nsequenceDiagram\n    participant User as 👤 Patient/App\n    participant Host as 🖥️ Untrusted Host (Cloud)\n    participant Enclave as 🔒 Intel SGX Enclave (Gramine)\n\n    User->>Host: Send Encrypted Health Data (AES-GCM)\n    Host->>Enclave: Forward Ciphertext to Inference Engine\n    Note over Enclave: Decrypts data inside protected memory\n    Enclave->>Enclave: Runs C++ Inference (Model Weights Protected)\n    Enclave->>Enclave: Encrypts Prediction Result\n    Enclave->>Host: Return Encrypted Result\n    Host->>User: Deliver Ciphertext prediction\n    Note over User: User decrypts result locally\n\nBefore we start, ensure your environment supports:\n  Hardware: Intel CPU with SGX support (check /dev/sgx_enclave).\n  Software: Docker, Gramine (the best Library OS for SGX), and a C++ compiler.\n  Knowledge: Basic understanding of Linux and containerization.\nWe’ll write a simple C++ \"Inference Engine.\" In a real-world scenario, this would load a TensorFlow or ONNX model. For this tutorial, we'll simulate the logic of processing heart rate data.\n// inference_engine.cpp\n#include <iostream>\n#include <string>\n#include <vector>\n\n// In a real TEE, we would use an SGX-compatible crypto library like IPP or OpenSSL\nvoid perform_inference(const std::string& input_data) {\n    std::cout << \"[Enclave] Processing sensitive health data...\" << std::endl;\n\n    // Simulate model logic: \"If heart rate > 100 while resting, flag it\"\n    int heart_rate = std::stoi(input_data);\n    std::string result = (heart_rate > 100) ? \"Risk Detected\" : \"Normal\";\n\n    std::cout << \"[Enclave] Result: \" << result << std::endl;\n}\n\nint main() {\n    std::string secret_data;\n    // In a real scenario, this input is decrypted inside the enclave\n    while (std::getline(std::cin, secret_data)) {\n        if (secret_data == \"exit\") break;\n        perform_inference(secret_data);\n    }\n    return 0;\n}\n\nTo make this portable, we use Docker. However, standard Docker containers aren't secure. We need to wrap our app with Gramine, which acts as a bridge between the Linux binary and the SGX hardware.\nFROM gramineproject/gramine:latest\n\n# Install build essentials\nRUN apt-get update && apt-get install -y build-essential\n\n# Copy our source code\nCOPY inference_engine.cpp /app/inference_engine.cpp\nWORKDIR /app\n\n# Compile the binary\nRUN g++ -O3 -o health_inference inference_engine.cpp\n\n# Generate SGX-specific configuration (Manifest)\nCOPY health_inference.manifest.template /app/health_inference.manifest.template\n\nThe .manifest file tells Gramine which files to trust and how much enclave memory (EPC) to allocate. This is where you define your Trusted Computing Base (TCB).\n# health_inference.manifest.template\nloader.entrypoint = \"file:{{ gramine.libos }}\"\nlibos.entrypoint = \"/app/health_inference\"\n\nloader.log_level = \"error\"\n\n# Enclave size: 256MB\nsgx.enclave_size = \"256M\"\nsgx.thread_num = 4\n\n# Trusted files (Files that shouldn't be tampered with)\nsgx.trusted_files = [\n  \"file:{{ gramine.libos }}\",\n  \"file:/app/health_inference\",\n  \"file:{{ gramine.runtimedir }}/\",\n]\n\n# Allowed files (Log files, etc.)\nsgx.allowed_files = [\n  \"file:/etc/hosts\",\n]\n\nWhile building a DIY enclave is a great way to \"learn in public,\" running health models at scale requires rigorous attestation and key management. \nFor advanced patterns, such as Remote Attestation (proving to the user that the code running in the enclave is exactly what you claimed) or Production-Ready Secure Architectures, I highly recommend checking out the technical deep dives at wellally.tech/blog. They cover the nuances of hardware-level security that are vital for HIPAA and GDPR compliance in the AI era.\nOnce your manifest is ready, you need to \"sign\" your enclave. This generates a measurement (MRENCLAVE) which is a cryptographic hash of your entire app environment.\n# Inside the container\ngramine-sgx-sign \\\n    --manifest health_inference.manifest.template \\\n    --output health_inference.manifest\n\n# Run it!\ngramine-sgx health_inference\n\nIf everything is configured correctly, Gramine will initialize the SGX enclave, load your C++ binary into protected memory, and start processing. Even if someone tries to dump the RAM of your process from the host OS, they’ll only see encrypted garbage. 🕵️‍♂️❌\nPrivacy computing is no longer a niche academic topic. With the rise of \"AI-on-Health,\" users are demanding that their most intimate data remains theirs. Using Intel SGX and Gramine allows us to build a future where we can gain insights from data without ever actually \"seeing\" it.\nWhat’s next?\n Try integrating OpenSSL inside the enclave for end-to-end encryption.\n Explore Remote Attestation to build trust with your clients.\n Drop a comment below if you want a tutorial on running PyTorch models inside SGX!\nHappy (and secure) hacking! 💻🛡️",
+      "publishedAt": "2026-08-04T01:32:00.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "48e2516069b49d9c545a57dc9dadd5fd68406063453d8aebb9ba467e39b8de3e",
+      "title": "工場現場映像をAIに解析させてメダリオンアーキテクチャを組んだら、サイクル分割がうまくいかなかった",
+      "url": "https://dev.classmethod.jp/articles/gemba-video-ai-medallion-cycle-split/",
+      "description": "工場の現場映像を録りっぱなしにせず、Bronze/Silver/Goldの3層で構造化できないか、実際にAWSを使って検証してみました。パイプライン自体はBronze→Silver→Goldまで問題なく流れることは確認できたんですが、肝心の「1サイクルの作業を工程ごとに区切る」ところで見事に沼りました。プロンプト強化・temperature調整・モデル差し替えと打ち手を積み重ねても改善せず、モデルは作業内容を理解しているのにチャプター分割だけ拒否するという不思議な壁にぶつかった経緯をまとめます。",
+      "publishedAt": "2026-08-04T00:00:09.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "5916e9d504d513165e988fcf6d66732754ef93c2f91d923b378d3cecec9a3b68",
+      "title": "Next.js 16.3",
+      "url": "https://nextjs.org/blog/next-16-3",
+      "description": "Last month we published a preview release of 16.3 that let you try out SPA-like navigations, better AI tooling, and a much less memory-hungry dev server. Today, we're excited to announce that Next.js 16.3 is here! This release is packed with improvements for all existing Next.js apps: Less memory...",
+      "publishedAt": "2026-08-03T23:02:53.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "4bbc90f998dfd74498422378ce4a6c7fb3ba46dcdbcde33336ba46540a396837",
+      "title": "全社AI活用率99％のMIXIは、いかにコストを最適化しているのか？CTOが語るインフラ運用戦略",
+      "url": "https://enterprisezine.jp/article/detail/24413",
+      "description": "全社AI活用率99％を達成したMIXIは、AI活用にともなうインフラコストの急増にどう応えているのか。同社執行役員CTOの吉野純平氏は、FinOpsの思想をAI領域にも適用し、全員がコスト感覚を持つ重要性を指摘する。外部APIとOSSモデルの自社運用を柔軟に使い分け、コストの可視化とガバナンスの自動化を推進する同社では、セキュリティ分析やオンプレミス環境の管理など、インフラ運用自体にもAIを積極的に活用しているという。2026年6月9日にEnterpriseZine編集部が開催した「EnterpriseZine Day 2026 Summer」にて、その詳細が語られた。",
+      "publishedAt": "2026-08-03T23:00:00.000Z",
+      "feedName": "EnterpriseZine"
+    },
+    {
+      "id": "26baab30d43fb10d42873403d99b4e99af52b160494a6580015cbd4bac93af87",
+      "title": "PythonでもTypeScriptでもない、2025年「最も人気のプログラミング言語」",
+      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2608/04/news036.html",
+      "description": "プログラミング言語の人気ランキング「TIOBEインデックス」の2026年1月版が公開された。2025年の「プログラミング言語オブ・ザ・イヤー」はランキングにおいて前年比で最大の増率（2.94ポイント増）を記録したという。",
+      "publishedAt": "2026-08-03T23:00:00.000Z",
+      "feedName": "＠IT"
+    },
+    {
+      "id": "f058f08a7448f726cfbbedea2bea00f38d115af3fe45a5172e609bdb5edd29de",
+      "title": "まるで「ずる賢い学生」、 なぜAIエージェントは 不正や嘘に走るのか",
+      "url": "https://www.technologyreview.jp/s/386957/heres-why-ai-agents-lie-and-cheat-to-reach-their-goals/",
+      "description": "好成績への意欲は強いが、道徳心はそれほど強くない——ある研究者は、不正を働くAIをそんな学生にたとえる。7月にはオープンAIのモデルが、テストの答えを探して他社のWebサイトに不正侵入した。目標に忠実であろうとするほど、正攻法で行き詰まったモデルは近道に走る。なぜAIは不正と嘘に走るのか、その仕組みを説明しよう。",
+      "publishedAt": "2026-08-03T21:25:35.000Z",
+      "feedName": "MITテクノロジーレビュー"
+    },
+    {
+      "id": "35a0203e8e8d5e0427884ab6f156f2672e43a4d9bd5b733ef1f729c51ec68fc1",
+      "title": "AWS CLIの環境変数 AWS_CLI_SESSION_ID_DISABLED でセッションID無効化を試してみた",
+      "url": "https://dev.classmethod.jp/articles/aws-cli-session-id-disabled/",
+      "description": "AWS CLI は User-Agent にセッションID（SID）を付与します。v2.36.14 で追加された環境変数 AWS_CLI_SESSION_ID_DISABLED を設定すると SID が消えるのかを --debug ログと CloudTrail の userAgent で確認し、有効になる値の条件をソースコードから読み解きます。",
+      "publishedAt": "2026-08-03T19:00:31.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "dad520e490a0a77a789980aee63eab99d38f35a412001694e033ec773dc35981",
+      "title": "オントロジーは「先に決める」か「データから起こす」か",
+      "url": "https://zenn.dev/knowledge_graph/articles/ontology-define-first-vs-induce",
+      "description": "オントロジーで AI に業務知識を渡す — AWS の OSS「Context Ontology Accelerator」を試してみた が話題になっています。オントロジーをテーブルや文書から起こして提案を人が確認して使うという話です。 現場では部署ごとに「売上」の意味が違いエージェントが誤った数字をすぐ拡散します。原因の一つはオントロジーの...",
+      "publishedAt": "2026-08-03T16:07:24.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "59f10c0b0917ba8a974c688e31d7a26abb812d01f981f86719ea105329b3f6ca",
+      "title": "AIは、中身で止める - Linkode.TechBlog",
+      "url": "https://blog.linkode.co.jp/entry/2026/08/03/173332",
+      "description": "止めすぎない統制のつくり方 シリーズ「AIが作る時代のセキュア設計」第3回 前回までのお話 このシリーズでは、AI が自発的にしてくれるセキュリティ上の注意は揺らぐこと（第1回1）、だから組織の設定で AI の機能を禁止すれば、その機能を使った社外への持ち出し（越境）を個人の注意に頼らず止められること（第2回2）...",
+      "publishedAt": "2026-08-03T13:02:28.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "3522d52e985c33917bba23bfd0893fcbf7dace218f3213ca5bc546a68a98e27b",
+      "title": "オリジン・CORS・セッションを基礎から理解する",
+      "url": "https://zenn.dev/owade/articles/cors-session-origin-guide",
+      "description": "はじめに Web開発をしていると「CORSエラーが出た」「セッションが切れた」という言葉をよく耳にします。しかしこれらの仕組みを「なんとなく」でしか理解できていないと、エラーの原因がわからなかったり、セキュリティ上の設定ミスを引き起こしたりすることがあります。 この記事では オリジン・同一オリジンポリシー...",
+      "publishedAt": "2026-08-03T12:31:03.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "b88c17634859fcf93f51b3e0077f0b3faba43517650258854c6a63bce051eaca",
+      "title": "[新機能] CloudWatch Logs Insights のクエリ結果を動的な Lookup Table にしてみた",
+      "url": "https://dev.classmethod.jp/articles/cloudwatch-logs-lookup-table-from-query-results/",
+      "description": "CloudWatch Logs Insights の Lookup Table を、クエリ結果（queryId）から直接作成できるようになりました。CSV を用意せずに、ログデータ自体を参照テーブルにできます。CloudTrail の SSM 操作ログを例に、スケジュールクエリでの自動更新と `lookup` での参照まで AWS CLI で試しました。",
+      "publishedAt": "2026-08-03T12:23:19.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "b0f775da2771bfad1ab20b373f08c6db203a10e48ea18ede9e36305fb928c856",
+      "title": "オントロジーで AI に業務知識を渡す — AWS の OSS「Context Ontology Accelerator」を試してみた",
+      "url": "https://zenn.dev/aws_japan/articles/context-ontology-accelerator-deploy",
+      "description": "はじめに こんにちは、AWS Japan でソリューションアーキテクトをしているいなりくです。 AI エージェントを業務に入れようとすると、必ず同じ壁にぶつかります。データはあるのに、業務の意味が渡っていないという壁です。 「売上」は total_amount の合計なのか、送料込みなのか、キャンセル分を引くのか 「この注文は...",
+      "publishedAt": "2026-08-03T09:58:20.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "612b6898332d050d8a8642cf8fe91d56ecc0d3d7ff151d3ee07a5bd8050923ab",
+      "title": "リテールアプリ共創部 マッハグループ ビルドチームにJOINした中村です。",
+      "url": "https://dev.classmethod.jp/articles/20260803-joined-classethod/",
+      "description": "DevelopersIOへの初投稿です！2026年8月に入社した中村が、ERPシステム開発の経験を活かしながら、AWSやClaude Codeといったモダンな技術でどう成長していくのか、これからのチャレンジについて紹介します。",
+      "publishedAt": "2026-08-03T09:26:30.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "ebad0eabe3495e6159d834481462752a39801b83fda441b351adfebaa1af5b45",
+      "title": "クラスメソッドオペレーションズにジョインした中川です",
+      "url": "https://dev.classmethod.jp/articles/202608-join-ng-classmethod-operations/",
+      "description": "クラスメソッドオペレーションズの SRE チームにジョインした中川です。AWS インフラエンジニアとしてのキャリアや、この企業を選んだ理由、そしてこれからの抱負についてお話しします。",
+      "publishedAt": "2026-08-03T08:47:56.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "9b23c6f5a4234af645487100500d0f10ae1fd506dd99e4eb587ca4c0139eebb0",
+      "title": "営業推進本部 インサイドセールス部 にジョインした大城です",
+      "url": "https://dev.classmethod.jp/articles/join-oshiro-20260803/",
+      "description": "2026年8月にインサイドセールス部へジョインしました、大城友美です。石垣島から東京へ上京し、約10年の営業・インサイドセールス経験を活かしながら、新しい環境でAWSなどクラウド知識を身につけ、成長していきたいと考えています。",
+      "publishedAt": "2026-08-03T08:17:49.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "a14bc3c5dbe348f4b1a3dce913b49cfcb0d50f29ffd6ead61e1a08cf7d524fe8",
+      "title": "IPA、「デジタル＆ＡＩシステムズ・デザインセンター」を新設　アーキテクチャ設計から社会実装まで",
+      "url": "https://enterprisezine.jp/news/detail/24801",
+      "description": "情報処理推進機構（IPA）は、2026年8月1日付で「デジタル＆ＡＩシステムズ・デザインセンター（DADC）」を新設した。\n\n　DADCは、旧「デジタルアーキテクチャ・デザインセンター」「デジタル基...",
+      "publishedAt": "2026-08-03T07:00:00.000Z",
+      "feedName": "EnterpriseZine"
+    },
+    {
+      "id": "a9d1627be2248191cf6b6e6e3930916c9d3d0ed1eb4c6cf3e570096726a25a41",
+      "title": "Comp AI、自社開発CRMをMITライセンスで公開 ——GoogleとVercelの利用を前提にセルフホスト可能",
+      "url": "https://gihyo.jp/article/2026/08/comp-ai-crm?utm_source=feed",
+      "description": "Comp AIは、SOC 2（企業の情報セキュリティ管理体制を外部の監査人が評価する仕組み）などへの対応を自動化するプラットフォームを提供している。同社のLewis Carhart氏は2026年8月1日、自社向けに開発した顧客関係管理（CRM）ソフトウェアをMITライセンスでGitHubに公開した。",
+      "publishedAt": "2026-08-03T07:00:00.000Z",
+      "feedName": "gihyo.jp"
+    },
+    {
+      "id": "b0f775da2771bfad1ab20b373f08c6db203a10e48ea18ede9e36305fb928c856",
+      "title": "オントロジーで AI に業務知識を渡す — AWS の OSS「Context Ontology Accelerator」を試してみた",
+      "url": "https://zenn.dev/aws_japan/articles/context-ontology-accelerator-deploy",
+      "description": "はじめに\nこんにちは、AWS Japan でソリューションアーキテクトをしているいなりくです。\nAI エージェントを業務に入れようとすると、必ず同じ壁にぶつかります。データはあるのに、業務の意味が渡っていないという壁です。\n\n「売上」は total_amount の合計なのか、送料込みなのか、キャンセル分を引くのか\n「この注文はキャンセルできる？」に答えるには、注文テーブルの状態とキャンセルポリシー文書の両方が必要\n「アクティブ顧客」の定義は部署ごとに違うかもしれない\n\nこれらは人間の頭と社内ドキュメントの中にあり、information_schema には存在しません。LLM がい...",
+      "publishedAt": "2026-08-03T05:26:48.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "bea038de21a98fdd38381b3720638948579c2f2feb3bb8e25253960e54fcdff1",
+      "title": "週刊生成AI with AWS – 2026/7/27週",
+      "url": "https://aws.amazon.com/jp/blogs/news/weekly-genai-20260727/",
+      "description": "週刊生成AI with AWS, いよいよ8月・夏本番な2026年7月27日週号 – Astemo様のAI-DLC UnicornGym、Outpost VFX様のAIモデルトレーニング8倍高速化事例を含む10件のブログ記事を紹介。サービスアップデートでは、Amazon BedrockとKiroでのOpenAI GPT-5.6値下げ (Lunaは最大80%オフ)、OpenSearch 3.7のベクトル検索改善、Kiro CLIの/tangentコマンド含む8件を紹介。",
+      "publishedAt": "2026-08-03T05:17:13.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "cad8ab2705522eaf1dc5abd0ef5b11eb32f0c3f2814c42275058bec7eed97a11",
+      "title": "「第3のパラダイム」へ移行するセキュリティ業界──チェック・ポイントも自律化・統合で応える",
+      "url": "https://enterprisezine.jp/news/detail/24797",
+      "description": "AIの普及により、誰でも低コストかつ高度な専門知識を必要とせずにサイバー攻撃が可能となった今日……。その規模やスピードも、これまでとは比較にならないレベルに達している。\n\n\n\n【左】Check Po...",
+      "publishedAt": "2026-08-03T04:20:00.000Z",
+      "feedName": "EnterpriseZine"
+    },
+    {
+      "id": "2ab0681af0a9c9bdfe46ac30d6e56336be8d574c213ec4ded5099b5925e9cb02",
+      "title": "「AI時代、開発スピード／規模は認知限界超え」　障害対応の初期調査15分をどう「実質ゼロ」にした？",
+      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2608/03/news049.html",
+      "description": "PLAYが「AWS DevOpsエージェント」と「New Relic MCP Server」を連携させ、次世代のインシデント対応体制を構築した。",
+      "publishedAt": "2026-08-03T04:00:00.000Z",
+      "feedName": "＠IT"
+    },
+    {
+      "id": "54d205784f9d8369d8671ae3361f27a04d122db758dc2be62106badcd66271ba",
+      "title": "Amazon Inspector SBOM Generator をプラグインで拡張",
+      "url": "https://aws.amazon.com/jp/blogs/news/extend-amazon-inspector-sbom-generator-with-plugins/",
+      "description": "Amazon Inspector SBOM Generator (inspector-sbomgen) に、Lua でカスタムパッケージコレクターを記述できるプラグインシステムを発表します。標準では対応していないエコシステムや組織独自のロックファイル形式も、コンパイル不要でインベントリ化できます。この記事では、スキャフォールディングによる最初のプラグインの作成手順、テストハーネスでの検証、Amazon Inspector の脆弱性スキャンとの統合、サンドボックス化された安全な実行環境について解説します。",
+      "publishedAt": "2026-08-03T03:28:42.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "8930ac215edb344f8ca28cfc8e7d8e6f7a926700f80c2f4ac981552e2a42f295",
+      "title": "Amazon Inspector SBOM Generator で Java のネストされた依存関係を特定する方法",
+      "url": "https://aws.amazon.com/jp/blogs/news/identify-java-nested-dependencies-with-amazon-inspector-sbom-generator/",
+      "description": "Java アプリケーションの JAR ファイル内に潜むネストされた依存関係は、Log4J の脆弱性 (CVE-2021-44228) のように見落とされがちなセキュリティリスクとなります。本記事では、Amazon Inspector SBOM Generator (Sbomgen) を使用してネストされた依存関係への明示的なパスを特定し、脆弱性を検出・緩和する方法を、Log4J、Jackson、Hibernate の具体例とともに紹介します。",
+      "publishedAt": "2026-08-03T03:21:27.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "deb3914a8576ea7fe1eef435a3f578b740485d3b31ec82a7e50bcf4467de457a",
+      "title": "SASE入門",
+      "url": "https://qiita.com/100618/items/e340cf4d02b1a73450a7?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "1. SASEとは\nSASE（Secure Access Service Edge）は、ネットワークとセキュリティをクラウドで一体的に提供する仕組みです。\n従来は会社のネットワークを経由してシステムへ接続していました。しかし、リモートワークやクラウドサービス（SaaS）の...",
+      "publishedAt": "2026-08-03T01:33:42.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "5db839ee78ae82f52e02d04420e9b319ca4bae0a2a9923603580bf9ab0ca40d7",
+      "title": "UnityのDIは本当に必要か：Zenject継続・Reflex新規採用・VContainer比較の判断軸",
+      "url": "https://zenn.dev/gamedev_toollab/articles/945a5084be2a38",
+      "description": "はじめに\nUnityの規模が大きくなると、GameManager.Instance、FindFirstObjectByType、GetComponent、Scene上の大量の参照設定が増え、依存関係が追いにくくなります。入力、通信、セーブ、分析、課金などをテスト用実装へ差し替えたいのに、利用側まで修正が必要になることもあります。\nこうした問題への代表的な解決策がDI（Dependency Injection、依存性注入）です。Unity向けではZenjectと、そのフォークであるExtenjectが長く使われてきました。しかし2026年7月時点で、Zenjectの最終リリースは202...",
+      "publishedAt": "2026-08-03T01:00:06.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "7c5025982520e2031390e7266b643497e70d56a7b88a0ca587661de5ae8cca8c",
+      "title": "AWSで作った洗濯botを2ヶ月使い続けた話",
+      "url": "https://qiita.com/SakiFukutani/items/82209a2a8b9cc603ec57?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "本記事は、BIPROGY / ユニアデックス社内AWSコミュニティ「BIPROGY AWS SPARK」の定期投稿企画第6回目の記事です。他の定期投稿企画の記事は、インデックスページをご覧ください。\n\nこの記事について\nこんな方に読んでいただけたら嬉しいです。\n\nA...",
+      "publishedAt": "2026-08-03T00:34:28.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "a76ff73e6ffc0f873f3be44bb6d6e2bc7fe7969c2316013680657037bc727285",
+      "title": "FlutterアプリのE2Eテストフレームワークとして Maestro を選んだ話",
+      "url": "https://qiita.com/fumiharu-sugawara/items/1f10a16590552181ac98?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "こちらの記事は 「MEDLEY Summer Tech Blog Relay」 の 15日目 の記事です \n人材プラットフォーム QAグループの菅原です。現在はジョブメドレーのiOSアプリを開発するクロスファンクショナルなチームにQAエンジニアとして参加しています。このアプ...",
+      "publishedAt": "2026-08-03T00:12:16.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "a814feda801666bb42c86e76d8aae041b3815f21fb5e702f4de04b2747fb52fb",
+      "title": "【Lambda】NFC 名刺のアクセスカウンターを Lambda Function URL + DynamoDB で作る",
+      "url": "https://qiita.com/ryu-ki/items/60cc8e04d60bbfcf7fa7?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "この記事は「2026 Japan AWS Jr. Champions 真夏のQiitaリレー」の3日目の記事となります。\n過去の投稿（リンク集）は以下からご覧ください。\n昨日投稿の記事も併せて記載します。\n\nはじめに\n私は現在、勉強会に参加する際に、NF...",
+      "publishedAt": "2026-08-02T23:20:04.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "baaa2d6d9daa61f0ea3a21f7399910e8290a0e4e7f23ead5857a6747c0e58243",
+      "title": "【小ネタ】Kiro👻と楽しむ月末駆動開発 (EMDD: End of Month Driven Development)",
+      "url": "https://qiita.com/kkoiwai/items/cfd3788907d4a6485214?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "AWSが開発しているAIコーディングアシスタントの「Kiro」はみなさんご存知でしょうか。\nいわゆるVS Codee ForkのIDEと、CLIと、Webが使えます。使えるモデルは制限がありますが、OpenAI、Antropicなど利用できます。\n\n仕様駆動開発のコンセ...",
+      "publishedAt": "2026-08-02T22:56:37.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "3522d52e985c33917bba23bfd0893fcbf7dace218f3213ca5bc546a68a98e27b",
+      "title": "オリジン・CORS・セッションを基礎から理解する",
+      "url": "https://zenn.dev/owade/articles/cors-session-origin-guide",
+      "description": "はじめに\nWeb開発をしていると「CORSエラーが出た」「セッションが切れた」という言葉をよく耳にします。しかしこれらの仕組みを「なんとなく」でしか理解できていないと、エラーの原因がわからなかったり、セキュリティ上の設定ミスを引き起こしたりすることがあります。\nこの記事では オリジン・同一オリジンポリシー・CORS・セッション・ブラウザのプロセスモデル を順番に整理し、実務で注意すべきポイントもまとめます。\n\n\n オリジン（Origin）とは\nオリジンとは 「スキーム + ホスト + ポート」の3点セット のことです。\nhttps://example.com:443/path?que...",
+      "publishedAt": "2026-08-02T13:51:06.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "2077888b53ef00b645bee313a853bf90852303b2890e7179fe60ea9f6748515f",
+      "title": "Kiroが変えたAWS Gameday",
+      "url": "https://qiita.com/am_i-12/items/56a987fd989515770985?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\n2026年6月25日～26日に開催された、AWS summit 2026に参加しました。\n時間が空いてしまいましたが、AWS Gamedayについて書いていきます \n問題の内容は口外NGなので、参加して感じたことを共有します。\n\nAWS Gamedayとは\nゲ...",
+      "publishedAt": "2026-08-02T08:37:58.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "ca22cf8c3e06af4c0c65a243444f783e84ba32ad461724bfc5da2948c0c64d8e",
+      "title": "[AWS] DevOpsAgentを高速化!! ~ managedKBより類似障害検索 ~",
+      "url": "https://qiita.com/kikuziro/items/3bc756cd6fa4b1043200?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "⚡ TL;DR\n\nDevOpsAgentのmonitorsメモリは月次バッチのような低頻度障害は調査し直しになる\n過去の調査結果をManagedKBに保存し意味検索で類似障害を引き当てさせてみた\nログを見れば一発で原因がわかる単純な障害には効果なし\n候補が多く絞り込みが必...",
+      "publishedAt": "2026-08-01T22:37:40.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "867aca938baacacd0d679f43104aa7adf494c9ac31a0cbd0a7f55a5b6415ec9c",
+      "title": "AIの暴走を物理的に封じ込める【Git × チケット駆動】のクローズドループ開発",
+      "url": "https://qiita.com/tokudiro/items/a9e1958262f77e0073f3?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "TL;DR\n\nAIにプロセスやコンテキストの管理を丸投げすると、推測が発散して暴走と破綻を招く。\nこれを防ぐには、アーキテクチャによってAIの行動に物理的な「ガードレール（境界線）」を設ける必要がある。\n**「チケット（Issue）による境界線設定」と「Gitによる絶対的な...",
+      "publishedAt": "2026-08-01T13:08:45.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "6cedd186db04cd16a67e2d689f51e0167c53610d3c93403886ef3ce1cc20c156",
+      "title": "週刊AWS – 2026/7/20週",
+      "url": "https://aws.amazon.com/jp/blogs/news/aws-weekly-20260720/",
+      "description": "NFS キャッシュソリューション KNFSD File Cache の Preview 提供開始、Amazon CloudWatch が AI コーディングエージェントの利用状況を可視化する Coding Agent Insights を発表、AWS CloudTrail でネットワークアクティビティイベントを ID 別に選択的にログ記録可能に、Amazon RDS for SQL Server が Microsoft SQL Server 2025 に対応、Amazon ECS がデプロイ中の操作を可視化する Action Logs を提供開始、Amazon SES が 3 段階の料金プランを導入、Amazon EKS の EKS Auto Mode と Karpenter で EFA と Placement Group をサポート、Network Load Balancer が送信元 IP アドレスタイプに基づくリスナールールに対応、Amazon CloudWatch Logs が Application Load Balancer ログに対応、AI エージェント向けオープンソースベンチマーク aws-bench をリサーチプレビューで公開、AWS で Claude Opus 5 が利用可能に等",
+      "publishedAt": "2026-07-30T16:13:57.000Z",
+      "feedName": "Amazon Web Services ブログ"
     }
   ]
 }
