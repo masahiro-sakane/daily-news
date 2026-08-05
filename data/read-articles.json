@@ -241,118 +241,6 @@
       "feedName": "Amazon Web Services ブログ"
     },
     {
-      "id": "764250acd8599846df992f1b4331208447083c04ad0bb4b4550c5d858420f506",
-      "title": "Deep Data SecurityとDatabase Vaultを組み合わせた多層アクセス制御",
-      "url": "https://qiita.com/Western24/items/6bfef60a350fcc201f72?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "Oracle Databaseには、多層防御を実現する数多くのセキュリティ機能が用意されています。AIエージェントによるデータベース・アクセスが急速に拡大する中、AI時代のデータ保護において特に重要となる機能をまとめたものが、以下のスライドです。\n\n今まで紹介してきたDee...",
-      "publishedAt": "2026-07-06T01:58:56.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "967998e88851c1d1aa9e8019c2e89e5c501091da6b526aebc3191ef148d4e4bb",
-      "title": "複数リポジトリを単一のdev containerで開発する Claude Code 環境を構築する",
-      "url": "https://zenn.dev/finatext/articles/whole-dev-container",
-      "description": "!\nこの記事は、デブサミ夏カウントダウンブログリレー2026に参加しています。当社ブースで 「テックブログを見て来ました！」 とお伝えいただいた方には、もれなくFinatextグループのテックブック（物理本）を差し上げます！\n👇️Developers Summit 2026 Summer 事前登録はこちらから（7/13 13:00締切）\nhttps://event.shoeisha.jp/devsumi/20260716\n\n\n はじめに\nFinatext でサーバーサイドと AWS まわりを担当している @takuma5884rbb です。\n最近すっかり開発の相棒になった Claude ...",
-      "publishedAt": "2026-07-06T00:00:08.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "fd1b5612f7fae49de04c80061b33dd7c746762b95737d52b0127229b4b69b2b9",
-      "title": "人工知能学会2026参加記 — 発表と学会で見えたAI研究の流れ",
-      "url": "https://developer.mamezou-tech.com/blogs/2026/07/06/jsai2026_conference_report/",
-      "description": "はじめに\n#\nAIテクニカルセクターの藤堂です。セクターが独立組織となって以降、全社でAI活用を広げる取り組みが本格化しています。そのような中、6月には第40回 JSAI2026に参加しました。\n前半ではポスター発表をした、士業資格試験を対象としたLLMベンチマークShigyoBenchについて簡単に触れ、AIの実用化についての所感を述べます。\n後半では、人工知能学会で印象に残った発表と、今後のAI研究について思ったことを記します。\nどういう論文か\n#\nShigyoBenchは、日本の士業資格試験を対象にしたLLMベンチマークデータセット です。宅建・行政書士・弁理士・司法書士・司法試験（予備試験含む）・不動産鑑定士・公認会計士の8試験、短答式8,979問を統一フォーマットで整備し、複数のLLMで評価実験を行いました。データセットは Hugging Face で公開しています。\n論文の位置づけとしては、専門領域の知識を試験問題で定量評価する研究です。士業領域（行政書士・弁理士・宅建・不動産鑑定士・司法書士など）とCPA全科目について、これまで再現可能な共通ベンチがなかった空白を埋める、というのが動機です。\n評価の結果、モデルや試験によって差は大きく、Gemini-3-Proは一部の試験で合格ラインを上回る一方、多くのモデル・科目ではまだ届かない、というのが本研究の結論です。\nたとえば次のような問題があります。以下は、google/gemma-4-26B-A4B-it で推論させて不正解となった一例です。\n司法試験・令和2年・民法第8問\n#\n問題\n即時取得に関する次のアからオまでの各記述のうち、判例の趣旨に照らし誤っているものを組み合わせたものは、後記1から5までのうちどれか。\nア. Aは、自己所有の宝石をBに売却して現実の引渡しをした。その後、Bは宝石をCに売却して現実の引渡しをした。さらにその後、AはAB間の売買契約をBの強迫を理由として取り消した。この場合、Cは即時取得により宝石の所有権を取得することはない。\nイ. 未成年者Aは、自己所有の宝石をBに売却して現実の引渡しをした。その後、AはAB間の売買契約を未成年であることを理由として取り消した。この場合、Bが即時取得により宝石の所有権を取得することはない。\nウ. Aは、B所有の宝石をBから賃借して引渡しを受けた上、宝石をCに預けていたが、宝石をDに売却し、Cに対し宝石を今後Dのために占有するよう命じ、Dがこれを承諾した。この場合、Dは宝石がA所有であると信じ、かつそのことに過失がなかったとしても、即時取得により宝石の所有権を取得することはない。\nエ. Aは、Bが置き忘れた宝石を、自己所有物であると過失なく信じて持ち帰った。この場合、Aが即時取得により宝石の所有権を取得することはない。\nオ. Aは、BがCから賃借していた宝石を盗み、Dに贈与した。Dが宝石をAの所有物であると過失なく信じて現実の引渡しを受けた場合、Bは宝石の盗難時から2年間は、Dに宝石の回復を請求することができる。\nア ウ　2. ア エ　3. イ ウ　4. イ オ　5. エ オ\ngoogle/gemma-4-26B-A4B-it の回答\nこの問題は、民法192条の「即時取得」に関する記述の正誤を判断し、誤っているものの組み合わせを選ぶ問題です。\n\n### 各記述の検討\n\n**ア. 正しい**\n即時取得が成立するためには、「取引行為」が必要です。Bの強迫による取消しの場合、取消しによって契約は遡及的に無効となりますが、判例によれば、取消しによって権利を失った者（A）からさらに譲り受けた第三者（C）が即時取得を行うためには、**「取消し前」に取引が行われていなければなりません**。しかし、本問ではAが取消しをした「後」にCが譲り受けているわけではなく、時系列としては「A→B（売買）→C（売買）」の後に「Aが取消し」をしています。\nここで重要なのは、強迫による取消しは「詐欺」とは異なり、取消しによって権利が遡及的に失われますが、即時取得の要件である「有効な取引」の観点から、強迫による取消しがなされた場合、Bは無権利者となります。しかし、判例の趣旨（および通説的な考え方）では、強迫による取消しは、善意無過失の第三者（C）に対してもその効力を主張できる（Cは即時取得できない）とされています。したがって、「Cは即時取得により所有権を取得することはない」という記述は正しいです。\n\n**イ. 誤り**\n即時取得が成立するためには、占有者の「権利」が欠けていること（無権利者からの取得）が必要ですが、取引行為自体は有効である必要があります。未成年者が単独で行った契約の取消しは、行為能力の瑕疵によるものですが、これは即時取得を妨げる理由にはなりません。Bが善意無過失であれば、即時取得により所有権を取得できます。したがって、「Bが即時取得により所有権を取得することはない」という記述は誤りです。\n\n**ウ. 正しい**\n即時取得が成立するためには、「占有の譲渡」などの直接的な占有の移転が必要です。本問のように、AがCに預けていたものを、Dに対して「占有改定（CがDのために占有するよう命じる）」によって占有を移転させた場合、判例は**占有改定による即時取得の成立を否定**しています。したがって、「Dは……即時取得により宝石の所有権を取得することはない」という記述は正しいです。\n\n**エ. 正しい**\n即時取得は「取引行為（売買、贈与など）」によって占有を取得する場合に成立します。本問のように、他人の物を勝手に持ち帰る行為（占有の事実上の取得）は「取引行為」には当たらないため、即時取得は成立しません。したがって、記述は正しいです。\n\n**オ. 誤り**\n民法193条により、盗品または遺失物の占有者は、盗難または遺失の時から**2年間**、即時取得者に対してその物の回復を請求できます。しかし、本問のDは、Aが「盗んだ物」であることを知らない（善意無過失）ため、即時取得が成立します。即時取得が成立した場合、Dは有効に所有権を取得します。たとえ民法193条の期間内であっても、即時取得によって権利が確定している以上、元の所有者BはDに対して返還を請求することはできません（即時取得は、193条の規定にかかわらず、有効な取得を認めるものです）。したがって、記述は誤りです。\n\n### まとめ\n- ア：正しい\n- イ：誤り\n- ウ：正しい\n- エ：正しい\n- オ：誤り\n\n誤っているものは **イ** と **オ** です。\n選択肢を確認すると、イとオの組み合わせは「4」となります。\n\n<answer>4</answer>\n\n正解: 1\n手法や結果の詳細については論文をご覧ください。\n実用化への道のり\n#\nLLMが登場し、ShigyoBenchのような人間と同じ試験問題を使ってLLMの専門知識を測ることが、AI評価の標準として定着しました。それにより、国際数学オリンピックや東京大学の入試試験、医師国家試験など、いくつもの試験がフロンティアLLMで解かれることが知られています。RAGなどを組み合わせれば士業試験で合格ラインに届かせることも、十分あり得ると思います。\n一方で、試験問題が解けることと、実用化できることは、別問題だということが現在、議論されています。\nソフトウェア開発では、少し様子が違います。こうした「試験と現場のギャップ」を十分に議論する前に、コーディング支援やエージェントが現場に入り始めている印象があります。おそらく、コードは試して直しやすく、フィードバックも速いからでしょう。医療や法律のように、一度の誤りから取り返しのつかない結果が生じにくい、という違いもあるのかもしれません。ただ、1つのシステムにかかわる複雑なコードやドキュメント類の品質をどのように保つのか、テストの合格率だけでは見えないリスクもあります。私自身、実案件でLLMを使いながら、その便利さと危うさの両方を感じています。\nフィジカルAIへの期待\n#\nJSAI2026では、ロボティクスやフィジカルAI（Physical AI）に関する発表が数多く見られました。業務都合でその中の1つのセッションしか聞けなかったのですが、日本でも研究者や学生の関心が集まっていることを実感しました。\n最も印象に残った発表は、「基盤モデル時代におけるPhysical AI」セッションでの「自動運転向けの多視点の動画生成における世界ハンドオフ整合性指標の設計」です。\n拡散モデルによる映像生成モデルが登場し、自動運転用の合成データ作成などに役立てられています。そのようなモデルで複数の視点からカメラで写したような映像が取得できますが、それらカメラの間で物理的な不整合（あるカメラでセダンだった車が別のカメラで別の車種になるなど）が発生します。そのような不整合を定量的に評価しようという論文です。\n松尾豊教授が、「JSAIの３分の１は国際学会で発表できるレベルにある」と言及されていました。個人的な体感として、論文数が増えた現在、そこまで高い割合ではないかなと思いますが、本発表は国際レベルの内容で、このように優秀な若者がフィジカルAIの問題をどんどん解いていくのだろうなと思いました。\n生成AIがAI研究自体を変え始めている\n#\n特定のセッションというより、学会全体を通して感じたのは、生成AIがAI研究の進め方そのものを変え始めている、ということでした。\n文献の当たり方、プログラミング、実験の設計、データの整理、モデルの学習といった、これまで研究者が時間をかけていた作業の多くを、LLMが肩代わりし始めています。負荷の中心は「実装する」「情報を集める」から、「何を問うか」「どう測るか」へ移っているように見えます。試行が短くなるほど次の成果が出やすくなり、それがまた試行を短くする、というサイクルになっているように見えます。\n個人的には、ひとつの論題を深掘りするより、こうしたサイクルを回しやすくする環境づくりに時間を使うようになってきました。\n\nモデルの使い分け、先行研究の整理の仕方、どこで人間が判断を挟むか、どのGPU をどの実験に回すか。このようにメタ視点で、実験環境全体にリソースを割くことにより、研究が加速していきます。\n明日には似た研究が発表されているかもしれない。研究が加速する中でいちばん難しいのは、何を題材にするかだと思います。\nおわりに\n#\n現地には最終日しか行けませんでしたが、ポスター発表では名だたるLLMベンダーの方々とお話ができて大変充実していました。よもや国内にAIモデルベンダーと呼ばれる人々が現れるとは5年前には想像もつきませんでしたが、彼らにはどんどん世界にチャレンジしていってもらいたいです。\nまた、以前お仕事を一緒にさせていただいた懐かしい人にも出会えて、様々なお話ができました。このようなことはリアルの醍醐味ですし、AIコミュニティというのは広そうで狭いコミュニティなのだなと実感しました。\n次は長崎です。\n参考文献\n#\n\n本研究（ShigyoBench）\n藤堂真登, 石川真之介. ShigyoBench: 日本の士業資格試験を対象としたLLMベンチマークデータセットの構築と評価. JSAI2026 論文集, 2026. https://pub.confit.atlas.jp/ja/event/jsai2026/presentation/5Yin-A-16 ／ データセット: https://huggingface.co/datasets/todo1111/shigyobench\n実用化・医療\nGong EJ, Bang CS, Lee JJ, Baik GH.\nJ Med Internet Res. 2025;27:e84120.\n\n学会で印象に残った発表\nキム ボンジュン, et al. 自動運転向けの多視点の動画生成における世界ハンドオフ整合性指標の設計. JSAI2026 論文集 (基盤モデル時代におけるPhysical AI), 2026. https://pub.confit.atlas.jp/ja/event/jsai2026/presentation/2G4-OS-47a-02\n大会\n\n人工知能学会. 2026年度 JSAI（第40回）",
-      "publishedAt": "2026-07-06T00:00:00.000Z",
-      "feedName": "豆蔵デベロッパーサイト"
-    },
-    {
-      "id": "45f623ea004f89437d36ec6d768d5580649421d3a5545ef1f952f4ad85b28e40",
-      "title": "【DevOps Agent】VPC 内のセルフホスト GitLab に Private Connections で繋いでみた〜ついでにリリース前コードレビュー機能も試す〜",
-      "url": "https://qiita.com/ryu-ki/items/e2c94f68b4bd17c1514d?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "はじめに\n2026年3月に GA（一般提供開始）された AWS DevOps Agent を最近よく触っています。インシデント調査やリリース前のコードレビューを自動でやってくれる、いわゆる frontier agent（自律的にタスクをこなす最先端の AI エージェント）...",
-      "publishedAt": "2026-07-05T23:43:11.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "9cb0a669793dcf7fb8701f8ea67e190c0126842862b46c45e040f670ec803a73",
-      "title": "AWSの新AI IDEで進む開発自律化　Webブラウザから複数リポジトリの横断作業を指示可能に",
-      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2607/06/news041.html",
-      "description": "Kiro開発チームは、Webブラウザから利用できるコーディングAIエージェント「Kiro Web」をプレビュー公開した。Webブラウザで、コードの記述から複数リポジトリにまたがる変更、プルリクエストの作成までをエージェントに任せられる。",
-      "publishedAt": "2026-07-05T23:00:00.000Z",
-      "feedName": "＠IT"
-    },
-    {
-      "id": "2114cd14f36a9c0a9669b8ff5fb351fba00d181f3e154d895c9aed79ce6d2734",
-      "title": "プロフェッショナルTLS＆PKI (Bulletproof TLS and PKI) 改題第2版を読む⑬ TLS 1.3 Handshakeプロトコル2",
-      "url": "https://qiita.com/gomAnomalocaris/items/1a6087c70a462e4f755e?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "⑩TLS 1.3 Handshakeプロトコルの続きです。\n\nClientHelloメッセージ\nClientHelloメッセージはTLS 1.3でも旧バージョンとほぼ共通です。\nメッセージ本体にはセキュリティパラメーターと暗号化に関する情報を含めます。メッセージの末尾に拡張...",
-      "publishedAt": "2026-07-05T22:27:56.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "b7a6afa66ec85a66b608e1f40c681595d1a0dcfcf98150cf1e486f68983498ab",
-      "title": "生成AIで履歴書も顔も偽装　北朝鮮ITワーカー、日本企業への潜入工作の実態",
-      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2607/06/news022.html",
-      "description": "北朝鮮のサイバー攻撃といえばランサムウェアや暗号資産の窃取を思い浮かべる人が多い。しかし今、新たな脅威として警戒されているのが「ITワーカー」の潜入だ。韓国のセキュリティ企業S2Wが生成AIも駆使する最新の偽装手口や、日本企業を狙う実態について明らかにした。",
-      "publishedAt": "2026-07-05T22:00:00.000Z",
-      "feedName": "＠IT"
-    },
-    {
-      "id": "cd0b11e0a499d00f23debee58c9522c4658d7efdaf2f5abb79eabf53ef491960",
-      "title": "閉域モード版源内のデプロイ手順とオンプレミスと接続する時の注意点",
-      "url": "https://qiita.com/takeda_h/items/058536359a54ab3c6bab?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "ガバメント AI 源内（genai-web）を閉域ネットワークでも動作するように、源内のフロントエンドを CloudFront から ALB + ECS Fargate に変更し、Lambda を VPC 内へ配置するようにした上で AWS サービスにはインターフェース V...",
-      "publishedAt": "2026-07-05T21:35:36.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "e7e69e67fa78b152afa678fcd8844c993fea5f95c129e359532baa85deb3e35e",
-      "title": "国連CISOを歴任した蓮見氏が語る、AI時代の“しなやかな”キャリアと日本型セキュリティ",
-      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2607/06/news002.html",
-      "description": "サイバー攻撃の裏には、必ず人間がいる――国家間の紛争に巻き込まれるような環境でCISOとして戦ってきた1人のセキュリティエンジニアが見つけた「究極の防御」は、「人間のしなやかさ」だった。",
-      "publishedAt": "2026-07-05T20:00:00.000Z",
-      "feedName": "＠IT"
-    },
-    {
-      "id": "636235248657b2302e150d12d45c016ab2080dd84c69510fc38d83f24a3b3879",
-      "title": "Dockerfileは分けない〜本番用とローカル用を1つに保つ方法🐳",
-      "url": "https://qiita.com/H-Hoshihara/items/82798a46964718f6bdb0?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "はじめに\n新卒研修にてコンテナアプリケーションを構築する機会がありました。\n以前、Dockerfileを本番用とローカル用で分けている現場を見たことがあったため、今回はその是非も含めて「本番環境とローカル環境でDockerfileを分けるべきか」検討しました。\n本記事は、...",
-      "publishedAt": "2026-07-05T17:32:58.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "9b6f08d413fc358773ff8ea1976c37f2dfdc6eebf03dad81d1f686056ae73f5f",
-      "title": "LLMにSQLを生成・実行させる際に注意したこと※AWS編",
-      "url": "https://qiita.com/yakumo_09/items/51419606674100367559?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "はじめに\n先日、JAWSミートにて登壇してきました。\nLLMにSQLを生成させる際に意識する点で、検証、構築する上で気づいた点など、収まりきらなかったポイントなどを記事にまとめていきたいと思います。\n\nデータストア・DB選択\n\nAurora か、Redshif...",
-      "publishedAt": "2026-07-05T13:25:15.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "de78637463de9de5ad7a5dcaaf636bae286a730de8009cb85c6c516bfd0c14c5",
-      "title": "【AWS Summit Japan 2026】2日目参加レポート",
-      "url": "https://qiita.com/eureka_/items/52f5a2c140f90f8a6a65?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "はじめに\nAWS Summit Japan 2026に参加しました！\n本記事は、2日目の参加レポートになります！\n1日目の記事も投稿済みですので、そちらもご覧いただけますと幸いです！\n\n2日目のスケジュール\n8:53 会場到着\n9:03 入場\n9:10 ラウンジで朝...",
-      "publishedAt": "2026-07-05T12:27:00.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "08391d8103bb2c4c30941feb068105d8430ed4ccdb9bbc5d5433363fcc7fb905",
-      "title": "JavaScriptのメソッドチェインが遅い理由",
-      "url": "https://zenn.dev/dameyodamedame/articles/0bd949354baf6e",
-      "description": "序\n以前Qiitaにあげていた記事の更新版です(Iterator Helpersが標準入りし、メンテナンス期間のnode.js LTSで使えるようになったので)。\nRustとJavaScriptで似たような書き方のメソッドチェインを比較します。\n\n Rust\nhttps://github.com/marudedameo2019/lazy-stream-examples/blob/main/lazy_stream.rs\nコンパイルと出力はこんな感じになります。\n$ rustc -g lazy_stream.rs\n$ ./lazy_stream\nmap: 0\nfor_each: 0\nma...",
-      "publishedAt": "2026-07-05T10:58:57.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "d62b987700d6bfe706472d2d3aee7208d708acb6b2986460ca9b862d425d6c68",
-      "title": "Aurora PostgreSQLの基本設計で押さえておきたいポイント",
-      "url": "https://qiita.com/ike_s_muramatsu/items/f1a08c7a2680f8cc807b?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "Aurora PostgreSQLの基本設計で押さえておきたいポイント\n\n導入・背景\nAWS案件でAurora PostgreSQLの基本設計を担当するなかで、「これは最初に決めておかないと後から困る」と感じたポイントを整理します。\n公式ドキュメントには各パラメータの説明...",
-      "publishedAt": "2026-07-05T04:41:03.000Z",
-      "feedName": "Qiita"
-    },
-    {
       "id": "fdd054114e8113dbec42742a7092d6acc74d6dd195d3413e1db77998e27e2a2e",
       "title": "[やってみた] DevOps Agent のサンプルスキル「Investigation Cost Guardrail」で調査にかかるコストを算出してみた",
       "url": "https://dev.classmethod.jp/articles/devops-agent-InvestigationCostGuardrail/",
@@ -7224,6 +7112,189 @@
       "description": "NFS キャッシュソリューション KNFSD File Cache の Preview 提供開始、Amazon CloudWatch が AI コーディングエージェントの利用状況を可視化する Coding Agent Insights を発表、AWS CloudTrail でネットワークアクティビティイベントを ID 別に選択的にログ記録可能に、Amazon RDS for SQL Server が Microsoft SQL Server 2025 に対応、Amazon ECS がデプロイ中の操作を可視化する Action Logs を提供開始、Amazon SES が 3 段階の料金プランを導入、Amazon EKS の EKS Auto Mode と Karpenter で EFA と Placement Group をサポート、Network Load Balancer が送信元 IP アドレスタイプに基づくリスナールールに対応、Amazon CloudWatch Logs が Application Load Balancer ログに対応、AI エージェント向けオープンソースベンチマーク aws-bench をリサーチプレビューで公開、AWS で Claude Opus 5 が利用可能に等",
       "publishedAt": "2026-07-30T16:13:57.000Z",
       "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "3d9a9665f7747be0d7fd93d0ffd3b942cab8e00af7939e63dcaeb789c375d5c0",
+      "title": "I Built a VS Code Extension, I would like your feedback!",
+      "url": "https://dev.to/abdvlla/i-built-a-vs-code-extension-i-would-like-your-feedback-2jg4",
+      "description": "Welcome to my first post!\n\n\nIf you write React and TypeScript regularly, you probably already know the feeling: you know how to write a useState + useEffect data fetch, you've done it a hundred times, but that doesn't make typing it out the hundred-and-first time any less annoying. So you either retype the same boilerplate by hand again, or dig through an old project to copy-paste it, or lose a minute to Stack Overflow just to copy paste or check a detail like isLoading vs. isPending. None of that is hard. It's just unnecessary effort that adds up over a day of writing code you already know how to write.\nThat issue is what led me to build RapidReact, a VS Code extension that turns common React/TypeScript patterns into short, typed snippets.\n🔗 Install RapidReact · View on GitHub\nInstead of hand-writing (or copy-pasting from an old project) the same boilerplate every time, you type a short prefix and get a complete, typed starting point.\nFor example, typing:\nrr.tq.querypage\n\nexpands into a full page component wired up with TanStack Query, imports, useQuery, loading/error states, and a return block ready for your JSX.\nPreview:\n\nRapidReact isn't just generic React snippets, it's built around the stuff that's actually easy to blank on mid-task:\nCore React patterns, useState, useEffect, typed props, list rendering, forms\nReact Hook Form + Zod, the zodResolver wiring between the two is one of the most-Googled parts of using either library\nAxios, request helpers, a configured instance, interceptors\nTanStack Query, useQuery/useMutation with the correct current API (isPending, not the deprecated isLoading)\nEveryday utilities, debounce, clipboard copy, a typed localStorage wrapper, safe JSON parsing, and more\nEvery snippet is TypeScript-first, since \"correct types\" is usually half the reason I'm looking something up in the first place.\nInstall RapidReact from the VS Code Marketplace, open a .tsx or .ts file, and start typing any of these:\n- rr.state\n- rr.formpage\n- rr.usefetch\n- rr.axios.get\n- rr.tq.query\n\nFull snippet list and docs are in the GitHub repo — link in the Marketplace listing.\nI am a developer that is still early in my career, and this is a v0.1 that I built to solve a problem I keep facing with the most common snippets that I would use, and I'm sure there are patterns I haven't covered yet (or details I got wrong). If you try it and hit something missing, broken, or worth adding, please feel free to open an issue on GitHub or drop a comment here. I would love for your feedback on what I should change, add, remove, etc.",
+      "publishedAt": "2026-08-05T02:16:10.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "df80dc95b7b2744542820d4567f5a2b0b5d9dd6b4b27cbf3bafa293c7d21b8ce",
+      "title": "Security Monitoring for SRE Teams",
+      "url": "https://dev.to/samson_tanimawo/security-monitoring-for-sre-teams-4bdm",
+      "description": "Security used to be a separate team. Increasingly, SRE teams are being asked to own the monitoring side of it. Here's a practical framework that doesn't turn you into a SOC analyst.\nYour existing observability stack is half of a security monitoring solution. You already collect logs, metrics, and traces. You already have alerts. The missing piece is usually what to look at.\n1. Authentication anomalies. Alert on impossible logins (user from Tokyo, then from Paris 10 minutes later), brute force patterns, and unusual session durations.\n2. Privilege escalation patterns. New admin role granted. Service account added to a sensitive group. Kubernetes role binding changed.\n3. Unusual data access. A user or service reading 10x the normal volume of records. Downloads from sensitive S3 buckets. Queries against PII tables by accounts that don't normally touch them.\n4. Outbound traffic anomalies. A process that has never called an external IP suddenly connecting to one. Large egress volumes during off-hours.\n5. Failed auth spikes. Not just the login endpoint. Internal auth, API keys, mTLS — anywhere auth happens.\nDon't try to build a SIEM yourself. You'll burn out chasing alerts. Either use a managed SIEM or stick to a small set of high-signal alerts.\nDon't treat security alerts like reliability alerts. Security alerts often need investigation, not immediate fix. The triage workflow is different.\nIf you're on the SRE side owning security monitoring, you need a clear escalation path to someone who does security full-time. Your job is detection; theirs is response.\nThe worst pattern: SRE team gets a suspicious alert, doesn't know what to do with it, and tables it. Weeks later, a real incident traces back to that alert. Define the handoff up front.\nIf you do nothing else, implement #1 and #5. Failed auth spikes and login anomalies catch 70% of opportunistic attacks. The rest is shoring up for the 30%.\nSecurity monitoring is just reliability monitoring with a different threat model. Treat it the same way: start with high-signal basics, prune noise aggressively, and escalate when you're unsure.\nWritten by Dr. Samson Tanimawo\nhttps://novaaiops.com",
+      "publishedAt": "2026-08-05T01:49:11.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "26d67373cb6d0f8842b2aad6fc55a60920813afaaac3d182adee76dd6d5668c1",
+      "title": "【アップデート】 AWS Config が Amazon Bedrock・SageMaker など 15 種類の新リソースタイプをサポートしました",
+      "url": "https://dev.classmethod.jp/articles/aws-config-15-new-resource-types-2026-08/",
+      "description": "AWS Config が Amazon Bedrock や Amazon SageMaker など 15 個の新しいリソースタイプに対応しました！利用している方は要チェックです！",
+      "publishedAt": "2026-08-05T00:41:43.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "438ad044e2932c03af090338a48e1e480496e6a510d697447adc88fe4d07f0e6",
+      "title": "AWS 認定の上位・下位関係を理解して効率的に認定を更新しましょう",
+      "url": "https://aws.amazon.com/jp/blogs/news/aws-certification-hierarchy-recertification-guide/",
+      "description": "AWS 認定には Professional → Associate → Foundational の上位・下位関係があり、上位の認定を取得または更新すると、取得済みの下位認定も自動的に更新されます。複数の認定を保持している方は、この関係を活用して効率的に再認定を進めることができます。本記事では具体的な上位・下位の紐づきを図で整理し、効率的な再認定の方法と注意点を解説します。",
+      "publishedAt": "2026-08-05T00:06:12.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "64fa07c40152dd5c0d537af462d299b90ae6711e67ec2ac75a7a2d224536b45a",
+      "title": "2026 年 7 月の AWS テクニカルサポートノートまとめ",
+      "url": "https://dev.classmethod.jp/articles/summary-of-aws-technical-support-notes-for-july-2026/",
+      "publishedAt": "2026-08-04T23:05:12.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "90a62e3e7c9d8022f0f6059c6ca175a3380a1266f90ee1e564c02fcb43ce2df5",
+      "title": "巨大製造企業のセキュリティ意識を変えよ　YKK APセキュリティ担当者の泥臭い“仕掛け”と“立ち回り”",
+      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2608/05/news013.html",
+      "description": "セキュリティ施策の推進を阻む組織文化をどう変えるか。YKK APのセキュリティ担当者が、正論だけでは動かない組織を、意図的な演出や交渉術でどう動かしたかについて赤裸々に話した。",
+      "publishedAt": "2026-08-04T20:00:00.000Z",
+      "feedName": "＠IT"
+    },
+    {
+      "id": "6e801ece285267e06e76dbc1acffbe680d5e3fee221da28f83c4a30e556a7169",
+      "title": "[アップデート] AWS Organizationsの最大アカウント数のクォータがAWS Service Quotasで確認できるようになりました",
+      "url": "https://dev.classmethod.jp/articles/organizations-max-account-quota-visibility-service-quotas/",
+      "description": "AWS Organizationsのアカウント最大数をService Quotasから確認できるようになりました。これまでサポート問い合わせが必要だった情報が、マネジメントコンソールやAPIで簡単に確認・監視できるようになった便利なアップデートを紹介します。",
+      "publishedAt": "2026-08-04T15:22:59.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "7866ed141aa14c59385655c9b5fe0006e65aabc98efb3b8a2e9c75c2453e346d",
+      "title": "[新機能]Snowflake で OpenID Connect によるフェデレーション認証ができるようになりました",
+      "url": "https://dev.classmethod.jp/articles/snowflake-oidc-federated-auth-preview/",
+      "description": "Snowflake の OIDC フェデレーション認証がパブリックプレビューになりました。Google を対象に、セキュリティ統合の作成からログイン、ドメイン制限の設定まで、実際の検証内容をまとめます。",
+      "publishedAt": "2026-08-04T12:20:20.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "e204ee601b8ad1bc8b46a20a8c812f28db71ad97faa9a9a3caaa0abb187eb108",
+      "title": "AWS Builder Center",
+      "url": "https://builder.aws.com/content/3HQgsojfwGT7m4UTYZHV2jMPcDU/ai-dlc-workflow-v1v2",
+      "description": "Connect with builders who understand your journey. Share solutions, influence AWS product development, and access useful content that accelerates your growth. Your community starts here.",
+      "publishedAt": "2026-08-04T10:25:14.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "1ca27e8dd94dc05a20117700879920ff4c19006863908aa262bb96076e3717ab",
+      "title": "[アップデート]AWS Direct Connect側で仮想インターフェース(VIF)がBGPで送受信したルートを確認できるようになりました",
+      "url": "https://dev.classmethod.jp/articles/aws-direct-connect-support-bgp-visibility/",
+      "description": "AWS Direct Connectで仮想VIF側のBGP経路情報が可視化できるようになりました。これまでBGPでの経路情報が原因か？となった場合はAWS上で調査ができずカスタマーゲートウェイでのデバッグが必須だったのが緩和され調査が可能となります。",
+      "publishedAt": "2026-08-04T09:45:07.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "623848e0f5e99e538147d4fe241b33ce1bf35f9b86dd0e760bdea9106940bba0",
+      "title": "10/24開催「Vue Fes Japan 2026」タイムテーブル公開、チケット販売中",
+      "url": "https://gihyo.jp/article/2026/08/vuefes-jp-2026?utm_source=feed",
+      "description": "Vue.jsをはじめとするWebフロントエンドに関するカンファレンス「Vue Fes Japan 2026」が2026年10月24日（土）に東京・大手町プレイス ホール＆カンファレンスで開催される。",
+      "publishedAt": "2026-08-04T07:40:00.000Z",
+      "feedName": "gihyo.jp"
+    },
+    {
+      "id": "ee352bd4d5ee225544d7feccb201d5ce49d2d44c3fb74915322f5a6afb87d4d7",
+      "title": "dSPACE と AWS で実現する自動運転 AI 開発の効率化 ～MLOps によるデータ駆動型開発の実践～",
+      "url": "https://aws.amazon.com/jp/blogs/news/dspace-aws-mlops-autonomous-driving/",
+      "description": "本ブログは dSPACE Japan 様と アマゾン ウェブ サービス ジャパン合同会社が共同で執筆いたしまし […]",
+      "publishedAt": "2026-08-04T06:44:06.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "f2a8fb0b280833a544eda847cc201cedd6e89d2061b39926270141602810b264",
+      "title": "アクセンチュアとServiceNow、レガシー基盤からの移行をAIで支援する2つのサービス開始",
+      "url": "https://enterprisezine.jp/news/detail/24808",
+      "description": "アクセンチュアとServiceNowは、2つの中核要素からなる共同サービスの提供を開始した。\n\n　一つはServiceNow AI Platform上に構築されたマネージドセキュリティサービスで、も...",
+      "publishedAt": "2026-08-04T06:30:00.000Z",
+      "feedName": "EnterpriseZine"
+    },
+    {
+      "id": "8ab08c96cc622b19cd82a50909808aa30701b9d02238c1e1d65b2f80686c99f4",
+      "title": "2枚のピザを囲んで語る業務変革 — 35社62名が参加した大阪開催 Claude・Kiro実践ワークショップの記録",
+      "url": "https://aws.amazon.com/jp/blogs/news/ai-coding-workshop20260702/",
+      "description": "大阪開催の経緯 みなさん、こんにちは。AWS アカウントマネージャーの岩上です。 2026年7月2日、AWS […]",
+      "publishedAt": "2026-08-04T06:22:22.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "3fd5c84a008218f3fdc9cc3c9585cdfdfb7fafdac14bbb30aae74286219f8017",
+      "title": "「Teradata Data Analyst Agent」がAWS Marketplaceで利用可能に",
+      "url": "https://enterprisezine.jp/news/detail/24807",
+      "description": "Teradata（テラデータ）は、 エンタープライズグレードの分析エージェント「Teradata Data Analyst Agent」がAWS Marketplaceで利用可能になったと発表した。...",
+      "publishedAt": "2026-08-04T06:20:00.000Z",
+      "feedName": "EnterpriseZine"
+    },
+    {
+      "id": "3e68f9a3f154b4c1159bfa09ddb6ab11277901a5ea7d1efe92e83c40369935af",
+      "title": "AWS DevOps Agent の多層セキュリティを、外部 MCP サーバーを接続して実際に検証してみた",
+      "url": "https://dev.classmethod.jp/articles/aws-devops-agent-multi-layer-security-verification/",
+      "description": "IAM で s3:DeleteBucket を許可してもエージェントは Denied operation で拒否した。実効権限は IAM ポリシーと Permission guardrail の交差であり、ツール許可リストも実効的だった。",
+      "publishedAt": "2026-08-04T06:04:13.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "abddb7a79d83a9b08e13b00a855ba7043a2507175ca7816b9c40c78db89e2ca0",
+      "title": "Bedrock Tool UseでAIロボットを動かしたらかなり気分屋だった",
+      "url": "https://qiita.com/R-You/items/8ee108b6b1f8c4a191c2?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "「2026 Japan AWS Jr. Champions 真夏のQiitaリレー」\nの4日目の投稿です！\n過去の投稿は以下の（リンク集）からご覧ください！\nhttps://qiita.com/ys-yoshida/private/6f7c7f85155a993e2c8...",
+      "publishedAt": "2026-08-04T03:41:59.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "96523b36441d1c17407798bde084e0848831d1d9c3927ded1fb54a90cbcd4095",
+      "title": "生成AIの品質保証をどう設計する？ ― 「全部QAで見る」をやめて、機械とAIと人に分けた話",
+      "url": "https://zenn.dev/wn_engineering/articles/95911ca28a7b1f",
+      "description": "はじめに\n初めまして、ウェルスナビでQAを担当しています大久保です。\nハルシネーションまみれのAIから数年、最近はAIの進化の速度に驚かされる日々を送っています。\n本記事では、AI事業者ガイドラインを起点に生成AIを組み込んだ機能のテスト観点を作り、\nPoCで直面した課題をもとに、品質保証のプロセスを組み直した過程を紹介します。\n\n生成AIの品質保証と言われた時に、QAではどんなテストをすれば良いでしょうか。\n私たちは最初、PoCで考えられるAIリスクを洗い出し、それをすべてQAで確認しました。\nその中で、確認工数だけでなく判定基準やリリース判断との結びつきにも課題が見えてきました。...",
+      "publishedAt": "2026-08-04T03:00:06.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "8c497c87414fd0e09e5ed6d43275a1e4a11057009f0909ed63cfe01066b591c2",
+      "title": "Next.js 16.3リリース ―メモリ使用量の大幅削減や開発／実行の高速化を実現、インスタントナビゲーションをオプトインで装備",
+      "url": "https://gihyo.jp/article/2026/08/next-js-16-3?utm_source=feed",
+      "description": "Vercelは2026年8月3日、JavaScriptフレームワークNext.jsの新バージョンNext.js 16.3をリリースした。",
+      "publishedAt": "2026-08-04T02:42:00.000Z",
+      "feedName": "gihyo.jp"
+    },
+    {
+      "id": "231401c52bfb74c65ea48b36e368f9bec2d6394d26ba6aa5f7f91a9c6893bdfe",
+      "title": "Rust のテストを実行するとき、裏側で何が起きているか",
+      "url": "https://zenn.dev/estie/articles/882e14dcad0d46",
+      "description": "こんにちは。株式会社estie（エスティ）で Rust や Python でデータパイプラインや Web サーバーサイドの開発に取り組んでいる Masaki Miyazaki（yuly3）です。\n前職も含め、これまで様々なアプリケーション Rust プロジェクトを見てきた中で、Rust のテストエコシステムへの理解不足に起因する時間的・金銭的損失を数多く見てきました。症状としてはこんなところです。\n\nRust backend の CI が TypeScript/Node.js frontend の 5 倍コストがかかっている\nテストを実行するとラップトップ PC が熱々になる\n\n「Rus...",
+      "publishedAt": "2026-08-04T01:00:06.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "001d800380b9d38ca2978cf0de6b06e623a8c2512ef0a6fe05845adb53f81fd6",
+      "title": "AWS BuilderCards v2 セキュリティ拡張パック ポケットガイド",
+      "url": "https://qiita.com/AyaKunisawa/items/b1e0f43e8ab9b49ba053?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "本記事は、BIPROGY / ユニアデックス社内AWSコミュニティ「BIPROGY AWS SPARK」の定期投稿企画第7回目の記事です。他の定期投稿企画の記事は、インデックスページをご覧ください。\n\nAWS BuilderCards v2（2nd Edition）...",
+      "publishedAt": "2026-08-04T00:07:11.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "7e0931f1290ad2998dabb963f928b165cf403547d8c6d3f1f5fa8d11c3e12ab6",
+      "title": "ヘルプデスク普通にむずかしくない?",
+      "url": "https://qiita.com/engineer_hiyok/items/0402bcc41416a36ec3e2?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\nこんにちは。元現場作業員のひよこです。\nExcel、パワポも触れて来なかったガチのIT初心者ですが、2026年1月から学習を始め、半年弱で6月にIT企業へ転職しました。\n保有資格はLPIC1、AWS CLF・SAA。資格と実務は別物ですが、とりあえず頑張って取り...",
+      "publishedAt": "2026-08-03T15:52:53.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "e3fa5f986552561ccf601dbc92232951363c7cd0320ace75d6119e5afad4de5b",
+      "title": "Web を iOS に乗せると仕様書に載っていない WebKit にボコボコにされる",
+      "url": "https://zenn.dev/tamat_llc/articles/ios-webkit-invisible-specs",
+      "description": "こんにちは！webエンジニア目指して10年のTakehiroTです！\nTamaT という、顧客提案から要件定義・設計・開発まで一気通貫で担う少数精鋭の開発会社でやってます。\n前回まではデスクトップの話でした。Tauri + WKWebView でボコボコにされた話を書いて、その次に PTY か ACP かを書いて。\nで、今回はモバイルの WebKit にボコられる話なんだっぴ！同じ WebKit なのに殴られ方が全然違うんよ・・\nあるモバイル向けの Web アプリ（Next.js + React）をチームで開発しています。PC ブラウザでは何の問題もなく動くのに、iOS の実機に乗せた瞬...",
+      "publishedAt": "2026-08-03T10:23:25.000Z",
+      "feedName": "Zenn"
     }
   ]
 }
