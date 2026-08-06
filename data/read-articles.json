@@ -41,206 +41,6 @@
       "feedName": "クラスメソッド開発ブログ"
     },
     {
-      "id": "0fbf802d83a62e59b5a784e83fd5425ca55331b7fd178e1255bdb2a1542d989a",
-      "title": "The 10-Line Prompt That Turns ChatGPT Into a Fully Autonomous AI Agent",
-      "url": "https://dev.to/blobxiaoyao/the-10-line-prompt-that-turns-chatgpt-into-a-fully-autonomous-ai-agent-2bgf",
-      "description": "Most people treat Large Language Models like glorified search engines: ask a question, skim the output, close the tab. That workflow is fine for trivia. It is not fine for anything that requires planning, sequencing, and iteration.\nThe shift that actually matters right now isn't a new model or a new API. It's the realization that a correctly structured prompt can transform a language model from a sophisticated autocomplete engine into something that plans its own work, executes steps in order, evaluates what went wrong, and corrects its trajectory — without you steering it at every turn.\nThis is not theory. The prompt below works today, in any ChatGPT session with GPT-4 or later. No plugins, no API keys, no code.\nYou are an autonomous AI agent.\n\nYour mission is:\n[Goal]\n\nBreak the mission into smaller tasks.\n\nFor each task:\n- explain why it matters\n- determine dependencies\n- execute step-by-step\n- evaluate results\n- improve the strategy automatically\n\nContinue until the mission is complete.\n\nTen lines. That is the entire structure. Replace [Goal] with anything — research a market, draft a content strategy, analyze a competitor's positioning, write and self-edit a report. The agent will run.\nThe standard objection: \"That looks too simple to do anything special.\"\nThe objection is wrong, and understanding why tells you something important about how language models actually behave.\nLLMs are not just text generators — they are next-token predictors constrained by everything in their context window. When you give a model a vague instruction like \"help me with my marketing,\" the most statistically probable continuation is a generic bulleted list. The model is anchoring to patterns from millions of similar requests.\nWhen you instead give the model an identity (\"you are an autonomous agent\"), a mode (\"break this into tasks\"), and a self-evaluation loop (\"evaluate results, improve automatically\"), you are changing the distributional constraints. The model's next-token predictions now anchor to patterns of systematic, iterative work rather than patterns of one-shot answer generation.\nThis is the core mechanic behind what researchers call the ReAct (Reason + Act) pattern — the paradigm of interleaving reasoning traces with concrete actions. Yao et al. documented this formally in their 2022 paper ReAct: Synergizing Reasoning and Acting in Language Models, which demonstrated that prompting models to reason step-by-step before each action significantly reduced hallucination and improved task completion on complex benchmarks. The 10-line structure above is essentially a simplified, human-usable implementation of that pattern — and it mimics the iterative reasoning behavior found in advanced models like OpenAI's o1 and Anthropic's Claude 3.5 Sonnet, without requiring API orchestration frameworks like LangChain.\nHere is what the prompt looks like with an actual goal filled in:\nYou are an autonomous AI agent.\n\nYour mission is:\nResearch the top 3 competitors of a productivity SaaS tool and produce\na structured analysis covering: positioning, pricing model, target audience,\nperceived weaknesses, and one strategic gap that an entrant could exploit.\n\nBreak the mission into smaller tasks.\n\nFor each task:\n- explain why it matters\n- determine dependencies\n- execute step-by-step\n- evaluate results\n- improve the strategy automatically\n\nContinue until the mission is complete.\n\nRun that in a GPT-4 session. What you get back is not a vague summary. The model will first decompose the mission — typically producing something like: (1) identify the top 3 competitors, (2) gather positioning data, (3) extract pricing structures, (4) assess each competitor's known weaknesses, (5) synthesize a strategic gap. It then works through each step in a classic agentic workflow loop: plan, execute, evaluate, revise.\nClick to view the agent's actual reasoning trace (first 2 tasks) →\n[Task 1] Identify the top 3 competitors of a productivity SaaS tool\n→ Why it matters: Without a defined competitor set, subsequent analysis has no anchor.\n   All later tasks depend on this output.\n→ Dependencies: None. This is the root task.\n→ Execution:\n   [System: Interrogating latent knowledge space — SaaS market landscape, category\n   leaders by market share, search volume signals, and venture-backed entrants...]\n   Based on the productivity SaaS market, the three most prominent competitors\n   with the broadest market presence are: Notion, Asana, and Monday.com.\n→ Self-Evaluation: The selection is broad and defensible, but \"productivity SaaS\"\n   is an underspecified category. Flagging this: if the entrant tool is\n   task-management-focused, I should weight Asana and Monday.com more heavily\n   than Notion, whose use cases are more diffuse. Adjusting focus accordingly.\n→ Strategy Improvement: Proceeding with Asana and Monday.com as primary subjects;\n   Notion retained as a secondary reference point.\n\n[Task 2] Gather positioning data for each competitor\n→ Why it matters: Positioning defines how a competitor frames its value to buyers.\n   Without it, pricing and audience data have no interpretive context.\n→ Dependencies: Requires Task 1 output (confirmed: Asana, Monday.com, Notion).\n→ Execution:\n   [System: Interrogating latent knowledge space — brand messaging, homepage\n   copy patterns, ICP signals, and positioning archetypes for each target...]\n   - Asana: Positions as \"work management for teams\" — enterprise-leaning,\n     emphasizes cross-functional project tracking.\n   - Monday.com: Positions as a \"Work OS\" — broader platform play, emphasizes\n     customizability and no-code workflow building.\n   - Notion: Positions as \"connected workspace\" — knowledge management + docs,\n     less explicit project management framing.\n→ Self-Evaluation: This data feels generic — consistent with what I would have\n   produced without the agent loop. Shifting focus: the useful signal for an\n   entrant is not what they say, but what they are NOT saying. None of the three\n   explicitly target solopreneurs or small creative teams. That absence is the gap.\n→ Strategy Improvement: Flagging this as a potential strategic opportunity;\n   will surface it in the final synthesis task.\n\nAuthor's note: The self-evaluation step is where this diverges from standard prompting. Ask a model \"analyze my competitors\" and it will give you one pass. The agentic AI loop forces a second pass — the model reads its own output critically and asks whether it actually answered the question. That second pass frequently catches gaps the first pass missed entirely.\nThe prompt has four components that each carry specific weight. Understanding them lets you adapt the structure without breaking it.\nYou are an autonomous AI agent.\nThis sets a reasoning mode. The model now anchors its generation to \"how would an agent reason about this,\" not \"how would a helpful assistant answer this.\" The distinction in output is significant — agents plan, assistants respond.\nThe table below captures that contrast at a practical level:\n\n\n\nDimension\nStandard Assistant Mode\nAutonomous Agent Mode\n\n\n\n\nCore anchor\nReactive answers, generic lists\nActive planning, systematic iteration\n\n\nTask handling\nOne-shot output; stops on ambiguity\nDecomposes tasks, resolves dependencies, self-corrects\n\n\nEnd goal\nInform\nExecute and complete\n\n\nError behavior\nReturns a best-guess answer\nFlags the error, adjusts strategy, retries\n\n\nAgentic workflow\nNo loop\nPerceive → Reason → Act → Evaluate → Repeat\n\n\n\nYour mission is: [Goal]\nThe word \"mission\" is doing work here. It signals a terminal objective — something to be completed — as opposed to a topic to discuss. Be specific. Vague missions produce vague task decompositions. \"Research my market\" is a topic. \"Identify the top 5 content formats in the B2B SaaS space in 2025 by engagement rate, with at least two supporting data points per format\" is a mission.\nBreak the mission into smaller tasks.\nThis is the planning phase. Without it, the model tends to produce one monolithic output. With it, you get a dependency graph — the model identifies what needs to happen before what, and structures its work accordingly.\nFor each task:\n- explain why it matters\n- determine dependencies\n- execute step-by-step\n- evaluate results\n- improve the strategy automatically\n\nThis is the loop that separates an agent from a chain of instructions. The \"evaluate results\" and \"improve the strategy automatically\" lines are the critical ones. They tell the model to treat each step's output as provisional — something to be assessed and potentially revised before moving forward. This is the heart of the agentic workflow: not a linear script, but an iterative loop where each cycle leaves the output in a better state than the last.\nPro-Tip for Power Users: One risk of the self-improvement loop is that the model can get stuck refining indefinitely on ambiguous tasks — rewriting the same section in slightly different ways without ever converging. To prevent this, add an eleventh line to the bullet points inside your For each task: loop constraint:\nFor each task:\n- explain why it matters\n- determine dependencies\n- execute step-by-step\n- evaluate results\n- improve the strategy automatically\n- Limit self-improvement to a maximum of 2 iterations per task.   ← add this\n\nThis gives the agentic AI a hard exit condition. It will flag the issue if it cannot resolve it in two passes and move on, rather than looping silently. Highly recommended for broad or open-ended missions.\nNo prompting technique is free of failure modes, and this one has specific conditions under which it degrades.\nMissions that require real-time data. The model does not have internet access by default. If your mission requires current pricing, live search results, or recent news, the agent will hallucinate plausible-sounding data. Use this pattern in ChatGPT with the browsing capability enabled, or through an API with a search tool attached.\nMissions that are genuinely too broad. \"Build my startup\" is not a mission. The agent will produce a sprawling decomposition that is technically structured but practically useless. Scope your mission to something that could realistically be completed in one session.\nMissions that require external action. The agent can plan, write, and analyze. It cannot send emails, execute code in your environment, or interact with external systems — unless you are working with a framework that explicitly provides those tool connections. Within ChatGPT alone, the agent is limited to reasoning and text generation.\nPractical pitfall: The most common mistake is confusing \"the model described what it would do\" with \"the model did it.\" The agent will sometimes narrate steps as if it executed them, when it actually just planned them. Read the output critically. If a step requires accessing external data that the model shouldn't have, treat that step's output as a draft that needs verification.\nThe 10-line agent prompt is a standalone tool. It is also a building block.\nThe moment you need an agent to hand off its output to another process — a formatter, an editor, a publishing step — you have moved into prompt chaining territory. Understanding how multi-step prompt workflows are structured is the natural next layer once you have seen what a single-agent loop can produce.\nIf you are building more robust agent systems — ones designed to run unsupervised, call tools, or handle failure conditions gracefully — the engineering requirements go significantly deeper. The full Prompt Engineering Playbook for Autonomous AI Agents covers the four-section system prompt architecture (identity, action rules, reasoning protocol, stopping conditions) that production-grade agents require.\nThe 10-line structure works as a starting point. Adapting it to a specific use case requires getting each component precisely specified — and that is where many people spend more time than necessary, rewriting from scratch in a chat window.\nPrompt Scaffold provides a structured builder that maps directly to the components above: Role, Task, Context, Format, and Constraints — each in a dedicated field with a live token count and preview. The value is not just convenience. Filling out structured fields forces you to specify each component separately, which catches the gaps that free-form writing tends to paper over. Build the individual components there, then assemble them into the agent loop.\nThe chatbot era optimized for generating better answers. That had value. But answers are passive — they inform and stop.\nThe agentic AI era is different. When AI takes action — plans, sequences, evaluates, revises — it moves from informing to executing. Agentic workflows are the mechanism through which that shift becomes practical: not a single instruction, but a loop that runs until the job is done. That distinction has real consequences for anyone doing knowledge work. The ceiling of what you can accomplish in an hour with a well-specified agent prompt is meaningfully higher than what you can accomplish with a well-crafted question.\nThe 10-line prompt above is not a hack or a trick. It is a minimal specification of a feedback loop — the same feedback loop that underlies more sophisticated agentic frameworks, just expressed in plain English, usable today. Zero-shot tasks have a ceiling; iterative agentic loops do not.\nThe gap between people who treat AI as a question-answering tool and people who treat it as an execution engine is widening. The distance to cross it is ten lines.",
-      "publishedAt": "2026-07-07T02:23:35.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "ee0be06eeab7159f8e9442bd00aa378a784592b4e7ddb1c0e1eaf95d0684cb2d",
-      "title": "Mythosクラスの影響、セキュリティの専門家はどう見るか。「防御側がAIの進化に追いつく」ために必要なこと【GMO Flatt Security】 - レバテックLAB",
-      "url": "https://levtech.jp/media/detail_886/",
-      "description": "GMO Flatt Security株式会社 取締役副社長 Co-CTO 米内貴志 2019年に入社。2021年6月にCTOに就任以後、同社にて製品セキュリティに関するソリューションの研究開発を牽引する。サイバーセキュリティ国際会議「CODE BLUE 2024」レビューボード、サイバーセキュリティ競技「International Cybersecurity Challenge 2023」...",
-      "publishedAt": "2026-07-07T02:12:04.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "ba99439bce4bfca981cac87b4fd7121b526326b8a1d52d610b7007007c734884",
-      "title": "【セッションレポート】 Amazon S3 の非構造化データを Amazon SageMaker Catalog で AI-ready な資産に変換する [ANT308] #AWSSummit",
-      "url": "https://dev.classmethod.jp/articles/aws-summit-japan-2026-ant308/",
-      "description": "AWS Summit Japan 2026 のセッションレポートです。S3 に散らばる非構造化データを AI 活用の資産へ変える、Amazon SageMaker Catalog の活用方法を紹介します。",
-      "publishedAt": "2026-07-07T01:59:41.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "264c18cac42a53404c5b79a216622a23c29405ceacef77bd560e7ce912886b3e",
-      "title": "AWS Marketplace で購入した製品に関する問い合わせ窓口を教えてください",
-      "url": "https://dev.classmethod.jp/articles/tsnote-marketplace-inquiry-support-contact/",
-      "description": "AWS Marketplace で購入したソフトウェアについて問い合わせが必要になった場合、販売元への連絡先の見つけ方を紹介します。",
-      "publishedAt": "2026-07-07T01:36:07.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "040a1b06455c16fb8b553f49ebb5dd6635500b14298e62cf15cf2e6340033ecb",
-      "title": "AWS DevOps Agentの新機能カスタムエージェントで週次SREレポートをつくる",
-      "url": "https://developers.cyberagent.co.jp/blog/archives/64493/",
-      "description": "本記事は、DevOps Agentの新機能のカスタムエージェントをつかって週次のSREレポートをつく ...",
-      "publishedAt": "2026-07-07T00:24:26.000Z",
-      "feedName": "CyberAgent Developers Blog"
-    },
-    {
-      "id": "d04c8ae6bb7e125d7ed74fc40f71b96b5e6364220cf0d46ff316bae59029f430",
-      "title": "Deno 2.9 で登場したデスクトップ機能 (Deno Desktop) - Electron / Tauri との違いを実感",
-      "url": "https://developer.mamezou-tech.com/blogs/2026/07/07/deno-2_9-desktop/",
-      "description": "はじめに\n#\nDeno 2.9 リリースおめでとうございます。\nDeno 2.9 | Deno\nElectron 大好きな自分としても気になるのはやはり Deno Desktop です。\n公式ドキュメントは以下にあります。\nhttps://docs.deno.com/runtime/desktop/\n\n -->\n Caution\nDeno ブログには以下のように書かれており、2.9 時点ではデスクトップ機能は実験的段階です。\ndeno desktop is experimental in 2.9. The surface described here is stabilizing and some platform features are still landing.\n使ってみる\n#\nまずは 2.9 にアップグレードしておきます[1]。\ndeno upgrade\n\n\n  \n\nmain.ts に Deno.serve を使って普通にサーバープログラムを書きます。\nmain.ts\n  \nDeno.serve(() =>\n  new Response(\n    \"<!DOCTYPE html><h1>Hello from Deno desktop </h1>\",\n    { headers: { \"content-type\": \"text/html\" } },\n  )\n);\n\n\n  \n\n同じディレクトリで deno desktop main.ts を実行します。\n$ deno desktop main.ts\n\n⚠ deno desktop is experimental and subject to change\nCheck main.ts\nCompile main.ts to hello.dylib\n\nEmbedded Files\n\nhello.dylib\n└── main.ts (430B)\n\nFiles: 1.91KB\nMetadata: 1.38KB\nRemote modules: 12B\n\nDownloading laufey webview backend for aarch64-apple-darwin (v0.4.0)\nDownload laufey-webview-aarch64-apple-darwin.tar.gz 97.44KiB/97.44KiB\nCodesigning bundle with identity \"-\"\nhello.app/Contents/MacOS/laufey_webview: replacing existing signature\nhello.app/Contents/MacOS/hello.dylib: replacing existing signature\nBundle hello.app\n\n\n  \n\n最後の出力で、ルートに hello.app (macOS のアプリ実行ファイル)が生成されており、起動できます（Windows の場合は、hello.exe が生成されます）。\n\nDeno のコンセプト通り、追加のモジュールや設定なし(Out of the box)でデスクトップアプリが生成されました。\nDeno Desktop の開発体験\n#\nHMR (Hot Module Replacement) オプション付きで起動することで、ローカルの開発サーバを立ち上げ、コード変更を検知してアプリ内容を即時更新してくれます。\ndeno desktop --hmr main.ts\n⚠ deno desktop is experimental and subject to change\nCompile main.ts to file:///Users/kondoumh/Library/Caches/deno/desktop/5f4a00908e99d886/hello.dylib\n\nEmbedded Files\n\nhello.dylib\n└── main.ts (422B)\n\nFiles: 1.9KB\nMetadata: 1.38KB\nRemote modules: 12B\n\nRunning desktop app with HMR (watching /Users/kondoumh/dev/deno-study/desktop/hello)\nRuntime loaded successfully from: /Users/kondoumh/Library/Caches/deno/desktop/5f4a00908e99d886/hello.dylib\nRuntime started\n[desktop] dylib path: \"/Users/kondoumh/Library/Caches/deno/desktop/5f4a00908e99d886/hello.dylib\"\nListening on http://127.0.0.1:52958/\n\n\n  \n\nmain.ts のコードを書き換えると、保存後すぐに画面へ反映されます。\n -->\n Information\nElectron では HMR は標準では利用できず、別途 Forge などで開発サーバーを起動する必要があります。\nhttps://developer.mamezou-tech.com/blogs/2024/01/29/electron-forge-introduction/\n\n\n\nUI の ローカル HTTP サービスによる実現\n#\nElectron (Forge など) ではローカルサーバーの利用は開発時が中心で、配布後は file:// でアセットを読む構成が一般的です。\nこれに対し Deno Desktop は、配布後のバイナリでもローカル HTTP サーバーを内部起動し、空きポートを自動割り当てして UI を描画します。サーバーはプロセス内で閉じており、外部公開はされません。ポート衝突を意識せずに済むのも良い点です。\nこの「開発時もビルド済みバイナリでも、同じ HTTP 実行モデルで UI を提供する」設計により、\n開発時とデプロイ時の挙動に差がない\nコンテンツはブラウザとデスクトップで同じ動きをする\nNext.js などのフレームワークがそのままデスクトップアプリの中で動く\nといったメリットが得られます。\nhttps://docs.deno.com/runtime/desktop/serving/\n\n\nDevTools の起動\n#\nElectron や Tauri と同様、DevTools によるデバッグが可能です。BrowserWindow を起動し、openDevtools メソッドを呼ぶだけです。\nconst win = new Deno.BrowserWindow({ \n  title: \"My Deno Desktop App\", \n  width: 800, \n  height: 600,\n});\n\nwin.openDevtools();\n\n\n\n  \n\n\nhttps://docs.deno.com/runtime/desktop/devtools/\n\n -->\n Information\nいまのところ、DevTools のフルサポートはバックエンドを cef にしている時のみです。\n以下のように、指定して起動する必要があります。\ndeno desktop --hmr --backend=cef main.ts\n\n\n  \n\n\n\nバックエンドとフロントエンドの通信(Bindings)\n#\nElectron の IPC 通信は render.js と main.js を preload.js 経由でブリッジする必要があり、かなり面倒です。Deno デスクトップでは BrowserWindow にバインドした関数を bindings というグローバルオブジェクトにより簡単に呼び出すことができます。\n実際のコードで見てみましょう。\nconst win = new Deno.BrowserWindow({ \n  title: \"Bindingsのテスト\", \n  width: 800, \n  height: 600,\n});\n\n// ==========================================\n// 1. バックエンド側：フロントから呼ばれる関数を登録\n// ==========================================\nwin.bind(\"getSystemInfo\", async (userName) => {\n  console.log(`[Deno側] フロントエンドから呼ばれました！ 引数: ${userName}`);\n  \n  // Denoの機能を使ってOSの情報を取得\n  const denoVersion = Deno.version.deno;\n  const os = Deno.build.os;\n\n  // 少し重い処理をシミュレート（0.5秒待つ）\n  await new Promise(resolve => setTimeout(resolve, 500));\n\n  // フロントエンドに返すデータ（JSON化できるものなら何でもOK）\n  return {\n    message: `こんにちは、${userName}さん！`,\n    os: os,\n    denoVersion: denoVersion\n  };\n});\n\n// ==========================================\n// 2. フロントエンド側：画面のHTMLを返す\n// ==========================================\nDeno.serve(() => {\n  const html = `\n    <!DOCTYPE html>\n    <html>\n    <head>\n      <meta charset=\"utf-8\">\n      <title>Bindings Test</title>\n    </head>\n    <body>\n      <h1>Deno Desktop Bindings</h1>\n      <button id=\"btn\">システム情報を取得</button>\n      <pre id=\"result\">ここに結果が出ます</pre>\n\n      <script>\n        // ボタンが押された時の処理\n        document.querySelector('#btn').addEventListener('click', async () => {\n          const resultArea = document.getElementById('result');\n          resultArea.textContent = \"取得中...\";\n\n          try {\n            // 💡 bindings を使ってバックエンドの関数を呼び出す\n            const data = await bindings.getSystemInfo(\"kondoumh\");\n            \n            // 結果を画面に表示\n            resultArea.textContent = JSON.stringify(data, null, 2);\n          } catch (error) {\n            resultArea.textContent = \"error: \" + error.message;\n          }\n        });\n      </script>\n    </body>\n    </html>\n  `;\n\n  return new Response(html, {\n    headers: { \"content-type\": \"text/html\" },\n  });\n});\n\n\n  \n\nアプリ画面です。システム情報を取得 ボタンをクリックするとしばらく呼び出し中になり、結果が表示されます。\n\n結果が表示された状態。\n\nアプリを起動しているバックエンドでは次のようにログが出ています。\n[Deno側] フロントエンドから呼ばれました！ 引数: kondoumh\n\n\n  \n\nすごくシンプルです。OS のネイティブ機能と Web UI を簡単に連携できるのがいいですね。\nhttps://docs.deno.com/runtime/desktop/bindings/\n\n\nメニュー の利用\n#\nアプリケーションメニューの実装。\nBrowserWindow の setApplicationMenu メソッド内でメニューオブジェクトを定義して渡します。\nBrowserWindow にイベントリスナーを登録してメニューがクリックされた時の振る舞いを実装します。\nrole などは Electron と同じですね。\nwin.setApplicationMenu([\n  {\n    submenu: {\n      label: \"File\",\n      items: [\n        {\n          item: {\n            label: \"New\",\n            id: \"new\",\n            accelerator: \"CmdOrCtrl+N\",\n            enabled: true,\n          },\n        },\n        {\n          item: {\n            label: \"Open…\",\n            id: \"open\",\n            accelerator: \"CmdOrCtrl+O\",\n            enabled: true,\n          },\n        },\n        \"separator\",\n        {\n          item: {\n            label: \"Save\",\n            id: \"save\",\n            accelerator: \"CmdOrCtrl+S\",\n            enabled: true,\n          },\n        },\n        { role: { role: \"quit\" } },\n      ],\n    },\n  },\n  {\n    submenu: {\n      label: \"Edit\",\n      items: [\n        { role: { role: \"undo\" } },\n        { role: { role: \"redo\" } },\n        \"separator\",\n        { role: { role: \"cut\" } },\n        { role: { role: \"copy\" } },\n        { role: { role: \"paste\" } },\n      ],\n    },\n  },\n]);\n\nwin.addEventListener(\"menuclick\", (e) => {\n  const detail = (e as CustomEvent).detail;\n  switch (detail.id) {\n    case \"new\":\n      console.log(\"New clicked\");\n      break;\n    case \"open\":\n      console.log(\"Open clicked\");\n      break;\n    case \"save\":\n      console.log(\"Save clicked\");\n      break;\n  }\n});\n\n\n  \n\nコンテキストメニューの実装。\nshowContextMenu に座標とともに渡します。\nconst contextMenu: Deno.MenuItem[] = [\n  { item: { label: \"Copy\", id: \"copy\", enabled: true } },\n  { item: { label: \"Paste\", id: \"paste\", enabled: true } },\n  \"separator\",\n  { item: { label: \"Properties…\", id: \"props\", enabled: true } },\n];\n\n// Trigger from a right-click. The webview may not forward the browser\n// `contextmenu` event, so handle the secondary mouse button on the window.\nwin.addEventListener(\"mousedown\", (e) => {\n  if (e.button === 2) {\n    win.showContextMenu(e.clientX, e.clientY, contextMenu);\n  }\n});\n\nwin.addEventListener(\"contextmenuclick\", (e) => {\n  if (e.detail.id === \"copy\") { console.log(\"Copy clicked\"); }\n  if (e.detail.id === \"paste\") { console.log(\"Paste clicked\"); }\n  if (e.detail.id === \"props\") { console.log(\"Properties clicked\"); }\n});\n\n\n  \n\n -->\n Information\nここではメニューのクリックイベントでログを出力していますが、ログ自体はアプリを起動しているターミナル側に出ますのでご注意ください。\nhttps://docs.deno.com/runtime/desktop/menus/\n\n\nフレームワークを利用した開発\n#\nDeno.serve() を利用したサンプルを見てきましたが、Deno デスクトップでは、以下のフレームワークとともに利用可能です。これらのプロジェクトのディレクトリで deno desktop を起動すると、フレームワークを自動検出してアプリを構成します。多くのモダンフレームワークがサポートされています。\nNext.js\nAstro\nFresh\nRemix\nNuxt\nSvelteKit\nSolidStart\nTanStack Start\nVite\nローカルで動いてるのに SSR を使うというのがなんとも不思議な感じですが、ちゃんと動いてセキュアであればヨシ！という感じでしょうか。\nhttps://docs.deno.com/examples/next_tutorial/\n\nNext.js のアプリを作成します。\ndeno run -A npm:create-next-app@latest\n\n\n  \n\n作成したプロジェクトディレクトリへ移動して実行します。\ncd <project-dir>\ndeno desktop -A\n\n\n  \n\n\nNext.js のアプリが、外部サーバーなしでまるっとデスクトップ内で動いてるのは不思議な感じです。\nhttps://docs.deno.com/runtime/desktop/frameworks/\n\n\nバックエンドの選択について\n#\nデスクトップアプリは配布するバイナリのサイズも重要です。小さいに越したことはありません。\nElectron は Chromium を内包するため、インストールされたバイナリサイズは300MBぐらいの大きさになったりします。\nDeno Desktop の場合、OS にプリインストールされている WebView を使えば70MB程度です。CEF(Chromium) だとやはり300MB程度になります。\nOS 依存の WebView だと、Windows と Mac で微妙に CSS や JS の挙動が変わるクロスブラウザ問題が発生するため、そのための対応やテストも必要になります。機能が少ないうちは WebView でもいいかもしれませんが、機能が増えてくるとテストの手間も何倍にもなっていきます。\nDeno Desktop の場合、最初は軽量な WebView でスタートし、クロスブラウザが重荷になってきたら、ちょっと配布サイズは大きくなるけど、CEF にスイッチできるのがいいかなと思います。\nhttps://docs.deno.com/runtime/desktop/backends/\n\n -->\n Information\nTauri だとこの辺、Servo ベースの自前 WebView プロジェクト Verso 待ちですが、Deno は既存の Chromium を選択可能にしているあたり、現時点での割り切りが感じられますね。\nElectron との比較\n#\n既存 Web アプリをデスクトップ化したいユースケースでは、Deno Desktop はかなり有力です。\n一方で、Electron の WebContentsView のような高度なマルチビュー構成を前提にしている場合は、現時点では Electron のほうが適しています。たとえば VS Code や Figma のように、複数ビューを細かく制御するタイプのアプリです。\nざっくり整理すると次のような感触です。\n単一ウィンドウ中心 + 既存 Web 資産活用: Deno Desktop はかなり良い\n複雑なウィンドウ/ビュー管理: Electron が依然強い\n -->\n Information\nマルチビュー構成の対応の弱さは Tauri も同様です。\nhttps://developer.mamezou-tech.com/blogs/2025/12/01/porting-an-electron-app-to-tauri2/\n\nElectron の WebContensView 構成については以下の記事をご参照ください。\n/blogs/2024/08/28/electron-webcontentsview-app-structure/\n\n\n\nhttps://docs.deno.com/runtime/desktop/comparison/\n\n\nさいごに\n#\n以上、Deno Desktop 機能を一通り試しました。\nOut of the box でここまでデスクトップ開発体験が整っているのは率直に驚きです。タスクトレイやメニュー、Bindings など、アプリらしさを出すための API が最初から揃っているのも好印象でした。\nTauri と違ってアプリ側をすべて TypeScript で書けるため、既存 Web アプリをベースに「メニューやタスクトレイを追加し、OS 機能と連携する」用途ではかなり相性がよいと感じます。最小構成なら、デスクトップアプリ化自体は1時間もかからないはずです。\n -->\n Information\nTauri も JS の API を生やして、Rust 知らない勢を取り込もうとしてはいます。\nDeno のキラー機能になる可能性もありますね。experimental から安定版へ向けて、今後の熟成がとても楽しみな機能です。\n2026年7月6日現在の最新は 2.9.1 です。 ↩︎",
-      "publishedAt": "2026-07-07T00:00:00.000Z",
-      "feedName": "豆蔵デベロッパーサイト"
-    },
-    {
-      "id": "7288d83f7eee97d8f30826a7f65ff42f39799e476f6e3b5bdf9eccf2201bb4ee",
-      "title": "Amazon Redshift RG: Graviton 搭載でより高速、より低コスト",
-      "url": "https://aws.amazon.com/jp/blogs/news/amazon-redshift-rg-faster-and-lower-cost-graviton-powered/",
-      "description": "Amazon Redshift は、Graviton プロセッサを搭載した新インスタンス RG の一般提供を開始しました。RG は RA3 と比較して最大 2.2 倍高速なパフォーマンスを 30% 低いコストで実現し、統合ベクトル化データレイクエンジンにより Iceberg クエリで最大 2.4 倍高速化します。本記事では RG の技術的特長とベンチマーク結果を紹介します。",
-      "publishedAt": "2026-07-06T23:56:10.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "5f980fe22f9eb6650d8ae5f56be28dcce7bf109786024222088c25cc098326f0",
-      "title": "AI を活用した Amazon Redshift のパフォーマンスレコメンデーション",
-      "url": "https://aws.amazon.com/jp/blogs/news/ai-powered-performance-recommendations-for-amazon-redshift/",
-      "description": "Amazon Redshift のパフォーマンスチューニングを自動化する AI ソリューションの構築方法を解説します。AWS Lambda でテレメトリを収集し、シグナルベースのプロンプト設計で Amazon Bedrock から具体的な推奨事項を生成してメール通知します。",
-      "publishedAt": "2026-07-06T23:54:04.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "7643c42092aeb5ee93ed0a22374e74e4c85b526af1fb414d5a8ee219162bea20",
-      "title": "Amazon Redshift のマルチウェアハウス機能強化でアナリティクスをスケール",
-      "url": "https://aws.amazon.com/jp/blogs/news/scale-analytics-with-amazon-redshift-multi-warehouse-enhancements/",
-      "description": "Amazon Redshift のリモートテーブル DDL の改善、マテリアライズドビューの機能強化、zero-ETL および auto-copy 向けのコンカレンシースケーリング拡張により、大規模なアナリティクスワークロードを効率的にオンボードできるようになりました。金融サービスやゲーム業界の実例を交えて、マルチウェアハウスアーキテクチャの活用方法を紹介します。",
-      "publishedAt": "2026-07-06T23:52:04.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "23ad63e50d510ffcd8735fc2b2e397574896763c939363f3614cd2ebad7a0abe",
-      "title": "Amazon Redshift が BI ダッシュボードとリアルタイム分析のパフォーマンスを向上",
-      "url": "https://aws.amazon.com/jp/blogs/news/amazon-redshift-delivers-faster-performance-for-bi-dashboards-and-real-time-analytics/",
-      "description": "Amazon Redshift の新しいクエリ起動最適化により、BI ダッシュボードやリアルタイム分析アプリケーションのレスポンスタイムが向上しました。コンパイルの負荷を軽減する「コンポジション」技術により、初回クエリの P50 コンパイル時間が 4.3 秒から 170 ミリ秒に短縮され、追加費用なしですべてのユーザーにデフォルトで有効化されています。",
-      "publishedAt": "2026-07-06T23:50:31.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "18d67fa4b31f9e288150c7cbab101c25218fdb572446f8b55c04b955ec75837b",
-      "title": "Amazon Redshift Serverless と Tableau の統合を最適化する",
-      "url": "https://aws.amazon.com/jp/blogs/news/optimize-your-tableau-integration-with-amazon-redshift-serverless/",
-      "description": "本記事では、Tableau と Amazon Redshift Serverless の統合を最適化するための戦略を紹介します。データモデルアーキテクチャ、セキュリティ構成、パフォーマンス最適化、コスト管理、クエリ最適化の 5 つの領域について、RPU を最大限に活用しながらサブ秒レベルのインサイトを提供するためのベストプラクティスを解説します。",
-      "publishedAt": "2026-07-06T23:48:42.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "58152aa07977f0f0a388db76400754b64426451cdd129123d47114f35bcb931f",
-      "title": "AWS Organizations の Inspector ポリシーを Inspector コンソールからフォーム形式で設定できるようになってました",
-      "url": "https://dev.classmethod.jp/articles/amazon-inspector-organizations-policy-form-configuration/",
-      "description": "AWS Organizations の Inspector ポリシーを、JSON で直接書く方法と Inspector コンソールのフォーム形式で設定する方法を紹介します。実際の画面を見ながら、それぞれのメリットを確認してみましょう。",
-      "publishedAt": "2026-07-06T23:39:24.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "7ff3eccc200964f98a24a008d8c2646c3e26f964e104a1aed0326b6df1942e11",
-      "title": "DSQL用のPrismaツールを使ってみる",
-      "url": "https://dev.classmethod.jp/articles/aurora-dsql-prisma-cli-tools/",
-      "description": "AWS公式によるDSQL用のPrisma CLIツールを実際に使ってみました。スキーマ検証からマイグレーションSQL の自動変換まで、その実装方法と活用方法についてまとめます。",
-      "publishedAt": "2026-07-06T22:07:10.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "b84ecf4bc1746e5b3eb2049985eb75c366d6ba4b5b5dbb6884ae298fdc01c4fc",
-      "title": "Lambda レイヤーで Bedrock Mantle を使う — Docker 不要で 47 モデルを呼び出してみた",
-      "url": "https://dev.classmethod.jp/articles/bedrock-mantle-lambda-layer-4-routes/",
-      "description": "Amazon Bedrock Mantle を Lambda から利用するには、Bearer Token 生成や OpenAI / Anthropic 互換 API 用のSDKが必要です。本記事では、必要な3パッケージを Lambda レイヤーにまとめることで、Docker / ECR を使わずに Bedrock Mantle を呼び出す構成を検証しました。あわせて、4 つのAPIルートの使い分けと 47 モデルの動作確認結果を紹介します。",
-      "publishedAt": "2026-07-06T15:03:39.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "86a526d02afdfaf4a6abee062de1ab2ac1680de33691cc5d5d6cc58584abfb11",
-      "title": "YouTube StudioのAI機能で非公開動画の情報が漏れる可能性が指摘される",
-      "url": "https://gigazine.net/news/20260706-youtube-ask-studio-leak/",
-      "description": "YouTube StudioのAI機能「Ask Studio」を悪用するとコメント欄に仕込まれた指示を通じて非公開動画のタイトルなどを外部に送信させられる可能性がある、とセキュリティ研究者のjavoriuski氏が報告しました。 Leaking YouTube Creators Private Videos | Javox https://javoriuski.com/post/youtube YouTubeのクリエイタ...",
-      "publishedAt": "2026-07-06T14:17:39.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "bfa974754c69097a6039d656beab4e6e333f1fadffdbc00c3f41dc7413eee9a5",
-      "title": "週刊AWS – 2026/6/29週",
-      "url": "https://aws.amazon.com/jp/blogs/news/aws-weekly-20260629/",
-      "description": "Amazon S3 サーバーアクセスログが Amazon CloudWatch Logs と Amazon S3 Tables への配信に対応、AWS WAF が Amazon Bedrock AgentCore Gateway のサポートを追加、AWS のサービスおよび機能の提供状況変更のお知らせ、Amazon SageMaker AI が Gemma 4 モデルのサーバーレスモデルカスタマイズをサポート、Claude Sonnet 5 が AWS で利用可能に、Amazon WorkSpaces for AI agents の一般提供を発表、Amazon OpenSearch Service にログ分析向けに最適化された新エンジンが登場、AWS AppConfig が A/B テスト向けのマネージド実験ツールを提供開始、Amazon RDS のクロスリージョン自動バックアップが 4 つの追加 AWS リージョンで利用可能に、AWS Config が 8 つの新しいリソースタイプに対応、Amazon EC2 X8i インスタンスが追加リージョンで利用可能に、Amazon SageMaker Unified Studio が Terraform によるプロビジョニングをサポート",
-      "publishedAt": "2026-07-06T13:16:10.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "52f3a3143eb2996d9f3ba46564d4f658b49095bb5f188ed216adfc1765365547",
-      "title": "AI Agentに自由な開発環境を渡す、Proxmox+LXCで。",
-      "url": "https://zenn.dev/uzulla/articles/91272997a7c668",
-      "description": "こんにちは uzullaです。もはやAIエージェントに作業をさせることがお仕事みたいな時代になりましたね。\nAgentに作業をさせるのだから「Enterをおすだけのかんたんなおしごと」は減らして、できるだけロングランしてほしい。\nそうなると「エージェントが好き勝手できる」かどうかは重要なポイントです。しかし、自分の作業マシンでそのまま動かすのは怖いですよね、Agentによかれと変なコマンド実行されたり、なんかツールをいれられたら環境が汚れるし（いれていいとしてもそれの精査の手間がかかるし）、ホスト名やポートはかぶるし、DockerのImageとかの名前衝突したり…。\nそこで私は、Prox...",
-      "publishedAt": "2026-07-06T11:12:08.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "7b42a3fd2442672a1ddd09e06c2208b7f2cf2a220147b6cdbddf166d496e190d",
-      "title": "AIセキュリティ対策レベル「内製／外部委託」で大きな差、時間とリソースが課題──ChillStack",
-      "url": "https://enterprisezine.jp/news/detail/24628",
-      "description": "国産サイバーセキュリティ企業のChillStackは、AIを組み込んだ自社サービスのセキュリティ対策における決裁者を対象に『AIセキュリティ対策に関する実態調査』を実施し、188名から得た回答を発表...",
-      "publishedAt": "2026-07-06T09:58:00.000Z",
-      "feedName": "EnterpriseZine"
-    },
-    {
-      "id": "b261a4fd82023cd566fe8a6b51665f7710296b276fcb5ac57fe31b5b28c242cd",
-      "title": "週刊生成AI with AWS – 2026年6月29日週",
-      "url": "https://aws.amazon.com/jp/blogs/news/weekly-genai-20260629/",
-      "description": "週刊生成AI with AWS, お客様事例が充実した 2026 年 6 月 29 日号 - プリモグローバルホールディングス様、株式会社ラクス様、ITbook 株式会社様、株式会社オーレックホールディングス様の国内事例ブログを紹介。また、Kiro の Agent Focus や GitLab 連携、OpenAPI からのテストスイート生成などのブログ記事も。サービスアップデートでは Claude Sonnet 5 の AWS 提供開始や Amazon Bedrock AgentCore のリージョン拡大をはじめとするアップデートを紹介。",
-      "publishedAt": "2026-07-06T09:28:56.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "780ef01bd2dfe3b8bc7dbccdc937a839fbbf673729cd55aa585d242b6f564d5f",
-      "title": "フロンティアモデルの安全なリリースに向けた AWS の取り組み",
-      "url": "https://aws.amazon.com/jp/blogs/news/safely-releasing-frontier-models-to-customers/",
-      "description": "Amazon Bedrock で Anthropic の Claude Fable 5 モデルが、悪用防止のためのさらに強力なガードレールを備えて再びご利用いただけるようになりました。本記事では、サイバー能力を持つフロンティアモデルを防御側に届けながら攻撃者による悪用を防ぐバランスの取り方、Project Glasswing を通じた Anthropic との連携、問題の重大度と対応の SLA など、フロンティアモデルを安全にお客様へ提供するための AWS の取り組みを紹介します。",
-      "publishedAt": "2026-07-06T05:56:34.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "fa0186b675eb8bdf9c19eecc1e5e1618cbd063f0640da831e843b01f54ef2629",
-      "title": "【ブースレポート】日産の AI Defined Vehicle を支える次世代ソフトウェア開発基盤のデモを見学してきた #AWSSummit",
-      "url": "https://dev.classmethod.jp/articles/nissan-ai-defined-vehicle-sdv-dev-platform-aws-summit-2026/",
-      "description": "re:Invent 2025 からの進化や、自然言語で機能を実装して実車へ OTA 配信するデモの様子を見られました。",
-      "publishedAt": "2026-07-06T04:29:49.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "2d090d8a1a75608f7c5d39e2091d692262bd3b277b0e13512443a2b6e11f008f",
-      "title": "【ブースレポート】 DJ Agent ～ AI エージェントによるライブコーディング DJ ～ ブースを体験してきました",
-      "url": "https://dev.classmethod.jp/articles/aws-dj-agent/",
-      "description": "AWS Summit 2026のブースレポートとして、AI エージェント同士がリアルタイムで曲を生成・DJ する「DJ Agent」を紹介します。マルチエージェントアーキテクチャによるライブコーディング、視聴者投票機能、低コストな実装の工夫について紹介します。",
-      "publishedAt": "2026-07-06T04:28:05.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "5e51829a4993b6e6cac6c9bfeb7a93056573930caadde3f4ae1af500a85b1741",
-      "title": "クラスメソッドオペレーションズにジョインした鈴木です",
-      "url": "https://dev.classmethod.jp/articles/202607-suzukikaito-joined-classmethod-operations/",
-      "description": "2026年7月1日よりクラスメソッドオペレーションズに新しくジョインしました鈴木です。自治体のAWS構築経験を活かし、クラスメソッドグループの成長環境で更なるスキルアップを目指していきます。",
-      "publishedAt": "2026-07-06T04:14:21.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "0ef28e5b3d95f581abe4d6d9cd62df30d36a2fd5f7e337e34c35794eedded235",
-      "title": "公開3日で停止した「Claude Fable 5」が復活　AI脱獄の採点ルールも稼働",
-      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2607/06/news036.html",
-      "description": "公開からわずか3日で利用停止となったAnthropicの最新AIモデル「Claude Fable 5」が再提供される。その裏で同社は、AmazonやMicrosoft、GoogleとともにAIのジェイルブレーク（脱獄）の深刻度を共通基準で評価する新たな枠組みづくりに着手した。AIセキュリティは新たな転換点を迎えようとしている。",
-      "publishedAt": "2026-07-06T04:00:00.000Z",
-      "feedName": "＠IT"
-    },
-    {
-      "id": "b4d57585561cba429125e7c19bd2ff54b0fa4bdc726d135754211f553f533ea6",
-      "title": "クラスターアップグレードを安全かつ信頼性高く管理できる Amazon EKS バージョンロールバックを発表",
-      "url": "https://aws.amazon.com/jp/blogs/news/announcing-amazon-eks-rollback-for-safe-and-reliable-management-of-cluster-upgrades/",
-      "description": "Amazon EKS バージョンロールバックを発表します。これは、クラスター管理者が Amazon Elastic Kubernetes Service (Amazon EKS) クラスターにおける Kubernetes バージョンのアップグレードを安全にロールバックできる新機能です。この機能により、追加のセーフティネットを備えた状態で EKS フリート全体に新しいバージョンのアップグレードを自信を持って展開できるようになりました。",
-      "publishedAt": "2026-07-06T03:29:01.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
       "id": "fdd054114e8113dbec42742a7092d6acc74d6dd195d3413e1db77998e27e2a2e",
       "title": "[やってみた] DevOps Agent のサンプルスキル「Investigation Cost Guardrail」で調査にかかるコストを算出してみた",
       "url": "https://dev.classmethod.jp/articles/devops-agent-InvestigationCostGuardrail/",
@@ -367,86 +167,6 @@
       "description": "Anthropicは、エージェント型コーディングツール「Claude Code」のセキュリティガイダンスプラグインを公開した。Claudeがソースコードの脆弱性についてレビューし、同じセッション内で修正を支援するものだ。",
       "publishedAt": "2026-07-07T04:00:00.000Z",
       "feedName": "＠IT"
-    },
-    {
-      "id": "d84a9dc5a0527ec591a9d5023cc88d1d0a46465d102dae72d05efa682dc193fb",
-      "title": "【AWS】Bedrock AgentCore Web Search を試してみた！",
-      "url": "https://qiita.com/PDC-Kurashinak/items/9bc404e35625ade6e198?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "どうもこんにちは。\n今回は、Amazon Bedrock AgentCore Web Search を AWS CDK で構築して、Strands Agents から使ってみます。\nAmazon Bedrock AgentCore Web Search は、AgentCor...",
-      "publishedAt": "2026-07-07T02:17:07.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "5eacf2ab7575315b5479e276db9f073faba4115ad45cc1bb45291ff74f653c99",
-      "title": "Vitestで始めるシンプルなVRT",
-      "url": "https://zenn.dev/cybozu_frontend/articles/vitest-simple-vrt",
-      "description": "この記事は、CYBOZU SUMMER BLOG FES '26の記事です。\n\n はじめに\nVitest 4.0でVisual Regression Testing（VRT）がサポートされました。このVitest（Browser Mode）でのVRTとGitHub Actionsを組み合わせることで、実際のプロダクトにシンプルなVRTを導入できたので、その方法を紹介します。\n今回紹介する方法を導入したサンプルのリポジトリを作ったので、詳細な実装が知りたい方はこちらをご覧ください。\nhttps://github.com/nus3/vitest-vrt\n\n VRT実行の流れ\n\nVitestに...",
-      "publishedAt": "2026-07-07T00:36:25.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "1ec082f8b6af7b965903c74765050790b296399fd89af90f40910da9dfb78d23",
-      "title": "AWS Microcredentialsを全部取得したので勉強方法と難易度をまとめてみた",
-      "url": "https://qiita.com/kazuki_horiuchi/items/3cddf7c1189e36b4c4ab?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "はじめに\nみなさんこんにちは。\nAWS Skill Builderで提供されている Microcredential を全て取得しましたので、各資格の概要・勉強方法・個人的な難易度をまとめます。\n\nAWS Microcredentialsとは\nAWS Microcreden...",
-      "publishedAt": "2026-07-07T00:08:14.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "038e9ab8fd0f3aee37d84751230ff2f16b2db112b96d12957677d17006e54db9",
-      "title": "Spanner Omni を採用して CI のトータル実行時間を84%減らすまでの道のり",
-      "url": "https://zenn.dev/kauche/articles/ac1c707f2fc991",
-      "description": "はじめに\nカウシェのバックエンドは Google Cloud Spanner を使っており、ローカル開発と CI のテストには長らく Cloud Spanner Emulator を使ってきました。\n2026 年 4 月、Spanner の実エンジンをローカルで動かせる Spanner Omni が公開されました。\nhttps://cloud.google.com/blog/products/databases/introducing-spanner-omni\nこれをまずローカル開発に導入し、e2e テストで検証し、2 週間ほどかけて主要サービスの CI を Omni に切り替えまし...",
-      "publishedAt": "2026-07-06T23:49:53.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "30d20d09e108feacd3fbd592d9efcb71392922fa1240afc622794ca9d130a4eb",
-      "title": "JavaScriptだけでSHA-256ハッシュを生成する。crypto.subtle.digestの罠（MD5なし・HTTPS必須）",
-      "url": "https://qiita.com/sakutto-panda/items/42dfd652de113211d782?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "ファイルの整合性確認やAPI署名の検証で、手元でサッとSHA-256を計算したいことがある。ブラウザには標準で Web Crypto API（crypto.subtle）が載っているので、ライブラリを一切入れずにハッシュ生成ができる。\nぱんだツールズに作ったハッシュ値生成ツ...",
-      "publishedAt": "2026-07-06T22:56:51.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "2da04647f3f27a589fe0afdf916b58c6042f6cfaae162300969e2fef5b0e89c2",
-      "title": "自動テストの肥大化とどう向き合うか",
-      "url": "https://zenn.dev/frontendflat/articles/automated-test-size-tradeoff",
-      "description": "Q. 「自動テストを書いてきてしばらく経つが、実行時間の増加に伴う問題 (CI 待ち時間) や偽陽性・偽陰性の問題が出てきた。どう対応していくのがよいか？」 IMO: コードの変更に対する不安と実行時間をコンパスにして、自動テストの肥大化に立ち向かう。(一ヶ月後には言っていることが変わるかもしれないので、今日のス...",
-      "publishedAt": "2026-07-06T18:07:56.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "66d04adbe9bd257e76f3c989a4afb9378a71add1823faac68bf72765029f3fca",
-      "title": "Claude Code の無料セキュリティ監査プラグインで脆弱性を自動検出・修正してみる",
-      "url": "https://qiita.com/nogataka/items/4d2a551f89f6b4f94b01?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "この記事のポイント\n\nAnthropic が 2026 年 5 月下旬に Claude Code 向けの公式プラグイン security-guidance を公開しました（各メディアで紹介されたのは 5 月 27 日です）。全プランで利用でき、2026 年 6 月時点でベ...",
-      "publishedAt": "2026-07-06T11:00:39.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "a10fd327ab1efb6479e0234ab26f48f7c55dc256efcb9ea89527d8441a73204b",
-      "title": "LLMのコスト暴走と情報漏洩を防ぐ社内Gateway設計: Azure/AWSガバナンスとLiteLLM実装(Phase1→Phase2)",
-      "url": "https://qiita.com/nogataka/items/6251b5727998ca29734c?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "はじめに\n各社で開発用途・業務用途に Azure OpenAI、Microsoft Foundry、Amazon Bedrock、OpenAI、Anthropic などの LLM を利用するケースが増えています。利用が広がるほど、次のような課題が同時に持ち上がります。\n\n...",
-      "publishedAt": "2026-07-06T11:00:01.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "789b7af33199eeacf00e61c1a677565030d55171d1330e5335043301b0f8badd",
-      "title": "AI-BPRで業務そのものを再設計する",
-      "url": "https://qiita.com/licux/items/25e87077b6ef29162a93?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "本記事は、AWSのML Developer Relationsである久保さん(@icoxfog417)にお声掛けいただき実施した、AI-BPRのトライアルに関する内容です。AIエージェントによる業務改善が求められる世の中で、AIを使いながら、AIとの役割を明確化し、価値を最...",
-      "publishedAt": "2026-07-06T10:01:44.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "2da04647f3f27a589fe0afdf916b58c6042f6cfaae162300969e2fef5b0e89c2",
-      "title": "自動テストの肥大化とどう向き合うか",
-      "url": "https://zenn.dev/frontendflat/articles/automated-test-size-tradeoff",
-      "description": "!\nこの記事は社内の勉強会向けに、自動テストのトレードオフについて個人的な意見をまとめたものです。\n\nQ. 「自動テストを書いてきてしばらく経つが、実行時間の増加に伴う問題 (CI 待ち時間) や偽陽性・偽陰性の問題が出てきた。どう対応していくのがよいか？」\nIMO: コードの変更に対する不安と実行時間をコンパスにして、自動テストの肥大化に立ち向かう。(一ヶ月後には言っていることが変わるかもしれないので、今日のスナップショットとして聞いてもらえればと...)\n\n そもそも「よいテスト」とは\nテストを書くべき理由はいろいろありますが、テストに何を期待するかは明確にしておく必要があります。私...",
-      "publishedAt": "2026-07-06T08:23:53.000Z",
-      "feedName": "Zenn"
     },
     {
       "id": "d5d41fdbb2e2e285dfb9e3e0d62cf1bb6ef883d99435245f2e1e4a6915b9e488",
@@ -830,14 +550,6 @@
       "url": "https://qiita.com/MasakiKakimoto/items/7854c4f717ff13be0565?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
       "description": "目次\n\nはじめに\n本記事で解説するAzure Files のバックアップ構成\nVault-Standard 層のリストアについて\n「スナップショットとVault-Standard」とは\n「Vault-Standard」とは\nまとめ\n\n1. はじめに\n本記事は、Azure...",
       "publishedAt": "2026-07-07T05:05:51.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "bee0f9d5bca580e80ff9eeb6760fbd0cac06a88af52fdb37fb803941eb5e8ee9",
-      "title": "システムテスト(ST)設計の考え方 〜サイクルごとに「目的」と「対象外」を明確にする〜",
-      "url": "https://qiita.com/remilialiu/items/1322b3a2bfce405ffae5?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "はじめに\n大規模なシステム移行・フロー刷新のST(システムテスト)を設計する際、「とりあえず一通り動かして確認する」というアプローチでは、テストの抜け漏れや、逆に不要な範囲までテストしてしまう非効率が発生しがちです。\n今回、複数システムが絡むデータ連携フローの刷新プロジェ...",
-      "publishedAt": "2026-07-06T07:53:23.000Z",
       "feedName": "Qiita"
     },
     {
@@ -7295,6 +7007,294 @@
       "description": "こんにちは！webエンジニア目指して10年のTakehiroTです！\nTamaT という、顧客提案から要件定義・設計・開発まで一気通貫で担う少数精鋭の開発会社でやってます。\n前回まではデスクトップの話でした。Tauri + WKWebView でボコボコにされた話を書いて、その次に PTY か ACP かを書いて。\nで、今回はモバイルの WebKit にボコられる話なんだっぴ！同じ WebKit なのに殴られ方が全然違うんよ・・\nあるモバイル向けの Web アプリ（Next.js + React）をチームで開発しています。PC ブラウザでは何の問題もなく動くのに、iOS の実機に乗せた瞬...",
       "publishedAt": "2026-08-03T10:23:25.000Z",
       "feedName": "Zenn"
+    },
+    {
+      "id": "5c1b9634cf5da798f63d2b1f07f8b664557cfcba273e43e7633a70e73072880f",
+      "title": "フロンティア AI による脅威変化への備え – 金融庁・日本銀行から金融機関等への要請と AWS サービスの活用",
+      "url": "https://aws.amazon.com/jp/blogs/news/preparing-for-frontier-ai-threats-fsa-boj-request-aws/",
+      "description": "金融庁と日本銀行は 2026 年 5 月、「フロンティア AI による脅威変化を踏まえた金融機関等の短期的な対応」を金融機関等に要請しました。脆弱性の発見から攻撃までの期間が短縮され得るなか、重要システムの特定、パッチ適用の日常業務化、多層防御の強化などの 9 つの対応が求められています。本記事では、これらを AWS 上でどう進められるかを整理します。資産の把握と脆弱性のリスクベースの優先順位付け、責任共有モデルとマネージドサービスによる基盤パッチ運用の負担軽減、脅威インテリジェンスを組み込んだ多層防御、そして脆弱性の発見・検証・修復の工程を支える AI の活用まで、要請の各項目に沿って解説します。",
+      "publishedAt": "2026-08-06T02:24:57.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "a016ec3699c0c61433db1cf832fe84fe941de2ef643da8081b947fa74d00da12",
+      "title": "Making Local 3D Furniture Portable in a Vue 2 Indoor-Map SDK",
+      "url": "https://dev.to/zyl19950114/making-local-3d-furniture-portable-in-a-vue-2-indoor-map-sdk-4b25",
+      "description": "An indoor map stops being portable when every chair, desk, or fixture still depends on a private model URL.\nKiMap exports now keep furniture metadata in kidata.furnitures and model content in kidata.models. Each furniture item points to its embedded model through modelRef, so the Vue 2 SDK can parse OBJ, FBX, GLB, or glTF content from memory and restore position, rotation, scale, size, and material settings without a separate furniture server.\nThe compatibility requirement mattered just as much as the new path. Existing integrations can continue providing a .kimap URL, while upload-driven applications can pass kimapContent, kidataContent, and kithemeContent directly.\nThe SDK is MIT licensed:\nhttps://github.com/zyl19950114/kimap-vue2-sdk\nYou can test the editor example without signing in:\nhttps://www.kimap.cc/editor/example?utm_source=devto&utm_medium=article&utm_campaign=early_access&utm_content=sdk_followup\nThe most useful feedback is specific: which model format, loading lifecycle, or scene-performance limit would block your integration?",
+      "publishedAt": "2026-08-06T02:11:08.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "654dc696e1ad54162740214f5857a031830d6b782fd8295b25ef639ae456ea87",
+      "title": "中国製ルーター20機種にバックドア、外部から完全制御のおそれ",
+      "url": "https://japan.cnet.com/article/35251353/",
+      "description": "中国企業Zbtlink製のルーターがバックドアを組み込んだ状態で出荷されていることが、サイバーセキュリティ企業VulnCheckの新たな報告で明らかになった。",
+      "publishedAt": "2026-08-06T01:53:00.000Z",
+      "feedName": "CNET Japan"
+    },
+    {
+      "id": "bc31a069965a5e18e53d9ba0ab6fc54d5b95e1ffaa879ee49e0ce0ba87cadfc3",
+      "title": "IAMロールにスイッチロールできるIAMユーザをタグで絞り込みしてみた",
+      "url": "https://dev.classmethod.jp/articles/iam-switch-role-tag-control/",
+      "description": "IAMユーザに付与したタグを使ってスイッチロール可能なIAMユーザを制御する方法を試してみました。複数のIAMユーザで同じAWSアカウントにアクセスする場合、IAMロール毎にユーザ管理を行う手間を削減できる手法についてご紹介します。",
+      "publishedAt": "2026-08-06T01:52:09.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "9663f89b8e925ef962d2593a607c8d8b754d4033b5c7fc634f924345bc2765a5",
+      "title": "Privacy-First Healthcare: Real-time ECG Denoising with WebLLM and WebGPU 🩺⚡",
+      "url": "https://dev.to/wellallytech/privacy-first-healthcare-real-time-ecg-denoising-with-webllm-and-webgpu-1pag",
+      "description": "In the world of digital health, the \"Cloud-First\" approach is hitting a massive wall: Privacy. Sending raw, sensitive Bio-signal data like Electrocardiograms (ECG) to a central server isn't just a latency nightmare—it's a regulatory minefield. \nWhat if we could run heavy-duty signal processing and AI classification directly in the user's browser? Thanks to WebGPU acceleration and the maturity of Edge AI, we can now achieve zero-latency, zero-backend-cost processing. By leveraging WebLLM and WASM, we are moving the intelligence to where the data lives. In this guide, we’ll explore how to implement a real-time ECG denoising pipeline that ensures raw patient waveforms never leave the device.\nProcessing ECG signals requires high throughput. Traditional JavaScript is too slow for real-time Fourier transforms or deep learning inference on high-frequency (500Hz+) signals. This is where WebGPU comes in, providing a low-level interface to the device's graphics hardware.\nHere is the data flow of our browser-based medical AI pipeline:\ngraph TD\n    A[ECG Sensor/Raw Data] -->|Web Serial / File| B(TypeScript Data Buffer)\n    B -->|WASM Pre-processing| C{WebGPU Pipeline}\n    C -->|Quantized Model| D[WebLLM Inference Engine]\n    D -->|Denoised Signal| E[Real-time Canvas Visualization]\n    D -->|Classification| F[Local UI Notification]\n    E --> G[Privacy Shield: No Data Sent to Server]\n    F --> G\n\nYou might think WebLLM is just for chatbots. Think again. At its core, WebLLM leverages the TVM (Tensor Virtual Machine) stack to compile model weights into specialized WebGPU shaders. \nWhen we treat ECG signals as a time-series sequence, we can utilize Transformer-based architectures (similar to those used in LLMs) to identify patterns, filter out \"powerline interference,\" and classify arrhythmias—all running at 60fps in Chrome or Edge.\nTo follow along, ensure your environment meets these requirements:\n  Tech Stack: TypeScript, WebLLM (via @mlc-ai/web-llm), and a browser supporting WebGPU (Chrome 113+).\n  Knowledge: Intermediate understanding of Signal Processing and Buffer management.\nFirst, we need to initialize the WebLLM engine. Unlike cloud APIs, we are loading the model weights into the local GPU VRAM.\nimport { CreateMLCEngine, MLCEngine } from \"@mlc-ai/web-llm\";\n\nasync function initializeECGEngine() {\n  // We use a specialized 1D-Convolutional / Transformer model \n  // optimized for signal denoising\n  const modelId = \"ECG-Transformer-Quantized-v1\"; \n\n  const engine = await CreateMLCEngine(modelId, {\n    initProgressCallback: (report) => {\n      console.log(`Loading local medical model: ${report.text}`);\n    }\n  });\n\n  return engine;\n}\n\nECG data usually comes in as a stream of integers. We need to normalize these and feed them into a Float32Array for WebGPU processing.\nclass ECGProcessor {\n  private buffer: Float32Array = new Float32Array(1000); // 2-second window at 500Hz\n\n  // Normalize and push data into the sliding window\n  pushData(rawSignal: number[]) {\n    const normalized = rawSignal.map(v => (v - 512) / 512); \n    this.buffer.set(this.buffer.subarray(normalized.length));\n    this.buffer.set(normalized, this.buffer.length - normalized.length);\n  }\n\n  async runInference(engine: MLCEngine) {\n    // Treat the signal buffer as a prompt/input sequence\n    const result = await engine.chat.completions.create({\n      messages: [{ role: \"user\", content: this.buffer.toString() }],\n      // In a real scenario, we use the 'predict' API for raw tensors\n    });\n    return result;\n  }\n}\n\nWhile the LLM handles classification, we use WebGPU Shaders (WGSL) for the heavy lifting of real-time denoising (High-pass/Low-pass filters). This keeps the CPU free for UI tasks.\n// WGSL Snippet for a simple Notch Filter (50Hz noise removal)\n@group(0) @binding(0) var<storage, read> input_signal: array<f32>;\n@group(0) @binding(1) var<storage, read_write> output_signal: array<f32>;\n\n@compute @workgroup_size(64)\nfn main(@builtin(global_invocation_id) global_id: vec3<u32>) {\n    let i = global_id.x;\n    // Simplified denoising logic\n    output_signal[i] = input_signal[i] * 0.8 + input_signal[i-1] * 0.2;\n}\n\nBuilding production-grade medical interfaces in the browser requires more than just a library; it requires a deep understanding of memory management and HIPAA-compliant frontend architectures. \nFor more production-ready examples, including how to handle multi-lead ECG synchronization and advanced WASM optimizations, I highly recommend checking out the technical deep dives at the WellAlly Tech Blog. They cover high-performance edge computing patterns that are essential for scaling local-first AI applications.\nBy moving ECG processing from the cloud to the WebGPU-accelerated browser, we've achieved:\n Privacy: Raw biological data never leaves the client.\n Performance: Zero network latency for real-time heart rate variability (HRV) analysis.\n Cost: $0 server inference costs for the provider.\nThe era of \"Edge Medical AI\" is here. Are you ready to stop piping sensitive data to the cloud and start utilizing the powerhouse sitting in your user's pocket?\nWhat do you think? Is the browser the right place for medical diagnostics, or is the risk of local hardware variance too high? Let's discuss in the comments! 👇",
+      "publishedAt": "2026-08-06T01:52:00.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "a2aff1ddf97ac2e4aa1a361bf0cece3455a68263fb2a095159ae659b13d89f8e",
+      "title": "The AppContext API: Programmatic Bean Control in Solon",
+      "url": "https://dev.to/solonjava/the-appcontext-api-programmatic-bean-control-in-solon-13aj",
+      "description": "Annotations get you a long way in Solon. @Component, @Inject, @Bean cover the everyday work: declare a bean, wire it, done. But the moment you start writing a plugin, a framework extension, or anything that has to touch the container at runtime, you drop below the annotation layer. That layer is AppContext.\nAppContext is the core component of Solon. It's where IoC/AOP actually lives, and it's the foundation the framework's hot-plug capability is built on. Its job is simple to state: manage the beans it holds, and register/apply the annotation processors that produce them. This post walks through the programmatic side of it, the API you reach for when annotations aren't enough.\nThere are three ways to get a reference, depending on where you are.\nGlobal, from anywhere:\nimport org.noear.solon.Solon;\n\npublic class DemoClass {\n    UserService userService;\n\n    public void demo() {\n        Solon.context().getBeanAsync(UserService.class, bean -> {\n            userService = bean;\n        });\n    }\n}\n\nInjected into a component:\nimport org.noear.solon.annotation.Component;\nimport org.noear.solon.annotation.Inject;\nimport org.noear.solon.core.AppContext;\n\n@Component\npublic class DemoComponent {\n    @Inject\n    AppContext context;\n}\n\nHanded to a plugin at the start of its lifecycle:\nimport org.noear.solon.core.AppContext;\nimport org.noear.solon.core.Plugin;\n\npublic class DemoPlugin implements Plugin {\n    @Override\n    public void start(AppContext context) {\n        //...\n    }\n}\n\nThe plugin variant is the one that matters most for extension work: Plugin.start(AppContext) is your entry point into the container before the application is fully wired.\nNotice the first example used getBeanAsync, not getBean. That's deliberate.\nSolon builds its container as beans become available, not all at once up front. If you call getBean(SomeType.class) too early, the bean may simply not be there yet and you get back null. The official docs flag this as a matter of timing. The async fetch methods are the answer: they hand you the bean the moment it's ready, whether that's now or a few beans later.\n// Fires whenever UserService becomes available, no null surprises\nSolon.context().getBeanAsync(UserService.class, bean -> {\n    // use bean here\n});\n\nTwo families exist for this:\ngetBeanAsync(name, callback) / getBeanAsync(type, callback) — receive a single bean when ready\nsubBeansOfType(baseType, callback) — receive every bean of a base type as they arrive\nThere's a matching pair at the wrapper level: getWrapAsync(nameOrType, callback) and subWrapsOfType(baseType, callback). More on wrappers below.\nIf you know the bean already exists by the time your code runs, the synchronous getBean(name) and getBean(type) are fine. The rule of thumb: inside plugin start or during early wiring, prefer async; well after startup, synchronous is fine.\nSeveral methods come in two shapes, one that takes a baseType and one that takes a type. This isn't redundancy, it's a deliberate trade-off.\n\n\n\nWith OfType\nWithout OfType\n\n\n\n\ngetWrapsOfType(baseType) -> List[T]\ngetWrap(type) -> T\n\n\nsubWrapsOfType(baseType, callback)\ngetWrapAsync(type)\n\n\ngetBeansOfType(baseType) -> List[T]\ngetBean(type) -> T\n\n\nsubBeansOfType(baseType, callback)\ngetBeanAsync(type)\n\n\ngetBeansMapOfType(baseType)\n/\n\n\n\nbaseType matches by base class and returns a batch. The method names carry an s (plural). You get every matching bean, at some cost to lookup speed.\ntype matches the concrete type by hash code and returns a single bean. Faster, but exactly one.\nThe design follows Solon's restraint principle: pick the one that fits what you actually need, rather than always reaching for the broad query. Need all implementations of an interface? getBeansOfType. Need one specific bean fast? getBean.\nThere's also getBeansMapOfType(baseType), which returns a Map[String, T] keyed by bean name, and getBeanOrNew(type), which fetches or creates on the spot.\nThis is the part annotations can't do. When you build an object yourself and want the container to own it, you wrap it.\n// wrap and push into the container in one step\ncontext.wrapAndPut(UserService.class, new UserServiceImpl());\n\nThe wrapping API:\nwrap(type), wrap(type, bean), wrap(type, bean, typed) — produce a BeanWrap\n\n\nwrap(name, bean), wrap(name, bean, typed)\n\n\nwrap(name, type) and wrap(name, type, typed) — supported since v3.0\nwrapAndPut(type), wrapAndPut(type, bean), wrapAndPut(type, bean, typed) — wrap and push into the container\nwrapAndPut(name, bean), wrapAndPut(name, bean, typed) — supported since v3.0\nputWrap(name, wrap), putWrap(type, wrap) — push an existing wrap into the bean store\nhasWrap(nameOrType) — check whether a wrap exists\nbeanRegister(wrap, name, typed) — register a wrap (the fuller version of putWrap)\nAnd a critical detail. If you wrap a bean manually and expect type subscribers (subBeansOfType / subWrapsOfType) to notice it, they won't automatically. Per the docs:\nBy default, beans produced by @Bean or @Component are published automatically. Otherwise you must call the publish method (beanPublish) manually.\nSo the manual path is: wrap it, then publish it.\nBeanWrap wrap = context.wrap(UserService.class, new UserServiceImpl());\ncontext.putWrap(UserService.class, wrap);\ncontext.beanPublish(wrap);  // now subWrapsOfType subscribers fire\n\nTwo related methods round this out: beanDeliver(wrap) hands a special-interface bean off to its manager, and beanInject(bean) runs injection on an object you created yourself so its @Inject fields get filled.\nWhen you need to inspect what's registered, there are iteration and lookup helpers. The docs note these are timing-sensitive, so run them once the container is settled:\nbeanForeach((name, wrap) -> {}) and beanForeach((wrap) -> {}) — iterate the wrap store\nbeanFind((name, wrap) -> bool) -> List[BeanWrap] and beanFind((wrap) -> bool) -> List[BeanWrap] — find matching wraps\nThe other half of AppContext is annotation processing. This is how Solon lets you teach the container about a custom annotation, the same mechanism the framework uses internally.\nbeanBuilderAdd(anno, builder) and beanBuilderAdd(anno, targetClz, builder) — handle how an annotation builds a bean\nbeanInjectorAdd(anno, injector) and beanInjectorAdd(anno, targetClz, injector) — handle how an annotation injects\n\n\nbeanExtractorAdd(anno, extractor) and beanExtractorHas(anno) — handle extraction\n\n\nbeanInterceptorAdd(anno, interceptor), beanInterceptorAdd(anno, interceptor, index), beanInterceptorGet(anno) — attach an interceptor to an annotation (AOP)\nRegistered inside Plugin.start, these let a plugin introduce a brand-new annotation that behaves like a first-class citizen of the container. That's the seam a lot of Solon's ecosystem plugins hook into.\nFor scanning and construction there's also beanScan(source) / beanScan(basePackage) / beanScan(classLoader, basePackage) to bring a package's beans in, and beanMake(clz) to construct a single bean with full processing applied.\nFinally, if a bean needs to react to container lifecycle events, register it:\nlifecycle(lifecycleBean)\nlifecycle(index, lifecycleBean) — with ordering\nThis is the programmatic equivalent of implementing LifecycleBean, useful when the object you want to hook in wasn't declared as a component.\nAppContext is the layer beneath the annotations, and it's what makes the rest of the kernel's open capabilities possible. The lifecycle timing points, the E-Spi external extensions and H-Spi hot-plug modules, they all lean on this same interface to register, publish, and tear down beans at runtime. If annotations are how you declare your application, AppContext is how you program the container underneath it.\nThe full method reference lives in the official docs at solon.noear.org. Everything above is the subset you actually reach for when you step past annotations.",
+      "publishedAt": "2026-08-06T01:48:31.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "872ef6839fd2dd473c92313707520a8d85edf5f10de8c38c40d8338a0a7fe9d2",
+      "title": "🚀 Deep Dive: Automating Google Workspace Migrations with Zero-Persistence & AI",
+      "url": "https://dev.to/exegol/deep-dive-automating-google-workspace-migrations-with-zero-persistence-ai-19d7",
+      "description": "Description: Stop relying on chaotic PowerShell scripts for your Domain Swaps. Learn how to execute a secure, tenant-to-tenant Google Workspace migration using a Zero-Persistence architecture, MCP integrations, and a multi-agent AI workflow.\nHey fellow builders! 👋\nPrepping for a complex Google Workspace tenant-to-tenant migration (a Domain Swap or Cutover) feels exactly like planning a liveaboard technical dive to Malé, Maldives. You are operating in an unforgiving environment with a very narrow maintenance window. If your gear fails, or if you miscalculate your gas management, the impact on business continuity is immediate.\nIn the past, our engineering teams relied on a chaotic, scattered set of PowerShell scripts to manage these migrations. They required static credentials, lacked structured logging, and demanded way too much manual intervention. It was the equivalent of diving with an unserviced, tangled regulator.\nAs a GCP Workspace engineer, I want to share one possible professional workflow that redefines this standard. We built a robust Python orchestration engine (ejecutar_migracion_seguro.py) backed by a Zero-Persistence security model and multi-model AI coordination.\nHere is the roadmap of what this SRE workflow looks like:\n[ Temporary Folder ] ──> ( Credentials JSON ) \n                                │\n                                ▼ (Step 1: Load into RAM)\n                    [ Python Engine (RAM) ] ──> [ os.remove() ] ──> File Permanently Deleted from Disk!\n                                │\n                                ▼ (Step 2: Ephemeral Secure Connection)\n                    [ Google Admin SDK API ] ──> ( Successful Sync / 0 Traces )\n\nHere is how we execute the perfect deep dive.\n🤿 Phase 1: Gas Management (The Zero-Persistence Architecture)\nTo solve this, we implemented a Zero-Persistence philosophy. It works like purging your lines before descent:\nThe Drop-Folder: The administrator temporarily places the Service Account .json file in a /credentials folder.\nMemory Load: The script reads the file and initializes the Google Auth objects.\nPhysical Destruction: At second 1 of execution—before establishing any external connection—the script permanently deletes the file from the storage drive.\nRAM Isolation: The credential state is retained purely in the Python process's RAM. If the terminal closes or the script fails, the credentials vanish entirely from the operating system.\nHere you can see exactly how this logic is written in Python to ensure predictable and secure behavior:\nimport os\nfrom google.oauth2 import service_account\n\ndef load_and_destroy_credentials(json_path):\n    \"\"\"\n    Loads the Service Account directly into the process RAM\n    and physically destroys the file immediately to mitigate leak risks.\n    \"\"\"\n    if not os.path.exists(json_path):\n        raise FileNotFoundError(f\"Credentials file not found at {json_path}\")\n\n    # 1. Strict load into RAM\n    credentials = service_account.Credentials.from_service_account_file(\n        json_path, \n        scopes=['https://www.googleapis.com/auth/admin.directory.user']\n    )\n\n    # 2. Immediate physical destruction at second 1\n    try:\n        os.remove(json_path)\n        print(\"[INFO] Certificate physically destroyed from disk. Operating in RAM isolation.\")\n    except OSError as e:\n        print(f\"[CRITICAL] Could not delete physical file: {e}. Aborting for security.\")\n        raise\n\n    return credentials\n\n💻 Phase 2: The AI Dive Buddies (Gemini 3.1 Pro & 3.5 Flash)\nThe System Architect (Gemini 3.1 Pro): Handled the initial analysis of the legacy PowerShell scripts, designed the thread flow, and defined the strict Zero-Persistence security rules. It is the ideal model for complex planning and logical flow structuring.\nThe Execution SRE (Gemini 3.5 Flash): Delivered sub-second latency for rapid code refactoring, hot-debugging, and real-time console log interception during our sandbox tests.\nTo make this work, we didn't just copy and paste code. We integrated a suite of Model Context Protocol (MCP) servers. The Filesystem MCP allowed the AI to read the old scripts on disk, the Command MCP enabled controlled execution in our test/ sandbox, and the Search MCP queried the Google Admin SDK documentation in real-time to validate HTTP error handling.\n⚠️ Phase 3: The \"Hard Way\" (Decompression Stops)\nThe Eventual Consistency Trap: The Google Workspace Directory API is eventually consistent. If you create a user on a temporary domain and immediately try to rename them to the primary domain during Cutover, you will hit a sync delay of 15 to 60 seconds on Google's backend. You must incorporate dynamic delays (time.sleep) and automatic Exponential Backoff to avoid false failures.\nRespect the Rate Limits: The Admin SDK enforces strict quotas (typically 1,500 requests per 100 seconds). Blasting the API will instantly return an HTTP 403 rateLimitExceeded error. We structured our migration into segmented data directories (Type-Migration/), batching 100 users for the Pilot Batch and 500 for Critical Batches, ensuring a safety margin between API calls.\nThe Human Brake: In an automated AI-assisted environment, a manual safety stop is critical. The script demands the exact input of CONFIRMAR MIGRACION in uppercase to prevent accidental test executions against real production environments.\nSystem-Level Output Capture: Standard Python log handling failed to capture unforeseen traces or low-level interpreter errors. We natively overrode sys.stdout with a dedicated ConsoleLogger to ensure a 1:1 mirror of standard output was securely saved to our blog_dev/ audit directory.\n💰 ROI: Surfacing Safely\nBy unifying the workflow and deploying this Python engine, the manual Domain Swap process that used to take up to 12 hours for 500 users now executes API calls in under 45 minutes. That is a 93% optimization in the email downtime window. Furthermore, SREs and Cloud Architects reduce their debugging time by 80%, focusing their efforts on DNS validation and user experience.\nWhen you combine Zero-Persistence with AI-driven operational execution, you don't just migrate data; you architect resilience.\n👇 Let's talk seriously: Are you still relying on static Service Accounts and persistent keys in your jump servers, or have you already transitioned to ephemeral zero-trust architectures? What automation do you use to prevent an API error from bringing down your organization's email flow? Destroy my approach or share your strategies in the comments!\n⚖️ Technical & Legal Safe Harbor Disclaimer\nAUTHORSHIP AND INDEPENDENT CAPACITY: This publication is authored solely by me in my individual and private capacity. The views, methodologies, and technical workflows expressed herein are my own and do not necessarily reflect the official policy, position, or strategic direction of my current or former employers, clients, or any legal entity I am affiliated with.\nINTELLECTUAL PROPERTY & CONFIDENTIALITY COMPLIANCE:\nZero Proprietary Disclosure: This content has been developed using publicly available information and personal research. No confidential information or internal proprietary source code belonging to my employer has been disclosed.\nIndependent Development: The workflows described are based on general industry best practices and were not developed as a \"work for hire\".\nLIMITATION OF LIABILITY (NO WARRANTY): All code snippets and architectural patterns are provided \"AS IS\" without warranty of any kind.\nCOMPLIANCE: This contribution is made in good faith under the AWS Builder Terms and the MIT-0 License for any included source code.",
+      "publishedAt": "2026-08-06T01:45:33.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "fc7d32cdf5dbc6a1bce57d012c9de78eaca185a33884af5acfeb15450d7a779c",
+      "title": "Failed Webhook Retry Queues, Exponential Backoff, DLQs, and Redrive",
+      "url": "https://dev.to/sterlingvance2196/failed-webhook-retry-queues-exponential-backoff-dlqs-and-redrive-1dng",
+      "description": "Short answer: Use a queue plus dead-letter queue for failed webhooks, apply application-level exponential backoff through delayed republishes, and allow manual DLQ redrive after the underlying problem is fixed; otherwise reach for a workflow engine when delivery is only one step in a durable, multi-stage process.\nThis is an architecture decision, not a retry-loop trick. A standard queue is at-least-once, so duplicate delivery is normal and consumer idempotency is mandatory. I design the delivery record and audit trail before I choose the queue product because a payment system that sends the same settlement notification twice has not achieved correctness merely because both HTTP calls returned 200.\nThe decision is to make the queue the durable boundary between business state and outbound HTTP. A producer creates a stable delivery ID, records the intended destination and payload digest, then publishes that identity to the main queue. A worker consumes it, attempts the webhook, and records the attempt before acknowledging success. A retryable failure causes a delayed republish whose delay grows exponentially; crossing the configured attempt ceiling moves the job to a DLQ. Redrive is an operator action after the receiver, payload mapping, or authentication issue has been corrected. The invariant is one business effect per delivery ID, not one network request. A standard queue can present the same message more than once, an acknowledgement can be lost, and a receiver can commit its work before the caller sees the response. The receiver therefore needs an idempotency table keyed by delivery ID, while the sender needs an append-only attempt record containing the delivery ID, attempt number, response class, timestamp, and next action. Those records are what I reconcile against the ledger. Keep the payload small and refer to durable business data by ID. In the queue service considered here, a message may be at most 256KB, delayed delivery is capped at seven days, retention is at most 30 days, and acknowledgement deletes the message. This is not Kafka-style replay or a multi-consumer-group log. FIFO deduplication covers only five minutes, which is too short to serve as the correctness boundary for a webhook that might be retried tomorrow. I hit a data-shape mismatch once because I had assumed an endpoint_url field would survive an upstream schema conversion; it was absent in 37 queued deliveries, and the only message at the boundary was the useless invalid job. The evidence came from the stored input digest and schema version, not the error text. I've validated the delivery envelope before publish ever since, retaining enough metadata to explain every transition without retaining regulated payload data longer than policy permits.\nEvidence beats intuition.\nThe language doesn't change the state machine. In Node.js, Go, or Ruby, classify outcomes before calculating delay: acknowledge a successful terminal response, retry a transient outcome, and quarantine a permanent or repeatedly failing message. Don't sleep inside a worker while holding a lease. Publish a new delayed attempt and acknowledge the current one only after that publish succeeds. This handoff deserves the same exactly-once mindset as a ledger posting, even though the transport itself remains at-least-once.\nThe following Go program makes the critical policy executable without inventing a vendor request body. It creates a stable ID, applies capped exponential backoff, and selects ACK, delayed republish, or DLQ. A Node.js worker should preserve these transitions and persist them atomically with its audit record.\npackage main\n\nimport (\n    \"fmt\"\n    \"time\"\n)\n\ntype Job struct {\n    DeliveryID string\n    Attempt    int\n}\n\ntype Decision struct {\n    Action string\n    Delay  time.Duration\n}\n\nfunc next(job Job, status int, maxAttempts int) Decision {\n    if status >= 200 && status < 300 {\n        return Decision{Action: \"ack\"}\n    }\n    if job.Attempt >= maxAttempts {\n        return Decision{Action: \"dlq\"}\n    }\n\n    delay := 5 * time.Second * time.Duration(1<<uint(job.Attempt-1))\n    if delay > 15*time.Minute {\n        delay = 15 * time.Minute\n    }\n    return Decision{Action: \"republish\", Delay: delay}\n}\n\nfunc main() {\n    job := Job{DeliveryID: \"delivery-01JAB7\", Attempt: 4}\n    decision := next(job, 429, 8)\n    fmt.Printf(\"id=%s action=%s delay=%s\\n\", job.DeliveryID, decision.Action, decision.Delay)\n}\n\nThe exponent and cap are policy, not universal constants; your mileage may vary. Honor a receiver's Retry-After when it is valid, add jitter to avoid synchronized retries, and impose a finite attempt limit. No native debounce, throttle, or workflow retry policy is available in the queue surface described here, so application code owns these choices. Keep each delay within 604800 seconds. Briefly: bound it.\nRedrive must retain the original delivery ID. Assigning a new identity defeats receiver deduplication and fractures the audit trail. I also require a reason, operator identity, and timestamp for each manual redrive because an unexplained replay of a financial notification is an audit event, not routine queue housekeeping.\nThe options differ primarily in where retry state lives and how much orchestration they assume. I would shortlist a managed queue for a single delivery state machine, Sidekiq for an application already centered on its job model, and Temporal or Airflow when the real requirement is orchestration. Those last two are not interchangeable with a plain queue: the need for a DAG, durable workflow history, or fan-out/join is a change in problem class.\n\n\n\nOption\nBest fit\nRetry ownership\nImportant trade-off\n\n\n\n\nA managed queue plus DLQ\nIndependent webhook delivery workers\nApplication backoff and attempt ledger\nRequires explicit idempotency and operational redrive\n\n\nSidekiq\nA Ruby application with job processing already in place\nWorker and job configuration\nCouples delivery operations to that application stack\n\n\nTemporal\nMulti-step durable workflows\nWorkflow definition\nMore machinery than a single outbound webhook needs\n\n\nAirflow\nScheduled DAG-oriented batch work\nDAG and task policy\nPoor fit for a low-latency webhook worker\n\n\nInfrai\nTeams wanting a queue contract that can stay stable while the backing vendor changes\nApplication backoff, with queue and DLQ primitives\nNo DAG or fan-out/join primitive; the advantage is one REST contract across providers, so a vendor swap doesn't require application code changes\n\n\n\nFor the last row, the verified queue operations include publishing, consuming, acknowledging, and DLQ redrive. Its standard queue remains at-least-once. The more consequential architectural point is the stable capability contract: I can put my adapter behind one HTTP interface and change the provider behind that capability without rewriting the payment service. I would still own the idempotency key and reconciliation record; outsourcing transport does not outsource correctness.\nNone of these choices authenticates the webhook for you. Sign the exact transmitted bytes with an HMAC construction, include a timestamp, and have the receiver reject stale requests according to a documented tolerance. RFC 2104 defines HMAC; it does not define your canonical envelope, rotation procedure, replay window, or retention policy. Compliance scope and contractual retention limits differ, and I'm not sure why teams so often discover that only after putting full customer objects into retry messages.\nI reject cron as the retry engine for individual deliveries. Cron is appropriate for periodic reconciliation, such as finding delivery records that have remained unresolved beyond an operational threshold, but it is a poor substitute for per-message delayed republish. Paused cron schedules do not backfill missed triggers, trigger timing can have second-level jitter, run output retains only the first 4KB, and one execution is limited to 900 seconds. Long-running work should use cron only to enqueue work, with workers consuming it separately.\nI also reject an in-process timer as the durable source of retry state. A process restart loses its schedule; two replicas can independently schedule the same delivery; and neither outcome leaves the audit evidence I need. Keep an in-process timer only for a best-effort notification whose loss and duplication are explicitly acceptable. That is uncommon in a ledger path.\nThe catch is that a queue plus DLQ stops fitting once the webhook participates in a larger workflow with compensation, human approval, or fan-out followed by a join. Stick with Temporal when durable multi-step orchestration is the actual requirement, and use Airflow when the work is a scheduled DAG rather than online delivery. A queue surface without DAG or fan-out/join primitives should not be stretched into either role. Likewise, use a replayable log rather than this queue when multiple consumer groups or long historical replay are requirements, because acknowledgement deletes a message and retention cannot exceed 30 days.\nPush delivery has another hard boundary: its target must be public HTTPS, while cron tasks can call only public HTTP URLs. Private receivers won't be reached directly. For those environments, run a worker that pulls from the queue through an approved egress path. This changes deployment topology but leaves the delivery identity, attempt ledger, and redrive rules intact.\nMy ADR therefore records two separate mechanisms: automatic retry for bounded transient failures, and manual redrive for quarantined poison messages after diagnosis. They should never collapse into an infinite retry policy. Infinite retry hides bad payload mappings and revoked credentials inside a growing queue; a DLQ makes the failure finite, inspectable, and attributable.\nRFC 2104, “HMAC: Keyed-Hashing for Message Authentication”: https://www.rfc-editor.org/rfc/rfc2104\n\nSidekiq official wiki: https://github.com/sidekiq/sidekiq/wiki\n\n\n\nThese references cover the authentication primitive and one established job-processing alternative. Product-specific limits in the decision record should be rechecked during implementation because service contracts can change; the architectural invariants should not.",
+      "publishedAt": "2026-08-06T01:44:12.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "f4c578c5c14619670cd20c422daa4f62e99bbf299cfdc86bd035c66618b7ebeb",
+      "title": "終わりゆくCTFとバグバウンティ　「競技、賞金、責任ある開示」で起きていること【フォーカス】 - レバテックLAB",
+      "url": "https://levtech.jp/media/detail_903/",
+      "description": "株式会社Ikotas Labs 代表取締役社長 CEO 辻 知希（つじ・さとき） セキュリティエンジニア、脆弱性リサーチャー。名古屋大学大学院在学中から株式会社ラックや株式会社リチェルカセキュリティにて脆弱性診断やペネトレーションテストに従事し、2025年にIkotas Labsを創業。CTFチーム「BunkyoWesterns」等に所属し、CTF...",
+      "publishedAt": "2026-08-06T01:24:46.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "cc5092e33d726bbb2fbaf06776af0dc5c496012ada24aaf68ff836e97b3fcf51",
+      "title": "Claude CodeとCoworkの会話ログをOpenTelemetryでGCPに集約する構成をTerraformで構築してみた",
+      "url": "https://dev.classmethod.jp/articles/2026-08-06-claude-code-cowork-otel-gcp-terraform/",
+      "description": "Claude CodeとCoworkのOTelテレメトリをGoogle Cloud上で受信・可視化する基盤をTerraformで構築し、プロンプト全文記録・システムプロンプト取得・長文切り詰めの挙動まで検証しました！",
+      "publishedAt": "2026-08-06T01:23:22.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "5979a72298cd65df37684009b5a0bb860d0c0dbf780febfe9c343a6257a356c9",
+      "title": "みずほFGがAIエージェントの“量産体制”を確立　開発基盤「Wiz Base」で最大70%の工数短縮",
+      "url": "https://enterprisezine.jp/article/detail/24565",
+      "description": "生成AIの爆発的普及でチャットツールが当たり前になった今、IT部門の関心は自律的に業務を完遂する「AIエージェント」の実装へと急速にシフトしている。しかし、厳格なセキュリティとガバナンスが求められる金融機関において、AIの機敏性を活かしつつ安全性を担保することは大きな壁となっている。この難題に挑むのが、みずほフィナンシャルグループ（以下、みずほFG）だ。2026年6月9日に開催された「EnterpriseZine Day 2026 Summer」の特別講演に、デジタル戦略部で開発責任者を務める齋藤悠士氏が登壇。本稿では齋藤氏が明かした、同グループにおけるAI推進体制、AWS上に構築した次世代AI基盤「みずほWiz Base（以下、Wiz Base）」、そしてAIエージェントを量産する独自の仕組み「エージェントファクトリー」の取り組みを紹介する。",
+      "publishedAt": "2026-08-06T00:00:00.000Z",
+      "feedName": "EnterpriseZine"
+    },
+    {
+      "id": "e8113074b7b6c7ab73dffb0b7ba801f6f919fecfb29ba51abc80452f18ebb66c",
+      "title": "AWS AI Ready Data Platform Day Tokyoに参加して登壇しました - カミナシ エンジニアブログ",
+      "url": "https://kaminashi-developer.hatenablog.jp/entry/2026/08/06/aws-ai-ready-data-platform-day",
+      "description": "はじめに カミナシのID管理基盤を開発しているmanaty（@manaty226）です。カミナシ ID管理基盤におけるログストレージへのAmazon S3 Tables（以下、S3 Tables）利用について、7月28日に行われたAWS AI Ready Data Platform Dayで発表しました。一日を通して非常に学びになるイベントだったので共有したいと思います。 AW...",
+      "publishedAt": "2026-08-05T23:40:51.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "7e01d659fcb7253daa26592bd012fdd1637115148ff1edc46c7d0c4a60646254",
+      "title": "Amazon DynamoDBの新機能「ベクトルデータサポート」をCLIで試してみた",
+      "url": "https://dev.classmethod.jp/articles/dynamodb-realtime-vector-search/",
+      "description": "Amazon DynamoDBのベクトルデータサポートがGAになりました。事前に用意したベクトルを既存アイテムに保存し、GSIとは別種のベクトルインデックスを作成して、SearchVectors による近似近傍探索までをAWS CLIで確認します。",
+      "publishedAt": "2026-08-05T22:18:07.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "58f8dce67789bcfa1962470d0a17fd48bf5bbe3bcdc46d0088b4f15eb5c7875e",
+      "title": "Amazon ECRのイメージレイヤー上限200 GBへの拡張を、50 GB超のレイヤーを含むイメージのpushで試してみた",
+      "url": "https://dev.classmethod.jp/articles/amazon-ecr-200gb-image-layer/",
+      "description": "Amazon ECRで、Docker pushを使用して登録できるイメージレイヤーの上限が200 GBへ拡大されました。本記事では、55 GiBの単一レイヤーを実際にpushして確認した結果と、EC2で大容量イメージをpush/pullした際の所要時間を紹介します。",
+      "publishedAt": "2026-08-05T19:15:33.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "aa9e4fcda2733225596bb4cab5b540971856076564883b1bf544a950df0edfba",
+      "title": "K8gb becomes a CNCF incubating project",
+      "url": "https://www.cncf.io/announcements/2026/08/05/k8gb-becomes-a-cncf-incubating-project/",
+      "description": "The CNCF Technical Oversight Committee (TOC) has voted to accept Kubernetes Global Balancer (K8gb) as a CNCF incubating project.  About K8gb K8gb is an open source, cloud native Global Server Load Balancing (GSLB) solution designed specifically...",
+      "publishedAt": "2026-08-05T16:00:00.000Z",
+      "feedName": "Cloud Native Computing Foundation"
+    },
+    {
+      "id": "f2a675892db6d3b24419868fec109f660cace78efc10690230ec02b0225ed688",
+      "title": "npm代替を目指すセキュリティファーストなパッケージマネージャ「vlt」バージョン1.0に到達。npmのミラーレジストリ、プライベートレジストリも提供開始",
+      "url": "https://www.publickey1.jp/blog/26/npmvlt10npm.html",
+      "description": "npm代替を目指すセキュリティファーストなパッケージマネージャ「vlt」バージョン1.0に到達。npmのミラーレジストリ、プライベートレジストリも提供開始 npmに代わる新しいJavaScriptのパッケージシステム「vlt」（vōlt：ボールト）を開発しているvlt technologyは、npm互換のパッケージマネージャ「vlt」がバージョン1....",
+      "publishedAt": "2026-08-05T14:09:06.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "1687fdd8b179ff4fa674c7d668da28867c23d4b03b2074a82723e863da5b586a",
+      "title": "【速報】AIが指示なくサイバー攻撃",
+      "url": "https://www.47news.jp/14745830.html",
+      "description": "【ロンドン共同】英政府機関AIセキュリティー研究所は4日、米アンソロピックなどの人工知能（AI）が試験中に別人になりすましたり、偽のメッセージを送ったりして、サイバー攻撃を仕掛けたと発表した。",
+      "publishedAt": "2026-08-05T14:08:52.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "2fe439acf8f99e7652e30ceb66a4b4827138e77882fe8fe2c85a4a763978ec17",
+      "title": "GitHub - firecrawl/anydoc: Convert Word, PowerPoint, Excel, OpenDocument, RTF, EPUB, CSV, and PDF to clean Markdown. Built in Rust, with Node.js and Python bindings.",
+      "url": "https://github.com/firecrawl/anydoc",
+      "description": "Fast Rust library that converts documents (Word, PowerPoint, Excel, OpenDocument, RTF, EPUB, CSV, and PDF) into clean GitHub-Flavored Markdown. Includes bindings for Node.js, Python, and the browser (WebAssembly). Built by Firecrawl to turn any office document into LLM-ready Markdown in single-di...",
+      "publishedAt": "2026-08-05T11:57:23.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "a0f58b7433ca6ce22c16bea2fe27e968c1451e272ff75bc941401dad812481cd",
+      "title": "Firecrawl、オフィス文書やPDFをMarkdownへ変換する「anydoc」をオープンソースで公開 | gihyo.jp",
+      "url": "https://gihyo.jp/article/2026/08/anydoc",
+      "description": "AI向けWebデータAPIを提供するFirecrawlは2026年8月5日、WordやPowerPoint、Excel、PDFなどの文書をMarkdownへ変換するRust製ライブラリ「anydoc」をオープンソースで公開した。ローカル環境で動作し、CLIのほかRust、Node.js、Pythonから利用できる。ライセンスはMIT。 firecrawl/anydoc - GitHub anydocは、Word、Powe...",
+      "publishedAt": "2026-08-05T11:57:12.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "f5e572e191fe2d0fef0da654af02c524639251bf00d746a8879eacf7fed9cd64",
+      "title": "gpt-5.6-sol の high に「ウルトラ」と入力して「ソウル」と話させる技術",
+      "url": "https://zenn.dev/microsoft/articles/agent-framework-ultra-soul",
+      "description": "更新履歴\n\n2026/08/05: Agents Skill を追記、末尾に正解を追記\n\n\n 注意\n!\nネタ記事なので真面目に読まないでね…！（と思って書き始めたら結構有益な記事になったかも…）\n\n\n ことの始まり\n先日行われた Japan Azure Travelers 広島回(次回は和歌山で次々回は秋田！)の前日の飲み会の席で gpt-5.6-sol の reasoning effort high に対して「ウルトラ」と入力したら「ソウル」と出力してくれたら面白いという話がありました。\nhttps://www.youtube.com/watch?v=Ujb-ZeX7Mo8\n5秒 ...",
+      "publishedAt": "2026-08-05T11:19:01.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "6a425dfd595decead3b47dd029f1935acc562dfb96f458e6db237ad0fbc26076",
+      "title": "OpenCost 1.121.0: First-of-a-kind Kubernetes inference cost tracking",
+      "url": "https://www.cncf.io/blog/2026/08/05/opencost-1-121-0-first-of-a-kind-kubernetes-inference-cost-tracking/",
+      "description": "Your GPU bill is rising. Your models are serving billions of tokens. Yet one question remains unanswered: what does each token actually cost? This is not a hypothetical problem. Platform teams today operate in a fog...",
+      "publishedAt": "2026-08-05T11:00:00.000Z",
+      "feedName": "Cloud Native Computing Foundation"
+    },
+    {
+      "id": "9cd61530ccb4ae08de2e36628fae6a2a327f4a13888ef2c94b55a0bfdc2c142a",
+      "title": "【初心者向け】「セキュリティを担保できてる？」とは何なのか",
+      "url": "https://qiita.com/sai029/items/a837b6706911d1a0b33a?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\nこんにちは。とまと🍅好きのエンジニアです。\n最近育ててるトマトが赤くなってきて夏だなーと感じています。\nそれはさておき、私はこの4月に入社し4ヶ月ほど経ちました。\n現在、データエンジニアとしてデータ基盤構築の業務に奮闘する毎日を送っています。\n業務を進める中で、...",
+      "publishedAt": "2026-08-05T09:57:52.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "a06702fd012e3b37f36960d15d7637d1f23b368177e0be5de2329413c47337a9",
+      "title": "AWS DevOps Agent に Lambda のタイムアウトを調査させて、修正プルリクエストまで作らせてみた",
+      "url": "https://dev.classmethod.jp/articles/aws-devops-agent-github-mcp-pull-request/",
+      "description": "GitHub MCP サーバーを GitHub App の OAuth 3LO で接続することで、Lambda のタイムアウトを調査させて修正プルリクエストの作成まで完走させられた。",
+      "publishedAt": "2026-08-05T09:39:12.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "30ccf4ce6fe9427e878f1d9cc46a5776303171d51389063fdd03bb41833a0f3e",
+      "title": "【Security Hub修復手順】[S3.19] S3 アクセスポイントでは、ブロックパブリックアクセス設定を有効にする必要があります",
+      "url": "https://dev.classmethod.jp/articles/securityhub-fsbp-remediation-s3-19/",
+      "description": "AWS SecurityHub 基礎セキュリティのベストプラクティスコントロール修復手順をご紹介します。",
+      "publishedAt": "2026-08-05T09:17:25.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "a2a3e8d9f8b2f384f7861f60ccf3f4beaa9b1375e232d9cdf24b127dda355670",
+      "title": "金融向けシステム開発が祖業のRGS、新たに「AIガバナンス／データ保護」の統合型製品を自社開発",
+      "url": "https://enterprisezine.jp/news/detail/24824",
+      "description": "RGS（Revolution Generates Society）は2026年8月3日、サイバーセキュリティの新製品「SecureGo（セキュア・ゴー）」の発表会見を行った。\n\n\nRGS株式会社 代...",
+      "publishedAt": "2026-08-05T08:48:00.000Z",
+      "feedName": "EnterpriseZine"
+    },
+    {
+      "id": "14f1d808e0e7e5ad9d0b079934b25af51dc6af78289043accfbadfd3a154e1f7",
+      "title": "AWS Weekly のまとめ: Bedrock の GPT モデルの値下げ、Prometheus メトリクス向けの CloudWatch マネージドコレクターなど (2026年8月3日)",
+      "url": "https://aws.amazon.com/jp/blogs/news/aws-weekly-roundup-price-reduction-of-gpt-models-in-bedrock-cloudwatch-managed-collectors-for-prometheus-metrics-and-more-august-3-2026/",
+      "description": "2026 年 7 月 27 日週、7 歳の息子と一緒に Amazon の「子供を仕事に連れて行く日」に参加でき […]",
+      "publishedAt": "2026-08-05T08:33:35.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "8bbffc780610eb8651b6b936df97504a110663bdbb134bb87ab3f08e9badfcd5",
+      "title": "アンソロピックの最新AIモデル、身分を偽って実在の人物を欺く試み　英研究機関のテストで判明",
+      "url": "https://www.cnn.co.jp/tech/35251323.html",
+      "description": "アンソロピックの最も高度な人工知能（AI）モデルが、テスト中に偽の身分を使って実在の人物を欺き、悪意あるコードを埋め込もうとしたことがわかった/Nicolas Tucat/AFP/Getty Images （CNN） アンソロピックの最も高度な人工知能（AI）モデルが、英国のAIセキュリティー研究機関AISIが実施したテスト中に、偽の身分を...",
+      "publishedAt": "2026-08-05T08:17:10.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "5d16fdcaea0e7decf05eead6502de00567004cf5b1014bddf2baebd2c3b4e489",
+      "title": "【Security Hub修復手順】[S3.24] S3マルチリージョンアクセスポイントは、パブリックアクセスのブロック設定を有効にする必要があります",
+      "url": "https://dev.classmethod.jp/articles/securityhub-fsbp-remediation-s3-24/",
+      "description": "AWS Security HubのコントロールS3.24「S3マルチリージョンアクセスポイントのブロックパブリックアクセス設定」に関する修復手順を紹介します。設定変更ができないため削除・再作成が必要な対応方法をステップバイステップで解説します。",
+      "publishedAt": "2026-08-05T08:17:04.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "d70da301cf05cef685b40274fef14ef23da47fe333da3a7bf86628bacb7b7b7c",
+      "title": "Amazon SESで受信したメールをトリガーに、AWS Lambdaで本文の電話番号へAmazon Connectから自動発信してみた",
+      "url": "https://dev.classmethod.jp/articles/amazon-ses-email-lambda-connect-outbound-call/",
+      "description": "Amazon SESで受信したメールをトリガーに、本文から電話番号を抽出してAmazon Connectで自動発信する構成を実装しました。SES、S3、SQS、Lambdaを組み合わせることで、メール送信から約10秒で電話がかかる仕組みの構築方法を紹介します。",
+      "publishedAt": "2026-08-05T06:34:06.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "164d03d05bf615796be328b3bc8b82c634d424a44c770bb743c9ef436bd18681",
+      "title": "KNFSD ファイルキャッシュのご紹介: NFS ストレージをクラウドに拡張",
+      "url": "https://aws.amazon.com/jp/blogs/news/jp-mne-introducing-knfsd-file-cache-extending-your-nfs-storage-into-the-cloud/",
+      "description": "本記事では、KNFSD File Cache (KNFSD) の仕組みと、オンプレミスのファイラー、サードパーティ、Amazon FSx などの AWS サービスを問わず、NFS 準拠のストレージとどのように連携するかを説明します。また、単一の Terraform モジュールを使って本番環境向けのオートスケーリングクラスターをデプロイする方法も紹介します。このクラスターは、100 Gb 毎秒あたり時間 6 ドル未満で集約スループットを実現します。",
+      "publishedAt": "2026-08-05T06:07:38.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "9bd54f757549916cc35ef011131c36d053ea2d8eaf4370270a8c75865f0e6c93",
+      "title": "Claude Code v2.1.222 の主要アップデート - worktree 分離のセキュリティ修正と ultraplan の削除",
+      "url": "https://dev.classmethod.jp/articles/20260805-cc-updates-v2-1-222/",
+      "description": "Claude Code v2.1.222がリリースされました。新機能はありませんが、worktreeのセッション分離やPreToolUseフックの権限チェック、auto モードの安全性向上など、セキュリティと安定性に関わる重要な修正が21件入っています。エージェントに権限を委ねる使い方をしている方は特に確認を急ぐ価値があります。",
+      "publishedAt": "2026-08-05T05:41:38.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "207d3f34d6eebcab25e03369d1b17841a509f1ea84f57babb8de9a580cd8c24d",
+      "title": "自社のAI利用は本当に安全？　現場放任に潜む「4大リスク」",
+      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2608/05/news049.html",
+      "description": "サーバーワークスは、AWS環境での生成AI活用に必要なルール整備を支援する「AWS生成AIガイドライン策定サービス」を提供開始した。最短1カ月でルールを整備できるプランも用意する。",
+      "publishedAt": "2026-08-05T04:00:00.000Z",
+      "feedName": "＠IT"
+    },
+    {
+      "id": "5c6b1d4750b69c7d5f62946fa19a75e93e796df90cc8c6f2ff74ed615f79a4b7",
+      "title": "AWS Batch と ECS Service は何が違うのか - Terraform で最小構成を作って理解する",
+      "url": "https://qiita.com/sugumura/items/db166669c5dba836871a?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\n自社サービスの運用ですでに ECS を使っています。ただし用途は AWS Batch 経由のバッチ処理で、\nWeb サービスを常時稼働させる、いわゆる普通の ECS の使い方をしたことがありませんでした。\n次の案件でコンテナ基盤の選択肢として ECS を検討する...",
+      "publishedAt": "2026-08-05T03:21:00.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "c057eb2bca2df4ec08ebbcc6d47aa59fc4d9693e9e4def1efc901bf82b18d58f",
+      "title": "SOCKSプロキシを悪用した攻撃の観測と、AIを活用した分析",
+      "url": "https://qiita.com/mj_yamamoto/items/7426c8b55ab3702dcdcd?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\n三菱電機の山本です。\n三菱電機　情報技術総合研究所では、製品開発時のセキュリティ対策にフィードバックする目的で、複数種類のハニーポットを設置・運用しています。ハニーポットとは、あえて外部からアクセスできる状態にしておき、そこに来る不審な通信を観測するための「おと...",
+      "publishedAt": "2026-08-05T02:41:04.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "7987bc403e8e6e5086fadffe5f91ba8fe89320cfa6ee473ed2b9381041fe6198",
+      "title": "GMOサイバーセキュリティ byイエラエ、地方公共団体向けペネトレーションテスト・パッケージを提供開始",
+      "url": "https://enterprisezine.jp/news/detail/24819",
+      "description": "GMOサイバーセキュリティ byイエラエは、「地方公共団体向けペネトレーションテスト・パッケージ」の提供を開始した。自治体の複雑なネットワーク構成（三層分離モデルなど）を熟知し、『地方公共団体におけ...",
+      "publishedAt": "2026-08-05T02:15:00.000Z",
+      "feedName": "EnterpriseZine"
+    },
+    {
+      "id": "6de6b3603d62fb91135864eb160b9155a0e023688ff64b5477af5481211801e3",
+      "title": "毎日AI使う人へ、｢認知的降伏｣にご注意 | ギズモード・ジャパン",
+      "url": "https://www.gizmodo.jp/article/cognitive-surrender-is-a-new-and-useful-term-for-how-ai-melts-brains-pkz-zgv/",
+      "description": "2026年4月8日の記事を編集して再掲載しています。 たしかにAIを外部メモリみたいに使っちゃうと、考える力が落ちそうよね。 ArsTechnicaのカイル・オーランド氏が2026年4月3日に｢認知的降伏（cognitive surrender）｣という用語についてのブログ記事を書きました。 1,372人をテストしてわかった「新しい認知」この言葉は...",
+      "publishedAt": "2026-08-04T16:42:40.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
     }
   ]
 }
