@@ -1,174 +1,6 @@
 {
   "articles": [
     {
-      "id": "a06b3a45c9ac4952e8eb92f62798f1c3b94c1d7e2e8258115ee01d1689e9cf56",
-      "title": "Residential Proxies for Developers: Picking the Right IP Strategy (2026 Comparison)",
-      "url": "https://dev.to/danielk_automat/residential-proxies-for-developers-picking-the-right-ip-strategy-2026-comparison-3l0m",
-      "description": "If you've ever built a scraper that worked perfectly in dev and then got blocked or CAPTCHA'd the moment it hit production traffic volume, you already know why proxy choice matters. This post breaks down residential proxies from a practical, implementation-focused angle: what they are, when to use them vs. alternatives, how to wire them into common tools, and how the major providers stack up.\nResidential proxies route requests through real ISP-assigned IPs, so they're harder for anti-bot systems to fingerprint than datacenter IPs.\nRotating residential proxies are for scraping/data collection. Sticky sessions (or static ISP proxies) are for anything stateful — logins, checkout flows, long-lived account sessions.\nNstproxy is a good default pick if you want residential, static ISP, and mobile proxies under one API/dashboard instead of juggling multiple vendors for different parts of your stack.\nFor large-scale enterprise scraping, Oxylabs and Bright Data have the most mature tooling. For budget/prototype work, IPRoyal, DataImpulse, and Webshare are worth testing.\n\n\n\nType\nUse for\nPros\nWatch out for\n\n\n\n\nResidential\nScraping, SERP checks, ad verification\nLooks like real user traffic\nUsually billed per GB\n\n\nStatic ISP\nLong-lived sessions, account workflows\nFast + stable IP\nLess useful for high-volume rotation\n\n\nDatacenter\nSpeed-sensitive, low-stakes tasks\nCheap, fast\nEasiest to fingerprint/block\n\n\nMobile\nMobile-first platforms/apps\nStrongest trust signal\nMost expensive per GB\n\n\n\nA production-grade scraping/automation stack often uses more than one of these at once — e.g., rotating residential IPs for crawling, and static IPs pinned to specific browser profiles for anything that requires a login.\nMost providers give you a host:port endpoint plus username:password auth, and let you control rotation/session stickiness through the username string. A typical setup looks like this:\nPython (requests):\nimport requests\n\nproxy_host = \"gate.proxyprovider.com\"\nproxy_port = 7000\nusername = \"user-session-abc123-country-DE\"  # session id + geo target encoded in username\npassword = \"your_password\"\n\nproxies = {\n    \"http\": f\"http://{username}:{password}@{proxy_host}:{proxy_port}\",\n    \"https\": f\"http://{username}:{password}@{proxy_host}:{proxy_port}\",\n}\n\nresp = requests.get(\"https://example.com\", proxies=proxies, timeout=15)\nprint(resp.status_code)\n\nTo get a sticky session (same exit IP across requests), you typically keep the session id portion of the username constant. To rotate, you generate a new session id per request:\nimport uuid\n\ndef get_proxy(country=\"US\", sticky=False, session_id=None):\n    sid = session_id if sticky and session_id else uuid.uuid4().hex[:8]\n    username = f\"user-session-{sid}-country-{country}\"\n    return {\n        \"http\": f\"http://{username}:{password}@{proxy_host}:{proxy_port}\",\n        \"https\": f\"http://{username}:{password}@{proxy_host}:{proxy_port}\",\n    }\n\n# Rotating: new IP each call\nfor _ in range(5):\n    r = requests.get(\"https://example.com/ip\", proxies=get_proxy(sticky=False))\n    print(r.text)\n\n# Sticky: same IP across calls, e.g. for a login flow\nsession_proxy = get_proxy(sticky=True, session_id=\"login-flow-1\")\nrequests.post(\"https://example.com/login\", proxies=session_proxy, data={...})\nrequests.get(\"https://example.com/dashboard\", proxies=session_proxy)\n\nNode.js (using axios + https-proxy-agent):\nconst axios = require(\"axios\");\nconst { HttpsProxyAgent } = require(\"https-proxy-agent\");\n\nconst proxyUrl = \"http://user-session-xyz789-country-JP:password@gate.proxyprovider.com:7000\";\nconst agent = new HttpsProxyAgent(proxyUrl);\n\naxios.get(\"https://example.com\", { httpsAgent: agent })\n  .then(res => console.log(res.status))\n  .catch(console.error);\n\nPlaywright (for anything JS-rendered / behind bot checks):\nfrom playwright.sync_api import sync_playwright\n\nwith sync_playwright() as p:\n    browser = p.chromium.launch(\n        proxy={\n            \"server\": \"http://gate.proxyprovider.com:7000\",\n            \"username\": \"user-session-abc123-country-FR\",\n            \"password\": \"your_password\",\n        }\n    )\n    page = browser.new_page()\n    page.goto(\"https://example.com\")\n    print(page.title())\n    browser.close()\n\nQuick sanity check before running the real job — always verify the exit IP and geo match what you expect:\ncurl -x http://user-session-abc123-country-DE:password@gate.proxyprovider.com:7000 https://ipinfo.io/json\n\nIf the country field doesn't match what you requested, or the request hangs, fix that before you scale up — debugging \"why is my scraper failing\" is much harder once thousands of requests are already in flight.\n\n\n\nProvider\nBest for\nNotes\n\n\n\n\nNstproxy\nMixed workloads (scraping + account sessions + mobile)\nResidential, static ISP, and mobile proxies in one platform; sticky + rotating sessions\n\n\nOxylabs\nEnterprise-scale scraping\nLarge pool, mature tooling, higher cost\n\n\nBright Data\nEnterprise data pipelines\nVery large network, powerful but complex product surface\n\n\nIPRoyal\nBudget/prototyping\nCheap entry point, test before scaling\n\n\nProxyEmpire\nResidential + mobile, regional targeting\nRollover data on some plans\n\n\nDecodo\nMid-market, easier UX\nFriendlier dashboard than enterprise platforms\n\n\nSOAX\nPrecise geo-targeting\nGood filtering options\n\n\nNetNut\nBusiness/ongoing use\nStable but less beginner-friendly\n\n\nDataImpulse\nCost-sensitive traffic\nTest IP quality against target sites first\n\n\nWebshare\nSimple setup\nGood for light/simple workflows\n\n\n\nScraping public data: rotating residential proxies, reasonable request rate, retry logic with backoff, and rotate user-agents alongside IPs — IP rotation alone won't save a scraper that behaves nothing like a browser.\nSEO/SERP monitoring: country- or city-level targeting matters more than pool size here. Verify the search engine is actually resolving to the expected region, not just that the proxy claims to.\nAccount/session workflows: use sticky residential or static ISP proxies. Don't rotate mid-session — most platforms treat sudden geographic jumps mid-session as a strong bot signal, and you'll burn test accounts learning this the hard way.\nAd verification: location accuracy is the whole game. A proxy that only guarantees country-level targeting may not be precise enough if you need to confirm placement in a specific city or DMA.\nMobile-first targets: consider mobile (carrier) proxies over residential — the trust signal is typically stronger, at a higher cost per GB.\nTreating all IPs as interchangeable. Rotation strategy should match the task, not be a global default.\nIgnoring session/IP mismatch. If your cookies/session say one location and your IP says another, expect friction.\nNot load-testing failure rate. A \"cheap\" proxy with a 25% failure rate costs more in retries, rate-limit backoff, and engineering time than a slightly pricier, more reliable one.\nSkipping the IP/geo sanity check before running a full job (see the curl example above — it's one request, do it every time you change proxy config).\nFree proxies in production code. Don't. They're unreliable, frequently already blacklisted, and not something you want handling credentials or authenticated sessions.\nFor most developer use cases, the decision tree is: rotating residential for stateless scraping, sticky residential or static ISP for anything stateful, mobile proxies if the target is mobile-first, and enterprise platforms (Oxylabs/Bright Data) only once you're operating at a scale that justifies the added complexity and cost. Nstproxy is a reasonable default if you want to cover the first three cases without integrating multiple providers into your stack.\nHappy scraping — and always sanity-check your exit IP before you kick off a big job.",
-      "publishedAt": "2026-07-07T02:54:55.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "9c4116228442070538d7904143abb00bb737a2a9f320c0742186b1fb84c0a433",
-      "title": "Amazon GuardDuty Investigationをイベントドリブンで使えるか確認してみたけど使えなかった",
-      "url": "https://dev.classmethod.jp/articles/amazon-guardduty-investigation-event/",
-      "description": "AWS GuardDuty InvestigationではAmazon EventBridgeでイベントが発行されて自動で通知とかができるのか調べましたが、されなかったのでどうやって扱うのか検討しました",
-      "publishedAt": "2026-07-07T02:49:57.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "167dfc74117b5dbe2b2a192c224f1ec14a6ccd6fcbfa2b109f29f9868a556f74",
-      "title": "Building a DeFi Staking Platform on SCAI Mainnet with Solidity & React",
-      "url": "https://dev.to/tanisha_aggarwal_230355e5/building-a-defi-staking-platform-on-scai-mainnet-with-solidity-react-41b4",
-      "description": "During my Blockchain Internship at EtherAuthority, I built a fully functional DeFi staking platform from scratch — a smart contract deployed on SCAI Mainnet, a React frontend connected via MetaMask, and real-time blockchain event tracking. Here's everything I learned.\nLive App: https://defi-staking-platform-wc8n.vercel.app\nhttps://github.com/Tanisha-aggarwal1085/Defi-Staking-Platform\nWhat is a DeFi Staking Platform?\nStake SCAI tokens and earn 12% APY\nTech Stack\nSmart Contract Design\ncontract Staking {\nmapping(address => uint256) public stakes;\nmapping(address => uint256) public rewards;\nmapping(address => uint256) public lastUpdated;\n\nevent Staked(address indexed user, uint256 amount, uint256 newTotal);\nevent Withdrawn(address indexed user, uint256 amount, uint256 newTotal);\nevent RewardClaimed(address indexed user, uint256 amount);\n\nfunction _updateReward(address user) internal {\n    if (stakes[user] > 0) {\n        uint256 timeElapsed = block.timestamp - lastUpdated[user];\n        uint256 earned = (stakes[user] * APY * timeElapsed) / (100 * YEAR);\n        rewards[user] += earned;\n    }\n    lastUpdated[user] = block.timestamp;\n}\n\nfunction stake() public payable {\n    require(msg.value > 0, \"Amount must be greater than 0\");\n    _updateReward(msg.sender);\n    stakes[msg.sender] += msg.value;\n    emit Staked(msg.sender, msg.value, stakes[msg.sender]);\n}\n\nfunction withdraw(uint256 amount) public {\n    require(stakes[msg.sender] >= amount, \"Not enough stake\");\n    _updateReward(msg.sender);\n    stakes[msg.sender] -= amount;\n    (bool success, ) = payable(msg.sender).call{value: amount}(\"\");\n    require(success, \"Transfer failed\");\n    emit Withdrawn(msg.sender, amount, stakes[msg.sender]);\n}\n\nfunction claimReward() public {\n    _updateReward(msg.sender);\n    uint256 reward = rewards[msg.sender];\n    require(reward > 0, \"No rewards\");\n    rewards[msg.sender] = 0;\n    (bool success, ) = payable(msg.sender).call{value: reward}(\"\");\n    require(success, \"Transfer failed\");\n    emit RewardClaimed(msg.sender, reward);\n}\n\n}\nKey Design Decisions:\nTime-based APY — Rewards accrue continuously using block.timestamp\nReward Calculation Formula\nFrontend Architecture\nDeployment to SCAI Mainnet\nhttps://mainnet-rpc.scai.network\",\nChallenges I Faced & How I Solved Them\nInvalid Contract Address\nMy first deployment had a 41-character address (should be 40). MetaMask flagged every transaction as suspicious. Fix: Always verify address length after deployment.\nShared Loading State\nAll three buttons (Stake, Withdraw, Claim) showed \"Processing...\" simultaneously because they shared one loading state. Fix: Created separate stakeLoading, withdrawLoading, claimLoading states.\nWrong Network\nThe app was initially deployed on local Hardhat — mentors couldn't test it. Fix: Deployed to SCAI Mainnet and added automatic network switching.\nTransaction History Not Persisting\nBlockchain events (queryFilter) sometimes failed on SCAI RPC. Fix: Dual approach — immediate in-memory update + async blockchain event sync.\nWhat I Learned\nConclusion\n🔗 Live: https://defi-staking-platform-wc8n.vercel.app\nhttps://github.com/Tanisha-aggarwal1085/Defi-Staking-Platform\nBuilt during Blockchain Internship at EtherAuthority",
-      "publishedAt": "2026-07-07T02:49:25.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "7939909bb1ba48b3f69a1d6e6404376c66bb1cfceb23d8453b6ffbbc7bc952f3",
-      "title": "GitHub Actionsの脆弱な構成の検知ツール、任せられる範囲と人が見極めるべきリスク - GMO Flatt Security Blog",
-      "url": "https://blog.flatt.tech/entry/2026-github-actions-security-part4",
-      "description": "はじめに こんにちは、GMO Flatt Security株式会社 セキュリティエンジニアの佐藤(@Nick_nick310)です。 これまで公開した記事にて、GitHub Actionsにおける攻撃手法や防御策、緩和策を解説してきました。 Vol.1: 相次ぐGitHub Actions 侵害から学ぶ、初期アクセス手法と開発者が知っておきたい対策 - GMO Flatt Securit...",
-      "publishedAt": "2026-07-07T02:34:45.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "26aaa7e75942367a68bb331d368d1327bed9872d0f9f3af3bafa7d30a6d7a8da",
-      "title": "「1年に1回のキーローテーション」はもう卒業しよう —— AWS IAMアクセスキー運用のベストプラクティス",
-      "url": "https://dev.classmethod.jp/articles/iam-accesskey-rotation-howto/",
-      "description": "AWSのIAMユーザーのアクセスキーを「年1回」ローテーションしていませんか？実は業界標準からすると、その周期は長すぎます。この記事では、セキュリティリスクを減らすための適切なローテーション周期、安全な切り替え手順、そしてSSO導入前に実践できるCLI運用改善まで、SREチーム視点から実装的に整理します。",
-      "publishedAt": "2026-07-07T02:33:18.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "fdd054114e8113dbec42742a7092d6acc74d6dd195d3413e1db77998e27e2a2e",
-      "title": "[やってみた] DevOps Agent のサンプルスキル「Investigation Cost Guardrail」で調査にかかるコストを算出してみた",
-      "url": "https://dev.classmethod.jp/articles/devops-agent-InvestigationCostGuardrail/",
-      "description": "AWS DevOps Agent のサンプルスキル集から「Investigation Cost Guardrail」を試してみました。障害調査を実行する前に AWS API のコストを自動見積もりしてくれるスキルで、想定外の課金を防ぐために必須レベルだと感じました。",
-      "publishedAt": "2026-07-08T02:32:11.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "2de45037841d60392c502f870bf623c1eee73a8b6cc91630bd7f43b2910ef94f",
-      "title": "Write Loops, Not Prompts: Why AI Agents Work Better When They Iterate",
-      "url": "https://dev.to/mininglamp/write-loops-not-prompts-why-ai-agents-work-better-when-they-iterate-o0l",
-      "description": "Most people using LLMs are still stuck in prompt mode. You craft a careful instruction, send it off, get something back, tweak the wording, try again. It works for single-shot questions but falls apart the moment you need anything that involves multiple steps, quality checks, or batch work.\nBack in January OpenAI published a technical post called \"Unrolling the Codex agent loop\" where they broke down how Codex CLI actually works internally. The core concept is what they call the agent loop. The model receives input, runs inference, and either returns a final answer or requests a tool call. If it requests a tool call, the agent executes it, appends the result back into the prompt, and loops back to inference. This repeats until the model signals it's done.\nA few months earlier Philip Zeyliger at Sketch.dev wrote \"The Unreasonable Effectiveness of an LLM Agent Loop with Tool Use,\" a post that hit 447 points on Hacker News. His core implementation was 9 lines of Python. A while loop. Call the LLM, if it returns tool calls execute them and feed results back in, if it returns text you're done. Zeyliger described being genuinely surprised at how much mileage he got out of this simple structure. Tasks he used to handle manually, obscure git operations, merge conflict resolution, type error chains, he now lets the agent work through iteratively.\nThe difference between prompting and looping is fundamental. A prompt is a single exchange. You say something, the model replies, end of story. A loop is a structured process where the model keeps working, each tool call result gets appended to its context, and it reasons over progressively richer information until the job is actually done. In OpenAI's post they note that a single conversation turn can involve hundreds of tool calls, each one adding new information to the prompt for the next inference step.\nLoops solve problems that single prompts can't touch because they give the model room to be wrong and correct itself. It doesn't need to nail everything on the first attempt. It can try a command, see that it failed, read the error message, adjust its approach, and try again. Zeyliger mentions agents installing missing tools on their own, adapting when grep flags differ across systems, working through failures without human intervention. A prompt can describe desired behavior but it can't react to what actually happens when that behavior meets reality.\nContext accumulation is another piece. Every tool call output becomes part of the prompt for subsequent iterations, so by iteration ten the model has access to everything that happened in iterations one through nine. OpenAI discusses this at length in their post, noting that prompts grow with each turn and that conversation history is always included. The model is effectively building up a working memory of what it has tried and what happened. A fresh prompt every time starts from zero. A loop keeps the record.\nThen there's automation. Once you have a working loop you can run it across multiple tasks independently. When we moved content generation and code review workflows from manual prompting to loop-based execution, processing time dropped significantly because agents could work in parallel instead of waiting for a human to feed them the next instruction.\nLoops aren't free though. OpenAI's post goes into the performance implications of growing prompts, including their use of prompt caching to avoid re-sending unchanged context. Context window management is a real engineering problem when an agent makes hundreds of tool calls in a single turn, and these are problems you simply don't face when you're doing single-shot prompts.\nThis is where Octo comes in. We've been building a workspace called Octo around exactly this loop-based model of agent work, but we've taken the concept further than a simple while loop in a terminal.\nIn Octo, the loop is called a Loop. A Loop is a unit of work that emerges naturally from conversation in a chat interface. Instead of filling out a form to create a ticket, you describe what you want in natural language and assign it to an agent. The agent picks it up, executes it through its own internal agent loop, and delivers results back for review. When you approve, the Loop closes. When you send it back with feedback, the agent takes another pass using that feedback as input.\nWhat makes this different from running agent loops in a terminal is that we've built the human review step into the loop itself. In Codex and similar tools the agent decides when it's done. In Octo the agent delivers and a person decides whether it's actually done. The feedback loop between human and agent is first-class, not an afterthought. Every approval or rejection gets captured as Preferences, learned patterns that the agent references on future tasks. If you keep sending back reports saying \"too verbose, make it shorter,\" after a few rounds the agent just writes shorter reports by default.\nAgents in Octo aren't generic assistants either. Each agent is a digital worker with specific skills, project context, and a persistent identity. You might have one agent that's good at documentation, another at code review, another at research. You route work based on what each agent is good at, the same way you'd pick the right person on a real team. We support multiple AI runtimes including OpenClaw, Codex, Claude Code, and Hermes, so you're not locked into a single model vendor. Everything runs on your own infrastructure; your data stays on your network.\nOcto also supports different orchestration patterns for different kinds of work. Roundtable mode for brainstorming where all agents see each other's output. Critic mode where a reviewer agent checks work without the producer seeing the critique. Pipeline mode for sequential multi-step work where each agent only sees the previous step's output. Split mode for dividing large tasks into independent chunks. Swarm mode for creative work where multiple agents tackle the same problem and you pick the best result. These patterns matter because collaboration isn't one-size-fits-all; different work needs different information flows.\nThe product includes a Loop workspace with list and kanban views, project grouping, automation for scheduled and event-triggered agent pipelines, and search across all Loops and projects. There's a web and desktop app for the full workspace, mobile for quick reviews and notifications, a browser extension for bringing Octo context into any webpage, a CLI for agents to interact natively, and IM integration so you can spin up a Loop by mentioning an agent in a group chat.\nIf you're still writing prompts one at a time and manually iterating, try turning the interaction into a loop. Let the model execute, see what happens, feed the result back, and let it try again. The core idea is genuinely just a few lines of code, but it changes the relationship between you and the model from question-and-answer to actual collaboration.\nOcto is opening early access soon. You can follow progress on our GitHub.\nhttps://github.com/orgs/Mininglamp-OSS/repositories",
-      "publishedAt": "2026-07-08T02:24:34.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "11d983b5f05d2a493cc15d756a7e166519348d38e30eafedd0feb085fdceb2d0",
-      "title": "AWS Organizations の Amazon Inspector ポリシーをアタッチしても、リージョンによって有効化に時間がかかることがあります",
-      "url": "https://dev.classmethod.jp/articles/amazon-inspector-organizations-policy-enable-delay/",
-      "description": "AWS Organizations の Amazon Inspector ポリシーで `ALL_SUPPORTED` を指定しても、リージョンによって有効化完了までのラグが発生することがあります。`us-east-2` で有効化が遅れた事象をCloudTrailで追跡した結果をまとめました。",
-      "publishedAt": "2026-07-07T23:27:40.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "3171acbdb2b8c14de18444d9b777d60c8bd1c93418d70fbec44a9fc7088b3abf",
-      "title": "QRコード攻撃はなぜメールセキュリティを無力化できるのか？　その理由を解説",
-      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2607/08/news048.html",
-      "description": "メールセキュリティ製品を導入しているからといって、安心とは限らない。QRコードを悪用したフィッシング攻撃は、従来のメールゲートウェイが前提としてきた検査方法をすり抜ける可能性があるという。どう対策をすればいいか。",
-      "publishedAt": "2026-07-07T22:00:00.000Z",
-      "feedName": "＠IT"
-    },
-    {
-      "id": "e0f5bd2f39d0a149c9dcccf34ad80cb2f721a3dceb670e606b4d400ebc068c89",
-      "title": "ソフトバンクの「1人100エージェント」を支える独自AIゲートウェイ「Cloud Proxy」の正体",
-      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2607/07/news009.html",
-      "description": "生成AIやAIエージェントを全社展開する際、企業はセキュリティやガバナンス、性能といった課題に直面しがちです。ソフトバンクは「全社で1人100エージェント」構想の実現に向けて、AI利用の入り口となる共通基盤「Cloud Proxy」を内製しました。その設計思想や性能強化の取り組み、自動化による迅速なスケールアウト、マルチLLM対応など、Cloud Proxyを支える設計思想と運用の工夫を紹介します。",
-      "publishedAt": "2026-07-07T20:00:00.000Z",
-      "feedName": "＠IT"
-    },
-    {
-      "id": "393c8a9e115bf00300f1b7bbe7f8191d776a9bc666c84d5f769213aabf2f59d8",
-      "title": "【セキュリティ ニュース】農業従事者情報を含むデータを誤送信 - フィルタ解除で閲覧可能（1ページ目 / 全1ページ）：Security NEXT",
-      "url": "https://www.security-next.com/186821",
-      "description": "徳島県小松島市は、農業従事者の個人情報が含まれるデータをメールで誤送信したことを明らかにした。 同市によれば、2026年6月16日、経営所得安定対策に関する農地管理データを市内の農業法人1社へメールで送信した際、誤送信が発生したもの。 本来は同法人分のみを送信すべきだが、担当職員が6月19日に送信済みデータを...",
-      "publishedAt": "2026-07-07T17:28:21.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "7ed95467e85bf0aa856bce576bc15733a0f86db980d5a423c33e03d555298d01",
-      "title": "Fedora LinuxでTLS接続だけがタイムアウトする事象をPMTU Blackholeの観点から解決した",
-      "url": "https://dev.classmethod.jp/articles/fedora-linux-pmtu-blackhole-tls-timeout-tcp-mtu-probing/",
-      "description": "Fedora Linux環境でAWSエンドポイントへのTLS接続だけがタイムアウトし、TCP接続やpingは正常という事象に遭遇しました。原因はPath MTU Discovery（PMTUD）の機能不全、いわゆるPMTU Blackholeでした。切り分け手順と`tcp_mtu_probing`による解決方法を記録します。",
-      "publishedAt": "2026-07-07T16:44:33.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "7cea81ecb2625605215a7a3ce2371d44b1f23306dbb28c164a6459a0717039ab",
-      "title": "手動で作った既存 S3 バケットを `cdk import` で CDK 管理下に取り込んでみた",
-      "url": "https://dev.classmethod.jp/articles/shoma-import-existing-manually-created-s3-bucket-into-cdk-management-with-cdk-import/",
-      "description": "手動作成した AWS リソースを CDK 管理下に移したい——そんな悩みを解決する `cdk import` の使い方を、実際に S3 バケットを取り込みながら検証しました。",
-      "publishedAt": "2026-07-07T14:52:55.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "144d2de39d830ba0b9f2c20edf4753d1770d9ed7cfad297278b3818fcf1be2de",
-      "title": "Snowflake App RuntimeでElementaryのレポートをDockerなしでホスティングしてみた",
-      "url": "https://dev.classmethod.jp/articles/snowflake-try-appruntime-with-elementary-report/",
-      "description": "以前Snowpark Container ServicesでElementaryレポートをホスティングしていましたが、今回はSnowflake App Runtimeを試してDockerなしで同じことが実現できるか検証してみました。",
-      "publishedAt": "2026-07-07T14:11:34.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "e5043896a0bbeff67d400bf9d4102d48ddb4191f95f5c819383034d31b666941",
-      "title": "【セッションレポート】 AWS における Kubernetes の未来[CN348]",
-      "url": "https://dev.classmethod.jp/articles/aws-summit-2026-Kubernetes-future/",
-      "description": "AWS summit 2026 AWS における Kubernetes の未来[CN348] のセッションレポートです。",
-      "publishedAt": "2026-07-07T13:32:58.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "21c78e5663b9f81ebc1a3fd01f3447ead3867fbc6ef4b0d73fdf0234cc7cf668",
-      "title": "【セッションレポート】 Amazon ECS Managed Instances と AWS Fargate の仕組みと違いを知る[CNS341]",
-      "url": "https://dev.classmethod.jp/articles/aws-summit-japan-2026-ecs-managed-instance-fargate/",
-      "description": "AWS Summit 2026  「Amazon ECS Managed Instances と AWS Fargate の仕組みと違いを知る」（CNS341）についてセッションレポートを記載します。",
-      "publishedAt": "2026-07-07T12:44:53.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "8907a34f36f55101937ae633413989a689a4379ecda0f18debbfd6a3a535c02a",
-      "title": "エムシーディースリー株式会社様：AI-DLC Unicorn Gym による3日間の開発変革",
-      "url": "https://aws.amazon.com/jp/blogs/news/mcd3-aidlc/",
-      "description": "エムシーディースリー株式会社様とAI-DLC Unicorn Gym を実施し、Kiroを使った3日間のプロダクト開発に挑戦しました。AI-DLCで要件定義からアーキテクチャ設計、実装、テスト、デプロイまでの開発ライフサイクル全体でAIを活用し、従来数か月かかっていた開発を3日間で実現可能なレベルまで圧縮できることを実証しました。",
-      "publishedAt": "2026-07-07T11:37:44.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "8d0060122af382b04f6aa60a0fe62086e29724465b24391b9beb1a3d2e80d2a4",
-      "title": "遅い・重い・書きづらい Apex テストを「モック化」で作り変えた話",
-      "url": "https://tech.uzabase.com/entry/2026/07/07/171729",
-      "description": "はじめに こんにちは、株式会社ユーザベース スピーダ事業 Sales System Engineering Teamの村松（あだ名：MJ）です。 ユーザベースのSalesforceのアドミン/デベロッパーを担当しています。 SalesforceではApexを本番環境にデプロイするときはテストクラスが必須です…が、Apexのテストクラス書きづらくないですか？ オブジェクトの依存関係を考慮してテストデータをインサートしないといけないですし、トリガがあったらそれはもう純粋なユニットテストではなくなってしまいます。 本記事では、テストデータと DML を モック化してレガシーな Apex テストを作り…",
-      "publishedAt": "2026-07-07T08:17:29.000Z",
-      "feedName": "Uzabase for Engineers"
-    },
-    {
-      "id": "66960d3cb6cfb09b3835a6c1eb65f6fdf7d0fd25a9d15a71869242c3a694e244",
-      "title": "APIもDBも東京なのに、全クエリが太平洋横断していた話",
-      "url": "https://zenn.dev/avaintelligence/articles/b7d4743a448485",
-      "description": "はじめに\nAI x 旅行アプリのアバトラベル（iOS / Android）は、2026年6月にフルリニューアルしました！\nところがその直後から、「ほぼ全てのAPIが一律に遅い」 という不思議な症状に悩まされていました。弊社に協力いただいているつよつよエンジニアの栗田さんの調査により、原因はAPIのコードでもDBのチューニング不足でもなく、接続先ホスト名のDNS解決にありました。\n\nバックエンドAPI：FastAPI（Python）、Fly.io東京リージョン（nrt）で稼働\nDB：PlanetScale（AWS ap-northeast-1 = 東京）\n\nという同一リージョン構成にも...",
-      "publishedAt": "2026-07-07T06:06:42.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "d0e750caacebd264616b21ab7b476392b3441a7c6482df3d7ecb2271f6f14000",
-      "title": "国会答弁対応業務の高度化と効率化に向けた中央省庁とのプロトタイピングプログラムの取り組み",
-      "url": "https://aws.amazon.com/jp/blogs/news/prototyping-program-with-central-government-agencies-for-diet-response-operations/",
-      "description": "国会答弁の想定問答作成業務は、正確性や首尾一貫性などが厳しく求められる重要度の高い業務です。それゆえに職員の負担も大きく、公務員の働き方改革や生成 AI 技術の急速な発展も相まって、AI を活用した高度化・効率化への期待が高まっていました。AWS は中央省庁のシステム担当部局とともに、人間の判断を中心に据えながら、過去資料の検索、ドラフト生成、審査等を AI で支援するアプリケーション「DietSearch」を、AWSのプロトタイピングプログラムでの共創を通じて構築しました。「まず動かして確かめる」というアプローチが、本格導入への道筋をどう後押ししたのかをご紹介します。",
-      "publishedAt": "2026-07-07T05:42:46.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "0756b1d2ceb23da0fd7fd1354f4cb11219c3d0ae3a1451cc929967501425f634",
-      "title": "後工程で発覚する脆弱性を4割減　「Claude Code」の新プラグインの仕組み、導入方法",
-      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2607/07/news030.html",
-      "description": "Anthropicは、エージェント型コーディングツール「Claude Code」のセキュリティガイダンスプラグインを公開した。Claudeがソースコードの脆弱性についてレビューし、同じセッション内で修正を支援するものだ。",
-      "publishedAt": "2026-07-07T04:00:00.000Z",
-      "feedName": "＠IT"
-    },
-    {
       "id": "d5d41fdbb2e2e285dfb9e3e0d62cf1bb6ef883d99435245f2e1e4a6915b9e488",
       "title": "Amazon Bedrock のゼロデータ保持の強制方法",
       "url": "https://aws.amazon.com/jp/blogs/news/enforce-zero-data-retention-on-amazon-bedrock-with-bedrock-projects-and-service-control-policies/",
@@ -489,70 +321,6 @@
       "feedName": "Hatena Developer Blog"
     },
     {
-      "id": "51ed1550a194a2373642cc05a0d0f3ca0bf16908e1deb091cc31bf028e4e0ef0",
-      "title": "Unity 6時代のR3運用ルール：SubscribeAwait・EveryUpdate・禁止パターンを整理する",
-      "url": "https://zenn.dev/gamedev_toollab/articles/88cbe9d9110202",
-      "description": "はじめに\n前回の記事では、Unity 6系のチーム開発でR3を使うときの基本方針として、ReactiveProperty<T>やSubject<T>の公開範囲、購読寿命、async/awaitとの役割分担を整理しました。\nこの記事ではその続きとして、R3を導入した後の運用ルールを扱います。\n対象は、プログラマが10人前後いて、UI、通信、ロード、演出、ゲーム進行などを複数人で触る現場です。個人開発や短期プロトタイプならここまで厳しくしなくてもよい場面はありますが、この記事では運用と保守性を優先した保守的な方針を取ります。\nこの記事はUnity 6固有APIの解...",
-      "publishedAt": "2026-07-08T01:00:09.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "31ff3b618cef77ea798034ccef527d0929bc83e971cedf3fe5c54555daf85bf9",
-      "title": "アプリ層から低レイヤーを打ち抜く：WhatsApp GIF脆弱性(CVE-2019-11932)をGemini×Claudeで徹底検証",
-      "url": "https://zenn.dev/inlet_back/articles/2069cb693dd737",
-      "description": "!\n🚨 注意事項・免責事項\n\n本記事は、Awakened氏が発見した過去（2019年）の修正済み脆弱性の技術解説です。\nセキュリティの学習と検証のみを目的としており、実際の攻撃を助長・手助けするものではありません。\n\n\n\n\n 1. はじめに\nこの記事は、2019年に発見されたWhatsAppの致命的なリモートコード実行（RCE）脆弱性「CVE-2019-11932」の技術的メカニズムを解説し、現代の生成AI（Gemini / Claude）を駆使してそのエクスプロイトを実際に手元で再現・検証した記録です。\n本記事の見どころ\n本記事は、以下のような技術的関心を持つ方に向けた実践的なケースス...",
-      "publishedAt": "2026-07-08T00:00:07.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "9c31d1d98be31fa2cecfa13ed7329c5dd6a1f74d60429a579735f735adb7e891",
-      "title": "【参加レポ】非情報系出身の新卒エンジニアが AWS Summit Japan 2026 に行ってみた",
-      "url": "https://qiita.com/takutech-it/items/6a4937254cc910f6acae?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "はじめに\nこんにちは！非情報系出身の26新卒エンジニアです。\n先日、幕張メッセで開催された AWS Summit Japan 2026（2026年6月25日〜26日） に参加してきました。日本最大級の「AWS を学ぶイベント」で、基調講演や 260 を超えるセッション、3...",
-      "publishedAt": "2026-07-07T23:30:51.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "c1930c4541e85a4643524b5cc48e521ecfc99b616ee9b2a0a04433675b8ce63b",
-      "title": "LambdaからS3 Filesを使った時の読み書き速度を検証してみた",
-      "url": "https://qiita.com/ry-harada/items/dc52d546c0c52c84b866?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "はじめに\n2026年4月に、AWS Lambda から Amazon S3 Files をマウントできるようになりました。\nS3 Filesを使うと、Amazon S3バケットのオブジェクトをLambda関数内のローカルマウントパスからファイルとして扱えます。これまでもS...",
-      "publishedAt": "2026-07-07T22:47:43.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "7a0ff32fd741f6fa74c10598164e45b7bd74706fb76289202d9c8cc9409a4cc5",
-      "title": "Fable 5が使えなくなる前に、その「働き方」をOpus/Sonnetに引き継がせた",
-      "url": "https://zenn.dev/yui/articles/e4f8268ab5c6c1",
-      "description": "前回、Fable 5をトークン破産させずに使い倒す方法について書きました。 簡単にいうとオーケストレーターに Fable 5をおいて、スコープ切り、設計、委譲、最終レビューを任せ、手を動かす実装・テスト・シッピング・コードレビューは Opus と Sonnet のサブエージェントが担う形式です。高いモデルが計画と判断を、安い...",
-      "publishedAt": "2026-07-07T21:10:09.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "627f4c404341ee4c4db02e691cb7c63e9c408ac0bea6e83865d913cf2528502f",
-      "title": "Claude Agent SDKにおけるMCPサーバー接続フローとalwaysLoadパラメータについて",
-      "url": "https://qiita.com/har1101/items/05be8c42ac9c4c2dc5e1?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "tl;dr\n\nClaude Agent SDK(TypeScript版)でMCPサーバーを接続する際、.mcp.jsonにalwaysLoad: trueを設定しておくと、セッション開始時からMCPサーバーが使えるようになる\nそのMCPサーバーを常に・必ず使ってほしい場合...",
-      "publishedAt": "2026-07-07T15:01:23.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "708d4ea3a37c17ae883b9c2f263e3244b8d793fc48a2337074341491521951ef",
-      "title": "VS Code DevContainer を使わなくなった私の、LLM エージェント向け開発環境",
-      "url": "https://zenn.dev/kenfdev/articles/1febc0052b0d71",
-      "description": "!\nこの記事は長いです。長い癖に具体的に自分が使っているdocker composeなどの設定までは記載していません。そこまで書くとさらにとんでもなく長い記事になってしまうと思ったためです。あくまで思想としてどのように最近開発環境を考えているのかを伝えられたらと思っています。コンテナ開発における環境に悩んでいる方、ぜひ読んでみて感想を聞けたらと思います。私は日々悩み続けています。\n\n以前、「辿り着いた最高の開発環境は Remote な Dev Containers です」という記事を書きました。\nhttps://zenn.dev/kenfdev/articles/dba4dbd45261...",
-      "publishedAt": "2026-07-07T08:00:09.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "0e16bdd1a3c12c7c28bfff2c03e99108db9bdd8b23a1efba6a06e497956fb2a7",
-      "title": "Azure Files バックアップ入門～「Vault-Standard 層」のリストアについて～",
-      "url": "https://qiita.com/MasakiKakimoto/items/7854c4f717ff13be0565?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "目次\n\nはじめに\n本記事で解説するAzure Files のバックアップ構成\nVault-Standard 層のリストアについて\n「スナップショットとVault-Standard」とは\n「Vault-Standard」とは\nまとめ\n\n1. はじめに\n本記事は、Azure...",
-      "publishedAt": "2026-07-07T05:05:51.000Z",
-      "feedName": "Qiita"
-    },
-    {
       "id": "63cb631144bce99b332931240568c238548ee13db9671310166eaf261d49671e",
       "title": "AWS環境の段階的な移行方式として、『ALBの加重ルーティング』と『API GatewayのCanaryリリース』を試してみた（前編）",
       "url": "https://dev.classmethod.jp/articles/myan-aws-bgdeploy-handson-01/",
@@ -788,14 +556,6 @@
       "url": "https://zenn.dev/natsu06/articles/8ed7455b6e148a",
       "description": "概要\n以下、JavaScriptが実行される環境です。コードが動く場所によって使えるAPIや挙動が変わります。\n\nブラウザ\nNode.js\njsdom\nCI環境\n\n今回、requestAnimationFrame を使ったフォーカス制御のテストが、ローカルでは通るのにCI環境で失敗するという問題に遭遇しました。\nその調査を通して、\n\nフロントエンドのコードは、どこで実行されているのかを意識しないと正しく理解できない\n\nということを改めて学びました。\nこの記事では、今回のテスト修正をきっかけに学んだ、ブラウザ・Node.js・jsdom・CI環境の違いについて整理します。\n\n\n 学習の...",
       "publishedAt": "2026-07-08T14:01:25.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "73a0ba387d062d063d37368530e79008bf8e9baf77d1689b55c7158c10bdd3e2",
-      "title": "Claude Code が「プロンプトインジェクション検出」を報告してきたので解析したら作話だった",
-      "url": "https://zenn.dev/nanasess/articles/claude-code-prompt-injection-confabulation",
-      "description": "!\nこの記事は Claude Code で執筆しています。本文中のトランスクリプト解析も、作話した当事者とは別セッションの Claude Fable 5 が実施しました。\n\n\n はじめに\nClaude Code で作業していたら、セッションの最後にこんな報告が来ました。\n\nセキュリティ注意（今セッションの重要事項）\n本セッション中、ツール出力ストリームへの注入・汚染が継続しました（rm -rf /var backups の実行要求、\"meta\":\"ignore this\" 等の偽フィールド、偽の「Playwright は使えますか」というユーザー発話、偽 System 警告）。破壊的な注...",
-      "publishedAt": "2026-07-07T21:55:26.000Z",
       "feedName": "Zenn"
     },
     {
@@ -7295,6 +7055,238 @@
       "description": "2026年4月8日の記事を編集して再掲載しています。 たしかにAIを外部メモリみたいに使っちゃうと、考える力が落ちそうよね。 ArsTechnicaのカイル・オーランド氏が2026年4月3日に｢認知的降伏（cognitive surrender）｣という用語についてのブログ記事を書きました。 1,372人をテストしてわかった「新しい認知」この言葉は...",
       "publishedAt": "2026-08-04T16:42:40.000Z",
       "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "9b74c4ce00adf4a7eb4135a0e0df3ec89ad3452e0dab6675b0463320efea2b1a",
+      "title": "When ‘Are We Affected?’ Requires Reconstructing Yesterday’s npm Install",
+      "url": "https://dev.to/demivalerith/when-are-we-affected-requires-reconstructing-yesterdays-npm-install-44j9",
+      "description": "The concrete problem\n\n\nA package is reported compromised. Your security channel immediately fills with one question: did we ship it?\nLooking at the repository’s current dependency tree is not enough. The vulnerable version may have existed for only a short time. Renovate may already have replaced it. A lockfile may have changed after the release. A Docker layer or CI cache may have reused something that no longer appears on the default branch. Even a clean scan today can say very little about the artifact built yesterday.\nThis makes supply-chain response a reconstruction problem. The useful unit is not the repository as it exists now; it is a particular artifact, produced by a particular build, from a particular set of resolved packages.\nOn August 4, Aikido disclosed that a maintainer account behind Keyv-related packages had been compromised and that malicious releases used install-time code to steal credentials and propagate. In RayTally’s bounded Hacker News snapshot at August 5, 00:33 UTC, the discussion had 227 points and 120 comments and ranked sixth. Those figures describe that observation only; they are not market demand or proof that a new product would succeed.\nThe operational lesson is more durable than the snapshot: a fast-moving package incident can be over before a team finishes asking whether any released artifact ever contained the bad version.\nImagine a tool that accepts a lockfile, build timestamp, artifact digest, and the relevant CI evidence. It reconstructs what that build actually resolved, then produces a report organized around images, services, and customer-delivered versions.\nEach conclusion should carry an evidence label. A lockfile entry with resolved and integrity fields is direct evidence. A registry publication window combined with a semver range is an inference. Missing build logs are a gap, not a green checkmark.\nThat distinction matters because the output may drive expensive or irreversible decisions: isolating a service, rotating credentials, rebuilding releases, or notifying customers. A useful report must show the dependency path and the evidence behind every claimed hit.\nThe product should also resist the temptation to become an automated incident commander. It can identify affected artifacts and propose the smallest upgrade-and-rebuild set. It should not rotate keys, disable production, or send notifications without human review.\nThe full RayTally product brief and its four-source evidence trail cover the source boundaries, competitor gap, and business model in more detail.\nStart with npm projects built in GitHub Actions. Accept package-lock.json or npm-shrinkwrap.json, the build time, an artifact digest, and a saved build log. Keep every result keyed to the artifact digest so a later scan of the current branch cannot overwrite history.\nThe first report only needs four states:\nConfirmed present: the locked version and integrity match the artifact’s build evidence.\nConfirmed absent: complete evidence shows another resolved version.\nPossible exposure: the version range and registry timeline overlap, but resolution evidence is incomplete.\nUnknown: required logs, caches, or lockfiles are missing.\nAn open-source CLI could produce a reviewable JSON report locally. A hosted layer could later map digests to deployed services and customer versions, retain evidence, and coordinate isolation status. That is a narrower and more defensible first product than another always-on vulnerability dashboard.\nThe hard part is not parsing npm metadata. It is making a trustworthy claim from evidence that organizations routinely fail to retain. Build logs expire. Private registries rewrite metadata. Multi-stage images hide intermediate dependency trees. CI caches cross build boundaries. Teams may not have a reliable mapping from an artifact digest to the release a customer received.\nA product that converts those gaps into confident red or green badges would be dangerous. False positives can trigger unnecessary outages and incident disclosures; false negatives can delay credential rotation after a real compromise. The required evidence model may be so conservative that many early reports end in “unknown,” which is honest but commercially frustrating.\nThere is also a platform question. Existing SCA vendors already retain project snapshots for customers who enabled monitoring before an incident. The wedge only exists where artifact-level historical reconstruction is materially better than those snapshots—and where teams value a forensic report enough to maintain the extra build evidence.\nWhat evidence does your build system retain today that would let you prove which exact dependency tarballs entered an artifact six weeks ago—and which missing piece would make that proof impossible?",
+      "publishedAt": "2026-08-07T02:23:23.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "93ddd139a4225eebddbd3987660dc50182e1b40f48413e036afbbd5ecc96cb09",
+      "title": "Build a Context-Aware Text-to-Speech CLI in Node.js",
+      "url": "https://dev.to/waeckerlin_federowicz_8da/build-a-context-aware-text-to-speech-cli-in-nodejs-p9",
+      "description": "Text-to-speech APIs are easy to demo but slightly harder to integrate well. A useful CLI should keep credentials outside source control, validate API errors, preserve audio metadata, and write a file that standard players can open.\nThis tutorial builds a small Node.js 20+ command-line tool around the public context-aware text to speech API from FlowSpeech. It uses only built-in Node modules.\nThe command will:\nread text from the command line;\nsend one authenticated synthesis request;\ndecode the base64 audio response;\nwrap raw 16-bit PCM in a WAV container when necessary;\nsave the result to disk;\nshow the remaining quota returned by the API.\nYou need Node.js 20 or newer because the example uses the built-in fetch implementation.\nCreate an API key in your FlowSpeech account under /settings/apikeys/create, then expose it only for the current shell:\nexport FLOWSPEECH_API_KEY=\"replace-with-your-own-key\"\n\nDo not commit the key to Git or paste it directly into the script.\nSave the following as tts.mjs:\nimport { writeFile } from \"node:fs/promises\";\n\nconst API_URL = \"https://flowspeech.io/api/ai/text-to-speech\";\nconst apiKey = process.env.FLOWSPEECH_API_KEY;\nconst text = process.argv.slice(2).join(\" \").trim();\n\nif (!apiKey) {\n  console.error(\"Missing FLOWSPEECH_API_KEY\");\n  process.exit(1);\n}\n\nif (!text) {\n  console.error('Usage: node tts.mjs \"Text to synthesize\"');\n  process.exit(1);\n}\n\nfunction createWavHeader({\n  dataLength,\n  sampleRate,\n  numChannels,\n  bitsPerSample,\n}) {\n  const blockAlign = (numChannels * bitsPerSample) / 8;\n  const byteRate = sampleRate * blockAlign;\n  const header = Buffer.alloc(44);\n\n  header.write(\"RIFF\", 0);\n  header.writeUInt32LE(36 + dataLength, 4);\n  header.write(\"WAVE\", 8);\n  header.write(\"fmt \", 12);\n  header.writeUInt32LE(16, 16);\n  header.writeUInt16LE(1, 20); // PCM\n  header.writeUInt16LE(numChannels, 22);\n  header.writeUInt32LE(sampleRate, 24);\n  header.writeUInt32LE(byteRate, 28);\n  header.writeUInt16LE(blockAlign, 32);\n  header.writeUInt16LE(bitsPerSample, 34);\n  header.write(\"data\", 36);\n  header.writeUInt32LE(dataLength, 40);\n\n  return header;\n}\n\nfunction outputForAudio(data) {\n  const audio = Buffer.from(data.audioBase64, \"base64\");\n  const mimeType = data.mimeType.toLowerCase();\n\n  if (mimeType.includes(\"l16\")) {\n    const header = createWavHeader({\n      dataLength: audio.length,\n      sampleRate: data.sampleRate,\n      numChannels: data.numChannels,\n      bitsPerSample: data.bitsPerSample,\n    });\n\n    return {\n      filename: \"speech.wav\",\n      bytes: Buffer.concat([header, audio]),\n    };\n  }\n\n  if (mimeType.includes(\"mpeg\") || mimeType.includes(\"mp3\")) {\n    return { filename: \"speech.mp3\", bytes: audio };\n  }\n\n  if (mimeType.includes(\"ogg\")) {\n    return { filename: \"speech.ogg\", bytes: audio };\n  }\n\n  return { filename: \"speech.bin\", bytes: audio };\n}\n\nasync function synthesize() {\n  const response = await fetch(API_URL, {\n    method: \"POST\",\n    headers: {\n      Authorization: `Bearer ${apiKey}`,\n      \"Content-Type\": \"application/json\",\n      Accept: \"application/json\",\n    },\n    body: JSON.stringify({\n      text,\n      originalText: text,\n      speakers: [{ voiceName: \"Kore\" }],\n    }),\n    signal: AbortSignal.timeout(90_000),\n  });\n\n  const rawBody = await response.text();\n  let result;\n\n  try {\n    result = JSON.parse(rawBody);\n  } catch {\n    throw new Error(\n      `FlowSpeech returned non-JSON data (HTTP ${response.status})`\n    );\n  }\n\n  if (!response.ok || result.code !== 0) {\n    const message = result.message || \"Speech generation failed\";\n    throw new Error(`${message} (HTTP ${response.status})`);\n  }\n\n  if (!result.data?.audioBase64) {\n    throw new Error(\"The response did not include audioBase64\");\n  }\n\n  const output = outputForAudio(result.data);\n  await writeFile(output.filename, output.bytes);\n\n  console.log(`Saved ${output.filename}`);\n  console.log(\n    `Format: ${result.data.mimeType}, ${result.data.sampleRate} Hz, ` +\n      `${result.data.numChannels} channel(s)`\n  );\n\n  if (result.data.quota) {\n    console.log(`Quota remaining: ${result.data.quota.remaining}`);\n  }\n}\n\nsynthesize().catch((error) => {\n  console.error(error.message);\n  process.exitCode = 1;\n});\n\nRun it with:\nnode tts.mjs \"Welcome to the command-line text-to-speech demo.\"\n\nThe script writes speech.wav when the API returns audio/L16. That format is raw signed 16-bit PCM, so the script adds a standard 44-byte WAV header using the sample rate, channel count, and bit depth supplied by the response. For encoded formats such as MP3 or OGG, it writes the decoded bytes directly.\noriginalText?\n\n\nFor a simple request, text and originalText can be identical. Keeping both fields makes the request compatible with workflows that later transform or annotate the spoken text while retaining the user's original input.\nVoice selection lives in the speakers array. For example:\nspeakers: [{ voiceName: \"Puck\" }]\n\nThe single-speaker shape is intentionally still an array. That means the same endpoint can represent dialogue by assigning voice names to speaker labels:\n{\n  text: \"Speaker A: Ready to ship?\\nSpeaker B: Ready.\",\n  originalText: \"Speaker A: Ready to ship?\\nSpeaker B: Ready.\",\n  speakers: [\n    { speaker: \"Speaker A\", voiceName: \"Kore\" },\n    { speaker: \"Speaker B\", voiceName: \"Puck\" }\n  ]\n}\n\nFor dashboards or preflight checks, call the quota endpoint:\nconst response = await fetch(\n  \"https://flowspeech.io/api/ai/text-to-speech/quota\",\n  {\n    headers: {\n      Authorization: `Bearer ${process.env.FLOWSPEECH_API_KEY}`,\n      Accept: \"application/json\",\n    },\n  }\n);\n\nif (!response.ok) {\n  throw new Error(`Quota request failed: ${response.status}`);\n}\n\nconst result = await response.json();\nconsole.log(result.data.quota);\n\nA successful response includes the limit, used amount, remaining amount, reset time, and whether the request is using guest access.\nBefore placing this code in a service:\nKeep the API key on the server. Never expose it in browser JavaScript.\nSet request timeouts and handle retries only for failures that are actually retryable.\nLimit input length before calling the API.\nUse unique filenames or object storage for concurrent jobs.\nLog status codes and request timing, but never log credentials or full sensitive input.\nValidate the returned MIME type and metadata before writing the file.\nThe CLI is deliberately small, but it covers the integration details that often get skipped in a quick TTS demo: credential isolation, structured errors, base64 decoding, raw PCM handling, and response metadata.",
+      "publishedAt": "2026-08-07T02:20:06.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "9fab685661fa1c78ea44aedcd0fd9895406fadfe12833e557af02c37cb5b137e",
+      "title": "千葉銀行、全社DX基盤にMicrosoft 365 E5を導入しセキュリティ強化　アバナードが支援",
+      "url": "https://enterprisezine.jp/news/detail/24834",
+      "description": "2026年8月7日、アバナードは千葉銀行グループの全社共通DX基盤の構築においてMicrosoft 365 E5導入によるセキュリティ変革を支援したと発表した。千葉銀行は、グループ各社や関連団体を含...",
+      "publishedAt": "2026-08-07T02:10:00.000Z",
+      "feedName": "EnterpriseZine"
+    },
+    {
+      "id": "4e2612b63b7200efdf43214b62153c2f142ae88408d95777346f7c72c86c9482",
+      "title": "JavaScript Array Methods Explained",
+      "url": "https://dev.to/nikita_maharana_879884df2/javascript-array-methods-explained-29dl",
+      "description": "When I first started JavaScript, I always got confused between forEach(), map(), and filter(). They all loop through an array, but they don't do the same thing.\nHere's the easiest way to remember them.\n1. forEach() – Just Visits Every Element\nYou can imagine as if forEach() is saying:\n\"Go through every element and perform some work.\"\nIt does not create a new array and does not return anything.\neg:\nconst numbers = [1, 2, 3, 4];\n\nnumbers.forEach((value, index) => {\n    console.log(index, value);\n});\n\nOutput\n0 1\n1 2\n2 3\n3 4\n\nYou can also modify another array.\nconst arr = [1, 2, 3, 4];\nconst squares = [];\n\narr.forEach((value, index) => {\n    squares[index] = value * value;\n});\n\nconsole.log(squares);\n\nOutput\n[1, 4, 9, 16]\n\nNow lets see  how trying to return something doesn't work.\nconst arr = [1, 2, 3, 4];\n\nconst result = arr.forEach((value) => {\n    return value * 2;\n});\n\nconsole.log(result);\n\nOutput\nundefined\n\nImp Point Over here: forEach() is mainly used when you want to perform side effects like printing, updating the DOM, making API calls, or modifying another variable.\n\n\n2. map() – Transform Every Element\nUse map() when you want a completely new array.\neg:\nconst arr = [1, 2, 3, 4];\nconst doubled = arr.map(value => value * 2);\nconsole.log(doubled);\n\nOutput\n[2, 4, 6, 8]\n\nAnother example:\nconst arr = [1, 2, 3, 4];\nconst evenCheck = arr.map(value => value % 2 === 0);\nconsole.log(evenCheck);\n\nOutput\n[false, true, false, true]\n\nNote it here map() returns something for every element.\nconst arr = [1, 2, 3, 4];\n\nconst result = arr.map(value => {\n    if (value % 2 === 0) {\n        return value;\n    }\n});\n\nconsole.log(result);\n\nOutput\n[undefined, 2, undefined, 4]\n\nThat's because map() must return one value for every position in the array.\n3. filter() – Keeps Only Matching Elements\nfilter() is quite different. It doesn't return one value for every element.\nInstead, it asks:\n\"Should I keep this element?\"\n=> If the callback returns true, the element stays.\n=> If it returns false, the element is removed.\nconst arr = [1, 2, 3, 4];\nconst evenNumbers = arr.filter(value => value % 2 === 0);\nconsole.log(evenNumbers);\n\nOutput\n[2, 4]\n\nA simple way to remember it:\nmap() → transforms every element.\nfilter() → keeps only matching elements.\n4. some() – Is At Least One Element Matching?\nsome() returns true as soon as one element satisfies the condition.\nconst arr = [1, 2, 3, 4];\n\nconst result = arr.some(value => value % 2 === 0);\n\nconsole.log(result);\n\nOutput\ntrue\n\nAnother example:\nconst arr = [1, 3, 5, 9];\n\nconsole.log(arr.some(value => value % 2 === 0));\n\nOutput\nfalse\n\n5. every() – Do All Elements Match?\nevery() returns true only if every element satisfies the condition.\nconst arr = [8, 2, 4, 6];\nconst result = arr.every(value => value % 2 === 0);\nconsole.log(result);\n\nOutput\ntrue\n\nExample where it fails:\nconst arr = [8, 2, 5, 6];\n\nconsole.log(arr.every(value => value % 2 === 0));\n\nOutput\nfalse\n\nsort() – It says Be Careful!\n\n\nMany beginners expect sort() to sort numbers correctly.\nstrings.\nconst arr = [5, 4, 6, 1, 11, 51];\n\nconsole.log(arr.sort());\n\nOutput\n[1, 11, 4, 5, 51, 6]\n\nHere JS considers 1 as first or smallest then 11 then 4 it doesnot see it as eleven it sees as 'one one';\nFor numbers, always provide a comparison function.\nAscending order\narr.sort((a, b) => a - b);\n\nOutput\n[1, 4, 5, 6, 11, 51]\n\nDescending order\narr.sort((a, b) => b - a);\n\nOutput\n[51, 11, 6, 5, 4, 1]\n\nBut you must be wondering Why does this work?\n(a, b) => a - b\n\nNegative value → keep a before b\n\nPositive value → swap them\nZero → keep their order\nforEach → \"Do something.\"\nmap → \"Change everything.\"\nfilter → \"Keep only what I need.\"\nsome → \"At least one?\"\nevery → \"Everyone?\"\nsort → \"Arrange them.\"\nOnce I understood these six methods, writing cleaner JavaScript became much easier.",
+      "publishedAt": "2026-08-07T02:03:52.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "431e321be438c63b6ce0587dd24706ce191b63b8b877d2d7d619181f792fb237",
+      "title": "Debugging a GNOME Shell layout collapse: how a 4,294,967,296 px preferred height collapsed St.ScrollView to 1 px",
+      "url": "https://dev.to/fedor-pasynkov/how-a-single-int32-1-broke-gnome-shell-layout-math-uint32-overflow-4294967296-and-stscrollview-6c2",
+      "description": "Debugging a GNOME Shell layout collapse: how a 4,294,967,296 px preferred height collapsed St.ScrollView to 1 px\n\n\n\nTested Environment:\nOS: Ubuntu 22.04.5 LTS (Linux x86_64)\nRuntime: GNOME Shell 42.9 (GJS 1.72.4), Mutter 42.0+\nSession: Wayland & X11\nImagine this scenario: you are developing an extension or desktop UI component for GNOME Shell using JavaScript (GJS). The extension loads cleanly with zero errors in journalctl. All GObjects are instantiated, icons are built, but on the screen... absolute void.\nWhen you log the actor geometry to the console, you see an unusual output:\nappsScroll=1\nappsBox=1\nstatus=4294967040\n\nThe parent St.ScrollView container has collapsed to a height of 1px, turning your interface into an invisible line across the screen. Meanwhile, its child grid actor claims its natural height is... 4,294,967,296 pixels (over 4 million kilometers — more than ten times the distance from Earth to the Moon!).\nIn this article, we will walk through the debugging investigation: from recursively traversing the Clutter Scene Graph to examining floating-point (gfloat) precision boundaries near $2^{32}$.\nWhen an element vanishes in Clutter/St, the initial hypothesis is usually an opacity issue (opacity = 0), visibility toggle (visible = false), or a z-index clipping problem. However, checking actor state confirms that elements exist in the Scene Graph.\nTo identify which container breaks layout calculations, we write a recursive helper function to inspect the Clutter Actor Tree:\nfunction inspectActorTree(actor, depth = 0) {\n    // In get_preferred_height(-1), -1 represents an unconstrained width query (for_width = -1)\n    let [minH, natH] = actor.get_preferred_height(-1);\n    let alloc = actor.get_allocation_box();\n    let name = actor.get_name() || actor.constructor.name;\n    console.log(`${' '.repeat(depth * 2)}${name}: minH=${minH}, natH=${natH}, allocH=${alloc.get_height()}`);\n\n    actor.get_children().forEach(child => inspectActorTree(child, depth + 1));\n}\n\nRunning this inspection tool outputs the critical clue:\nStBoxLayout (parent): minH=0, natH=4294967296, allocH=600\n  StScrollView: minH=1, natH=4294967296, allocH=1   <-- Root cause container!\n    ChildGridActor: minH=0, natH=4294967296, allocH=0\n\nThe child grid ChildGridActor reports a natural height natH = 4294967296. Seeing this astronomical request, the parent St.ScrollView collapses to 1px.\nLet's separate confirmed observations from what currently serves as a working hypothesis.\n-1 (for_width)\n\n\nIn get_preferred_height(-1), -1 is the input parameter for_width, representing an unconstrained width query in Clutter (clutter_actor_get_preferred_height). One working hypothesis is that an invalid or unconstrained size entered the preferred-size calculation when intermediate containers lacked explicit minimum dimensions or had conflicting x_align/y_align flags.\nCaveat on Root Cause Limits: The exact location of the signed-to-unsigned conversion in Mutter or St C source code has not yet been isolated to a specific line of code. The breakdown below represents a plausible working hypothesis consistent with empirical evidence.\ngfloat Precision at $2^{32}$ and Values 4294967296 / 4294967040\n\n\nIn Clutter's C implementation (clutter/clutter-box-layout.c), layout sizes pass through gfloat (32-bit IEEE 754 single-precision floating point numbers).\nNear $2^{32}$, single-precision floats lose unit precision:\n$2^{32} = 4,294,967,296$\n$2^{32} - 256 = 4,294,967,040$\nThe logged values — 4,294,967,296 ($2^{32}$) and 4,294,967,040 ($2^{32} - 256$) — match adjacent representable values in gfloat arithmetic near the $2^{32}$ boundary. This provides strong mathematical evidence that the value corruption passed through floating-point size evaluation.\nClutterBoxLayout\n\n\nDuring vertical layout allocation, the parent container sums natural heights across siblings (natH). Seeing a request of 4 billion pixels ($2^{32}\\text{ px}$), ClutterBoxLayout determines that constraints cannot be satisfied. A safety fallback triggers: the layout manager abandons natural height distribution and allocates St.ScrollView its minimum baseline requirement — 1px.\nBefore finding the correct fix, 3 plausible workarounds were tested, each creating regressions:\nmin-height in CSS\n\n\n\n\n\n.my-scroll-view {\n    min-height: 300px;\n}\n\nWhy it failed: The 1px collapse stopped, but ScrollView lost responsiveness: it stopped adapting dynamically to screen resolution changes and clipped overflowing content.\nactor.queue_relayout() in Constructor\n\n\n\n\n\n_init() {\n    super._init();\n    // Attempting to force relayout during construction\n    this.queue_relayout(); \n}\n\nWhy it failed: Calling queue_relayout() inside _init() while GObject properties were partially initialized triggered a recursive layout cycle during startup. This resulted in an empty AppFavorites grid race condition on boot.\nSetting actor geometry simultaneously from JavaScript (actor.set_width(...)) and CSS (stylesheet.css) created conflicting layout loops where JS and CSS layout managers continuously overwrote allocation boxes.\nTo test size constraint sensitivity during diagnosis, setting hardcoded bounds acts as an illustrative workaround:\ngrid.set_size(200, 300); // Diagnostic workaround to confirm constraint sensitivity\n\nFor the production adaptive fix:\nSingle Geometry Owner: Manage dimensions and expansion in one location (JS via Clutter actor flags).\nAlign Container Constraints: Remove conflicting x_align and y_align parameters from intermediate wrappers.\nUse Expansion Flags: Use x_expand: true and y_expand: true so the parent layout manager handles dynamic sizing cleanly.\n\n\n\n\n- const grid = new St.Widget({ \n-     x_align: Clutter.ActorAlign.CENTER, \n-     y_align: Clutter.ActorAlign.FILL \n- });\n- grid.queue_relayout();\n\n+ const grid = new St.Widget({\n+     style_class: 'app-grid',\n+     x_expand: true,\n+     y_expand: true,\n+ });\n\nRun bash verify.sh to check JS syntax across reproduction/, broken/, and fixed/, verify metadata structure, and execute tools/validate_cases.py:\nbash cases/gnome-shell/st-boxlayout-invalid-natural-height/verify.sh\n\nInstall and enable the extension in a GNOME Shell 42.9 session (Ubuntu 22.04.5 LTS).\nOpen the side panel containing St.ScrollView.\nConfirm appsScroll allocation height is $> 100\\text{px}$ and icons render cleanly without collapsing.\nThe observed failure is real: a child actor reported an enormous preferred height near the 32-bit unsigned/float boundary, after which St.ScrollView received only a 1px allocation.\nThe logged numbers ($4,294,967,296$ and $4,294,967,040$) match gfloat precision limits near $2^{32}$. However, the exact low-level conversion point in Mutter or St source code remains a working hypothesis rather than a fully proven C-code line reference.\nThe practical fix was to eliminate conflicting alignment rules and pass x_expand/y_expand cleanly to a single geometry owner. Honest demarcation of evidence boundaries makes this investigation technically rigorous and reliable for desktop developers.",
+      "publishedAt": "2026-08-07T01:47:23.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "ef23abddffda4bcde8d4f4ceb767146215f85c59b1cf39da146fe75ec488aaa6",
+      "title": "Replacing Model Routes Behind One API Key Without Corrupting Node.js Classification Data",
+      "url": "https://dev.to/valenciamoss6824/replacing-model-routes-behind-one-api-key-without-corrupting-nodejs-classification-data-2ie7",
+      "description": "Treat every model change as a data migration: keep one application credential and one chat-completions-shaped boundary if that simplifies the Node.js service, but never let a routing decision overwrite a previously accepted classification without a versioned schema, provenance, and an explicit promotion rule.\nThat is the short answer. Replacing several provider integrations with one API key reduces credential exposure in the caller; it does not make models equivalent, and it does not remove the upstream credentials from the trusted routing service. The hard part is preserving the meaning of labels while prompts, models, and adapters change. A response that parses cleanly can still be incompatible with the taxonomy that downstream queries expect.\nStorage makes that mistake durable.\nFor a tagging workload, the useful abstraction is smaller than a universal AI client. Define a classification command with an immutable item identifier, input text or a controlled reference to it, a taxonomy version, and a deadline class. Define the accepted result as the same item identifier, exactly one allowed label or an explicit abstention, plus the versions of the taxonomy, prompt, route, and model that produced it.\nThe application owns the item and the business deadline. A routing service authenticates the application's single key, selects an adapter under policy, and holds upstream credentials in separate secret scopes. The adapter translates the common request into a provider-specific request. None of those layers gets to decide that an unknown label is \"close enough\" to a known one.\nThis boundary is deliberately narrow. Chat completions can be the transport shape, and schema-constrained generation can reduce malformed responses, but generated JSON is still untrusted input until a deterministic validator checks it. Structured Outputs documents how a response can follow a supplied JSON Schema; it does not relieve the consumer of checking the item identity, active taxonomy version, or commit preconditions.\n\n\n\nConstraint\nBoundary that enforces it\nFailure if omitted\n\n\n\n\nOne caller credential\nRouting service\nProvider secrets spread across application deployments\n\n\nClosed label set\nResult validator\nPlausible new labels silently enter storage\n\n\nStable item identity\nValidator and data layer\nA valid answer attaches to the wrong record\n\n\nPinned route per attempt\nRouter and attempt log\nA retry changes semantics without evidence\n\n\nOne promoted result\nConditional storage write\nRacing attempts overwrite each other\n\n\n\nThe one-key design is therefore a security and operations choice, not proof of semantic portability. It is useful when several server-side callers need the same policy and audit boundary. It is not suitable when the team cannot operate credential rotation, quotas, adapter conformance, and audit retention for that extra service; keep direct integrations behind a local interface in that case, even though the server will hold multiple keys.\nYes, if Node.js sends a provider-neutral command and the system treats routing metadata as part of the stored evidence rather than disposable telemetry. The route should be selected from declared properties such as taxonomy support, data region, input size, latency class, and synchronous versus batch execution. Once an attempt begins, pin its route. A timeout may justify another attempt, but it must not erase which model handled the first one.\nThe dangerous case is ambiguous completion. Imagine attempt a-1041 reaches an upstream service, the caller loses the response, and policy immediately sends a-1042 elsewhere. Both answers may be syntactically valid and disagree at a difficult class boundary. If the data layer accepts whichever arrives last, network timing has become the classification policy. That is indefensible.\nUse an idempotency key for the logical command and a distinct ID for every attempt. Store candidate results append-only. Promotion should be a conditional operation against the current taxonomy and result version, with a conflict reported as a normal concurrency outcome rather than repaired by a blind overwrite. Short code is enough to show the boundary; the production implementation can use a transactional database, a compare-and-swap object, or another store with equivalent conditional-write semantics.\nfrom dataclasses import dataclass\nfrom typing import Literal\n\n\nLabel = Literal[\"billing\", \"defect\", \"feature\", \"other\", \"abstain\"]\n\n\n@dataclass(frozen=True)\nclass Candidate:\n    item_id: str\n    command_id: str\n    attempt_id: str\n    label: Label\n    taxonomy_version: str\n    prompt_version: str\n    route_id: str\n    model_id: str\n\n\ndef promote(\n    candidate: Candidate,\n    *,\n    expected_item_id: str,\n    active_taxonomy: str,\n    current_result_version: int,\n) -> dict[str, object]:\n    if candidate.item_id != expected_item_id:\n        raise ValueError(\"IDENTITY_MISMATCH\")\n    if candidate.taxonomy_version != active_taxonomy:\n        raise ValueError(\"TAXONOMY_VERSION_REJECTED\")\n    if candidate.label == \"abstain\":\n        raise ValueError(\"ABSTENTION_REQUIRES_REVIEW\")\n\n    return {\n        \"condition\": {\"result_version\": current_result_version},\n        \"next_result_version\": current_result_version + 1,\n        \"candidate\": candidate,\n    }\n\nThose symbolic errors are intentional. TAXONOMY_VERSION_REJECTED tells an operator which contract failed without logging the source text, while a generic invalid payload collapses identity, schema, and policy failures into one useless bucket. I've kept the example free of SDK calls because the wire protocol is the replaceable part; the commit invariant is not.\nDo not automatically retry every failure. A connection interruption before acceptance may be retryable under the command deadline. Authentication rejection needs secret or configuration repair. A schema-invalid answer is not made safe by repeatedly requesting the same thing. A content-policy refusal or abstention is an outcome that needs an explicit product rule. Normalize these categories at the adapter boundary, retain the provider's correlation identifier in restricted telemetry when available, and keep raw input out of ordinary logs.\nA model route is ready for consideration only after it has run against a frozen, reviewed evaluation set that represents the stored population: common cases, minority classes, ambiguous boundaries, empty content, Unicode, oversized input, instruction-like text embedded in the document, and cases expected to abstain. Split results by label and cohort. An aggregate accuracy figure can conceal a route that improves the dominant class while damaging the rare class that triggers an expensive workflow.\nCompare schema-valid rate, abstention rate, confusion by class, latency distribution, and usage-based cost per accepted result. Cost belongs in the decision, but it cannot compensate for label corruption or a privacy mismatch. I'm not sure a single weighted score is defensible unless the business has written down the loss attached to each error type; a vector of measures is less convenient and more honest.\nBatch execution deserves a separate contract. The Batch API guide describes asynchronous processing through uploaded request files and a completion window, so it fits evaluation runs and backfills differently from an interactive classification request. Preserve a custom identifier that maps every batch row back to the immutable command, and do not assume returned rows can be committed in request order. Interactive traffic, by contrast, needs a bounded deadline, cancellation behavior, and a decision about what the caller sees when no accepted classification exists.\nTest adapters for behavior, not just request compatibility. The conformance suite should cover malformed JSON, an extra field, a missing identifier, an out-of-taxonomy label, an old schema version, refusal, deadline expiry, duplicate delivery, and two valid candidates racing for promotion. Test that sensitive text is absent from routine telemetry. Then inspect model and adapter documentation for schema enforcement, token accounting, regional processing, retention, and batch semantics; similar envelopes do not establish similar guarantees.\nThis takes longer than checking that message.content contains a label.\nIt also catches the failures that matter.\nThree deployment shapes can expose a stable interface to Node.js. None wins universally.\n\n\n\nShape\nBest fit\nOperational cost\nMain limitation\n\n\n\n\nIn-process adapters\nOne service, small team, few routes\nMultiple secrets and adapter releases travel with the app\nPolicy and audit behavior can drift between callers\n\n\nInternal routing service\nSeveral callers need shared policy and one application key\nTeam owns availability, rotation, quotas, and conformance\nAdds a network hop and a control plane\n\n\nManaged multi-model gateway\nTeam wants outsourced adapter operations\nExternal dependency must satisfy data and audit controls\nCommon syntax may expose only a subset of model-specific capabilities\n\n\n\nChoose based on who will own the failure modes. An internal gateway is a poor bargain when nobody is accountable for its on-call path. In-process adapters are a poor bargain when ten services independently implement secret rotation and fallback. A managed gateway is not suitable when policy requires a deployment region, retention behavior, or audit detail that its contract does not guarantee; stick with a directly controlled route in that case.\nAvoid claiming that switching a model requires no code change. A stable request envelope can prevent application rewrites, but a taxonomy change still requires data migration, a new prompt may change class boundaries, and a provider-specific capability may demand an adapter extension. The honest promise is narrower: business code does not change for a route that already conforms to the tested classification contract.\nBegin by versioning the current taxonomy and prompt, then capture a reviewed evaluation set from lawful, access-controlled samples. Add the candidate adapter and run conformance tests. Shadow production-shaped traffic only where the data policy permits it, writing candidate outputs to an append-only evaluation store rather than the canonical label column. Compare disagreements by cohort, review the expensive ones, and canary promotion for a deliberately bounded slice.\nDuring expansion, monitor route, model, schema, prompt, attempt, normalized outcome, latency, and usage without putting raw sensitive text into general logs. Keep the previous promotion policy available until the new route has passed the agreed observation window. Rollback changes which candidate may be promoted; it does not delete evidence or restore labels by replaying an unversioned prompt.\nThe final acceptance test is pleasantly dull: the Node.js caller still submits the same command with the same application key, every stored label names the contract and route that created it, duplicate attempts cannot race into the canonical field, and an operator can explain a rejection from its error category without opening the original text. Model routing is successful when changing the model is controlled and observable, not when the adapters happen to share JSON punctuation.\nOpenAI, \"Batch API guide\": https://platform.openai.com/docs/guides/batch\n\nOpenAI, \"Structured Outputs guide\": https://platform.openai.com/docs/guides/structured-outputs",
+      "publishedAt": "2026-08-07T01:41:02.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "64c54d10b6a099d98539b50f55aaacb7a26d8c9668143e28755abdf251e57726",
+      "title": "セルフホスト型の分散Durable Objects／Workers実装「celld」発表",
+      "url": "https://gihyo.jp/article/2026/08/celld?utm_source=feed",
+      "description": "Node.jsやDenoの開発者として知られるRyan Dahl氏は2026年8月5日、セルフホスト型の分散Durable Objects／Workers実装「celld」を発表、Apache 2.0ライセンスのもとオープンソースとしてGitHub上で公開されている。",
+      "publishedAt": "2026-08-07T00:13:00.000Z",
+      "feedName": "gihyo.jp"
+    },
+    {
+      "id": "0d638b46556f73813b72bb7e4eb414e7e70be2cbaa48b60585aab804000494b1",
+      "title": "医療情報システムの安全管理に関するガイドライン第7.0版の改定ポイントをAWSアーキテクチャの観点で整理してみた",
+      "url": "https://dev.classmethod.jp/articles/iro-guideline70-aws/",
+      "description": "医療情報システムのガイドライン第7.0版が改定されました。本記事では、この改定内容をAWSクラウド上での設計・運用にどう落とし込むかを整理します。保守委託や脆弱性対策、認証方式など、実装に影響しそうなポイントを確認してみます。",
+      "publishedAt": "2026-08-07T00:06:14.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "433d04552f50c4f6c81719345f4132675bc636a172f0dec76a26d111a514fa73",
+      "title": "未曾有のトレンドが押し寄せる今、ガートナーの専門家が重圧に悩むセキュリティリーダーへ送るアドバイス",
+      "url": "https://enterprisezine.jp/article/detail/24780",
+      "description": "経営層からは、「AI活用をビジネスの価値創出につなげてほしい」というプレッシャーが高まるばかり……。この難局において、セキュリティリーダーはどう組織に貢献すればよいのか。来日したガートナーのアナリストであるトム・ショルツ氏に、同社が発表した2026年のサイバーセキュリティ トップ・トレンドをもとに解説してもらった。",
+      "publishedAt": "2026-08-07T00:00:00.000Z",
+      "feedName": "EnterpriseZine"
+    },
+    {
+      "id": "65010f0b8be92658602da1d5f84c8715d08aa18976c9e8455bbc28c3c82783d2",
+      "title": "Sysdig、CNAPP上で独自開発のセキュリティAIを発表　マシンスピードの攻撃に対抗する防御側の実働AI部隊",
+      "url": "https://enterprisezine.jp/news/detail/24832",
+      "description": "Sysdigは、「Sysdig Secure CNAPP」上に構築されたAIネイティブの新製品「Sysdig Secure AI」を発表した。AIを活用した攻撃と同じ速度でチームが防御できるよう支援...",
+      "publishedAt": "2026-08-06T22:20:00.000Z",
+      "feedName": "EnterpriseZine"
+    },
+    {
+      "id": "cf9a95c6826bd683ca51d05a9d44c29f7477454e62cc69f12a7d73dc0002f08b",
+      "title": "平和ボケの代償？　ニチレイショックの裏で進行する“ド級のデータ漏えい”",
+      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2608/07/news041.html",
+      "description": "大手タクシー会社「日本交通」で現在進行形で進むランサムウェア被害。2.9TBに及ぶ大規模なデータ漏えいの実態とその裏にあるセキュリティ管理の課題に、日本ハッカー協会代表理事の杉浦隆幸氏と迫る。",
+      "publishedAt": "2026-08-06T22:15:00.000Z",
+      "feedName": "＠IT"
+    },
+    {
+      "id": "f31e36fa1facf9ba482bb4bd8545bbeba35d287656b0c8c76ae5dec7d9e94b9b",
+      "title": "LRM、セキュリティ教育クラウド「セキュリオ」に新機能　従業員の“行動変容”を実現する",
+      "url": "https://enterprisezine.jp/news/detail/24830",
+      "description": "LRMは、セキュリティ教育クラウドサービス「セキュリオ」において、従業員の行動変容の実現を支援する新機能「ユーザーダッシュボード」を提供開始した。\n\n　同機能は、受講態度などの「行動」を軸に、セキュ...",
+      "publishedAt": "2026-08-06T22:00:00.000Z",
+      "feedName": "EnterpriseZine"
+    },
+    {
+      "id": "c19ce84ad822de26d75582c862f08eba64a7590b97f648fbc6b9725f1213efdb",
+      "title": "「日本のセキュリティ信仰は構造的にズレてる」　コスパよく、すぐ救われる“左側”の防衛術",
+      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2608/07/news012.html",
+      "description": "「高額な製品を導入すれば安心だ」――そんな日本のセキュリティ信仰は、構造的にズレているのかもしれない。攻撃者エコシステムが拡大し、勢いを増す中、セキュリティ担当者はわざわざ不利な戦場で戦わされている。東京大学 先端科学技術研究センターの西尾素己氏が、認証情報保護に関する新たな視点と、防御側が「絶対的に優位」に立てる“左側”の戦場について明かした。",
+      "publishedAt": "2026-08-06T20:00:00.000Z",
+      "feedName": "＠IT"
+    },
+    {
+      "id": "93887e04c30ff773e4b588a3860302e6497897b854da689211d66c4c21b697a0",
+      "title": "Claude Code v2.1.223 の主要アップデート - 権限バイパスの修正と /review の /code-review 統合",
+      "url": "https://dev.classmethod.jp/articles/20260806-cc-updates-v2-1-223/",
+      "description": "Claude Code v2.1.223がリリースされました。セキュリティ修正4件に加えて、/review の /code-review 統合やコンテキストウィンドウ制御の変更など、運用に影響する重要なアップデートが含まれています。",
+      "publishedAt": "2026-08-06T13:56:42.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "1dbbb31c83b168042b6e74e4ac7a8511649ef0db77faf450f690e4613be97197",
+      "title": "メタのAIモデルも他社に侵入　社内システムを変更か",
+      "url": "https://www.cnn.co.jp/tech/35251344.html",
+      "description": "メタのAIモデルがサイバーセキュリティーのテスト中に他社のシステムへ侵入した/Francis Mascarenhas/Reuters/File （CNN） フェイスブックとインスタグラムを運営するメタの人工知能（AI）モデルがサイバーセキュリティーのテスト中に他社のシステムへ侵入した。広報が5日に確認した。自社のAIエージェントが暴走した企...",
+      "publishedAt": "2026-08-06T13:08:26.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "f85ea535601eaf55e7900ba3cad4da96f50da8c15b9d7c9fae5aec0729889e89",
+      "title": "AWS DevOps Agent のスキルを GitHub リポジトリからインポートしてみた",
+      "url": "https://dev.classmethod.jp/articles/aws-devops-agent-skill-import-from-github-repository/",
+      "description": "できました。ただしネイティブの GitHub 連携が必須。",
+      "publishedAt": "2026-08-06T09:28:35.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "2b476bfc6b195f2d5a2d6190673b227272683431b28ded0e1552a1ca1e737a8a",
+      "title": "Storybookとは？ UIコンポーネントを効率よく開発・確認するウェブのツール - ICS MEDIA",
+      "url": "https://ics.media/entry/260806/",
+      "description": "Reactなどで作るコンポーネントは、渡すデータによって見た目が変わります。たとえば次のようなパターンは、普段の開発用データでは確認できないことがあります。 一覧が0件のとき スクロールが必要なほど件数が多いとき カードなどで文言が極端に長いとき 画面遷移やデータの準備をしてから各パターンを見に行く手間も...",
+      "publishedAt": "2026-08-06T07:50:09.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "91f6ddeb5bc469f349d691c8cbd9733cb1cb9a24389d0ec79141471030f52acc",
+      "title": "「1人1AI」のアプローチは破綻する――チームでAI共有時のセキュリティ問題を解決するベストプラクティス",
+      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2608/07/news022.html",
+      "description": "Anthropicは、「Claude Tag」における「エージェントアイデンティティー」アクセスモデルの仕組みと、チームのワークスペースでこれを構成する際のベストプラクティスを解説したブログ記事を公開した。",
+      "publishedAt": "2026-08-06T07:00:00.000Z",
+      "feedName": "＠IT"
+    },
+    {
+      "id": "f6b484b4982617f2ef5dc26ae46c52bdd15a233e80b5565af9f5e1a1ad93179d",
+      "title": "KiroCrew公式DockerイメージをEC2で動かしてTailscale経由の接続を試してみた",
+      "url": "https://dev.classmethod.jp/articles/kiro-crew-docker-tailscale-ec2/",
+      "description": "前回EC2上に直接インストールしたKiroCrewを、Dockerコンテナを隔離境界として運用し、Tailscale Serve経由でtailnet内からアクセスできる構成を試しました。SSMによる有人セットアップ、named volume構成、アクセスログに記録される項目も確認します。",
+      "publishedAt": "2026-08-06T06:38:41.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "96b9767d676659bd6a00564c1dc7bc373171263f9b2a74b5c5b65880f2c0df38",
+      "title": "たった3人の情シス室、インシデント後の対策は「むしろ運用を減らす」　どう強化した？",
+      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2608/05/news053.html",
+      "description": "東邦化学工業ではセキュリティインシデントが発生し、専門家の即時介入が必要になったという。3人の情報システム室は、そこから何をどう立て直したのか。",
+      "publishedAt": "2026-08-06T04:00:00.000Z",
+      "feedName": "＠IT"
+    },
+    {
+      "id": "51c816f80f1ecc6d4549c7e70730e5f1ec0c4dff204b8f558c04ff1fd0226f1f",
+      "title": "GitHub Actions Runner を手元の MacBook Pro で動かす話",
+      "url": "https://dev.classmethod.jp/articles/self-hosted-runner-with-mbp/",
+      "description": "AIがコード量を増やしたことで、CIのe2eテスト実行時間が悩みの種になってしまいました。AWS上でのランナー構築を検討した結果、最終的には手持ちのMacBook ProをLimaで仮想化し、セルフホストランナーとして活用する方法にたどり着きました。その実装と工夫を紹介します。",
+      "publishedAt": "2026-08-06T02:58:39.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "30d69b07c803b03bb041cd7636d522bbb9b700b809496f90baab0c6ef42c78c2",
+      "title": "Flutter × slangで多言語対応を実装する | build_runnerで詰まった失敗談と回避策",
+      "url": "https://qiita.com/usui0623/items/4e41063519aaca5fe4e7?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\nソーイ株式会社の臼井です。前回は、Vue.jsとLaravelを使用したWebアプリの多言語対応について書きました。今回は、Flutterアプリでslangを使用して多言語対応を実装した方法を紹介します。\n実装中にbuild_runnerによる翻訳コードの生成が...",
+      "publishedAt": "2026-08-06T02:56:50.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "fa10db775ef973887bdfb84fa3c50255e196bab8399ecf576fe26d10bdac291c",
+      "title": "依存パッケージなしのTypeScript製スプレッドシートエンジン「hucre」v1.0.0が公開",
+      "url": "https://gihyo.jp/article/2026/08/hucre?utm_source=feed",
+      "description": "オープンソース開発者のWind氏は8月4日、スプレッドシートエンジン「hucre」v1.0.0を公開した。XLSX、CSV、ODS、JSON、NDJSON、XMLの読み書きに対応するTypeScript製のライブラリで、実行時の依存パッケージを必要としない。ライセンスはMIT。",
+      "publishedAt": "2026-08-06T02:27:00.000Z",
+      "feedName": "gihyo.jp"
+    },
+    {
+      "id": "ac58e465da6c192d0ff721857414a852054a22b3a21ed3506a959aa81fc482fa",
+      "title": "Amazon Quick で実現する分析の民主化と業務自動化",
+      "url": "https://qiita.com/somasun_aws/items/b10f22fa87ab8379fc0a?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\nこんにちは。\nこの記事は「2026 Japan AWS Jr. Champions 真夏のQiitaリレー」6日目の記事となります。\n過去の投稿（リンク集）はこちらからご覧ください。\nhttps://qiita.com/ys-yoshida/private/6f...",
+      "publishedAt": "2026-08-05T23:20:00.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "b9d9d218590513fab6d7a911c646888d839608ef89f837e8e1722fce4ff3a6ae",
+      "title": "ARC Region Switch で実現する 10 分以内の自動リージョン切り替え [DeNA インフラ SRE]",
+      "url": "https://engineering.dena.com/blog/2026/08/disaster-recovery-automation/",
+      "description": "はじめに こんにちは、 IT 本部 IT 基盤部 第三グループの横野です。\nDeNA では、全社的な業務を支える基盤サービスが多数存在します。その中には、リージョン障害が発生した場合でも 目標復旧時間（RTO）が 10 分のサービスなど、特に高い可用性が求められるサービスもあります。こうした要件を満たすため、私たちは Disaster Recovery（DR）の自動化に取り組みました。\n本稿では、そのような厳しい要件を持つサービスに対して、どのように障害を正確に検知し、高可用性な自動切り替えメカニズムを実現したのか、そのアーキテクチャと具体的な仕組みについてご紹介します。読者の皆さんが、高い可用性を要求されるサービスにおける DR 自動化の一例について理解を深めていただければ幸いです。",
+      "publishedAt": "2026-08-05T15:00:00.000Z",
+      "feedName": "DeNA Engineering"
+    },
+    {
+      "id": "2de741549c15fa8eab7c7d4a3fbdf33516a40bfecd3c3db5d829a3e98c6ae292",
+      "title": "検索処理のN+1問題をElastiCache Serverless for Valkeyで解消する",
+      "url": "https://qiita.com/usanchuu/items/03893a68d6b843379971?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "この記事は「2026 Japan AWS Jr. Champions 真夏のQiitaリレー」の5日目の記事となります。\n過去の投稿（リンク集）と昨日投稿の記事は以下からご覧ください。\n\nはじめに\n位置情報から最寄り地点を探し、その地点に紐づく情報をさら...",
+      "publishedAt": "2026-08-05T11:16:37.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "71d62a1ef5415929ad9704de6806fe90f46d75313b9488dec74814786e67aebb",
+      "title": "脆弱性を作り込まないために、Claude公式「Security Guidance Plugin」を導入した話",
+      "url": "https://zenn.dev/rakko_inc/articles/claude-code-security-guidance-intro",
+      "description": "AI にコードを書かせるようになって、実装のスピードが上がりました。\n一方で次なる課題も山のようにありますよね。\n今日はその中から「セキュリティ対策」をテーマに選びました。\n実装コードレベルの脆弱性をどのように予防するか？ という話をしたいと思います。\n結論だけ先に言うと、「とりあえずSecurity Guidance Pluginを入れましょう」です。\n\n レビューが追いつかなくなっている\n昨今の状況を整理すると、どこの開発現場も似たような状態ではないでしょうか？\n\nPRの数が増えるが、レビューする側の人数は変わらない\n追いつかない分はAIレビューに任せる、レビューの質に不安が残る\n認...",
+      "publishedAt": "2026-08-05T09:25:00.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "a75aa7a0353cbfd54e6cf57f5822a52eebe7df91ece84708466e4b607e8f8565",
+      "title": "SkillをGitHub Copilotで\"育てる\" — 実証的プロンプト改善の実践レポート",
+      "url": "https://zenn.dev/aiforall/articles/cb36b724e20a43",
+      "description": "はじめに\nプロンプトの細かな差異（空白の有無、指示の構造など）は、LLM の回答の質を大きく左右します。「なんとなく書いたら動いた／動かなかった」を卒業するには、勘ではなくテスト駆動で Skill を育てていく発想が有効です。\nこの記事では、mizchi 氏が提唱する「empirical-prompt-tuning」の手法を GitHub Copilot 環境で試し、意図的に品質を落とした regex-builder(正規表現生成) Skill を反復的に改善していった記録を紹介します。\n\n 検証環境\n\n\n\n項目\n詳細内容\n\n\n\n\n実行環境\nGitHub Copilot Chat\n\n...",
+      "publishedAt": "2026-08-05T08:23:13.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "81afee1d86f481d3809d939c6324e69e5fc1717b1b3b3afffb23b41dd59bc386",
+      "title": "仕様書から保証台帳へ、GDD（保証駆動開発）のすすめ",
+      "url": "https://zenn.dev/yktsnet/articles/202608-guarantee-driven-development",
+      "description": "Claude Code に実装を投げるようになって、バグ修正も機能追加も、以前なら手を出さずに置いていた量までこなせるようになりました。同時に増えたのが手戻りです。直したところが次の変更で戻る、関係ないと思っていた場所が壊れる。作れる量が増えたぶん、壊す量も増えました。\n守ってくれるのはテストです。ただ、そのテストも Claude Code が書いています。走らせれば緑になり、diff をざっと見て通し、本数だけが増えていきます。そして次に手を入れるとき、いま何が守られているのかを知る方法が tests/ を上から読むことしかありません。\nかといって、変更のたびに「壊していないか全部確認...",
+      "publishedAt": "2026-08-05T07:42:28.000Z",
+      "feedName": "Zenn"
     }
   ]
 }
