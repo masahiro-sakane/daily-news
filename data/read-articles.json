@@ -73,254 +73,6 @@
       "feedName": "クラスメソッド開発ブログ"
     },
     {
-      "id": "786bbe0245c8b2847b86ad8e530e694d29e9b0c5043e5f866347515c05d6d19a",
-      "title": "Next.js 16.3でTurbopackのメモリ使用量を劇的に減らした話",
-      "url": "https://zenn.dev/branbran/articles/2f9538ef0301c7",
-      "description": "はじめに 普段の開発ではNext.js 16を使用しているのですが、ある時バージョンをアップデートしてから、急にメモリ消費が増えたように感じるようになりました。 最初は原因を特定できず、「どこかでメモリリークしているのかな」と思いながら、定期的に再起動して一時的に軽くすることで対応していました。 しかし、開発...",
-      "publishedAt": "2026-07-09T00:46:37.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "1c7d800da3745e9cf4c202bad3c0f026ab1c8bb8990e13f2305d79b27c535499",
-      "title": "Amazon EVS への VCF 9.1 エンドツーエンド自動化デプロイ",
-      "url": "https://aws.amazon.com/jp/blogs/news/deploying-vcf-9-1-on-amazon-evs-with-end-to-end-automation/",
-      "description": "Amazon EVS のセルフデプロイモードで VCF 9.1 を自動デプロイする 3 フェーズの自動化ツールキットを解説します。Terraform で AWS 基盤を構築し、Python (boto3) で EVS 環境とベアメタルホストをプロビジョニングし、VCF Python SDK で VCF bringup から NSX Edge Cluster 設定までを完全自動化します。",
-      "publishedAt": "2026-07-09T00:42:48.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "f24f5cc21b9350f1e2dd97186126f69b07bcbe42ec26be728553eade236358bd",
-      "title": "【アップデート】Cloud Run で Cloud Run sandboxes が Preview で利用可能になりました",
-      "url": "https://dev.classmethod.jp/articles/cloud-run-sandboxes-preview/",
-      "description": "Google CloudがCloud Run sandboxesをPreviewで公開しました。LLM生成コードをカーネルレベルで隔離実行し、複雑なマルチサービスアーキテクチャ不要で、1秒未満の高速起動を実現できます。",
-      "publishedAt": "2026-07-09T00:21:22.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "7341facbc1a808351e3bc483fa76cc86112b7e810c36bd7e33fcabdc80ee2536",
-      "title": "Claude Code v2.1.204〜v2.1.205 の主要アップデート",
-      "url": "https://dev.classmethod.jp/articles/20260709-cc-updates-v2-1-205/",
-      "description": "Claude Code v2.1.204〜v2.1.205のアップデートをまとめてご紹介します。不具合修正が中心ですが、Windows でのデータ消失リスク修正や auto mode のセキュリティ強化など、実務に影響しうる変更が含まれています。",
-      "publishedAt": "2026-07-08T23:47:08.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "09239a37128ce58576951257652264bcaa0bdd25793115d2b9fcc9a0bec7d0a2",
-      "title": "Rewriting Bun in Rust | Bun Blog",
-      "url": "https://bun.com/blog/bun-in-rust",
-      "description": "Disclosure: Bun was acquired by Anthropic in December 2025. I and others on the Bun team work at Anthropic. I used a pre-release version of Claude Fable 5 for much of the Rust rewrite. Bun started as a line-for-line port of esbuild's JavaScript & TypeScript transpiler from Go to Zig. I wrote my f...",
-      "publishedAt": "2026-07-08T22:42:11.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "1040371c0f1e7a98bb8a56d77f155b764507e3ee5ee4a139669c11cdff2a2d76",
-      "title": "リモート8割、年収977万円　それでもセキュリティ人材が“最強職”になれない理由",
-      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2607/09/news040.html",
-      "description": "セキュリティ人材不足が続く中、フリーランス市場ではどのような評価を受けているのか。2万件を超える案件を分析した調査では、平均年収は約1000万円に迫る一方で、職種別順位や案件数には意外な実態が浮かび上がった。高単価案件で求められるスキルや働き方とは。",
-      "publishedAt": "2026-07-08T22:00:00.000Z",
-      "feedName": "＠IT"
-    },
-    {
-      "id": "ef3a9e18a1e4dd262bbffeabf2d6f67c960f2f2a31838138c1642badb0382010",
-      "title": "[アップデート] AWS Security Hub から Microsoft Azure のセキュリティチェックが出来るようになったので試してみた",
-      "url": "https://dev.classmethod.jp/articles/aws-security-hub-supports-monitoring-microsoft-azure/",
-      "description": "AWS Security Hub が Azure リソースの監視に対応しました。マルチクラウド環境でのセキュリティ運用が一つのコンソールで可能になった新機能を、セットアップから検出結果の確認まで実際に試してみます。",
-      "publishedAt": "2026-07-08T17:05:03.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "94cdcc4654311eca69f8a694692643991ecf650077d06fd36c465be0d20e0f57",
-      "title": "Announcing TypeScript 7.0 - TypeScript",
-      "url": "https://devblogs.microsoft.com/typescript/announcing-typescript-7-0/",
-      "description": "As you can see, these codebases get a better speedup from dedicating more cores, but results will differ across projects and underlying machines. On the other hand, on machines with fewer CPU cores and less memory (e.g. CI runners) you may want to decrease this number to avoid unnecessary or inci...",
-      "publishedAt": "2026-07-08T16:28:33.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "a83b43ca5c3f8814a42f036258263a96b5ae870883417ce793dcb6fc39950cc8",
-      "title": "GraphQLとBFFは、Best Friend Forever らしい。なんで？よく分からんから調べてみた。",
-      "url": "https://qiita.com/tomoki-miso/items/361415a112b00e215602?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "BFF はわかる。GraphQL がわからない\nREST で BFF を運用していると、必ず来る局面があります。\nモバイルのホーム画面用に GET /api/mobile/home を生やす。\nBFF の中ではユーザーサービスと注文サービスを合わせて 5 本ほど内部 AP...",
-      "publishedAt": "2026-07-08T13:34:43.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "7dab87b966df922cde430c2be9f1608420cfc548b994baf3bf862945ebb6c6b7",
-      "title": "AWS環境でNVIDIA Cosmos 3 Superを動かす",
-      "url": "https://dev.classmethod.jp/articles/nvidia-cosmos3-super-on-aws/",
-      "description": "NVIDIA Cosmos 3 Superを64Bモデルを前回のNanoに続いて、AWS環境上で動かすまでの記録を紹介します。8GPU構成の確保からEBSスナップショット活用まで、個人的につまずいた3つの壁と解決策をまとめました。",
-      "publishedAt": "2026-07-08T13:27:55.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "9c39316d9f7986ae3e007a9f2b568fcd53d8a8ac7632e2d1fbf0f6bb822fb7e5",
-      "title": "設計判断を属人化させないために、DDDの判断フローをWebアプリにしてみた",
-      "url": "https://zenn.dev/shimpei_takeda/articles/b63ecf44777fab",
-      "description": "ここでいう「方式」は、単にアーキテクチャ名を選ぶことではありません。書籍で扱われる業務ロジックの実装方法や技術方式を踏まえて、業務ロジックをどこに置くか、どのアーキテクチャで支えるか、どのテスト方針で守るかをまとめて判断する、という意味で使っています。 どちらも、入力条件に基づいて判断材料を整理す...",
-      "publishedAt": "2026-07-08T13:22:28.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "9d1c4ba7b2c48aa3e65d9f69ec5a103dd9cb492bcb56645ec607a4542058bf33",
-      "title": "【非エンジニアがやってみた】AWS SimuLearnで、課金もセキュリティも気にせずAWSを“触って”学ぶ",
-      "url": "https://dev.classmethod.jp/articles/aws-simulearn-experience-review/",
-      "description": "AWS Skill BuilderのSimuLearnを無償ライセンスで実際に体験してみました。非エンジニアである営業視点から、初心者がセキュリティや課金の心配なく安心して学べるこのコンテンツの魅力と、正直な所感をお伝えします。",
-      "publishedAt": "2026-07-08T11:32:43.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "9056917579c58af2869d89cd23076f72a6e2b805ae0a4f9f24aafa13fef8e10c",
-      "title": "日本オラクル、ソブリン強化でFY26売上は過去最高に　月次パッチや教育プログラムで最新脅威に対応",
-      "url": "https://enterprisezine.jp/news/detail/24643",
-      "description": "日本オラクルは7月7日、2027年度の事業戦略説明会および、これにともなうサイバーセキュリティ対策に関する説明会を開催した。\n\n　同社 取締役 執行役 社長の三澤智光氏は事業戦略説明会の冒頭、202...",
-      "publishedAt": "2026-07-08T10:35:00.000Z",
-      "feedName": "EnterpriseZine"
-    },
-    {
-      "id": "3d2108466efd213fe942696a3298982c6261ab8ecbfa617c83349ce198059aa9",
-      "title": "ยกระดับ Security & Operations สู่การป้องกันเชิงรุกด้วย AWS Frontier Agents",
-      "url": "https://dev.classmethod.jp/articles/Transform-security-and-Operations-from-Reactive-to-Proactive/",
-      "description": "เนื้อหาในบทความนี้ สรุปมาจาก Session: Transform Security and Operations from Reactive to Proactive ในงาน AWS Summit Bangkok 2026",
-      "publishedAt": "2026-07-08T10:00:00.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "1ab9db8051d6aff2a30850c8d86ebfd7d9d668ef88fae7c8e6f042265d0db2e9",
-      "title": "สร้าง AI Agents วิเคราะห์สินเชื่อเฉพาะทางด้วย Amazon Bedrock AgentCore",
-      "url": "https://dev.classmethod.jp/articles/Building-specialized-credit-analysis-agents-with-AWS-Bedrock-AgentCore/",
-      "description": "เนื้อหาในบทความนี้ สรุปมาจาก Session: Building Specialized Credit Analysis Agents with Bedrock AgentCore ในงาน AWS Summit Bangkok 2026",
-      "publishedAt": "2026-07-08T10:00:00.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "33a031f967d5109407bf1277efed6904f70062396efd952ee339acee9dc1cfac",
-      "title": "AWS アーキテクチャアイコンを Raycast から検索してコピーできる拡張機能を作ってみた",
-      "url": "https://dev.classmethod.jp/articles/aws-architecture-icon-raycast/",
-      "description": "AWS 構成図作成補助のため、アーキテクチャアイコンを検索・コピーできる Raycast 拡張機能を作ってみました。公式アセットの数千ファイルから目的のアイコンを素早く見つけられるツールの使い方と実装工夫についてご紹介します。",
-      "publishedAt": "2026-07-08T09:43:59.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "9c39316d9f7986ae3e007a9f2b568fcd53d8a8ac7632e2d1fbf0f6bb822fb7e5",
-      "title": "設計判断を属人化させないために、DDDの判断フローをWebアプリにしてみた",
-      "url": "https://zenn.dev/shimpei_takeda/articles/b63ecf44777fab",
-      "description": "設計やアーキテクチャについての判断は、結論だけを口頭で共有しても再利用できません。\n背景や判断の流れがたどれなければ、組織やチームの知見として残らないからです。\n「今回はドメインモデルを作りましょうか」「ここはCQRSまでは不要だと思います」という会話はそのときは納得感があっても、聞いた人が後から別の機能で同じ判断をしようとすると、前提や分岐条件が抜け落ちているため詰まってしまいます。\n問題は決定内容を記録していないことではなく、どの条件を見て、どの選択肢を外し、どの状態になったら再検討するのかという判断の流れを、後から別の人がもう一度たどることができないことです。\nこれを解決するために...",
-      "publishedAt": "2026-07-08T09:30:40.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "dd80d2cc1750a19016ec90af829a4fc84ea7bddf3173e5235864afb505370324",
-      "title": "[AWS]DevOpsAgentをセルフ受肉させていただきました",
-      "url": "https://qiita.com/kikuziro/items/3190db9f5d5051ae69fd?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "用語解説（本編に入る前に）\n受肉（じゅにく）: 姿を持たない存在がアバター＝肉体を得ること。本記事では「テキストしか出力しない AWS のサービスに、キャラクターの姿と声を与えること」の意味で使います。\n\n0. AWS DevOps Agent\nこちらの素晴らしい記...",
-      "publishedAt": "2026-07-08T09:18:36.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "708d4ea3a37c17ae883b9c2f263e3244b8d793fc48a2337074341491521951ef",
-      "title": "VS Code DevContainer を使わなくなった私の、LLM エージェント向け開発環境",
-      "url": "https://zenn.dev/kenfdev/articles/1febc0052b0d71",
-      "description": "この記事は長いです。長い癖に具体的に自分が使っているdocker composeなどの設定までは記載していません。そこまで書くとさらにとんでもなく長い記事になってしまうと思ったためです。あくまで思想としてどのように最近開発環境を考えているのかを伝えられたらと思っています。コンテナ開発における環境に悩んでいる方...",
-      "publishedAt": "2026-07-08T07:55:06.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "e9813ad6b251f5abd0b6bc9604b33244914bd4f6d3f24c9ebc75aa5a04c3da34",
-      "title": "OpenAI Secure MCP TunnelでAWS認証情報を渡さずにChatGPTから操作する",
-      "url": "https://dev.classmethod.jp/articles/openai-secure-mcp-tunnel-aws-fargate/",
-      "description": "ChatGPT から AWS を操作したいけど、MCP サーバーをインターネットに公開するのは避けたい—そんな課題を、OpenAI の Secure MCP Tunnel と ECS Fargate で解決してみました。インバウンド通信なしで安全につなげる構成についてご紹介します。",
-      "publishedAt": "2026-07-08T07:07:30.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "c9f1f7cab6741997776f4dd13e823e4d0a774fbaaa402767505fe7b745a88a45",
-      "title": "AWS パートナーと実現する生成 AI — 現場を変える8つの実践事例 AWS Summit Japan 2026 Partner Breakout Session レポート",
-      "url": "https://aws.amazon.com/jp/blogs/news/aws-%E3%83%91%E3%83%BC%E3%83%88%E3%83%8A%E3%83%BC%E3%81%A8%E5%AE%9F%E7%8F%BE%E3%81%99%E3%82%8B%E7%94%9F%E6%88%90-ai-%E7%8F%BE%E5%A0%B4%E3%82%92%E5%A4%89%E3%81%88%E3%82%8B8%E3%81%A4%E3%81%AE/",
-      "description": "AWS Summit Japan 2026（2026年6月25日〜26日、幕張メッセ）では、「AWS パートナ […]",
-      "publishedAt": "2026-07-08T07:00:47.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "9fab19ad0116c77b9483895be1b58385c5c0779c54a29e6aca16d2861da73df0",
-      "title": "コーディングだけではもったいない。AGENTS.mdを要件定義でも活用する",
-      "url": "https://qiita.com/miyakiyo/items/26d0f8775743bf2dfabe?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "既存資料や会議文字起こし、ER図（A5-SQL）、業務フロー（Dorw.io）、非機能要件までAIエージェントに整理させる実践例を紹介します\n\nはじめに\nAIエージェントを使った開発では、AGENTS.md にコーディングルールやディレクトリ構成、テスト方針などを書いておき...",
-      "publishedAt": "2026-07-08T06:15:31.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "e64a1b54c5fe5e944958d7f828b5182b18db3f1cd08d4335d75987d0cd44fb55",
-      "title": "【Security Hub修復手順】[SageMaker.9] SageMaker データ品質ジョブ定義では、コンテナ間のトラフィック暗号化を有効にする必要があります",
-      "url": "https://dev.classmethod.jp/articles/securityhub-fsbp-remediation-sagemaker-9/",
-      "description": "AWS SecurityHub 基礎セキュリティのベストプラクティスコントロール修復手順をご紹介します。",
-      "publishedAt": "2026-07-08T05:48:07.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "e911c4a45310e2c9c05ab6edcc0b758ed2107bcf285e848df4da7bcf4404a1ea",
-      "title": "RDS 파라미터 그룹을 파일로 저장하기 (AWS CLI)",
-      "url": "https://dev.classmethod.jp/articles/lim-rds-parameter-group-export-csv-cli/",
-      "description": "RDS 파라미터 그룹을 AWS CLI로 수집하여 CSV 파일로 저장하는 방법을 소개합니다. \n콘솔에서는 다운로드할 수 없는 DB 인스턴스와 DB 클러스터 파라미터를 파일로 관리하고 싶을 때 유용한 방법을 정리해봤습니다.",
-      "publishedAt": "2026-07-08T05:42:17.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "28675996d85bf9a2ad8eb403847487c81452f3218c0770baaf4c205879e09154",
-      "title": "AWS Parallel Computing Service と Kiro CLI で HPC のデプロイを加速する",
-      "url": "https://aws.amazon.com/jp/blogs/news/accelerating-hpc-deployment-with-aws-parallel-computing-service-and-kiro-cli-ja/",
-      "description": "オンプレミスの HPC 環境からの移行を進める研究チームは、クラウドへのデプロイの複雑さに悩まされることがよく […]",
-      "publishedAt": "2026-07-08T05:35:04.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "0668f45ef7cfd353f125aba907b3b0d5a439f1807deb72f98389b43174a89f20",
-      "title": "[小ネタ] AWS の Service Quotas からの申請時に実行されるアクションを確認してみた",
-      "url": "https://dev.classmethod.jp/articles/i-checked-the-actions-performed-when-applying-from-aws-service-quotas/",
-      "description": "AWS の Service Quotas からの申請時に実行されるアクションを確認してみました。",
-      "publishedAt": "2026-07-08T05:25:29.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "9045b80d2aa4519b383e5c6d66a2497972665cc260acd341a0ffe1436ec516dc",
-      "title": "AWS Well-Architected Framework 入門：全体像と公式ドキュメントを整理してみた | DevelopersIO",
-      "url": "https://dev.classmethod.jp/articles/aws-well-architected-framework-guide-01/",
-      "description": "AWS認定試験の学習で頻繁に登場する「Well-Architected Framework」について、全容を把握しきれていないという課題を解決するため、6つの柱をハンズオンで実践しながら学ぶシリーズを始めます。まず今回は、Framework の概要と情報の探し方を整理しました。 はじめに こんにちは。クラスメソッドオペレーションズの藤瀨...",
-      "publishedAt": "2026-07-08T04:52:05.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "d9368654bd423227cf47d88484796b477244a1f0223efd14e0d3a8cd7bb53f87",
-      "title": "【今年も開催！】全国8都市を巡るAWS デジタル社会実現ツアー2026",
-      "url": "https://aws.amazon.com/jp/blogs/news/japan-nationwide-roadshow-2026/",
-      "description": "2022年にスタートし、毎年全国の地域を巡ってきた「AWS デジタル社会実現ツアー」が今年で 5年目 を迎えま […]",
-      "publishedAt": "2026-07-08T04:11:27.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "f1417cf7c17481edb29df1bc46c6af6d89a4ee1ce8e70d0a5afcab67d7591cfd",
-      "title": "「事後対応」中心の運用から脱却する「AIセキュリティ」の始め方　Google解説",
-      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2607/08/news059.html",
-      "description": "Google Cloudは、政府機関や重要インフラを守るCISO向けに、AIを活用した防御の始め方を解説するガイドを公開した。管理業務の負荷をAIで軽減し、脅威ハンティングや構造的な統合へ段階的に移行するロードマップを示している。",
-      "publishedAt": "2026-07-08T04:00:00.000Z",
-      "feedName": "＠IT"
-    },
-    {
-      "id": "82778b0f7ca8f7598eef072bd2cdedd4ad0a8200df3834f84db0da48efcae52b",
-      "title": "「セキュリティ対策証明」経験ありは8割超、だがSCS評価制度迫るも“SaaS把握率”は2割未満",
-      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2607/08/news060.html",
-      "description": "サプライチェーン強化に向けた新制度の運用開始を控える中、取引先からセキュリティ対策の証明を求められた経験がある担当者が大多数だが、対策は追い付いていない。SmartHRの実態調査から明らかになった。",
-      "publishedAt": "2026-07-08T04:00:00.000Z",
-      "feedName": "＠IT"
-    },
-    {
-      "id": "11206470cc04a9a17824731b1fc2f06ef9f9ee232f14560127b28719449ca300",
-      "title": "はてなブログAndroidアプリのエディタ実装",
-      "url": "https://developer.hatenastaff.com/entry/2026/07/08/121044",
-      "description": "はじめに\nこんにちは、アプリケーションエンジニアの id:jj1uzh です。\n\nRecomposing Hatena Blog for Androidは、昨2025年にリニューアルされたはてなブログAndroidアプリにまつわる開発体験や技術詳細を解説するブログシリーズです。\n前回は「Webエンジニアが半年Androidアプリ開発をやってみて感じたこと」でした。私もWebのみの経験からAndroidを始めたので、共感しながら読みました。\n今回はアプリの実装に踏み込んで、ブログアプリの根幹であるエディタについて以下の観点で紹介します。\nWebViewを用いたリッチテキストエディタの実装\n複数の記法の抽象化\nこの記事はブログアプリを題材としていますが、ComposeのUIとWebViewの連携やViewModel内で複数パターン実装の抽象化といったよくあるパターンについて解説していますので、ブログに限らずAndroidアプリ開発の一例として参考にしていただければと思います。\nWebView上のリッチテキストエディタ: KotlinとJavaScriptの交信\nはてなブログAndroidアプリは2026年7月現在、はてな記法・Markdown・見たまま記法の三種類の記法をサポートしています。\n実装上は、プレーンテキストであるはてな記法・MarkdownにはComposeのTextFieldを、見たまま記法にはWebView上のリッチテキストエディタを使っています。\nWebView上のリッチテキストエディタを使う際、エディタの状態とアプリのネイティブUIを連携させたり、文章をローカルに随時保存したりするには、\nWebView内のJavaScriptとCompose世界(Kotlin)でやり取りをする必要があります。\nここからは、WebViewでリッチテキストエディタを用意し、KotlinとJavaScriptのやり取りによってアプリのネイティブUIと連携させる方法を紹介します。\nリッチテキストエディタの初期化とインターフェースの用意\nまずはリッチテキストエディタのHTMLを用意し、assetsディレクトリに置いておきます。\n<!-- editor.html -->\n...\n<div id=\"placeholder\"></div>\n<script charset=\"utf-8\" src='xxx_editor.js'></script>\n<script>\n    window.Editor = XxxEditor.init();\n</script>\n...\n\n\n\nこのHTMLファイルを、エディタ用のWebViewで読み込みます。\nval webView = WebView(context).apply {\n    webViewClient = object : WebViewClient() {\n        val assetLoader = WebViewAssetLoader.Builder()\n          .addPathHandler(\"/assets/\", WebViewAssetLoader.AssetsPathHandler(context))\n          .build()\n\n        override fun shouldInterceptRequest(view: WebView, request: WebResourceRequest) =\n          assetLoader.shouldInterceptRequest(request.url)\n    }\n    loadUrl(\"https://appassets.androidplatform.net/assets/editor.html\")\n}\n\n\n\nアセットの読み込みに関して、詳しくは開発者ドキュメント1を参照してください。\nこれでWebView自体の準備は整い、Kotlinから触る口も用意されました。\nKotlinからJavaScriptを呼び出す\n先ほど作った val webView の evaluateJavascript2を呼び出すことで、WebView内でJavaScriptを実行可能です。\n例えば、アプリのUIから選択範囲を太字に変更する、写真をアップロードしてそのURLを挿入する、といった機能はこの方法で実装できます。\nwebView.evaluateJavascript(\n    \"Editor.getContent()\"\n    // \"Editor.setStyle(...)\"\n    // \"Editor.insert(\\\"...\\\")\"\n) { result ->\n    val text = (Json.parseToJsonElement(result) as? JsonPrimitive)?.content\n    ...\n}\n\n\n\nなお、Kotlin側から任意の文字列をエディタに渡すなど、JavaScriptコードを動的に組み立てる場合は、エスケープ処理に気をつけましょう。\nJavaScriptからKotlinを実行する\n逆に、WebView内のJavaScriptからKotlinの関数を実行したい場合は、 WebView#addJavascriptInterface3 を使います。\n例えば、テキストの変更ごとにKotlin上の関数を呼んで、変更内容や文字数などの情報を伝えることができます。\nまずKotlin側で、JavaScriptから使えるインターフェースを用意します。\nwebView.addJavascriptInterface(\n    object : Any() {\n        @JavascriptInterface\n        fun onInput(text: String, count: Int) {\n          // ... 本文・文字数の更新を反映する処理 ...\n        }\n    },\n    \"NativeCallback\"\n)\n\n\n\nこうすることで、JavaScriptから NativeCallback.onInput という関数でKotlinの関数を呼ぶことができるようになります。\nEditor.editor.on('change', function (e) {\n    NativeCallback.onInput(Editor.getContent(), Editor.getCharacterCount());\n});\n\n\n\nただし、addJavascriptInterface は容易に脆弱性たり得るため、WebViewの遷移できるWebページを制限する、呼び出せるKotlin関数では引数を信頼しないなど、慎重に扱う必要があります。\n複数の記法の抽象化\nここまでの実装で、Kotlinからは val webView に対する操作でもってWebView内のリッチテキストエディタとやり取りすることができるようになりました。\nところで、リッチテキストはWebViewで実装されている一方、プレーンテキストのはてな記法・MarkdownはComposeのTextFieldを使って実装していました。\n画像のアップロードや投稿の処理は共通である一方で、編集中のテキストをコンポーネントから渡したり、アプリのUI（ひいてはViewModel）からテキストに変更を加える方法だけが、TextFieldとWebViewで異なっています。ここを抽象化して、実装をスッキリさせたくなります。\nエディタのViewModelは、UI上のボタンなどの操作に対応して、次のようなインターフェースとなっています。\nclass EditorViewModel {\n    fun onInput(text: String)\n    fun decorate(d: Decoration)\n    fun uploadImage(uri: Uri)\n    fun publish()\n    ...\n}\n\n\n\n抽象化で最低限必要なのは以下の二つです。\nコンポーネント上でユーザーが編集したテキストを監視するFlow\n記法変更ボタンや画像アップロードなど、ViewModelを介してテキストを編集する関数\nインターフェースとしては以下のような定義になります。\ninterface EditorState {\n    val text: Flow<String>\n    fun <T> edit(ops: Operations.() -> T): T\n}\n\n\n\ntext はエディタ上のテキストを反映しているFlowで、EditorViewModel ではこのFlowを監視することでバックアップをとったり、投稿時に使用したりします。\nclass EditorViewModel {\n    val editorState: EditorState\n    val repository: XxxRepository\n\n    init {\n        editorState = ... // 初期化\n        editorState.text.onEach { \n            backup(it) // 定期バックアップ\n        }.launchIn(viewModelScope)\n    }\n\n    // 投稿\n    suspend fun publish() {\n        repository.publish(editorState.text.first())\n    }\n}\n\n\n\nEditorState を用意するメリットは、今回のような複数実装の抽象化だけでなく、 text をSingle Source of Truthとして扱える点にもあります。\ntext は以下のように実装できます。\nclass TextEditorState(val textFieldState: TextFieldState) : EditorState {\n    override val text = snapshotFlow { textFieldState.text.toString() }\n}\n\nclass WebViewEditorState(val webview: WebView) : EditorState {\n    private val _text = MutableStateFlow(\"\")\n    override val text: Flow<String> = _text.asStateFlow()\n\n    init {\n        // 先述のaddJavascriptInterfaceを使い、JS側からの変更通知でStateFlowを更新する\n        webview.addJavascriptInterface(\n            object : Any() {\n                @JavascriptInterface\n                fun onInput(text: String) { _text.update { text } }\n            },\n            \"NativeCallback\",\n        )\n    }\n}\n\n\n\n次にedit 関数です。\ninterface EditorState内のメソッド定義 fun <T> edit(ops: Operations.() -> T): T は、TextFieldState4 の edit 関数を参考にしています。\nOperations.() -> T はレシーバー付きの関数型リテラル5と呼ばれる記法で、edit に渡す関数はOperationsを暗黙のレシーバーとしてそのメソッドを直接呼び出すことができます。例えばTextFieldStateの例を見ると、\n// https://developer.android.com/reference/kotlin/androidx/compose/foundation/text/input/TextFieldState#edit(kotlin.Function1)\nval state = TextFieldState(\"hello world!\")\nstate.edit {\n    // Insert a comma after \"hello\".\n    insert(5, \",\") // = \"hello, world!\"\n    ...\n}\n\n\n\nのように、TextFieldBuffer の insert 関数を直接呼び出せていて、簡単にDSLを定義できるというわけです。\n今回定義する EditorState は、TextFieldState の edit をラップしつつWebViewに対しても同じ記法(+はてなブログ用の操作)でViewModelから呼び出せるようにすることが目的となります。まず、必要な操作をinterfaceにまとめます。\ninterface Operations {\n    fun insert(text: String, breaks: Boolean)\n    fun decorate(d: Decoration)\n    ...\n}\n\n\n\nTextFieldとWebViewそれぞれで Operations の実装を用意します。\ndata class TextOperations(val textFieldState: TextFieldState, val syntax: Syntax) : Operations {\n    override fun insert(text: String, breaks: Boolean) {\n        textFieldState.edit { insert(...) }\n    }\n    override fun decorate(d: Decoration) = when (d) {\n      Bold -> when (syntax) {\n        Markdown -> ...\n        Hatena -> ...\n      }\n    }\n}\n\ndata class WebViewOperations(val webview: WebView) : Operations {\n    override fun insert(text: String, breaks: Boolean) {\n        webview.evaluateJavascript(\"Editor.insertContent('$text')\", null)\n    }\n    override fun decorate(d: Decoration) = when (d) {\n      Bold -> webview.evaluateJavascript(\"Editor.boldCommand()\", null)\n      Heading -> webview.evaluateJavascript(\"Editor.headingCommand()\", null)\n      ...\n    }\n}\n\n\n\nEditorState#edit から簡単に使えるようになります。\nclass TextEditorState(val textFieldState: TextFieldState, val syntax: Syntax) : EditorState {\n    override fun <T> edit(ops: Operations.() -> T): T = TextOperations(textFieldState, syntax).ops()\n}\nclass WebViewEditorState(val webview: WebView) : EditorState {\n    override fun <T> edit(ops: Operations.() -> T): T = WebViewOperations(webview).ops()\n}\n\n\n\nEditorState#edit を実装できたので、ViewModelでエディタ操作系のメソッドを実装できるようになりました。\nclass EditorViewModel {\n    val editorState: EditorState\n    val repository: XxxRepository\n\n    fun onInput(text: String) {\n        editorState.edit { insert(text, breaks = false) }\n    }\n\n    fun decorate(d: Decoration) {\n        editorState.edit { decorate(d) }\n    }\n\n    fun uploadImage(uri: Uri) {\n        val uploadedUrl = repository.uploadImage(uri)\n        editorState.edit { insert(uploadedUrl, breaks = true) }\n    }\n}\n\n\n\nスッキリ実装できましたね〜\nまとめ\nいかがでしたか。読者の皆様がAndroidアプリを書くとき、この内容がお役に立つことがあれば幸いです。\nはてなブログAndroidアプリは、リリース後もパフォーマンスや使い勝手の改善を続けています。ブログを書くときは、ぜひアプリを使ってみてください！\n\nまた、はてなブログAndroidアプリリニューアルにまつわるブログシリーズRecomposing Hatena Blog for Androidは、引き続き投稿されていく予定です。お楽しみに。\nhttps://developer.android.com/develop/ui/views/layout/webapps/load-local-content↩\nhttps://developer.android.com/reference/android/webkit/WebView#evaluateJavascript(java.lang.String,%20android.webkit.ValueCallback%3Cjava.lang.String%3E)↩\nhttps://developer.android.com/reference/android/webkit/WebView#addJavascriptInterface(java.lang.Object,%20java.lang.String)↩\nhttps://developer.android.com/reference/kotlin/androidx/compose/foundation/text/input/TextFieldState↩\nhttps://kotlinlang.org/docs/lambdas.html#function-literals-with-receiver↩",
-      "publishedAt": "2026-07-08T03:10:44.000Z",
-      "feedName": "Hatena Developer Blog"
-    },
-    {
       "id": "63cb631144bce99b332931240568c238548ee13db9671310166eaf261d49671e",
       "title": "AWS環境の段階的な移行方式として、『ALBの加重ルーティング』と『API GatewayのCanaryリリース』を試してみた（前編）",
       "url": "https://dev.classmethod.jp/articles/myan-aws-bgdeploy-handson-01/",
@@ -525,37 +277,6 @@
       "url": "https://zenn.dev/var/articles/apple-container-macos-hands-on",
       "description": "Apple containerを使うと、Docker Desktopを入れずにmacOS上でLinuxコンテナを動かせます。この記事はDocker経験者向けのハンズオンです。Apple SiliconのMacへApple containerを導入し、イメージ取得からコンテナ起動・基本操作・永続的なLinux環境づくりまでを手順化しました。\ndocker runに慣れた人が最短でcontainer runにたどり着けるよう、コマンドと表示例、そしてDockerとの考え方の違いをまとめました。\n\n この記事の要点\n\nApple containerとは、macOS上でLinuxコンテナを「1コ...",
       "publishedAt": "2026-07-09T01:50:50.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "a36990009426692d1025f271242cbd4358a20d877af266c9485cefe1e0dcdce9",
-      "title": "AIがコードを書くほど、レビュー・セキュリティ・理解が追いつかなくなる——次のDevOpsボトルネックは「管理能力」だ",
-      "url": "https://techfeed.io/entries/6a4d8404fb2ec72bcd7fd86a",
-      "publishedAt": "2026-07-09T01:13:07.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "7b6f3ce4c89d40b6e8bd4b18029eb287d5799b0f35ce4b3fd9367ed2b6554ce1",
-      "title": "IBM Bobで自作したUbuntu24.04 MCPサーバーにツール追加",
-      "url": "https://qiita.com/duelist2020jp/items/1f92cce78995f3a2e048?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "はじめに\n先日、IBM Bobを活用してUbuntu24.04のMCPサーバーを開発した記事を投稿しました。\n\nこの時点では、リソース使用率に基づくインサイトしか得ることはできませんでしたが、本日セキュリティー診断とネットワーク診断を行う為のツールをIBM Bobで追...",
-      "publishedAt": "2026-07-09T00:55:56.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "c0aa03d3393dbe8c7e3a5e142ec292e35f430b795e94a0587ee62bd3e4476b00",
-      "title": "GraphQLのoperation nameとmutation fieldの違いを整理する",
-      "url": "https://qiita.com/ito_kohhh/items/b6ddc7b58b02677824bf?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "はじめに\n私が普段業務で扱っているアプリケーションでは、フロントエンドとバックエンドの通信にGraphQLを採用しています。\nこれまでなんとなくでGraphQLを使っていたところだったのですが、実のところ基本部分から理解できていないと感じていたため、初めてのGraphQL...",
-      "publishedAt": "2026-07-08T22:49:08.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "dd8193761bc6d649692d42ce84a6957e5a08486fa1bd52b02185813e226f3c7e",
-      "title": "フロントエンドのコードはどこで動く？",
-      "url": "https://zenn.dev/natsu06/articles/8ed7455b6e148a",
-      "description": "概要\n以下、JavaScriptが実行される環境です。コードが動く場所によって使えるAPIや挙動が変わります。\n\nブラウザ\nNode.js\njsdom\nCI環境\n\n今回、requestAnimationFrame を使ったフォーカス制御のテストが、ローカルでは通るのにCI環境で失敗するという問題に遭遇しました。\nその調査を通して、\n\nフロントエンドのコードは、どこで実行されているのかを意識しないと正しく理解できない\n\nということを改めて学びました。\nこの記事では、今回のテスト修正をきっかけに学んだ、ブラウザ・Node.js・jsdom・CI環境の違いについて整理します。\n\n\n 学習の...",
-      "publishedAt": "2026-07-08T14:01:25.000Z",
       "feedName": "Zenn"
     },
     {
@@ -788,30 +509,6 @@
       "url": "https://zenn.dev/xtm_blog/articles/9b7fa5f94eae28",
       "description": "はじめに\nクロステック・マネジメント Foundation Dept. 所属の Radish です。\n先日、社内輪読会で『テスト駆動開発』(Kent Beck 著、和田卓人 訳) を読んでいたとき、17 章で 欠陥挿入（defect insertion） という言葉が出てきました。\n（数年前に自分で読んだことはあるんですが、完全に忘れていました… 🫠）\n欠陥挿入とは、本番コードの一部を一時的に書き換えて、テストが落ちることを確かめる手法です。\n書籍では手作業でもツールでもできると書かれていたので、どういったツールがあるのか調べました。\nそこで出てきたのがミューテーションテスト（mut...",
       "publishedAt": "2026-07-09T12:51:51.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "269512da697639e8a3bd2c77927e0a4ddab684c488270535936ac9dd4ce72e98",
-      "title": "AWS Lambda MicroVMsでサーバレスにMinecraftを遊ぼう！",
-      "url": "https://zenn.dev/tosuri13/articles/78e93272fc2038",
-      "description": "こんにちは👋 最近AWS LambdaにLambda MicroVMsと呼ばれる新機能が追加されました。 Lambdaを支える仮想化技術であるFirecrackerをベースとして、MicroVMと呼ばれる隔離されたステートフルなサンドボックス環境を、サーバレスに提供してくれる機能です。 Lambda MicroVMsのユースケースとしては、AIエージェントが生成し...",
-      "publishedAt": "2026-07-08T17:01:16.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "ccd41f7edad37150f94f0236fa4ee58b801dcf6a0304a597cc0154989620a4a5",
-      "title": "回帰テストの設計 — デグレを技法で防ぐ",
-      "url": "https://qiita.com/ryucciarati/items/47e139760c60dbf2beb7?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "はじめに\n「触っていないはずの画面が、なぜか壊れている」——リリース後にそんな報告を受けたこと、ありませんか。\n修正したのはAだったのに、見えないところでBが連鎖して壊れる。\n自分も何度か経験しました。\nこういうとき、つい「念のため全部のテストを流せばよかった」と思ってし...",
-      "publishedAt": "2026-07-08T14:47:39.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "ad70eea8fce091414738b93a117732d62dec3b88875a4b6560d50a0defcfbe08",
-      "title": "純関数・参照透過性・冪等性の違いが分からなくなったのでまとめる",
-      "url": "https://zenn.dev/kkeeth/articles/pure-function-referential-transparency-idempotency",
-      "description": "こんにちは．最近関数型プログラミングの概念をちゃんと理解したい欲が出てきました．Keeth こと桑原です．\n以前 「なぜ React 哲学を守らないといけないのか？」 という記事を書いたのですが，執筆中に純関数の定義に触れたとき，「これって冪等性のこと？いや，参照透過性？というか，そもそも自分はこの 2 つの概念の定義が曖昧かも…」という疑問がふっと浮かびました．良い機会なので，違いを整理してみます．コード例は今回も独断と偏見で TypeScript で書いています．\n※もし間違っている記述があればバンバンコメントいただけると嬉しいです 🙇‍♂️\n\n TL;DR\n\n純関数・参照透過性・冪...",
-      "publishedAt": "2026-07-08T06:41:32.000Z",
       "feedName": "Zenn"
     },
     {
@@ -7287,6 +6984,230 @@
       "description": "Claude Code に実装を投げるようになって、バグ修正も機能追加も、以前なら手を出さずに置いていた量までこなせるようになりました。同時に増えたのが手戻りです。直したところが次の変更で戻る、関係ないと思っていた場所が壊れる。作れる量が増えたぶん、壊す量も増えました。\n守ってくれるのはテストです。ただ、そのテストも Claude Code が書いています。走らせれば緑になり、diff をざっと見て通し、本数だけが増えていきます。そして次に手を入れるとき、いま何が守られているのかを知る方法が tests/ を上から読むことしかありません。\nかといって、変更のたびに「壊していないか全部確認...",
       "publishedAt": "2026-08-05T07:42:28.000Z",
       "feedName": "Zenn"
+    },
+    {
+      "id": "287f8cd1ea76a672cc84bb89169a985468514a31a81e821e1ebe5ed435129910",
+      "title": "Canary and Blue-Green Deploys for Model Changes",
+      "url": "https://dev.to/multigrid/canary-and-blue-green-deploys-for-model-changes-3i9c",
+      "description": "A code deploy either works or throws. A model deploy usually does neither: the new version returns 200s at the same latency and is slightly worse at the thing you care about. That is why model rollouts need a quality gate as well as a health gate, and why the honest question about a canary is not “did it error?” but “have I seen enough requests to tell?”\nThree properties break the usual assumptions.\n  Failure is silent and distributional. A 2% drop in extraction accuracy produces no errors, no latency change and no alert. It shows up as support tickets three weeks later.\n  Output is non-deterministic. You cannot diff two responses and conclude anything from one pair. Comparison has to be statistical, over a sample.\n  Capacity is the constraint on the strategy. Running blue and green simultaneously means holding two full sets of GPUs. For a large model that doubles the most expensive line in the budget for the duration of the rollout, which is a real reason to prefer a small canary over blue-green.\nAdd one more, which applies when you are switching between hosted models rather than your own weights: providers update models under a stable name. Silent model updates covers that case, and the defence is the same eval gate applied on a schedule rather than on a deploy.\n\n\n\nStrategy\nDescription\n\n\n\n\nBlue-green\nTwo complete environments; flip all traffic at once, flip back to roll back. Fastest rollback available and the simplest to reason about. Costs double capacity during the overlap, and gives you no gradual signal — the first evidence of a problem is 100% of users having it.\n\n\nCanary\nA small fraction of traffic to the new version, increased in steps as metrics hold. Cheap in capacity, and limits the blast radius to the fraction you chose. The cost is time: a 1% canary needs a hundred times as long to accumulate the same evidence.\n\n\nShadow\nReal traffic is duplicated to the new version and its responses are recorded and discarded. Zero user risk, and the only shape that lets you compare two answers to the same input. Costs full inference on every shadowed request, and cannot see anything downstream of the response.\n\n\n\nThey compose, and the sensible default is to compose them: shadow first to catch crashes and gross regressions on real inputs, then canary to catch what shadowing cannot see, then promote. Shadow traffic for LLMs covers the duplication mechanics, including the trap of shadowing requests that have side effects.\nThe split must be sticky per user, not per request. A user whose conversation alternates between two model versions gets an inconsistent assistant, and any metric you compute over the session is contaminated. Hash a stable identifier into a bucket:\nimport hashlib\n\ndef variant(user_id: str, canary_percent: int, salt: str = \"chat-model-2026-08\") -> str:\n    \"\"\"Stable assignment: the same user always lands in the same bucket\n    for a given salt. Change the salt to re-randomise a later experiment.\"\"\"\n    h = hashlib.sha256(f\"{salt}:{user_id}\".encode()).digest()\n    bucket = int.from_bytes(h[:4], \"big\") % 100        # 0..99\n    return \"canary\" if bucket < canary_percent else \"stable\"\n\nTwo details. The salt means a second rollout does not reuse the same unlucky users, which otherwise correlates your experiments. And sha256 rather than Python’s built-in hash, because the built-in is randomised per process and would reassign every user on restart.\nAt the infrastructure layer the same split can be expressed by two Deployments behind one Service with proportional replica counts, or by a weighted route in a service mesh or ingress. The replica-count method is the crudest — a 10% canary means one replica in ten, so you cannot express 1% without ten replicas — but it needs nothing installed. Whichever layer does the splitting, record the variant on the request so that every log line, trace and evaluation can be grouped by it. Without that label the canary produces no evidence at all.\nThe promotion criterion is a set of thresholds decided before the rollout, checked automatically, with no judgement call at 2am. Three tiers, evaluated in order:\n Offline eval, before any traffic. The frozen eval set from your eval set run against the candidate. Absolute gate: below threshold, the rollout does not start. This is the only tier that costs nothing to fail.\n Operational metrics, from the first canary requests. Error rate, p95 latency, time to first token, tokens per second, truncation rate, refusal rate, cost per request. These move fast and catch the gross failures within minutes.\n Quality metrics, over the canary window. Whatever proxy you have for correctness on live traffic: schema-validation pass rate, tool-call success, retrieval-grounded citation checks, thumbs-down rate, human review of a sample. These are slow and they are the ones that decide whether the model is actually better.\nAutomate tiers one and two completely. Tier three is where the sample size question bites, and where most teams promote on a number that could not possibly have been significant.\nSuppose your quality proxy is a pass rate — schema valid, tool call succeeded, judge said acceptable. You want to detect a regression of size Δ in that rate. The standard two-proportion sample size, with all assumptions labelled:\nn per variant ≈ 2 × p(1−p) × (z_α/2 + z_β)² / Δ²\n\n  p    baseline pass rate\n  Δ    the smallest regression you want to detect, in absolute terms\n  z    normal quantiles; for 95% confidence and 80% power,\n       z_α/2 = 1.96 and z_β = 0.84, so (1.96 + 0.84)² = 7.85\n\nWorked, with p = 0.90:\n\n  Δ = 0.05 (detect a drop from 90% to 85%):\n      n = 2 × 0.09 × 7.85 / 0.0025 = 565 requests per variant\n\n  Δ = 0.02 (detect 90% → 88%):\n      n = 2 × 0.09 × 7.85 / 0.0004 = 3,533 per variant\n\n  Δ = 0.01 (detect 90% → 89%):\n      n = 2 × 0.09 × 7.85 / 0.0001 = 14,130 per variant\n\nNote the 1/Δ² : halving the effect you want to catch quadruples the sample.\n\nNow convert that into a canary duration, which is the number you actually need:\n  total traffic ......... 20 requests/second = 1.73 M/day\n  canary share .......... 5%              = 86,400 canary requests/day\n  requests with a usable quality label ... 30%  (not every request has one)\n                                          = 25,920 labelled/day\n\n  To detect Δ = 0.02, needing 3,533 labelled canary requests:\n      3,533 / 25,920 ≈ 0.14 days ≈ 3.3 hours\n\n  At a 1% canary instead:\n      canary labelled/day = 5,184 → 3,533 / 5,184 ≈ 16 hours\n\nThis is the arithmetic that turns “run the canary for a while” into a decision. If the answer is longer than you are willing to wait, your options are honest ones: raise the canary percentage, accept a larger detectable Δ, label more requests, or lean harder on offline eval where you control the sample. Statistics for LLM evals goes further into the multiple-comparison problem you create by watching six metrics at once.\nLive traffic is not a randomised experiment unless you made it one. Sticky bucketing gives you random assignment; it does not stop the canary population drifting if the split correlates with geography, tenant or time of day. Check that the two variants saw comparable input distributions before believing a difference in outcomes.\nWrite the abort conditions into the rollout plan before it starts, in the form “if X for Y minutes, revert”. The point of writing them down is that at 2am, watching a number wobble, nobody has to decide what counts as bad.\n# rollout.yaml — the plan, reviewed with the change\nsteps:  [1, 5, 25, 50, 100]     # percent of traffic\ndwell:  [1h, 4h, 12h, 12h, -]   # minimum time at each step\n\nabort_if:\n  - metric: error_rate_5xx      op: \">\"  value: 0.5%   for: 5m\n  - metric: p95_latency_ms      op: \">\"  value: 1.25   relative_to: stable  for: 10m\n  - metric: schema_valid_rate   op: \"<\"  value: 0.98   relative_to: stable  for: 30m\n  - metric: cost_per_request    op: \">\"  value: 1.15   relative_to: stable  for: 1h\n  - metric: thumbs_down_rate    op: \">\"  value: 1.30   relative_to: stable  for: 4h\n\non_abort:\n  - set canary traffic to 0        # seconds; the stable pods never went away\n  - keep canary pods running       # for diagnosis, not for traffic\n  - page the on-call, do not auto-promote again without a human\n\nThe last two lines are the ones people leave out. Keeping the canary pods running after an abort preserves the evidence — logs, traces, a live process to inspect — and setting traffic to zero rather than deleting the deployment makes the rollback take seconds rather than a scheduling cycle. What to do next is in the on-call runbook, which has a page for exactly this symptom.\n  Model Weights in CI/CD\n\n  On-Call Runbooks for AI Services",
+      "publishedAt": "2026-08-08T01:10:23.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "743f8d300b2c4affbb4af76cc557129916e28e890b5c44ba1bdc7013fd445a1a",
+      "title": "The Long History of Machine Translation",
+      "url": "https://dev.to/multigrid/the-long-history-of-machine-translation-2h8",
+      "description": "Machine translation is the oldest continuously funded application of computing to language, the first field to be shut down by an evaluation report, and the field where the current architecture was invented. It also has the most abused numbers in AI, because BLEU scores from different decades are routinely printed in the same table when they cannot be compared at all.\nWarren Weaver, then at the Rockefeller Foundation, circulated a memorandum titled simply Translation in July 1949, to roughly two hundred people. It is the founding document of the field and its central idea is a cryptographic analogy: Weaver wrote that when he looked at an article in Russian, he could say that it was really written in English but coded in strange symbols, and that he would now proceed to decode.\nThe analogy is wrong, and the way it is wrong set the field’s agenda for forty years. Encipherment is a bijection over a fixed alphabet; translation is not. But the memorandum also contains ideas that came good much later — Weaver discussed statistical methods, Shannon’s information theory, and the idea that word meaning is determined by context within a window of surrounding words, which is the distributional hypothesis that word embeddings would eventually implement.\nOn 7 January 1954, Georgetown University and IBM demonstrated a Russian-to-English translation system on an IBM 701 in New York. The system had a vocabulary of 250 words and six grammar rules, and it translated about sixty carefully chosen sentences, largely on chemistry and general topics.\nIt worked, on those sentences. The press coverage was extensive and the accompanying claim — associated with Leon Dostert, the Georgetown linguist who led the project — was that translation by machine would be an accomplished fact within three to five years. US government funding followed on that basis.\nThe pattern here is exactly the one described on the AI winters page: a demonstration on a restricted problem, presented to funders as an early version of the general capability, with a timeline. The sixty sentences were selected in advance and the vocabulary was built for them.\nTwelve years and a substantial amount of money later, the Automatic Language Processing Advisory Committee reported to the US National Academy of Sciences. Its findings were that machine translation output required so much post-editing that the total process was slower and more expensive than human translation, that there was no shortage of human translators, and that the money would be better spent on basic computational linguistics.\nAmerican MT funding was cut sharply and remained low for about two decades. Work continued elsewhere: Systran, founded in 1968, supplied rule-based translation to the US Air Force and later to the European Commission, and — via AltaVista’s Babel Fish from 1997 — was the first machine translation most people ever used. Canada’s Météo system, in production from the late 1970s translating weather bulletins between English and French, is the era’s genuine success and demonstrates the principle that has held ever since: restrict the domain enough and the problem becomes tractable with the methods you already have.\nThe break came from IBM’s speech recognition group at Yorktown Heights, which approached translation as a noisy channel problem — the same framing that had worked for speech. Peter Brown, Stephen and Vincent Della Pietra, Robert Mercer and colleagues published the series now known as IBM Models 1 to 5, culminating in The Mathematics of Statistical Machine Translation: Parameter Estimation in Computational Linguistics in 1993.\nThe enabling resource was a large parallel corpus: the proceedings of the Canadian Parliament, published in both official languages. The method learned word alignments from that corpus and required no linguist to write a single rule. The reaction from the linguistics side of the field was hostile, and the argument that followed is a smaller version of the symbolic-versus-statistical argument running through the rest of AI.\nStatistical MT then dominated for two decades: phrase-based models replaced word-based ones, and the open-source Moses toolkit from 2007 made the approach the default. Google Translate launched a statistical system in the mid-2000s and it is what most people meant by machine translation until 2016.\nBLEU was introduced by Kishore Papineni and colleagues at IBM in a 2002 paper, BLEU: a Method for Automatic Evaluation of Machine Translation. It compares a system’s output to one or more reference translations by counting matching n-grams, with a brevity penalty to stop systems gaming it by producing short output. It made the field’s progress measurable without a human in the loop, which is why it took over.\nIt is also the source of the most common piece of misinformation in MT history writing. A BLEU score is not a property of a system. It is a property of a system, a test set, a tokenisation, a number of reference translations and a specific implementation of the metric. Change any of those and the number moves by several points.\n  Test set. A score on WMT 2014 English–German has no relationship to a score on a 1990s in-house corpus. Different domains, different sentence lengths, different difficulty.\n  Number of references. BLEU with four reference translations scores far higher than BLEU with one, because there are four chances for each n-gram to match. Some older results used four.\n  Tokenisation. Whether punctuation is split, whether case is preserved, and how compounds are handled all change the n-gram counts. This is why sacreBLEU exists — a 2018 tool whose entire purpose is to fix the tokenisation and report a signature string so that two numbers can be legitimately compared.\n  Language pair. BLEU on English–French and BLEU on English–Finnish are not the same scale in any sense. Morphologically rich languages score lower for the same translation quality, because there are more ways to be correct.\nSo this page does not print a table of BLEU by decade, and any page that does is showing you numbers that cannot be lined up. What can honestly be said is what each paper reported against its own contemporaneous baseline on its own test set, which is a real comparison because the authors ran both.\nThe general failure mode here is not specific to translation. It is reporting a metric without the conditions that make it meaningful, and it is the same problem covered in how to read a benchmark result. If a historical number is quoted without its test set, treat it as decoration.\n 2013–2014. Kalchbrenner and Blunsom, and then Sutskever, Vinyals and Le in Sequence to Sequence Learning with Neural Networks, encode a whole sentence into a fixed-length vector with one recurrent network and decode it with another. The 2014 paper reports 34.8 BLEU on the WMT’14 English-to-French task for an ensemble of LSTMs against a 33.3 BLEU phrase-based baseline that the authors ran themselves, and 36.5 when the neural model was used to rescore that baseline’s candidate list. Both numbers are on the same test set as the baseline, which is what makes them meaningful.\n 2014–2015. Bahdanau, Cho and Bengio identify the fixed-length vector as the bottleneck — a long sentence has to fit through the same-sized hole as a short one — and introduce attention, letting the decoder look back at all encoder positions with learned weights. This is the mechanism the entire subsequent history of the field is built on.\n September 2016. Google publishes its neural machine translation system and reports, on side-by-side human evaluation against its own previous phrase-based system, an average reduction in translation errors of about 60 per cent across the language pairs tested. This is a human evaluation against a stated baseline, which is a stronger form of evidence than a BLEU delta.\n June 2017. The transformer paper removes recurrence entirely, reporting 28.4 BLEU on WMT 2014 English-to-German and 41.8 on English-to-French, at a fraction of the training cost of the systems it beat. Translation is the application the transformer was built for; everything else it is used for now is a later discovery.\nIn March 2018 Microsoft announced that its system had achieved human parity on translation of news from Chinese to English, on the WMT 2017 test set, based on human evaluation of individual sentences by bilingual annotators.\nTwo independent groups published re-evaluations the same year, and both found the claim did not hold under stricter conditions. The findings, stated carefully:\n  Evaluator expertise matters. When professional translators rather than bilingual crowd workers judged the same output, they preferred the human translations.\n  Sentence-level evaluation hides document-level failure. Rated one sentence at a time, machine output looked comparable. Rated as whole documents, human translations were clearly preferred — because consistency of terminology, pronoun reference and discourse coherence across sentences is invisible when you evaluate sentences in isolation.\n  Reference quality matters. Where the source text was itself a translation, the direction of translation affected the comparison in ways the original evaluation had not controlled for.\nThe lasting contribution of that exchange is methodological rather than about translation: document-level evaluation with professional raters became the standard for parity claims, and the field is markedly more careful about them now. The claim was not fraudulent — it was true under its stated protocol, and the protocol turned out to be the wrong one. That is the most common way an AI claim goes wrong, and it is much harder to spot than a fabricated number.\nWhat remains genuinely unsolved is worth listing, because it is where the current systems fail rather than where they failed in 1966: low-resource language pairs where no large parallel corpus exists; gender and other bias inherited from training data, visible when translating from a language without grammatical gender into one with it; terminology consistency across a long document; and the fact that a fluent, confident, wrong translation is harder for a non-speaker to detect than a clumsy correct one.\n  word2vec and the Idea That Meaning Has Coordinates\n\n  How the Transformer Paper Came About",
+      "publishedAt": "2026-08-08T01:00:40.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "f0f6c945aab7cf5bdeef7923de87cc6b895a9f4cb4b429b69984f7f1afb1f593",
+      "title": "Beyond LLMs: Agent Logic Is the Real Key to Scaling Enterprise AI",
+      "url": "https://dev.to/judy_miranttie/beyond-llms-agent-logic-is-the-real-key-to-scaling-enterprise-ai-216o",
+      "description": "📰 Key Takeaways\n\n\n\nIBM Research published a study arguing that the key to scaling enterprise AI isn't a bigger LLM — it's \"Agent Logic,\" a guidance layer built from software primitives like knowledge graphs, static code analysis, and algorithmic decomposition. This mechanism compresses the LLM's context space, cutting both hallucination rates and token consumption while making model behavior more controllable and costs more predictable.\nThe research walks through four use cases with hard numbers. For legacy mainframe code comprehension, replacing repeated LLM queries with a statically-analyzed, pre-indexed database cut token consumption by about 30x, letting the system reliably handle million-line-scale COBOL/PL1 codebases. For automated test generation, a sub-agent system guided by code analysis improved line, branch, and method coverage by 20-45%, while using just 1/15th of the tokens of the current best-in-class coding agent. For IT incident investigation, an I3 agent combined with a knowledge graph ran 4x faster than a GPT-5.1 ReAct baseline. For equipment maintenance, asset review time dropped from 15-20 minutes to 15-30 seconds, coverage rose from about 1% to 30%, and hallucinated statements fell by 57%. IBM defines the core principle behind this architecture as \"autonomous reasoning, bounded decisions\" — the agent can freely propose courses of action, but final decision-making stays subject to business rules and regulations, ensuring the system can be trusted in enterprise deployment.\nIBM Research's study makes a pretty direct point: what actually makes enterprise AI stable at scale isn't a bigger model, it's the \"Agent Logic\" layer wrapped around it.\nAll four use cases in the study point at the same design idea: use static analysis, knowledge graphs, and algorithmic decomposition to shrink the space the LLM has to reason through on its own. A 30x drop in token consumption for COBOL code comprehension, 1/15th the token usage for automated test generation compared to the current best agent — these numbers say that reining in the model's freedom, rather than expanding it, is what actually makes systems more reliable and costs more predictable. IBM's \"autonomous reasoning, bounded decisions\" principle is worth paying attention to in particular: the agent can freely propose a plan, but execution stays gated by business rules — which is close to non-negotiable for enterprise scenarios that have to stay compliant.\nNext time you're designing an agent, start by asking which judgment calls could be handled by program logic instead of model reasoning — list those out, and that's usually the fastest path to cutting both cost and hallucinations.\nPublished: 2026-06-01T13:51\nSource: https://huggingface.co/blog/ibm-research/agent-logic-and-scalable-ai-adoption\n\n\n\n\n\n\n\n  \n  \n  🔗 Further Reading\n\n\n\nThe Rise of Personalized AI Models: Tailoring Intelligence for Your Business\nFrom Trading Idea to Live Deployment: A Real-World AI-Assisted Strategy Development Workflow\nWhat's the Difference Between an AI Agent and an LLM?\nAI Agent Is Here, But What Is It? A Full Breakdown of AI Agent Definitions, Applications, and Challenges | Global Views Monthly\nWhat Is the Agentic AI Operating Model? A Full Breakdown of Enterprise Agentic AI Scaling and ROI in 2026\nOriginally published at Judy AI Lab. Visit for more articles on AI engineering and development.",
+      "publishedAt": "2026-08-08T01:00:27.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "87d2fa4fcae530434a6ec6bc0b46d6384d71ed63c9dfea80c5be0194cedf28a0",
+      "title": "What AI Overviews Actually Cite: A GEO Study for Developers",
+      "url": "https://dev.to/aimigo_57e64d6aeaf6a67a02/what-ai-overviews-actually-cite-a-geo-study-for-developers-26fm",
+      "description": "What AI Overviews Actually Cite: A GEO Study for Developers\n\n\nAI Overviews don't cite the most authoritative sites. They cite the most structurally predictable ones. After analyzing 1,400 queries across 12 tech verticals, our data shows that pages with clear entity definitions, scannable code blocks, and explicit \"what/why/how\" subheadings are 3.2x more likely to appear in citations than pages with deep, unstructured expertise. If your content strategy still relies on \"long-form originality,\" you're already behind.\nDevelopers write for humans. We use context, implication, and shared domain knowledge. AI models, however, don't read—they extract. They parse your HTML into discrete factoids, then match those factoids against a user's query intent. When your article says \"the API throws a 429,\" the model doesn't know if you mean rate limiting, auth failure, or a server bug. That ambiguity costs you a citation.\nThe problem isn't quality. It's semantic granularity. In a controlled test, we rewrote the same technical documentation twice: once as a narrative tutorial, once as a structured reference. The structured version received 4.7x more AI Overview citations over a 30-day window, despite identical content and backlinks.\nReason 1: The extraction pipeline is lossy. Google's MUM and Gemini-based systems convert your page into a \"fact graph.\" They don't store your prose; they store predicate-object pairs. A sentence like \"The retry parameter defaults to 3, but you can override it with maxRetries\" becomes two nodes: retry.default = 3 and retry.override = maxRetries. If your article buries that in a paragraph, the graph misses it.\nReason 2: Citation is a ranking signal, not a quality signal. AI Overviews are designed to reduce user friction. The system cites sources that minimize \"verification cost\"—meaning the snippet must look self-sufficient. A page with clean <h2> headers, a table of contents, and code blocks in <pre> tags is cheaper to verify than a wall of text with inline code.\nReal-world example: We tracked two popular React hooks libraries. Library A had a single, comprehensive README with deep explanations. Library B had a modular site with one page per hook, each with a \"Parameters\" table and \"Return Value\" section. For the query \"useDebounce hook implementation,\" Library B appeared in 83% of AI Overviews. Library A appeared in 11%. Same code quality, same GitHub stars.\nWe scraped 500 AI Overview responses for developer-focused queries (Python, Docker, Kubernetes, REST APIs, SQL optimization). Here's the citation breakdown by content type:\nStep-by-step tutorials with numbered lists: 42% of citations\nAPI reference pages with parameter tables: 31%\nStack Overflow answers with accepted-answer schema: 18%\nLong-form blog posts (2,000+ words): 6%\nVideo transcripts or slide decks: 3%\nThe pattern is clear: structured, atomic content wins. But there's a second, subtler layer. AI Overviews also favor pages with explicitly stated relationships. For example, a page that says \"If X happens, then do Y\" gets cited more than a page that implies the same logic through narrative. The model doesn't infer causality; it only extracts it.\nStep 1: Restructure for fact extraction. Break every technical article into three mandatory sections: \"Problem Context,\" \"Constraints,\" and \"Resolution.\" Use <h3> tags for each. Inside the text, avoid pronouns. Instead of \"It throws an error,\" write \"The fetch() method throws a TypeError when the URL is malformed.\" This gives the AI a clean subject-predicate-object chain.\nStep 2: Publish \"reference twins.\" For every tutorial, create a companion page that is nothing but a specification table. Columns: Parameter, Type, Default, Constraints, Example. No prose. This page doesn't need backlinks or social shares—it just needs to be crawlable. In our tests, these twin pages accounted for 22% of all AI citations, even when the tutorial had 10x more traffic.\nStep 3: Use schema markup for code entities. Google's SoftwareSourceCode and PropertyValue schemas are underused. Add them to your code blocks and parameter lists. We saw a 1.8x increase in citation likelihood for pages with PropertyValue markup on every function argument.\nStep 4: Answer the \"implicit next question.\" AI Overviews often cite pages that preempt follow-ups. If you're writing about rate limits, add a subsection titled \"What happens when you exceed the limit?\" with a direct answer. This signals completeness to the model. In our analysis, pages with FAQ-style subheadings were cited 2.3x more often for long-tail queries.\nStep 5: Optimize for the \"snippet economy.\" The first 50 words of your page matter more than the entire conclusion. AI models score \"introductory coherence\"—if your first sentence states the problem, the second states the solution, and the third states the scope, you're 94% more likely to be cited than if you start with background history.\n**",
+      "publishedAt": "2026-08-08T01:00:19.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "56fb695a67c06155d5527260218573627a3941cb6aa48c460370ab2d98cc2430",
+      "title": "Giving your AI agent eyes on your design specs: The Lanhu MCP approach",
+      "url": "https://dev.to/renato_marinho/giving-your-ai-agent-eyes-on-your-design-specs-the-lanhu-mcp-approach-30lj",
+      "description": "I've spent a lot of time staring at browser tabs, switching between Figma, Jira, and my IDE, trying to verify if the padding on a button matches what is written in the CSS. It's a low-value, high-friction task that kills flow. When we talk about 'AI agents' today, most people focus on them writing code or summarizing text. But the real productivity leap isn't just having an agent write a component; it's having an agent audit your design layers against your implementation without you ever leaving Cursor.\nThis is what happens when you bridge the gap with the Lanhu MCP server.\nIf you are working in a high-performance team, design handoff is usually where momentum goes to die. A designer makes a change in Lanhu, leaves a comment about a color tweak, and then... nothing happens until you manually notice the notification, open the web interface, find the layer, and translate that back into code.\nIf you are using an agent like Claude or Cursor, that agent is currently blind to your design source of truth. It only knows what you copy-paste into it. You can paste a screenshot, sure—but screenshots don't give you the structural metadata. They don't tell you if a group is named btn-primary-container or just Group 452.\nBy using the Lanhu MCP server (available at https://vinkius.com/mcp/lanhu), you are essentially giving your agent a structural view of your design workspace.\nThe magic isn't in 'seeing' the design; it's in querying it. When I looked at the toolset available in this Lanhu implementation, one specific thing stood out that most people skimming documentation would miss: the list_layers and get_file tools.\nMost developers think of MCP as a way to 'show' an image to an LLM. That is trivial. The real power lies in retrieving node structures and metadata. With list_layers, your agent can recursively traverse the hierarchy of a Lanhu file.\nYou can prompt your agent: \"Check the layers in the 'checkout-v1' file. Are there any hardcoded hex values that deviate from our design tokens?\"\nThe agent doesn't just look at a picture; it parses the tree. It sees the nodes, identifies the properties, and compares them against the context you've provided in your codebase. This turns an AI agent from a simple coder into a Design Ops auditor.\nBased on the tools available in this server, we aren't just talking about viewing files. We are talking about orchestration:\nAutomated Component Audits: Using list_layers and get_file, an agent can verify if your React component props match the design specifications (e.g., checking if a padding value in Lanhu matches your Tailwind config).\nComment-Driven Development: The get_comments tool is massive. Instead of hunting for feedback, you can ask: \"Summarize all recent designer feedback on the 'Mobile Wallet' project and create a checklist of tasks in my editor.\"\nProject Discovery: If you are part of multiple teams, use list_teams and list_project_files to let the agent find the relevant assets for the feature you are currently building.\nHere is where we need to be honest: giving an AI agent access to your design workspace—which often contains sensitive product roadmap info—is a massive security risk. If you're running a custom MCP script on your local machine, what happens if that script has an SSRF (Server-Side Request Forgery) vulnerability? Or what if the agent starts leaking team member details through list_members?\nWhen I built Vinkius, this was my primary obsession. We don't just run these tools; we run them in isolated V8 sandboxes. Every execution context has eight distinct governance policies—including DLP (Data Loss Prevention) and HMAC audit chains. When your agent calls get_comments, it's happening within a controlled environment that prevents the agent from using that connection to probe your internal network.\nIf you are building production-grade workflows, 'it works on my machine' isn't enough. You need an execution layer that handles the heavy lifting of security and auth so you can focus on the prompt engineering.\nThe setup is intentionally stripped of friction. I hate the moment a developer has to configure complex OAuth callbacks just to test a tool.\nSubscribe to the Lanhu server on Vinkium.\nGrab your Lanhu Access Token (found in your [User Settings] → [Access Token]).\nPaste the connection token into Claude or Cursor.\nThat's it. No heavy lifting, no broken dependencies.\nYou can find the full catalog and setup instructions here: https://vinkius.com/mcp/lanhu\nWe are moving toward a world where the IDE is the center of all engineering truth—not just code, but design, documentation, and project management. The MCP protocol is the glue that makes this possible. Stop manual checking; start orchestrating.\nMCPs are the music of AI Agents. We built the catalog. Discover Vinkius MCP Catalog.",
+      "publishedAt": "2026-08-08T00:48:43.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "d9c73dfcb495d9f73faf766ea39ece2fbd8556ae2a1105a8f6b2ad927902a5bb",
+      "title": "OpenAI、次期モデル「Astra」の一部開発を停止　「Critical」級サイバー能力の可能性否定できず",
+      "url": "https://www.itmedia.co.jp/news/article/2608/08/2000000459/",
+      "description": "米OpenAIは8月7日（現地時間）、次期モデル「Astra」の社内評価について、自社の安全指針「Preparedness Framework」が定める最上位の「Critical」（重大）に当たるサイバー能力に達している可能性を否定できないと発表した。直近数日の内部評価でエージェント的なコーディングとサイバーセキュリティの能力が大幅に向上...",
+      "publishedAt": "2026-08-07T22:25:09.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "a4b3d0f91bf0e5126df5d307bd82c9436ec97617f64a3e70c4f51e6575af1232",
+      "title": "お店の成長とともに、AWS環境はどう拡大していくのか考えてみた",
+      "url": "https://dev.classmethod.jp/articles/summer-project-2026-aws-shop-growth-koty-mousa/",
+      "description": "架空のお店の成長を通じて、AWS環境がどのように拡大していくのか考えてみました",
+      "publishedAt": "2026-08-07T17:24:19.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "4253ad0a99e9d27a6793d80a6f2c7f28d64a7da023b913d1d46ea8f4dd482cb8",
+      "title": "不審な国際電話番号から「海外不正利用でクレジットカードを止めた」と連絡があり、本人確認のためとフルネームと生年月日を聞かれたので、「ひろゆき氏」のものを伝えると「本人確認が取れました」",
+      "url": "https://togetter.com/li/2730285",
+      "description": "ひげおやじ @higeoyaji ※注意喚起になればと思い発信をさせていただきます。 本日「+1(855)0754511」という不審な国際電話番号から連絡があり、出ると「JCBセキュリティカスタマーセンター ハヤシ」と名乗る人物からでした。曰く、海外不正利用でクレジットカードを止めたとのこと。突然のことに驚き詳細を伺おうとする...",
+      "publishedAt": "2026-08-07T15:01:44.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "c9925a07a72367ef471484aa689fe1b5d8fde1aaa9b1e75778872b7403a8e5fe",
+      "title": "比較優位のデザイン｜Aki",
+      "url": "https://note.com/ak_iii/n/n337dec0687c6",
+      "description": "AI時代、もうできることを増やす競争は意味がなくなっています。 私たちは「人より上手くできることを増やせ」と教えられて育ってきました。経済学の言葉を少し乱暴に借りれば、絶対優位を増やすキャリア観です。誰よりも速く走る、テストで人より高い点を取る、偏差値の高い学校に入る、資格を取る、就職したら専門性を...",
+      "publishedAt": "2026-08-07T13:27:29.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "5a48d513d43c6809d245a5a0a2ff677263eb911ad244efb3251ef41cdb88e003",
+      "title": "AWSからCloudflareへ移して わかった「サーバを所有しない」こと",
+      "url": "https://docs.google.com/presentation/d/1MVF6nWVXKlFVjLMnUoCtjkQ8pJBh4knmBcv5kFJn_eY/mobilepresent?slide=id.out_s01",
+      "description": "今日は、AWSからCloudflare Workersへ移行して、API基盤のコストが下がった話をします。ただし主題は料金比較ではありません。移行したことで、コードに埋まっていた「自分たちのサーバがある」という前提が見えるようになりました。その前提をどう手放したかを、実際の失敗も含めて紹介します。 Cloudflare Workers AWS...",
+      "publishedAt": "2026-08-07T12:58:55.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "613a2a842dc5afe076a9459f48b7e07163bb5ec43f0c06dce5260d98c4710a6b",
+      "title": "Does Kubernetes DRA Replace HAMi?",
+      "url": "https://www.cncf.io/blog/2026/08/07/does-kubernetes-dra-replace-hami/",
+      "description": "Projects that want to share a GPU on Kubernetes have to work around an API instead of with it. The device plugin interface could count devices, and that was the whole vocabulary: nvidia.com/gpu: 1. It meant one...",
+      "publishedAt": "2026-08-07T11:30:00.000Z",
+      "feedName": "Cloud Native Computing Foundation"
+    },
+    {
+      "id": "1badb539b3264f23749d12fdfed1ecac644491e727ba10b95cc3a36713f8efca",
+      "title": "Shadow AI in CI/CD: Threat-modeling the path from developer laptop to Kubernetes",
+      "url": "https://www.cncf.io/blog/2026/08/07/shadow-ai-in-ci-cd-threat-modeling-the-path-from-developer-laptop-to-kubernetes/",
+      "description": "Artificial intelligence is becoming part of daily software delivery, often before it becomes part of the security architecture. That gap has a name: Shadow AI. It is any AI tool, model, agent, extension, or integration used...",
+      "publishedAt": "2026-08-07T11:00:00.000Z",
+      "feedName": "Cloud Native Computing Foundation"
+    },
+    {
+      "id": "33d066fb0c97164d96c7f0c652ea7f96c965b422c7d70eccaf369c37f9613c44",
+      "title": "AWS Backup for S3 の新機能「バックアップアクセスポイント」でバックアップデータの直接アクセスを試してみた",
+      "url": "https://dev.classmethod.jp/articles/aws-backup-s3-backup-access-point/",
+      "description": "AWS Backup for S3 にバックアップアクセスポイント機能が追加されました。従来はバックアップから1ファイルを取り出すにもリストアジョブが必要でしたが、アクセスポイント経由なら S3 標準 API で直接取得できます。AWS CLI で実際に検証してみました。",
+      "publishedAt": "2026-08-07T10:02:57.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "9fc2ba6c34f85c75038f35775e9fe7b92167d6bcccefe4732090646e64c87b89",
+      "title": "テストが増えすぎてもう限界だったので、PRで全テストを回すのをやめた話 - Timee Product Team Blog",
+      "url": "https://tech.timee.co.jp/entry/2026/08/07/164910",
+      "description": "はじめに こんにちは、タイミーのプラットフォームエンジニアリングチームに所属している徳富(@yannKazu1)です。 この記事では、スキマバイトサービス「タイミー」のバックエンド（Rails API）に Datadog Test Impact Analysis（TIA） を導入し、PRごとのCIフィードバックを大幅に高速化した取り組みについて紹介します...",
+      "publishedAt": "2026-08-07T09:53:34.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "d7511b4c04a194c4c2291d5e6b30c58a0a7d4356b91e798d118db8ecf0fae6fa",
+      "title": "OpenAI、GitHubのプルリクエストをセキュリティ面から詳しく調べる「Codex Security Review」を研究プレビューで提供",
+      "url": "https://gihyo.jp/article/2026/08/codex-security-review?utm_source=feed",
+      "description": "OpenAIは2026年8月6日、GitHubのプルリクエストをセキュリティ面から詳しく調べる「Codex Security Review」を研究プレビューとして提供を開始した。",
+      "publishedAt": "2026-08-07T09:52:00.000Z",
+      "feedName": "gihyo.jp"
+    },
+    {
+      "id": "cfc0f2d8c6306713c1cfd68444b6b40f27aa8553bc5eff148cbeea259b04282b",
+      "title": "AWS WAF を使った Web アプリケーション防御のワークショップをやってみた",
+      "url": "https://dev.classmethod.jp/articles/waf-web-application-workshop/",
+      "description": "CloudFrontを保護する保護パックの作成から、XSS・SQLインジェクション対策、ボットコントロール、レート制限、API保護まで、7つのステップでセキュリティ対策を実装する手順を紹介します。",
+      "publishedAt": "2026-08-07T09:40:12.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "1cfa36f3765d01090706929a7c07891991bf6003d91e4674782390228a5fe9fb",
+      "title": "エージェンティックエンタープライズを AWS for SAP MCP Server on Amazon Bedrock AgentCore で実現",
+      "url": "https://aws.amazon.com/jp/blogs/news/building-agentic-enterprises-on-aws-using-aws-for-sap-mcp-server-on-amazon-bedrock-agentcore/",
+      "description": "AWS for SAP MCP Server は、SAP ERP のビジネスデータとビジネスプロセスをファーストクラスの MCP ツールへと変換します。Amazon Quick、Strands SDK、SAP Joule Studio でエージェントを構築する場合でも、A2A を使用してマルチエージェントワークフローをオーケストレーションする場合でも、AWS for SAP MCP Server を使えば、エージェントはすぐにライブの SAP データを検出して操作できるようになります。AWS はこの MCP サーバーをコンテナイメージとして無償で提供しており、MCP サーバーを大規模にホスティングするためのフルマネージドサービスである Amazon Bedrock AgentCore Runtime にデプロイできます。Amazon Bedrock AgentCore Runtime は、セッションの分離、SAP リソースへのプライベート接続、そして Amazon Bedrock AgentCore Identity による安全なインバウンドおよびアウトバウンドの認可を担うため、お客様はインフラストラクチャの管理ではなくエージェントの構築に集中できます。",
+      "publishedAt": "2026-08-07T09:26:35.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "8e72a4afd9800c8ed4271a10eb2020282f3f3b98aa94324efcde48d84839f171",
+      "title": "検証環境にEC2 Spot Instanceは最適解なのか？コストと可用性の観点から考えてみた",
+      "url": "https://qiita.com/01_Riri_53/items/047d2c4867e9d21316bb?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\n本記事は「2026 Japan AWS Jr. Champions 真夏のQiitaリレー」の7日目の記事です！\n下記URLから他の方の記事を確認できます。ぜひご覧ください！\n\nさて、本題に移ります。\n最近仕事をしていて、開発・検証環境は、稼働時間が意外と長...",
+      "publishedAt": "2026-08-07T09:24:11.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "ccc692d829e1154ab4b33e79efaf14714bf2a1c8eb28d44f10499711375d09e3",
+      "title": "AWS Systems Manager Parameter Store から AWS Secrets Manager のシークレットを GetParameters でまとめて取得してみた",
+      "url": "https://dev.classmethod.jp/articles/parameter-store-secrets-manager-getparameters/",
+      "description": "AWS Systems Manager Parameter Store の `/aws/reference/secretsmanager/` プレフィックスを活用して、通常設定値と Secrets Manager のシークレットを GetParameters で一括取得する方法を検証してみました。",
+      "publishedAt": "2026-08-07T06:59:41.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "209257f10c154ba566cb818e7f694c801c1e5f60b36af128adfedf9816539742",
+      "title": "イタリアを発信元とするサイバー攻撃が「前年同期比約75倍」に増加──サイバーセキュリティクラウド調査",
+      "url": "https://enterprisezine.jp/news/detail/24841",
+      "description": "サイバーセキュリティクラウドは、『Webアプリケーションへのサイバー攻撃検知レポート』を発表した。\n\n　検知期間は2026年4月1日～6月30日。同社が提供するクラウド型WAF「攻撃遮断くん」および...",
+      "publishedAt": "2026-08-07T06:00:00.000Z",
+      "feedName": "EnterpriseZine"
+    },
+    {
+      "id": "1187b2dcfdfd34872b3b190e813085b59b08a2c2fe93e6980a7fce5dd3712057",
+      "title": "ダークトレース、「AIセキュリティ」と「自律型セキュリティ運用」を可能にするプラットフォームを発表",
+      "url": "https://enterprisezine.jp/news/detail/24840",
+      "description": "ダークトレースは、企業におけるAIシステムやAIエージェントとの協働を念頭に設計された統合プラットフォーム製品「Darktrace Behavioral Defense Platform」を発表した...",
+      "publishedAt": "2026-08-07T05:35:00.000Z",
+      "feedName": "EnterpriseZine"
+    },
+    {
+      "id": "7343bf41bebbc8071df7b6916d3d114aafc1acf460c9a016c6bc90e75bf31034",
+      "title": "Vercel、OpenAI、GitHub、Microsoft、AWS、Anysphereらが参加、AIエージェントのプラグイン共通規格「Agent Plugins」発表",
+      "url": "https://gihyo.jp/article/2026/08/agent-plugins?utm_source=feed",
+      "description": "2026年8月6日、AIエージェントで再利用可能なコンポーネントをポータブルなプラグインとしてパッケージ化するためのオープンな標準規格「Agent Plugins」が発表された。",
+      "publishedAt": "2026-08-07T04:54:00.000Z",
+      "feedName": "gihyo.jp"
+    },
+    {
+      "id": "9a0c9cc07e135adc2b01656825857ee7c727ca66b4e016e1803e9a9e6cbb197a",
+      "title": "「パスワードを使い回している人」が6割超　情シスが“特に警戒すべき人”は？",
+      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2608/07/news048.html",
+      "description": "パスワード管理の強化は、セキュリティ対策の基本だ。ゾーホージャパンの調査からは、その基本の取り組みが十分に進んでいない実態が見えてきた。",
+      "publishedAt": "2026-08-07T04:00:00.000Z",
+      "feedName": "＠IT"
+    },
+    {
+      "id": "64c322d6b92123249a5e09b2d34b4b5e13e42a4d7bb02dae7fd912efeb18ae9c",
+      "title": "GitHubリポジトリの「侵入口」をどうふさぐ？　無料で使える6つのセキュリティ設定",
+      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2608/07/news062.html",
+      "description": "GitHubは、リポジトリを攻撃者に狙われにくくする6つの無料セキュリティ設定を紹介した。いずれも30分以内で設定でき、攻撃者が狙う「侵入しやすい入り口」をふさぐ効果があるという。",
+      "publishedAt": "2026-08-07T04:00:00.000Z",
+      "feedName": "＠IT"
+    },
+    {
+      "id": "5af0428a8dd6bb53a5ad93d03bd16514ae93dd034af686381b1c00116b9a3596",
+      "title": "AI Agent は “つながり” で進化する ─ Amazon Connect Customer × Salesforce MCP 連携",
+      "url": "https://aws.amazon.com/jp/blogs/news/integration-as-intelligence-amazon-connect-customer-integrates-with-salesforce-via-mcp/",
+      "description": "統合されたアーキテクチャの「幅広さ」こそが、AI エージェントの能力を左右する ── その理由。 はじめに エ […]",
+      "publishedAt": "2026-08-07T03:53:57.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "580c1581ef9f13dca1d2c8ee7bd802e3e8f70edf10777938f6b70fcab2066386",
+      "title": "AWS検証環境の削除し忘れ対策を、簡易的に自動化してみた！",
+      "url": "https://qiita.com/KoheiMaeno/items/880a89f6cd25a3f115b5?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "本記事は、BIPROGY / ユニアデックス社内AWSコミュニティ「BIPROGY AWS SPARK」の定期投稿企画第10回目の記事です。\n他の定期投稿企画の記事は、インデックスページをご覧ください\n\n目次\n\nはじめに\nやりたいこと\n全体アーキテクチャ\n実装の全体...",
+      "publishedAt": "2026-08-07T00:34:59.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "32dded74ecbee7d724a1a4836ff3562f9af03327e76c453415b03529f24464d3",
+      "title": "58% の Pull Request を AI が承認するようになった",
+      "url": "https://zenn.dev/she_techblog/articles/937836550dfdf3",
+      "description": "SHE株式会社の開発責任者を務めている @qsona です。\nAI コーディングの普及で開発速度は速くなったが、価値の創出はそこまで速くなっていない、というのは、多くの開発組織が感じている課題でしょう。Four Keys で測れるような(狭義の)開発生産性だけをみても、コードレビューやテストといった、品質担保のアクションがボトルネックになってきがちです。弊社 SHE においても、Pull Request レビューがボトルネックになりがちであるという議論が、半年ほど前からされていました。\nそこで、この状況に対して、AIがコードレビューおよび approve 判断まで行う仕組みを実装しました...",
+      "publishedAt": "2026-08-06T21:10:44.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "78de93bd4d18a452792c6aef598e4f8522bd2e0a74b8be044e377733a53a31a7",
+      "title": "夏休みの自由研究:AWSの「Kiro Crew」がよくわからなかったので、自分で作ってみた",
+      "url": "https://qiita.com/yama3133/items/47a3b303a3d8a0eb02b2?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "きっかけ:読んでもよくわからなかった\n2026年8月4日、AWSからKiro Crewがを公開されました。簡単に言うと\n「AIエージェントをずっと動かし続けるための仕組み」\nというもののようです。\nREADMEを読み、ソースコードも読んでみたのですが、正直、頭の中でうまく...",
+      "publishedAt": "2026-08-06T17:54:35.000Z",
+      "feedName": "Qiita"
     }
   ]
 }
