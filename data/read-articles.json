@@ -1,126 +1,6 @@
 {
   "articles": [
     {
-      "id": "299ff64e8f6140b7c8c7995d19ead73748a3cb03cd852c1920a1e52cbd5a5773",
-      "title": "Why I Believe Vibe Coding Is Becoming a Real Engineering skills",
-      "url": "https://dev.to/sabeer/why-i-believe-vibe-coding-is-becoming-a-real-engineering-skills-4a6d",
-      "description": "For a long time, I thought vibe coding was simply about asking AI to generate code.\nThe more I build, the more I realize that's only a small part of it.\nThe real skill isn't writing prompts it's making sound engineering decisions.\nAI can generate a login page, an API, or even an entire application in minutes. What it can't reliably do is make the decisions that determine whether a product is secure, scalable, and maintainable.\nThose decisions still require human judgment.\nAs developers, we're responsible for answering questions like:\nIs this the right architecture for the product?\nHow should user data be secured?\nWill this design scale as the application grows?\nIs the generated code maintainable and easy to extend?\nWhat are the trade-offs between different solutions?\nHow do we identify and fix flaws in AI-generated code?\nThese are engineering problems not prompting problems.\nI believe the developers who will stand out over the next decade won't necessarily be those who write code the fastest. They'll be the ones who can think critically, design robust systems, evaluate AI-generated solutions, and ship reliable products.\nThat's the direction I'm pursuing.\nAs a frontend developer, I'm expanding into AI, backend engineering, and system design because I want to understand how great products are built from end to end—not just how they're coded.\nAI isn't replacing software engineers.\nIt's raising the bar for what software engineering looks like.\nWhat's your perspective?\nDo you think vibe coding will evolve into a respected engineering discipline, or will it remain a temporary trend?\n\n\n  \n  \n  AI #Programming #SoftwareEngineering #WebDevelopment #SystemDesign #MachineLearning #ProductEngineering #OpenSource",
-      "publishedAt": "2026-07-30T01:35:04.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "6bf09007669d6ac1708656a23c8f18b1baaddce6f21adeac0251a18e8eca4f61",
-      "title": "I Built a Free Cold Calling Dialer That Replaces $200/Month Software",
-      "url": "https://dev.to/6t9/i-built-a-free-cold-calling-dialer-that-replaces-200month-software-3j25",
-      "description": "I Built a Free Cold Calling Dialer That Replaces $200/Month Software\n\n\nMost cold calling tools cost $50-200 per user per month. I built one that's free, open-source, and runs in your browser.\nI was working with a small sales team that needed to make cold calls. They looked at:\nRingCentral — $30/user/month\nDialpad — $25/user/month\n\n\nFive9 — $150+/user/month\nVicidial — Free but requires a dedicated server and is ancient\nNone of these fit their budget or needs. So I built Open Cold Dialer.\nIt's a full-featured cold calling CRM that runs in your browser:\nBrowser Softphone — Make calls directly from your browser using SIP.js\nMulti-Provider SIP — Works with SignalWire, Telnyx, Twilio, or any SIP server\nLead Management — Add leads manually or import from CSV\nCampaign Management — Organize leads into campaigns\nCall Scripts — Templates with objection handling responses\nCall History — Track every call with outcome and notes\nDashboard — Real-time stats on your calling activity\nFrontend:  React 18 + Vite + TypeScript + Tailwind CSS\nBackend:   Express.js + SQLite (zero config!)\nAuth:      JWT with bcrypt\nSIP:       SIP.js (WebRTC)\n\ngit clone https://github.com/6t9xstar/Open-Cold-Dialer.git\ncd Open-Cold-Dialer\n\n# Backend\ncd backend\nnpm install\nnpm run seed  # Loads 20 sample leads\nnpm run dev\n\n# Frontend (new terminal)\ncd frontend\nnpm install\ncp .env.example .env.local\nnpm run dev\n\nOpen http://localhost:3000 and you're running.\ndocker compose up -d\ndocker compose exec backend npm run seed\n\nAdd your SIP provider credentials to .env.local:\nVITE_SIP_URI=sip:your-extension@your-domain.sip.signalwire.com\nVITE_SIP_PASSWORD=your-password\nVITE_SIP_WS_URL=wss://your-domain.sip.signalwire.com\nVITE_SIP_CALLER_ID=+1XXXXXXXXXX\n\n┌─────────────────────────────────────────────┐\n│                  Browser                     │\n│  ┌─────────┐  ┌──────────┐  ┌───────────┐  │\n│  │ React UI│  │ SIP.js   │  │ WebRTC    │  │\n│  │         │  │ Client   │  │ Audio     │  │\n│  └────┬────┘  └────┬─────┘  └─────┬─────┘  │\n│       │            │              │         │\n└───────┼────────────┼──────────────┼─────────┘\n        │            │              │\n   ┌────▼────┐  ┌────▼─────┐  ┌────▼─────┐\n   │ Express │  │ SignalWire│  │ Browser  │\n   │ API     │  │ / Telnyx  │  │ Mic      │\n   │ (REST)  │  │ (SIP)     │  │          │\n   └────┬────┘  └──────────┘  └──────────┘\n        │\n   ┌────▼────┐\n   │ SQLite  │\n   │ DB      │\n   └─────────┘\n\nThe key insight: SIP.js handles the telephony directly from the browser. No need for a SIP server — just connect to your provider's WebSocket endpoint.\nThe library that makes browser-based calling possible. It handles:\nSIP registration\nMaking/receiving calls\nAudio via WebRTC\nDTMF tones\nZero-config database. No PostgreSQL, no MySQL — just a file. Perfect for:\nSingle-server deployments\nEasy backup (copy one file)\nNo database admin needed\nBlazing fast development. Hot module replacement means changes appear instantly.\n\n\n\nFeature\nOpen Cold Dialer\nRingCentral\nVicidial\n\n\n\n\nPrice\nFree\n$30/user/mo\nFree*\n\n\nSelf-hosted\nYes\nNo\nYes\n\n\nOpen Source\nYes\nNo\nYes\n\n\nSetup Time\n5 minutes\n30 minutes\n2+ hours\n\n\nUI\nModern React\nModern\nPHP (2005)\n\n\nBrowser-based\nYes\nYes\nNo\n\n\nLead Management\nBuilt-in\nExtra\nBasic\n\n\nCSV Import\nYes\nNo\nYes\n\n\nCall Scripts\nYes\nNo\nBasic\n\n\n\n*Vicidial is free but requires a dedicated server and is complex to set up.\nI'm working on these features:\n[ ] Audio device selector (choose mic/speaker)\n[ ] Call recording\n[ ] Parallel dialing (power dialer mode)\n[ ] Voicemail detection\n[ ] DNC list management\n[ ] AI call summaries\nThe project is open-source and ready to use:\nGitHub: github.com/6t9xstar/Open-Cold-Dialer\ngit clone https://github.com/6t9xstar/Open-Cold-Dialer.git\ncd Open-Cold-Dialer/backend && npm install && npm run seed && npm run dev\n\nIf you find it useful, please give it a star on GitHub. It helps others discover the project.\nOpen an issue on GitHub or drop a comment below. I'm happy to help you set it up.\nBuilt with React, TypeScript, SIP.js, and a lot of coffee.",
-      "publishedAt": "2026-07-30T01:26:28.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "d4fea8108c9b8c3802b7e846213f4469547990481d5dfe22dff32c17e2a57ee8",
-      "title": "ChatGPTに「入力してはいけない」5項目――押さえておきたい“生成AIのNGリスト”",
-      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2607/30/news039.html",
-      "description": "組織内での生成AI利用がますます広がっていますが、一方では生成AI利用時のリスク抑制の必要性が高まっています。ChatGPTの利用に伴うセキュリティリスクや、組織がリスクだと見なしている生成AIツールの状況などをまとめました。",
-      "publishedAt": "2026-07-30T01:15:00.000Z",
-      "feedName": "＠IT"
-    },
-    {
-      "id": "5d505da6634ad2aed97b9a0ead22a74214e39640b125928b8517930dd83b209e",
-      "title": "API設計の常識が変わる？　HTTP新メソッド「QUERY」とセキュリティ対策を学ぶ",
-      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2607/30/news031.html",
-      "description": "APIはWebサービスや生成AIアプリケーションを支える重要な基盤だ。「IETF」がHTTP新メソッド「QUERY」を標準化プロセスへ進めるなど、API設計は変化しつつある。一方で、攻撃への備えも欠かせない。API設計とセキュリティを理解するための記事を紹介する。",
-      "publishedAt": "2026-07-30T01:00:00.000Z",
-      "feedName": "＠IT"
-    },
-    {
-      "id": "c943435d119fbe96861bd619b92f4544d756d3c8c640ee7dbb6d46b03be99b36",
-      "title": "AWS Nitro Isolation Engine: AWS Nitro System におけるハイパーバイザーの形式的検証",
-      "url": "https://aws.amazon.com/jp/blogs/news/aws-nitro-isolation-engine-formally-verifying-the-hypervisor-in-the-aws-nitro-system/",
-      "description": "AWS Nitro System のハイパーバイザー内で分離を実施する専用コンポーネント「AWS Nitro Isolation Engine」の一般提供を Graviton5 ベースのインスタンスで開始しました。形式的検証により、機密性と完全性、機能的正確性、ランタイムエラーの不在、メモリ安全性という 4 つの特性を数学的に証明し、形式的に検証された初のクラウドハイパーバイザーを実現します。Rust による実装や今後の展望も紹介します。",
-      "publishedAt": "2026-07-30T00:52:58.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "09f4da5a5ef28d5894fe7a03f76ba3ba4c82de1bcdb4b56496e896f9eca7a0c7",
-      "title": "Isabelle/HOL: Nitro Isolation Engine を支える定理証明支援系",
-      "url": "https://aws.amazon.com/jp/blogs/news/isabelle-hol-the-proof-assistant-behind-the-nitro-isolation-engine/",
-      "description": "Amazon Web Services (AWS) は、定理証明支援系 Isabelle/HOL を用いて Nitro Isolation Engine (NIE) の正当性とセキュリティ保証を検証し、世界初の形式的に検証されたクラウドハイパーバイザーを実現しました。本記事では、ブール論理から一階述語論理、高階論理、依存型理論に至る数理論理の言語階層を解説し、Isabelle/HOL が備える数学的な記述の表現力、自動化、スケーラビリティのバランスや、sledgehammer やロケールなどの主要機能、seL4 や CRDT などの応用事例を紹介します。",
-      "publishedAt": "2026-07-30T00:38:50.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "af0c97c6ede2c0ed5a0247a72d4e430f1dc3a894539309caa1a9f57f7edf2337",
-      "title": "EKS の IRSA っぽく Kubernetes から GitHub の短命なトークンを取得する",
-      "url": "https://developers.cyberagent.co.jp/blog/archives/65015/",
-      "description": "こんにちは。ABEMA の CloudPlatform チームに所属しているエンジニアの koda  ...",
-      "publishedAt": "2026-07-29T23:00:05.000Z",
-      "feedName": "CyberAgent Developers Blog"
-    },
-    {
-      "id": "4318907ac4abe4e45bbcedda6cfd5972b0222aef02d1e98cc0e3b55fa1c2efcf",
-      "title": "技術的実装、SBOM管理、そして「PSIRT 2.0」へ……CRAの各要求事項に応える実務のポイント",
-      "url": "https://enterprisezine.jp/article/detail/24703",
-      "description": "前回（第3回）は、欧州サイバーレジリエンス法（CRA）対応の土台となる組織体制や社内教育、リスクアセスメントの重要性について解説しました。今回は、その土台の上で、実際にどのような技術的対策を製品に施し、それをどう検証し、長期間にわたって維持していくべきか。そして、法規制への適合を超えた先にある、製品セキュリティの将来像「PSIRT 2.0」について展望します。",
-      "publishedAt": "2026-07-29T23:00:00.000Z",
-      "feedName": "EnterpriseZine"
-    },
-    {
-      "id": "ccd2f0be2564de9454266a050423b7d0057b4c745bae2ba8e72465e92cef87a9",
-      "title": "Windows Updateで要注意　甘く見るとPCの起動も認証も止まる「3つのセキュリティ移行」",
-      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2607/30/news015.html",
-      "description": "2026年、Windowsではセキュア ブート証明書の世代交代など、複数のセキュリティ仕様の移行が同時に進んでいます。対象は端末の起動や認証、周辺機器とさまざまですが、いずれもWindows Updateを通じて段階的に進められています。更新後に突然ログインできなくなったり、周辺機器や業務アプリケーションが動かなくなったりしないように、自社がどの仕様変更の影響を受けるのかを把握することが大切です。皆さんの組織は、今どの変更が進み、それにどう備えるのかを説明できるでしょうか。",
-      "publishedAt": "2026-07-29T20:00:00.000Z",
-      "feedName": "＠IT"
-    },
-    {
-      "id": "4325fda038fa6d7b4cf355775fc236d84de182eab2485a69f510195688d79ba4",
-      "title": "[アップデート] Kiro IDE 1.0.242 でエディタの右クリックメニューや Quick Fix から直接 Kiro に依頼できるようになりました",
-      "url": "https://dev.classmethod.jp/articles/kiro-ide-10242-contextmenu/",
-      "description": "AWS提供のAI コーディングIDE「Kiro IDE」で、エディタのコンテキストメニューやクイックフィックスから直接Kiroに依頼できるようになりました。新機能を試してみたので紹介します。",
-      "publishedAt": "2026-07-29T17:22:45.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "e46320e08aeb74146448d8e24926ff47b22cd8e52ea686663ccce83d831058b9",
-      "title": "aws-bench の診断タスクを AWS 利用料ほぼゼロ、Kiro クレジットで試してみた",
-      "url": "https://dev.classmethod.jp/articles/aws-bench-mini-tasks-local-runner/",
-      "description": "aws-bench を公式手順のまま試すには、AWS Organizations 環境や高額なリソースが必要です。公式データセットから4つの診断タスクを単一アカウントに展開し、AWS 利用料をほぼゼロに抑えました。Kiro クレジットで動かす読み取り専用 Kiro に診断させ、ローカルで判定する最小構成を紹介します。",
-      "publishedAt": "2026-07-29T15:43:03.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "bb946f6fc5c5b4d4af2906911146ed0e872fdd4d3fd1ba282a8b6aaca6159aac",
-      "title": "KubernetesはAIを動かすプラットフォームに。横浜でKubeCon＋CloudNativeCon Japan 2026が開幕",
-      "url": "https://www.publickey1.jp/blog/26/kubernetesaikubeconcloudnativecon_japan_2026.html",
-      "description": "KubernetesはAIを動かすプラットフォームに。横浜でKubeCon＋CloudNativeCon Japan 2026が開幕 クラウドネイティブ関連技術におけるIT業界最大のイベント「KubeCon+CloudNativeCon Japan 2026」が昨日（2026年7月29日）、パシフィコ横浜で開幕しました。日本でKubeCon＋CloudNativeConが開催されるのは、昨年に続いて2度...",
-      "publishedAt": "2026-07-29T15:27:10.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "67e464ceb2d1e43b1cc7f966d622d957c0c1e2760ac6159a18e05c042942d998",
-      "title": "[アップデート] AWS Entity Resolution の Advanced ルールタイプがリアルタイムマッチングに対応したので試してみた",
-      "url": "https://dev.classmethod.jp/articles/20260729-aws-entity-resolution-rules-rt-match/",
-      "description": "AWS Entity Resolutionの Advanced ルールタイプがリアルタイムマッチングに対応したので、GenerateMatchId API での動作を実際に検証してみました。",
-      "publishedAt": "2026-07-29T14:38:54.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "6efe3bc6c957ae2c8f9b2bf3b842db767f4f8a47109d7f0ce4d603b5bd365d82",
-      "title": "cloud-nuke（取扱注意）の時間フィルタでAWSリソースを削除してみた",
-      "url": "https://dev.classmethod.jp/articles/cloud-nuke-time-based-aws-resource-deletion/",
-      "description": "cloud-nukeの時間フィルタを使ってAWSアカウントを作成日時で絞って削除する方法を試してみました。「最近作ったものだけ消したい」検証環境の掃除に便利ですが、作成日時を持たないリソースの扱いに注意が必要です。実運用での工夫をまとめます。",
-      "publishedAt": "2026-07-29T11:51:34.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "1efe9b533f41e8011342c2832ce07fd4d8d6cdefde960396b75039973a72eabb",
-      "title": "Your Kubernetes health checks are accidentally waking your services. Here’s the fix.",
-      "url": "https://www.cncf.io/blog/2026/07/29/your-kubernetes-health-checks-are-accidentally-waking-your-services-heres-the-fix/",
-      "description": "Scale-to-zero breaks when health checks scale you back up. Learn how KubeElasti’s ProbeResponse lets Kubernetes services stay genuinely idle — while keeping load balancers and uptime monitors happy. Scale-to-zero sounds perfect on paper. Idle service. No...",
-      "publishedAt": "2026-07-29T11:00:00.000Z",
-      "feedName": "Cloud Native Computing Foundation"
-    },
-    {
       "id": "1d43774912af77d670457ce977b1386cb991f2b8c6a0ead6fe15214af6e74b21",
       "title": "Best CDN for Live Streaming in 2026: A Developer’s Guide to Choosing the Right Provider",
       "url": "https://dev.to/alviny/best-cdn-for-live-streaming-in-2026-a-developers-guide-to-choosing-the-right-provider-31j8",
@@ -319,86 +199,6 @@
       "description": "約30ステージの業務自動化パイプラインを「どこで落ちても再開できる」設計にした実装パターンを紹介。ステータス駆動の冪等性、二重実行防止、3段階リトライ制御をTypeScript + PocketBaseで実現しました。",
       "publishedAt": "2026-07-30T06:00:11.000Z",
       "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "1496a83cc23e73850daa1a4dd8a5dc6d7e228319737877232d6e30a18d07341f",
-      "title": "Patch Manager の EventBridge 通知でスキャンとインストールを判別するにはどうすればいいですか",
-      "url": "https://dev.classmethod.jp/articles/tsnote-ssm-patchmanager-eventbridge-maintenance-window-filter/",
-      "description": "AWS Patch Manager のスキャンとインストール完了を区別して EventBridge で通知する方法について紹介します。EC2 Command Invocation Status-change Notification では判別できない理由と、Maintenance Window Task Target Invocation State-change Notification を使った解決策を解説します。",
-      "publishedAt": "2026-07-30T05:46:05.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "05336dd16effe10247de697f0859b3db5dba7c3c8d85ee647f45d45aba777904",
-      "title": "MCPの大型アップデート（2026-07-28）で何が変わったか —— TypeScript SDK v2で試す",
-      "url": "https://zenn.dev/komlock_lab/articles/mcp-stateless-spec-2026",
-      "description": "こんにちは！ブロックチェーン×AI Agentで自律経済圏を創るKomlock labでエンジニアをしている小原（@brto_0224）です。 MCPが2026年7月28日に大型アップデートされた、という話を見かけて調べてみました。公開された2026-07-28仕様はMCP発足以来もっとも大きな仕様変更で、通信の土台が作り直されたほか、認可の強化や...",
-      "publishedAt": "2026-07-30T05:23:06.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "abb956c3bc196d7c814ec540e72c545915bf81d515c7b7db91d19ac88d1f9f95",
-      "title": "オープンソースサプライチェーン攻撃の背後にいる北朝鮮のハッカーグループを Amazon が特定",
-      "url": "https://aws.amazon.com/jp/blogs/news/amazon-identifies-north-korean-hacker-group-behind-open-source-supply-chain-attacks/",
-      "description": "Amazon Threat Intelligence は、axios、debug、chalk、typo-crypto という人気 NPM パッケージの侵害が、同一の北朝鮮 (DPRK) に関連する脅威アクターによるものであることを初めて特定しました。本記事では、オープンソースサプライチェーン攻撃の手口がどのように進化しているか、スロップスクワッティングや間接プロンプトインジェクションといった生成 AI がもたらす新たな脅威、そして Amazon Inspector や Amazon GuardDuty を通じた AWS の対応について解説します。",
-      "publishedAt": "2026-07-30T04:16:08.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "a49d0b5ec6f806549bb2bfa6c4f10ecec01c77cf968fde5f9c8331bb200b8f97",
-      "title": "なぜいま「DNS」の見直しが必要？　攻撃者が狙う“6つの設定ミス”",
-      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2607/30/news046.html",
-      "description": "NISTが改訂したDNSガイドラインを基に、Akamaiは攻撃者が標的とする6つの主要なDNS設定・運用上の問題について解説した。ネットワークセキュリティにおけるDNSの重要性と、攻撃者に狙われやすい点とは。",
-      "publishedAt": "2026-07-30T04:00:00.000Z",
-      "feedName": "＠IT"
-    },
-    {
-      "id": "a1725f7fb9708b155c7be2c52eaffd5e11f69afd584a6b089f670b05a91ca2ae",
-      "title": "AWS初心者がCIDRとビットについて整理してみた話",
-      "url": "https://qiita.com/tks_1128/items/833450c8f16abf47af61?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "はじめに\nこんにちは。Tsukasaです！\n皆さんはCIDRとかビットはご存じでしょうか？\n聞いたことはあるけど、何なのかはよくわからないなんて方も多いのではないのでしょうか。\n私自身も聞いたことはありますし、よく目にはしますが、結局のところ何なのかはよくわかっていません...",
-      "publishedAt": "2026-07-30T03:23:59.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "283c45c1ff679837f61a982e27dfbba9e4e33bed1cf4433d3d2debf1daf42b62",
-      "title": "リプレイ機能付きオセロを作って、AWS（EC2/RDS）にデプロイしてみた",
-      "url": "https://qiita.com/KyosukeTakahagi/items/aae3889fb1dacf6892c8?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "本記事は、BIPROGY / ユニアデックス社内AWSコミュニティ「BIPROGY AWS SPARK」の定期投稿企画第4回目の記事です。他の定期投稿企画の記事は、インデックスページをご覧ください。\n\nはじめに\n私は普段業務でAWSのインフラ環境を構築することが多い...",
-      "publishedAt": "2026-07-30T00:47:36.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "9a9bec2a175998220faa8767c358db6a9237519c0ea87ef42bd56cabf900a32a",
-      "title": "CLAUDE.md は21セクションか、8行か — 公式ドキュメントで決着をつけた",
-      "url": "https://qiita.com/jqit_suwa/items/cea574550613de33a114?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "CLAUDE.md の書き方を調べていたら、正反対の主張に行き当たりました。\n\nA「20項目以上のテンプレートを用意して、役割・規約・テスト戦略・セキュリティまで網羅すべき」\n\nB「8行で十分。増やすより削るほうが効く」\n\nどちらも自信を持って書かれています。両方試したう...",
-      "publishedAt": "2026-07-30T00:47:06.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "330bb7e4ccfac551233457d2495610c7cb92d10e02a41039f38a16c2b1150e7c",
-      "title": "GitHub Actionsのコストが増えているなら、Namespaceを使えばいいじゃない",
-      "url": "https://zenn.dev/aircloset/articles/6b47018589df0f",
-      "description": "!\nEnglish Version is here\n\nみなさまこんにちは！エアークローゼットでCTOをしている辻です。\nGitHub ActionsのランナーをGitHub hosted→Blacksmith→Namespaceと2回乗り換えました。結果を先に言うと:\n\nCIコストはGitHub hosted時代の約1/4\n遅い処理（p90）でも37%短縮\nCIが完了しない事故は32件→0件\n移行作業は1行変えるだけ\n\nこの記事はその実測記録です。乗り換え判断の材料になるよう、測り方も失敗談も込みで公開します。\n\n AIで開発すると、CIは静かに膨らみ続ける\nまず課題感から。AIエージェ...",
-      "publishedAt": "2026-07-29T23:52:26.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "05336dd16effe10247de697f0859b3db5dba7c3c8d85ee647f45d45aba777904",
-      "title": "MCPの大型アップデート（2026-07-28）で何が変わったか —— TypeScript SDK v2で試す",
-      "url": "https://zenn.dev/komlock_lab/articles/mcp-stateless-spec-2026",
-      "description": "こんにちは！ブロックチェーン×AI Agentで自律経済圏を創るKomlock labでエンジニアをしている小原（@brto_0224）です。\nhttps://x.com/claudedevs/status/2082164248697069935\nMCPが2026年7月28日に大型アップデートされた、という話を見かけて調べてみました。公開された2026-07-28仕様はMCP発足以来もっとも大きな仕様変更で、通信の土台が作り直されたほか、認可の強化や複数機能の非推奨化まで含みます。この記事では公式ブログと仕様書の内容を整理しつつ、実際にTypeScript SDK v2（2026-07-...",
-      "publishedAt": "2026-07-29T14:05:30.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "603a748dd2b64b394b9445309ccb3225d8d9b582cac57c5ef68ca23a1ac52da1",
-      "title": "Azure AI Search入門 〜検索の基本からベクトル検索・RAG連携まで徹底解説〜",
-      "url": "https://qiita.com/Hinata-H/items/700a87e89c0b8fa55e71?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "はじめに\nMicrosoft Azureが提供する検索サービス「Azure AI Search」（旧称：Azure Cognitive Search）について、基礎概念からハンズオンでの構築手順、そして昨今注目されている生成AI（RAG: Retrieval Augmen...",
-      "publishedAt": "2026-07-29T10:12:05.000Z",
-      "feedName": "Qiita"
     },
     {
       "id": "4f580601d4e7e44799f20af599233bd78925abebc48db1a03154ae374e8a12e3",
@@ -910,14 +710,6 @@
       "description": "Copilot Chat の会話をあとから見返したい、Markdown ファイルとして保存しておきたいと思ったことはありませんか？\n現時点では、Copilot Chat には会話全体をまとめてエクスポート・一括保存する機能がありません。できるのは、回答を1つずつコピーするか、プロンプトを使って1つの回答にまとめさせ Wordファイル や Pages に出すくらいです。\nブラウザの拡張機能を使えば会話履歴をエクスポートできます。ただ、拡張機能が禁止されている、顧客データを扱う、導入前にセキュリティレビューが要るような企業では、簡単に導入できません。\nそこでこの記事では、拡張機能なし・管理者...",
       "publishedAt": "2026-07-30T09:19:02.000Z",
       "feedName": "Zenn"
-    },
-    {
-      "id": "61e70341bdf989933fccfab330e04b2d352226491aa53e7d20aa9bda5ed842f0",
-      "title": "自分のPCだけで動く「自分専用AI」を Ollama × Docker で動かしてみた",
-      "url": "https://qiita.com/y104autumn/items/6132bcc74fb8d43d4cd3?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "自分のPCだけで動く「自分専用AI」って、実は拍子抜けするくらい簡単に作れる。\nChatGPT や Claude に質問を投げるたび、「このデータ、外に出して大丈夫だっけ」と一瞬手が止まったことはないだろうか。個人のメモや検討中のコード、ちょっとした愚痴まで、クラウドの向こ...",
-      "publishedAt": "2026-07-29T22:21:01.000Z",
-      "feedName": "Qiita"
     },
     {
       "id": "f00078e900410dbd38415259c34785093f337ba28e8246e5e0a211cb69a897f0",
@@ -6824,6 +6616,158 @@
       "description": "AWS CLI を使うのに、アクセスキーを発行していませんか？\n私も昔はそうでした。便利なんですよね、アクセスキー。\n一度 aws configure で設定すれば、あとはずっと使えます。\nでも、この便利さの裏に、ちょっとこわい話があります。\n漏らせば高額な請求、情報流出、...",
       "publishedAt": "2026-08-26T11:11:57.000Z",
       "feedName": "Qiita"
+    },
+    {
+      "id": "a0dd5b92d27d8e9065bc080dec8b00d7e26dd0f9371050435c089d34cf252592",
+      "title": "Stop OCRing Every PDF: Route It First with pdf-inspector",
+      "url": "https://dev.to/jonson800/stop-ocring-every-pdf-route-it-first-with-pdf-inspector-501g",
+      "description": "OCR is often the most expensive and slowest step in a document-ingestion pipeline. The frustrating part is that many PDFs already contain usable text, yet a naive pipeline sends every document through OCR anyway.\npdf-inspector takes a better approach: classify first, extract native text when possible, and route only the pages that actually need OCR.\nThe core decision is simple:\nPDF arrives\n  ↓\nClassify the document and its pages\n  ├─ native text available → extract locally → Markdown\n  └─ text missing/broken   → route those pages to OCR\n\nThat small decision can remove a large amount of unnecessary OCR work from RAG ingestion, invoice processing, research-paper parsing, and document search.\nThe library classifies PDFs as:\nTextBased\nScanned\nImageBased\nMixed\nIt also returns a confidence score and the specific pages that need OCR. A 40-page report with one scanned appendix does not have to become a 40-page OCR job.\nInstall the package:\npip install pdf-inspector\n\nThen process a PDF:\nimport pdf_inspector\n\nresult = pdf_inspector.process_pdf(\"document.pdf\")\n\nprint(result.pdf_type)\nprint(result.pages_needing_ocr)\nprint(result.markdown)\n\nFor selective OCR, the native package also exposes an OCR-aware pipeline:\nocr_result = pdf_inspector.process_pdf_with_ocr(\"document.pdf\")\nprint(ocr_result.pages_routed_to_ocr)\n\nThe OCR runtime remains separate and is only touched when a page is routed to it. That keeps the default extraction path lightweight.\nThe same idea is available for Node.js:\nnpm install @firecrawl/pdf-inspector\n\nimport { readFileSync } from \"fs\";\nimport { processPdf } from \"@firecrawl/pdf-inspector\";\n\nconst pdf = readFileSync(\"document.pdf\");\nconst result = processPdf(pdf);\n\nconsole.log(result.pdfType);\nconsole.log(result.markdown);\n\nThere is also a WebAssembly package for running the Rust parser locally in a browser or Web Worker:\nnpm install @firecrawl/pdf-inspector-wasm\n\nThis is useful when documents should not be uploaded to a parsing service just to determine whether they contain native text.\nClassification is only half the project. For text-based PDFs, the extractor attempts to preserve structure such as:\nheadings derived from font-size tiers\nbold and italic text\nnumbered and bulleted lists\ncode blocks detected from monospace fonts\ntables detected from drawing rectangles and text alignment\nmulti-column reading order\nlinks, page breaks, captions, and common font encodings\nThe output is Markdown, which makes the library convenient for search indexing and LLM/RAG pipelines.\nAt a high level, the detector inspects PDF content streams for text operators such as Tj and TJ, and image operators such as Do. It can scan all pages, stop early, sample a large document, or inspect a caller-provided page set.\nThis is a routing signal, not a promise that every PDF will be perfectly parsed. PDFs with broken encodings, text converted to vector paths, or extremely complex layouts may still need OCR or a specialized parser. The library explicitly reports encoding problems so callers can fall back instead of silently accepting bad text.\nThe project publishes a reproducible benchmark against a 200-document corpus. Its July 2026 results report strong reading-order and table scores as well as fast local processing. Those are project-published measurements on specified hardware—not a universal latency guarantee—so benchmark your own document mix before committing to production thresholds.\nThe more durable takeaway is architectural: OCR should be a fallback chosen per page, not the default chosen per file.\nA conservative router might look like this:\nresult = pdf_inspector.process_pdf(\"document.pdf\")\n\nif result.pdf_type == \"text_based\" and result.confidence >= 0.95:\n    store_markdown(result.markdown)\nelse:\n    send_pages_to_ocr(result.pages_needing_ocr)\n\nYour threshold should depend on the cost of a false positive. A casual knowledge base can tolerate more extraction noise than a legal or financial workflow.\nIf your pipeline currently OCRs every incoming PDF, classification-first routing is a small change with a clear operational payoff.\nThe longer version and implementation notes are available on ToolGenix.",
+      "publishedAt": "2026-08-29T05:24:16.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "e6df6a417c45492d16bb5f4c8ef7d2e4ce695d200761c668107a2f7b67841bc5",
+      "title": "Why Does a 125B AI Model Use Only 6B Parameters at a Time?",
+      "url": "https://dev.to/darun_karasabir_b79602fd/why-does-a-125b-ai-model-use-only-6b-parameters-at-a-time-2pd4",
+      "description": "Why Does a 125B AI Model Use Only 6B Parameters at a Time?\n\n\nA new AI model launches.\nYou open X and immediately see numbers like:\n125B parameters\n\n6B active parameters\n\n262K context\n\nOpen weights\nAnd if you're not working with LLM architecture every day, your first reaction is probably:\nWhat do these numbers actually mean?\nThe most interesting one is this:\n125B total parameters, but only around 6B active per token.\nIf the model has 125 billion parameters, why doesn't it use all 125 billion?\nAnd if it only activates 6 billion, why not simply build a 6B model?\nThe answer tells us a lot about where modern AI is heading.\nLet's explain it without the usual AI jargon.\nBefore understanding parameters, we need to understand tokens.\nAI models don't read text exactly the way humans do.\nIf you write:\nBuild a React login page\n\n\n`\nthe model first converts that text into smaller pieces called tokens.\nA simplified version might look like:\ntext\n\nBut don't think:\nOne word = one token.\nIt isn't always that simple.\nA word such as:\ntext\n\ncould be split into multiple tokens depending on the tokenizer.\nCode can also produce interesting token patterns.\nFor example:\njavascript\n\ngets converted into a sequence of tokens before the model processes it.\nSo when an AI model generates an answer, it is essentially generating tokens one after another.\nVery simplified:\ntext\n\nThis matters because when someone says:\n6B parameters are active per token\nthe phrase per token is extremely important.\nA parameter is a learned numerical value inside a neural network.\nDuring training, an AI model adjusts billions of these numbers.\nTogether, those values help the model learn patterns involving things like:\nlanguage\ngrammar\nprogramming\nconcepts\nrelationships\nreasoning patterns\nstructure\nprediction\nIf you see:\ntext\n\nit usually means the model has roughly:\ntext\n\nSimilarly:\ntext\n\nmeans roughly:\ntext\n\nBut here's an important misconception.\nA 125B model does not have something like:\n`text\nParameter #2 = React is a JavaScript library\nParameter #3 = 2 + 2 = 4\nParameter #4 = Python uses indentation\n\nThat's not how it works.\nKnowledge is distributed across the network.\nParameters are learned mathematical values that work together to produce the model's behavior.\nSo:\n125B parameters does not mean 125B facts.\nImagine a model described like this:\ntext\n\nYour first interpretation might be:\n`text\nMedium question\nVery difficult question\n\nThat sounds logical.\nBut that's not really what \"6B active\" means.\nThe model isn't normally reading your entire request and thinking:\n\"Hmm, this is an easy question. I only need 6 billion parameters.\"\nInstead, we're dealing with a different architecture.\nIt's called:\nUsually shortened to:\nMoE\nAnd this is where things get interesting.\nImagine that instead of having one giant neural network doing everything, the model contains multiple groups of parameters.\nThese groups are called:\nexperts\nThen there is another component that decides which experts should process a token.\nThis is usually called a:\nrouter\nA simplified version looks like this:\ntext\n\nInstead of activating the entire model for every token, the router activates only selected parts.\nThat means a model can have:\ntext\n\nwhile only something like:\ntext\n\nparticipate in the main computation for a particular token.\nHere's probably the easiest way to understand it.\nImagine a huge hospital.\nThe hospital has 125 specialists.\nThere are:\ncardiologists\nneurologists\neye specialists\nsurgeons\ndermatologists\northopedic doctors\nemergency doctors\ngeneral physicians\nradiologists\nmany other specialists\nNow imagine someone arrives with an eye problem.\nWould the hospital call all 125 doctors?\nOf course not.\nMaybe the patient needs:\ntext\n\nOnly a small number of doctors work on that particular case.\nBut does that mean the other doctors are useless?\nNo.\nA different patient may need completely different specialists.\nThat's the basic intuition behind Mixture of Experts.\nThis analogy can accidentally create another misunderstanding.\nYou might think:\n\"Okay. So my whole programming question gets sent to one group of experts.\"\nNot necessarily.\nRouting can happen at the token level.\nLet's say you ask:\ntext\n\nConceptually, different tokens could involve different routing decisions.\nSomething like:\n`text\n\"API\"\n\"PostgreSQL\"\n\"user\"\n\nThis is a simplified illustration.\nIt doesn't mean there's literally a button inside the model labeled:\ntext\n\nor:\ntext\n\nExpert specialization is learned during training.\nBut the main point remains:\nDifferent tokens can activate different parts of the model.\nThis is probably the most interesting question.\nSuppose:\ntext\n\nDoes that mean:\ntext\n\nNo.\nThink about it token by token.\nYou might have something conceptually like:\n`text\nToken 2\nToken 3\nToken 4\n\nDifferent parts of the full model may participate as the response is generated.\nSo:\nmeans:\nThe model has a very large overall pool of learned parameters.\nWhile:\nmeans:\nOnly a subset participates in the main computation for a particular token.\nThose are two very different measurements.\nNow we arrive at the question I find most interesting.\nIf only around 6B parameters are active per token...\nWhy not forget the other 119B and just build a normal 6B model?\nBecause these two models are very different:\ntext\n\ntext\n\nGo back to our hospital.\ntext\n\ntext\n\nAt this particular moment, both hospitals might have six doctors working.\nBut they don't have the same overall capability.\nThe second hospital has a much larger pool of specialists to choose from.\nA different case can involve a different group.\nAnd another case can involve another group.\nThat's why:\n6B active does NOT mean a 125B MoE model is simply a 6B model.\nThat's an important distinction.\nThis also helps explain two terms you'll see frequently:\nand:\nLet's simplify them.\nIn a dense model, the model generally uses the full set of model layers/parameters involved in the forward pass for each token.\nConceptually:\ntext\n\nIf the model gets significantly larger, the computational requirements generally increase too.\nAn MoE model adds routing.\ntext\n\nThe model might have a massive total parameter count while only activating some experts for each token.\nThat's the key advantage.\nBecause AI compute is expensive.\nReally expensive.\nLarge models can require huge amounts of:\nGPU memory\nGPU compute\nelectricity\nnetworking\nserver infrastructure\ncooling\nmoney\nImagine a huge company with thousands of employees.\nNow imagine requiring every employee to join every meeting.\nThat would be ridiculous.\nYou don't need:\nHR\nsecurity\naccounting\nfrontend engineers\nbackend engineers\nlawyers\ndesigners\nmarketers\nin every single meeting.\nYou want the right people for the right problem.\nMoE is built around a similar idea.\nInstead of saying:\nMake every parameter work for every token.\nThe architecture says:\nFigure out which experts should participate.\nThat's potentially far more efficient.\nNo.\nAnd this is another common mistake.\nImagine:\ntext\n\nYou might think:\n\"Great! Then I only need enough memory for a 6B model.\"\nNot necessarily.\nThe full model weights still need to exist somewhere.\nThere are also other costs involving:\nmemory\nexpert storage\nrouting\nGPU communication\nmodel sharding\nbandwidth\nKV cache\ninfrastructure\nSo:\ntext\n\ndoes not automatically mean:\ntext\n\nStorage requirements and active computation are different things.\nNow let's talk about another number you see everywhere:\n262K context\nThis has nothing to do with the number of model parameters.\nRemember tokens?\nA model's context window tells us how many tokens it can work with within its context.\nHere's a simple analogy.\nImagine your desk.\nA small desk might hold:\ntext\n\nA huge desk could hold:\n`text\nDocumentation\nPrevious messages\nAPI specifications\nDatabase schemas\nSeveral documents\nInstructions\nYour current question\n\nA larger context window gives the model a larger \"working desk.\"\nSo:\ntext\n\nare related to the model's learned internal capacity.\nWhile:\ntext\n\ndescribe how much information can fit into its active context.\nTwo completely different concepts.\nNo.\nThis is another important distinction.\nA model supporting a huge context window does not automatically mean:\nIt perfectly remembers and understands everything inside that context.\nA model still needs to:\nretrieve the right information\npay attention to relevant sections\nreason over long documents\navoid confusing distant information\nmaintain accuracy\nSo context size is useful.\nBut:\ntext\n\nJust like:\ntext\n\nNot necessarily.\nSuppose we have:\n`text\nModel B → 125B parameters\n\nCan we automatically say:\ntext\n\nNo.\nPerformance depends on many things:\nmodel architecture\ntraining data\nquality of training data\ntokenizer\npost-training\nreinforcement learning\nreasoning training\noptimization\nexpert routing\ncontext handling\ninference techniques\nA smaller model can sometimes outperform a much larger model on particular tasks.\nThat's why model comparisons based only on:\ntext\n\nare becoming less useful.\nA few years ago, people could look at:\ntext\n\nand get a rough idea of how large a model was.\nToday we increasingly see things like:\ntext\n\nor other models where only a fraction of the total network participates in each token.\nSo the better questions are becoming:\n`text\nHow many ACTIVE parameters?\nDense or MoE?\nHow many experts?\nHow many experts are selected?\nWhat is the context window?\nWhat are the memory requirements?\nHow fast is inference?\nHow expensive is inference?\nHow good is the model on real tasks?\n\nParameter count is still useful.\nIt's just no longer enough by itself.\nWhen people hear:\n6B active parameters\nit's tempting to explain it like this:\ntext\n\nThat's not quite accurate.\nThe model isn't normally making one global decision:\n`text\nHard problem?\n\nInstead, the architecture is designed so that a limited subset of experts is activated during token processing.\nAnd routing can change as different tokens move through the model.\nA more accurate explanation is:\nThe model has a large pool of available parameters, while a router selects a smaller group of experts for each token.\nThat's the key.\nImagine a technology company with:\n10,000 employees\nSomeone reports:\nOur PostgreSQL database is slow.\nDoes the CEO call all 10,000 employees?\nNo.\nMaybe the task goes to:\n`text\nBackend Engineer\nInfrastructure Engineer\n\nTomorrow the company gets a legal problem.\nNow it might involve:\n`text\nCompliance Team\nSecurity Team\n\nThen someone wants a new landing page.\nDifferent people again:\n`text\nFrontend Engineer\nCopywriter\n\nThe strength of the company comes from having all these different specialists available.\nIt doesn't come from putting every employee on every task.\nThat's a surprisingly useful mental model for understanding MoE.\nBecause specialization can be useful.\nThink about humans.\nSomeone can be great at:\ntext\n\nwhile another person specializes in:\ntext\n\nand another in:\ntext\n\nInstead of forcing one system to represent everything through exactly the same pathways, MoE architectures provide separate expert networks that can develop different useful behavior.\nAgain, we shouldn't take the \"expert\" name too literally.\nThese aren't tiny people living inside the model.\n😂\nThey're neural network components.\nBut specialization is the important concept.\nThe router is one of the most interesting parts of MoE.\nImagine receiving a token.\nThe system needs to answer:\nWhich experts should process this token?\nThe router produces scores for experts.\nSimplified:\n`text\nExpert A → 0.04\n\nThen the architecture may select the highest-scoring experts according to its routing design.\nFor example:\ntext\n\nThose experts process the token.\nThe results are then combined and passed forward.\nReal implementations are much more sophisticated than this simple diagram, but the basic idea is enough to understand why MoE works.\nNow here's something people don't talk about enough.\nHaving lots of experts isn't useful if your router makes bad decisions.\nImagine our hospital again.\nYou have the world's best 125 doctors.\nBut the receptionist sends:\n`text\nEye patients → orthopedic doctor\nBroken bones → cardiologist\n\nHaving great specialists isn't enough.\nRouting matters.\nThe same idea applies to MoE models.\nThe model needs to learn useful routing behavior.\nThat's one reason architecture and training matter just as much as the giant parameter number printed in the announcement.\nFor a long time, the AI scaling story felt like:\ntext\n\nThat approach produced incredible results.\nBut it is also expensive.\nNow researchers are exploring another question:\nCan we increase the model's total capacity without increasing computation at exactly the same rate?\nMoE is one answer.\nInstead of:\ntext\n\nwe move toward:\ntext\n\nThat's a very different philosophy.\nImagine future models containing massive pools of specialized capacity.\nOne part may become especially useful for:\ntext\n\nAnother for:\ntext\n\nAnother might be useful for:\ntext\n\nAnother for:\ntext\n\nThe exact specialization won't necessarily be this clean or human-readable.\nBut the general idea is powerful.\nInstead of making the entire giant network work equally hard for everything, the architecture can route computation more selectively.\nThat could allow models to become:\nlarger\nmore capable\nmore specialized\nmore efficient\nwithout increasing active computation at exactly the same rate as total model capacity.\nNext time you see:\n125B parameters\ndon't immediately think:\n\"Wow, it uses 125 billion parameters every time I type hello.\"\nAsk:\n125B total or active?\nThen ask:\nDense or MoE?\nThen:\nHow many parameters activate per token?\nThen:\nWhat does it actually cost to run?\nAnd finally, probably the most important question:\nHow well does it actually perform?\nBecause impressive architecture doesn't automatically mean impressive real-world performance.\nBenchmarks and actual usage still matter.\nHere's the easiest way to remember everything.\n\n\n\nTerm\nSimple Meaning\n\n\n\n\nToken\nA small unit of text processed by the model\n\n\nParameter\nA learned numerical value inside the neural network\n\n\n125B Parameters\nRoughly 125 billion total learned parameters\n\n\n6B Active\nRoughly 6B parameters participate in computation per token\n\n\nMoE\nMixture of Experts — only selected expert networks are activated\n\n\nRouter\nDecides which experts should process a token\n\n\n262K Context\nThe model can work with roughly 262K tokens in its context\n\n\nDense Model\nUses its full dense network for token processing\n\n\nSparse Model\nActivates only selected parts of the full network\n\n\nOpen Weights\nModel weights are released for others to use under their license\n\n\n\nIf you only remember two lines from this entire article, remember these:\ntext\n\nAnd:\ntext\n\nInstead:\nThe model has a much larger pool of learned capacity, while only a smaller subset is activated for each token.\nDifferent tokens can involve different experts.\nThat's the important part.\nFor years, one of the first questions people asked about an AI model was:\nHow many parameters does it have?\n7B?\n13B?\n70B?\n400B?\nBut modern architectures are making that question much less useful on its own.\nThe future of AI may not simply be:\nBuild a bigger brain.\nIt may increasingly become:\nBuild a huge collection of capabilities and get better at activating the right ones at the right time.\nThat is why a model can have:\ntext\n\nwhile activating something closer to:\ntext\n\nAnd suddenly, that strange-looking number starts making much more sense.\nThe AI race is no longer only about how big the model is.\nIt's also becoming about:\nhow intelligently the model uses what it has.\nIf two models produced similar results, which would you choose?\nA smaller dense model that activates everything\nor\na huge Mixture-of-Experts model that activates only selected experts?\nI'd love to hear how you think about this.\nIf this explanation helped, save it for the next time an AI company drops a model announcement full of numbers like:\n125B · 6B Active · 262K Context · MoE\nAt least now those numbers won't look like random marketing magic. 😄",
+      "publishedAt": "2026-08-29T05:20:52.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "65b5392f21dc0b776c373353191ef1b6236f10d666055d0c3417b6b0ad67de0f",
+      "title": "I built a daily debugging puzzle to stop getting rusty",
+      "url": "https://dev.to/dejan_stajic_28050c35cb79/i-built-a-daily-debugging-puzzle-to-stop-getting-rusty-j7h",
+      "description": "I kept noticing I was faster at writing new code than at finding bugs in code I already had. That skill atrophies if you only ship features.\nSo I built a small daily practice: a broken snippet, one bug, fix it. New challenge every day. Python, JavaScript, and TypeScript, beginner through advanced.\nThe loop is simple. Open the challenge, read the code, reproduce the failure, patch it. No leaderboard pressure. Just reps.\nToday's is a Python greeting function. Other days are string concat, off-by-one, the usual stuff that actually shows up in review.\nSite: https://debugger-zeta.vercel.app\nStack is Next.js on Vercel. I want feedback on whether the bugs feel like real mistakes or too toy. If you try one, tell me which language and whether the difficulty labels are honest.",
+      "publishedAt": "2026-08-29T05:18:05.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "34b927e3b9ab3228fd0a5f689af2d37de87427ca8d9159ea25a85a819caf4710",
+      "title": "Accelerating JVM startup on GKE: How VPA CPU startup boost eliminates ongoing resource waste",
+      "url": "https://dev.to/googlecloud/accelerating-jvm-startup-on-gke-how-vpa-cpu-startup-boost-eliminates-ongoing-resource-waste-33i2",
+      "description": "Running Java and other JVM-based workloads in Kubernetes has long presented an infrastructure sizing challenge. During initialization, JVM applications require substantial CPU capacity to perform class loading, bytecode verification, framework dependency injection, and Just-In-Time (JIT) compilation. Once this initialization phase finishes, steady-state CPU consumption frequently drops by 50% to 80%.\nTo avoid slow startups and ensure new Pods pass readiness probes quickly, platform teams have historically over-provisioned CPU requests permanently. This compromise introduces persistent CPU waste—unutilized allocations that inflate infrastructure spend and degrade workload packing density on worker nodes.\nTo resolve this trade-off, the GKE team launched the Public Preview of VerticalPodAutoscaler (VPA) CPU Startup Boost. Available on GKE clusters running version 1.36.0-gke.4447000 or newer in the Rapid Channel, this feature provides up to 2x faster startup latency while dynamically reclaiming CPU capacity once the application stabilizes.\nIn this article, I will explain how CPU startup boost operates under the hood, how it leverages Kubernetes In-Place Pod Resize (IPPR), and how to configure it effectively for your clusters.\nWhen configuring CPU requests for a container, Kubernetes uses that value for scheduling decisions and CPU bandwidth enforcement through CFS quotas. If you rightsize a Java container for its steady-state requirement—say, 500m CPU—the application may experience severe CPU throttling during boot, stretching startup times from seconds into minutes.\nSlow startups create cascading operational challenges:\nHorizontal scaling lag: When traffic spikes occur, Horizontal Pod Autoscaler (HPA) creates new replicas, but those replicas take too long to start serving requests.\nFlapping readiness probes: Applications that exceed initial startup budgets can fail health checks, triggering unwanted container restarts.\nResource waste: To avoid throttling, teams routinely allocate 2 to 4 vCPUs permanently. After the bootstrap window, those vCPUs sit idle across GKE Standard and Autopilot clusters.\nCPU startup boost solves this by providing temporary CPU headroom during initialization, then reducing the allocation back to baseline without restarting the Pod.\nThe CPU startup boost lifecycle executes across three distinct phases:\nAdmission phase: When a Pod is created, the GKE VPA mutating admission webhook intercepts the request. The webhook calculates the boosted CPU request based on your policy and injects both the elevated CPU values and a tracking annotation (vpaCpuStartupBoost/<container-name>) before the scheduler places the Pod.\nStartup phase: The container starts on a node with the higher CPU allocation, allowing JVM class loading and JIT compilation to run without CFS throttling.\nUnboosting phase: Once the Pod satisfies its readiness checks and reaches Ready status, the configured durationSeconds timer begins. When the duration expires, the VPA Updater initiates an in-place resize back to baseline.\nBecause GKE utilizes Kubernetes In-Place Pod Resize (IPPR), this downscale happens live. The container is never terminated or restarted when the boost ends.\nYou configure CPU startup boost directly inside a standard VerticalPodAutoscaler Custom Resource. You can use VPA exclusively for startup boost or combine it with continuous autoscaling.\nIf you manage steady-state resource requests manually in your Deployment manifest, set updateMode: \"Off\" in the VPA policy:\napiVersion: autoscaling.k8s.io/v1\nkind: VerticalPodAutoscaler\nmetadata:\n  name: java-app-startup-boost\nspec:\n  targetRef:\n    apiVersion: apps/v1\n    kind: Deployment\n    name: customer-service\n  updatePolicy:\n    updateMode: \"Off\"\n  startupBoost:\n    cpu:\n      type: Factor\n      factor: 2\n      durationSeconds: 10\n\nIn this manifest:\ntype: Factor: Multiplies the baseline CPU request (doubling 1 vCPU to 2 vCPUs during startup). You can also specify type: Quantity with a fixed addition like quantity: \"2\".\ndurationSeconds: 10: Keeps boosted CPU active for 10 seconds after the Pod reaches Ready state before reclaiming the resource.\nFor multi-container Pods containing sidecars, you can isolate the boost to the primary application container using containerPolicies:\napiVersion: autoscaling.k8s.io/v1\nkind: VerticalPodAutoscaler\nmetadata:\n  name: java-app-advanced-boost\nspec:\n  targetRef:\n    apiVersion: apps/v1\n    kind: Deployment\n    name: payment-service\n  updatePolicy:\n    updateMode: InPlaceOrRecreate\n  resourcePolicy:\n    containerPolicies:\n    - containerName: app-server\n      mode: Auto\n      startupBoost:\n        cpu:\n          type: Quantity\n          quantity: \"2\"\n          durationSeconds: 0\n    - containerName: envoy-proxy\n      mode: \"Off\"\n      startupBoost:\n        cpu:\n          type: Factor\n          factor: 1\n\nSetting updateMode: InPlaceOrRecreate allows GKE to boost startup resources, return to baseline, and then continue evaluating ongoing usage to rightsize the workload over time.\nWhen adopting CPU startup boost across your clusters, keep the following operational rules in mind:\nHPA integration: When pairing startup boost with HPA based on CPU utilization, always define a readinessProbe and set durationSeconds: 0. This configuration ensures the Pod unboosts immediately upon becoming ready, preventing startup CPU spikes from triggering false scale-out events.\nGKE Autopilot resource rules: Autopilot validates compute ratios during Pod admission. Make sure your Pod's baseline memory allocation can support the boosted CPU ratio. Because the Scale-Out ComputeClass enforces a fixed 1:4 ratio, standard or performance compute classes are recommended.\nNode capacity and autoscaling: On GKE Standard, ensure worker nodes have sufficient allocatable CPU to schedule boosted Pods. If a node lacks capacity, GKE caps the boost to what the node can fit.\nPod restart semantics: Startup boost triggers during initial Pod creation. If a container crashes and restarts within an existing Pod, the boost is not reapplied.\nYou can confirm that startup boost is active by inspecting Pod annotations and cluster events with kubectl:\n# Check for the tracking annotation injected at admission\nkubectl get pod <pod-name> -o jsonpath='{.metadata.annotations.vpaCpuStartupBoost/*}'\n\n# Observe the in-place downscale event after readiness\nkubectl get events --field-selector reason=InPlaceResizedByVPA\n\nThe InPlaceResizedByVPA event confirms that the container returned to baseline requests without a restart.\nVPA CPU Startup Boost eliminates a longstanding trade-off in Kubernetes workload sizing, helping Java microservices start faster while cutting idle resource costs.\nTo start testing startup boost on your GKE clusters, review the official GKE CPU startup boost documentation and explore Vertical Pod Autoscaling in GKE.",
+      "publishedAt": "2026-08-29T05:03:06.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "1278ae9b3158a439947b7956174dcdfdda833b2c67eebcbf526700340e4cbc45",
+      "title": "Using Claude Code or Codex as a Teacher, Not an Autopilot",
+      "url": "https://dev.to/ndabene/using-claude-code-or-codex-as-a-teacher-not-an-autopilot-513j",
+      "description": "Learning to code with AI doesn’t mean letting the AI do the work for you. It means using AI as a thought partner that sharpens your reasoning, uncovers gaps in your understanding, and guides you toward solving problems yourself. When you treat an AI coding agent like a teacher—not an autopilot—you build deeper knowledge, avoid shallow fixes, and gain confidence to tackle new challenges.\nHere are four ways to turn your AI assistant into a powerful mentor instead of a shortcut.\n1. Make the AI Ask You the Questions\nInstead of asking for code immediately, ask the AI to guide you through the problem by asking you questions. For example, if you’re building a dashboard that fetches metrics, prompt the AI to verify your understanding of where the API call should happen, how to handle loading and error states, and why TypeScript types alone aren’t enough to validate real-world data. This forces you to articulate what you know—and exposes what you don’t—before seeing a single line of code.\n2. Demand Progressive Hints, Not Instant Fixes\nWhen you’re stuck on an error, resist the urge to ask for a full solution. Request a sequence of help: first a guiding question, then a conceptual hint, then a minimal example, and only finally the correction—if you still need it. This scaffolding ensures help arrives only when your own attempts have failed, reinforcing problem-solving habits rather than dependency.\n3. Analyze Your Flawed Attempts\nShare your imperfect code with the AI and ask it to rephrase what your code does, identify what’s correct, highlight the two biggest risks, and pose a question that leads you to the next fix. This turns your mistakes into learning material. You’ll realize, for instance, that fetch can fail, HTTP errors must be handled, and response.json() returns unvalidated external data—lessons that stick when you discover them through reflection, not correction.\n4. Compare Trade-offs, Don’t Just Accept the First Answer\nAI often presents one solution as “the right way.” But real development is about trade-offs. Ask the AI to generate two approaches—like fetching metrics directly in a server page versus through an API route—and compare them based on simplicity, security, caching, testability, and error handling. The goal isn’t to pick the fanciest solution, but to understand why one fits your context better than another.\nThe key isn’t to avoid AI, but to use it in a way that strengthens your judgment. Over time, your prompts will become sharper, your understanding deeper, and your reliance more intentional. You’ll learn to spot when the AI is steering you right—and when it’s missing the mark.\nhttps://nicolas-dabene.fr/en/blog/using-claude-code-or-codex-as-a-teacher-not-an-autopilot/",
+      "publishedAt": "2026-08-29T04:54:34.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "d9ecd36dc61229f0dc6e521aca72a22da8054828bae774e38d1bb6e778a61356",
+      "title": "AWS IoT RuleでMQTTメッセージをCloudWatch Logsへ保存してみた",
+      "url": "https://dev.classmethod.jp/articles/saving-mqtt-message-to-cloudwatch-through-iot-rule/",
+      "description": "AWS IoT Ruleを使い、ローカルコンテナから送信したMQTTメッセージをCloudWatch Logsへ出力する方法をTerraformで実装してみました。デバイスの権限分離とインフラの最小構成を意識した検証です。",
+      "publishedAt": "2026-08-28T13:14:10.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "b8767d85f45284fe0eca95b2b3e61d335a4683fcc3784cd6fdfad34d8f802893",
+      "title": "Testcontainersで実DBを使う並列テスト基盤を設計する - エムスリーテックブログ",
+      "url": "https://www.m3tech.blog/entry/2026/08/28/160000",
+      "description": "【Unit7 ブログリレー5日目】 記事とは関係ない自宅の本棚。気づいたら本が増えてます。 エムスリーエンジニアリンググループ Unit7(リサーチプロダクトチーム)の丸田です。 現在開発しているプロジェクトでは、可能な限りMockを使わず、実際のPostgreSQLに接続してJUnitでテストを動かしています。 Repositoryのテスト...",
+      "publishedAt": "2026-08-28T12:53:43.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "76647d755adf3c75560263ab719bfa1f8cbbb0a9bb38cfb8b8cf6e32671589f3",
+      "title": "多観点で比較する Lambdalith vs 単一目的 Lambda",
+      "url": "https://dev.classmethod.jp/articles/lambdalith-vs-single-purpose-lambda/",
+      "description": "AWSでAPIを作るとき、Lambdaをエンドポイントごとに分けるか1つにまとめるか。単一目的LambdaとLambdalith（Hono）の2つの構成を、コールドスタート・認証・IAM権限・保守性・ルーティング・CDKの書き方・CloudFormationリソース数の7つの観点で比較します。",
+      "publishedAt": "2026-08-28T12:31:17.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "d3ea953eef3a021d8fb4b7dbd242e990922a77d6954faf121c13b3ed62d5b247",
+      "title": "AI コーディングエージェントは本当に良くなっているのか？",
+      "url": "https://aws.amazon.com/jp/blogs/news/diagnostics-over-time/",
+      "description": "Kiro IDE のコーディングエージェントがコードを書いたり変更したりすると、diagnostics ツールが静的解析器を実行して出力をチェックします。これは、開発者がエディタ上で下線として目にするのと同じチェックです。実際にこのツールは、モジュールの import 漏れ（Cannot find module 'aws-cdk-lib' or its corresponding type declarations）、解決できない Java の import（The import org.junit cannot be resolved）、型の不一致（Argument of type 'string | undefined' is not assignable to parameter of type 'string'）、implicitly typed any、undefined symbol といったものを検出します。これらは、本来であればビルド時になって初めて表面化するような種類の問題です。",
+      "publishedAt": "2026-08-28T11:59:49.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "3cbdf732235e5653def758519a1e3dc8fac2325844b7054895aaa9666e150f34",
+      "title": "AWS Batch が Amazon ECS Managed Instances をサポートしたので GPU と CPU インスタンスそれぞれ試してみた",
+      "url": "https://dev.classmethod.jp/articles/aws-batch-ecs-managed-instances-gpu-cpu/",
+      "description": "AWS Batch が Amazon ECS Managed Instances をサポートしたので、GPU と CPU インスタンスそれぞれを試して、実際の動作や設定方法、料金体系などを確認してみました。",
+      "publishedAt": "2026-08-28T11:38:24.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "570122a106c88a5872caf482b45470e7432e552adc606cb93b9d763a807e09fc",
+      "title": "Scale before the spike: Predictive autoscaling for GPU workloads on Kubernetes",
+      "url": "https://www.cncf.io/blog/2026/08/28/scale-before-the-spike-predictive-autoscaling-for-gpu-workloads-on-kubernetes/",
+      "description": "The 3 AM Call We got paged one Tuesday morning. A critical production service had crashed under traffic—not gradually degraded, but crashed. Hundreds of pending pods. Users were seeing 15–20% error rates. The incident postmortem was...",
+      "publishedAt": "2026-08-28T11:30:00.000Z",
+      "feedName": "Cloud Native Computing Foundation"
+    },
+    {
+      "id": "fd1fafc099035697ad02198822b427591e23c5560f36d950725dcb7075518c95",
+      "title": "国内金融業界は62.6％がWindows 10のまま利用／現場と情シスの“見えない分断”が浮き彫りに",
+      "url": "https://enterprisezine.jp/news/detail/24966",
+      "description": "サイバーリーズンは2026年8月28日、国内企業405社を対象とした「セキュリティ成熟度ベンチマーク診断」の結果と、同社のグローバルSOC（GSOC）が観測した2026年上半期の最新インシデント分析...",
+      "publishedAt": "2026-08-28T11:10:00.000Z",
+      "feedName": "EnterpriseZine"
+    },
+    {
+      "id": "d8ac0ba73cc0287acd129f352f3f01fb9ef667cf04f29a6223a0b2efb0903a2c",
+      "title": "Your Kubernetes platform is ready for containers. Is it ready for AI?",
+      "url": "https://www.cncf.io/blog/2026/08/28/your-kubernetes-platform-is-ready-for-containers-is-it-ready-for-ai/",
+      "description": "Kubernetes has given platform teams a consistent way to deploy, scale, and operate containerized applications. Now, many of those same teams are being asked to support AI. The transition is already underway. According to the CNCF...",
+      "publishedAt": "2026-08-28T11:00:00.000Z",
+      "feedName": "Cloud Native Computing Foundation"
+    },
+    {
+      "id": "350d618e49f1ad2e937a6881fd22f36bb960ac285b5a5d43ecddf4cc987638b5",
+      "title": "Snowflake Cortex Agents向けのAgent SkillをGitHubから連携してエージェントから使う",
+      "url": "https://dev.classmethod.jp/articles/snowflake-cortex-agents-deploy-skills-from-github/",
+      "description": "SnowflakeのCortex Agentsでスキルを設定する際に、GitHubからスキルをデプロイする2つの方法を試してみました。GitHub Actionsからステージにデプロイする方法と、Snowflake Gitリポジトリを同期して利用する方法をそれぞれ紹介します。",
+      "publishedAt": "2026-08-28T10:34:19.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "d5e11a96b251627b9ea91f9a694c1b919035605c0fb1351f3ca12803ce46aa8f",
+      "title": "GitHub Actionsのセルフホステッド ランナーをLambda MicroVMs上で実行してみた | DevelopersIO",
+      "url": "https://dev.classmethod.jp/articles/github-actions-self-hosted-runner-on-lambda-microvms/",
+      "description": "Construct Hubで公開されているcdk-github-microvm-runnersを使ってLambda MicroVMs上にGitHub Actionsのセルフホステッドランナーを構築してみました。 高速に起動してスケールアウトも容易なので、セルフホステッドランナーの実行基盤としてはなかなか良い選択肢ではないでしょうか？ GitHub Actionsの処理時間やコス...",
+      "publishedAt": "2026-08-28T09:48:21.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "4537dd49b54f8ab29c83233818c6822306488b4a7bb8bcab95217bb6e38b9d53",
+      "title": "2026年、中小企業のセキュリティ実態は如何に……基本徹底を確実に、「主権」の視点を持て──ESET",
+      "url": "https://enterprisezine.jp/news/detail/24963",
+      "description": "EUにおけるセキュリティ最大手の一角であるESETの日本法人イーセットジャパンは、日本の中小企業（以下、SMB）におけるサイバーセキュリティの実態について、記者向けに説明会を開催した。\n\n\n\n【左】...",
+      "publishedAt": "2026-08-28T09:13:00.000Z",
+      "feedName": "EnterpriseZine"
+    },
+    {
+      "id": "1c8fef49c35050d28fdaed19ad08c7b5efd08aefd5943fefe1f7207b760935e7",
+      "title": "ICFPC 2026における人間とAIの共闘",
+      "url": "https://zenn.dev/estie/articles/a6d1e78e8e41d5",
+      "description": "※この記事は、estie プログラミングコンテスト2026 懇親会の LT で紹介した内容をブログ記事として再構成したものです。\n\n はじめに\n昨今、AIのコーディング能力は飛躍的に向上し、業務におけるコーディングの大半をAIが担うようになってきました。また、プログラミングコンテストにおいてもAIがトッププレイヤーを上回る成績を残すことも起こり始めています。\nこの記事は、7月末に行われた ICFPC 2026 というプログラミングコンテストの参加記録です。ICFPC 2026 の出題は、オーガナイザーの Nolen Royalty 氏がブログ記事で言及されているように、このAI時代におい...",
+      "publishedAt": "2026-08-28T03:11:50.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "f996e61c96661f997725c3292375e367285f45e8e90e44bd91068a577b698228",
+      "title": "米オープンAIのAI暴走、エージェント同士が予期せぬ通信の末にハッキング＝調査報告書 - BBCニュース",
+      "url": "https://www.bbc.com/japanese/articles/cy7z8zp7m3no",
+      "description": "画像説明, 米オープンAIのサム・アルトマン最高経営責任者（CEO）。同社の人工知能（AI）モデルの一部がセキュリティーテスト中に暴走し、スタートアップ企業をハッキング攻撃した問題で厳しい目が向けられている",
+      "publishedAt": "2026-08-27T05:43:41.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "2d74b4206a909814861fdb2ff80d730eaa9d46a73159e67308ef4d055c4680b6",
+      "title": "Claude Code から Cloud Run 上の MCP サーバを使うための認可構成 - エムスリーテックブログ",
+      "url": "https://www.m3tech.blog/entry/2026/08/26/110000",
+      "description": "この記事は、Unit7（リサーチプロダクトを扱う部署）ブログリレー3日目の記事です エムスリーエンジニアリンググループ、Unit7 の田上です。 GCP 環境で MCP サーバを立ち上げる際、Cloud Run は有力な選択肢のひとつです。 この記事では、MCP サーバを利用するクライアントとして Claude Code を想定し、Cloud Run 上の...",
+      "publishedAt": "2026-08-26T04:15:24.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
     }
   ]
 }
