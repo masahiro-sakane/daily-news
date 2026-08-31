@@ -1,278 +1,6 @@
 {
   "articles": [
     {
-      "id": "4f580601d4e7e44799f20af599233bd78925abebc48db1a03154ae374e8a12e3",
-      "title": "Alchemy: GJS UI Framwork",
-      "url": "https://dev.to/softwareishappiness/alchemy-gjs-ui-framwork-4j25",
-      "description": "Gnome Application Framework\n\n\nI just added to Alchemy (GJS UI Framework) inspired by Quasar Framework and VueJS:\nQWebView (Native WebKit 6.0 integration with reactive URL/HTML bindings)\nQAudioPlayer (Extensible, HTML5-like audio player powered by GStreamer for advanced multimedia and WebRTC integration)\n / \n        Alchemy\n      \n    \n\nAlchemy Framework ⚗️\nAlchemy Framework is a lightweight, highly-reactive UI component library for GNOME/GJS, heavily inspired by the beloved Quasar Framework (VueJS).\nAlchemy bridges the gap between modern web development ergonomics and native Linux desktop application development. It allows you to build GNOME applications using a familiar, Vue-like composition API, while rendering 100% native GTK4 widgets.\nMethodology\n1. The Reactivity Engine\nAt the core of Alchemy is a lightweight, dependency-tracking reactivity engine modeled after Vue 3.\nref: Creates a reactive reference to primitive values (or objects).\ncomputed: Creates derived reactive state that automatically re-evaluates when its dependencies change.\neffect: Tracks dependencies and automatically executes a callback whenever bound ref values update.\n2. Native GTK4 Abstractions\nAlchemy does not use a webview or render custom DOM nodes. Instead, every Alchemy component (like QBtn or QInput) is a thin, reactive wrapper around a native Gtk4 widget.\nState…\n\n  \nView on GitHub",
-      "publishedAt": "2026-08-01T02:25:49.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "7dffce943462daee041475ca8fc2995297d4badcc394937c96769709786e9cc9",
-      "title": "You baked the model into the image. One env var can silently un-bake it",
-      "url": "https://dev.to/ownstackhq/you-baked-the-model-into-the-image-one-env-var-can-silently-un-bake-it-4dno",
-      "description": "On serverless GPU, cold start is image pull plus model load. The single biggest win is usually to stop downloading weights at boot: download them at build time so they ship inside the image and load from local disk instead.\nThe setup is two lines. Point the cache at a path inside the image, then fetch during the build:\nENV HF_HOME=/opt/huggingface\nRUN python -c \"from huggingface_hub import snapshot_download; snapshot_download('<repo>', revision='<pinned>')\"\n\nsnapshot_download writes into HF_HOME, that directory becomes an image layer, and at runtime the loader finds everything already on disk.\nHere's the part worth knowing. The loader resolves weights through HF_HOME at runtime. So if anything in your runtime environment sets HF_HOME to a different path — a network volume, a mount, a leftover template variable — the loader looks there, finds an empty cache, and quietly falls back to downloading from the network.\nNothing errors. Your image still contains the weights, sitting in a directory nobody reads anymore. You just paid to bake them, and you're paying the download on every cold start anyway. The only symptom is that cold starts went back to what they were before you did the work, which is easy to blame on the platform.\nAttach no volume at all. If the worker has no volume, there's no tempting path to point the cache at. In my setup the endpoints run with volume size zero for exactly this reason: everything the worker needs is in the image, so a volume is not an optimization, it's a way to reintroduce the network.\nVerify at boot, not by feel. Watch a cold worker's log. If you see download progress for weights, the bake is being bypassed, full stop. A baked image reaching the network for weights is always a misconfiguration, never a normal path.\nTreat the cache path as part of the build contract. The Dockerfile that baked the weights and the runtime env that reads them have to agree. That agreement is invisible in both files individually, so write it down where whoever edits the template env will see it.\nBaking has real costs: the image gets large, builds take much longer, and updating the model means rebuilding and redistributing the whole thing. If your weights are small or your traffic keeps workers warm, a volume or a runtime fetch may genuinely be the better trade. This is about the case where you already chose to bake — because then paying the build cost and the download cost is the worst of both.",
-      "publishedAt": "2026-08-01T02:05:53.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "536c164d93a1f7b58f20716e57205de98f21838fa50c0d1189b61c6a2a79753a",
-      "title": "Data Consistency in Microservices — Saga Pattern",
-      "url": "https://dev.to/gouranga-das-khulna/data-consistency-in-microservices-saga-pattern-4b4d",
-      "description": "One-liner: In microservices, you can't use a single database transaction across services — the Saga pattern breaks it into a sequence of local transactions with compensating rollbacks on failure.\nIn a monolith, you can wrap everything in one DB transaction:\nBEGIN;\n  UPDATE orders SET status='confirmed' WHERE id=1;\n  UPDATE inventory SET stock=stock-1 WHERE product_id=5;\n  INSERT INTO payments (order_id, amount) VALUES (1, 99.99);\nCOMMIT; -- all or nothing\n\nIn microservices, each service owns its own DB. You cannot do a cross-service ACID transaction. If the payment service fails after inventory was deducted, you're in an inconsistent state.\nA Saga is a sequence of local transactions. Each step publishes an event triggering the next. If any step fails, compensating transactions undo the previous steps.\nStep 1: Order Service      → Create order (PENDING)\nStep 2: Inventory Service  → Reserve items\nStep 3: Payment Service    → Charge customer\nStep 4: Shipping Service   → Schedule delivery\nStep 5: Order Service      → Mark order CONFIRMED\n\nHappy path ✅:\nOrder Created → Items Reserved → Payment Charged → Shipping Scheduled → Done ✅\n\nFailure at Payment ❌:\nOrder Created → Items Reserved → Payment FAILED\n                                       ↓\n                          Compensate: Release inventory\n                          Compensate: Cancel order\n\nEach service listens for events and reacts. No central coordinator.\nOrderService    ──publishes──► \"OrderCreated\"\nInventoryService ──listens──► reserves stock, publishes \"StockReserved\"\nPaymentService  ──listens──► charges card, publishes \"PaymentProcessed\"\nShippingService ──listens──► schedules delivery, publishes \"Shipped\"\n\nOn failure:\nPaymentService publishes \"PaymentFailed\"\nInventoryService listens, releases stock, publishes \"StockReleased\"\nOrderService listens, marks order CANCELLED\n\nPros: Simple, decoupled, no single point of failure\n\nCons: Hard to track overall saga state, cyclic dependencies possible\nA dedicated Saga Orchestrator tells each service what to do.\n                    ┌─────────────────────┐\n                    │   Saga Orchestrator  │\n                    │   (Order Saga)       │\n                    └──────────┬──────────┘\n                               │\n         ┌─────────────────────┼──────────────────────┐\n         ▼                     ▼                       ▼\n  InventoryService       PaymentService          ShippingService\n  \"Reserve stock\"        \"Charge $99\"            \"Ship to addr\"\n  → \"Reserved\" ✅        → \"Failed\" ❌           (not called)\n         │                     │\n         └─────────────────────┘\n                    Orchestrator receives \"Failed\"\n                    → tells InventoryService: \"Release stock\"\n                    → marks saga FAILED\n\nPros: Clear saga state, easy to audit and debug\n\nCons: Orchestrator is a bottleneck / SPOF if not designed carefully\n\n\n\n\nChoreography\nOrchestration\n\n\n\n\nControl\nDecentralized\nCentralized\n\n\nCoupling\nLoose (events)\nTighter (direct calls)\n\n\nVisibility\nHard to trace end-to-end\nEasy — one place to look\n\n\nComplexity\nLow per-service, high overall\nHigh orchestrator logic\n\n\nBest for\n3-4 step sagas\nComplex, many-step flows\n\n\n\nTrack saga state to survive crashes:\nCREATE TABLE sagas (\n  id UUID PRIMARY KEY,\n  type VARCHAR(50),          -- 'order_saga'\n  current_step VARCHAR(50),  -- 'awaiting_payment'\n  status VARCHAR(20),        -- 'IN_PROGRESS', 'COMPLETED', 'FAILED'\n  payload JSONB,             -- order details\n  created_at TIMESTAMP,\n  updated_at TIMESTAMP\n);\n\nMaintains data consistency without distributed transactions\nWorks with polyglot persistence (each service uses its own DB)\nChoreography scales well horizontally\nOrchestration provides clear audit trail\nEventual consistency — data temporarily inconsistent between steps\nCompensating transactions are complex to implement correctly\nHard to debug when something fails mid-saga\nIdempotency required for every step (retries happen)\n✅ Use when:\nMulti-service workflows that must be atomic (order → payment → shipping)\nDifferent services own different databases\nLong-running business processes (insurance claims, loan approvals)\n❌ Avoid when:\nSingle service with one DB (just use a DB transaction)\nSimple async operations that don't need rollback\nYou can redesign to avoid the distributed write entirely",
-      "publishedAt": "2026-08-01T02:00:00.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "9837931320916f6bbb4bd160c10a3e92a9346588ec851d80d57f26d0d87a270a",
-      "title": "Updates in Next.js 16.3: AI-Native Development, Better Security, and Instant Navigation",
-      "url": "https://dev.to/kyl67899/whats-new-in-nextjs-163-ai-native-development-better-security-and-instant-navigation-2fm0",
-      "description": "The Next.js team continues to push the boundaries of modern web development with the Next.js 16.3 Preview. While previous releases focused on performance and caching, version 16.3 shifts its attention toward AI-native development, developer security, and instant application navigation.\nAs AI coding assistants become a core part of the development workflow, Next.js is evolving into a framework that not only builds applications but also helps AI agents understand, debug, and improve them safely.\nLet's explore the biggest improvements in Next.js 16.3.\nOne of the most exciting additions in Next.js 16.3 is its first-class support for AI coding assistants.\nInstead of treating AI as an external tool, Next.js now includes built-in capabilities that help agents understand your project structure, documentation, and runtime behavior.\nKey improvements include:\nVersion-aware documentation through AGENTS.md, ensuring AI assistants reference the correct framework version.\nFirst-party Skills that guide AI through multi-step development workflows.\nAgent Browser with React introspection, allowing compatible AI tools to inspect component state and application behavior.\nActionable errors with copy-ready prompts that make troubleshooting faster.\nThese enhancements reduce hallucinations from AI assistants and provide more accurate, context-aware code suggestions.\nAs developers increasingly rely on AI to generate and modify code, security has become a critical concern.\nAdded 'skills' that would be useful for multi-step workflow. Visit skills.sh\nThe Skill requires agent-browser version 0.27 or later.\nnpx skills add vercel/next.js --skill next-dev-loop\nNext.js 16.3 introduces several improvements that make AI interactions safer and more reliable:\nThe built-in Model Context Protocol (MCP) server now exposes only the tools required for build diagnostics while separating larger knowledge-base functionality.\nBenefits include:\nReduced attack surface\nBetter isolation of tooling\nMore predictable AI interactions\nImproved maintainability\nInstead of allowing AI to freely inspect an application, Next.js now provides structured diagnostic capabilities that expose only the information necessary for debugging.\nThis improves both developer productivity and security by limiting unnecessary access to project internals.\nPerhaps the most noticeable user-facing feature is Instant Navigations.\nInstead of waiting for an entire page to load, Next.js intelligently streams or caches route content to make navigation feel nearly instantaneous.\nHighlights include:\nInstant route transitions\nStreaming page updates\nIntelligent route caching\nConfigurable navigation strategies\nApplications now feel much closer to native desktop or mobile experiences.\nBuilding on previous routing improvements, Next.js 16.3 introduces Partial Prefetching.\nRather than downloading an entire route ahead of time, the framework caches reusable layout shells and streams only the dynamic content when users navigate.\nBenefits include:\nLower bandwidth usage\nFaster perceived performance\nReduced redundant downloads\nImproved scalability for large applications\nDebugging AI-generated code is often harder than writing it.\nNext.js 16.3 addresses this by introducing:\nMore descriptive compiler diagnostics\nActionable error messages\nCopy-ready prompts for AI assistants\nBetter build insights\nThese improvements help developers quickly identify problems and collaborate more effectively with AI coding tools.\nDocumentation has traditionally been written for humans.\nWith Next.js 16.3, documentation is also optimized for AI systems.\nNew capabilities include:\nMarkdown versions of documentation pages\nEasier machine-readable content\nVersion-specific references\nBetter retrieval for coding assistants\nThis helps reduce outdated or incorrect suggestions from AI tools by ensuring they consume the most relevant documentation.\nAlthough AI is the headline feature, developers also benefit from continued performance improvements.\nNext.js 16.3 includes:\nPersistent Turbopack caching\nFaster incremental builds\nReduced compilation times\nBetter memory management during development\nLarge projects see noticeable improvements in rebuild speed and overall responsiveness.\nThe 16.3 Preview represents a shift in how frameworks are built.\nRather than simply optimizing rendering performance, Next.js now embraces a future where AI coding assistants are part of every developer's toolkit. By combining AI-aware documentation, structured diagnostics, secure tooling, and faster navigation, the framework helps teams build applications more efficiently without sacrificing reliability or security.\nNext.js 16.3 is more than an incremental update. It introduces a new direction for modern web development—one where AI assistants, developers, and the framework work together seamlessly.\nThe standout additions include:\nAI-native development tools\nImproved security through a more focused MCP server\nVersion-aware documentation for AI agents\nInstant Navigations\nPartial Prefetching\nBetter diagnostics and debugging\nFaster Turbopack builds\nWhile still in Preview, these features provide a glimpse into the future of full-stack React development and position Next.js as one of the most forward-looking frameworks in the ecosystem.\nOfficial Next.js 16.3 AI Improvements announcement: https://nextjs.org/blog/next-16-3-ai-improvements\n\nOfficial Next.js 16.3 Instant Navigations announcement: https://nextjs.org/blog/next-16-3-instant-navigations\n\nNext.js Blog: https://nextjs.org/blog\n\nNext.js Documentation: https://nextjs.org/docs\n\n\n\nSource:\nhttps://nextjs.org/blog",
-      "publishedAt": "2026-08-01T01:57:30.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "5ffbc87e611ed961c1e8c93f32f0243f7a4fd7efe9c36283092c7b98531d380f",
-      "title": "Reviving K6's StatsD Extension for Datadog Observability",
-      "url": "https://dev.to/osnibjunior/reviving-k6s-statsd-extension-for-datadog-observability-299m",
-      "description": "A lot gets said about how data can help us with observability, but much less gets said about how much we can shape the collection itself to actually help us make decisions.\nUnfortunately, K6 v0.55.0 dropped support for sending metrics via StatsD, which happens to be Datadog's recommended way of receiving them. We looked into other ways of getting K6 metrics into Datadog, but every alternative came with trade-offs, including the absence of some extremely important p95 metrics.\nWhile going through K6's documentation, I found a path forward: it's possible to build a custom K6 binary and re-enable the StatsD extension through xk6. So that's exactly what I did.\nDockerfile, and after a few failed builds, I landed on a version that worked end to end, sending every metric to the local Datadog Agent and having it show up correctly in the platform.\nFor the client, I handed over everything: the full explanation of the problem and the original Dockerfile, so their team could build the image themselves and keep it internalized within their corporate environment.\nYou can find it here: osnijunior/k6-statsd on Docker Hub",
-      "publishedAt": "2026-08-01T01:54:34.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "f57e5f68ef2b0c571ed5753e4258c7d76998dcc007b6b5becb27de45178d0ac3",
-      "title": "[アップデート] AWS IAM Identity Center のマルチリージョンサポートが Identity Center ディレクトリをIDソースとして使用するインスタンスにも対応しました",
-      "url": "https://dev.classmethod.jp/articles/iam-identity-center-extends-multi-region-support-to-identity-center-directory/",
-      "description": "IAM Identity Center のマルチリージョンサポートが Identity Center ディレクトリにも拡張されました。外部 IdP 不要でセットアップできる新機能を、実際に東京リージョンを追加して試してみたので紹介します。",
-      "publishedAt": "2026-07-31T22:17:06.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "af06dbee62055ea2be44e6f8e94c2ba9bd17488548f0e0619edfa6a43813b1b9",
-      "title": "aws-benchのCloudFormation復旧タスクで実行できる手順を答えたKiro CLIが不合格になった理由を確認してみた",
-      "url": "https://dev.classmethod.jp/articles/aws-bench-fix-cfn-kiro-cli-17models/",
-      "description": "aws-bench の公開データセットから CloudFormation の復旧タスク1本を取り出し、Kiro CLI で選べる17モデルに同じ条件で3周ずつ解かせました。スタックの実状態では実行できない手順が正答とされ、実行できる手順を答えた回答は不合格になりました。判定理由と回答、公式ドキュメントから、その分かれ目を確認します。",
-      "publishedAt": "2026-07-31T18:05:54.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "dd141fac8411e477e34f5b270b06a3ce2457f091894d98cb9728cef983ac1cbf",
-      "title": "aws-benchのVPC Flow Logs診断タスクでKiro CLI 17モデルの合否が分かれた理由を確認してみた",
-      "url": "https://dev.classmethod.jp/articles/aws-bench-check-vpc-kiro-cli-17models/",
-      "description": "aws-bench の公開データセットから VPC Flow Logs の診断タスク1本を取り出し、Kiro CLI で選べる17モデルに同じ条件で3周ずつ解かせました。有効な Flow Log を正しく指摘した回答でも不合格が続き、合否は紛らわしいロググループ2本に気付けたかどうかで分かれました。判定理由と回答、実行ログから、その境目を確認します。",
-      "publishedAt": "2026-07-31T16:58:09.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "ff61659278ba20ccdc5b8ade591c8d7a6961bc96eca5e3ffcc0ce64eedcbafe7",
-      "title": "「コンテナはもう要らない」は本当か？ AWS Lambda の provided.al2023 で WebAssembly を動かしてみた",
-      "url": "https://dev.classmethod.jp/articles/20260731-lambda-wasm/",
-      "description": "WebAssembly（Wasm）が本当に「軽量・小さい・高速起動・移植性が高い」のか、AWS Lambda上で実際に動かして確かめてみました。机上の論点を実測で検証します。",
-      "publishedAt": "2026-07-31T14:39:14.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "5dd5b7172d22d3bc7b26a3888e24dcd1ba0a69eb23c811291392af9375a8060f",
-      "title": "シンプルな生成 AI チャットボットを Amazon Bedrock AgentCore で作る（2）FastAPI BFF を ECS Fargate にのせて Runtime を SSE で中継する",
-      "url": "https://dev.classmethod.jp/articles/bedrock-agentcore-bff-ecs-sse/",
-      "description": "このシリーズでは、Amazon Bedrock AgentCore を使ってブラウザから使える生成 AI チャットボットを AWS 上に構築しています。今回は FastAPI で BFF を書き、ECS Fargate にデプロイして、BFF から Runtime のエージェントを呼び出します。ALB 経由で curl からチャットが動く状態まで作ります。",
-      "publishedAt": "2026-07-31T14:33:06.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "670d66bfc4337bd87ab0832dd5836c38c3437b34a3e85fc2eef87543c6530563",
-      "title": "シンプルな生成 AI チャットボットを Amazon Bedrock AgentCore で作る（1）Runtime に Strands エージェントをのせる",
-      "url": "https://dev.classmethod.jp/articles/bedrock-agentcore-runtime-deploy-strands-agent/",
-      "description": "Amazon Bedrock AgentCore を使ってブラウザから操作できるチャットボットを AWS 上に構築するシリーズの第 1 回です。まずは Strands で最小のエージェントを書き、AgentCore Runtime にデプロイして CLI から応答が返るところまでを実装します。",
-      "publishedAt": "2026-07-31T14:22:11.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "5ea0b4415b01720dd2f0786df18a5b621224506b1e7661b5bb8c3680212b863e",
-      "title": "【Security Hub修復手順】[ECS.9] ECS タスク定義にはログ設定が必要です。",
-      "url": "https://dev.classmethod.jp/articles/securityhub-fsbp-remediation-ecs-9/",
-      "description": "AWS Security HubのECS.9コントロール違反を修復するため、ECSタスク定義へのログ設定追加手順をご紹介します。",
-      "publishedAt": "2026-07-31T13:27:31.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "8f960b04b33148fddc1c102799f5215f6953a84af01ea041c2234d45eb950073",
-      "title": "AI時代の強いチームの作り方",
-      "url": "https://speakerdeck.com/yuukiyo/building-strong-teams-in-the-age-of-ai",
-      "description": "「それ、どこに出しても恥ずかしくないTerraformコードになってるか？」 / Terraform AWS Best Practices",
-      "publishedAt": "2026-07-31T13:23:13.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "88b7f5e55df6a65d38fb61233aa76e1b8dc76434ee825c9fe31fc9fa7cc6c8ea",
-      "title": "aws-benchのStep Functions診断タスクをKiro CLIの17モデルで試してみた",
-      "url": "https://dev.classmethod.jp/articles/aws-bench-diagnose-sfn-kiro-cli-17models/",
-      "description": "aws-bench の公開データセットから Step Functions の診断タスク1本を取り出し、Kiro CLI で選べる17モデルに同じ条件で3周ずつ解かせました。タスクの内容と判定のしくみを説明し、全モデルが正答したうえで正解1件あたりのクレジットに大きな差が付いたこと、そしてこの課題に見合うモデルを紹介します。",
-      "publishedAt": "2026-07-31T13:07:25.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "f5e853ea1c268ebacd9a316d248c9a1b57f6efeb0943ed03152dfd210e4916f8",
-      "title": "AnthropicのAIモデルが評価中に不正アクセスしていた事案についてまとめてみた - piyolog",
-      "url": "https://piyolog.hatenadiary.jp/entry/2026/07/31/214935",
-      "description": "Anthropicは2026年7月30日、自社AIモデル「Claude」がサイバーセキュリティ評価の実施中に評価環境からインターネットへ到達し、実在する3組織へ不正アクセスしていたと公表しました。評価パートナーとの認識の齟齬により、隔離されているはずの環境がインターネットに接続できる状態になっていたとしています。ここでは...",
-      "publishedAt": "2026-07-31T12:57:11.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "b6d5446733e66fbc3a71399f8089713470ec976b9c244ab6e8acbd3ee27f5f1f",
-      "title": "AWS WAFで海外IPをブロックしているサイトのGoogle広告が審査落ち（403）したときの対処方法をまとめてみた",
-      "url": "https://dev.classmethod.jp/articles/aws-waf-allow-google-crawler-ip-ranges-geoblock/",
-      "description": "AWS WAF で海外IPをブロックしていると、Google広告の審査落ちや検索クローラーのブロックが起きてしまうことがあります。今回はその原因と解決方法を、実際の対応手順ベースでご紹介します。",
-      "publishedAt": "2026-07-31T12:01:26.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "47b173dc24e5118c179b4b1fea6f81ab3e8357285ccfd4e8d313d9bda3f11975",
-      "title": "Scaling Kubernetes pods with KEDA based on Amazon SQS queue depth",
-      "url": "https://www.cncf.io/blog/2026/07/31/scaling-kubernetes-pods-with-keda-based-on-amazon-sqs-queue-depth/",
-      "description": "In event-driven Kubernetes architectures, CPU and memory utilization often fail to reflect real system pressure. A worker pod may sit idle from a CPU perspective while thousands of messages pile up in an Amazon SQS queue....",
-      "publishedAt": "2026-07-31T11:00:00.000Z",
-      "feedName": "Cloud Native Computing Foundation"
-    },
-    {
-      "id": "b364dd6dc644f660eee0061d627578f144f8ad55dccb641b2f410e735019d230",
-      "title": "ロシアの「.ru」ドメインが実質使えなくなりそう？　本人確認義務化でユーザー悲鳴、関連事業者は対応急ぐ",
-      "url": "https://www.itmedia.co.jp/news/article/2607/31/2000000340/",
-      "description": "ロシア政府が「.ru」ドメインなどの管理者に本人確認を義務付ける方針を示し、同ドメインに関連する事業者が対応を迫られている。国内では、ドメイン取得・管理サービスを手掛けるGMOデジロックやGMOブランドセキュリティなどが対応を案内。SNSでは、対象のドメインを使うユーザーから不安の声も出ている。 ロシア政府は...",
-      "publishedAt": "2026-07-31T10:52:35.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "743e3726d2fd385b2b805ee37fd049f82ce777c6758b054532651625579b8226",
-      "title": "[登壇レポート]  Ops-JAWS Meetup41 運用 LT 大会で「Control Tower を CloudFormation で管理する前に知っておきたいこと」というタイトルで登壇しました",
-      "url": "https://dev.classmethod.jp/articles/202607-ops-jaws-41-control-tower-cfn-resource-import-tips/",
-      "description": "AWS Control Tower の設定を CloudFormation で管理する前に知っておくと良さそうなことをまとめてみました。",
-      "publishedAt": "2026-07-31T10:29:20.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "b292d1cbb64a06b5b7a7294a87df46ba5b5a12202ee9941dd5b4d5a227c73ad6",
-      "title": "Dev Container の Lockfile がGAになっていました",
-      "url": "https://dev.classmethod.jp/articles/devcontainer-lockfile/",
-      "description": "Dev Container CLI の Lockfile が Preview から Stable へ昇格する提案の内容と、実装状況を確認しました。`devcontainer-lock.json` がどのように Features のバージョンを固定し、再現性とセキュリティを担保しているのか、実際に CLI を動かしながら解説します。",
-      "publishedAt": "2026-07-31T10:02:45.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "2ba57811b9672c2d7be79df417580bd3843b7f55d069e7b0cf8bb5df0a35a2d3",
-      "title": "Pythonで書いた関数デコレータをTypeScriptで再現する",
-      "url": "https://dev.classmethod.jp/articles/convert-python-decorator-to-typescript-decorator/",
-      "description": "Pythonで使っていたログ出力デコレータをTypeScriptに移植してみました。オプション引数の実装方法やthis の扱い、非同期関数への対応など、言語間での違いを詳しく紹介します。",
-      "publishedAt": "2026-07-31T09:30:08.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "d6db425d86ab5a6a4cc075ecb4823651a00c4e331e931ad2cb633d40e385790e",
-      "title": "AWS環境のセキュリティレベルを可視化する ！ AWSセキュリティ成熟度モデル活用ガイド",
-      "url": "https://dev.classmethod.jp/articles/aws-security-enhancement-program-guide/",
-      "description": "AWSが公式に提供するセキュリティ成熟度モデルと、それをベースにしたクラスメソッドの支援サービスについて、専門知識がなくても分かるよう解説します。",
-      "publishedAt": "2026-07-31T09:27:51.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "d8339c34a37b2b38fe0a7c5dcf23c19d9bf12d7f5e93382ee2019fba9c732590",
-      "title": "AuditアカウントからAssumeできる組織横断のReadロールを各アカウントに配置する",
-      "url": "https://dev.classmethod.jp/articles/aws-organization-readonly-role-cross-account-inventory/",
-      "description": "AWS Organizationsのマルチアカウント環境で、組織横断の棚卸しを効率化するためのReadロール配置とその活用法を紹介します。StackSetsを使った一括デプロイから実践的な運用例まで、検索ツールでは対応できないケースをカバーする方法をまとめました。",
-      "publishedAt": "2026-07-31T09:24:27.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "38df86f467b4592d92db7ed855b8bd1e6a5e3f44c85253a904721f79dab3aed2",
-      "title": "AWS DevOps Agent のエージェント応答言語を AWS CDK で日本語に設定してみた",
-      "url": "https://dev.classmethod.jp/articles/aws-devops-agent-locale-cdk/",
-      "description": "Agent Space の Locale プロパティで応答言語を指定できる。CloudFormation / CDK では 2026 年 5 月から設定可能。効くのは調査出力でチャットは入力言語に追従した。",
-      "publishedAt": "2026-07-31T09:12:56.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "07bd738da7570dd7d1786aaedb05e62960c8e386837fd723891a6fad19176e61",
-      "title": "AGENTS.mdでAWS DevOps Agentの不要なリージョンアクセスを止めてみた",
-      "url": "https://dev.classmethod.jp/articles/agents-md-region-filter-aws-devops-agent/",
-      "description": "AWS DevOps Agentの調査時間とコストを削減するため、AGENTS.mdの書き方を工夫してリージョン制約をきちんと遵守させる方法を試してみました。",
-      "publishedAt": "2026-07-31T09:01:30.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "034dd386d7e245e44b857b5e0ecd13610444394b6d42d23f938269caa6bce559",
-      "title": "AWS Lambda から Google スプレッドシートに OAuth 2.0 で行を追記してみた",
-      "url": "https://dev.classmethod.jp/articles/lambda-google-sheets-oauth-append/",
-      "description": "AWS Lambda から Google スプレッドシートへ書き込みたいとき、組織の設定でサービスアカウントが使えない場合があります。その時は個人アカウントの OAuth 2.0 で解決できます。認証設定からリフレッシュトークンの管理まで、実装のポイントをまとめました。",
-      "publishedAt": "2026-07-31T09:00:18.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "55a407df651724d24ffb07c4a16646e8f9433f0b633eeca88a7aaa0744c41a9b",
-      "title": "AWS Summit Japan 2026 行ってみた！",
-      "url": "https://dev.classmethod.jp/articles/aws-summit-2026-went-koty-mousa/",
-      "description": "AWS Summit Japan 2026に参加してきました！基調講演で心に残った「Why not?」というメッセージと、AI展示、そして自分自身の成長を振り返りながら感じたことをお伝えします。",
-      "publishedAt": "2026-07-31T08:18:00.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "730c961b2bf10e3b608877beda35f1d053c3a37426d2701f55e07a2e21697178",
-      "title": "【登壇レポート】 100名で参加のクラスメソッドが教えるAWS re:Inventへ行くべき理由と効果的な参加術で「re:Inventへの学びを、成果に変えるコツ」というタイトルで登壇しました",
-      "url": "https://dev.classmethod.jp/articles/reinvent-webinar-report-3years-consecutive-participant/",
-      "description": "AWS re:Invent に3年連続参加して見えた、現地での動き方と帰国後の初速が「学びを成果に変える」すべてを決めるというお話を、実体験からお伝えします。",
-      "publishedAt": "2026-07-31T08:16:55.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "a44ca8a65d2fbf891f1a397f98710cc9fda47b08c13d6d1b7249089bc25b407d",
-      "title": "Playwrightで業務E2Eテストのアーキテクチャを設計する — Screen Object Model、Fluent Chaining、日本語メソッド名、ロケーター辞書の統合パターン",
-      "url": "https://dev.classmethod.jp/articles/playwright-e2e-test-architecture-patterns/",
-      "description": "Playwright + TypeScriptで業務B2BポータルのE2Eテストを設計した際に採用した、Screen Object Model、Fluent Chaining、日本語メソッド名、ロケーター関数辞書、ポップアップ処理のファクトリメソッド封じ込めなど、複数パターンの統合アーキテクチャを紹介します。",
-      "publishedAt": "2026-07-31T08:00:16.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "5c872b262c7e9449df719edc30514792cd6d517c1c3639a5e8f92292fa2da63c",
-      "title": "【開催！】2026 Japan AWS Jr. Champions 真夏のQiitaリレー",
-      "url": "https://qiita.com/ys-yoshida/items/6f7c7f85155a993e2c86?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "みなさん、こんにちは！\nNTT西日本株式会社の吉田です。\nこの度、114名の2026 Japan AWS Jr. Championが選出されました👏👏\n\n「Japan AWS Jr. Champion Partner Program」とは、AWS Partner Ne...",
-      "publishedAt": "2026-07-31T06:59:06.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "ebfab4b2751c198cd56be9433d02f81e1e3e88bef527a42a7669276aaa8eff78",
-      "title": "AWS DOPが楽しかった話",
-      "url": "https://qiita.com/Rabbit_booK/items/2c17461a2149028d9593?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "DOP合格しました\n勉強期間：ちょうど1週間くらい\n経験・スキル：\nSREに配属されてもう少しで1年\n取得済み資格はCLF, AIF, SAA, SOA, DVA\n\n例によって、誇れるほどの点数ではないです。\n\n対策など\n\n使用教材\n\nUdemyBusiness：Maru...",
-      "publishedAt": "2026-07-31T06:15:32.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "ff09a0b003e0e84a066c32744ea11a9caacd488159b9cccf2dc6c0c4b60f5ab4",
-      "title": "「アーキテクチャ」って結局何？ITパスポートのEAを調べてみた",
-      "url": "https://qiita.com/prumnn/items/da1cd811a3a7408472d2?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "はじめに\n\n本屋の技術書コーナーでよく見かける「〇〇アーキテクチャ」というタイトルの本。なんとなくスルーしていたぷらむんが、ITパスポートの勉強中についに「アーキテクチャ」の文字に出会って、調べずにいられなくなった話です。\n\nこんにちわ、会社で自称マスコットキャラをや...",
-      "publishedAt": "2026-07-31T05:20:25.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "315066a6e0839c9ff20e3869a0e94b709ba6a15deb274a2e5c54ea44732496e4",
-      "title": "AWS Mainframe Modernization Day Tokyo 2026 (2026年9月17日開催)",
-      "url": "https://aws.amazon.com/jp/blogs/news/aws-m2-day-20260917/",
-      "description": "メインフレーム基幹系システムの AWS 移行を真剣にご検討中のお客様向けの対面イベントを 2026/09/17(木) に麻布台ヒルズで開催します。参加費は無料です。詳細・お申し込みはブログをご覧ください。",
-      "publishedAt": "2026-07-31T05:11:54.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "02e739aaf5e62a9028fba069fe89bed1d2eb6e2f6f3bd87ee28c8964f8c0b107",
-      "title": "「AlmaLinux 9.2」がセキュリティ認証取得、企業の“OS選定”にどう影響する？",
-      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2607/31/news057.html",
-      "description": "サイバートラストは「AlmaLinux 9.2」が国際標準規格「CC認証」を取得したと発表した。背景には企業が考慮すべきセキュリティリスクがあるという。",
-      "publishedAt": "2026-07-31T04:00:00.000Z",
-      "feedName": "＠IT"
-    },
-    {
       "id": "a89522080bc3d378f153b2d33d41ba25807efd10a224ba3f1f9dc74c8d596edc",
       "title": "Picking a Random Name From a List: A Practical Decision Guide for Engineers",
       "url": "https://dev.to/lizely/picking-a-random-name-from-a-list-a-practical-decision-guide-for-engineers-52gj",
@@ -423,45 +151,6 @@
       "description": "Playwrightには @playwright/test だけでなく、テストランナーなしで使えるコアライブラリ playwright があります。RPA的なブラウザ自動化や独自のオーケストレーション層が必要な場合に、テストフレームワークに縛られない選択肢とそのトレードオフを実例をもとに整理しました。",
       "publishedAt": "2026-08-01T04:00:09.000Z",
       "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "3fa831f0544df53800b052e61c771b781b521b3ff4e49722a2a17d03cf3d2bcf",
-      "title": "AWS Organizations間のアカウント移行でRAM共有が外れる理由と共有を維持する設定",
-      "url": "https://qiita.com/infra365/items/daed33099cdf34e2e588?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "概要\nAWS Organizations配下のアカウントに対してAWS RAM（Resource Access Manager）でTransit Gatewayを共有している環境で、そのアカウントを別のOrganizationへ移行するとRAM共有が外れます。2026年2...",
-      "publishedAt": "2026-08-01T01:18:53.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "1ef85d4e8d4596bc3fe09ea0268439db80b11e31c942e4c340e6b7e7e312c822",
-      "title": "OpenAIがGPT-5.6 Lunaを80%値下げしたから、今日からCodex派になりました。｜tatsuki",
-      "url": "https://note.com/nobel/n/n92fb2ecf10f4",
-      "description": "この記事は数日間全文無料で読めます。 AIのモデルを追っていると、価格と性能の地図が毎週のように書き換わります。 少し前まで、ClaudeのFable 5はすごいと言われていた。そこへ、Fable 5に近い性能を半額で出すOpus 5が登場した。Kimi K3やGLM系は、評価項目によってはさらに安く、Grokもコストパフォーマンスがいい...",
-      "publishedAt": "2026-08-01T00:41:48.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "6203467638f7e99c8d6c06c7a4fef5577b8985d5ad069986ab77031a9d18a9a7",
-      "title": "ガバメントクラウドでのAWS DevOps Agentの活用",
-      "url": "https://qiita.com/infra365/items/70eb40b12d6f9c0011ca?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "概要\n2026/07/31に開催されたJAWS UG 名古屋 × Gov JAWSコラボにて「ガバメントクラウドでのAWS DevOps Agentの活用」というタイトルでLT登壇させていただいた内容です。\n\nガバメントクラウドの運用はマルチアカウント構成や閉域ネット...",
-      "publishedAt": "2026-07-31T20:16:50.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "e26bc63d3ca2d3a73c18cee24951b4c9648aede3fad1d9e7d4e99c179cee9503",
-      "title": "米アンソロピック、AIモデルがテスト中に3社をハッキングと公表　オープンAIの事案受けた調査で発覚 - BBCニュース",
-      "url": "https://www.bbc.com/japanese/articles/c04kr96vdqeo",
-      "description": "米アンソロピックは30日、サイバーセキュリティーのテスト中に、同社の人工知能（AI）モデルがインターネットにアクセスするエラーが発生し、他の3社のシステムに侵入していたと発表した。 競合の米オープンAIは21日、自社のモデルがテスト中、米ハギングフェイスなど他社の内部システムの一部に侵入したと発表したばか...",
-      "publishedAt": "2026-07-31T13:49:29.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "55e3bb7f2638602e5ae889682b003d76865238d1f81cd53158d31122aa87456d",
-      "title": "Playwrightで業務E2Eテストのアーキテクチャを設計する — Screen Object Model、Fluent Chaining、日本語メソッド名、ロケーター辞書の統合パターン | DevelopersIO",
-      "url": "https://dev.classmethod.jp/articles/playwright-e2e-test-architecture-patterns/",
-      "publishedAt": "2026-07-31T10:22:34.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
     },
     {
       "id": "f00078e900410dbd38415259c34785093f337ba28e8246e5e0a211cb69a897f0",
@@ -6639,6 +6328,230 @@
       "url": "https://zenn.dev/135yshr/books/go-service-design",
       "description": "「クリーンアーキテクチャというアーキテクチャはない」——大事なのは図の形を真似ることではなく、依存の向きを設計し、変更に強いサービスを育てることです。本書は、Go でサービスを設計・運用する中で得た判断基準を、原則の理解、層ごとの設計判断、ドメインの表現、CI での維持、そして読書ログサービスを題材にし...",
       "publishedAt": "2026-08-12T08:49:54.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "277c6dbb25f164173716a54105f6c7bcfe141a278f8b7c2f4c60958cd98f65bc",
+      "title": "Upgrade .NET, React, and Next.js apps to latest versions with multiple AI Agents",
+      "url": "https://dev.to/qmmughal/upgrade-net-react-and-nextjs-apps-to-latest-versions-with-multiple-ai-agents-58fn",
+      "description": "Teaching an AI agent to upgrade .NET, React, and Next.js apps for real — not just talk about it\nEvery engineering team has that repo. The one running a framework version from three or four years ago. Everyone knows it needs an upgrade. Nobody wants to be the one who breaks production doing it.\nThat's the problem UpgradePilot — an open-source, multi-agent upgrade pipeline — is built to solve. And this week we shipped the piece that made it stack-agnostic: real, working upgrade automation for .NET, React, and Next.js, including repos that mix a .NET backend with a React or Next.js frontend in the same codebase.\nHere's what that actually means, because \"AI upgrades your code\" is a claim that's earned a lot of well-deserved skepticism.\nThe design principle: shell out to the real tool, never fake it\nThe easy version of this feature is an LLM that reads your package.json, guesses at new version numbers, and writes some plausible-looking code changes. That's not what we built.\nEvery step in UpgradePilot's pipeline calls the actual toolchain:\n.NET — real dotnet restore, dotnet build, dotnet list package --outdated, dotnet ef migrations add. Package version bumps are verified by an actual restore, not assumed to work.\n\n\nReact / Next.js — real npm install, npm run build, npm outdated. Codemods run through the actual react-codemod and @next/codemod CLIs — we pulled the real transform names directly from those projects' GitHub repos rather than guessing, because a fabricated transform name just fails at runtime.\n\n\nTarget versions aren't invented. PackageTargetVersions come from dotnet list package --outdated and npm outdated — the same commands you'd run yourself.\n\n\nCodemod selection isn't invented either. UpgradePilot pulls React's and Next.js's own GitHub release notes, classifies breaking changes, and matches them against a verified catalog of real codemod transforms.\n\n\n\nIf a step can't do something for real, it says so — with a confidence score and an explanation — instead of pretending.\nWhat's real today, stack by stack\n.NET\nNuGet package upgrades across every .csproj in a multi-project solution, not just the first one\nCentral Package Management support (Directory.Packages.props) — auto-detected, not assumed\nTarget Framework Moniker bumps (net6.0 → net8.0 → net10.0)\nRoslyn-based rename codemods for breaking API changes\nEF Core migration generation, with destructive operations (dropped tables/columns) flagged for review instead of silently applied\nReal dotnet build validation after every change\nReact\nReal npm install-verified package.json upgrades\nreact-codemod integration for known breaking-change patterns (legacy ReactDOM.render → createRoot, PropTypes migrations, deprecated lifecycle renames)\nJest and Vitest test-summary parsing — real pass/fail/skip counts, not just an exit code\nReal npm run build validation\nNext.js\nEverything React gets, plus @next/codemod integration\nPages Router vs. App Router detection — based on the actual required files each router uses (layout.* vs _app.*), not a guess from folder names\nBuild validation that also exercises route compilation, the closest thing to a route smoke test without spinning up a live server\nMixed repos (.NET + React/Next.js in one codebase)\nThe backend upgrades and validates first — a frontend calling into backend APIs should be upgrading against an already-working backend, not the reverse\nThe frontend half then resolves to React or Next.js automatically and runs through the same real pipeline\nIf the frontend can't be confidently identified, that half is explicitly flagged for manual review — never silently skipped, never guessed at\nWhy this matters more than it sounds like it should\nA huge amount of AI coding tooling right now optimizes for demo-ability: something that looks impressive on a green-path example. The failure mode that actually costs teams trust is quieter — a tool that claims success on a real repo but didn't actually verify anything.\nEvery one of these steps is designed around one question: does this survive contact with a real, imperfect codebase? That's why package bumps are verified by a real restore, why codemods run through the actual official tools instead of hand-rolled regex, and why every gap that isn't solved yet — renaming a method based on a release note, auto-coordinating a genuinely ambiguous mixed repo — is documented in the code as an open limitation, not hidden behind a confident-sounding summary.\nIt's open source\nUpgradePilot is Apache 2.0 licensed, and the agents that run in the free CLI are the same agents that power the hosted product — nothing is held back to make a paid tier look better. If you're maintaining a repo that's overdue for a .NET, React, or Next.js upgrade, the code is here:\ngithub.com/qmmughal/upgradepilot-core\nI'd genuinely welcome issues, PRs, and \"this codemod catalog is missing X\" reports — especially from teams running these upgrades for real. That's exactly the feedback that makes the difference between a tool that looks good in a demo and one you'd actually trust on your own repo.\n\n\n  \n  \n  OpenSource #DotNet #React #NextJS #AIAgents",
+      "publishedAt": "2026-08-31T03:42:39.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "2be0d6f4e20545c5845a1475f9163f9c31cc3790ac453742559060ef724215a7",
+      "title": "The Day I Became the One Being pip Installed: My Pre-Release Checks Caught 3 Leaks",
+      "url": "https://dev.to/secleeman/the-day-i-became-the-one-being-pip-installed-my-pre-release-checks-caught-3-leaks-3dfj",
+      "description": "(Translation of my Japanese article on Zenn.)\nThis is part 4 of a series where I keep delegating implementation to AI without being able to read the code, building a vulnerability triage CLI called triage-lens. This installment is about distribution rather than the tool's internals: the tool had been sitting on GitHub, and I published it to PyPI so a single pip install triage-lens brings it in.\nA confession first. Shipping took more nerve than any of the feature work did. And three \"leaks\" actually turned up right before release.\nI can't read code, but I have typed pip install before. Years ago I dabbled in Python out of curiosity, and the one thing that stuck was the experience of a useful tool arriving in one line. Now that I'm the one publishing, the other side of that one line finally became concrete. Someone builds a thing, shapes it into a package, and puts it on the public shelf called PyPI. That's why it installs in one line anywhere in the world. My turn to put something on the shelf.\nI delegated the release work to AI too: package metadata, the release workflow, and one thing I insisted on. Instead of an API token, authentication to PyPI uses Trusted Publishing (OIDC). Nothing like a long-lived password gets stored anywhere; you declare \"trust publishes from this workflow in this GitHub repository\" and that's it. A secret you never hold is a secret that can't leak.\nIn this project, nothing goes out to a public repository without passing a mechanical check. Procedures and tests, not eyeballs, verify that no personal or development-only information is mixed in. For three releases it came up empty. That's what insurance looks like.\nOn the fourth run it caught something real. Three somethings.\nFirst, test code had slipped into the distribution. The packaging tool's default behavior had a path where the whole development test suite gets bundled along. I was about to scatter files nobody needs into users' environments.\nThe second one scared me. The name of my private development repository was about to appear in a published artifact. I run this whole activity anonymously, and keeping the development side separate from the public face is a design I care about. That boundary nearly got crossed. The funny part is how it got in: the test that checks whether the dev repository name has leaked had that very name hardcoded in its own source, so the check itself was the source of the leak. Building a check doesn't make you safe. The check is something to distrust too.\nThe third was mundane: relative links in the README turn into 404s on the PyPI page. Links that work on GitHub break when displayed somewhere else.\nAll three were fixed before release and never went out. The point I want to make is not \"that was close.\" It's the opposite. A fixed procedure calmly caught things eyeballs would have missed. The value of turning verification into a mechanism shows up on the fourth run, after three swings at nothing.\nIt didn't end with a clean release. Two lessons came after publishing.\nOne: the description shown on the PyPI page is baked into the artifact at the moment you publish. Fix the README on GitHub afterward and the published version's page never changes. I had scheduled the README update for \"after the release succeeds,\" so the page right after launch showed stale instructions. I ended up shipping v0.4.1, identical in content down to the last character, just to line the page up. That lesson became one more line on the pre-release checklist.\nTwo: the post-release smoke check failed with \"that version does not exist.\" Not the tool's fault, not a config mistake. PyPI takes time to propagate; the dashboard showed the release while pip couldn't see it for a few dozen seconds. One more line on the checklist: confirm the new version is visible to pip before running the check.\nDistribution turned out to be a pile of small traps like these. None fatal. All of them unknown to me until I tried.\nA night after publishing, honestly: it doesn't feel real. Anyone in the world can now install it in one line. But \"can install\" is not \"is installing.\"\nWhether this tool is useful will show up from here on as download counts, quantitative and merciless. I've already built weekly automation that collects article reactions and package usage. The zeros might just keep lining up. Recording that too is what this series is for, so when the numbers come in, good or bad, I'll write them up.\nThe repository is public. pip install triage-lens gets you in.\nhttps://github.com/secleeman/triage-lens",
+      "publishedAt": "2026-08-31T03:15:19.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "1c801346f78d48777bbebd62556de974cea4481d2bb1c6a4e9a7c8fdcf086eae",
+      "title": "React Compiler Silent Bailouts: How to Detect and Fix Them in React 19",
+      "url": "https://dev.to/nainikmehta/react-compiler-silent-bailouts-how-to-detect-and-fix-them-in-react-19-4oai",
+      "description": "The Promise of \"Zero-Effort\" Memoization\n\n\nWhen React 19 was announced, the developer community collectively exhaled. For years, we had been manually managing performance with useMemo and useCallback. These hooks, while powerful, were often sources of bugs, boilerplate, and \"dependency hell.\" The React Compiler promised to solve this by automatically memoizing components and hooks, effectively making manual optimization a relic of the past.\nMany developers rushed to upgrade, enabled the React Compiler, and immediately purged their code of all those manual memoization calls. It felt like liberation. But there is a hidden danger in this \"zero-effort\" approach: the compiler is designed to be incredibly polite.\nThe React Compiler is a sophisticated tool, but it is not magic. It operates under specific constraints. When it encounters code that violates the Rules of React or uses patterns it cannot safely transform, it doesn't crash your build or stop your development server. Instead, it performs a \"silent bailout.\"\nIn a silent bailout, the compiler simply skips the optimization for that specific component or hook. Your app continues to function perfectly fine, but it does so without the memoization you expected. \nIf you have already deleted your useMemo and useCallback calls, you are now relying entirely on the compiler to handle performance. If it bails out on a high-frequency component—like a list item renderer or a complex data visualization—you are suddenly shipping code that performs worse than your React 18 version. You have lost your manual safety net, and the compiler has decided not to provide its own.\nSo, how do you know if the compiler is actually working? You cannot simply assume it is. You need to verify it.\nViolations of the Rules of React: This is the most common reason. If your code breaks the fundamental rules (e.g., calling hooks conditionally), the compiler cannot guarantee the safety of its transformations.\nUnsupported Syntax: While the compiler supports most modern JavaScript, certain complex patterns or experimental syntax may still cause it to skip over a block of code.\nEscaping the Compiler: Sometimes, we inadvertently write code that makes it impossible for the compiler to track dependencies accurately.\nYou need to shift from passive reliance to active auditing. You shouldn't be guessing about your bundle's performance; you should be measuring it.\nThe most effective way to catch these issues before they reach production is by using eslint-plugin-react-hooks (version 7 and above). This plugin is specifically tuned to work with the React Compiler's logic.\nConfigure your .eslintrc file to treat these as errors or high-priority warnings:\n// Example ESLint configuration for React 19\nmodule.exports = {\n  plugins: ['react-hooks'],\n  rules: {\n    'react-hooks/exhaustive-deps': 'warn',\n    'react-hooks/unsupported-syntax': 'error', // Catch compiler bailouts\n    'react-hooks/todo': 'error' // Highlight patterns violating Rules of React\n  }\n};\n\nThe React Compiler provides detailed output during the build process. If you are ignoring your build logs, you are ignoring the heartbeat of your application's performance. Look for warnings or notes indicating that the compiler was unable to transform specific files. \nThe React Compiler is a massive leap forward for developer experience and application performance. However, it requires a new mindset. We are moving from a world of explicit management to a world of implicit optimization. \nDon't let the \"zero-effort\" promise make you complacent. Set up your linting, monitor your build logs, and treat your performance as a critical part of your CI/CD pipeline. Your users will thank you for the extra effort.\nHave you checked your React Compiler build logs recently? It might be the most important thing you do for your app's performance this week.",
+      "publishedAt": "2026-08-31T03:02:12.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "01714247e5b9c19861e0a57d503e1f5af53e451fc4e6ff3e85a150f7279edf2f",
+      "title": "【AWS中級へのステップ】 SSE-KMS で暗号化された S3 へのクロスアカウントアクセス 2 選",
+      "url": "https://dev.classmethod.jp/articles/aws-step-to-intermediate-s3-cross-account-access-using-kms/",
+      "description": "SSE-KMS（カスタマーマネージドキー）で暗号化されたS3バケットへのクロスアカウントアクセスとして、「パターン1. S3が存在するアカウントのIAMロールにスイッチする」「パターン2. バケットポリシー＋KMSキーポリシーで他アカウントからのアクセスを許可する」を紹介します。",
+      "publishedAt": "2026-08-31T02:39:03.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "cb8c6dadc4078f3283916b4296d3d1c1e821917e4782ae2c451edff1868522fa",
+      "title": "[アップデート] EC2 の AMI に対応インスタンスタイプを設定できるようになったので試してみた",
+      "url": "https://dev.classmethod.jp/articles/ec2-ami-support-instancetype/",
+      "description": "EC2 の AMI に対応インスタンスタイプを指定できる新機能が追加されました。従来のアーキテクチャチェックに加え、特定のインスタンスタイプのみで起動を許可する細かい制御ができるようになったので、実際の動作を確認してみます。",
+      "publishedAt": "2026-08-31T02:21:45.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "7d577100592677681221821dbf8531766cef542a30b4f897de867f3ca3e26541",
+      "title": "PR： 【Q&Aで解説】VMware Cloud Foundation（VCF）9.1へのアップグレードを成功させるヒント",
+      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2608/31/news004.html",
+      "description": "「VMware vSphere 8.0」のサービス終了（EOS）が、2027年10月に迫っています。アップグレード計画の策定から設計、環境構築、テストに至るプロジェクト工程を考慮すると、あまり猶予はありません。アップグレード計画は何から始めるべきか、Q&A形式で解説します。",
+      "publishedAt": "2026-08-31T01:00:00.000Z",
+      "feedName": "＠IT"
+    },
+    {
+      "id": "ba58c387300d82ea68697e4bdd236c8684f5e6f6ff3d278bf7605fc0b7776431",
+      "title": "Snowflake Cortex Agents のバージョン管理および GitHub Actions での CI/CD を考えみた",
+      "url": "https://dev.classmethod.jp/articles/snowflake-cortex-agents-versioning/",
+      "description": "Snowflake Cortex Agents のバージョン管理とGitHub Actions を用いた CI/CD について考え、実際に検証してみました。",
+      "publishedAt": "2026-08-31T00:50:32.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "e388810a7886d4dc53cdd1bae4896ebc5ca77659ea898a8367d0847e6761e68f",
+      "title": "AIによる大規模サイバー攻撃に備えよ--OpenAIら155組織が防衛強化を呼びかけ",
+      "url": "https://japan.cnet.com/article/35252073/",
+      "description": "AIによる広範なサイバー攻撃への防御を強化できる「時間は限られている」として、OpenAIら150以上の組織が、企業や政府、その他の機関に対し、サイバーセキュリティー強化へ迅速に行動するよう呼びかけた。",
+      "publishedAt": "2026-08-31T00:34:00.000Z",
+      "feedName": "CNET Japan"
+    },
+    {
+      "id": "6c77c3affa13dd0b53dfe0341fea61e8e4735bf3b5954d4178eb123636f0cbd2",
+      "title": "TypeScript 7.0リリース！ Misskeyで検証",
+      "url": "https://gihyo.jp/article/2026/08/misskey-25?utm_source=feed",
+      "description": "今回は、MisskeyのコードベースでTypeScript 7.0のパフォーマンスを検証します。",
+      "publishedAt": "2026-08-30T23:58:00.000Z",
+      "feedName": "gihyo.jp"
+    },
+    {
+      "id": "1311f4a6d1ffc5f8efc3dd52d4521b2503f6c3ec3ad06d47db11c3c3b199868a",
+      "title": "Amazon EVS と NSX Federation によるディザスタリカバリとマルチサイトネットワーク",
+      "url": "https://aws.amazon.com/jp/blogs/news/amazon-evs-with-nsx-federation-for-disaster-recovery-and-multi-site-networking/",
+      "description": "Amazon Elastic VMware Service (Amazon EVS) が NSX Federation をサポートしました。これにより、AWS 上で VMware ワークロードを実行する際のエンタープライズ規模のネットワーク、ディザスタリカバリ (DR)、マルチサイトネットワークのための強力な新しいオプションが利用可能になります。 NSX Federation は、複数の NSX 環境を単一の Global Manager コントロールプレーンの下で接続する VMware のネットワーク機能です。オーバーレイネットワーク、セキュリティポリシー、ゲートウェイサービスを複数のロケーションに拡張し、各サイトを個別に設定するのではなく、複数サイトのネットワークを統一されたファブリックとして管理できます。",
+      "publishedAt": "2026-08-30T23:47:42.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "a4f5a9b339edc22cf4c569aa1fa421095fed539eed9b934c37d0b2695aae2476",
+      "title": "IAM Policy Autopilot 0.3.0 でサポートされた「Terraform の plan 結果からの IAM ポリシー生成」を試す - kakakakakku blog",
+      "url": "https://kakakakakku.hatenablog.com/entry/2026/08/27/130630",
+      "description": "はじめに 2026年8月18日に「IAM Policy Autopilot」で Terraform の plan 結果から IAM ポリシーを生成できるようになったというアップデートがリリースされていた💡 aws.amazon.com IAM Policy Autopilot は awslabs で公開されているツールで CLI と MCP サーバーとして使える．今回の機能は IAM Policy Autopilot 0.3...",
+      "publishedAt": "2026-08-30T15:29:11.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "d61bd66c69e332fd6fa8f0c6e93db147ea41812bc0d2ca9d8b22f2fda0c80fda",
+      "title": "Amazon Bedrock の GPT-5.6 で access_denied が返る原因を調査してみた",
+      "url": "https://dev.classmethod.jp/articles/bedrock-gpt56-access-denied-investigation/",
+      "description": "Amazon Bedrock で GPT-5.6 の呼び出しが access_denied で落ちる原因のうち、手元の IAM ポリシーやモデルアクセスを直しても解決しないものが2つあります。AWS 側でモデルが解放されていない場合と、組織の SCP で拒否されている場合です。この2つを OpenAI 互換 API を含む5経路で再現し、メッセージ本文だけで切り分ける方法と、誰に何を伝えるかをまとめました。",
+      "publishedAt": "2026-08-30T14:34:14.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "ca567875df4231014ca4702b406659f2adc85f2779d4b7ce00db899f2231d1ce",
+      "title": "AI Agentが決済で予算超過させた時インフラ制御で暴走を止められるのかをAgentCore Payments使って実験してみた",
+      "url": "https://qiita.com/R-You/items/e8cf2f1c783401563ef2?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "「2026 Japan AWS Jr. Champions 真夏のQiitaリレー」\nの30日目の投稿です！\n過去の投稿は以下の（リンク集）からご覧ください！\nhttps://qiita.com/ys-yoshida/private/6f7c7f85155a993e2c...",
+      "publishedAt": "2026-08-30T14:17:20.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "094531f35bd6594c1f6144f9debfba859fa25512d477619aa784f7d0696804a0",
+      "title": "【JavaScript】Uncaught TypeError: backButton.previousElementSibling is not a function",
+      "url": "https://qiita.com/J-T_ky2g/items/4aa2f0fc5ffffca987f5?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\n\nある要素の前のdomを取得する実装をしていた\n\n問題\n\npreviousElementSiblingでdomを取得しようとしたができない\n\n解決\n\npreviousElementSiblingはメソッドではなくプロパティだった\npreviousElemen...",
+      "publishedAt": "2026-08-30T14:02:04.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "6fe23b0409de8671df16f6de67142e56b888d882dad52351c397be1aacf97132",
+      "title": "AWS Context Ontology Accelerator（COA）で日本語のオントロジーを構築してみた - 多言語検索等のサポート",
+      "url": "https://dev.classmethod.jp/articles/20260830-aws-context-v022/",
+      "description": "AWS の OSS「Context Ontology Accelerator」v0.2.2 で、日本語のような分かち書きしない言語の質問がオントロジーのラベルに到達できるようになりました。日本語データを用意して、実際に多言語検索を試してみた結果をお伝えします。",
+      "publishedAt": "2026-08-30T13:42:26.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "5da903ecdb4e8e484e7994dd1972774d9d83a7f030ebb34774b0147afa6a78fd",
+      "title": "TypeScript ライブラリとして動作する組版エンジン minitype を公開しました",
+      "url": "https://zenn.dev/inaniwaudon/articles/62f1def4bad627",
+      "description": "2025 年度下期未踏アドバンスト事業[1]にて開発してきた，TypeScript ライブラリとして動作する組版エンジン minitype を公開しました！ 従来は独立したシステムや専用言語として提供されることの多かった組版処理をライブラリとして提供することにより，LLM や外部アプリケーションを含む，様々な文書生成に活用される...",
+      "publishedAt": "2026-08-30T13:09:39.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "5da903ecdb4e8e484e7994dd1972774d9d83a7f030ebb34774b0147afa6a78fd",
+      "title": "TypeScript ライブラリとして動作する組版エンジン minitype を公開しました",
+      "url": "https://zenn.dev/inaniwaudon/articles/62f1def4bad627",
+      "description": "2025 年度下期未踏アドバンスト事業[1]にて開発してきた，TypeScript ライブラリとして動作する組版エンジン minitype を公開しました！ 従来は独立したシステムや専用言語として提供されることの多かった組版処理をライブラリとして提供することにより，LLM や外部アプリケーションを含む，様々な文書生成に活用されることを目指しています．\nhttps://typeset.jp/\n\n未踏アドバンスト事業：2025年度下期実施プロジェクト概要（和田PJ） | デジタル人材の育成 | IPA 独立行政法人 情報処理推進機構\n\nminitype の使用方法や活用例のデモは，以下の動画...",
+      "publishedAt": "2026-08-30T12:21:31.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "eb65b8b592147c17602c464281766579c48a26146ae40bad9d5e1a96e02efd54",
+      "title": "【CloudFront OAC × Lambda Function URL】SSRアプリのPOSTだけ403になった話",
+      "url": "https://qiita.com/yosuke-suzuki/items/3cbd19db1e33853a2f91?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\n個人で運用している「AI模試ノート」(AWS認定試験の学習アプリ)を、ビルド時間に対する課金が膨らんできたため、AWS Amplify HostingからAWS CDK(Lambda Web Adapter + CloudFront)への移行をしたところ、ホステ...",
+      "publishedAt": "2026-08-30T12:15:55.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "3771459f52ab1da75c515c0dde69d584125fa82f89043157df2a206791e7b949",
+      "title": "【JavaScript】値の真偽を確認",
+      "url": "https://qiita.com/J-T_ky2g/items/b4ed286019668e5ea22c?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\n\n実装中、真偽値この場合どっちだっけとなった\n\n問題\n\n値の真偽どっちだっけとなることがあった\n\n解決\n\nすぐ確認できるスクリプトを書いた\n\nconst judgementBool = (targetArray) => {\n  console.log(tar...",
+      "publishedAt": "2026-08-30T11:12:53.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "8757e207e715c946e6e2814ce613e2ba84a3e9f8bbe321a8f7320d0f3d0edd87",
+      "title": "DuckDB で Amazon S3 Tables に格納された表形式データセットへのアクセスを効率化する",
+      "url": "https://aws.amazon.com/jp/blogs/news/streamlining-access-to-tabular-datasets-stored-in-amazon-s3-tables-with-duckdb/",
+      "description": "DuckDB は軽量なインメモリ SQL エンジンで、追加のサーバー運用なしに対話型のデータ分析を実現します。本記事では、Amazon SageMaker Lakehouse Iceberg REST エンドポイントと AWS Lake Formation のアクセス許可を利用して、AWS CloudShell 上の DuckDB から Amazon S3 Tables に格納された Iceberg テーブルにアクセスし、クエリを実行する手順を紹介します。",
+      "publishedAt": "2026-08-30T10:56:07.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "bdcb75323b09de8b76f667187073f8f3246d5b194c6dd22aa36ec9637b939958",
+      "title": "Microsoft Entra ID と SAML フェデレーションでジャンプアカウント経由の個人識別ログインを実現してみた",
+      "url": "https://dev.classmethod.jp/articles/202608-entra-id-saml-jump-account-federation/",
+      "description": "AWS Organizations も IAM Identity Center も使えない環境で、Microsoft Entra ID と SAML フェデレーションを組み合わせ、IAM ユーザーを作らずにジャンプアカウント経由で各アカウントへログインし、個人識別と MFA を実現する方法を検証しました。",
+      "publishedAt": "2026-08-30T08:05:35.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "b5e152986158a845bdb99bae041e5082c06733b3f11600db7bcd84a6a34c614a",
+      "title": "【個人開発】MLBの試合日程をGoogleカレンダー・Appleカレンダーに自動同期するWebアプリを作りました【React/TypeScript/iCalendar】",
+      "url": "https://qiita.com/takahiro_honda/items/b44d4e2b526aa009f822?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\nMLB（メジャー・リーグ・ベースボール）の試合日程をGoogleカレンダー・Appleカレンダーに自動同期するWebアプリを作成しました。\nその感想を書いていきます。\n\n開発理由\n最近、大谷翔平選手の所属するドジャースの試合にめちゃくちゃどハマりしています！\n...",
+      "publishedAt": "2026-08-30T08:00:11.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "244905582ebdb3b8ef69f86802f921586dd0b4fc4145e0498ed0f23718695c2a",
+      "title": "【Security Hub修復手順】[ECR.5] ECR リポジトリはカスタマーマネージド AWS KMS keys で暗号化する必要があります",
+      "url": "https://dev.classmethod.jp/articles/securityhub-fsbp-remediation-ecr-5/",
+      "description": "AWS Security HubのECR.5コントロール対応について、カスタマーマネージドキーによる暗号化が必須な理由と、見落としやすいAWSマネージドキーとの判別方法から修復手順まで、実践的な対応策をご紹介します。",
+      "publishedAt": "2026-08-30T07:59:48.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "8f3b2b972618cfcc763b4829cf64c908c15a9d8e30b1887fab29163ded27bf29",
+      "title": "自作npmパッケージにマルウェアを公開されたときにやったこと",
+      "url": "https://zenn.dev/7nohe/articles/npm-malware-incident-response",
+      "description": "はじめに\n2026年8月29日の早朝、私が管理しているリリースワークフローの不備を突かれ、npmパッケージ@7nohe/openapi-react-query-codegenに悪意あるバージョンが10個公開されました。\nいわゆるサプライチェーン攻撃で、インストールした時点で攻撃者のコードが実行されます。\nこの期間にインストールしてしまった方には、お詫び申し上げます。\n該当する場合は、そのマシンやCIランナーから到達できる認証情報（npm・GitHubのトークン、SSH鍵、クラウドのアクセスキー、環境変数のシークレット）をすべてローテーションすることを強くお勧めします。\n今回のペイロー...",
+      "publishedAt": "2026-08-29T15:49:58.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "fca27a764761ee177dc82cf66e1ec8834f2a177f140d832631e1e2fbecad3593",
+      "title": "【AWS】AgentCore Runtimeのフェールオーバーとリトライ設計について確認しました",
+      "url": "https://qiita.com/yakumo_09/items/6f83dc660382f10388c3?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\nECS上で動かしているFastAPIのエージェント部分を、AgentCore Runtimeに切り出す検討をしています。そこで気になったのが「障害が起きたとき、会話や処理はどうなるんだろう？」というところでした。\nドキュメントを読んでもセッションのライフサイクル...",
+      "publishedAt": "2026-08-29T15:01:49.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "f965c2ac9528d10bf664db4df3a6d673058f2fa23e0971d9f0c457f7debca700",
+      "title": "Azure無料枠を意識してWindows Server 2022を構築してみた",
+      "url": "https://qiita.com/NoguchiHikaru/items/d55d3b9cfdc38a07034d?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\n前回の記事では、Azure上でWindows Serverを構築する際に考えておきたいポイントを、インフラ目線で整理しました。\n今回はその実践編として、実際にAzure Portalを操作しながらWindows Serverを1台構築してみます。\n今回のゴールは...",
+      "publishedAt": "2026-08-29T14:54:20.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "ff98ccd0d2293dc4efc3946a1191516a7eccdb9666ed55ee271470cbfdad2fc4",
+      "title": "ガバメントクラウドAWS環境における統合監視・AIによる障害時自動調査について検討してみた",
+      "url": "https://qiita.com/fj_yoshimura_kosuke/items/1cb40e25071475268431?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "富士通 Japan 株式会社 Public & Education 事業本部\nクラウドサービス事業部の吉村 康良です。\n令和3年度のガバメントクラウド先行事業から、ガバメントクラウドを利用したインフラストラクチャの設計に従事し、現在は主にガバメントクラウド上のインフラ運用保...",
+      "publishedAt": "2026-08-28T08:21:52.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "66e2067afef681773f0945f497c16f1678d9ac5665c0c74aeccdcd19c58373ad",
+      "title": "ターミナルから Backlog を操作できる CLI「bee」を公開しました | 株式会社ヌーラボ(Nulab inc.)",
+      "url": "https://nulab.com/ja/blog/nulab/released-backlog-cli-bee/",
+      "description": "この記事は ヌーラボブログリレー2026夏 の7日目 Part 1 として投稿しています。 Part 2 → GitHub Actions で Backlog 課題と GitHub プルリクエストを連動させる こんにちは。Backlog Unit の simochee @lollipop_onl です。 Backlog をターミナルから操作できる CLI「bee」を公開しました。 GitHub – nulab/bee: Comma...",
+      "publishedAt": "2026-08-25T12:47:05.000Z",
       "feedName": "はてなブックマーク - テクノロジー"
     }
   ]
