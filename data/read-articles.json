@@ -1,142 +1,6 @@
 {
   "articles": [
     {
-      "id": "5af24d3a299c5d518c87d4251b19c194f6f0b8ed4b8b534efacdee8cbf1fcace",
-      "title": "Paragraph CMS and the Rise of the AI-Native Headless CMS",
-      "url": "https://dev.to/gpiechnik/paragraph-cms-and-the-rise-of-the-ai-native-headless-cms-2ne0",
-      "description": "Paragraph CMS sits in a category that is still taking shape: the AI-native headless CMS. That label matters because it points to a different operating model, not just a familiar CMS with a chatbot glued onto the side. Instead of treating AI as an extra writing assistant, Paragraph CMS treats AI, structured content, localization, media, SEO, and delivery as parts of the same editorial system. If you publish across channels and languages, that changes what everyday work feels like.\nTL;DR: Paragraph CMS is an AI-native headless CMS built around structured content operations rather than one-off AI prompts. Its value is not simply faster drafting. It is the combination of AI-assisted editing, localization, media metadata, SEO workflows, and developer-ready delivery in one workspace, which makes content systems easier to run at scale.\nA standard headless CMS separates content management from presentation. Editors work in one system, while websites and apps fetch content through APIs. That architecture is familiar and useful, but many teams still end up stitching together AI tools, translation tools, SEO helpers, media libraries, and custom workflows around it. The result is usually more fragmented than it first appears.\nAn AI-native headless CMS takes a different stance. AI is not an afterthought or a bolt-on prompt box. It becomes part of the content workflow itself. That means the system understands fields, localized variants, metadata, publishing context, and governance rules while content is being created and updated. You can see that positioning clearly on the Paragraph CMS homepage, which frames the product around AI, localization, media management, CDN delivery, and SEO in one workspace.\nThat difference may sound subtle, but in practice it is substantial. When AI is embedded into the editorial workflow rather than operating outside it, teams spend less time copying text between tools and more time refining content that is already connected to its real schema, assets, and publishing destination.\n\nThe answer is visible in its product surface. Paragraph CMS describes built-in AI chat that understands your content, an AI editor for in-context rewriting, AI generation for metadata, translation and retranslation workflows, multiple model provider support, bring-your-own-key support, a prompt library, and automatic SEO file generation for application delivery. Those are not generic category claims. They are presented as first-class product areas across the main site and changelog.\nThat matters because many teams have already felt the limits of a patchwork setup. A writer drafts in one AI tool. An editor moves the copy into the CMS. Someone else localizes it in another app. A marketer fills in meta fields later. A developer wires up sitemaps and robots rules separately. Every handoff introduces delay, inconsistency, or silent breakage.\nParagraph CMS tries to reduce those seams. Its features page highlights built-in chat, AI editing, generative SEO, translation, prompt reuse, and developer-oriented delivery support. The product is not promising that AI replaces editorial judgment. It is promising that AI belongs inside the governed content workflow rather than outside it.\nThis is the most important question for buyers and practitioners. Plenty of platforms now advertise AI assistance. The issue is not whether AI exists somewhere in the product. The issue is where it lives, how much context it has, and whether it is tied to the content model.\nA normal headless CMS with AI features often gives you a text generator inside a field, a sidebar assistant, or an external integration. That can be helpful. But the workflow is still largely manual. Editors still reconcile generated text with schema requirements, localization strategy, image metadata, and SEO fields on their own.\nWith Paragraph CMS, the product positioning is more operational. It explicitly connects AI to content creation, image alt and caption generation, slug generation, hero metadata generation, localization, and prompt reuse. Its changelog also documents recent improvements that support that workflow, including image alt generation, hero metadata fields with AI generation support, faster translation and retranslation, and a prompt library for reusable prompt templates.\nIn other words, the system is not just asking, “Can AI write this paragraph?” It is asking, “Can AI help move this structured content object toward a publishable state inside the actual workflow?” That is a stronger and more useful question.\n\nBased on the public site and changelog, several capabilities stand out.\nFirst, there is AI-assisted editorial work. Paragraph CMS presents built-in chat and an AI editor that help research, brainstorm, rewrite, and improve content without leaving the editor. That keeps assistance close to the content rather than disconnected from it.\nSecond, there is structured SEO support. The product emphasizes generation of alt text, captions, and slugs, and the changelog shows the addition of dedicated hero metadata fields plus AI generation support for them. For teams publishing image-rich content, that is practical, not cosmetic. Google’s documentation on image SEO best practices makes it clear that descriptive alt text helps search engines understand images and also supports accessibility.\nThird, there is multilingual content support. Paragraph CMS describes translation into more than 75 languages and instant retranslation after updates. The changelog adds more detail, noting faster translation and retranslation workflows across localized content.\nFourth, there is developer-oriented delivery. The homepage references a global CDN, edge caching for public media, image optimization to WebP in the current implementation, official SDKs, and framework support for Next.js, React Router, Nuxt, Astro, and SvelteKit. The changelog also references a dedicated SEO package that can generate robots.txt, sitemap.xml, rss.xml, and llms.txt.\nFifth, there is governance for teams. The public site points to members, teams, roles, permissions, and API keys as core product areas. That is especially relevant when AI is involved, because the question stops being “Can the system generate content?” and becomes “Who can ask it to generate what, where, and under which rules?”\nMost editorial teams are not blocked by the act of typing. They are blocked by handoffs, repetitive metadata tasks, localization overhead, and the friction between content creation and content operations. Writing the first draft is often the easiest part. Converting that draft into a publishable, reusable, localized, searchable content asset is what takes time.\nThat is why Paragraph CMS’s positioning is more interesting than generic “AI writing” claims. A built-in assistant that understands the content context is useful. But equally useful is AI that helps generate asset metadata, supports page SEO tasks, translates existing structured entries, and works within the existing model instead of outside it.\nGoogle’s guidance on writing helpful alt text reinforces the same principle: metadata should be useful, contextual, and descriptive. Teams rarely skip alt text because they do not value it. They skip it because the work is repetitive and easy to push off. An AI-native workflow helps reduce that friction while still leaving room for review.\n\nLocalization is where many content systems reveal their real complexity. Translating one blog post is easy. Keeping dozens or hundreds of structured entries synchronized across markets is not. The challenge is not just translation quality. It is version control, retranslation after source edits, media consistency, metadata coverage, and editorial visibility.\nParagraph CMS treats multilingual content as a core feature area rather than a niche extension. The product’s public navigation includes Multilingual Content, and the main site describes one-click translation and instant retranslation after updates. The changelog provides even stronger evidence that this is a living product area, with recent improvements for faster translation of language variants and faster retranslation of all language versions.\nThat is a meaningful distinction. In many stacks, translation still happens as a sidecar process. Content is exported, transformed elsewhere, then re-imported. Editors lose confidence because they cannot easily tell which locale is current or which fields changed. A better approach keeps source content, localized variants, and update actions close together.\nFor global teams, the key benefit is not simply speed. It is lower coordination cost. If the system knows the canonical source, the localized versions, and the content structure, retranslation becomes a controlled operation instead of a spreadsheet exercise.\nParagraph CMS appears to approach SEO as a built-in publishing concern, not as an external checklist. The site calls out generative SEO, metadata generation, and analytics-oriented visibility into what is missing from content. The changelog adds specifics, including the release of an SEO package with built-in generation for robots.txt, sitemap.xml, rss.xml, and llms.txt.\nThat combination matters because SEO in a headless setup often becomes fragmented. Editors manage titles and descriptions in the CMS, while developers separately maintain crawl files and feed generation in the front end. Paragraph CMS is trying to narrow that divide.\nThere is also a useful nuance here. Google’s documentation on robots meta tags and indexing controls makes it clear that crawl and indexing behavior should be handled intentionally, at the page and site level. Automating the repetitive parts is valuable, but automation still needs the right defaults and review.\nThe mention of llms.txt should also be interpreted carefully. Google has stated that llms.txt is not needed for ranking in search, a point summarized in Search Engine Land’s coverage. So the real advantage is not magical SEO lift. It is operational completeness. If your content platform can help generate the files modern teams want to manage, that reduces maintenance burden, even when not every file has equal search impact.\n\nMedia is often treated as a separate concern until it starts breaking production. Then it becomes urgent. Missing alt text, inconsistent captions, renamed files, replaced assets, and locale-specific image variants all create publishing drag.\nParagraph CMS has been steadily expanding this part of the product. Its changelog documents unified handling for media alt and caption, improved media API support, AI generation of slugs and captions for image elements, AI-generated alt tags, and the ability to replace media assets across multiple language variants of an article simultaneously.\nThat is exactly the sort of feature set that supports the “AI-native” label in a concrete way. Instead of using AI only for body copy, the system applies it to the metadata and maintenance work that actually slows teams down. The practical value is even clearer when you compare it to Google’s guidance on image discoverability and accessibility. Good alt text needs context. A CMS that understands the page, image role, and editorial intent can help generate a better starting point than a disconnected image tool.\nParagraph CMS also highlights consistent public media delivery and retention windows for removed or replaced images, which helps reduce broken URLs after updates. That is a small operational detail with outsized value for teams that publish frequently.\n\nOne of the common mistakes in CMS evaluation is to separate the editor experience from developer reality. Teams buy for one audience and later pay the price in the other. A headless CMS has to serve both.\nParagraph CMS makes a developer-facing case in a few ways. The main site highlights official open-source SDKs with TypeScript support, framework-specific quickstarts for modern front-end stacks, and production-ready templates and examples. The changelog also points to starter and advanced example projects for Next.js, Astro, Nuxt, React Router, and SvelteKit, including patterns for localized blog routing and automatic generation of sitemap, robots, RSS, and LLM-oriented files.\nThat is important because in a headless environment, content operations and delivery architecture are inseparable. A CMS is not just a place to store content. It is part of the application interface. Sitecore’s documentation on content modeling in headless systems describes the content model as the structure that enables reuse across channels. Developers feel the quality of that model every time they query, validate, cache, and render content.\nWhen Paragraph CMS says it is built for editors and ready for developers, the claim makes most sense when you look at the combination: structured content types, APIs, SDKs, framework support, delivery tooling, and editorial features that map to real application needs.\nParagraph CMS looks especially relevant for teams with one or more of these conditions:\nThey publish structured editorial content across a custom front end.\nThey need localization without adding a sprawling translation workflow.\nThey want AI assistance inside the CMS rather than across disconnected tools.\nThey care about metadata completeness, media operations, and SEO hygiene.\nThey need a system that serves both non-technical editors and modern JavaScript developers.\nThis does not mean it is the right answer for every project. A tiny brochure site may not need an AI-native headless workflow. A legacy enterprise stack with deeply entrenched governance may move more slowly. But for product teams, content-led startups, publishers, multilingual SaaS companies, and developer-forward marketing teams, the fit is easier to see.\nThe product also appears designed to reduce early integration friction. The changelog notes an in-app getting started flow and helper buttons that show how to use the client library for fetching and updating data. That suggests a product team paying attention not just to raw capability, but to time-to-first-working-integration.\n\nThe biggest mistake is treating AI as the strategy rather than as part of the system. If your content model is weak, your review workflow is unclear, and your roles are undefined, AI will only help you make inconsistent content faster.\nA second mistake is modeling pages instead of modeling reusable content. Good headless architecture starts with structured content types, relationships, validation, and reusable fields. Contentstack’s guidance on content modeling best practices and broader headless modeling advice across the industry point to the same conclusion: the content model is where future flexibility is won or lost.\nA third mistake is underestimating metadata work. Teams often focus on body copy and forget that slugs, captions, alt text, hero metadata, locale variants, and SEO fields determine whether content is actually publishable. Paragraph CMS seems well aligned with this problem because so many of its AI features target exactly those overlooked tasks.\nA fourth mistake is assuming automation removes the need for review. It does not. AI-native should mean faster, more contextual, and more governed operations. It should not mean blind publishing. The best implementation pattern is usually human review on brand-sensitive, regulated, or high-traffic content, paired with stronger automation on repetitive low-risk tasks.\nYes. Any honest evaluation should acknowledge them.\nFirst, an AI-native CMS asks teams to think more carefully about governance. Once AI can rewrite, translate, and generate metadata inside the core workflow, permissions and review states matter more. That is not a flaw in Paragraph CMS specifically. It is a consequence of making AI operational rather than peripheral.\nSecond, teams still need editorial standards. AI can accelerate production, but it cannot define your voice, your source quality thresholds, your compliance requirements, or your publishing priorities. Without those rules, faster content creation just amplifies drift.\nThird, newer categories always require some buyer education. “AI-native headless CMS” is clearer today than it was a year ago, but it is still not as standardized a category as “CMS” or “DAM.” Buyers should look past labels and ask concrete workflow questions: What can the AI see? Which fields can it act on? How are prompts reused? What gets audited? What can be localized? What can be generated automatically? Which frameworks are supported? Which tasks remain manual?\nFourth, not every SEO or AI-delivery convention carries equal value. For example, auto-generating sitemap.xml and robots.txt addresses well-established operational needs. llms.txt is more experimental as a site convention, and should be treated as optional infrastructure rather than as a ranking shortcut.\n\nImagine a content team launching a multilingual product article series.\nA content strategist defines the content model and editorial fields. An editor opens a new entry, uses built-in chat to research structure and angle, then drafts inside the editor with in-context AI assistance for rewrites and refinement. Images are uploaded, and the system helps generate captions, slugs, and alt text as a starting point.\nNext, the editor fills SEO fields and checks whether the page is ready to publish. Then the team creates language variants and runs translation. If the source version changes next week, they can retranslate rather than rebuilding each locale manually. Developers consume the published content through the SDK in their chosen framework, while crawl files and related SEO resources are generated with less custom glue code.\nThat workflow is not futuristic. It is simply less fragmented than the standard stack most teams have accepted as normal.\nThis is where the Paragraph CMS changelog becomes useful. Instead of vague product marketing, it shows specific shipping work around translation, media metadata, prompt reuse, example projects, and SEO package support. For practitioners, that is a strong signal that the AI-native claim is tied to implementation details.\nThe broader shift is away from “content as pages” and toward “content as governed, reusable, multi-step operations.” Headless CMS platforms already moved the industry toward structured content and channel flexibility. AI-native systems push the next step by reducing the manual work around that structure.\nWhat matters is not whether AI writes more words. What matters is whether the content system itself becomes better at helping teams move from idea to publishable asset with fewer copy-paste workflows, fewer metadata gaps, fewer localization bottlenecks, and better alignment between editors and developers.\nParagraph CMS is compelling in that context because its product narrative is not narrowly about generation. It is about integrating AI with editorial structure, localization, media, delivery, and governance. That makes it a more credible example of the category than tools that simply add an assistant sidebar and call it transformation.\nYou can also see that positioning in the range of public feature areas the company exposes, including Get Started, core product features, and developer-focused setup paths. For a headless CMS, that breadth matters. The category lives or dies on workflow coherence.\n\nIf your team wants a generic AI writer that occasionally helps produce marketing copy, this may be more system than you need. But if your challenge is operational, not just creative, Paragraph CMS deserves real consideration.\nIt appears particularly strong for teams that need structured content, modern front-end delivery, multilingual publishing, reusable prompts, built-in AI assistance, and integrated handling of media and SEO metadata. That is the cluster of needs where “AI-native” starts to mean something concrete.\nThe best way to evaluate it is not to ask whether it has AI. Most products can now answer yes. Ask whether AI is meaningfully connected to the content model, the editorial workflow, the localization lifecycle, and the delivery stack. Paragraph CMS has made that connection the center of its product story.\nThat is why the “first AI-native headless CMS” framing is interesting. Whether one treats “first” as a category claim or a positioning statement, the more useful point is this: Paragraph CMS is trying to define a headless CMS where AI is part of content operations from the start, not a late add-on. For many teams, that is exactly the direction the category has needed.",
-      "publishedAt": "2026-08-09T01:27:02.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "a6e8fbd7509edfafc6373c1b9aedf14615fe8bbf5c627a7ba64f064d66ae5830",
-      "title": "The two opposite ways AI gets your system wrong",
-      "url": "https://dev.to/kayashaolu/the-two-opposite-ways-ai-gets-your-system-wrong-43k1",
-      "description": "You asked an AI to help you build something, and it put the whole thing inside one service. I have written about this before: a Service is a waiter, it takes the order and comes back with an answer. Ask AI to write the code for your app and it puts everything behind that one order: validate the input, hit the database, send the email, all before the response goes back. It works in the demo. In production the email step is slow, so every user stares at a spinner while your server waits on someone else's mail service.\nAsk the same AI to design that system before you write a line of code, and you get the opposite mistake. Same AI. Same app. Opposite failure. You and one other engineer are building an app that lets roommates split rent and bills. Ask AI to design it, and it hands you five services: auth, billing, notifications, an API gateway in front of all of them, and a message broker connecting them.\nFive services sounds manageable until you count what is actually inside each one. Auth is not one thing. It is a Service, a Relational Database of user accounts, and a Key-Value Store holding sessions: three building blocks. Billing is a Service plus its own Relational Database of charges: two more. Notifications is a Service, a Queue, and a Worker to send the email: three more. The API gateway is a fourth Service sitting in front of the rest, and the message broker is its own Queue. Ten building blocks, minimum, spread across five separate deployments, for a team of two.\nWhat the app actually needs looks nothing like that. Someone logs in and adds a bill: one Service. The bill has to know which users it belongs to and how it is split: one Relational Database. When someone marks a bill paid, you want to email the other roommates, and that does not need to happen while anyone is watching a spinner, so it goes on a Queue, and a Worker picks it up a few seconds later. One Service, one Relational Database, one Queue and Worker: the whole system. Four blocks, one deployment, against ten blocks spread across five.\nAsk AI to write code and it defaults to the plainest possible shape: one function, one service, request in, response out. It never reaches for a queue, because a queue is a decision about what can wait, not the plain shape of code. Ask AI to design a system on its own and it defaults to the most-discussed shape it has read about, which is how large companies solve problems you do not have. Same root cause both times: it is matching the genre of your prompt, not your actual constraints.\nThis is why the blocks matter more than the word \"service.\" A microservice is not a building block. It is a whole deployment that can contain two or three of them. Count in services and \"five\" sounds like five things to build. Count in blocks and it is ten pieces you have to build, wire together, and keep alive, spread across five deployments you run separately. Against four pieces in one.\nMicroservices earn their cost when separate teams need to ship without waiting on each other, when one part needs different hardware, or when one failure cannot be allowed to take down everything else. Two people building one app have none of that pressure. What you need is one place to change things, one deploy, one thing to reason about at 11pm: a monolith. Not the beginner version of something you graduate out of. At your stage, it is the correct design.\nRun every piece of the AI's answer, whether it built too little or too much, through one question: does the pressure that justifies this exist on my team, right now? Multiple teams stepping on each other's deploys. A component that needs different hardware. Traffic you can already measure, not traffic you are imagining for next year. If that pressure is not real, the piece comes out, whether it is a missing queue or an extra service.\nThat is why I teach the seven building blocks in Course 1 before anyone draws a single box. Know what each one is for, and you can look at any answer, AI's or your own, and ask what it is actually built to survive.\nYou do not fix the answer the AI gave you. You check the pressure behind every piece of it.\nKay\nP.S. If you want the repeatable version of that question, I wrote up the full decision framework: one question per building block, so you can point at any requirement and know exactly what it needs. https://systemthinkinglab.ai/learn/building-blocks/decision-framework/\nThis letter goes out by email every Saturday. Subscribe here or read the full archive at systemthinkinglab.ai/newsletters.",
-      "publishedAt": "2026-08-09T01:03:46.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "22a999d4ad2168f55241ae775a990d947356fecaca46910a591ed0beee0f570c",
-      "title": "CNCF's shadow-AI post makes the case for treating agents as identities",
-      "url": "https://dev.to/leobaniak/cncfs-shadow-ai-post-makes-the-case-for-treating-agents-as-identities-27m0",
-      "description": "Give an AI agent a Git token and a Kubernetes ServiceAccount. Now ask which team owns it, and where its logs go. If you cannot answer both in one breath, congratulations: you have shadow AI in your pipeline. This week Matteo Bisi of ReeVo has a CNCF community post out that names the problem, threat-models it end to end, and cross-references the open-source controls you already have but are probably not using yet.\nBisi's working definition is uncomfortably broad on purpose: shadow AI is any AI tool, model, agent, extension, or integration used in the software lifecycle without formal approval, ownership, risk assessment, or monitoring. The assistant writing your commit messages is one thing. The agent holding a token that can push to main, or a ServiceAccount that can restart a workload, is a different beast. Kubernetes will not distinguish a malicious call from a well-meaning agent with too much RBAC. The blast radius is the same either way.\nThe verdict Bisi lands early is the one that costs you meetings: treat AI as an identity class. Named business and technical owners on file. Purpose and data classification recorded. Environment-scoped credentials that are short-lived, read-only by default, with an explicit allowlist for anything more. A revocation button someone can actually press at 2 a.m.\nReasonable. Also, if we are being honest, mostly aspirational at your shop.\nThe post walks the delivery path in six stages and gives each its own failure mode. On the developer laptop: unapproved assistants and local models leaking source and secrets. In source control: AI-authored pull requests with more repo scope than the human author has. In CI: prompts and logs quietly ingesting build secrets and cloud credentials. In the artifact registry: an AI helpfully picking a dependency with a fresh vulnerability. In continuous delivery: recommender roles fused with executor roles, so a suggestion becomes a release. In the cluster: agent remediation loops that scale, patch, or delete on behalf of a compromised prompt.\nPrompt injection is the through-line. Every stage inherits it. If your only defence is a filter on the model's inputs, everything downstream is doing security theatre.\nThe strong move in Bisi's write-up is that he does not stop at the diagnosis. Each stage gets a set of concrete, mostly CNCF-adjacent controls you can wire up this quarter.\nOn the laptop: pre-commit secret scanning with gitleaks, commit signing via Gitsign and the wider Sigstore stack, and disposable, VM-isolated workspaces for the agents you do let touch code.\nIn the supply chain: image scanning with Trivy or Grype, SBOMs from Syft, and artifact signatures via Cosign, in-toto, or Notation. Nothing you have not read about before. The point is that AI-authored artifacts are still artifacts, and the same attestations apply.\nIn delivery: keep the recommender separate from the executor, and put a GitOps controller (Argo CD, Flux) between the two so merge approval remains the last human choke point before anything hits production.\nIn the cluster: SPIFFE/SPIRE for workload identity, namespace-scoped RBAC that follows the same model as above (short-lived, allowlisted, revocable), and runtime detection with Falco or Tetragon on Cilium to catch the behaviour when the identity story fails. Add network segmentation via Cilium, Istio, or Linkerd so a compromised agent cannot casually pivot.\nThere is a lot to like here. Bisi is not selling anything. He is pointing at parts of the stack you already run and asking why the agent piggybacking on them is not held to the same standards as every other production identity.\nBisi flags the gap plainly, and it is the honest read: no CNCF graduated project today owns end-to-end AI governance. Prompt inspection and tool-call policy remain immature. Emerging pieces (kagent, Envoy AI Gateway, Backstage, OpenTelemetry) each cover a slice, but nothing yet stitches the identity, the prompt, the tool call, and the runtime effect into one auditable trace.\nThat is a healthier account of the state of the art than most vendor whitepapers on the same topic. If you were hoping for one control plane you can turn on, keep waiting. If you were hoping to composite one from parts you already run, the parts exist. Someone on your team just has to own the assembly.\nBan the AI and it moves to a personal laptop with your source tree on it. Approve it and forget to scope it, and it moves to production on your behalf. Pick one.",
-      "publishedAt": "2026-08-09T00:25:53.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "326d8a2175f06e967848719e5292718f75587e3ae2fe71ac884afe48964de545",
-      "title": "定番の「MQTT + AWS IoT Core + Timestream for InfluxDB + Grafana」を、実運用目線でひと工夫 ― hot/coldデータの組み合わせと、スケール可能なデバイスモックで仮想1000台×30日分を検証する",
-      "url": "https://dev.classmethod.jp/articles/iot-timestream-influxdb-grafana-1000-devices/",
-      "description": "IoT データ可視化の定番構成（MQTT + AWS IoT Core + Timestream for InfluxDB + Grafana）を、仮想デバイス1000台と生成データで実装し、過去と直近のデータをシームレスに表示する方法を紹介します。",
-      "publishedAt": "2026-08-08T23:25:54.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "e01b53a400394b8c23bfae86ec32c582cf217c51097bd2b1914039f52f1554d5",
-      "title": "Hugging Face侵害、AIエージェントは社内に“秘密の掲示板”を作っていた──OpenAIがBlack Hatで詳細説明",
-      "url": "https://www.itmedia.co.jp/news/article/2608/09/2000000463/",
-      "description": "米OpenAIは8月5日（現地時間）、7月に明らかになったAI開発プラットフォームHugging Faceへの侵害インシデントについて、米ラスベガスで開催されたセキュリティカンファレンス「Black Hat USA 2026」で詳細な経緯を説明した。登壇したのはアラインメント／安全性研究者のエリック・ウォレス氏と、セキュリティ・インフラ...",
-      "publishedAt": "2026-08-08T22:57:18.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "62c31ba10ef2f60141120d5762fccdd04f3bb0e70f1b4fec5ba7ef3edb268d3d",
-      "title": "[アップデート] AWS Lambda コンソールの「IDE で開く」機能が Kiro と Cursor にも対応しました",
-      "url": "https://dev.classmethod.jp/articles/aws-lambda-ide-kiro-cursor/",
-      "description": "AWS Lambda コンソールの console-to-IDE 機能が Kiro と Cursor に対応したので、実際に試してみました。コンソールからワンクリックで各 IDE を開けるようになっています。",
-      "publishedAt": "2026-08-08T22:23:30.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "3eff75f5fd481775e6495ca2b3a947d3902703903424bfe99b929897684a4edd",
-      "title": "AWS IAMのAWS管理ポリシーを全種類捕まえてみた",
-      "url": "https://dev.classmethod.jp/articles/summer-project-2026-iam-aws-managed-policies-get-daze/",
-      "description": "夏なので、AWS管理ポリシー（AWS Managed Policy）をたくさん捕まえました。AWS管理ポリシーって長くて呼びづらいので、マネポリと呼びますね。マネポリをゲットしました。1,564匹もいるのでどの子をパーティに入れるか迷ってしまいますね。",
-      "publishedAt": "2026-08-08T14:59:00.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "f5729c77ac7f902573dd9b0cfcb1d47e793cf5293fed5f3533bc733b776f1abf",
-      "title": "Amazon Cognito 向け aws-auth スキルでパスキー認証アプリを試してみた",
-      "url": "https://dev.classmethod.jp/articles/agent-toolkit-aws-auth-skill-cognito-passkey/",
-      "description": "Agent Toolkit for AWS に aws-auth スキルが追加されました。Cognito 認証に関する9つのリファレンスをまとめたスキルです。これを使い、GPT-5.6 Luna で Cognito パスキー認証のデモアプリを実装しました。",
-      "publishedAt": "2026-08-08T14:08:51.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "7f05b14a27388ff183dd4b265b800dcc1de192d095bdd07b5c089914515c1dc0",
-      "title": "Google Apps Script を clasp でローカル開発する環境構築手順",
-      "url": "https://dev.classmethod.jp/articles/gas-clasp-local-development-setup/",
-      "description": "Google Apps Script を clasp でローカル開発する環境構築手順です。PC の初期状態から、nvm による Node.js の導入、clasp のインストールと認証までを macOS と Windows の両方でまとめました。認証情報を 1Password で管理する方法も紹介します。",
-      "publishedAt": "2026-08-08T13:24:11.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "ecb44671596e7addcdd5e9f0768cec023cf50a9c9a574dce947645dea190ac3d",
-      "title": "Aurora MySQL の変更データを AWS DMS の Full Load + CDC で S3（Parquet）に出力し Athena でクエリしてみた",
-      "url": "https://dev.classmethod.jp/articles/dms-full-load-cdc-aurora-mysql-to-s3-parquet/",
-      "description": "AWS DMS で Aurora MySQL のデータ変更をリアルタイムに S3 へ連携し、Athena で分析する方法を、実装手順と動作確認まで含めてご紹介します。",
-      "publishedAt": "2026-08-08T11:25:09.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "b987e94a165564166f05c28951336bbfcfc423f8ec497a26c10a1bb3769cfcf0",
-      "title": "プレビューURL付きのセルフホスト型開発サンドボックス「sandboxd」",
-      "url": "https://gigazine.net/news/20260808-sandboxd/",
-      "description": "アプリやシステムの開発環境を隔離して他のプロジェクトへの影響を防ぎながらコードを実行する仕組みをサンドボックスと言います。Docker・Traefik・SQLiteを利用し、なおかつAIエージェントによる開発に特化したサンドボックス基盤を簡単に構築できる「sandboxd」が公開されています。 Self-hosted, open-source AI app...",
-      "publishedAt": "2026-08-08T10:31:07.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "655ae1ef4fa90468af7e0e1d453784ddc150664440fd54d648978e71ee942dde",
-      "title": "WindowsでDNSサーバーを構築して、オンプレ想定VPCからGenU閉域モードへ接続してみた",
-      "url": "https://qiita.com/infra365/items/c350d66f0575cd1303f0?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "概要\nGenUには、インターネットに出ずにVPC内部だけで利用できる閉域モードがあります。\n\n閉域モードではGenUのWeb UIはALB、各種AWSサービスはVPCエンドポイント経由でアクセスします。そのため、オンプレミス側から使う場合は名前解決の設定が必須です。A...",
-      "publishedAt": "2026-08-08T09:39:20.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "f2ffa5aa74b582aeddb63340eebbaabe34f6f40d8cc3301e346730964fc8d099",
-      "title": "今更だけど、DynamoDBの設計の勘所をサクッとまとめてみた",
-      "url": "https://qiita.com/miruky/items/c7beb2fbed6492d195d1?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "はじめに\nこんばんは、mirukyです。\n突然ですが、私の一番好きなAWSサービスは、Amazon DynamoDB（DynamoをよくDyamoと打ち間違える）です。なぜかと言うと、一言で言えば「非常に扱いやすいから」ですね。RDBMSほどデータの厳密性が必要の無い場面...",
-      "publishedAt": "2026-08-08T08:58:27.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "f0eebd7c49c3b19a66ad12d301cb1265c9ad34cd0084bd4a70f25071832b933d",
-      "title": "Amazon DynamoDBのリアルタイムベクトル検索機能をちょっと整理する",
-      "url": "https://qiita.com/Syoitu/items/068db63a8bf3bb961b2b?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "前書き\n2026年8月5日、Amazon DynamoDBがリアルタイムベクトル検索に対応しました。\n\nこれまでAWSでベクトル検索をやりたい場合、AWS Marketplace利用しない場合、選択肢はだいたい次の5つでした。\n\nAmazon OpenSearch S...",
-      "publishedAt": "2026-08-08T06:15:11.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "45b7d50a6c2e3a436de68dc36493fc2bb55f260172c0f95103100817ec4ae967",
-      "title": "AWS Batch に優先順位を自分で決められる配分戦略が追加されたので図解で整理してみた",
-      "url": "https://dev.classmethod.jp/articles/aws-batch-ordered-allocation-strategies/",
-      "description": "AWS Batch に追加された 2 つの新しい配分戦略について、オンデマンド向けと スポット向けの違いを図解を交えて整理しました。インスタンスタイプの優先順位を自分で指定したいときの使い分けをまとめます。",
-      "publishedAt": "2026-08-08T06:10:19.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "ce89017931c25e0e4dc9b745aa6b58d43614073613de4e58cc457256ab1180a3",
-      "title": "AWS Organization間のアカウント移行でTransit GatewayのRAM共有はどうなるか、実際に移行して確認した",
-      "url": "https://qiita.com/infra365/items/43831628277794df5959?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "概要\n前回、下記記事で、AWS Organizations間のアカウント移行でRAM共有が外れる理由と、共有を維持する設定を確認しました。\n\nこちらのマニュアルに記載の通り、組織の作成から7日、組織内で作成したメンバーアカウントは作成から4日が経過するまで別の組織へ移...",
-      "publishedAt": "2026-08-08T05:10:51.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "02dc67a50114070b357104fa066065ac7ab120165893ce55680d6d248c2bab60",
-      "title": "Transit Gateway の新機能「ポリシーベースルーティング」の使い時を考えてみた",
-      "url": "https://qiita.com/eureka_/items/19f8f412df9fb5e6f580?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "本記事は「2026 Japan AWS Jr. Champions 真夏のQiitaリレー」の8日目の記事となります。\n過去の投稿（リンク集）は以下からご覧ください。\n\n私は2日目ぶりの2回目の投稿になります。前回の記事もぜひご覧ください！\n\nはじめに\n...",
-      "publishedAt": "2026-08-08T04:23:02.000Z",
-      "feedName": "Qiita"
-    },
-    {
       "id": "fcdda5b0737eec4d09a3b71b71c9bcdaa3a25b384ce0799b98658ed4a59812d5",
       "title": "Private & Fast: Building a Local-First Mental Health Assistant with WebLLM and WebGPU 🧠💻",
       "url": "https://dev.to/wellallytech/private-fast-building-a-local-first-mental-health-assistant-with-webllm-and-webgpu-c8j",
@@ -246,62 +110,6 @@
       "url": "https://xenospectrum.com/cpu-deoptimization-hall-of-shame-198-billion-cycles/",
       "description": "セキュリティ研究者が「最も遅いx86命令」を競うリーダーボードを公開。fxrstor64をPCIe MMIOに向けて他コアでバスを飽和させる手法で、通常150サイクルの命令を1980億サイクル（62秒）まで引き延ばした。この「遅さ」はSMMの排他性仮説を崩し、100件超の休眠CVEを再点火しうる。",
       "publishedAt": "2026-08-09T05:47:42.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "f10420efc389944b24fce20cb801ef750763ea945944aebef472ac5664251e0c",
-      "title": "【さくらAIで転生小説を書いてみるシリーズ第5回】新規232行・呼び出し回数0回——AI小説執筆エンジンに「ナレッジグラフ」を実装してみて分かったこと",
-      "url": "https://qiita.com/TheGateBreaker/items/c7cf0baa0dc76ed8435b?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "TL;DR: さくらのAI Engineで動かしているAI小説執筆エンジンに、登場人物や伏線を構造化して持つ「ナレッジグラフ」を新設し、AIが自分の判断で検索できるツールとして実装した。実装自体は正しく動いた(セッション内で確認した範囲では、テストも全件パスした)。しかし、...",
-      "publishedAt": "2026-08-09T00:19:38.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "ea4e00f7ca6d2415b35aed635ceca04b082e3f6c3f2ea32063ca0b8e0abd5991",
-      "title": "【AWS】Bedrock MantleがAPI キーレスで使えるっぽいのでやってみた",
-      "url": "https://qiita.com/yakumo_09/items/210e60518b5bb7dbc4e0?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "今北産業\n\nBedrock Mantleを呼ぶ時の認証方法\n実はAPIキーレスでも呼べる\n実装時のあれこれ\n\nBedrock Mantleとは\n下記の記事を参照ください。本記事でBedrock Mantleについての基本的な説明は行いません。\n\nMantle エン...",
-      "publishedAt": "2026-08-08T20:58:36.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "65e6e00eb7bb56930e40cb7a9f1986fa43e6ba71be739e0ae45c7b575471d662",
-      "title": "ネットワークセキュリティの基礎を学習した話(ファイアウォール・IDS/IPS・プロキシ・VPNまで)",
-      "url": "https://qiita.com/Ikechom/items/58cd28b2a39487865506?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "ネットワークセキュリティの基礎を学習した話(ファイアウォール・IDS/IPS・プロキシ・VPNまで)\n\nはじめに\n情報処理安全確保支援士試験の対策として、ネットワークセキュリティの基礎知識を学習したのでまとめます。TCP/UDPの違いから、ファイアウォール、WAF、IDS...",
-      "publishedAt": "2026-08-08T16:38:18.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "5e6a6b0cfccb9ddb9c6254f3f0988a1065050cce398b72d38357e18b0b35814f",
-      "title": "C# 15+の新DIパターン: 内部はinterfaceで疎結合、公開APIはunionで型の許容範囲を制御",
-      "url": "https://zenn.dev/inuinu/articles/csharp15-new-di-interface-union-closed",
-      "description": "!\n【正式版では変わる可能性があります】\nこの情報は.NET 11.0 preview6で検証していますが、previewなので、\n.NET 11やC# 15.0の正式リリース版では違ってくる可能性があります！\n\n\n はじめにまとめ\n\nC#15にはunionとclosedが入る\nDIにつかうと許容範囲を絞って制限できる\nでもテストのためにはinterfaceにもしたい\nそんなよくばりができるパターンを紹介\n\n!\n💡よくばりパターン\n公開APIでは union で受け入れる型を限定しつつ、内部実装では interface を介してテストしやすい構造にする\n\n\n unionとDIは相性がいい...",
-      "publishedAt": "2026-08-08T13:09:58.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "c4826f10ccc4e9426382492731b00f7621b0d20c19b9c9ad7a0137b63e183e8f",
-      "title": "AI時代の「Markdown負債」と「レガシー脱却」の壁、エンジニアが直面する新・旧の課題",
-      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2608/08/news012.html",
-      "description": "AIテクノロジーの劇的な進化に伴い、開発現場のナレッジ管理やセキュリティ、さらにはチーム編成の在り方まで大きな転換期を迎えています。エンジニアのドキュメント文化を支えてきたMarkdownに対する新たな課題提起や、開発現場における「人」の役割の再定義など、AI時代を見据えた意欲的なアプローチが注目を集めまし...",
-      "publishedAt": "2026-08-08T11:13:44.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "1f4eaa1616925012176f271347f09cff14bbab43d566678de6eef78e81ee39f9",
-      "title": "フィッシングの手口を体験して学べるWebアプリを作りました",
-      "url": "https://qiita.com/nadev/items/7407a746e6ab0c5755c0?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "はじめに\nフィッシング詐欺を安全に疑似体験し、見抜く視点と適切な行動を学ぶ日本語Webアプリを作りました。\nVue 3・TypeScriptを使ったフロントエンドのみのシンプルな構成で、開発にはOpenAI Codexを活用しています。\nこの記事では、制作の背景、主な機能...",
-      "publishedAt": "2026-08-08T09:28:34.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "5762896f8a140b886a99d4c65b110d5784c76e5d317851340022a3294d83d7f5",
-      "title": "[Claude Code] AIの説明が「それっぽいだけ」で終わる問題を、Skill設計で解決した話",
-      "url": "https://zenn.dev/ncdc/articles/56d60cb79319b2",
-      "description": "はじめに 以前、新しく参画するプロジェクトのキャッチアップに、AIを使ったことがあります。 「このリポジトリを読んで、アーキテクチャをまとめて」と気軽にお願いしたら、それらしいレポートが思ったより早く出てきました。 ただ、実際に読んでみると 「ECSでバックエンドを動かしています」 これで終わりました。 い...",
-      "publishedAt": "2026-08-08T04:33:42.000Z",
       "feedName": "はてなブックマーク - テクノロジー"
     },
     {
@@ -534,22 +342,6 @@
       "url": "https://qiita.com/Omizu-25/items/5157a01639c31d60ad7a?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
       "description": "はじめに\nこんにちは！KDDIアイレット株式会社の水野 永遠です。\nこの記事は「2026 Japan AWS Jr. Champions 真夏のQiitaリレー」の9日目の記事となります。\n過去の投稿（リンク集）はこちらからご覧ください。\n\n2025年7月17日、A...",
       "publishedAt": "2026-08-09T08:25:05.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "8791cfb639fa8e8ce809f9f01e167d6f7993a3d00596cbb73c99d93e860250ef",
-      "title": "AWS認定を1年延長できる維持制度の登録、延長方法について - Qiita",
-      "url": "https://qiita.com/kiwi-dev/items/60dca34eccf785744a1d",
-      "description": "Deleted articles cannot be recovered. Draft of this article would be also deleted. Are you sure you want to delete this article? はじめに 待望のAWS認定資格の維持制度がベータでリリースされました！ https://aws.amazon.com/jp/blogs/news/a-new-way-to-keep-your-aws-certification-current/ 2026 年 6 月 2...",
-      "publishedAt": "2026-08-09T02:02:54.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "6f12e54c831ff53e8d9115bc7e832e580b5d631a1ce014b819c7f24dc257aabc",
-      "title": "AWS認定を1年延長できる維持制度の登録、延長方法について",
-      "url": "https://qiita.com/kiwi-dev/items/60dca34eccf785744a1d?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "はじめに\n待望のAWS認定資格の維持制度がベータでリリースされました！\nhttps://aws.amazon.com/jp/blogs/news/a-new-way-to-keep-your-aws-certification-current/\n\n2026 年 6 月 2...",
-      "publishedAt": "2026-08-09T01:54:00.000Z",
       "feedName": "Qiita"
     },
     {
@@ -6528,6 +6320,293 @@
       "description": "The session catalog is live. Explore what's waiting for you",
       "publishedAt": "2026-09-04T00:33:13.000Z",
       "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "789001a15efe65ab51a79e7f817b9aa5aeb58356ab03788857697d62a530620c",
+      "title": "How We Sneaked a 1024-Dimensional AI Visual Brain Directly into a Browser Tab (With Zero Cloud Costs)",
+      "url": "https://dev.to/superomni/textnv-0142-0891-0056-1204-0443n-26m0",
+      "description": "Picture this all-too-familiar developer or designer headache:\nYou are scrolling through an image-heavy web portal—say a design showcase, an asset library, or a photography archive. You see hundreds of jaw-dropping assets, and you want to filter out only the visual references featuring \"cyberpunk streetscapes\" or \"minimalist matte-black product mockups.\" \nYou hit Ctrl + F or fire up a traditional browser scraper extension, only to receive a big, fat zero.\nWhy? Because behind the scenes of modern web architecture, over 85% of image files have names that look like this: f9a8b2c_thumb_1024x768.webp. Unless the web developer painstakingly typed out descriptive metadata like alt=\"matte black wireless headphones\", your computer is completely blind. To traditional scraping scripts, that gorgeous photograph is nothing more than an unreadable soup of binary bytes.\nHow do most commercial tools \"solve\" this today? \nA couple of months ago, we set out to build an alternative: What if we could endow a plain browser tab with an on-device visual cortex—running a neural network entirely inside local client memory without sending a single byte to the cloud?\nThis engineering challenge became the heartbeat of the architecture behind OmniPic: an in-browser, local-first engine executing 1024-Dimensional Visual Vector Embeddings. \nHere is an intuitive, under-the-hood breakdown of how this mathematical black magic works inside an everyday browser tab.\n\"1024 dimensions\" sounds like something pulled straight out of theoretical quantum physics. In computer vision, however, the concept is breathtakingly practical.\nThink about how you describe a point on a flat sheet of paper: you only need two numbers—an $X$ coordinate and a $Y$ coordinate.\nthree numbers: length, width, and height $(X, Y, Z)$.\nNow, how do you describe what a complex visual image actually looks like using pure numbers?\nDecades of convolutional neural network research demonstrated that any visual scene can be decomposed into hundreds of microscopic perceptual properties:\nDimension #1 might represent the warm color distribution across the upper third;\nDimension #2 measures the frequency of high-contrast linear edges;\nDimension #3 captures organic textures characteristic of animal fur;\nDimension #4 quantifies metallic gloss reflections, and so forth.\nWhen an image passes through a deep convolutional backbone, the network distills raw pixels down to 1,024 continuous mathematical metrics:\n$$ \\mathbf{V} = [0.142, -0.891, 0.056, 1.204, \\dots, -0.443]_{1024} $$\nThis list of 1,024 floating-point numbers serves as the image's definitive spatial coordinate inside a 1024-dimensional geometry space.\nHere is the magic: In the physical world, a Corgi and a Shiba Inu share obvious visual traits. In this 1024-dimensional space, their coordinates land right next to each other. Even if the file names are random hashes like xyz_84920.jpg, the geometry instantly proves they belong to the exact same visual neighborhood.\nHistorically, nobody ran deep neural inference inside extension scripts for a glaring reason: it freezes the browser tab.\nRunning millions of floating-point matrix multiplications on the main JavaScript thread causes instant frame drops, triggering the dreaded \"Page Unresponsive\" browser crash prompt. To pull this off at a steady 60 frames per second, we had to engineer a strict decoupled pipeline:\nThe browser's main thread is like a front-desk concierge—it has to handle your mouse hovering, smooth scrolling, and UI button clicks. If you ask the concierge to compute 1024-dimensional dot products, everything grinds to a halt.\nIn our architecture, the entire machine learning inference loop is isolated inside a Dedicated Web Worker. The UI stays ultra-responsive on the main thread, while the mathematical heavy lifting churns silently in the background.\nTo squeeze every ounce of performance out of heterogeneous client machines, the engine automatically interrogates the browser environment:\nTier 1 (GPU Shaders via WebGL): Compiles tensor operations down to GPU shader fragments for extreme parallel processing;\nTier 2 (WASM with 128-bit SIMD): If WebGL context creation fails or graphics hardware is busy, it falls back to WebAssembly compiled with Single Instruction Multiple Data vector extensions;\nTier 3 (Pure TypedArray CPU Kernels): If running in restricted virtualized sandbox environments, vanilla typed arrays guarantee execution continuity.\nThe result? Extracting a full 1024-dimensional embedding vector takes just 14 milliseconds per image on a modern laptop—over twenty times faster than the blink of an eye.\nOnce every scraped image has a 1024-dimensional address, how do we search and deduplicate across thousands of candidates in real time?\nWe leverage one of the most elegant formulas in analytical geometry: Cosine Similarity.\nImagine every vector as a directional laser beam fired from the origin of our 1024-dimensional universe:\nIf two images depict almost identical aesthetics (say, golden hour beach sunsets), their laser beams point in virtually the exact same direction, yielding an angle near $0^\\circ$ (cosine value approaching $1.0$);\nIf one image is a snow-covered mountain and the other is a dark PCB motherboard, their vectors point far away from each other, pushing the cosine score near $0$.\nBy $L_2$-normalizing every vector upon extraction (locking every laser beam's length to exactly $1$), calculating similarity drops the heavy division steps and becomes a blazing-fast vector dot product:\n$$  ext{Sim}(\\mathbf{A}, \\mathbf{B}) = \\sum_{k=1}^{1024} A_k    imes B_k $$\nThis microsecond mathematical calculation unlocks two game-changing features:\nModern media platforms routinely generate three or four downsampled crops of the same asset (e.g., small preview grid, responsive card, full-res hero). Presenting all of them turns an asset collection view into a disorganized mess.\nWhen our vector comparison detects two items with a similarity score $\\ge 0.92$, it flags them as near-duplicate twins. The lower-resolution variant is automatically collapsed into a secondary drawer underneath the primary master card, cutting gallery clutter by over 70%.\nDrag any reference photo from your local desktop and drop it into the browser. Without connecting to any external cloud service, the engine maps your reference to its 1024-D coordinate in 14 milliseconds, compares the angles against every image scraped on the current page, and instantly pulls up visually matching compositions.\nIn an era where tech products rush to offload every single user interaction onto massive, subscription-gated cloud servers, building local-first computing feels almost rebellious.\nYet once you experience opening your laptop completely offline—unplugged from the internet—and finding that your browser side panel can still semantically locate \"vintage convertibles\" across thousands of visual nodes in milliseconds, you realize something fundamental:\nTrue technical elegance isn't about renting massive server clusters to process user data. It's about taking sophisticated mathematical principles and distilling them into a lightweight, client-side engine that respects user privacy and runs effortlessly on the hardware you already own.",
+      "publishedAt": "2026-09-08T02:37:04.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "09ae8f1117a27ce3dfb861dd8528a76768ca856aea3b1d522a7ebb2efbd09bb2",
+      "title": "AWS User Notifications で Health イベントメールのサンプルがあれば教えてください",
+      "url": "https://dev.classmethod.jp/articles/tsnote-user-notifications-health-event-email-sample/",
+      "description": "AWS User Notificationsを使ってAWS Healthのイベント通知を受け取る際、実際に届くメールはどのような形式なのか、その見た目について紹介します。",
+      "publishedAt": "2026-09-08T02:36:26.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "3c5947d487a4046c79359195b1d2fb6e6d80edc5c3b0e530a5ae2411d55319bc",
+      "title": "A like is not a relationship: where our agent's permission to reply stops",
+      "url": "https://dev.to/rulestack/a-like-is-not-a-relationship-where-our-agents-permission-to-reply-stops-27d6",
+      "description": "Our agent replies to strangers in public. The standing rule is that the owner approves every reply before it sends — with exactly one exemption a machine can check: the person is warm, and the draft contains no question aimed at them.\nLast week we widened what warm means. We deliberately did not widen the exemption. That gap — the relationship definition grew, the auto-send permission didn't — is the part of this design worth stealing.\nThe approval gate was added after a platform engineer publicly asked our account to label itself as a bot. The owner chose a different answer than a label: keep the profile honest by making the claim true — an AI drafts, a human approves. The file header for the gate says why in one line: if the profile claims a human approves replies, the approval has to actually exist, or the profile is a lie.\nThat framing decides everything downstream. The gate isn't there to make the agent behave. It's there so that a public claim and the send path agree.\nThe tempting implementation is to ask the model: do we know this person? We don't. classifyThreadRelationship takes sets of DIDs and returns a verdict, and every set comes from data on disk.\nThree of them are cheap: accounts we follow (fetched live from the Bluesky API, because the API is more truthful about the present than our own ledger of past follows), accounts that follow us, and accounts that liked or reposted our posts in the last 7 days — the last two read off the tail of state/engagement-snapshots.jsonl.\nThe two new ones are the interesting ones, and they live in prior-outbound-touch.ts:\nLikes we sent. collectLikedAuthorTouches walks state/outbound-engagement.jsonl for rows whose action is liked or replied-and-liked. Newer rows carry authorDid directly. Older rows don't — early ledgers stored only the liked post's URI — so the DID is reconstructed with extractDidFromAtUri, which pulls did:plc:… out of at://did:plc:xxx/app.bsky.feed.post/yyy. AT-URIs happen to embed the author's identity, which is the only reason that history is recoverable at all.\nQuote posts we published. There is no quote-post ledger. The only machine-readable trace of a quote is the quotedUri field on our own post log, so loadQuotedPostEvents scans every content/posts/*.jsonl file across all time and treats that field as the source of truth. Rather than add a ledger and start its history at zero, we read the record that already existed.\nmergePriorOutboundTouches unions the two by DID, tagging each person liked, quoted, or liked-and-quoted, and keeps the earliest touch time. Earliest, not latest, because the same map feeds our conversion measurement — anchoring on a later touch silently drops the conversions that already happened out of the denominator.\nclassifyThreadRelationship deduplicates thread participants by DID and assigns each warm one a single RelationshipBasis from a fixed union: mutual, following, follower, engaged, conversation, repeat-commenter, quoted-by-us, liked-by-us, follow-first. The precedence is explicit in the code — follow relationships beat their inbound reactions, which beat our outbound touches — so a mutual follow never gets reported as \"we liked them once.\" The assessment carries a one-line human-readable summary that ends up in the approval board and in the ledger row, which means every send can be traced back to the specific reason it was allowed.\nA thread is warm if any participant is warm. Cold means we have never touched anyone in it.\nHere is the design decision that matters. When the owner's instruction on 2026-08-29 made \"someone we liked or quoted\" count as warm, the obvious refactor was to let the whole new cohort through the auto-send path. Warm plus no question equals send, and these people are now warm.\nWe didn't, because the exemption came from a different instruction on a different date — 2026-08-27, covering people we have an established relationship with. Nobody authorized auto-sending to someone whose entire connection to us is a like we left on their post.\nconst BASES_OUTSIDE_EXEMPTION: ReadonlySet<RelationshipBasis> =\n    new Set<RelationshipBasis>(['quoted-by-us', 'liked-by-us'])\n\nexport function hasExemptableBasis({ assessment }) {\n    return assessment.warmParticipants.some(\n        (participant) => !BASES_OUTSIDE_EXEMPTION.has(participant.basis),\n    )\n}\n\nEight lines, and they encode a distinction that is easy to state and easy to lose in a refactor: touching someone does not earn you the right to talk to them unsupervised. A thread warmed only by our own like or quote is still warm — the reply may be drafted, the classifier won't block it — but it goes to a human first. decideReplyApprovalExemption requires all three conditions: verdict is warm, at least one basis is exemptible, and the body has no ? or ？.\nTwo ideas that look like one thing — may we reply and may we reply without asking — turned out to need two separate predicates. Every widening of either one maps to a dated instruction we can point at.\nDrafting is where policy is easiest to write and least binding, because a later code path can always route around it. So the check sits where the side effect happens. In engage-outbound, immediately before anything is posted:\nconst { exempt, requiresApproval } = splitReplyCandidatesByExemption({ ... })\nassertRepliesApproved({ candidates: requiresApproval, records: loadReplyApprovals() })\n\nassertRepliesApproved hashes each draft with hashReplyDraft (SHA-256 over the trimmed body) and looks for an approved row keyed by channel, target, and that hash. Missing approval, pending approval, rejection, or a body edited by one character after approval — any of them throws, and the throw takes the whole batch down before a single reply is sent. The error message distinguishes \"no request was ever filed\" from \"approved, then the text changed,\" because those are different mistakes.\nThe file header is honest about the limit, and we'd repeat it for anyone building the same thing: the agent writes the approval rows too, so a dishonest agent could forge one. What this gate actually buys is that an accidental unapproved send is impossible, and that every send has a durable, git-tracked record pairing a body hash with a decision. It's an audit trail and an accident preventer, not a proof of integrity.\nFor a genuinely cold thread, assertReplyAllowedByRelationship refuses the request outright and the recommended mode comes back as quote-or-like-first: publish a quote post, or leave a like if nothing is worth quoting, then reply next turn once the ledger says warm. The ordering is measured, not aesthetic — among accounts that weren't following us at the moment of contact, quote posts converted to follows at 14.3% (2 of 14) against 2.6% (1 of 39) for likes alone. Denominators that small are a hint, not a finding, and we re-measure weekly.\nAn escape hatch exists — coldThreadOverrideReason — but it demands at least 20 characters of stated reason, so \"exception\" won't compile as an excuse. And the boundary is per-channel: dev.to and Hashnode sit in CHANNELS_WELCOMING_COLD_COMMENTS, where commenting on a stranger's post is the norm rather than an intrusion, so cold comments pass. The rule models each platform's etiquette instead of one global notion of politeness.\nLatency. Anything needing approval waits for a human turn. We chose that over shrinking the volume of drafting: the queue holds, the standard doesn't move.\nLedger hygiene becomes safety-critical. Once permission is derived from outbound-engagement.jsonl and quotedUri, a dropped write isn't a reporting gap — it silently demotes a real relationship to cold. Files that were bookkeeping are now part of the security boundary, and need the tests to match.\nRetrofitting costs real code. extractDidFromAtUri exists purely because early rows didn't store the actor's DID. We were lucky the URI format embedded it. Store the identity you'll want to join on, on day one.\nThe question check is deliberately dumb. It's a regex for ? and ？, paired with a drafting convention that questions must carry a question mark. A model-judged \"is this a question?\" would be more accurate and would also be arguable — and an arguable gate is one an agent can eventually talk its way past.\nIf your agent speaks to humans in public, write the approval boundary as data the send path enforces, keep it conservative by default, and widen it only through an explicit human decision you can date. The last clause is the one people skip. Our two-line BASES_OUTSIDE_EXEMPTION set isn't clever; it just refuses to assume that a permission granted for one relationship extends to a new relationship nobody was asked about.\nBuilt while running Rulestack, where the gates that decide what our agent may say are shipped as products themselves.\nThe agent's own posts — approved or exempt — land at @ai-shop.bsky.social.",
+      "publishedAt": "2026-09-08T02:17:00.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "0c16c203fdc5cc460c2cfb039dfefc08150e43b2a73e0d6097faf84597a301c6",
+      "title": "Cloud Native Computing Foundation Announces Karmada Graduation",
+      "url": "https://www.cncf.io/announcements/2026/09/07/cloud-native-computing-foundation-announces-karmada-graduation/",
+      "description": "Multi-cluster, multi-cloud Kubernetes orchestration project reaches production maturity as global enterprises scale AI training and inference across hybrid infrastructure Key Highlights SHANGHAI, China – KubeCon + CloudNativeCon + OpenInfra Summit + PyTorch Conference China 2026 –...",
+      "publishedAt": "2026-09-08T02:06:17.000Z",
+      "feedName": "Cloud Native Computing Foundation"
+    },
+    {
+      "id": "af7407594b16688eb5a4cb8712e175efd7a86be5bf4670ca115b051d240cef6c",
+      "title": "iOS Visual Regression Testing with simctl and Pixel Diffs",
+      "url": "https://dev.to/changyou/ios-visual-regression-testing-with-simctl-and-pixel-diffs-4eme",
+      "description": "A practical UIKit screenshot pipeline, a paywall layout bug, and the failure modes to fix before trusting CI.\n\niOS visual regression testing can start with a small, local pipeline: launch a specific screen, capture it on a simulator, and compare its pixels against an accepted baseline. The difficult part is making sure both screenshots represent the same environment and application state.\nWhile updating ShotZen's paywall, I reordered subscription options, emphasized a recommendation badge, and added a NO RENEWALS label to the lifetime option. The screenshot report showed changes beyond the areas I intended to edit. The annual subscription row, call-to-action button, and footer had moved too.\nReplacing the padded badge with plain text reduced the reported difference. That experience shaped how I read visual regression reports: the percentage measures changed area, while the surrounding context explains whether the change is acceptable.\nThis walkthrough covers the implementation described in that September 2026 case, including its limitations. It is useful as a local review tool; several capture checks still need strengthening before treating it as an unattended CI gate.\nThe case used four languages, two appearance modes, and four screens: 32 screenshot states. A screen name alone is not a sufficient coverage unit. Language and appearance belong in its identity.\nThe assertion is narrow: under specified inputs and rendering conditions, how does the current static appearance differ from the appearance previously accepted?\nIt does not prove that a purchase succeeds, that a button responds, or that a price description is correct. An unchanged screenshot can accompany broken business logic.\nChoose a testing approach according to the behavior you need to observe:\n\n\n\nApproach\nUseful observation\nMain responsibility\n\n\n\n\nXCUITest with screenshots\nLaunch behavior, navigation, and interaction paths\nPrepare state and maintain UI tests; launch arguments can also provide shortcuts\n\n\nswift-snapshot-testing\nSnapshots of views, view controllers, and other values\nConfigure rendering strategies and assertions in tests\n\n\nDEBUG harness with simctl\nFull simulator screenshots of registered screen states\nMaintain application state isolation, capture integrity, and comparison logic\n\n\n\nPoint-Free's swift-snapshot-testing supports view controllers, device configurations, and trait collections. It is not limited to isolated views. The choice here was to expose a predictable entry point inside the app and let an external script handle the screenshots.\nThe pipeline has three parts:\nApplication harness: VisualRegressionHarness.swift reads launch arguments, configures state, builds the requested view controller, and installs it as the window's root controller.\nCapture driver: capture.py selects a simulator, locates and installs the app, then loops through language, appearance, and screen combinations.\nComparator: diff_report.py compares PNGs using Pillow, draws difference boxes, and writes an HTML report plus summary.json.\nThe shell entry point, run.sh, exposes initialization, baseline capture, checking, and opening the report.\ncapture.py --launch arguments--> DEBUG harness in the app\n     |\n     +-- simctl screenshot --> current/<language>/<style>/<screen>.png\n                                      |\nbaselines/<language>/<style>/<screen>.png\n                                      |\n                               diff_report.py\n                                      |\n                           HTML + summary.json\n\nThe diagram abbreviates the screenshot operation; the actual command is xcrun simctl io <UDID> screenshot <PATH>.\nThe interfaces are conventions: argument names, registry keys, and relative image paths. The generic engine does not need to know the app's business architecture. Each project supplies its own screen builders, language handling, theme integration, and fixed test data.\nThe app does not need an additional Swift testing library for this route. The host still needs Xcode with simulator support, Python, and Pillow.\nThe capture driver launches the app with arguments such as these. Replace the placeholders with a real simulator UDID and bundle identifier:\nxcrun simctl launch <UDID> <BUNDLE_ID> \\\n  -VRScreen paywall \\\n  -VRLang ja \\\n  -VRStyle dark\n\nThese are application-defined arguments. simctl passes them through; it does not automatically interpret -VRLang as a localization instruction.\nThe initialization order matters: parse the request, prepare fixed data, select the language, synchronize the theme, construct the controller, and display the window. Setting the language after constructing labels may leave old text in place.\nFor a UIKit project using SceneDelegate, the integration point belongs before normal routing. This fragment depends on the project's own harness, theme manager, and router:\nguard let windowScene = scene as? UIWindowScene else { return }\nlet window = UIWindow(windowScene: windowScene)\nself.window = window\n\n#if DEBUG\nif VisualRegressionHarness.activateIfRequested(on: window) {\n    window.makeKeyAndVisible()\n    return\n}\n#endif\n\nThemeManager.shared.attach(window)\nlet router = AppRouter(window: window)\nrouter.start()\n\nThe early return bypasses onboarding and ordinary navigation. If the screen needs a navigation bar, construct it inside a UINavigationController in the registry.\nBe careful about what else the early return skips. Dependency injection, required services, and theme observers may still be necessary. Supply deterministic fixtures for network responses, account state, photo access, and product information.\nGuard both the harness and its call site with #if DEBUG, and verify that production build configurations do not define DEBUG accidentally.\nIn ShotZen, appearance involved both the UIKit window and a custom theme manager:\n// Project-specific setup, before constructing the target controller.\nThemeManager.shared.current = .dark\nwindow.overrideUserInterfaceStyle = .dark\n\nApple documents how overrideUserInterfaceStyle overrides interface appearance. Your application's stored preference remains your responsibility.\nA controller that reapplies a saved theme during loading can undo an earlier window override. The result might be a light screenshot saved under dark/. A correct filename does not establish a correct state.\n\nThe supplied first-round English dark-mode report shows a 3.49% difference.\nRestarting an app does not reset UserDefaults, databases, permissions, or every system overlay. A reliable capture needs more control than a fresh process.\nThe implementation described here prefers the configured simulator name. Among matching names, it prefers an already booted device, then a newer runtime. If the name is unavailable, it warns and falls back to an available iPhone.\nThat still leaves room for environment drift. Two simulators with the same name can use different runtimes. A stronger CI setup would record the UDID, runtime, Xcode version, and image dimensions, then validate compatibility before comparison. The case implementation does not yet provide that complete manifest.\nThe driver locates an existing .app through xcodebuild -showBuildSettings, using BUILT_PRODUCTS_DIR and FULL_PRODUCT_NAME. Reusing a successful Xcode build is convenient, including when a particular command-line build encounters framework-embedding errors.\nHowever, the inspected implementation can continue with an existing .app after a requested build fails. A successful capture may therefore show old code. CI should require a successful build and bind the screenshot run to that exact artifact.\nThe status bar can be stabilized with:\nxcrun simctl status_bar <UDID> override \\\n  --time 9:41 \\\n  --batteryLevel 100 \\\n  --batteryState charged \\\n  --cellularBars 4 \\\n  --dataNetwork wifi \\\n  --wifiBars 3\n\nThis does not freeze in-app dates, countdowns, remote images, or prices. Those need fixed inputs.\nThe capture driver also defaults to rebooting the simulator and resetting app privacy permissions before capture. These operations are configurable. A screen that needs granted access requires an explicitly prepared state; resetting permission alone can create another prompt.\nThe case configuration waits four seconds after each launch. For 32 states, that is 128 seconds of waiting alone, before build, boot, installation, and screenshot overhead.\nA fixed sleep is not proof that layout has settled. Disabling UIView animations does not stop every timer or asynchronous task. For complex screens, a readiness signal after fixtures and final layout are complete would be more reliable. That is a proposed improvement, not a capability to assume in this implementation.\nHere is a standalone example of the core calculation. It requires Pillow:\nfrom PIL import Image, ImageChops\n\nPIX_TOL = 24\n\n\ndef changed_percent(baseline: Image.Image, current: Image.Image) -> float:\n    if baseline.size != current.size:\n        raise ValueError(\"Images must have matching dimensions\")\n\n    base = baseline.convert(\"RGB\")\n    cur = current.convert(\"RGB\")\n    # Convert the absolute RGB difference to a grayscale difference.\n    gray = ImageChops.difference(base, cur).convert(\"L\")\n    mask = gray.point(lambda value: 255 if value > PIX_TOL else 0)\n    changed = mask.histogram()[255]\n    return 100.0 * changed / (mask.width * mask.height)\n\n\nbase = Image.new(\"RGB\", (10, 10), \"white\")\ncur = base.copy()\ncur.putpixel((0, 0), (0, 0, 0))\nprint(f\"{changed_percent(base, cur):.2f}%\")  # 1.00%\n\nPillow's difference operation computes absolute channel differences. The subsequent grayscale conversion weights those differences approximately as:\ngray_difference = 0.299 * abs(delta_R)\n                + 0.587 * abs(delta_G)\n                + 0.114 * abs(delta_B)\n\nThe weights come from Pillow's RGB-to-grayscale conversion. Converting the difference image is not equivalent to converting both originals to grayscale first.\nThe threshold of 24 applies to that weighted result, not independently to each channel.\nA single-pixel experiment illustrates the consequence. Comparing black against (0, 0, 100) produces a grayscale difference of about 11, so the pixel is not marked. An equally large red-channel change produces about 30; green produces about 59. Both exceed the threshold.\nIf the requirement is to catch any channel exceeding tolerance, taking the maximum absolute channel difference would be an alternative. Changing the algorithm requires recalibrating the threshold.\nThere are also two distinct tolerances:\nPIX_TOL = 24 determines whether an individual pixel counts as changed.\ndiff_threshold_pct = 0.5 determines whether enough of the image changed to trigger the gate.\nThe case notes recorded a maximum of 0.335% among non-paywall screenshots. That does not establish 0.5% as a safe universal threshold. A wrong price character can occupy very little of the screen.\nThe report's red boxes are another approximation: the mask is divided into 48-by-48-pixel cells, and each occupied cell contributes a bounding box. One continuous change can produce many boxes. They are location hints, not counts of independent defects.\n\nThe first-round screenshot shows 32 compared states and eight threshold violations. The English light-mode paywall difference is 3.55%.\nThose eight flagged states are not eight confirmed product bugs. Intentional changes, such as rearranging subscription options, also trigger pixel differences.\nThe clue was that the CTA and footer changed even though the intended edits were higher on the screen. The project retrospective recorded these observations:\n\n\n\nObservation\nPadded badge\nPlain-text label\n\n\n\n\nPaywall difference\nAbout 3.5%\nAbout 0.65%-0.88%\n\n\nAnnual-row Y coordinate\n1168; baseline 1163\nBack to 1163\n\n\nCTA Y coordinate\n1513; baseline 1508\nBack to 1508\n\n\n\nThe second-round percentages and coordinates come from the project notes. The screenshot above documents the first round; it is not visual proof of the second-round measurements.\nThe recorded explanation was that badge padding increased the lifetime row's height, shifting subsequent content by about five pixels. Removing the padding restored downstream coordinates.\nDo not derive that displacement by directly converting three points of padding into five pixels. UIKit points, screenshot pixels, constraints, and display scale are different factors.\nA displacement can produce a surprising amount of pixel difference: glyph edges move onto positions that previously contained background, while their old positions become background. The affected area extends far beyond the badge.\nI kept the information and changed the label to plain text. The recorded outcome was a restored layout and a smaller difference. There is no conversion-rate experiment in this case, so it does not establish a commercial benefit.\nFor this particular locally installed engine, the initialization command was:\n~/.claude/skills/mufeng-ios-visual-regression/run.sh init\n\nThat is a local installation path, not a publicly available package installation command. The configuration below documents the engine's interface; a reader needs the engine files or an implementation of the same contract.\n{\n  \"xcodeproj\": \"MyApp.xcodeproj\",\n  \"scheme\": \"MyApp\",\n  \"configuration\": \"Debug\",\n  \"bundle_id\": \"com.example.myapp\",\n  \"source_dir\": \"MyApp\",\n  \"simulator_name\": \"iPhone 16\",\n  \"settle_seconds\": 4.0,\n  \"diff_threshold_pct\": 0.5,\n  \"languages\": [\"en\"],\n  \"styles\": [\"light\"],\n  \"screens\": [\n    { \"id\": \"paywall\", \"name\": \"Paywall\" }\n  ]\n}\n\nReplace project identifiers and the simulator name. Projects that use a workspace supply workspace instead of xcodeproj. Automatic language discovery in this implementation only checks immediate *.lproj directories under source_dir; use an explicit list if your resources are organized differently.\nAdd the harness to the app target, register a single screen, configure its fixtures, and build successfully. Then capture and inspect a baseline. Verify the actual screen, language, and theme before expanding coverage.\n~/.claude/skills/mufeng-ios-visual-regression/run.sh baseline\n~/.claude/skills/mufeng-ios-visual-regression/run.sh check\n\nCommit the configuration, harness, and accepted baselines. Keep current captures and reports as run artifacts. Updating a baseline is an acceptance decision; it should follow an explanation of the difference.\nThe implementation can report compared, new, missing, and size-mismatch. Missing current images and size mismatches fail; a new image without a baseline does not. Compared percentages are rounded to three decimal places before the threshold decision.\nThree gaps deserve attention:\nThe expected matrix is not enforced. The comparator discovers keys from PNGs present in either directory. In a minimal reproduction, the configuration declared home and paywall, but both directories contained only home.png. The report returned only home. A state absent from both sides was invisible.\nA failed capture can leave an old PNG in place. The driver does not clear the current directory at the start of a run. It skips failed launches and does not validate each screenshot command's return code. An older file can then masquerade as this run's output. Use isolated output directories and validate exit status, image readability, and the expected set of states.\nA successful launch can show the wrong screen. The sample harness returns false for an unknown registry key, allowing ordinary startup. A visual-test request that cannot be fulfilled should fail explicitly rather than quietly produce the homepage. Persistent preferences and permissions also need deliberate reset or fixture handling.\nThese are reasons to improve capture integrity before adding a more sophisticated image metric.\nBefore accepting a result, ask whether the comparison is valid, whether the change was intended, and what evidence supports accepting it.\nStatic screenshots do not automatically cover unregistered dialogs, scrolled content, Dynamic Type settings, additional devices, or interaction behavior. Those need explicit scenarios and complementary tests.\nFor the ShotZen change, the useful output was a repeatable visual record that exposed an unintended downstream shift. A good visual regression workflow makes that record easy to produce and inspect, and makes accepting a new baseline a deliberate decision.\nApple: Choosing a specific interface style for your iOS app.\nPoint-Free: swift-snapshot-testing.\nPillow: ImageChops and Image.convert.\nWhat has caused the most misleading screenshot diff in your iOS project: environment drift, persistent state, or a small layout change? Share the failure mode and the check that helped you catch it.",
+      "publishedAt": "2026-09-08T02:02:46.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "2c8f60b01e96cddd38ec6b50e335067f10f39a386f7559190519b0194cac3025",
+      "title": "China Merchants Bank Wins CNCF End User Case Study Contest for Unifying AI Training and Inference on Kubernetes",
+      "url": "https://www.cncf.io/announcements/2026/09/07/china-merchants-bank-wins-cncf-end-user-case-study-contest-for-unifying-ai-training-and-inference-on-kubernetes/",
+      "description": "New cloud native platform lifted average accelerator compute utilization from 35% to more than 60% and cut inference cost per 1 million tokens by more than 60% Key Highlights SHANGHAI, China – KubeCon + CloudNativeCon +...",
+      "publishedAt": "2026-09-08T01:54:31.000Z",
+      "feedName": "Cloud Native Computing Foundation"
+    },
+    {
+      "id": "4c81d74d0bc04b11ce170d02a45041f51c79aa1511fc6ea1c4f776c15d62ec5b",
+      "title": "開発環境のNATゲートウェイをNATインスタンスに移行してコスト大幅削減した話",
+      "url": "https://zenn.dev/sprix_it/articles/cdf8a39ee9de62",
+      "description": "はじめに AWS の開発環境で運用しているインフラで、NAT ゲートウェイから NAT インスタンスへ移行することで、大幅なコスト削減に成功しました。この記事では、移行の背景、実装方法、監視設定、そして注意すべきトレードオフについて解説します。 背景と課題 私たちのプロジェクトでは、DEV/STG/PRD の 3 環境で AWS ...",
+      "publishedAt": "2026-09-08T00:24:06.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "1b733b7b54949a9141dcdbdb0642c6940516b040f4f09d5528a907ec3d86474c",
+      "title": "AWS の Service Quotas の自動調整リクエストが失敗した場合の対応方法を教えてください",
+      "url": "https://dev.classmethod.jp/articles/tsnote-service-quotas-how-do-i-respond-when-an-aws-service-quotas-automatic-adjustment-request-fails/",
+      "publishedAt": "2026-09-08T00:04:16.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "b1fee35b5560e066aea498fe6e30dd73f8f03b714f6db539030f9f6c4a667ff4",
+      "title": "「従来型SOCの限界 -machinespeedの攻撃にどう立ち向かうか-」 | ドクセル",
+      "url": "https://www.docswell.com/s/ohhara_shiojiri/58N66Y-2026-09-02-164916",
+      "description": "会社概要 キーメッセージ 守り抜く、セキュリティのすべての力で。 会社名 SCSKセキュリティ株式会社 ［SCSK Security Corporation］ 代表 代表取締役社長 市場 健二 役員 取締役 執行役員 取締役 取締役 監査役 執行役員 執行役員 黒木 俊平 佐藤 利宏 谷口 愼一 佐々木 和志 福田 洋介 中田 勝也 （2026年4月1日付） h...",
+      "publishedAt": "2026-09-07T21:41:53.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "e30d9522f48c3b80bfff79154019b5b2723a510342d308fa80d3f664014dddea",
+      "title": "HTMX 4.0正式リリース。内部実装がXHRからfetchに移行しStreaming HTMLが可能に、属性はデフォルトで子要素に継承されないように変更など",
+      "url": "https://www.publickey1.jp/blog/26/htmx_40xhrfetchstreaming_html.html",
+      "description": "HTMX 4.0正式リリース。内部実装がXHRからfetchに移行しStreaming HTMLが可能に、属性はデフォルトで子要素に継承されないように変更など HTMLに属性を追加するだけで、Webページにサーバと連動した動的なアプリケーションの機能を追加できるJavaScriptライブラリ「HTMX」の最新バージョンとなる「HTMX 4.0」正式版のリ...",
+      "publishedAt": "2026-09-07T14:51:21.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "db98ca515b367cf71c8409103c740b3b01ad3ca00c9e7c38b6fda6318e6b2855",
+      "title": "クラスメソッド データアナリティクス通信(AWSデータ分析編) – 2026年9月号",
+      "url": "https://dev.classmethod.jp/articles/cm-news-analytics-202609/",
+      "description": "2026年8月のAWSデータ分析関連アップデートをお届けします。Apache Iceberg v3とAmazon S3 Tablesを軸に、各サービスがマネージドな連携でパイプラインの自前実装を減らす方向に揃ってきた1か月。AWS Glue 6.0の30%価格削減、Kinesis Data Streamsのストリーミングテーブル、Redshiftのシステムテーブル長期保持など、注目のアップデートをまとめました。",
+      "publishedAt": "2026-09-07T13:09:37.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "cd9e95f127aaade9a33b8ba89b9d8991caf4d00c142a5ec34d2e496b715efc7b",
+      "title": "[アップデート] AWS Transfer Family の SFTP コネクターが認証情報のローテーション中も転送を継続できるようになりました",
+      "url": "https://dev.classmethod.jp/articles/transfer-family-sftp-credential-rotation/",
+      "description": "新旧2つの SSH 鍵を用意し、リモート役の SFTP サーバーとコネクターの間で鍵を入れ替えて、シークレットのバージョンが `AWSCURRENT` から `AWSPREVIOUS` へ切り替わってもコネクターを更新せず転送が続くことを確認しました。",
+      "publishedAt": "2026-09-07T11:59:13.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "3354e470b181f065e79c4c8d9fee295f2eb2258a48242c17d74fd55731aea6bb",
+      "title": "[アップデート] AWS Gateway Load Balancerにターゲット異常時にRSTパケットを応答する機能が追加され、クライアントが異常を素早く検知できるようになりました",
+      "url": "https://dev.classmethod.jp/articles/gwlb-support-tcp-reset-on-target-failure/",
+      "description": "AWS Gateway Load Balancerがターゲットに異常が発生した場合にRSTパケットを応答するオプションが追加され、クライアントがタイムアウトを待ち続けることなく異常を検知できるようになりました。今回は実際にオプションを有効化し接続が復旧する様子を確認してみます。",
+      "publishedAt": "2026-09-07T11:36:13.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "f23bc757872058012a7937ae46864cef48b18e9d4e075b0e7d620959ddfeec37",
+      "title": "DatabricksのServerlessで複数CPUアーキテクチャに対応して起動時間を遅くしない [2026年9月7日時点]",
+      "url": "https://zenn.dev/turing_motors/articles/71a4dd39e0654c",
+      "description": "チューリングの MLOps エンジニアの岩政です。\n以前、Databricks の Declarative Automation Bundles を用いた機械学習データセット作成基盤の構築をまとめました。この記事はその続きにあたるので、まだご覧になっていない方は先に読んでいただけると嬉しいです。\nhttps://zenn.dev/turing_motors/articles/46b5560dce0e3a\nこの中で「4.5.2 Python のライブラリの依存解決を高速にする」を紹介しました。\nDatabricks の Serverless compute では、依存パッケージのインストー...",
+      "publishedAt": "2026-09-07T09:00:08.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "6aac43e7dc5b4978c56d3fa933e0c91fc9af4d5f3104f1739ebd512300806250",
+      "title": "オンプレミスVMをAWSに移行する際に確認すべきこと",
+      "url": "https://dev.classmethod.jp/articles/check-when-migration-on-premises-vm-to-aws-jp/",
+      "description": "オンプレミス環境からAWSへの移行方法は、サーバー、ファイル、データベースなど、何を移すかによって大きく異なります。本記事では、サーバーをそのまま移す場合からデータだけを移す場合、オンプレミスとAWSを併用する場合まで、それぞれの状況に応じた移行方法と適切なAWSサービスの選択についてまとめました。",
+      "publishedAt": "2026-09-07T07:53:06.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "36b1d0d21b3b2d8d5a34fe48533fa5a6443b8013599f7f7c5f71bfa46df1e57b",
+      "title": "Amazon ECSのデプロイツール「ecspresso」について調べてみた",
+      "url": "https://dev.classmethod.jp/articles/about-ecspresso-jp/",
+      "description": "Amazon ECSのデプロイをシンプルに管理できるツール「ecspresso」について紹介します。既存サービスのコード管理化やCI/CDパイプラインとの連携方法を、実際の検証結果とともに解説します。",
+      "publishedAt": "2026-09-07T07:51:30.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "8077fc8415aa836e859be9b144e1cf20615f5131cd17246706b3481919131f0e",
+      "title": "週刊AWS – 2026/8/31週",
+      "url": "https://aws.amazon.com/jp/blogs/news/aws-weekly-20260831/",
+      "description": "Automated Security Response on AWS がカスタム修復向け AI Toolkit を追加、Anthropic の新しいフロンティアモデル Claude Fable 5.1 が AWS で利用可能に、Amazon SageMaker Unified Studio CI/CD がノートブックプロモーションと AI 支援によるマニフェスト生成を追加、Amazon SES が S/MIME メール署名のサポートを開始、AWS MCP Server が AWS Lambda 関数向けの serverless capability を追加など",
+      "publishedAt": "2026-09-07T07:22:23.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "72baefe83e9a504d44f6bb001bd08087625b10dc44e36ca67b9c71a390dea0c4",
+      "title": "チェック・ポイント、OpenAIのフロンティアAIモデルをセキュリティプラットフォーム全体に統合",
+      "url": "https://enterprisezine.jp/news/detail/25027",
+      "description": "チェック・ポイント（Check Point）は、OpenAIのセキュリティ向けAI「Daybreak」を自社のセキュリティプラットフォーム全体に統合した。これにより、AIを悪用する攻撃者よりも早く、...",
+      "publishedAt": "2026-09-07T06:23:00.000Z",
+      "feedName": "EnterpriseZine"
+    },
+    {
+      "id": "22f9e5e2c88e15a263dc02077fbbdbd9021c966ae0ad66a2221694e4c67469bb",
+      "title": "Amazon Aurora DSQL でスケーラブルなアプリケーションを構築する",
+      "url": "https://aws.amazon.com/jp/blogs/news/building-scalable-applications-on-amazon-aurora-dsql/",
+      "description": "Amazon Aurora DSQL の分散アーキテクチャでスケールするアプリケーションの設計方法を解説します。楽観的並行性制御(OCC)を前提とした主キーの選定、スキーマ設計、トランザクション戦略、マルチリージョン最適化を取り上げ、競合を抑えて実効スループットを高めるための実践的なパターンを紹介します。",
+      "publishedAt": "2026-09-07T05:37:58.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "e02fce867d2d7a28bd22c4eeee3339e69979624ca70e8e8dfed555cf0802823d",
+      "title": "【AWS中級へのステップ】IAM ユーザーの権限を最小化するための３ステップ",
+      "url": "https://dev.classmethod.jp/articles/aws-step-to-intermediate-iam-reduce-permissions/",
+      "description": "IAM ユーザーの権限を最小化するためのステップを段階ごとに紹介します。IAM の最終アクセス日時で大まかにサービスを絞り、IAM Access Analyzer のポリシー生成にて管理イベントに関するアクションをさらに絞り、最後はデータイベントを Athena でクエリして詰めていきます。",
+      "publishedAt": "2026-09-07T04:58:21.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "de21c0840fa70af571d692c8f4213ec22fb17be6f31a2aa11662aea48b5d6e44",
+      "title": "【react-router-dom v7】ルーティングのネスト",
+      "url": "https://qiita.com/J-T_ky2g/items/458b660e48f5649a0e5b?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\n\nSwitchではなくRoutesを使うようになっていたので、今の方法を調べた\n\n問題\n\nネストしたルーティングを書きたいが書き方不明\n\n解決\n\n親コンポーネント\n\n以下のようにすると /dashboard/settings のパスで見た時に子コンポーネント...",
+      "publishedAt": "2026-09-07T03:28:11.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "bc45905b3ad3690acb3f3609e4e4e6d1e70395e97eb054f26b2dcf308e9a348f",
+      "title": "ドメインモデル貧血症はなぜ生まれるのか — Decision パターンで DDD トリレンマを解く",
+      "url": "https://zenn.dev/tellernovel_inc/articles/0193eb68cabb6e",
+      "description": "テラーノベルで Go を書いている typer です。\nこの記事は次のような方向けです。\n\nGo でコードを書いていて、domain 層にロジックが集まらないと感じている方\nDDD の戦術的パターンを入れてみたが、結局 domain の外側にロジックが溜まっている方\nリポジトリを呼ぶために domain に context と error を持ち込むかどうかで迷ったことがある方\n\n先に結論を書いておきます。\n\nドメインモデル貧血症は、怠慢ではなく構造的なトリレンマの結果として生まれやすい\n「判断するために何が要るか」を型で返せば、型の制約を保ちながらトリレンマは解ける\n\n\n 「戦術的 D...",
+      "publishedAt": "2026-09-07T03:03:17.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "8710f871fae23ad43b68cd5de37bb13f7d422c345af103a6d93f689d3e02d8c9",
+      "title": "【XP祭り2026】エンジニアにコミュ力を求めるな、と言われて頷いた",
+      "url": "https://zenn.dev/nexta_/articles/51fdb6f774d1ca",
+      "description": "こんにちは！QAエンジニアのAyakaです。\n2026年9月5日の XP祭り2026 にプロポーザル採択いただいたので、参加してきました。私はオンラインDの13:00枠で「社内ナレッジをAIに読ませて、QAのテスト設計を任せてみた話」を話しました。\n午前の基調講演、自分の登壇とその直後の1枠までしか聞けていないので、その範囲で刺さった論点を3つに絞って書きます。\n\n その前に：XPを、私は言葉でしか知らなかった\n午前のオープニングで、XPそのものの入門説明がありました。正直、これがなかったらそのあとの90分は置いていかれてました。私はXPを「ペアプロとかTDDとかをやるやつ」くらいの抽象...",
+      "publishedAt": "2026-09-07T02:32:05.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "277ea1523a64e32e44b732930813454283a81d058b15713f414f974d77960d38",
+      "title": "WebエンジニアのためのReact Native + NativeWind v5事始め — Webの常識が通用しない18のポイント",
+      "url": "https://zenn.dev/my_vision/articles/2bbf47bb0db842",
+      "description": "はじめに\n弊社では Web エンジニアがモバイルアプリを開発しており、Web の React + Tailwind CSS の知見をそのまま応用できるよう React Native + NativeWind を採用しています。\nNativeWind は書き味こそ Web の Tailwind そのものですが、「className を指定したのに効かない」「Web の感覚で書いたら見た目だけ崩れた」「lint エラーにもならない」 というケースに何度も遭遇しました。\nそこでつまずいたポイントを、トピックごとに整理してまとめました。\n\n 環境\n\nnativewind 5.0.0-prev...",
+      "publishedAt": "2026-09-07T01:17:48.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "a93d38c5cf56d7c5cda9fe84246383dbd5be3ebe5ed1767aadad70b658e0acda",
+      "title": "HTMLを社内共有するサービスを、コードを読まずに作る - 1人で25万行を回す自動運用の記録",
+      "url": "https://zenn.dev/coji/articles/solo-software-factory-without-reading-code",
+      "description": "これはなに？\nこの記事は、「コードを読まなくても大丈夫」という話ではありません。コードを読まないと決めたぼくが、何につまずき、どんな仕組みを足し、何を作りすぎて捨てたのか。その試行錯誤から残った、仕様と実装のレビューループの話です。\nHTMLを社内だけで安全に共有するWebサービス「Artifact Share」を、ひとりで開発しています。TypeScriptで書かれたWebアプリケーションです。\n開発を始めて4ヶ月が経ちました。リポジトリのTypeScriptコードは25万行を超え、マージしたPRは1,144本、Issueは777件に達しています。関わっている人間は、ぼく1人。\n2...",
+      "publishedAt": "2026-09-07T00:05:00.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "682f2930035d6037cb41a2f55edb360e5c283360b18511b599dc39a0faa93709",
+      "title": "テストを生成するな、信頼を生成しろ",
+      "url": "https://zenn.dev/nakurei/articles/generate-trust-not-tests",
+      "description": "これはなに\nAIにコーディングを丸投げするなら、テストコードくらい確認しろという愚痴。\n\n 背景 | ただの愚痴\n私はここ1年ほど毎日のように、コードの構造や仕様をAIへ与え、それに基づいてテストケースを作らせている。もちろんコード自体も書かせている。そしてAIに書かせたコードをチームメンバーにレビューさせ、チームメンバーがAIに書かせたコードをレビューしている。まあこんなのはもはや、プログラマーにとっては日常だろう。\nだが、最近私はそれに困り悩まされている。自分が他人のコードを、とくにテストコードをレビューするとき、そもそも書かれたテスト自体まるで無意味なことが増えたからだ。\nたと...",
+      "publishedAt": "2026-09-07T00:00:07.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "6724a2e019a3821570c0572aaa4c0691b838dcb498fdcf55a6f55ec0bb73e76a",
+      "title": "Docker環境をガチで軽量化するための鉄板設定まとめ",
+      "url": "https://qiita.com/nolanlover0527/items/24ee07122dd4d0523069?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\nDocker環境が重すぎて頭を抱えている人は多いのではないでしょうか。\n私自身も激重なDocker環境を触っていて、原因を一つずつ潰していった経験が何度かあります。\n今回は、ローカルのDocker環境（Windows）を軽量化するための方法について、実際に行った...",
+      "publishedAt": "2026-09-06T23:56:41.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "e5878063af6fef262d85c3cf21375e8901f6d33ac1118941952ebfdc76d436d5",
+      "title": "RustでWebフロントとモバイルの複雑なドメインロジックを共通化する（UniFFI + WASM）",
+      "url": "https://zenn.dev/rick2200/articles/16ee74ef2464b8",
+      "description": "背景\nWeb・iOS・Androidのマルチプラットフォームで展開するサービスでは、同じビジネスロジックを3つの言語で別々に実装することが珍しくありません。たとえば「送料無料の判定」のような、金額計算が絡む処理です。\nもちろん最終的な確定値はサーバーサイドで再計算してDBに永続化しますが、UI/UXの要件（カート画面でのリアルタイムな合計金額表示など）から、クライアントサイドでの即時計算がどうしても必要になるケースがあります。このとき通常は、Web（TypeScript）、iOS（Swift）、Android（Kotlin）のそれぞれに同じ計算ロジックを実装します。\nしかし、ここに機...",
+      "publishedAt": "2026-09-06T23:55:05.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "fe673e011f269fc44d7569ef79a1c7f58df7dd4c21307fa44bc60db43197e3d6",
+      "title": "JavaScriptを1文字ずつ削る。手ごとの削減幅を実測した10個と、壊れる境界",
+      "url": "https://qiita.com/Rapls/items/526e29f36fe88c8be73e?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "短くしたコードは、どこまで元と同じ結果を返すのでしょうか。\n削り方の一覧はよく見かけます。ただ、どれが何文字減るのか、そしてどこから結果が変わるのかを並べたものが見当たりませんでした。\nなので測りました。Node.js v22.22.2 で、変換前と変換後を両方実行して、返...",
+      "publishedAt": "2026-09-06T23:48:54.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "faf259bd219da18c15a94123b418cb2012f31a52dc72db7d810e944fca4d84d8",
+      "title": "【OCIR】OCIのコンテナ・レジストリを使ってみた",
+      "url": "https://qiita.com/yushibats/items/1acdd6245255c442c5a6?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "前回の記事で、nginxのトップページを差し替えた自作イメージ を作りました。 ただ、このイメージはビルドしたVMの中にしかありません。 別のマシンで動かしたり、この先Kubernetesから使ったりするには、レジストリ（イメージの置き場）に登録しておく必要があります。\nO...",
+      "publishedAt": "2026-09-06T22:59:55.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "c9a7db33755eae3c3727e8ffef323c624e795a05707bd379aab32b4912ebd0fe",
+      "title": "【プロンプト公開】他のAIが3日後に知る情報を、Grokは「今」教えてくれる。Grok × Xで技術ニュース収集が完全無料で「週10分」に激変した話",
+      "url": "https://qiita.com/shinkai_/items/710c03dbfc8ecf849496?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\nAI関連のニュースって、とにかく量が多いですよね。\n毎日のように新しいモデルが発表され、企業の動向がアップデートされ、セキュリティ関連の重大ニュースも次々に流れてきます。\nそして、そういった情報の「一次情報としての新鮮さ」で言うと、圧倒的に強いのはXです。ニュー...",
+      "publishedAt": "2026-09-06T22:49:27.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "a468943a5ad147c9615fe59cf655a1483494ecb8e3e54d94ca9e9454a6937d42",
+      "title": "【AWS初心者向け】インフラ構成を図解で理解しよう！ALB・ECS・RDS・Lambda・NAT Gateway・VPCエンドポイントを一気に学ぶ",
+      "url": "https://qiita.com/Nao52/items/35441e4b0009aa128610?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "■ この記事はこんな人におすすめ\n\nAWSを勉強し始めたけど、サービスが多すぎて何から学べばいいか分からない人\nAWSの個々のサービスは知っているけど、全体の構成のイメージがつかめない人\nECS・Lambda・RDSなどの言葉を聞いたことはあるが、なぜそれを使うのか説明で...",
+      "publishedAt": "2026-09-06T22:40:31.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "ca48e79fffaff15c0a3fc34585a02ebccb74aeb6c637aedad53e9fae0f4c83c9",
+      "title": "不具合はCIに刻もう。「Red-Green Stacked PR」のすすめ",
+      "url": "https://zenn.dev/bmth/articles/red-green-stacked-pr",
+      "description": "不具合修正のPRをレビューしていて、「この追加されたテストは、修正前のコードで本当に落ちていたのだろうか」と手が止まったことはありませんか？\nCIがGreenになれば、修正後の状態でテストが通っていることは分かりますが、そのテストが修正前に落ちていたかどうかまでは、すぐにはわかりません。\n実は、これを簡単に確かめる方法があります。\nRedの状態そのものを、CIがGreenと判定できる形にしてしまえばよいのです。\nこの記事では、gh stackの登場で行いやすくなった、落ちるテストをCIに刻む手法、 「Red-Green Stacked PR」 について紹介していきます。\nなお、この呼び名...",
+      "publishedAt": "2026-09-06T16:01:18.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "f5e0b7d5c6ce624a40a850b0683980b86c34974db10c0db72fb0580d41f96b7d",
+      "title": "【AWS IAM Identity Center】個人アカウントで一人アドミンに挑戦してみた！(IAM Identity Center編)",
+      "url": "https://qiita.com/yosuke-suzuki/items/6aa8e6cf04ea330cb597?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\nこんにちは。マルチアカウント運用を楽にしたいすずきです。\nAWS Organizationsを利用した一人アドミン検証シリーズの3本目です。\n前2本では前後編としてまとめていましたが、アカウント管理・運用を考えると、Organizationsだけで収まるわけがな...",
+      "publishedAt": "2026-09-06T14:53:44.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "bb0e5f88c9016a19fbb9ca0818f1bec362a049885b0cf477d442da6b415dd01a",
+      "title": "【React】default exportは無名関数でコンポーネントを作っても動いてしまう",
+      "url": "https://qiita.com/J-T_ky2g/items/a5b9a6acf097ade52c9f?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\n\nたまたまIDEのコード補完で見つけた\nこういうのを一つ一つ拾ってアウトプットしていると色んな事と繋がって覚えられて良い\n\n内容\n\n以下のように定義できる\ndefault exportなので当然使う側で名前を決められる\nただ、名前空間を決める恩恵があるのでna...",
+      "publishedAt": "2026-09-05T22:40:14.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "0192fbe8edfdef003fb2f5c2d8b7bb8e5b46159481a99d6bd0e8a4ee949e94e7",
+      "title": "Vercel Teamに入らずにデプロイしたい！トークンだけで実現するGitHub Actions CD",
+      "url": "https://qiita.com/keikeigo/items/3950c3ad50d659a1253d?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\nNext.jsのCDパイプラインを作成しました。\n現在、受託開発を行なっていて、Vercelにデプロイしたいが依頼者のVercelアカウントにログインすることはできない。Teamにメンバーとして参加する方法もあるようだが、一人につき20ドル必要。\n個人開発の時の...",
+      "publishedAt": "2026-09-05T00:42:15.000Z",
+      "feedName": "Qiita"
     }
   ]
 }
