@@ -1,118 +1,6 @@
 {
   "articles": [
     {
-      "id": "fcdda5b0737eec4d09a3b71b71c9bcdaa3a25b384ce0799b98658ed4a59812d5",
-      "title": "Private & Fast: Building a Local-First Mental Health Assistant with WebLLM and WebGPU 🧠💻",
-      "url": "https://dev.to/wellallytech/private-fast-building-a-local-first-mental-health-assistant-with-webllm-and-webgpu-c8j",
-      "description": "Privacy is no longer just a feature; it's a human right—especially when it comes to mental health. Imagine a Cognitive Behavioral Therapy (CBT) assistant that lives entirely in your browser, never sends a single byte of your conversation to a remote server, and runs at lightning speed. \nThanks to the explosion of Edge AI and the maturing WebGPU standard, this isn't science fiction anymore. In this tutorial, we will explore how to use WebLLM, TVM Unity, and React to build a high-performance, offline-capable mental health assistant. By leveraging WebLLM and Local-first AI principles, we can provide low-latency support while keeping sensitive user data exactly where it belongs: on the user's device.\nMental health data is incredibly sensitive. Using traditional LLM APIs (like OpenAI or Claude) means sending private thoughts to the cloud. By using WebGPU acceleration, we can run models like Llama 3 or Mistral directly on the client's GPU via the browser.\nThe magic happens through TVM Unity, which compiles machine learning models into high-performance kernels that the browser can execute via the WebGPU API.\ngraph TD\n    A[User Input] --> B[React UI State]\n    B --> C[WebLLM Worker]\n    subgraph Browser Environment\n    C --> D[TVM Runtime]\n    D --> E[WebGPU API]\n    E --> F[Local GPU / VRAM]\n    F --> G[Model Inference]\n    G --> D\n    end\n    D --> H[Streaming Response]\n    H --> B\n    I[(IndexedDB Cache)] -.-> C\n\nTo follow along, you’ll need:\nNode.js & npm/pnpm\n\nA browser with WebGPU support (Chrome 113+, Edge, or Firefox Nightly)\nThe following stack: React, WebLLM, and Vite.\nFirst, let's install the core dependencies:\nnpm install @mlc-ai/web-llm react\n\nThe heart of our application is the ChatWorker. We want to run the LLM in a Web Worker to ensure the UI remains responsive during heavy inference.\n// engine.ts\nimport { CreateWebWorkerEngine, type ChatOptions } from \"@mlc-ai/web-llm\";\n\nconst SELECTED_MODEL = \"Llama-3-8B-Instruct-q4f16_1-MLC\";\n\nexport async function initializeEngine(onProgress: (p: any) => void) {\n  // This downloads the model and initializes the WebGPU pipeline\n  const engine = await CreateWebWorkerEngine(\n    new Worker(new URL(\"./worker.ts\", import.meta.url), { type: \"module\" }),\n    SELECTED_MODEL,\n    { initProgressCallback: onProgress }\n  );\n  return engine;\n}\n\nFor a mental health assistant, the system prompt is everything. We need to steer the model toward Cognitive Behavioral Therapy techniques—identifying cognitive distortions and suggesting reframing exercises.\nconst CBT_SYSTEM_PROMPT = `\nYou are a supportive Mental Health Assistant specialized in Cognitive Behavioral Therapy (CBT).\nYour goal is to help users identify negative thought patterns.\nRules:\n1. Be empathetic and non-judgmental.\n2. If a user mentions self-harm, immediately provide emergency resources.\n3. Use Socratic questioning to help users reach their own conclusions.\n4. Keep data privacy top-of-mind: remind users this is a local-only session.\n`;\n\nNow, let's build a custom hook to manage the chat state and the engine lifecycle. 🚀\n// useWebLLM.ts\nimport { useState, useEffect } from 'react';\nimport * as webllm from \"@mlc-ai/web-llm\";\n\nexport function useWebLLM() {\n  const [engine, setEngine] = useState<webllm.EngineInterface | null>(null);\n  const [progress, setProgress] = useState(\"\");\n\n  useEffect(() => {\n    async function init() {\n      const instance = await webllm.CreateMLCEngine(\n        \"Llama-3-8B-Instruct-q4f16_1-MLC\", \n        { initProgressCallback: (p) => setProgress(p.text) }\n      );\n      setEngine(instance);\n    }\n    init();\n  }, []);\n\n  const chat = async (messages: webllm.ChatCompletionMessageParam[]) => {\n    if (!engine) return;\n\n    const chunks = await engine.chat.completions.create({\n      messages: [\n        { role: \"system\", content: CBT_SYSTEM_PROMPT },\n        ...messages\n      ],\n      stream: true,\n    });\n\n    return chunks;\n  };\n\n  return { chat, progress, ready: !!engine };\n}\n\nWhile this demo gets you up and running, deploying Edge AI at scale requires deep optimization regarding model quantization, caching strategies, and cross-browser compatibility.\nIf you are looking for advanced patterns on model sharding or more production-ready examples of local-first architectures, you should definitely check out the deep-dives at WellAlly Tech Blog. They cover the nuances of TVM Unity and memory management that are crucial for high-traffic applications.\nFinally, we connect our hook to a simple chat interface. Note how we handle the streaming response to create that \"typing\" effect users love.\n// App.tsx\nimport { useState } from 'react';\nimport { useWebLLM } from './useWebLLM';\n\nfunction App() {\n  const { chat, progress, ready } = useWebLLM();\n  const [input, setInput] = useState(\"\");\n  const [messages, setMessages] = useState([]);\n\n  const handleSend = async () => {\n    const userMsg = { role: \"user\", content: input };\n    setMessages(prev => [...prev, userMsg]);\n    setInput(\"\");\n\n    const stream = await chat([...messages, userMsg]);\n    let fullReply = \"\";\n\n    for await (const chunk of stream) {\n      fullReply += chunk.choices[0]?.delta?.content || \"\";\n      // Update UI with the stream\n      setMessages(prev => [...prev.slice(0, -1), { role: \"assistant\", content: fullReply }]);\n    }\n  };\n\n  if (!ready) return <div>Loading AI Engine: {progress}</div>;\n\n  return (\n    <div className=\"chat-container\">\n      <h2>Local CBT Assistant 🌿</h2>\n      <div className=\"messages\">\n        {messages.map((m, i) => (\n          <div key={i} className={m.role}>{m.content}</div>\n        ))}\n      </div>\n      <input value={input} onChange={(e) => setInput(e.target.value)} />\n      <button onClick={handleSend}>Talk</button>\n    </div>\n  );\n}\n\nBy combining WebLLM and WebGPU, we've built a tool that is:\n Private: No data leaves the device.\n Cost-Effective: Zero API costs per token.\n Low Latency: No network round-trips for inference.\nEdge AI is transforming how we think about sensitive applications like mental health, finance, and personal journaling. By moving the \"brain\" to the browser, we empower users to own their data without sacrificing the power of modern LLMs.\nWhat are you planning to build with WebGPU? Let me know in the comments! And don't forget to head over to wellally.tech/blog for more technical guides on the future of decentralized AI! 🚀🔥",
-      "publishedAt": "2026-08-10T01:21:00.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "60af9240e22b411b556f863b13948c65f5ef0d2e259427d0543e4771b2b2cffd",
-      "title": "Compression Is Understanding: Two July Papers That Prove AI Gets Smarter by Compressing Physics",
-      "url": "https://dev.to/lanternproton/compression-is-understanding-two-july-papers-that-prove-ai-gets-smarter-by-compressing-physics-5399",
-      "description": "Compression Is Understanding: Two July Papers That Prove AI Gets Smarter by Compressing Physics\n\n\nThere's a thesis I keep coming back to: AI doesn't understand by accumulating information — it understands by compressing it. A model that can reconstruct a concept from fewer bits has, in a real sense, captured its structure. Compression forces you to find what matters and discard what doesn't.\nJuly 2026 handed me two independent, concrete demonstrations of exactly this — one from a world-model paper, one from a 35-year-old scientist on the MIT TR35 list.\nOn August 7, the Chinese Academy of Sciences' Institute of Automation released PhiZero (arXiv:2607.28624), a world model built around what they call a \"physical language.\"\nThe setup: predicting what happens next in a video. The naive approach predicts pixels. But pixels mix two very different kinds of information:\nAppearance — texture, lighting, material. Huge volume, mostly static.\nState transitions — how objects move, interact, deform. Small volume, entirely dynamic.\nWhen you predict pixels directly, the dynamic structure gets drowned out by appearance noise.\nPhiZero's fix is a clean act of compression:\nCurrent state + action intent → physical language tokens → future evolution\n\nA Physical Language Tokenizer compresses video changes into a compact discrete vocabulary (~25K symbols). A 33-frame, 4-second video becomes 256 physical-language tokens — versus 44,800 continuous visual tokens with a standard VAE. That's a 175x reduction.\nThen a Reasoner (initialized from Qwen3-VL-4B) predicts the next token sequence — i.e., it reasons about how the world will evolve in the compressed space — and a decoder renders the future video from the first frame plus the predicted token sequence.\nThe key insight: the model thinks about physics before it draws pictures. It predicts state transitions symbolically, then renders. Understanding happens in the compressed space — the 175x reduction isn't a lossy hack, it's the actual mechanism by which the model isolates what changes from what just is.\nAnd the compression generalizes: the same token sequence can be re-rendered with different appearances (rice → liquid → sticky material), transferred across embodiments (human full-body motion → Unitree G1 humanoid; human hand → dexterous hand, no paired training data needed), and moved from simulation to real-world visuals.\nOn July 25, MIT Technology Review released the 2026 \"35 Innovators Under 35\" (TR35) China list in Shanghai. Among the five Shanghai scientists was Zhang Hongliang, a young researcher at Fudan University.\nHis work: applying AI to nuclear materials R&D — specifically, predicting the safety margins, structural integrity, and service life of structural materials for next-generation advanced nuclear reactors.\nWhy this matters: inside a reactor, materials are bombarded by neutron irradiation, which degrades their microstructure over decades — embrittlement, swelling, cracking. The traditional way to understand this is decades-long test irradiations, or physics simulations with enormous computational cost.\nZhang's contribution, per the TR35 citation:\nClarified, at the micro/nano scale, the mechanisms of irradiation-induced interface evolution in materials\nDiscovered that metals at micro/nano scale exhibit ultra-high ductility and entirely new deformation mechanisms that overturn conventional understanding of brittleness\nUses AI to model these evolutions so that decades of service-life behavior can be predicted computationally instead of measured over decades\n\n\n\nSame structure as PhiZero: the physics is too expensive to compute exhaustively, so AI learns to compress the evolution rules — the part that matters — and predict the outcome directly.\nStrip the domains away and both are the same move:\n\n\n\n\nPhiZero\nZhang Hongliang\n\n\n\n\nDomain\nVideo world models\nNuclear materials\n\n\nThe expensive thing\nPredicting future pixels\nPredicting decades of irradiation damage\n\n\nThe compression\nVideo → 256 discrete physics tokens\nIrradiation physics → learned evolution model\n\n\nWhat's kept\nState transitions (motion, contact, interaction)\nMicrostructural evolution rules\n\n\nWhat's discarded\nTexture, lighting, appearance\nFull brute-force physics simulation\n\n\nThe payoff\n175x fewer tokens, transferable across embodiments\nService-life prediction without waiting decades\n\n\n\nThe boundary between \"compressible\" and \"incompressible\" is where understanding lives. PhiZero keeps appearance out of the bottleneck because appearance doesn't drive dynamics. Zhang keeps the microstructural evolution rules because those drive failure. Both found — empirically — what their domain is, by finding what can be thrown away.\nThis is the same argument I made in my book manuscript: compression has limits because time itself carries information — the gaps between events are not empty, they are information. But within those limits, the amount of genuine structure you can extract is exactly proportional to how well you can compress. These two papers are existence proofs.\nThe PhiZero result in particular lands directly on the embodied-AI stack:\nWorld models are the L3 layer for robots — \"understand physics before acting\" is precisely what a robot needs to plan manipulation, locomotion, and interaction.\nCross-embodiment transfer solves the data scarcity problem — human video → robot policy, no paired data required, because the compressed state-transition structure transfers even when the body doesn't.\nModel-based RL is the theoretical foundation — the PhiZero Reasoner (predict next state tokens) is world-model RL in disguise, which is exactly lectures 15–16 of Berkeley CS 285.\nAnd the QC angle: a discrete symbolic space is verifiable. Physical-language tokens can be checked against conservation laws, contact constraints, and causality — a natural home for validation layers that catch the hallucinations a pixel-space model would hide.\nTwo events in July 2026, one from a Chinese research institute, one from a 35-year-old on a prestigious list, both demonstrating the same principle:\nAI understands the world by compressing it — finding the structure that survives compression is the actual act of understanding.\nThe 175x token reduction isn't a trick. It's what understanding looks like when you measure it in bits.\nRelated: I Tested DeepSeek V4 Flash's Hallucination Rate on the Release-Day API — 94% → 0%",
-      "publishedAt": "2026-08-10T01:06:38.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "ee5f390c1994be4007118878920b0df534856f3d40d5abdc09485c5b96bd5fe9",
-      "title": "愛媛県庁、SASEなど導入でネットワーク基盤をゼロトラスト移行へ　ネットワンシステムズとSCSKセキュリティが受注",
-      "url": "https://enterprisezine.jp/news/detail/24845",
-      "description": "愛媛県庁の次期ネットワーク基盤を、ネットワンシステムズとSCSKセキュリティが受注した。稼働開始は2027年1月を予定しているとのことだ。\n\n　同環境は、高度なセキュリティ対策を導入することで、職員...",
-      "publishedAt": "2026-08-10T00:00:00.000Z",
-      "feedName": "EnterpriseZine"
-    },
-    {
-      "id": "a4094936a0590a1d25d586fc7acba2b541fb2e4df8e19fd9178933440ce9354c",
-      "title": "GMO AI&ロボティクス商事、ロボット向けセキュリティサービスを提供へ",
-      "url": "https://enterprisezine.jp/news/detail/24844",
-      "description": "GMO AI&ロボティクス商事（以下、GMO AIR）は、人型ロボット（ヒューマノイド）を安全に運用するための新たな仕組みとして「GMO SAFE」を提供すると発表した。\n\n　GMO SAF...",
-      "publishedAt": "2026-08-09T23:30:00.000Z",
-      "feedName": "EnterpriseZine"
-    },
-    {
-      "id": "09fc29b09da43ec467dec7de0b0d0f109e60637ca8a957ad36ead1aff8d16770",
-      "title": "GPUaaS基盤を支える Kubernetes カスタムコントローラ",
-      "url": "https://developers.cyberagent.co.jp/blog/archives/64574/",
-      "description": "はじめに CIU (CyberAgent group Infrastructure Unit) の  ...",
-      "publishedAt": "2026-08-09T23:00:36.000Z",
-      "feedName": "CyberAgent Developers Blog"
-    },
-    {
-      "id": "8f1112b9f4f95ae7da9d12d2ef0f6aafd7065286853f7ecddc7da30f07ae0423",
-      "title": "キヤノンMJジャパン、グループ各社のサービスを結集して「セキュリティ対策評価制度」への対応を支援",
-      "url": "https://enterprisezine.jp/news/detail/24843",
-      "description": "キヤノンマーケティングジャパン、キヤノンITソリューションズ、キヤノンシステムアンドサポートは、経済産業省が推進する「サプライチェーン強化に向けたセキュリティ対策評価制度（SCS 評価制度）」への対...",
-      "publishedAt": "2026-08-09T23:00:00.000Z",
-      "feedName": "EnterpriseZine"
-    },
-    {
-      "id": "3c7a39e582282576916e6333de46c0d676ca7564da66024bce1393935edfb196",
-      "title": "残存“Windows 10”が危険なだけじゃない、そもそもPC保護は「年間76日も機能していない」",
-      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2608/10/news040.html",
-      "description": "Absolute Securityが公表したサイバーレジリエンスに関する調査結果によれば、企業ではエンドポイントセキュリティ機能が約20％も適切に機能しないなど、深刻なリスクにさらされている。",
-      "publishedAt": "2026-08-09T23:00:00.000Z",
-      "feedName": "＠IT"
-    },
-    {
-      "id": "59cba9b30513949b3dcfcf71273def2371234eef4ed35c1865f808729e247317",
-      "title": "1時間で損失3億　企業が見落とす「ダウンタイム」の真実",
-      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2608/10/news036.html",
-      "description": "サイバー攻撃を完全に防ぐことが難しくなる中、企業にとって本当に大きな損失は「侵入」ではなく、その後に発生する業務停止かもしれない。セキュリティ投資が増え続けても、なぜダウンタイムは減らないのか。",
-      "publishedAt": "2026-08-09T22:30:00.000Z",
-      "feedName": "＠IT"
-    },
-    {
-      "id": "a315d09439892cb5d850d885499c39d924cadea20a819a8827182f151ce0a6e1",
-      "title": "ランサム被害、主因は脆弱性より「人」　34％がメールで感染、「本物に見えた」で疑わず",
-      "url": "https://www.itmedia.co.jp/news/article/2608/10/2000000432/",
-      "description": "世界中で多発しているランサムウェア感染は、いつもと変わらないように見える添付ファイルを開いたり、問題なさそうに見えるログイン画面にパスワードを入力したり、アカウントが乗っ取られているとは知らずに返信したりといった「人」の行為で始まっている――米セキュリティ企業Proofpointの調査でそんな実態が浮かび上...",
-      "publishedAt": "2026-08-09T22:27:35.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "6320f15bbbdb71c9f6102dc2066071188e30d5442b24d3d2c59419887004f5c8",
-      "title": "AWS DevOps Agent のインシデント調査結果を AWS CLI で取得してみた",
-      "url": "https://dev.classmethod.jp/articles/aws-devops-agent-investigation-result-cli/",
-      "description": "AWS DevOps Agent のインシデントレスポンス調査結果を AWS CLI で取得する方法を紹介します。",
-      "publishedAt": "2026-08-09T15:37:44.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "7b267b7af5479472bf11ae33e3f3354373cc6ef4c7987fa25d165c215e5a0ea5",
-      "title": "【AWS Organizations】個人アカウントで一人アドミンに挑戦してみた！(org環境の作成編)",
-      "url": "https://qiita.com/yosuke-suzuki/items/e28f07bcf54d444acf8d?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "はじめに\nこんにちは、すずきです。\n突然ですがみなさんはAWS Organizationsを使ったことがありますか？\n私は正直、「複数アカウントをまとめて管理するためのサービス」という程度の理解しかありませんでした。\n会社の環境では組織管理はすでに整備済みでも、一般メンバ...",
-      "publishedAt": "2026-08-09T14:59:03.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "3b07f4085e790eec967618ec047997b52709da424c018f99e030bf095f0bc778",
-      "title": "Node.jsのfetch()がOSへI/Oを依頼するところをstraceで覗いてみた",
-      "url": "https://dev.classmethod.jp/articles/nodejs-fetch-strace/",
-      "description": "Node.jsの`fetch()`がOSと通信する仕組みを、`strace`でシステムコールレベルから追いかけてみました。DNS問い合わせからTLS通信まで、低レイヤーで何が起きているのかを具体的に見ていきます。",
-      "publishedAt": "2026-08-09T13:35:08.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "a52460cf459a8d403e0ebaca6cfbe12327cac039baea76c11eeba5d9b018cb8c",
-      "title": "「Agent Plugins 1.0.0」発表、異なるAIエージェント間でもスキルやMCPサーバ設定が共通化へ。マイクロソフト、OpenAI、AWS、Googleらがサポート",
-      "url": "https://www.publickey1.jp/blog/26/agent_plugins_100aimcpopenaiawsgoogle.html",
-      "description": "「Agent Plugins 1.0.0」発表、異なるAIエージェント間でもスキルやMCPサーバ設定が共通化へ。マイクロソフト、OpenAI、AWS、Googleらがサポート AWS、マイクロソフト、OpenAI、Anysphere、Vercelの各社は、AIエージェントのスキルやMCPサーバの設定を、AIエージェンが異なっていても共有できる業界標準の仕様「Agent Pl...",
-      "publishedAt": "2026-08-09T13:31:00.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "24f4e2b51f7bc87ef10beadfd9f7765cbfbe1c192db976160cfc31590c2840e4",
-      "title": "「CPUをダメにする」研究者が見つけた最も遅い1命令の正体と暴かれたリスク | XenoSpectrum",
-      "url": "https://xenospectrum.com/cpu-deoptimization-hall-of-shame-198-billion-cycles/",
-      "description": "セキュリティ研究者が「最も遅いx86命令」を競うリーダーボードを公開。fxrstor64をPCIe MMIOに向けて他コアでバスを飽和させる手法で、通常150サイクルの命令を1980億サイクル（62秒）まで引き延ばした。この「遅さ」はSMMの排他性仮説を崩し、100件超の休眠CVEを再点火しうる。",
-      "publishedAt": "2026-08-09T05:47:42.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
       "id": "a303c6b7afd58bb422d04b1a4eee6f4d7d391cbf7e3ac352d27dbaa4d7b8362d",
       "title": "How to Calculate Distance Between Two GPS Coordinates in JavaScript",
       "url": "https://dev.to/echoluoluo/how-to-calculate-distance-between-two-gps-coordinates-in-javascript-3f13",
@@ -321,30 +209,6 @@
       "feedName": "＠IT"
     },
     {
-      "id": "ed16663084f385757932fa4da48b91175cc2a4a1cf164d7fe14b3808a30c5bc6",
-      "title": "【FinOps Agent】身に覚えのない請求の調査を任せてみる",
-      "url": "https://qiita.com/ryu-ki/items/94c478b2642ac525c6c4?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "この記事は「2026 Japan AWS Jr. Champions 真夏のQiitaリレー」の10日目の記事となります。\n過去の投稿（リンク集）・昨日の投稿は以下リンクからご覧ください。\n\nはじめに\n8月に入ってすぐ、AWS Budgetsから予測アラ...",
-      "publishedAt": "2026-08-10T00:50:17.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "6a1435482a1c730435b83642b8cce7c52d19b47b2f0eef3569a97492cfa4e828",
-      "title": "富士山登頂記念に、AWS Blocks という山も少しずつ登ってみる（第1弾：五合目から八合目の山小屋へ ── 「地名→標高」アプリをローカル完結で）",
-      "url": "https://qiita.com/ShikoMaehara/items/6a8adc79a26b23a128ff?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "本記事は、BIPROGY / ユニアデックス社内AWSコミュニティ「BIPROGY AWS SPARK」の定期投稿企画第11回目の記事です。他の定期投稿企画の記事は、インデックスページをご覧ください。\n\n（麓からの写真です。雪のように見えますが、「雲」です。）\n先日...",
-      "publishedAt": "2026-08-10T00:00:16.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "15eef98b90990de94dd3b4f9525aab76784c6773b0f8d646723cc890af373fd0",
-      "title": "ECSネイティブBlue/Greenで「切替後に旧環境を残して、確認できたら落とす」をやる — PAUSEフックの置き場所について",
-      "url": "https://qiita.com/Omizu-25/items/5157a01639c31d60ad7a?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "はじめに\nこんにちは！KDDIアイレット株式会社の水野 永遠です。\nこの記事は「2026 Japan AWS Jr. Champions 真夏のQiitaリレー」の9日目の記事となります。\n過去の投稿（リンク集）はこちらからご覧ください。\n\n2025年7月17日、A...",
-      "publishedAt": "2026-08-09T08:25:05.000Z",
-      "feedName": "Qiita"
-    },
-    {
       "id": "5a25e17baaa8e2541c4985aa88817abc72d3e215a9ed5f2cc358ceec4053c2f5",
       "title": "Beyond Words: Tracking Depression Risk Trends Using Wav2Vec 2.0 and FastAPI 🧠🎙️",
       "url": "https://dev.to/wellallytech/beyond-words-tracking-depression-risk-trends-using-wav2vec-20-and-fastapi-4ok1",
@@ -518,14 +382,6 @@
       "url": "https://zenn.dev/knowledgework/articles/29b2b09ac70350",
       "description": "こんにちは。特撮熱が爆上がり中のbun913と申します。\n2026年8月より株式会社ナレッジワークでQAエンジニアとして働き始めました。\n早速ですが、皆さんは SQL Injection について理解は深いですか？特定の職種でない限り実際に SQL Injection について、非常に深い知識を持っている方は少ないと思います。\n私も普段はQAエンジニアとして活動しており、プロダクトの機能面だけでなく非機能面でもプロダクトやチームメンバーの力になりたいと思い、セキュリティについて学習中です。\n例えば、以前は HTTP リクエストスマグリング という攻撃手法について記事を書きました。\nhtt...",
       "publishedAt": "2026-08-10T06:00:05.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "e684098341fa2f01ef641ebf42e00be9f4df7fd6b0630eb820d747659713abf0",
-      "title": "Next.js + Cloudflareで「サボる」ためのWebツール集を個人開発した",
-      "url": "https://zenn.dev/ikuosaito1989/articles/47a9b4d4177d87",
-      "description": "個人開発で neglegere（ネグレゲレ） というWebサービスを作っています。\nhttps://neglegere.com/\nコンセプトは、\n\n地味に時間を取られる作業を少しだけ任せて、大事なところに力を残す\n\nです。\n最初は、自分の声を使って文章を読み上げる「AIボイス」から始めました。\nそこから、\n\n音声加工\n背景除去\n画像変換\nPDF\nOCR\n読み上げ\n電子サイン\nマイク\nカメラ\nrPPG\nAI要約\n文字起こし\n\nなど、ブラウザでできそうなものを少しずつ増やしています。\n現在は主に、\n\nAIボイス\n鬼ボイス\n背景メーカー\n画像変換\n音読アシスト\n手書き電子サイン\nことばレンズ\n...",
-      "publishedAt": "2026-08-10T01:59:52.000Z",
       "feedName": "Zenn"
     },
     {
@@ -6606,6 +6462,285 @@
       "url": "https://qiita.com/keikeigo/items/3950c3ad50d659a1253d?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
       "description": "はじめに\nNext.jsのCDパイプラインを作成しました。\n現在、受託開発を行なっていて、Vercelにデプロイしたいが依頼者のVercelアカウントにログインすることはできない。Teamにメンバーとして参加する方法もあるようだが、一人につき20ドル必要。\n個人開発の時の...",
       "publishedAt": "2026-09-05T00:42:15.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "2f133062c8cd52a107e98a659088052c97f0d4430109f8ac4b036254ef04036a",
+      "title": "[登壇レポート] 勉強会opsmethod#4 「コスト最適化の「めんどくさい」を AWS FinOps Agent でチョット楽にする」というタイトルで登壇しました",
+      "url": "https://dev.classmethod.jp/articles/20260908-opsmethod4-cost-optimization-with-aws-finops-agent/",
+      "description": "AWS FinOps Agent を使ったコスト最適化の効率化について、勉強会での登壇内容をご紹介します",
+      "publishedAt": "2026-09-09T03:05:18.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "10a55d76747ad648ddb8561ba3b562d812aa27567a1572eb679379fa8f153fde",
+      "title": "NocoBase を Docker Compose でローカルで動かしてみよう！ 公式手順だけでは見落とす、後から変えにくい設定",
+      "url": "https://dev.classmethod.jp/articles/nocobase-docker-compose-local/",
+      "description": "NocoBase を Docker Compose でローカルに立てる手順を、公式ドキュメントに沿って最後まで通します。あわせて、バージョン・データベース・タイムゾーン・ボリュームという、公式手順だけでは見落としがちで後から変えにくい設定について、何を基準に決めるかを整理しました。",
+      "publishedAt": "2026-09-09T03:03:17.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "2b7e6b14e7b06b6cb0e9b26f4c94d23e325cd6006de42686fe308b9874819a3c",
+      "title": "A beginner's guide to the Qwen3.8-Flash-Next model by Qwen on Huggingface",
+      "url": "https://dev.to/aimodels-fyi/a-beginners-guide-to-the-qwen38-flash-next-model-by-qwen-on-huggingface-5aip",
+      "description": "This is a simplified guide to an AI model called Qwen3.8-Flash-Next maintained by Qwen. If you like these kinds of analysis, you should join AImodels.fyi or follow us on Twitter.\nQwen3.8-Flash-Next is an experimental open-weight causal language model with a vision encoder from Qwen. It targets coding agents, long-horizon tool use, multimodal computer tasks, multilingual software engineering, and reasoning. The most important point before adoption is that this is an architecture preview intended to underpin Qwen4, not the production-hosted Qwen3.8-Flash service: the hosted version adds production features such as 1M-token context by default and official built-in tools. The model has 125B total language-model parameters with 6B activated, plus 51B n-gram embedding parameters and 4B multi-token-prediction parameters. It provides 262,144 native context tokens and can extend to 1,000,000 tokens. The repository supplies post-trained weights and configuration in Hugging Face Transformers format, with compatibility listed for Transformers, vLLM, SGLang, TokenSpeed, and other serving systems. The model card lists the license as other; it does not provide terms that establish commercial-use rights, so legal review is required before commercial deployment.\nLong-horizon coding agents. The model suits repository-level coding, debugging, test execution, and tool-driven software work. It scores 62.5 on SWE-bench Pro, 81.0 on SWE-bench Multilingual, 58.7 on DeepSWE 1.1, and 91.9 on LiveCodeBench v6. Its 256K evaluation context, sparse attention design, multi-step training, and agent-oriented post-training support workflows that require reading large repositories, planning changes, invoking tools, and recovering from failures.\nMultilingual software engineering. Choose it for coding tasks across multiple programming-language and natural-language environments. Its 81.0 SWE-bench Multilingual score exceeds the listed results for Qwen3.8-27B at 73.8 and Qwen3.7-Plus at 75.8. The model’s general instruction-following score of 81.3 and competitive-coding score of 91.9 also support structured implementation and problem-solving tasks.\nTool-using productivity agents. The model performs well on office and professional workflows that require multiple actions rather than a single answer. It scores 73.9 on CoWorkBench, 55.7 on JobBench, 51.2 on Agents’ Last Exam, and 73.5 on Toolathlon Verified. These results make it a candidate for research assistants, document workflows, finance or legal task automation, and other systems that combine reasoning with external tools. The model card warns that reducing reasoning effort can lower total completion time in multi-turn agents by causing failures and retries, so per-turn latency is not the only performance metric.\nMultimodal computer-use systems. The vision encoder and multimodal benchmark results support tasks such as navigating Android applications, recreating applications across desktop, mobile, and web platforms, analyzing charts, and solving visual mathematics. It scores 84.5 on AndroidWorld, 19.4 binary and 52.3 partial on OSWorld 2.0, 49.9 on RecreationBench, 64.0 on Vision2Web, and 88.5 on RealWorldQA. These results favor research systems that connect screenshots or visual documents to actions and structured responses.\nScientific and visual reasoning. The model scores 91.7 on GPQA Diamond, 35.9 on HLE, 90.6 on MathVision without CI and 95.7 with CI, and 84.6 on CharXiv without CI and 90.6 with CI. It can support chart interpretation, visual math, scientific question answering, and multidisciplinary analysis. The HLE result remains below Claude-Opus-4.6 (Max) at 40.0, so it should not be treated as the strongest option for every frontier reasoning task.\nThe model is large despite its low 6B activated count. The 125B language-model weights, 51B n-gram embedding parameters, and 4B MTP parameters create substantial storage and memory demands. The provided material gives no VRAM requirement, quantization size, measured tokens-per-second result, latency figure, or recommended batch size. Do not infer hardware capacity from the activated-parameter count: n-gram embeddings and inactive weights still affect deployment memory, while framework implementation determines how much can be offloaded.\nThe model has a native context length of 262,144 tokens, with extension up to 1,000,000 tokens. The repository does not state the quality or speed behavior at the extended limit. Long context also increases serving complexity, and the model card provides no end-to-end latency measurements. Qwen claims that Qwen Sparse Attention reduces long-context latency, but the supplied information does not quantify the reduction.\nBenchmark results show uneven strengths. Qwen3.8-Flash-Next leads the listed models on many agentic, coding, instruction-following, and multimodal rows, but it does not lead every task. On NL2Repo-Bench it scores 48.1, below DeepSeek-V4-Flash-0731 at 54.2. On HLE it scores 35.9, below Claude-Opus-4.6 (Max) at 40.0. On CharXiv without CI it scores 84.6, below Qwen3.7-Plus at 85.8, although its with-CI score is 90.6. Benchmark harnesses, prompts, temperatures, and judges differ, so these numbers do not establish universal quality rankings.\nThe model operates in thinking mode by default and emits content in <think>\\n...\\n</think>\\n\\n before the final response. This can increase output length, cost, and latency. Non-thinking mode exists, but the supplied material does not include the actual disabling code. Sampling-parameter support varies by inference framework.\nThe license is listed only as other. No license terms appear in the supplied README, so commercial use, redistribution, modification, and hosted-service obligations remain unresolved. The model card also does not provide a detailed bias, safety, privacy, or misuse analysis. Teams need their own evaluation and policy controls.\nQwen3.8-Flash-Next-GGUF\n\n\nPick Qwen3.8-Flash-Next when you need the original Transformers-format weights and direct compatibility with Transformers, vLLM, SGLang, or TokenSpeed. Pick the GGUF alternative when local deployment through GGUF-compatible tooling and quantization matter more than retaining the original weight format. The supplied information does not provide quantized file sizes, quality deltas, VRAM requirements, or speed measurements, so it cannot establish a numeric cost or accuracy advantage.\nQwen3-Coder-Next\n\n\nPick Qwen3.8-Flash-Next for a broader multimodal and agentic system: it includes a vision encoder, reaches 1M-token extensibility, and reports strong computer-use and visual-reasoning results. Pick Qwen3-Coder-Next for coding-agent and local-development workloads when its specialized design and 3B activated parameters are the priority. The key tradeoff is general multimodal breadth and higher reported agent scores versus a smaller, coding-focused deployment profile.\nQwen3.6-35B-A3B\n\n\nPick Qwen3.8-Flash-Next when its reported coding-agent, tool-use, long-context, and multimodal capabilities justify a larger deployment. Pick Qwen3.6-35B-A3B when a smaller 35B-total, 3B-activated model better fits local serving constraints. The supplied benchmark table does not include Qwen3.6-35B-A3B, so no direct quality, speed, or cost comparison is available.\nQwen3.8-2.4T-A95B\n\n\nPick Qwen3.8-Flash-Next when you need a much smaller open-weight model with 6B activated parameters and a practical path to self-hosting. Pick Qwen3.8-2.4T-A95B when maximum model capacity is more important than infrastructure cost and complexity. The supplied information gives no shared benchmark results, latency data, or pricing, so the tradeoff can be stated only as model scale versus deployment burden.\nQwen3.5-35B-A3B\n\n\nPick Qwen3.8-Flash-Next for the newer experimental architecture, 125B total parameters with 6B activated, 262K native context, and the listed multimodal agent results. Pick Qwen3.5-35B-A3B when its 35B-total, 3B-activated profile offers a better fit for constrained infrastructure. The supplied material does not include direct benchmark, speed, pricing, or VRAM comparisons.\nQwen3.8-Flash-Next uses a causal language model with a vision encoder and includes both pre-training and post-training. Its architecture is an experimental preview for Qwen4.\nTotal language-model parameters: 125B.\nActivated language-model parameters: 6B.\nN-gram embedding parameters: 51B.\nMTP parameters: 4B.\nHidden dimension: 2,560.\nToken embedding size: 248,320, padded.\nN-gram embedding table: 20,000,000 entries, using bigrams and trigrams at layer 2.\nLayers: 48.\nHidden layout: 12 repetitions of three Gated DeltaNet-to-MoE blocks followed by one Qwen Sparse Attention-to-MoE block.\nGated DeltaNet: 48 linear-attention heads for V, 16 for QK, head dimension 128.\nQwen Sparse Attention: 24 Q heads, 2 KV heads, head dimension 256, rotary position-embedding dimension 64.\nQSA indexer: MQA with 4 query heads and 1 shared key head; indexer head dimension 128.\nQSA budget: 512 blocks or 2,048 tokens.\nMoE: 512 experts; 10 routed experts plus 1 shared expert activated; expert intermediate dimension 640.\nGated Residual: 4 branches; bottleneck rank 320.\nLM output size: 248,320, padded.\nMTP: one layer trained with multi-steps.\nContext: 262,144 tokens natively; extensible to 1,000,000 tokens.\nModel format: Hugging Face Transformers weights and configuration.\nListed serving compatibility: Hugging Face Transformers, vLLM, SGLang, TokenSpeed, and other compatible systems.\nRecommended production serving engines: SGLang, KTransformers, or vLLM.\nTraining recipe: Muon and AdamW applied to specific weight categories; batch-size warmups removed; training starts at the target batch size; refitted scaling laws support larger learning rates and fewer optimizer steps.\nArchitecture innovations: QSA selects micro-blocks rather than individual tokens; Gated Residual uses an element-wise data-dependent read gate and per-branch scalar write gate; n-gram embeddings provide a parameter-scaling path designed for offloading and memory-constrained accelerators.\nRepository downloads shown in the supplied metadata: 2,551.\nPipeline tag: image-text-to-text.\nLibrary metadata: transformers.\nModel tag: Text-to-Text.\nLicense metadata: other.\nThe README provides no training-dataset name or size, training-step count, compute budget, VRAM requirement, quantization specification, measured inference speed, or pricing.\nText prompts for causal language-model generation.\nMultimodal inputs supported by the model type and image-text-to-text pipeline designation.\nContext up to 262,144 tokens natively.\nContext extension up to 1,000,000 tokens.\nMulti-turn conversations and agent trajectories.\nTool-use workflows, when the surrounding serving or application framework supplies tools.\nThinking-mode generation by default.\nSampling parameters for thinking mode: temperature=1.0, top_p=0.95, top_k=20, min_p=0.0, presence_penalty=0.0, repetition_penalty=1.0.\nSampling parameters for instruct or non-thinking mode: temperature=0.7, top_p=0.80, top_k=20, min_p=0.0, presence_penalty=1.5, repetition_penalty=1.0.\nGenerated text from a causal language model.\nThinking-mode output containing <think>...</think> before the final response.\nFinal natural-language answers, code, plans, tool arguments, and agent actions as determined by the application.\nVision-conditioned text responses for image-text-to-text workflows.\nThe model card does not define a universal tool-call schema or built-in tool set for this open-weight release.\nApplications that expose thinking content should parse or filter the <think> section before presenting the final answer.\nThe supplied README does not include a complete Python loading and inference example. It recommends API use for streamlined integration and lists deployment recipes for SGLang, vLLM, and TokenSpeed. For production or high-throughput workloads, use a dedicated serving engine and consult the framework-specific recipe. The official hosted service is Qwen Cloud; the hosted Qwen3.8-Flash version adds production features beyond this preview.\nQ: Can I use Qwen3.8-Flash-Next commercially?\nA: The metadata lists the license as other, but the supplied README does not state the license terms. Do not assume commercial permission; obtain and review the applicable license before deployment.\nQ: How much VRAM does Qwen3.8-Flash-Next require?\nA: No VRAM requirement is provided. The model has 125B language-model parameters, 51B n-gram embedding parameters, and 4B MTP parameters, so the 6B activated count does not describe total storage or memory needs.\nQ: What context length does it support?\nA: It supports 262,144 tokens natively and is extensible to 1,000,000 tokens. The README does not provide quality or latency measurements for the extended range.\nQ: Does it accept images?\nA: The model type includes a vision encoder, and the metadata uses the image-text-to-text pipeline tag. The supplied material does not specify image resolution, image file formats, preprocessing rules, or a complete multimodal code example.\nQ: Is thinking enabled by default?\nA: Yes. The model emits <think>...</think> content before the final response. The README provides separate sampling recommendations for thinking and instruct or non-thinking modes, but the supplied excerpt does not include the code for disabling thinking.\nQ: Which framework should I use for serving?\nA: The weights and configuration use Hugging Face Transformers format and are listed as compatible with Transformers, vLLM, SGLang, and TokenSpeed. For production or high-throughput serving, the README recommends SGLang, KTransformers, or vLLM.\nQ: How fast is inference?\nA: The supplied information gives no tokens-per-second or latency measurements. Qwen claims that QSA cuts long-context latency by selecting micro-blocks rather than individual tokens, but the README provides no numeric comparison.\nQ: Is this the same as the hosted Qwen3.8-Flash model?\nA: No. Qwen3.8-Flash is the official hosted version based on this architecture preview and adds production features, including 1M-token context by default and official built-in tools.\nQ: Can I fine-tune it?\nA: The repository provides post-trained Transformers weights and configuration, but the supplied material does not document a fine-tuning recipe, supported parameter-efficient method, or hardware plan. Transformers compatibility provides an integration path, not a confirmed fine-tuning procedure.\nQ: Where can I read the related research?\nA: The Qwen3 technical report is available through the Qwen3 technical report. The model README also identifies a Qwen3.8-Flash-Next technical report, but no internal link for that report is provided here.\nClick here to read the full guide to Qwen3.8-Flash-Next",
+      "publishedAt": "2026-09-09T03:02:40.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "5879b4cb0600892d083e842ce9b41e6122666cc73d6c5f3f984c0d45fc58cb68",
+      "title": "React Context Is Not State Management: Stop Using It",
+      "url": "https://dev.to/nainikmehta/react-context-is-not-state-management-stop-using-it-4i3l",
+      "description": "The Architectural Trap: Why React Context Isn't a State Manager\n\n\nIn the modern React ecosystem, \"prop drilling\" is often cited as the ultimate developer productivity killer. To solve it, many teams reflexively reach for React Context. It’s built-in, it’s easy to use, and it seems to solve the problem of passing data through deeply nested component trees.\nHowever, after auditing dozens of enterprise-grade React codebases, I have identified a recurring architectural pattern that is quietly crippling application performance: using React Context as a high-frequency state management tool.\nIt is time to clarify a fundamental truth: React Context is a dependency injection tool, not a state manager. When you use it for the wrong purpose, you aren't just writing messy code—you are creating a performance bottleneck that will eventually choke your main thread.\nTo understand why Context fails under high-frequency updates, we have to look at how React handles re-renders. When a value provided by a Context.Provider changes, React notifies every single component that consumes that context.\nCrucially, this process bypasses React.memo. If your component consumes a context, it will re-render whenever the context value changes, regardless of whether the specific data the component cares about has actually changed.\nThe most common mistake I see involves passing an object literal directly into the provider:\n// The Anti-Pattern\n<Context.Provider value={{ state, dispatch }}>\n  {children}\n</Context.Provider>\n\nBecause React uses Object.is for reference equality checks, the object { state, dispatch } is re-created on every single render of the parent component. Even if state hasn't changed, the reference has. This forces a massive, unnecessary cascade of re-renders across your entire component tree.\nWe recently audited an enterprise dashboard featuring a complex form with 50+ fields. Users reported that typing in the fields felt sluggish and unresponsive. After profiling the application, we found the update latency was a staggering 250ms per keystroke.\nBy migrating the high-velocity UI state from a monolithic React Context to Zustand, we achieved a dramatic improvement. Zustand leverages atomic, selector-based subscriptions. This means that when a user types in a single input field, only that specific component re-renders. \nThe result? Update latency dropped from 250ms to a buttery-smooth 12ms.\nReact Context is not \"bad\"—it is simply a specialized tool. It excels at managing low-velocity global data that rarely changes.\nHere is the rule of thumb I recommend for your architecture:\nLow-Velocity Data Only: Use Context for data that changes infrequently, such as UI themes, user authentication status, or locale settings.\nSplit Your Contexts: If you must use Context for state, split your providers. Separate your StateContext from your DispatchContext. This ensures that components only interested in calling a dispatch function do not re-render when the state changes.\nExternal Stores for High-Frequency Data: For anything that changes on every keystroke, mouse movement, or real-time data stream, move that state into an external store like Zustand or Jotai. These libraries utilize useSyncExternalStore under the hood, providing a performant, predictable way to manage state without triggering global re-renders.\nAs we move through 2025, the complexity of our frontends continues to grow. We need to be more disciplined about our architectural choices. Stop using React Context as a catch-all solution. Your users deserve a responsive interface, and your main thread deserves a break.\nWhat is your go-to state management tool for React apps in 2025? Let’s discuss in the comments.",
+      "publishedAt": "2026-09-09T03:01:52.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "c590e1037b981804b33a3afe2e54e9c0f52ead4473734686cce81f0586f10449",
+      "title": "A PDF Exporter With No PDF Library",
+      "url": "https://dev.to/megapixel99/a-pdf-exporter-with-no-pdf-library-2hb9",
+      "description": "Longshot, a Firefox screenshot extension I have been building, exports to PDF. The exporter is 336 lines and pulls in nothing. That is not a boast about writing things from scratch, which is usually a bad reason to do anything; it is that the two jobs a PDF library would do here are both already done by the browser, and once you notice that, the remaining work is smaller than the dependency would have been. The code is not public, so this is a description rather than an invitation to read it.\nA PDF stores image data in a stream with a named filter, and the filters that matter here are /DCTDecode and /FlateDecode.\n/DCTDecode means \"this stream is a JPEG bitstream\". The viewer decodes it; a JPEG goes into the file verbatim, byte for byte, with no re-encoding and no image codec to ship. The browser already produced the JPEG.\n/FlateDecode means \"this stream is zlib-wrapped deflate\". CompressionStream('deflate') is native, and what it emits is zlib-wrapped deflate. Not deflate that needs a header bolted on, and not raw deflate: precisely the thing FlateDecode names. So there is no zlib to bundle either.\nThose two facts are why the exporter is small, and they are worth stating as facts about the formats rather than as cleverness. PDF's filters were specified around image and compression formats that were already standard in 1993, and the browser platform, decades later, exposes those same two formats through canvas.toBlob and CompressionStream. Nobody coordinated that. It just means an exporter written today can hand both straight through.\nIt also means the honest claim here is narrow. A general PDF library does typography, fonts, vector graphics, encryption, forms, incremental updates and a hundred other things. This one puts images on pages and adds an invisible text layer. Saying \"no dependency\" is only meaningful alongside saying what the dependency would have been for.\nEvery PDF ends with a cross-reference table: one entry per object, each entry a byte offset into the file. A viewer reads the table first and seeks. One wrong offset makes the whole document unreadable, and it does so in the worst possible way, because all the bytes are present and correct and simply unfindable. Nothing higher up notices; the image is there, and so is the text layer. The file is 1.4 MB of perfectly good data with a broken index.\nThe failure mode you get from a mistake like that is not a crash during export. It is a file that a user saves, keeps, and opens three weeks later.\nTwo things follow. The file is assembled as bytes and measured, never estimated from string lengths, because the moment an offset comes from a .length on something that has not been encoded yet, the number is a guess that happens to be right for ASCII.\nAnd the test does not check that a cross-reference table exists, or that it has the right number of entries, or that the offsets are plausible. It follows them: for each entry, seek to the offset it claims and confirm the object it points at is the one it is supposed to be. There are 21 assertions in that suite, and this is the one that would have caught the mistake worth catching.\npdf.js deliberately touches no canvas APIs. Everything to do with a canvas lives in a separate 115-line bridge.\nThat split is the only reason the byte-level testing above can happen in Node at all. A PDF writer that reached for canvas.toBlob internally would need a browser to run, which would put it behind the same wall as the print pipeline and the OCR chain, both of which need a real DOM and are covered by a browser harness instead. Keeping the byte assembly pure was not a purity exercise; it moved the component that can silently corrupt a file into the environment where it is cheapest to check.\nThat is a decision I would make again and did not make for the right reason the first time. It started as tidiness.\nTall captures split at page height rather than becoming one enormous page. A 30,000-pixel single page is valid PDF and practically useless: it cannot be printed, and most viewers scale it to illegibility. Valid and useless is a combination worth watching for in any format with generous limits.\nThe invisible OCR layer uses text render mode 3, which draws nothing while remaining selectable and searchable, with Tz horizontal scaling so a selection tracks the pixels underneath it. The font is base-14 Helvetica, WinAnsi-encoded, so Latin scripts only. Characters it cannot represent are dropped rather than written out as mojibake, on the grounds that a searchable layer containing wrong characters is worse than one containing fewer.\nThat last choice pairs with a related one in the OCR stage: words recognised below 60% confidence are discarded. A searchable layer is only useful if searching it finds the right thing, and OCR noise makes a search land on words that were never on the page. Both decisions trade completeness for the property people actually rely on.\n\"No dependencies\" is a description of effort until you can say what the dependency would have done, and both halves of that sentence have to be checkable. Here the answer is that a PDF library would have shipped a JPEG encoder and a zlib implementation, and the browser exposes both formats natively, so the honest version of the claim is that the platform already had the two pieces and the rest is 336 lines of file assembly.\nThe corollary is the more useful part. When a dependency turns out to be replaceable by something already present, the risk does not disappear, it moves. Here it moved into the cross-reference table, which is the one structure in the file with no redundancy and no way to self-check. That is where the test needed to be, and finding it meant asking which part of the output could be wrong in a way that nothing downstream would report.",
+      "publishedAt": "2026-09-09T03:00:00.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "b34afc8b508c3757a077a4c681f020e8b79ce6d457405f38192d65c9c29ec298",
+      "title": "AI を活用したスキャフォールディングで、フルスタックの AWS アプリケーションを数分で構築する",
+      "url": "https://aws.amazon.com/jp/blogs/news/build-full-stack-aws-applications-in-minutes-with-ai-powered-scaffolding/",
+      "description": "本記事は「Build full-stack AWS applications in minutes with […]",
+      "publishedAt": "2026-09-09T02:50:02.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "e4040feeb730e65ac17eebe766d502278f8e56622cb0d51620553ce6249732e1",
+      "title": "「四半期ごとのパッチ適用」はもう許されない　AWSが「フロンティアAI対策9項目」のポイントを解説",
+      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2609/09/news043.html",
+      "description": "高度な技術を持たない攻撃者であっても、生成AIや公開コードを活用して迅速にサイバー攻撃を実行できる時代に突入している。こうした中AWSは、金融庁と日本銀行が金融機関に求めた9つの短期的対応について、同社のサービス・機能がどう役立つかを整理して解説した。",
+      "publishedAt": "2026-09-09T02:30:00.000Z",
+      "feedName": "＠IT"
+    },
+    {
+      "id": "f59861242638f0e808faa1aa73d9e64ab9f229ad5f0c9d19b89cd60d01332990",
+      "title": "マルチリポジトリの共通PythonパッケージをAWS CodeArtifactでいい感じに配布する設計をまとめてみる",
+      "url": "https://dev.classmethod.jp/articles/codeartifact-shared-packages/",
+      "description": "複数のサービスを別々のリポジトリで開発する際、共通Pythonパッケージの共有をどう実現するか。コピー配置の破綻、Submoduleの手間、monorepoの過去の失敗を経て、AWS CodeArtifactをプライベートレジストリとした「いい感じに」管理する設計を紹介します。",
+      "publishedAt": "2026-09-09T02:00:06.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "2434e021034bdd2416030a465df8463f37e973b4d8aa9355c91da926ecd7cd9f",
+      "title": "警察庁と日本マイクロソフトが「サイバー対策」で協定--その中身とは",
+      "url": "https://japan.cnet.com/article/35252422/",
+      "description": "警察庁と日本マイクロソフトは9月7日、「官民連携によるサイバー事案対策の推進に関する協定」を締結した。両者は、サイバー事案の未然防止や被害拡大の防止、捜査に役立てるために情報を共有する。あわせて、子どもたちへのセキュリティ教育でも協力する。",
+      "publishedAt": "2026-09-09T01:30:00.000Z",
+      "feedName": "CNET Japan"
+    },
+    {
+      "id": "c0da59c299606c31371098d9789f05d664b558adbd47acc9361c4dc20936178b",
+      "title": "エージェンティックセキュリティ: マシンスピードでの検出と対応",
+      "url": "https://aws.amazon.com/jp/blogs/news/agentic-security-detection-and-response-at-machine-speed/",
+      "description": "自律型 AI エージェントの台頭は、セキュリティポスチャにとってクラウドへの移行以来最大の変化です。本記事では、SANS Institute と共同執筆した 2026 Cloud Security Exchange eBook の章から、エージェントのアイデンティティとガバナンス、振る舞いの監視とオブザーバビリティによる検出の進化、段階的な自動対応、マルチエージェントエコシステムへの備えという 4 つの基礎領域を紹介します。Amazon GuardDuty、Amazon Inspector、AWS Security Hub を活用し、マシンスピードでの検出と対応を実現する実践的なフレームワークを解説します。",
+      "publishedAt": "2026-09-09T01:29:18.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "142215a9e52ff694e9ce77b8a61f075712fa857bdfafdfe8584a92e6f4d86e8c",
+      "title": "【アジャイルFAQ 第1回】AI時代に問い直す！本当に必要？スクラム基礎の「意味」と「価値」",
+      "url": "https://developer.mamezou-tech.com/blogs/2026/09/09/1-do_we_still_need_scrum/",
+      "description": "連載をはじめるにあたって\n#\n この記事を読んでいただきありがとうございます。アジャイルグループに所属する、藤井智弘です。\n 「豆蔵最後のアルバイト」という謎の肩書でお客様を煙に巻きながら、日々研修やご支援に従事している中で、同じような質問を何年にも渡って繰り返しいただいてきました。アジャイル開発が世に出て30年近い年月が経ち、実践者の世代交代が進んでいるので、かつて議論し尽くされた（かに見えた）質問が、打者一巡よろしく繰り返し話題にのぼるのも当然とも思います。\n 対象となる読者像は、以下のように設定しました。\n研修や専門書での学習によって、「スプリントってなに？」という基本的な用語レベルは知っている\n新年度になってスプリントを回し始めて数ヶ月、「これでいいんだっけ？」という引っかかりが溜まりはじめた\n基礎を学んだ方がもう一歩…「知っているのに、現場でうまくいかないのはなぜか」…掘り下げて考える機会を作ろうということがねらいです。\n 実際にいただいた質問を起点にしているので、タイトルを見ると「開発者視点」と思われそうですが、「アジャイルに関わる人であれば知っておいたほうが良い内容」を意識しました。ですので、チームを率いるリーダーや、発注側・経営側としてスクラムのチームと向き合う立場の方もお付き合いください。\n 本題に入る前に、お断りを３ついれさせていただきます。\n「正解」ではなく「選択肢」。\n「AIツールの具体的な使い方」の開設ではありません。\n餅は餅屋、法的なことは専門家にまかせる。\n 少々前置きが長くなりました。初回のFAQには、いままさに研修や導入支援の場で受けることが増えている、この時代ならではの質問を選びました。\n質問\n#\n AIがコードを書き、テストを書き、設計案まで出してくれる時代です。開発のスピードは桁違いに上がりました。正直なところ、いまさらスクラムの基礎を学ぶ意味はあるのでしょうか？　スプリントで区切って人間が見積りや振り返りをするのは、AIのスピードの前では、“儀式”に見えます。\n回答\n#\n 学ぶ意味はあるし、重要性はむしろ増しているとさえ思います。なぜなら、スクラムが管理しているのは「作るスピード」ではなく「進むべき方向」だからです。\nAIが速くしたもの、しなかったもの\n#\n まず、冷静に仕分けをしましょう。生成AIが確かに変えたのは、実装・テストコード作成・定型設計・調査といった「どのように作るか」の領域です。ここが数倍（いやもっとかな？）速くなったという主張に異論はありませんし、私自身実感してもいます。\n では、次の問いはどうでしょうか。\nこの機能は誰のどんな業務課題を解決するのか。\nリリースした結果、狙った効果は出たのか。\n出なかったとして、次に何を変えるのか。\nチームの今のやり方は機能しているか…。\n これらは、人が主体的に意思決定するテーマであり、AIは答えを持っていません。もっともらしい答えの文章は生成してくれますが、その検証責任は人に残ります。そしてお気づきの通り、「何を作るか」「作った結果から何を学ぶか」「チームでどう検査と適応を回すか」は、アジャイルがこの30年間一貫して問うてきたことそのものです。AIは、アジャイルが担ってきたこれらの問いを何ひとつ引き受けてくれていない。むしろ、問いに向き合わないまま作れてしまうスピードだけが上がったのです（少なくともこれまでのところは）。\n“AIいいなり開発”という新しくて古い病気\n#\n その帰結として、現場で目にするようになった光景があります。AIの生成物を、十分な検証もせず、その意図を理解もせずただ丸呑みして積み上げていく開発…「それじゃぁ『AIいいなり開発（AI-Dictated-Development）』じゃないか！」と叫びたくなる姿です。本来の「AI駆動開発（AI-Driven-Development）」とは似て非なるものです。\n\n AIいいなり開発の特徴は、一つひとつの成果物がもっともらしいことです。コードは動き、テストは通り、ドキュメントは整っている。問題は、その全体が誰の何のために作られたのか、誰も満足に説明できないことです。検証されていない仮定の上に、検証されていない生成物が高速に積み上がっていく。従来なら数ヶ月かかった「間違った方向への行軍」が、数週間で再現できるようになりました。\n しかし、これは新しい病気ではありません。「要件定義書に書いてあったから作りました」「言われた通りに作りました」——意図を問わない開発は昔からありました。AIはそれを高速化し、かつ「作った感」で覆い隠すのがうまくなっただけです。\n 診断が同じなら、処方も同じ系統です。\nスクラムの基礎は、AIの出力に対してこそ効く\n#\n この連載で扱う基礎を、AIの文脈に置き直してみます。\n宛先と目的を問う習慣は、「このコードは誰の何のためか」(fig002)をAIの出力に対しても問わせます。生成物がもっともらしいほど、この問いだけが人の仕事として残ります\n\n小さく完成させて検査するリズムは、生成されたものを鵜呑みにせず、動かして・使わせて・学ぶ機会を強制的に確保します。スプリントは「人間が遅いから区切る」のではなく、「学習のリズムを設ける」ための仕組みなので、生成が速くなっても不要にはなりません。むしろ検証すべき生成物が増えた分、検査のリズムの価値は上がります\n計測と記録の規律は、「AIで速くなった気がする」を検証可能な事実に変えます。リードタイム（着手から届くまでの時間）は本当に縮んだのか、手戻りは増えていないか。道具の評価もまた、検査と適応の対象です\n 逆に、変わってよいものもあります。スプリントの長さ、見積りのやり方、ドキュメントの作り方…これらはスクラムの進行を調整する“運用パラメータ”であり、AIによって最適値が変わり得ます（この「基本」と「運用パラメータ」の区別は、次回以降の各論でも繰り返し登場します）。生成が速いなら、スプリントはもっと短くできるかもしれない。見積りの議論は、作って確かめる方が速い場面が増えるかもしれない。パラメータは大胆に見直してください。この技術の大変革の時代に、「批判精神なき前例踏襲は、“罪”」です。\n そして、ここまで説明した検査と適応のループそのものを外した瞬間、残るのは「高速ないいなり」です。\nなぜ、新しい技術が生まれるたびに、似たような質問が繰り返されるのか\n#\n 「新しい道具が来たから、プロセスの基礎はもう不要では？」という問いは、実はAIが初めてではありません。CASEツール（設計図からコードを自動生成する1980〜90年代のツール群）が自動生成する、RAD（試作を繰り返して短期間で作る1990年代の開発手法）で開発が桁違いに速くなる、ローコードでプログラマーが不要になる…新しい道具が現れるたびに、同じ問いが再演されてきました。打者一巡どころか、これはもう何巡目かの打席です。\n そして毎回、結論も同じでした。道具は「どのように作るか」を変え、ときに劇的に改善する。しかし「何を作るべきか」「作った結果から何を学ぶか」は道具の外に残り続け、そこを疎かにしたプロジェクトは、速い道具で速く失敗した…。\n AIが過去の道具と規模の違う変化であることは認めます。だからこそ、と言うべきでしょう。道具が強力になるほど、ハンドルを握る側の基礎が問われます。本連載がこれから扱うのは、そのハンドルの握り方です。\n\n今後の予定\n#\n 次回以降の予定ですが、タイトルと順序を以下に列挙しておきます。\n第2回: 保守運用チームにスクラムは合わないのでは？\n第3回: アップグレード案件の「現行機能保証」にどう向き合う？\n第4回: 更改案件の見積を、全機能を確定せずにどう出す？\n第5回: ドキュメントが信用できない現行システム、何を『仕様』にして検証する？\n第6回: デイリースクラムが進捗報告会になっています\n第7回: レトロスペクティブが機能しません…同じ改善案の再放送と、ToDoの列挙会\n第8回: スプリントレビューにステークホルダーが来なくなりました\n第9回: ストーリーポイントの人日換算を上司に求められます\n第10回: ベロシティが安定しません。計画に使っていいの？\n第11回: スプリント内に終わらないタスクが毎回出ます\n第12回: 割り込み作業はどう計画に入れる？\n第13回: POが多忙でチームに来ません\n第14回: スクラムマスターは何をする人？ 暇そうに見えます\n第15回: 自己組織化と言われても、結局リーダーが全部決めています\n第16回: 技術的負債の返済をPOが優先してくれません\n第17回: ドキュメントはどこまで書けばいい？\n第18回: 最初は改善が進んだのに、最近チームが停滞している気がします\n第19回（最終回）: 連載の総括\n 長い文章にお付き合いいただきありがとうございました。\n次回: 「保守運用チームにスクラムは合わないのでは？」",
+      "publishedAt": "2026-09-09T00:00:00.000Z",
+      "feedName": "豆蔵デベロッパーサイト"
+    },
+    {
+      "id": "e505e42e487ea60ab98243a53676674da313e14b8414d6c2319317e934838085",
+      "title": "COBOL、VMware、.NETまで――AWS「45億行に及ぶコード処理」で見えたAIレガシー刷新の現状",
+      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2609/09/news027.html",
+      "description": "何年もかかっていたレガシーシステムの刷新が、AIによって「6週間」に――。COBOL、VMware、.NETなどのシステムをAIを活用して移行、刷新する1年間の取り組みの成果をAWSが公開した。",
+      "publishedAt": "2026-09-08T23:00:00.000Z",
+      "feedName": "＠IT"
+    },
+    {
+      "id": "0628a7092153bef3f93ca136396576e09e62dc775d857b8c1a651a5cb3733a4c",
+      "title": "「AIエージェントはモデルだけじゃない」　NVIDIAらが説く“エージェント防御”の勘所と共有の仕組み",
+      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2609/09/news038.html",
+      "description": "Linux Foundationは、エージェント型AIのセキュリティインシデントを業界で共有するためのガイドライン「SAFE」について意見募集を始めた。NVIDIAやCisco、CrowdStrikeなどが初期案の作成に参加している。",
+      "publishedAt": "2026-09-08T23:00:00.000Z",
+      "feedName": "＠IT"
+    },
+    {
+      "id": "4863d43ce9fabe4941609eb09cf91031aa08e5a79e1e2cdfcc54f0996aef44fc",
+      "title": "Meta、パーソナルAIエージェント「Muse」発表。ユーザーの日常タスクを自律的に支援、セキュリティやプライバシーも考慮した設計うたう | テクノエッジ TechnoEdge",
+      "url": "https://www.techno-edge.net/article/2026/09/09/5476.html",
+      "description": "Metaは、米国のユーザー向けに新しいパーソナルAIエージェント「Muse」を発しました。Metaが独自に開発したAIモデル「Muse Spark」を採用し、ウェブブラウジングやファイル操作、フォームへの入力、購入手続きといった幅広いタスクをバックグラウンドで自律的に実行します。",
+      "publishedAt": "2026-09-08T22:45:12.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "18920254ccb8185ab3ad44f8e9221a021bd5a372ebac9c343b31de8bb7150ff7",
+      "title": "Amazon Linuxが4年ぶりにメジャーバージョンアップ、「Amazon Linux 2027」パブリックプレビュー。SELinuxがデフォルトで強制モードに",
+      "url": "https://www.publickey1.jp/blog/26/amazon_linux4amazon_linux_2027selinux.html",
+      "description": "Amazon Web Services（AWS）は、AWSに最適化されたLinux OSの4年ぶりとなるメジャーバージョンアップ「Amazon Linux 2027」をパブリックプレビューとしてリリースしました。 現時点の正式版はAmazon Linux 2023 Amazon LinuxはAWSによって無料で提供されているLinux OSのディストリビューションです。Amazon EC2などのAW...",
+      "publishedAt": "2026-09-08T14:40:17.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "be3c0ce9372b4106cb37e3250c7e9bd95d73555c5554b1e69c7693cc2a5b4237",
+      "title": "「JAWS-UG CDK支部 #26 〜CDKに関する真夏のLT大会〜」 にて「PMに『CDK使わなくていいよ』と言われて気付いたCDKの権限周りの話」 というテーマでLT発表しました！",
+      "url": "https://dev.classmethod.jp/articles/jaws-ug-cdk-0908-beginner-lt/",
+      "description": "JAWS-UG CDK支部のイベントで初めてのLT登壇をしました。",
+      "publishedAt": "2026-09-08T12:05:09.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "b703f804dcc1fb4499014768b0835ed43ae79d5623632ab6205ea1a57eeee81e",
+      "title": "AWS AgentCore Evaluationsを使ってAIエージェントを評価してみた",
+      "url": "https://qiita.com/ko_koyama_w/items/6531c511b4058d69d839?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "本記事では、AWSのマネージドサービス「Amazon Bedrock AgentCore Evaluations」を使って、学習用にサンプルとして構築したAIエージェントを評価してみた内容を紹介します。\n\nモチベーション\n「AIエージェント元年」と呼ばれた2025年を経て、...",
+      "publishedAt": "2026-09-08T12:01:33.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "869e1eb2e5dc1e4a6c18e46ec40e99d397859f13102aa09cbff94af0c8d73475",
+      "title": "Kubernetes access via an identity provider: Public client, not confidential",
+      "url": "https://www.cncf.io/blog/2026/09/08/kubernetes-access-via-an-identity-provider-public-client-not-confidential/",
+      "description": "Access control belongs on the same day-zero checklist as networking and storage. On most on-prem clusters, it never makes the list. The Identity Gap Managed cloud Kubernetes ships IAM or SSO integration out of the box....",
+      "publishedAt": "2026-09-08T11:30:00.000Z",
+      "feedName": "Cloud Native Computing Foundation"
+    },
+    {
+      "id": "680de7e30ee6d9d4b6b30e23c8811dbd873ba7ad746f78225c98d5fd7f9e47cd",
+      "title": "Distributed tracing for CI pipelines without touching a single workflow file",
+      "url": "https://www.cncf.io/blog/2026/09/08/distributed-tracing-for-ci-pipelines-without-touching-a-single-workflow-file/",
+      "description": "You’ve probably felt this one: GitHub Actions usage creeps up across your org, and your actual visibility into it doesn’t keep pace. Which workflows are slow? Which are flaky? How long are jobs sitting queued for...",
+      "publishedAt": "2026-09-08T11:00:00.000Z",
+      "feedName": "Cloud Native Computing Foundation"
+    },
+    {
+      "id": "3d0916a40ad972c1d9c3b8c68b642aabaf13d1d3019972908f31a7fd27827f2f",
+      "title": "ServiceNow、自律型AIを組み込んだ6つのセキュリティ統合ソリューションを発表",
+      "url": "https://enterprisezine.jp/news/detail/25040",
+      "description": "ServiceNow Japanは9月2日、「Autonomous Security」ビジョンおよびこのビジョンを加速化する6つの統合ソリューションを発表した。\n\n　同日に開催された記者説明会には、...",
+      "publishedAt": "2026-09-08T10:22:00.000Z",
+      "feedName": "EnterpriseZine"
+    },
+    {
+      "id": "aba6c5ce019aee5176abfe063dfe6a61fb3aaf6e78caf5c30077b51b50fb77a2",
+      "title": "AWS Weekly Roundup: AWS 版 Claude Fable 5.1、Amazon Linux 2027 プレビュー、AWS Certified AI Business Strategist など (2026 年 9 月 7 日)",
+      "url": "https://aws.amazon.com/jp/blogs/news/aws-weekly-roundup-claude-fable-5-1-on-aws-amazon-linux-2027-preview-aws-certified-ai-business-strategist-and-more-september-7-2026/",
+      "description": "2026 年 8 月 31 日週、Claude Fable 5.1 が AWS で利用可能になりました。Ant […]",
+      "publishedAt": "2026-09-08T09:58:54.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "95214323dd1592e00e9cc7a2d51584475286889fdb885d30f5d43e8846351132",
+      "title": "Github Appを使って別リポジトリのワークフローを実行するための一時的なPATを発行する",
+      "url": "https://dev.classmethod.jp/articles/generate-temporary-pat-by-github-app-on-github-actions/",
+      "description": "Github Appを使ってGithub Actions内で一時的なPATを生成する方法について試してみました。別リポジトリのワークフロー実行に必要な認証情報を、セキュアに取得できる手法をご紹介します。",
+      "publishedAt": "2026-09-08T09:30:12.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "cfe6c9e144b4d16f9d07fa0f84736e82dbc5a9616a5cd603c625bf45e32a7ffd",
+      "title": "Oracle VirtualBox의 VM을 AWS Transform MGN으로 EC2에 옮겨보기",
+      "url": "https://dev.classmethod.jp/articles/oracle-virtualbox-to-ec2-using-aws-transform-mgn-kr/",
+      "description": "Oracle VirtualBox의 VM에 Ubuntu에 AWS Replication Agent를 설치하고, AWS Transform MGN을 사용하여 EC2 테스트 인스턴스에서 실행하기까지의 절차를 소개합니다. 온프레미스 서버가 없어도 로컬 가상 머신에서 MGN의 동작을 확인할 수 있는 방법을 시험해 보았습니다.",
+      "publishedAt": "2026-09-08T08:59:28.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "9f32dab504a3ac0f646227a4e390128d52ebf874e7446ff5c5111ec4d37126ce",
+      "title": "AWS DevOps Agentのマルチアカウント構成をTerraformでデプロイしてみた",
+      "url": "https://dev.classmethod.jp/articles/aws-devops-agent-multi-account-terraform/",
+      "publishedAt": "2026-09-08T08:45:21.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "05b643011458466d73738244a022d50ac9dc821d43d0b1e01e7f347041df91d6",
+      "title": "OpenAI「GPT-6 Astra」発表　Codexのコーディングは前世代からどれだけ進化？",
+      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2609/08/news035.html",
+      "description": "OpenAIは、次世代AIモデル「GPT-6 Astra」を発表した。PC自律操作やコーディング、セキュリティ検証などの能力が大幅に向上し、抽象推論ベンチマークテスト「ARC-AGI-3」で99.9％のスコアを達成したという。",
+      "publishedAt": "2026-09-08T08:00:00.000Z",
+      "feedName": "＠IT"
+    },
+    {
+      "id": "2af46adb1f0a0aa603d2d94d0fde338f564c8ab44e3fc5e98e73f7b58948f191",
+      "title": "Control TowerのガードレールでRootユーザーを制限しつつCentralized root accessを使う方法",
+      "url": "https://dev.classmethod.jp/articles/control-tower-guardrail-root-user-with-centralized-root-access/",
+      "description": "AWS OrganizationsのCentralized root accessを有効化したものの、Control Towerのガードレールによって特権アクションが拒否される問題に遭遇しました。本ブログではその原因と解決方法をまとめます。",
+      "publishedAt": "2026-09-08T07:38:49.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "7de3c7b05135e92409546e10ad504d5686a38878e23640ba5a258de50e63653e",
+      "title": "AWS IoT CoreからInfluxDBへ送信できるようになったので試してみた",
+      "url": "https://dev.classmethod.jp/articles/try-iot-core-rule-influxdb/",
+      "description": "AWS IoT CoreにInfluxDBへ直接データを送信できる新しいルールアクションが追加されました。これまで必要だったLambdaが不要になり、設定だけでデータを送信できるようになったこの機能を実際に試してみたので、その検証結果と制限事項をご紹介します。",
+      "publishedAt": "2026-09-08T07:31:33.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "847916c7d38400a4bfc4580a79c9e181b816eba3c10ab5d5a2270e7053ce2306",
+      "title": "モバイルアプリ開発でもエージェントループを回したい！React Nativeで計画から検証・PRまで任せる",
+      "url": "https://zenn.dev/tellernovel_inc/articles/57b223dd4b8f5d",
+      "description": "こんにちは！テラーノベルでiOS/Android/Webとフロントエンド周りを担当している @kazutoyo です！\nOpus 4.5が出たあたりから、自分でコードを書くことがほとんどなくなりました。\n最近はループエンジニアリングという言葉も出てきて、エージェントに任せる流れがさらに加速している感じがあります。\nただ、モバイルアプリで同じことをやろうとすると、Webアプリと比べて検証がしづらく、そこだけ人の手が残っていました。\nそこで使っているのが、以前紹介した agent-device です。\nエージェント自身がiOS Simulator / Android Emulatorを操作し...",
+      "publishedAt": "2026-09-08T05:40:14.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "fcde69612e220b68bece90e2af809e2c572090f015a27eecd5997ec584a97452",
+      "title": "React 19移行で学んだpnpmの依存関係解決の仕組み",
+      "url": "https://zenn.dev/yamatechi/articles/vite-monorepo-react-dedupe",
+      "description": "React19移行で見つかった謎の不具合 pnpm workspaceとViteを使うモノレポで、複数あるReactアプリケーションの一つをReact19に更新しました。他のアプリはReact18のままだったため、両方のバージョンが共存している状態です。 変更後、検証していると謎の不具合に遭遇しました。 React19へ移行したアプリに古いReactが紛...",
+      "publishedAt": "2026-09-08T05:19:42.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "8ca462ff057e3bc13025d5cace946b7f17ab61f34a61f87e241d0a25204d54fb",
+      "title": "Kubernetes と Agones から Amazon GameLift Servers への移行",
+      "url": "https://aws.amazon.com/jp/blogs/news/migrating-from-kubernetes-and-agones-to-amazon-gamelift-servers/",
+      "description": "Kubernetes 上で動作する Agones は専用ゲームサーバーのホスティングによく使われますが、グローバル規模になると運用が複雑になります。本記事では、運用面とコスト面から Agones ベースのソリューションと Amazon GameLift Servers の違いを比較し、Agones から Amazon GameLift Servers へ移行する手順を解説します。",
+      "publishedAt": "2026-09-08T05:14:00.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "727e8bc45fb7ca4578c941ceb3f760e98afa03e31e638e46d22bfebe8656b7ab",
+      "title": "AWS Skill BuilderによるAWS認定資格の更新方法について",
+      "url": "https://dev.classmethod.jp/articles/skill-builder-certification-update/",
+      "description": "AWS認定資格の有効期限が近づいたので、Skill Builderの再認定コースで資格を更新しました。試験再受験より手軽に、最新知識をキャッチアップできる方法について紹介します。",
+      "publishedAt": "2026-09-08T03:06:01.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "fcde69612e220b68bece90e2af809e2c572090f015a27eecd5997ec584a97452",
+      "title": "React 19移行で学んだpnpmの依存関係解決の仕組み",
+      "url": "https://zenn.dev/yamatechi/articles/vite-monorepo-react-dedupe",
+      "description": "こんにちは、Dress Code でプロダクトエンジニアをしているてちです！\n少し前にアプリケーションで利用しているReactについて、React18からReact19への移行を行いました。\n今回は移行で遭遇した不具合について、調査をしていく中で多くの学びがあったので記事にしてみました。\n!\n自分なりに調査した内容を書いてますが気になる点あればお気軽にご指摘ください...！\n\n\n React19移行で見つかった謎の不具合\npnpm workspaceとViteを使うモノレポで、複数あるReactアプリケーションの一つをReact19に更新しました。他のアプリはReact18のままだったた...",
+      "publishedAt": "2026-09-08T03:00:05.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "7c5ea0349b2d66bb8e2743aa40682ca6ce91e02f42b698f390fd803863aff197",
+      "title": "Kaggleコンペ紹介：AI Agent Security - Multi-Step Tool Attacks",
+      "url": "https://zenn.dev/mkj/articles/fad8adf0586665",
+      "description": "はじめに\nこんにちは、松尾研究所 データサイエンティストの力岡です。\n今回は、Kaggleで開催された「AI Agent Security - Multi-Step Tool Attacks」コンペに参加し、4,187チーム中4位（金メダル） を獲得することができました。本記事では、コンペの概要や攻略の考え方、私たちの取り組み、上位解法について紹介します。\n本コンペは、「AIエージェントのセキュリティ」を題材にしたレッドチーミングコンペです。PublicリーダーボードとPrivateリーダーボードで順位がほとんど入れ替わる激しいシェイクアップが起き、2,802チームがPrivateで...",
+      "publishedAt": "2026-09-08T02:50:05.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "f6d6ceddc7328a6260b1762cc353529f64f1447381cd90cce1ce198912da2321",
+      "title": "Docker環境をガチで軽量化するための鉄板設定まとめ - Qiita",
+      "url": "https://qiita.com/nolanlover0527/items/24ee07122dd4d0523069",
+      "description": "はじめに Docker環境が重すぎて頭を抱えている人は多いのではないでしょうか。 私自身も激重なDocker環境を触っていて、原因を一つずつ潰していった経験が何度かあります。 今回は、ローカルのDocker環境（Windows）を軽量化するための方法について、実際に行った手順と一緒に紹介します。 ただし、リソース削除やnamed ...",
+      "publishedAt": "2026-09-07T23:24:29.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "8d37e60f16fe04e1eee1aac2962a8a9590dc93f48c5902d15abd3855ad3092be",
+      "title": "「そのページ、消えるよ」AWS Blocksで1ヶ月以上デプロイしてないアプリにアクセスできなくなる話",
+      "url": "https://qiita.com/shimagaji/items/a5373b841b1bade13f59?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "先日起票した以下のIssueのきっかけとなるお話です。Issueが解決したらここに追記します。\nhttps://github.com/aws-devtools-labs/aws-blocks/issues/480\nhttps://github.com/aws-devto...",
+      "publishedAt": "2026-09-07T15:16:04.000Z",
       "feedName": "Qiita"
     }
   ]
