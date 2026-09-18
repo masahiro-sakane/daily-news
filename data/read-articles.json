@@ -1,278 +1,6 @@
 {
   "articles": [
     {
-      "id": "39e78bd7cebac54f2a0d1cc52a07c35e1169a5fa6903ae2d1a7b9512a4d96b67",
-      "title": "Detecting 2026 Election Deepfakes: US, Brazil, India",
-      "url": "https://dev.to/leojulieta/detecting-2026-election-deepfakes-us-brazil-india-1a8j",
-      "description": "Deepfake Showdown 2026: Detecting Election Fakes in the U.S., Brazil & India\n\n\n\n\n\n\n  \n  \n  Introduction\n\n\nThe 2026 election season is already being hijacked by AI‑generated videos that make politicians say things they never said. In the last 30 days, Google Trends shows a 340 % surge in “deepfake election” searches across the United States, Brazil, and India—proof that voters, journalists, and campaign staff are looking for a fast, reliable way to spot the fakes before they go viral.  \nThis guide gives you a hands‑on, SEO‑friendly workflow to (1) recognize the most viral political deepfakes of the past three years, (2) understand the GANs and diffusion models that create them, (3) see real‑world reach numbers from CrowdTangle, (4) run three free detection tools plus a tiny Python script, (5) follow a step‑by‑step verification checklist, (6) read a quick interview with a leading forensic analyst, and (7) get policy recommendations and a link to an open‑source detection widget you can embed on your site.  \n\n\n\nYear\nCountry\nSubject\nPlatform\nApprox. Reach*\nWhy It Went Viral\n\n\n\n\n2023\nUSA\n“Biden endorses TikTok ban” (fabricated speech)\nTikTok, Twitter\n9 M\nTimed with a Senate hearing on social‑media regulation\n\n\n2024\nBrazil\n“Lula calls for military coup” (audio‑visual)\nWhatsApp groups, YouTube\n12 M\nShared by right‑wing influencers during the presidential runoff\n\n\n2025\nIndia\n“Modi declares emergency in Uttar Pradesh” (video)\nFacebook, Instagram Reels\n11 M\nSpread during a state‑assembly election, amplified by regional memes\n\n\n\n*Reach measured as cumulative video views + shares within 48 hours (CrowdTangle data).  \n\n\n\nModel Type\nTypical Use\nKey Artifact\n\n\n\n\nGAN (Generative Adversarial Network)\nHigh‑resolution face swaps, short clips\nSlight “ghosting” around hair and earrings, inconsistent eye reflections\n\n\n\nDiffusion Model (e.g., Stable Diffusion Video)\nFull‑body motion, smoother lighting\nSubtle flicker in background textures, occasional frame‑level blurs\n\n\nAudio‑only TTS (e.g., ElevenLabs)\nSynthetic speeches, phone calls\nOver‑pronounced consonants, unnatural prosody, missing background ambience\n\n\n\nKnowing these artifacts helps you spot fakes even before you run a scanner.  \nPlatform   | Avg. Views per Deepfake | Avg. Shares (48h) | Top Region\n-----------|------------------------|-------------------|-----------\nTikTok     | 1.8 M                  | 45 k              | USA (Midwest)\nWhatsApp   | 2.3 M (estimated)      | 78 k (group forwards) | Brazil (Nordeste)\nFacebook   | 1.5 M                  | 32 k              | India (Uttar Pradesh)\n\nKey takeaway: A single deepfake can out‑reach traditional political ads in under 48 hours.  \n\n\n\nTool\nFree Tier\nAccuracy (public benchmark)\nLink\n\n\n\n\nDeepware Scanner\nUnlimited uploads\n84 %\nhttps://deepware.ai/scanner\n\n\nSensity Detect\n5 scans/day\n89 %\nhttps://sensity.ai/detect\n\n\nDeepDetect (open‑source)\nSelf‑hosted\n81 %\nhttps://github.com/DeepDetect\n\n\n\ndeepdetect)\n\n\n\n\n\n# deepfake_check.py\nimport requests, json, sys, pathlib\n\nAPI_URL = \"http://localhost:8080/predict\"\nVIDEO = pathlib.Path(sys.argv[1])\n\npayload = {\"data\": [{\"uri\": str(VIDEO)}]}\nr = requests.post(API_URL, json=payload)\nresult = r.json()\nprint(f\"Deepfake probability: {result['predictions'][0]['probability']*100:.1f}%\")\n\nRun it:\n# 1️⃣ Install the server (Docker)\ndocker run -p 8080:8080 deepdetect/deepdetect\n\n# 2️⃣ Test a video\npython deepfake_check.py my_video.mp4\n\nIf the probability is >70 %, treat the clip as suspicious and move to the manual checklist.  \n\n\n\nStep\nAction\nTool / Tip\n\n\n\n\n1️⃣\n\nCheck metadata – look for mismatched creation dates or edited codecs.\nffprobe -v quiet -show_format -show_streams video.mp4\n\n\n2️⃣\n\nRun three scanners – upload to Deepware, Sensity, and DeepDetect.\nCompare scores; flag if ≥2 >70 %\n\n\n3️⃣\n\nInspect frame‑level artifacts – zoom in on eyes, teeth, and hair edges.\nUse VLC → “Take snapshot” at 0.5 s intervals\n\n\n4️⃣\n\nAudio sanity check – listen for robotic cadence or missing ambient noise.\nAudacity → Spectrogram view\n\n\n5️⃣\n\nCross‑reference source – search the exact phrase on Google News, official channels, and fact‑checkers (e.g., AFP, Snopes).\nUse site:gov.in \"Modi emergency\"\n\n\n\n6️⃣\n\nDocument everything – screenshot scanner results, timestamps, and your manual notes.\nStore in a shared Google Drive folder labeled “Deepfake Review – [Date]”.\n\n\n7️⃣\n\nEscalate – if the clip is high‑impact (≥1 M reach) and likely fake, alert the platform’s abuse team and your organization’s communication lead.\nUse pre‑written email template (see Appendix).\n\n\n\nQ: What’s the biggest mistake people make when evaluating a political video?  \nA (Dr. Maya Rao, Digital Forensics Lead, CyberTruth Labs):  \n“Relying on a single detection tool. Most free scanners are trained on older datasets, so a new diffusion‑based deepfake can slip through. The safest approach is triangulation—run multiple tools, then verify with a manual checklist. Also, never ignore the context: a sudden surge in shares from a single WhatsApp group is a red flag.”  \nQ: Which emerging technique should we watch?  \nA:  \n“Text‑to‑video diffusion models are getting cheaper to run on a consumer GPU. They can produce 30‑second clips that look almost perfect, but they still leave a tell‑tale ‘temporal inconsistency’—tiny frame‑to‑frame jitter that a human eye can spot with a slow‑motion replay.”  \nAllocate AI‑media funds – Election‑security budgets in the U.S., Brazil, and India should earmark at least $10 million for real‑time deepfake detection services.\n\n\nMandate platform transparency – Require TikTok, WhatsApp, and Facebook to publish daily deepfake detection statistics for political content.\n\n\nStandardize a verification badge – Adopt a universal “Verified Authentic” badge powered by an open‑source widget (see repo below).\n\n\n\nOpen‑Source Detection Widget – A lightweight JavaScript component that calls the DeepDetect API and overlays a confidence meter on any embedded video.\n<script src=\"https://cdn.deepdetect.io/widget.js\"></script>\n<video id=\"politics-video\" src=\"candidate.mp4\" controls></video>\n<script>\n  DeepDetectWidget.attach('#politics-video', {\n    apiUrl: 'https://api.deepdetect.io/predict',\n    threshold: 0.7,\n    onResult: (score) => {\n      if (score > 0.7) alert('⚠️ Potential deepfake detected');\n    }\n  });\n</script>\n\nAdd the snippet to any newsroom site to give readers an instant trust signal.  \n\ntext\nSubject: Immediate Action Required – Potential Deepfake (Reach: 8.2M)\n\nHi [Platform Abuse Team],\n\nWe have identified a video (link: …) that our detection pipeline flagged with a 78 % deepfake probability across three independent tools. The content has already amassed 8.2 M views in 24 hours and appears to target [region] voters.\n\nPlease:\n1. Review the attached scanner screenshots.\n2. Apply a temporary content warning.\n3. Initiate removal if verification confirms manipulation.\n\nThanks,\n[Your Name]\nDigital",
-      "publishedAt": "2026-08-19T01:02:31.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "314e253acba90f58e07ea3523e1b518bcade84988f06c55ecfeffa891ea3d2e1",
-      "title": "Cómo detectar deepfakes electorales en Brasil e India 2026",
-      "url": "https://dev.to/leojulieta/como-detectar-deepfakes-electorales-en-brasil-e-india-2026-bb7",
-      "description": "Deepfakes electorales 2026: cómo detectar la ola que amenaza a Brasil e India\n\n\n\n  \n  \n  Introducción\n\n\nLos videos falsos generados por IA ya no son una curiosidad de internet; son armas de desinformación que pueden decidir el destino de una elección. En los últimos seis meses, las búsquedas de “deepfake election” en Google han subido un 320 %, y los próximos comicios en EE. UU., Brasil e India son el blanco perfecto para estos ataques.\n\nEn este artículo verás, paso a paso, los casos más virales, entenderás la tecnología en pocos minutos, y obtendrás herramientas gratuitas, un script Python listo para usar y un checklist práctico para no caer en la trampa.\n\n\n\nCaracterística\nDeepfake (IA)\nEdición tradicional\n\n\n\n\nMétodo\nRedes neuronales generativas (GAN, modelos de difusión)\nCorte, superposición y retoque manual\n\n\nAutomatización\nTotalmente automática después del entrenamiento\nRequiere intervención humana en cada fotograma\n\n\nCalidad\nFoto‑realismo que engaña a expertos\nLimitada por la habilidad del editor\n\n\nVelocidad\nMinutos o segundos por video\nHoras o días\n\n\n\nEn pocas palabras, el deepfake aprende a imitar rostros y voces, mientras que la edición tradicional copia lo que ya existe.  \n\n\n\nPaís\nVídeo\nAlcance (CrowdTangle)\nComentario\n\n\n\n\nEE. UU.\n“Biden admite fraude electoral” (YouTube)\n4,2 M visualizaciones\nDetectado por InVID en 12 h\n\n\nBrasil\n“Lula declara victoria antes de la cuenta” (TikTok)\n2,9 M visualizaciones\nDeepfake de voz con modelo TTS entrenado en 30 min\n\n\nIndia\n“Modi anuncia recorte de impuestos al 5 %” (WhatsApp)\n1,8 M visualizaciones\nVideo creado con Stable Diffusion 3.0 + audio de ElevenLabs\n\n\n\nEstos ejemplos demuestran que el impacto no depende del medio, sino del algoritmo que genera el contenido.  \n\n\n\nHerramienta\nTipo\nUso rápido\n\n\n\n\nInVID\nAnálisis de video\nExtensión Chrome → “Analyze”\n\n\nDeepware Scanner\nApp móvil (Android/iOS)\nEscanea URL o archivo\n\n\nSensity AI (demo)\nPlataforma web\nSubir video < 30 s\n\n\nScript Python (ver sección 4)\nAnálisis local\nDetecta artefactos de GAN\n\n\n\n# deepfake_detector.py\nimport cv2, numpy as np, torch, torchvision\nfrom torchvision import transforms\nfrom model import EfficientNetB0  # modelo pre‑entrenado en DeepFakeDetection\n\ndef load_video(path, max_frames=30):\n    cap = cv2.VideoCapture(path)\n    frames = []\n    while len(frames) < max_frames and cap.isOpened():\n        ret, frame = cap.read()\n        if not ret: break\n        frame = cv2.resize(frame, (224, 224))\n        frames.append(frame)\n    cap.release()\n    return np.stack(frames)\n\ndef predict(video_path):\n    model = EfficientNetB0(pretrained=False)\n    model.load_state_dict(torch.load('deepfake_weights.pth'))\n    model.eval()\n    frames = load_video(video_path)\n    tensor = transforms.ToTensor()(frames).unsqueeze(0)   # (1, T, C, H, W)\n    with torch.no_grad():\n        prob = torch.sigmoid(model(tensor)).item()\n    return prob\n\nif __name__ == '__main__':\n    import sys\n    p = predict(sys.argv[1])\n    print(f'Probabilidad de deepfake: {p:.2%}')\n\nCómo usarlo\npip install opencv-python torch torchvision\npython deepfake_detector.py video.mp4\n\nTip: Si la probabilidad supera el 70 %, trata el video como sospechoso y verifica con al menos dos fuentes independientes.  \nFuente – ¿Proviene de una cuenta verificada o de un mensaje reenviado?\n\n\nMetadatos – Usa exiftool video.mp4 y busca inconsistencias de fecha/hora.\n\n\nSincronía labial – Reproduce el video a 0.5× y observa si los labios coinciden con el audio.\n\n\nHuella digital – Ejecuta el script anterior o InVID.\n\n\nContraste con fuentes oficiales – Busca el mismo anuncio en sitios gubernamentales o en la cuenta oficial del candidato.\n\n\n\nSi alguna de estas etapas falla, no compartas el contenido.  \nMaría Gómez, analista forense en Digital Integrity Lab:\n\n“Los deepfakes de 2025 ya no necesitan GPUs de gama alta; con una laptop y acceso a Stable Diffusion 3.0 puedes crear un video de 10 s en menos de 5 min. Por eso, la detección temprana debe estar en el flujo de trabajo de cualquier red social o medio de comunicación, no como una tarea posterior.”  \nObligar a plataformas a implementar detección automática basada en IA y publicar informes de transparencia trimestrales.\n\n\nCrear una unidad especializada en cada país (Brasil, India, EE. UU.) para perseguir la difusión intencional de deepfakes electorales.\n\n\nFinanciar campañas de alfabetización digital dirigidas a votantes mayores de 60 años, que son los más vulnerables.\n\n\n\n\n\n\n\n  \n  \n  8. Widget de detección para tu sitio web\n\n\nAñade este pequeño fragmento HTML a cualquier página y permite a tus lectores analizar videos sin salir del sitio:\n<script src=\"https://cdn.deepdetect.io/widget.js\"></script>\n<div class=\"deepdetect-widget\" data-api-key=\"TU_API_KEY\"></div>\n\nEl widget muestra la probabilidad de deepfake en tiempo real y enlaza a recursos de verificación.  \nLos próximos comicios en Brasil e India (2026) serán el escenario donde los deepfakes demuestren su poder de cambiar realidades. La buena noticia es que, con herramientas gratuitas, un script sencillo y un checklist práctico, cualquier ciudadano, periodista o responsable de una comunidad online puede actuar como la primera línea de defensa. No esperes a que el video se vuelva viral; verifica hoy y protege la integridad de tu voto.",
-      "publishedAt": "2026-08-19T01:01:33.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "5e52c66cee84f1653bf67edf1606d9895862bde9ebba02ebbf0b249f795c4bf5",
-      "title": "Amazon Connect Customer AIエージェントの手動検索からフローモジュールを呼び出し、Lambda で予約情報を検索してみた",
-      "url": "https://dev.classmethod.jp/articles/amazon-connect-customer-ai-agent-flow-module-lambda-reservation/",
-      "description": "Amazon Connect Customer AIエージェントのフローモジュールツールを使い、オペレーターが顧客情報からLambda関数経由で予約情報を確認する構成を試しました。セキュリティプロファイルの設定ポイントも含めて紹介します。",
-      "publishedAt": "2026-08-19T01:01:17.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "d2472eb0d5b06b98ffef2468e746b699ad528565f2c0324ae81810853286736c",
-      "title": "Cómo mantener siempre disponibles las sesiones de tu agente de código remoto (parte 2)",
-      "url": "https://dev.to/aws-builders/mover-un-agente-de-ia-siempre-encendido-de-un-vps-de-24-a-fargate-spot-pt-2-o4f",
-      "description": "La Parte 1 construyó una caja siempre encendida para una sesión de remote-control de Claude Code y terminó con una alarma que convierte seis días de silencio en quince minutos. Esa alarma atrapa una caja muerta. Esta es la secuela, y la caja de aquí nunca estuvo muerta. Estaba active, su token estaba fresco, y en cada reinicio imprimía:\nTake this session with you and pick up right where you left off on any device.\nOpen the Code tab in the Claude mobile app, or visit claude.ai/code in a browser.\n\ny la sesión no estaba en claude.ai/code. Nunca se había registrado. El banner de arriba se imprime al arrancar, antes de que haya pasado lo que anuncia, así que le mintió al monitoreo, me mintió a mí cuando lo \"arreglé\", y casi se mintió hasta meterse en este blog post como el arreglo. Este post es sobre la diferencia entre un proceso que dice que está listo y una sesión que de verdad lo está.\n\n\n\n\nLo que creía\nLo que era cierto\n\n\n\n\nCausa raíz\nel registro se puso viejo a lo largo de ~6 días de uptime\n\nnunca se registró, el CLI se colgó en un prompt interactivo sin TTY\n\n\nEl \"arreglo\"\nreinicia el servicio; el banner regresa; el heartbeat en verde\nel reinicio imprimió el banner otra vez y aun así no se registró\n\n\nLa señal de salud que construí\ngrep del journal por claude.ai/code\n\nese string es el banner de pre-registro, verde para un proceso colgado\n\n\nLa señal real\n\nla URL registrada (claude.ai/code/session_…), que solo se imprime después del registro\n\n\n\nPlaceholders, como en la parte 1: myapp, appuser, acme/myapp.\nLa sesión simplemente no estaba en la lista de claude.ai/code, mientras que todo en la caja decía que debería estar:\n$ systemctl is-active claude-remote-control\nactive\n$ stat -c %y ~/.claude/.credentials.json\n2026-07-28 02:54:11          # token refrescado hace horas, la auth está bien\n$ aws cloudwatch describe-alarms --alarm-names myapp-agent-box-down \\\n    --query 'MetricAlarms[].StateValue' --output text\nOK\n\nAsí que hice lo obvio: reinicié el servicio. Imprimió el banner, el proceso subió, el heartbeat se puso verde, y la sesión seguía sin estar ahí. Ese es el momento en el que vale la pena detenerse. Cada señal que tenía decía sano, y el producto real (una sesión que puedo abrir desde un navegador) no existía.\nUn reinicio que produce un banner no es un reinicio que produce una\n\n\n  \n  \n  Conseguir una señal que no puede mentir\n\n\nsystemctl is-active reporta que el proceso existe. El banner reporta que el proceso arrancó. Ninguno reporta que la caja se registró con el punto de encuentro hospedado, lo único que mete la sesión en la lista. Para ver eso, pídele al CLI que escriba su propio log de debug y lee lo que de verdad pasa:\nclaude remote-control --name myapp-cloud --continue --debug-file /tmp/rc.log --verbose\n\nDos fallas cayeron de inmediato, y ninguna era \"vieja\":\nTake this session with you and pick up right where you left off on any device.\nOpen the Code tab in the Claude mobile app, or visit claude.ai/code in a browser.\nThe session keeps running on this machine. ... Press Ctrl+C to stop.\n\nEnable Remote Control? (y/n)\n\nEl proceso imprime el banner y luego se bloquea en un prompt interactivo.\nactive, banner emitido, registro ni siquiera intentado. Los CLI recientes agregaron esta confirmación; la caja de la parte 1 es anterior a ella.\nY cuando le di una y, la segunda falla:\nError: No recent session found in this directory or its worktrees.\nRun `claude remote-control` to start a new one.\n\n--continue, la bandera de la parte 1 que mantiene el marcador estable reanudando la misma sesión, da error duro cuando no hay sesión que reanudar. En una caja cuyo historial de sesión local se había borrado en una reconstrucción, --continue no era una optimización; era un arranque que solo podía fallar.\nLas dos fallas viven en una línea, así que el arreglo es una línea, un wrapper en ExecStart:\nExecStart=/bin/bash -c 'cd /home/appuser/myapp; \\\n  echo y | /home/appuser/.local/bin/claude remote-control --name myapp-cloud --continue || \\\n  echo y | /home/appuser/.local/bin/claude remote-control --name myapp-cloud'\n\nTres cosas se ganan su lugar:\necho y contesta el prompt. Importa que el proceso siga corriendo después de que su stdin se cierra (verificado, sí lo hace), así que un echo de una sola vez basta; sin yes inundando el pipe, sin sleep infinity manteniéndolo abierto.\n--continue || <nuevo> trata de reanudar (marcador estable) y cae de vuelta a una sesión nueva cuando no hay nada que reanudar. Como echo y cierra limpio, un --continue fallido de verdad regresa y corre el fallback; un sleep infinity aquí colgaría el pipeline en el camino de falla y reintroduciría el atoro silencioso exacto.\nSin $@ ni $VAR en ExecStart. systemd expande ${} y $VAR pelón él mismo, y mutila $@; la jugada segura es repetir la ruta en lugar de factorizarla en una variable.\nAhora el log de debug muestra lo que el banner solo fingía:\n[bridge:init] Resuming session session_01Pp8… on environment env_01Vp…\n[bridge:init] Registered, server environmentId=env_01Vp…\n[bridge:title] server title: myapp-cloud\n\nRegistered. Ese es el recibo. El banner era el menú.\nEl wrapper arregla el outage. Dos guardas del primer borrador de este trabajo se quedan, porque endurecen la caja contra otras maneras en que la sesión puede caducar:\nReciclado diario. RuntimeMaxSec=86400 rebota la unidad cada 24h; Restart=always la trae de vuelta y --continue reanuda la misma sesión, así que el marcador aguanta. Si un registro alguna vez se pone viejo en un uptime largo, esto le pone tope al radio de impacto en un día en lugar de confiar en\nTimeoutStopSec=20 mantiene cada reciclado rápido, ya que el CLI ignora SIGTERM por ~90s.\nEscritura de vuelta de credenciales. La parte 1 señaló que el CLI rota su refresh token y la captura del secreto se pudre. Un helper chico empuja el token vivo de vuelta a Secrets Manager en cada corrida del watchdog, protegiendo con fuerza contra escribir un archivo local malformado encima de un secreto bueno, para que una instancia reemplazada ya no arranque sin autenticar.\nAquí está la parte que arde. La primera versión del chequeo de readiness, la que se suponía atrapaba justo este estado de \"arriba pero sin registrar\", hacía esto:\n# MAL: hace match al banner de pre-registro, así que está verde para un proceso colgado\njournalctl -u claude-remote-control --since \"${AGE}s ago\" | grep -q \"claude.ai/code\"\n\nclaude.ai/code está en el banner que se imprime antes del prompt en el que el proceso estaba colgado. El chequeo que construí para detectar la falla quedaba satisfecho por la falla. Es el bug original vestido con el disfraz de su propio arreglo.\nLa sesión registrada imprime una línea distinta, una URL con un id de sesión o de environment:\nContinue coding in the Claude mobile app or https://claude.ai/code/session_01Pp8…\n\nEl discriminador entre \"anunciada\" y \"registrada\" es un solo carácter: lo que sigue a code. El banner dice code in a browser; la cosa real dice code/session_… o code?environment=…. Así que haz match a eso:\n# solo una sesión REGISTRADA imprime una URL con '/' o '?' después de 'code'\njournalctl -u claude-remote-control --since \"${AGE}s ago\" | grep -qE 'claude\\.ai/code[/?]'\n\nCon el chequeo corregido el heartbeat significa lo que dice: active, lo bastante joven para haberse registrado, y una URL de registro en su propio log.\nDEGRADED y reinicia, y DEGRADED no hace match al filtro OK de la parte 1, así que un estado que no se va a auto-sanar de todos modos le suena a la alarma existente.\nChecar por una conexión de red abierta. La sonda de readiness intuitiva:\nseguramente una sesión registrada sostiene un socket al punto de encuentro.\nMedido en la caja sana: cero sockets establecidos. Una sesión registrada\ninactiva no mantiene ninguno. El chequeo reiniciaría una caja funcionando\nen cada tick.\nGrep del banner de arranque. Cubierto arriba. Verde antes de que el\ntrabajo esté hecho.\nLos dos fallan de la misma manera: afirman sobre algo que es cierto antes de\nsolo después del éxito: la línea Registered, la URL\nUn banner es un menú, no un recibo. Cualquier mensaje de \"ya puedes\nhacer X\" impreso al arrancar es una intención, no una confirmación. Los\nhealth checks tienen que indexarse en el artefacto que existe solo una vez\nque X de verdad pasó.\nReiniciar hasta que reaparezca el mensaje feliz no es verificación. Vi\nel banner, vi el heartbeat ponerse verde, y seguí adelante, dos veces. El\nmensaje era el mismo las dos veces porque nunca dependió del éxito.\nLos prompts interactivos son minas en cajas sin atender. Una sola\ncompuerta (y/n) nueva, incontestable sin un TTY, convierte en silencio un\nservicio que funciona en uno colgado. Dale la respuesta explícitamente; no\nasumas que un servicio hereda la de tu terminal.\nLas banderas de conveniencia tienen modos de falla. --continue\nmantiene un marcador estable y falla duro cuando no hay nada que continuar.\nEn una caja que se puede reconstruir desde nada, \"reanudar\" necesita un \"o\narranca de nuevo\" al lado.\nCuando no hay API de estado, afirma sobre el log de éxito, el\nespecífico. No el banner optimista. La línea que solo el camino exitoso\npuede producir.",
-      "publishedAt": "2026-08-19T00:53:33.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "b79684954ec805abeb60f8f72e1df022e012aea5074839b4eccd3d45cb76144c",
-      "title": "Next.js 16.3's Memory Claim Didn't Hold Up on My App. Its TypeScript Claim Cut My Build by Two Thirds.",
-      "url": "https://dev.to/pfgiiu/nextjs-163s-memory-claim-didnt-hold-up-on-my-app-its-typescript-claim-cut-my-build-by-two-30om",
-      "description": "The claim\n\n\nNext.js 16.3 shipped on August 3, 2026, and the headline number is memory: long\nAnyone who's watched a dev server climb until Node gives up and prints FATAL\nSo I upgraded one. What follows is a single production app taken from 16.2.3 to\nThe short version: the memory claim didn't survive contact with this app. The\nAll raw data, the measurement scripts, and the full upgrade log are in the repo: https://github.com/pfgiiu/artigo01\nThe subject is a production Next.js app that builds 142 static pages on the App\nEnvironment: Windows 11 Pro, Node v24.13.1, npm 11.8.0, TypeScript 5.9.3. The\nEach build runs twice with .next deleted beforehand. The first is cold. The\nWindows doesn't expose RSS. The equivalent is PeakWorkingSet64, and since the\nSampling runs every 10 seconds through a PowerShell script that starts the\nTwo scenarios:\nScenario A — Idle. npm run dev started fresh and left alone for ten\nScenario B — Active HMR. The route compiles once, then a real edit lands in\ngit checkout afterward, and\nBoth scenarios exist because the claim is about long development sessions, not\nThe type-check phase is measured separately from compilation, since 16.3 prints\nexperimental.useTypeScriptCli, then removed — the shipped tree stays on 5.9.3.\nBoth baseline builds exit clean, no warnings, and the dev server readied in\n\n\n\nMetric\n16.2.3\n\n\n\n\nCold build (.next deleted)\n95.3s\n\n\nSecond build (cache warm)\n63.8s\n\n\nDev ready\n1497ms\n\n\nStatic pages generated\n142\n\n\nPeak working set — idle\n355.7 MB (3 processes)\n\n\nPeak working set — active HMR\n564.8 MB (3 processes)\n\n\n\nAn idle dev server turns out to be a near-flat line. A 30-second smoke run of\nStart editing and the picture changes. Same server, same three processes, same\nFive edits is nothing. A real morning is a few hundred. The baseline doesn't\nThat also makes Scenario A a control. If 16.3 barely moves it, the release is\nNow the builds. The 33% drop between the two is the expected cache effect, but\nWhich means that by the second build, TypeScript accounts for 37.5 of 63.8\nnext build type check with TypeScript 7.\nSo the baseline hands us a specific question to test, rather than a vague hope\nWorth recording separately, because it contradicted the assumption I started\nGET / 200 lines that look like slow recompiles. They aren't. They're the\n\n\n\nEvent\nRecompile GET (wall)\nSteady GET\n\n\n\n\nInitial cold load\n12.1s\n—\n\n\nEdit 1\n248 ms\n59 ms\n\n\nEdit 2\n225 ms\n55 ms\n\n\nEdit 3\n239 ms\n57 ms\n\n\nEdit 4\n231 ms\n55 ms\n\n\nEdit 5\n238 ms\n57 ms\n\n\n\nMedian recompile after an edit: 238 ms. Median steady-state request: 57 ms. Fast\nOne note, since it affects how you read these figures: Next.js logs route\nGET ... in Xms number\nThe upgrade itself was a non-event.\nnpm install --save-exact next@16.3.1 eslint-config-next@16.3.1\n\nTwo cold builds afterward, both exit 0, no warnings, no type errors, 142 static\nnpm audit reports seven pre-existing vulnerabilities, unchanged by the bump\nOne side effect will show up in your git status and look like something went\nRunning next dev on 16.3.x regenerates a nextjs-agent-rules block in\nAGENTS.md at your repo root, from Next's own generate-agent-files.js. The\nnode_modules/next/dist/docs/ before writing any code.\nThat's a reasonable answer to a real problem. Any model trained before August\nPractical note: the block regenerates on every next dev, so reverting it just\nI'd flag one thing the block doesn't. A generated file that tells your tooling\ngenerate-agent-files.js in the installed package — but that's the sort of\nNothing broke. Zero errors, zero warnings, zero required code changes.\nThat's a real result for a minor release, and I'd rather report it than pad this\nmiddleware/proxy with\nnext/image defaults in unusual ways.\nEvery scenario ran three times on each version, with the machine verified clean\nIdle — peak working set, MB\n\n\n\nVersion\nRun 1\nRun 2\nRun 3\nMedian\n\n\n\n\n16.2.3\n481.6\n360.1\n357.3\n360.1\n\n\n16.3.1\n429.9\n432.8\n439.7\n432.8\n\n\n\nActive HMR — peak working set, MB\n\n\n\nVersion\nRun 1\nRun 2\nRun 3\nMedian\n\n\n\n\n16.2.3\n988.4\n562.4\n567.8\n567.8\n\n\n16.3.1\n867.0\n509.0\n513.4\n513.4\n\n\n\nRead the medians, not the ranges. In three of the four groups, run 1 is a high\n.next between\npdf-parse temp directory, so the first run after\nThat gives two findings pointing in opposite directions.\nIdle got worse: 360 MB to 433 MB, about 20% more. A dev server left running\nActive HMR got better: 568 MB to 513 MB, about 10% less. Under an actual\nThe flip fits what the release targets — long development sessions, not idle\nBut 10% isn't 90%. Vercel's \"up to\" is doing real work in that sentence.\nThis is where the release earns its keep, and the baseline told us in advance\nGetting TypeScript 7 takes one command. It went GA in July 2026 and now ships as\ntypescript package, and since Next resolves the checker from that\nnpm install -D typescript@7\n\nThe type-check phase, across four cold builds:\n\n\n\nMode\nBuild\nCompile\nTypeScript\nErrors\n\n\n\n\ntsc 5.9.3 (16.2.3)\n#2\n18.4s\n37.5s\n0\n\n\ntsc 5.9.3 (16.3.1)\n#2\n19.7s\n29.3s\n0\n\n\nTS7, default\n#1 / #2\n23.2s / 13.2s\n4.3s / 4.4s\n0\n\n\nTS7, useTypeScriptCli: true\n\n#1 / #2\n19.4s / 11.3s\n3.0s / 3.8s\n0\n\n\n\nRoughly 33 seconds down to roughly 3.5. About eight times faster, and it holds\nOn total wall-clock, the warm build went from 63.8s on 16.2.3 to 21.2s on 16.3.1\nTwo caveats matter more than the number.\nZero errors is a property of this project, not of TypeScript 7. This\nstrict: true, so TS7's stricter defaults surfaced\ntsc --noEmit across 270 files exited clean. A\nThe flag matters less than the docs imply. TypeScript 7 ships no JS compiler\nlib/typescript.js is simply absent, leaving only the native binary\ntypescript-api mode\nE1467. It didn't: Next fell back to the TS7 CLI and built clean\nexperimental.useTypeScriptCli: true is marginally\nTwo cases.\nIf you're still on Next.js 15, the timeline decides for you. Version 15\nparams, searchParams, cookies(),\nheaders() and draftMode(). Budget real time for it, and start before the\nIf you're already on 16.1 or 16.2, upgrade — but do it for the type checker,\nThe measurement scripts, the raw JSON from all twelve runs, the full benchmark\nhttps://github.com/pfgiiu/artigo01\nTwo caveats for anyone repeating this. Clearing .next between runs has to\nNumbers from a single app on a single machine are one data point, not a\nbenchmark suite. If you run the same procedure on your own codebase, I'd like to\nsee what you get.",
-      "publishedAt": "2026-08-19T00:50:23.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "9af4e7ef44cd87954e3913e02459d713825bd7b99a670b53f0c2bca35e85cafe",
-      "title": "AI Agent Frameworks in 2025: A Deep Dive into LangChain, CrewAI, MAF, and the Ecosystem",
-      "url": "https://dev.to/sanyaduan/ai-agent-frameworks-in-2025-a-deep-dive-into-langchain-crewai-maf-and-the-ecosystem-1m7e",
-      "description": "AI Agent Frameworks in 2025: A Deep Dive into LangChain, CrewAI, MAF, and the Ecosystem\n\n\nAn honest comparison to help you choose the right foundation for your next agentic application\nThe AI agent space is exploding. Every week there is a new framework, a new paradigm, a new \"revolutionary\" way to make language models do things. If you have spent any time building with LLMs recently, you have probably felt the vertigo: LangChain, CrewAI, AutoGen, LlamaIndex, Semantic Kernel, MetaGPT, AgentVerse...\nThe question is not \"which framework is best.\" It is \"which framework is right for my problem, my team, and my tolerance for maintenance debt.\"\nThis article cuts through the noise. I will walk through the three most-discussed frameworks — LangChain, CrewAI, and a broader look at the ecosystem including MAF (Model-Agent Framework) and others — with honest assessments of where they excel, where they bleed you dry, and what you would actually choose for different use cases.\nBefore comparing, let us define terms. An \"agent framework\" typically provides some combination of:\nOrchestration — how agents are wired together, how messages flow\nMemory — short-term context, long-term state persistence\nTool use — connecting LLMs to external APIs, code execution, file systems\nPlanning / Reasoning — multi-step task decomposition, loops, reflection\nMulti-agent coordination — role assignment, shared goals, handoffs between agents\nNo framework does all of these equally well. The tradeoffs are real.\nWhat it is: LangChain is the 800-pound gorilla of the LLM framework space. It started as a prompt-chaining library and has evolved into a full platform with LangGraph (for building stateful, graph-based agentic systems), LangSmith (observability), and LangServe (deployment).\nThe Good:\nLangChain is greatest strength is its comprehensiveness. If you need to connect to 50 different vector stores, 30 different LLM providers, and 20 different tool types, LangChain probably has a connector already. The ecosystem is enormous. If you hit a wall, the community Slack will have someone who solved your exact problem six months ago.\nLangGraph specifically is genuinely good for complex stateful workflows. The graph model (nodes = actions, edges = transitions, state = shared context) maps well to how agents actually think — especially when you need cycles, conditional branching, and human-in-the-loop checkpoints.\nfrom langgraph.graph import StateGraph, END\nfrom typing import TypedDict\n\nclass AgentState(TypedDict):\n    messages: list\n    next_action: str\n\nworkflow = StateGraph(AgentState)\nworkflow.add_node(\"research\", research_node)\nworkflow.add_node(\"write\", write_node)\nworkflow.add_node(\"review\", review_node)\n\nworkflow.set_entry_point(\"research\")\nworkflow.add_edge(\"research\", \"write\")\nworkflow.add_edge(\"write\", \"review\")\nworkflow.add_edge(\"review\", END)\n\napp = workflow.compile()\n\nThat pattern — build a graph, compile it, run it — is clean and debuggable.\nThe Bad:\nLangChain is fatal flaw is complexity through abstraction. Every release (and there are many) changes the API in breaking ways. Code written six months ago often does not work with the current version. The abstractions are leaky — you are constantly fighting them when you go off the happy path.\nDocumentation is extensive but often contradictory across versions. Debugging LangChain apps in production is its own special challenge. And the framework is heavy — you are pulling in a lot of dependencies for what might be a simple use case.\nBest for:\nEnterprise projects that need maximum flexibility and tool integrations\nTeams that need LangSmith for production observability\nComplex multi-step workflows with branching and state\nProjects where you will use the full platform (LangGraph + LangSmith + LangServe)\nNot best for:\nQuick prototypes where you need to move fast\nTeams without bandwidth to handle framework churn\nSimple single-agent tasks (you do not need a battleship for a rowboat)\nWhat it is: CrewAI is built around the concept of multi-agent crews — you define agents with specific roles (Researcher, Writer, Analyst), give them tools, assign tasks, and let them collaborate. The mental model is explicitly inspired by organizational structures: agents are employees, tasks are jobs, and the crew is the company.\nThe Good:\nCrewAI is killer feature is its ergonomics. Getting a multi-agent system running is genuinely fast. The role-based abstraction makes it easy to reason about: \"I need a researcher to gather data, then a writer to turn it into a blog post, then an editor to review it.\" That maps directly to CrewAI is API.\nfrom crewai import Agent, Crew, Task, Process\n\nresearcher = Agent(\n    role=\"Research Analyst\",\n    goal=\"Find the most relevant facts about {topic}\",\n    backstory=\"Expert at synthesizing complex information\",\n    tools=[search_tool, scrape_tool]\n)\n\nwriter = Agent(\n    role=\"Content Writer\",\n    goal=\"Write a compelling article based on research\",\n    backstory=\"Award-winning tech writer\",\n    tools=[file_tool]\n)\n\ncrew = Crew(\n    agents=[researcher, writer],\n    tasks=[research_task, writing_task],\n    process=Process.sequential\n)\n\nresult = crew.kickoff(inputs={\"topic\": \"agent frameworks\"})\n\nThe output is clean. The agent collaboration is visible. For use cases where the multi-agent pattern fits, CrewAI often wins on development speed.\nThe Bad:\nCrewAI is less flexible when your problem does not fit the \"crew\" mold. If you need a single agent with complex state management, or a graph with cycles, or tight integration with specific infrastructure, you will hit walls faster than with LangGraph.\nThe tool ecosystem is narrower. If you need something unusual, you might be writing more custom code than you would like. And while the framework is easier to use than LangChain, it is also younger — the production hardening and debugging story is less mature.\nBest for:\nMulti-agent pipelines that fit the crew/role model\nFast prototyping of collaborative AI workflows\nTeams that want a clean mental model without a steep learning curve\nContent generation, research synthesis, analysis pipelines\nNot best for:\nSingle-agent complex stateful applications\nHighly custom orchestration requirements\nProduction systems requiring deep observability out of the box\nSituations where you need the broadest possible tool ecosystem\nMAF is a less-discussed but interesting entrant in the space. It positions itself as a minimalist agent framework — opinionated about structure, minimal about abstraction. The philosophy is \"give you just enough to build agents reliably, without the framework becoming the product.\"\nMAF is strength is its predictability. Because it is small and focused, behavior is more consistent across versions. The tradeoff is a narrower feature set — if you need something MAF does not support natively, you are likely back to writing custom code.\nIt is a good choice for teams that have been burned by framework complexity before and want something stable they can reason about. Less community support, but more stability.\nAutoGen takes a conversational multi-agent approach. Agents communicate by exchanging messages, with humans optionally participating in the loop. It is powerful for complex collaborative tasks and has strong Microsoft ecosystem integration (Azure AI, etc.).\nThe strength is the multi-agent conversation model and human-in-the-loop support. The weakness is a steep learning curve and a framework that can feel heavy for simpler tasks.\nSemantic Kernel is Microsoft is enterprise-grade offering, deeply integrated with the Azure ecosystem. It has strong support for planning, memory, and skill orchestration. If you are already in the Microsoft/Azure world, it is a natural fit.\nThe catch: if you are not on Azure, the integration benefits evaporate and you are left with a fairly verbose framework compared to more lightweight alternatives.\nMetaGPT simulates a software company with multiple agents playing roles (Product Manager, Architect, Engineer, QA). It takes the crew/multi-agent idea and pushes it to an extreme — giving agents structured outputs that simulate SOPs.\nIt is a fascinating research prototype and great for demos. For production use, the overhead and cost (multiple LLM calls per step) can be prohibitive.\nLlamaIndex deserves a special mention because it is often compared to LangChain but serves a different primary purpose. While LangChain is general-purpose, LlamaIndex is purpose-built for retrieval-augmented generation (RAG). If your agent is primary job is \"read a bunch of documents, answer questions about them,\" LlamaIndex is probably the right starting point, not LangChain.\nMany teams use both: LlamaIndex for the retrieval layer, LangChain or CrewAI for orchestration.\nHere is the honest comparison across dimensions that matter:\n\n\n\nDimension\nLangChain/LangGraph\nCrewAI\nMAF\nAutoGen\n\n\n\n\nLearning curve\nSteep\nModerate\nLow\nSteep\n\n\nMulti-agent ergonomics\nModerate\nExcellent\nModerate\nGood\n\n\nSingle-agent workflows\nGood\nWeak\nGood\nWeak\n\n\nTool ecosystem\nMassive\nGrowing\nMinimal\nModerate\n\n\nProduction maturity\nHigh\nMedium\nLow-Medium\nMedium\n\n\nAPI stability\nPoor (frequent breaking changes)\nModerate\nGood\nModerate\n\n\nDebugging experience\nChallenging\nGood\nGood\nModerate\n\n\nCost efficiency\nModerate\nGood\nGood\nLower (more LLM calls)\n\n\nCommunity size\nHuge\nGrowing\nSmall\nMedium\n\n\nBest for\nComplex enterprise systems\nMulti-agent pipelines\nStable minimal builds\nHuman-in-the-loop agents\n\n\n\nHere is the decision framework I would give a friend:\nChoose LangChain/LangGraph if:\nYou are building a complex, production-grade system\nYou need integrations with everything under the sun\nYou have the engineering bandwidth to manage framework complexity\nYou need LangSmith is observability features\nYou are building something that needs to survive multiple team members and a year of maintenance\nChoose CrewAI if:\nYour problem is naturally a \"crew\" — multiple specialized roles collaborating on a pipeline\nYou want to move fast on a prototype and are willing to refactor later if needed\nYou value code readability and a clean mental model over maximum flexibility\nYou are building content pipelines, research tools, or multi-step analysis workflows\nChoose MAF if:\nYou have been burned by framework churn before\nYou want something stable and predictable\nYour use case is relatively contained\nYou prefer to extend a small framework yourself rather than navigate a large one\nChoose AutoGen if:\nYou need human-in-the-loop decision making as a first-class feature\nYou are in the Microsoft ecosystem and want tight Azure integration\nYou are building a research prototype that might graduate to production\nUse LlamaIndex for the retrieval layer regardless of which orchestration framework you choose, if your agent needs to work with documents or knowledge bases.\nThe framework landscape is still very much in flux. The patterns that will win long-term are not clear yet. Here is what I believe with moderate confidence:\nLangChain will remain dominant in enterprise because the ecosystem lock-in is real and switching costs are high. But it will lose mindshare among indie developers and startups who want to move fast.\nCrewAI has the best product-market fit for the \"I want multi-agent without a PhD\" market. If it can maintain API stability and grow its ecosystem, it has a real shot at becoming the Rails of the agent world.\nMAF and similar minimal frameworks will grow as the industry matures and developers realize that \"less framework\" often means \"less debugging.\"\nThe most important skill is not learning any particular framework. It is understanding the patterns underneath — state machines, tool calling, memory management, multi-agent handoffs — so you can adapt when your framework of choice inevitably changes.\nIf you are ready to pick one and start building, here is the path I recommend:\nSpend one hour with CrewAI — build a simple two-agent pipeline. Feel the ergonomics.\nSpend one hour with LangGraph — build the same pipeline. Feel the power and the complexity.\nAsk yourself: \"Did I feel limited by the simpler tool, or did the complex tool give me things I actually needed?\"\nThe answer to that question tells you more than any comparison table ever could.\nBuild something. Ship it. Then rebuild it better. That is the only framework that does not have breaking changes.",
-      "publishedAt": "2026-08-19T00:44:58.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "1e372866f5f348bdd29762d974c4a306c5525252e50868da7e7d18cf38d38883",
-      "title": "Where Did My 512GB Go? How Developers Lose 50GB+ to Node, Docker & macOS Build Artifacts",
-      "url": "https://dev.to/sarmad_hussain_771d6c87fa/where-did-my-512gb-go-how-developers-lose-50gb-to-node-docker-macos-build-artifacts-6m5",
-      "description": "If you develop on a MacBook (especially a 256GB or 512GB model), you've probably seen the dreaded \"Disk Almost Full\" notification.\nWhen you check macOS Storage Settings, Apple simply labels 100GB+ under the ambiguous \"System Data\" banner.\nHere is an honest breakdown of where that disk space actually disappears—and how to reclaim it safely without breaking active projects.\nnode_modules Folders\n\n\nEvery tutorial, side project, and prototype you worked on 6 months ago still has a 500MB–1.5GB node_modules tree sitting quietly on your drive.\nIf you have 30 inactive repositories, that's 30GB–50GB of pure disk waste.\nModern full-stack toolchains leave heavy caching artifacts:\n.next and .nuxt build outputs\n.turbo and .parcel-cache\n\nComposer vendor folders\nEven if you aren't an iOS developer, installing packages with native dependencies or running React Native / Flutter builds causes ~/Library/Developer/Xcode/DerivedData to silently balloon to 20GB+.\nWhatsApp Desktop on macOS caches all incoming media locally at ~/Library/Containers/desktop.WhatsApp/Data/Library/Application Support/WhatsApp/. This can easily consume 15GB–40GB of stale videos and voice notes.\nTo see your top 10 largest folders inside your projects directory:\ndu -sh ~/Projects/* | sort -rh | head -n 10\n\nTo calculate the total space consumed by node_modules across your machine:\nfind ~/Projects -name \"node_modules\" -type d -prune -exec du -chs {} +\n\nMost generic Mac cleaner utilities search for browser cache and system logs, but they fail developers in two ways:\nThey ignore developer project artifacts completely.\nIf they do find them, they delete blindly without explaining whether a folder is rebuildable or critical.\nTo solve this transparency issue, I built Dusty, an AI-explained macOS storage cleaner tailored specifically for developers. \nIt classifies files into transparent risk tiers (Safe, Rebuildable, Review First, Never Touch) and uses Gemini AI to give a plain-English explanation before moving anything safely to the macOS Trash.\nYou can check out our in-depth guide on how developers can clean hidden Mac storage safely.\nDo you use shell aliases, npx scripts, or dedicated tools? Share your setup in the comments!",
-      "publishedAt": "2026-08-19T00:37:22.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "534a2857c77b3814f6a017f2255803e8a125d961589de1186fce7a24fec2124c",
-      "title": "Why Extracting Tables From a PDF Is Harder Than It Looks (and How We Actually Do It)",
-      "url": "https://dev.to/peter_ndumia_pdfhaul/why-extracting-tables-from-a-pdf-is-harder-than-it-looks-and-how-we-actually-do-it-2llg",
-      "description": "If you have ever copy-pasted a table out of a PDF, you already know what happens. Rows collapse into one long line of text. Columns interleave. Numbers land in the wrong cell, or no cell at all. The table on the page looks perfectly structured, but a PDF has no real concept of \"table.\" It only knows where individual characters sit on a page. Every extraction tool, ours included, has to reconstruct the table from scratch, using nothing but the position of each word.\nThat gap between \"looks like a table\" and \"is structured data\" is where almost every free PDF tool falls apart. Here is how we handle it, what actually works, and where it still doesn't.\nPDFHaul splits this into two separate tools because they solve different problems.\nPDF to Excel rebuilds the whole document as a single spreadsheet, in the order it appears on the page: form labels, key-value pairs, section titles, and tables all together. It is for documents where you want the full content, not just the numbers, things like invoices, time sheets, and reports.\nExtract Tables does the opposite. It ignores everything that isn't a table and hands back one clean sheet per table, nothing else. It is for people who want structured data out, ready to sum, sort, and filter, not a copy of the document.\nBoth tools share the same underlying geometry engine. The difference is what each one keeps and what it throws away.\nThe core problem with table extraction is that \"looks tabular\" and \"is tabular\" are not the same thing. A vector chart's axis box, a form's outlined signature field, and a two-column list of allergen names all produce something that a naive extractor will happily read as a grid. None of them are tables.\nOur pipeline handles this in four phases, all before anything is written to a spreadsheet:\nPhase 1: classify the page. Every page is scored as bordered (has ruled lines or filled-rectangle grid lines), stream (no borders, but rows visibly span both sides of a column gap), columnar (independent parallel lists that never interact), or plain text.\nPhase 2 and 3: run the right extractor for the layout. Bordered pages go through Camelot's lattice mode. Borderless but structured pages go through Camelot's stream mode. Neither result is trusted blindly.\nPhase 4: catch what the first pass missed, and gate everything. This is the important part. Every candidate table, whether it came from Camelot, from an explicit rectangle grid, or from our own zone-based word extraction, has to pass a classifier before it is counted as a table at all. The classifier checks column count, row density, and how numeric or short the cell contents are. A form field's outline box or a chart's axis lines will fail this check and get demoted to plain text instead of becoming a two-cell \"table.\" Without this gate, Camelot's own false positives, grid-shaped chart elements, form outlines, would get counted as extracted tables. With it, only genuine tables make it through.\nUnderneath all four phases sits a shared geometry layer that does the actual measuring: it finds page gutters by picking the split point that divides the text most evenly (not just the widest gap, which a table's own label-and-value gap can be wider than), clusters words into lines by their vertical center rather than their top or bottom edge (so bold headers and footnote superscripts don't throw off row grouping), strips dot leaders like \"Section..........12\" before measuring column gaps (leaders fill the whitespace a gap detector relies on), and merges a wrapped label back onto the row it belongs to before anything gets written out.\nTables that span a page break get stitched back together too. If two adjacent pages produce tables with the same column count, and the second page's first row looks like a repeat of the first page's header (fuzzy-matched, so \"Week No.\" and \"Week Number\" still count as the same header), they are joined into one continuous table instead of two separate sheets.\nWe measure this against a verified 20-PDF corpus spanning financial reports, government tenders, laws and regulations, and scientific articles, scored on both cell content and correct row and column placement.\n\n\n\n\nContent accuracy\nStructure accuracy\n\n\n\n\nPDF to Excel\n84% average (94% typical)\n79% average (89% typical)\n\n\nExtract Tables\n84% average (100% typical)\n83% average (100% typical)\n\n\n\nAverage and typical (median) diverge because a handful of document types outside our core use case, dense mathematical notation and pages built around vector charts, drag the average down. Inside the core use case, financial, business, and legal documents, both tools sit at 83 to 100 percent uniformly across every file we tested.\nWe would rather tell you this directly than let you find out the hard way.\nScanned PDFs get real table detection too, not just text. We run OCR automatically before extraction starts, no separate step needed. For tables with visible ruled borders, the table-line detection itself runs directly on the rendered page image, so it works whether the underlying PDF has any vector graphics data or not, a scanned bordered table gets picked up the same way a native one would. The honest limit: table shape detection is one thing, text quality is another. A low-resolution or heavily degraded scan can still produce garbled cell content even when the table's structure is found correctly, since that depends on how much a scanner or camera actually captured, not on our extraction logic.\nPages with charts can leak garbage. A vector chart's axis numbers and legend entries currently extract as short text blocks alongside the real content, because the classifier correctly recognizes they aren't tables, but nothing yet recognizes they belong to a chart and should be dropped entirely, keeping only the caption. This is the single biggest gap we're working on.\nDense academic and mathematical notation is a genuinely different layout problem, and accuracy drops to 35 to 52 percent on that category. If your PDF is a math-heavy research paper, expect a rougher result than a financial statement.\nOutside those three cases, financial reports, government forms, contracts, business documents, this is what the tool is actually built for, and the numbers above reflect that.\nFor the harder cases above, badly degraded scans, dense academic layouts, chart-heavy pages, we're looking at a premium tier built on Google's Document AI, a cloud model trained specifically on document structure rather than the geometry-based approach described here. It would not replace what's already free, it would be an option for the documents that currently come out rough.\nSo we'll ask directly instead of guessing: would you pay for more accurate extraction on your hardest documents, the ones that don't come out clean today? Tell us.\nExtract Tables and PDF to Excel are both free, with no account required for a single file. Upload a PDF and see which one gives you what you need: the full document, or just the numbers.",
-      "publishedAt": "2026-08-19T00:36:56.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "1f2c19a04408e4fad85254694e780d33e9e24464eb30ae8f810add29ef35fe9b",
-      "title": "Build a Tiny Native Coding Agent in Under 100 Lines",
-      "url": "https://dev.to/adilaidev/build-a-tiny-native-coding-agent-in-under-100-lines-1o0k",
-      "description": "Most coding agents feel like over-engineered black boxes. They rely on cloud APIs, eat RAM like candy, and hide their internals behind layers of abstraction. What if you could build one that fits in a single file, runs on your laptop, and does exactly what you need without the bloat?\nA tiny agent means no unnecessary dependencies. No Docker containers, no Python virtual environments, no gigabytes of model weights. Native means it compiles to a single binary or runs with minimal runtime overhead. This keeps startup times fast and resource usage predictable.\nOpen source ensures you control the behavior. You can tweak the prompts, adjust the logic, or strip out features you don’t need. No vendor lock-in, no surprise API bills, no waiting for someone else to fix a bug.\nA small language model that runs locally. Think 7B parameters or fewer.\nA file watcher to monitor your codebase for changes.\nA simple CLI interface for sending commands and receiving output.\nA prompt template that keeps the agent focused on coding tasks.\nBasic error handling and logging to avoid silent failures.\nYou don’t need a 70B parameter model for most coding tasks. Smaller models like CodeGemma 2B or TinyLlama 1.1B are fast, lightweight, and surprisingly capable for code completion, refactoring, and simple explanations. They run on a single GPU or even a decent CPU.\nQuantization helps. Converting the model to 4-bit precision reduces memory usage without a huge drop in quality. Tools like GGML or llama.cpp make this straightforward. You’ll trade a little accuracy for a lot of speed and portability.\nA file watcher triggers the agent when your code changes. In Go, you can use the fsnotify library. In Rust, the notify crate works well. Python has watchdog. The key is to debounce events so you don’t overload the model with rapid-fire changes.\nKeep the watcher simple. It should track file saves, not every keystroke. Ignore temporary files, build artifacts, and directories like node_modules or .git. Focus on the files you actually edit.\nA good prompt turns a general-purpose model into a coding assistant. Start with a clear role. Tell the model it’s an expert developer working on a specific codebase. Include the file context and the task you want help with.\nYou are an expert Python developer. Here’s a function from my codebase. Suggest a cleaner implementation that handles edge cases better.\nLimit the response length. A model that rambles for pages is useless. Set a token limit and ask for concise answers. If the task is complex, break it into smaller steps and handle them one at a time.\nLoad the quantized model into memory at startup. Keep it warm to avoid cold-start delays.\nStart the file watcher in a separate thread or process. Use a queue to manage incoming events.\nWhen a file changes, read the content and send it to the model with your prompt template.\nStream the response back to the CLI or insert it directly into your editor via LSP or a plugin.\nLog errors and timeouts. If the model fails, fall back to a simple error message instead of crashing.\nA coding agent should feel like a pair programmer, not a distraction. Start with small, predictable tasks. Ask it to explain a function, suggest a refactor, or write a docstring. Avoid open-ended requests like 'improve this file' unless you want a mess.\nIntegrate it with your editor. If you use VS Code, write a simple extension that calls your agent’s CLI. For Neovim, use a Lua script to send the current buffer to the agent and display the response in a split. The less friction, the more you’ll use it.\nOpen source isn’t just about the license. It’s about making the code easy to understand and modify. Write clear, commented code. Use a simple build system. Document the dependencies and setup steps. If someone can’t run it in 10 minutes, it’s too complicated.\nPublish it on GitHub with a permissive license like MIT or Apache 2.0. Include a README that explains what it does, how to build it, and how to contribute. The goal is to let others adapt it to their needs, not just clone and forget.\nA tiny native coding agent won’t replace a full IDE or a team of developers. But it can handle the repetitive, low-context tasks that slow you down. Build it small, keep it open, and make it work for you.\nThis post was originally published on my site. Read the full article and more →",
-      "publishedAt": "2026-08-19T00:36:47.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "8e3bdfdd404bbb27801d9dd7611f26abb00ab280c47b20bb9fb0c013c7d9ae90",
-      "title": "第923回　DockgeでDocker Composeをブラウザから手軽に管理しよう",
-      "url": "https://gihyo.jp/admin/serial/01/ubuntu-recipe/0923?utm_source=feed",
-      "description": "今回は、Docker ComposeのスタックをWebブラウザから管理できるDockgeを紹介します。",
-      "publishedAt": "2026-08-19T00:00:00.000Z",
-      "feedName": "gihyo.jp"
-    },
-    {
-      "id": "42834e89884e384d377b87c0d8c910c264eefc4c273d147226815456400b9a0d",
-      "title": "アップル「iOS 26.6.1」公開　「iOS 27」を待たず今すぐアップデートしよう",
-      "url": "https://japan.cnet.com/article/35251669/",
-      "description": "アップルは「iOS 26.6.1」をリリースした。20件を超える不具合修正とセキュリティーパッチが含まれる。",
-      "publishedAt": "2026-08-18T23:44:00.000Z",
-      "feedName": "CNET Japan"
-    },
-    {
-      "id": "e8ffd52c71344f6704c4d61324bdaacc2a35ed4b3dcb6112f909a784dde49d95",
-      "title": "ランサムウェア被害後の命運を分ける「復旧」のカギ──本当に機能するバックアップ運用を押さえよう",
-      "url": "https://enterprisezine.jp/news/detail/24871",
-      "description": "EnterpriseZine編集部は9月17日（木）に、編集部企画・主催のサイバーセキュリティ専門イベント「Security Online Day 2026 Autumn」を開催します。当日は、IT...",
-      "publishedAt": "2026-08-18T23:30:00.000Z",
-      "feedName": "EnterpriseZine"
-    },
-    {
-      "id": "8e2eda42c40542ea7bd683cfadbed4a24c28ba065c0893aed668cc1953a0ef82",
-      "title": "参加者約 5,000 人が UC Berkeley に集結 — Agentic AI Summit 2026 参加レポート",
-      "url": "https://developers.cyberagent.co.jp/blog/archives/65345/",
-      "description": "UC Berkeley で開催された Agentic AI Summit 2026 の参加レポート。現地約 5,000 人・登壇者 150 名超のカンファレンスから、harness・評価基盤・セキュリティ・coding agent など Agentic AI の最前線を紹介します。",
-      "publishedAt": "2026-08-18T23:00:55.000Z",
-      "feedName": "CyberAgent Developers Blog"
-    },
-    {
-      "id": "441267fd80e11272515ea3dceeb591332497e0597bc942649ec9f8bb5d40c6b6",
-      "title": "コードからDockerfile不要でOCIコンテナをビルド。「Cloud Native Buildpacks」が十分成熟したとしてCNCFの卒業プロジェクトに",
-      "url": "https://www.publickey1.jp/blog/26/dockerfileocicloud_native_buildpackscncf.html",
-      "description": "コードからDockerfile不要でOCIコンテナをビルド。「Cloud Native Buildpacks」が十分成熟したとしてCNCFの卒業プロジェクトに Cloud Native Computing Foundation（CNCF）は、アプリケーションのソースコードから直接OCIコンテナメージを構築するツールである「Cloud Native Buildpacks」が十分成熟したとして、卒業プ...",
-      "publishedAt": "2026-08-18T22:39:52.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "d85260feb55034b4ac963bd128f0155ef942eb400b46a3747ffa3887b80e6246",
-      "title": "Azure／Entraから情報を抜かせない　大企業9社・364万件流出事案で見えた防御の穴",
-      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2608/19/news040.html",
-      "description": "大企業9社のAzure／Entra環境から、計364万件超の従業員情報が持ち出された事案が起きた。一体なぜこのような事態が発生してしまったのか。今回の事例を踏まえて、Azureテナントを守るために押さえるべきポイントを考える。",
-      "publishedAt": "2026-08-18T22:00:00.000Z",
-      "feedName": "＠IT"
-    },
-    {
-      "id": "5a6b43d9bfbad1ec41c705a8668d74120353820ad53611884d9defd522f992e8",
-      "title": "Oracle Database@AWS 移行に向けてアプリケーションの SQL*Net レイテンシーを把握する",
-      "url": "https://aws.amazon.com/jp/blogs/news/characterizing-sqlnet-latency-in-your-application-for-oracle-databaseaws-migrations/",
-      "description": "Oracle Database@AWS への移行では、ワークロードが SQL*Net レイテンシーの増加に敏感かどうかの見極めが重要です。本記事では AWR、Active Session History、SQL Trace を使い、3 つのフェーズで感度を段階的に絞り込む CRET 手法を紹介します。移行前にレイテンシー増加の影響を定量化でき、接続とデプロイの考慮事項も解説します。",
-      "publishedAt": "2026-08-18T21:54:07.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "1e5b16b6e5e7065e0bc6923aaba0b14299054de6845206d8338c831708375c11",
-      "title": "AIセキュリティ何から勉強すりゃええの？ - Qiita",
-      "url": "https://qiita.com/mikihitooooo/items/ced6a0aa744379d338b6",
-      "description": "Deleted articles cannot be recovered. Draft of this article would be also deleted. Are you sure you want to delete this article? AIセキュリティ何から勉強すりゃええの？ 目次 はじめに 軽く自己紹介 調べたソース・用語 直近の学習計画 1. 論文の読み込み（一次ソースの収集） 2. 検証環境の構築 3. ブログ・...",
-      "publishedAt": "2026-08-18T20:32:46.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "4b5ab81deba3b32a2bec776b239e9b7408edc205576ed6cc2c7d5e5aa8832a26",
-      "title": "Wantedlyのインフラチームは「挑戦を続けるための」開発・運用基盤をどう築いてきた？",
-      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2608/19/news016.html",
-      "description": "ビジネスSNS「Wantedly」を提供するウォンテッドリーは、コンテナやKubernetes、マイクロサービスなど新しい技術を早くから取り入れ、サービス開発のスピードを高めてきた。開発者が開発に集中できる環境と、安定したユーザー体験を支える仕組みをどう構築してきたのか。取り組みの背景と狙いを聞いた。",
-      "publishedAt": "2026-08-18T20:00:00.000Z",
-      "feedName": "＠IT"
-    },
-    {
-      "id": "d93c4fe5078a2a6c72da6b2ae35b0839100297631b30fee5cd58d7ca5726efa4",
-      "title": "AWS サインイン画面の新しいエクスペリエンスを試してみた",
-      "url": "https://dev.classmethod.jp/articles/aws-signin-new-experience-builder-id/",
-      "description": "AWSマネジメントコンソールのサインイン画面に、新しいエクスペリエンスへの案内が表示されるようになりました。メールアドレスやソーシャルログインの選択に応じて認証経路が振り分けられるこの画面で、ルートユーザー、IAMユーザー、AWS Builder ID、AWSと未連携のGoogleアカウントを試し、それぞれの画面遷移を確認しました。",
-      "publishedAt": "2026-08-18T18:06:24.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "2c438c069ab7e514bda5416ba8e69750b88fbc8a3c3a0f048b401a7e7aef3778",
-      "title": "AWS ParallelClusterをPermissions Boundary環境で使ってみる",
-      "url": "https://dev.classmethod.jp/articles/aws-parallelcluster-permissions-boundary/",
-      "description": "ParallelClusterをPermissions Boundary環境で動かす際の設定方法と、実装時のハマりどころについてまとめました。\nPermissions Boundaryを使う環境ではクラスタ作成がDenyされてしまいますが、設定ファイルに1行加えるだけで解消できます。",
-      "publishedAt": "2026-08-18T14:58:28.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "ddb6ff6c002decaaa07c3a6b1256817ea7425c2471778a42f865f403eba2c649",
-      "title": "Snowflake Openflow Connector for PostgreSQL を SPCS で動かし、RDS for PostgreSQLに接続してみた",
-      "url": "https://dev.classmethod.jp/articles/tried-running-snowflake-openflow-connector-for-postgresql-on-spcs-and-connected-to-rds/",
-      "description": "SnowflakeのOpenflow Connector for PostgreSQLを使って、RDS for PostgreSQLからSnowflakeへCDCデータ転送を試してみました。前回はAWS上にデプロイしてデプロイして動作するBYOCを試しましたが、今回はSPCSで試してみました。",
-      "publishedAt": "2026-08-18T10:11:47.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "afa1d676a28946b984c6507e0ae74168e3b71b443934e5595b4cec9401254bbc",
-      "title": "【IoT入門】AWS IoT ルールを使用してデバイスから送信されたデータをSlack通知してみる",
-      "url": "https://dev.classmethod.jp/articles/iot_rules_lambda/",
-      "description": "AWS IoT Coreへの入門として、MQTTクライアントからデータを送信し、AWS IoT ルール経由でLambdaを使用してSlackに通知する仕組みを実装してみます。",
-      "publishedAt": "2026-08-18T08:16:08.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "cc328034ada8230f41dc2c60ca5ace93935c3ea0f96923640c30ae22e824af25",
-      "title": "Claude Cowork のハンズオン環境をAWS上に構築してみた",
-      "url": "https://dev.classmethod.jp/articles/claudecowork-build-handson-environment/",
-      "description": "# 導入文\n\nClaude Cowork のハンズオン環境構築に挑みました。デスクトップアプリを100名規模でブラウザから安全に配り、受講者ごとに予算管理する必要があり、前回の Claude Code の資産がほぼ使えず一から組むことに。そこで直面した7つの課題と、その解決過程を紹介します。",
-      "publishedAt": "2026-08-18T08:08:44.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "6c8095245e04998480a31d70fe4317bbcf31493c939e81abcd94c3e6779cd78e",
-      "title": "【開催報告】AWS Summit Japan 2026 レポート：SUMCO が挑む、Amazon Redshift × 生成 AI による半導体ウェーハ製造 DX",
-      "url": "https://aws.amazon.com/jp/blogs/news/sumco-redshift-generative-ai-semiconductor-wafer-dx/",
-      "description": "本記事は 2026 年 6 月 25 日から 26 日に幕張メッセで開催された AWS Summit Japan 2026 の開催報告です。AWS for Industries Zone に出展した株式会社 SUMCO のブース展示 「Amazon Redshift × 生成 AI で挑む 半導体ウェーハメーカーの DX」 の内容を、SUMCO と AWS が共同で振り返ります。",
-      "publishedAt": "2026-08-18T07:23:15.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "2dfc6c1b6209411cabaa0c77823c853b8e4f66e4f2e411df6cf8dee692eb44bd",
-      "title": "[アップデート] AWS CloudShell が組み込みのビジュアルファイルエディタをサポートしたので試してみた",
-      "url": "https://dev.classmethod.jp/articles/20260818-aws-cloudshell-visual-file-editor/",
-      "description": "AWS CloudShellに追加されたビジュアルファイルエディタを実際に試してみました。`edit`コマンド一つでブラウザ上のGUIエディタが起動し、シンタックスハイライトや検索・置換に対応しています。この記事では、実際の使用例から300KiBの上限などの制約まで、詳しく検証した結果をご紹介します。",
-      "publishedAt": "2026-08-18T06:56:02.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "1602f10bd579feadde4bdd6dbf065648afe1b9fc16316ceeb0b4cf7cc381dadd",
-      "title": "【AWS CloudShell】ビジュアルファイルエディタ `edit` 機能が追加されました！",
-      "url": "https://dev.classmethod.jp/articles/aws-cloudshell-visual-file-editor/",
-      "description": "AWS CloudShell に新しく追加されたビジュアルファイルエディタ機能についてご紹介します。`edit`コマンド一つで起動でき、構文ハイライトや検索置換などのGUI機能が使えます。",
-      "publishedAt": "2026-08-18T06:43:55.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "dc11fb53cefed0ab923d6149b556579894bb8267969f0071deaade6f471ffed9",
-      "title": "プルーフポイント、パートナー向けOEMプログラムを開始　脅威インテリジェンス基盤の自前構築が不要に",
-      "url": "https://enterprisezine.jp/news/detail/24868",
-      "description": "プルーフポイント（Proofpoint）は、「Proofpoint OEM プログラム」の開始を発表した。テクノロジープロバイダー、サイバーセキュリティベンダー、マネージドサービスプロバイダー、プラ...",
-      "publishedAt": "2026-08-18T06:21:00.000Z",
-      "feedName": "EnterpriseZine"
-    },
-    {
-      "id": "06eaffa2366a0d722db1bde4ce5957070c40800a38a40827a595ff25f0e54284",
-      "title": "AWS BackupでEC2をバックアップするときに特定のボリュームを除外することは可能ですか？",
-      "url": "https://dev.classmethod.jp/articles/tsnote-aws-backup-ec2-exclude-specific-volumes/",
-      "description": "AWS Backup で EC2 インスタンスをバックアップする際、特定の EBS ボリュームを除外できますか？ EC2 単位のバックアップでは除外不可ですが、EBS ボリューム単位に変更することで対応可能です。",
-      "publishedAt": "2026-08-18T06:01:31.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "ac3f1f60d9c602ea585ce580d28f6ff535b1ccdf8aac0231cf6c94f4c7680482",
-      "title": "オラクル、AWSと「Oracle AI Database@AWS」で協業拡大",
-      "url": "https://enterprisezine.jp/news/detail/24866",
-      "description": "オラクル（Oracle）は、「Oracle Exadata Database Service on Exascale Infrastructure」における、「Oracle AI Database@...",
-      "publishedAt": "2026-08-18T05:45:00.000Z",
-      "feedName": "EnterpriseZine"
-    },
-    {
-      "id": "230b654c66840e039d7c2a84d374ea22e771e781f80d6778e9de0513c46409bd",
-      "title": "生成AIによる処理結果をTP/FP/TN/FN×信頼区間でテストする",
-      "url": "https://qiita.com/take-yoda/items/4f561e8ad7c069c71001?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "株式会社ブレインパッドプロダクト開発部でRtoaster GenAIの開発をしている依田です。\n今回は生成AI機能の「信頼性」をどうテストするかというテーマで、ECサイトの予算抽出機能を題材にしたハンズオンをお届けします。\n\nはじめに\n生成AIを組み込んだ機能を作っていると...",
-      "publishedAt": "2026-08-18T04:17:10.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "3fc3c0c8519947eb1df24b14d3cd383b750026f413d51378cac8c82b8536a4ac",
-      "title": "AWSジャパン、地域創生支援の新プログラム発表　1社あたり最大50,000ドルのAWSクレジット提供",
-      "url": "https://enterprisezine.jp/news/detail/24859",
-      "description": "アマゾン ウェブ サービス ジャパン（以下、AWSジャパン）は2026年8月17日、新プログラム「AWSジャパン地域創生支援プログラム（LEAP by AWS Japan）」発表にともなう記者会見を...",
-      "publishedAt": "2026-08-18T04:00:00.000Z",
-      "feedName": "EnterpriseZine"
-    },
-    {
-      "id": "c55b9a30c509b6547e78f0e973e2fa1ea1e331885a3045ec9f4e2c01425e48ea",
-      "title": "あなたの適職は「CISO」？　それとも「技術営業」？　9職種から“一押しセキュリティ職”が分かる無料診断",
-      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2608/18/news048.html",
-      "description": "「セキュリティ人材」には、具体的にどのような職種があるのか。自分にとっての適職はどれなのか――。これらを知るために役立つ、無償で使える診断ツールが登場した。どのようなものなのか。",
-      "publishedAt": "2026-08-18T04:00:00.000Z",
-      "feedName": "＠IT"
-    },
-    {
-      "id": "444884e76742dfa5f1d876be0ae1e09d1120d129b2129774b975f442049d656f",
-      "title": "ブラウザ内AI推論を「最大60倍」速く　Web AIランタイム「LiteRT.js」をGoogleが発表",
-      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2608/18/news049.html",
-      "description": "Googleは、同社のオンデバイス推論ライブラリ「LiteRT」のJavaScriptバインディングである「LiteRT.js」を発表した。「TensorFlow」がルーツにあり、「PyTorch」「JAX」「Keras」といったフレームワークでも同様に高いパフォーマンスを発揮するという。",
-      "publishedAt": "2026-08-18T04:00:00.000Z",
-      "feedName": "＠IT"
-    },
-    {
-      "id": "7c3d363971276fdf6b4b08c309c64ecc601bec9c1f84e1bfa80188bd4fee3328",
-      "title": "「セキュリティまで兼務なんて無理」「アラート見落としも不安」を解消　“少人数情シス”は何を変えた？",
-      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2608/18/news053.html",
-      "description": "人手を増やせない中で、セキュリティの監視やインシデント対処までどう回すか――。少人数の情報システム部門が抱えがちな課題を、南条装備工業はどう解消したのか。",
-      "publishedAt": "2026-08-18T04:00:00.000Z",
-      "feedName": "＠IT"
-    },
-    {
       "id": "57254e33504a9bdfdb33cd9eb404f9464555bec7d3a6036f512e84a3ac16ebb6",
       "title": "Perry Mason in: The Case of the Drifting Timer",
       "url": "https://dev.to/kickbuttowski80/perry-mason-in-the-case-of-the-drifting-timer-inj",
@@ -446,70 +174,6 @@
       "description": "Tree View は階層構造を効率よく操作できる一方、ARIA ロールを付けるだけではアクセシブルになりません。WAI-ARIA APG を参考に、roving tabindex、矢印キー、選択、文字検索を備えた単一選択の Tree View を React で実装する方法を紹介します Tree View は、ファイルシステムや商品カテゴリのような階層構造を表示す...",
       "publishedAt": "2026-08-19T03:42:26.000Z",
       "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "ccd73fbb6f61b3df2a65e24ffef9673a008a677eca8648db7bd1d8ff5e911545",
-      "title": "鮮度の高いインサイトで迅速な意思決定を – talabat が AWS と Google Cloud で実現したニアリアルタイム分析",
-      "url": "https://aws.amazon.com/jp/blogs/news/fresher-insights-faster-decisions-talabats-near-real-time-analytics-across-aws-and-google-cloud/",
-      "description": "talabat が AWS と Google Cloud にまたがるハイブリッドなマルチクラウドレイクハウスを構築した方法を紹介します。Apache Iceberg のデータを Amazon S3 Tables に一元的に保持しながら、Lakehouse フェデレーテッド Iceberg REST カタログを通じて BigQuery からニアリアルタイムで読み取り可能にし、データ移動コストを約 40% 削減しました。",
-      "publishedAt": "2026-08-19T03:01:09.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "ec2abafa6a5ea4f78ceeb1aefc70ecf1632415b1364240895b60e438d7c5d9f5",
-      "title": "【IaC 入門】 AWS CDK で「インフラのコード化」を体験してみた",
-      "url": "https://dev.classmethod.jp/articles/aws-cdk-handson-beginner/",
-      "description": "AWS CDK（Python版）とCloudShellを使い、Lambda と API Gateway でシンプルなサーバーレス API を構築してみました。長期アクセスキーを発行せずに、ローカル PC に認証情報を置かずに一連の作業を完結させる方法をご紹介します。",
-      "publishedAt": "2026-08-19T02:55:42.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "3c6cd0db6e759e1021336b03b25f6bddf19d32730fc945f8fc2d02dc9936e3e2",
-      "title": "株式会社セガ、グローバル展開タイトル『ソニックランブル パーティ』を少人数チームで支える Amazon EKS Auto Mode × Agones 活用事例",
-      "url": "https://aws.amazon.com/jp/blogs/news/sonic-rumble-party-eks-automode-agones/",
-      "description": "本記事では、株式会社セガが開発・運用する『ソニックランブル パーティ』の専用ゲームサーバー基盤で、ゲームサーバーのオーケストレーションに Agones を用い、その基盤に Amazon EKS (Elastic Kubernetes Service) Auto Mode を採用した経緯と効果を、お客様の声を交えて紹介します。 EKS Auto Mode の採用により、開発環境では「ゼロインスタンス運用」によるコスト削減を実現、本番環境ではグローバルローンチ以降、インフラ起因の停止はなく安定稼働を続けています。加えてその運用負荷削減効果により、運用が軌道に乗ってからは API サーバーやデータベースも含めた全環境を 1 名のエンジニアで運用できています。",
-      "publishedAt": "2026-08-19T02:45:10.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "9be8cdaa92b54816450e3d2f127efb26e5427f7bf30b734d09ecaece81e473aa",
-      "title": "AI時代の神経系「ネットワーク」、それを守る「セキュリティ」──2つの融合が企業生存の必須条件になる",
-      "url": "https://enterprisezine.jp/article/detail/24829",
-      "description": "2026年7月10日に、フォーティネットジャパンが日本で3年ぶりとなるツアーイベント「Fortinet Accelerate Japan 2026」を開催した。2026年度は事業戦略の転換を掲げ、大きな攻勢に出ているフォーティネット。今年度のキーメッセージは2つ──①ネットワークとセキュリティの融合、②サプライチェーン全体を守る・価値を高めるセキュリティだ。その根底にある意図や、実現するためのアプローチについて、代表の与沢和紀氏や、本国から来日したキーパーソンたちが基調講演で語った。また、その考えに賛同しAI時代のセキュリティ対策を実践する企業として、三菱電機デジタルイノベーションとトヨタ自動車のセキュリティリーダーも登壇した。",
-      "publishedAt": "2026-08-19T01:00:00.000Z",
-      "feedName": "EnterpriseZine"
-    },
-    {
-      "id": "2ecd274d0a636a25fc7be1b1ea0d4d10de241a8a6333070615b7ac630f45914e",
-      "title": "AWS の新ポリシー言語 Dogwood を試す",
-      "url": "https://zenn.dev/exwzd/articles/20260813-dogwood-agent-policy",
-      "description": "先端技術開発グループ（WAND）の伊賀です。 2026年8月、AWS が Dogwood というオープンソースのポリシー言語を発表しました（Introducing Dogwood: runtime verification for AI agents）。 AI エージェントのツール呼び出しを制御するための言語で、同日に発表された Amazon Bedrock AgentCore の temporal policies の...",
-      "publishedAt": "2026-08-18T23:15:14.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "595362325636a2ead86a8be4e3bf66c9e5cb727d30946ac476b83e1e1b08018e",
-      "title": "AIセキュリティ何から勉強すりゃええの？",
-      "url": "https://qiita.com/mikihitooooo/items/ced6a0aa744379d338b6?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "AIセキュリティ何から勉強すりゃええの？\n\n目次\n\nはじめに\n軽く自己紹介\n調べたソース・用語\n\n直近の学習計画\n\n1. 論文の読み込み（一次ソースの収集）\n2. 検証環境の構築\n3. ブログ・技術記事によるアウトプット\n\n理想の学習サイクル\nさいごに\n\nはじめに\n「...",
-      "publishedAt": "2026-08-18T15:03:47.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "f196b4bcc0ef23f64dfecc727cf3d45ece0a97334554ae416e2ea4bcedc3137f",
-      "title": "AWSでYouTube的サービスを検証してたら、電気通信事業法と著作権法の壁にぶつかった話",
-      "url": "https://qiita.com/yama3133/items/e60cb25d3b10d7a2f316?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "今、AWS環境でYouTube的な動画配信サービスがどこまで作れるかを検証している。\n動画のアップロード、トランスコード、配信基盤あたりはEC2やS3、CloudFrontを組み合わせれば技術的には普通に動く。\nところがコメント欄やユーザー間のDM機能を足そうとしたところで...",
-      "publishedAt": "2026-08-18T04:10:47.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "2ecd274d0a636a25fc7be1b1ea0d4d10de241a8a6333070615b7ac630f45914e",
-      "title": "AWS の新ポリシー言語 Dogwood を試す",
-      "url": "https://zenn.dev/exwzd/articles/20260813-dogwood-agent-policy",
-      "description": "先端技術開発グループ（WAND）の伊賀です。\n2026年8月、AWS が Dogwood というオープンソースのポリシー言語を発表しました（Introducing Dogwood: runtime verification for AI agents）。\nAI エージェントのツール呼び出しを制御するための言語で、同日に発表された Amazon Bedrock AgentCore の temporal policies の基盤にもなっています（Securing AI agents with temporal policies in Amazon Bedrock AgentCore）。\nエー...",
-      "publishedAt": "2026-08-18T04:07:05.000Z",
-      "feedName": "Zenn"
     },
     {
       "id": "1fd05f98acd7d183c66dafc333551dcb8bdc1384644670ace355a3ea42f7bc90",
@@ -1276,14 +940,6 @@
       "description": "はじめに\nJavaScriptを学んでいると、TypeScriptという名前を目にする機会が増えてきます。\nこの記事では、TypeScriptをこれから始める方に向けて、基礎知識から開発環境の構築、そして最初のプログラムを実行するまでの流れを、学習のアウトプットを兼ねて分...",
       "publishedAt": "2026-08-21T00:02:31.000Z",
       "feedName": "Qiita"
-    },
-    {
-      "id": "b986ec0ec34b16b35e204227000418d341a39b4d14149a46fe6dd9c6934bdc99",
-      "title": "何から手をつける？SmartHRのセキュリティ対策の考え方",
-      "url": "https://speakerdeck.com/smarthr/nani-kara-te-o-tsukeru-smarthr-no-sekyuriti-taisaku-no-kangaekata",
-      "description": "2026/08/18開催「事例から学ぶ！ 少数精鋭チームのセキュリティ防衛術 〜組織フェーズでみる取捨選択〜」の登壇資料です。 登壇者：岡村隆行（SmartHR セキュリティ・リスクマネジメント統括本部） イベント：https://findy.connpass.com/event/401381/…",
-      "publishedAt": "2026-08-18T22:02:44.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
     },
     {
       "id": "8d5a322b733e2c062ec202bcd13d37edbc77df5d9e7273bfd4b8317542610bb2",
@@ -6514,6 +6170,174 @@
       "url": "https://qiita.com/rana_kualu/items/f82f870ef8481d9b1f0b?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
       "description": "と謳うライブラリPorfforが、先日2026/08/25にアルファ版に到達しました。\nとのことで、以下は公式サイトとGitHubの紹介です。\n\nporffor公式サイト\n\nPorfforはJavaScriptをコンパイラでリビルドします。\nこれによってメモリ使用量とサイズ...",
       "publishedAt": "2026-09-14T12:34:39.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "554e3ce5a046dda43b6f0cc1498b2ce907be159bdf44ac5a3a6c8cb395b5805b",
+      "title": "iOSアプリ開発の気になる変更まとめ（2026/09/18）",
+      "url": "https://dev.classmethod.jp/articles/ios-dev-weekly-changes-20260918/",
+      "description": "iOS 27 / Xcode 27.0の正式リリースに伴い、リリースノートから新たに確認できた変更（launch screen必須化、@Stateマクロ化など）を整理した。iOS 26.7セキュリティアップデート、バージョン表示の障害、iOS 27.2 / Xcode 27.2 betaの注目点、Apple DeveloperドキュメントのMarkdown取得対応にも触れた。",
+      "publishedAt": "2026-09-18T02:56:57.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "62775663243a18c5a0365a28c6f33d778956a64abf4d8cbf5e2cad332614831f",
+      "title": "SAP Commerce Cloud と SAP Cloud ERP Private on AWS の統合 – 実践的で実証済みのアプローチ",
+      "url": "https://aws.amazon.com/jp/blogs/news/integrating-sap-commerce-cloud-with-sap-cloud-erp-private-on-aws-a-practical-and-proven-approach/",
+      "description": "SAP Commerce（SAP Hybris）2205 のメインストリームメンテナンス終了を控え、多くの企業が SAP Commerce Cloud SaaS と AWS 上の SAP Cloud ERP Private の統合によるモダナイゼーションを進めています。本記事では、リージョン選択、レイテンシー最適化（Amazon CloudFront・SAP BTP Integration Suite の活用）、ネットワーキング（AWS Global Accelerator・Amazon Route 53）、セキュリティの 4 つの観点から、実証済みのアーキテクチャベストプラクティスを解説します。さらに、Buy with Prime や Amazon Multi-Channel Fulfillment（MCF）との統合による e コマース業務の拡張についても紹介します。",
+      "publishedAt": "2026-09-18T02:12:55.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "885ca102f353a7cdf5e77bc2ba05d4a0d3a4700b24ede954b9c55b9895f97926",
+      "title": "ERP例外処理をAWSエージェント型標準作業手順書（SOP）で自動化",
+      "url": "https://aws.amazon.com/jp/blogs/news/aws-agentic-standard-operating-procedures-sops-for-erp-automation/",
+      "description": "エンタープライズ ERP の例外対応は、SAP のスリーウェイマッチや RPA、従来型 ML でも解決しきれず、手作業に依存してきました。本稿では、Amazon Bedrock AgentCore と Strands を基盤に、ナレッジベースの SOP を実行時に解釈して SAP／非 SAP システム横断で例外を自律解決する「エージェント型 SOP」フレームワークを紹介します。EventBridge・Lambda・DynamoDB・Bedrock Knowledge Bases・SES を組み合わせ、ヒューマン・イン・ザ・ループと監査水準の証跡を備えたリファレンスアーキテクチャと技術的ベストプラクティスを解説します。あるグローバル製造業では 30 日超を要した PO 引当計上が数分に短縮されました。",
+      "publishedAt": "2026-09-18T02:08:13.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "ede09ca85e286a4ab1099e87d7e359c4101a87466ee1605b76806e77823c83c4",
+      "title": "「FTPサーバでファイル共有」は“危険で手間”――ブラザー工業はどうやめた？",
+      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2609/18/news035.html",
+      "description": "協力会社との設計ファイルの共有にFTPサーバを利用していたブラザー工業。共有のたびにファイル保管場所をメールで連絡する手間に加えて、FTPサーバのセキュリティリスクに悩んでいた。どう解消したのか。",
+      "publishedAt": "2026-09-18T02:00:00.000Z",
+      "feedName": "＠IT"
+    },
+    {
+      "id": "e3aed6adf3cd4a4f4ee7659c6c3bbc0b0e11201e0348c2c3df1de7b8601897bd",
+      "title": "散在する“29万ファイル”をAmazon S3に集約、「AIに聞くだけ」で検索可能に――AWSはどう実現？",
+      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2609/18/news025.html",
+      "description": "社内のさまざまなシステムに散在するデータを、AIで横断的に検索、分析できるようにするにはどうすればいいのか。AWSが航空業界を題材に、約29万ファイルを使ったレファレンス実装を公開した。",
+      "publishedAt": "2026-09-18T02:00:00.000Z",
+      "feedName": "＠IT"
+    },
+    {
+      "id": "aaae60f966f325757b2c045cd59c0c2dbcc6e817ada412fe375d38b49721a12c",
+      "title": "大手企業の55％が「長期休暇中」にセキュリティインシデントを経験　シルバーウイーク直前、注意すべきポイントひとまとめ",
+      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2609/18/news049.html",
+      "description": "大手企業の55％が経験する長期休暇中のセキュリティインシデント。管理体制が手薄になる連休中、セキュリティインシデントの発生を防ぐにはどうすればよいのか？　IPAの最新情報や専門家が推奨する4つの重点対策を1冊のeBookにまとめた。",
+      "publishedAt": "2026-09-18T01:15:00.000Z",
+      "feedName": "＠IT"
+    },
+    {
+      "id": "c7a91a4fedcdb93ce2a3f2b2a784b39b28dc20c48d373d1ebb8011e235bd262f",
+      "title": "AWS、中東2リージョンで顧客データ復旧不能　バーレーンは全域、攻撃の影響で",
+      "url": "https://japan.cnet.com/article/35252766/",
+      "description": "Amazon Web Services（AWS）は米国時間9月15日、中東の2つのリージョンについて、復旧できない顧客データがあると明らかにした。対象は3月以降の中東での攻撃によって損傷した施設で、復旧できない範囲はバーレーンではリージョン全域、アラブ首長国連邦（UAE）では3つあるアベイラビリティゾーン（AZ）のうち1つに及ぶ。そこにしか置いていなかったリソースとデータについて、AWSはアクセスを復旧できないとしている。",
+      "publishedAt": "2026-09-17T22:55:00.000Z",
+      "feedName": "CNET Japan"
+    },
+    {
+      "id": "3cc71f34014ed707668e1ac7a25b603b62fc0acad6cb53830f3052c5b47f1c82",
+      "title": "GA になった Amazon Corretto 27 でポスト量子鍵交換を試してみた",
+      "url": "https://dev.classmethod.jp/articles/amazon-corretto27-ga-pq-tls/",
+      "description": "2026年9月17日に GA となった Amazon Corretto 27 は、JEP 527 による TLS 1.3 のポスト量子ハイブリッド鍵交換をサポートします。ローカル Docker 上で Corretto 27 クライアントと OpenSSL 3.5.7 サーバーを接続し、JDK のデバッグログから X25519MLKEM768 が選択されることを確認しました。",
+      "publishedAt": "2026-09-17T15:38:18.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "a0199f1354c13db8991a8837389e253dc534a852c8f86cb8db8d142b8a95c261",
+      "title": "AWS IoT Greengrass V2でIoTデバイスの動的登録を試してみた",
+      "url": "https://dev.classmethod.jp/articles/aws-iot-ggv2-dynamic-iot-registration-handson/",
+      "description": "AWS IoT Greengrass V2を使い、デバイスの自動登録とローカルゲートウェイ運用を実装してみました。工場のように台数が動的に増減するシナリオで、Podmanコンテナだけでfleet provisioning by claimとclient device認証を組んだ全体像をご紹介します。",
+      "publishedAt": "2026-09-17T09:23:09.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "e38ea0d6bc24bd68447d52a501384e4c0fdf1ab38bdc76dfebb5700fbc7d8626",
+      "title": "Azure 検証環境のコストをリソースグループ単位で毎日通知してみた話",
+      "url": "https://qiita.com/HikaruTakahashi/items/824ffd27d4a8b38230a5?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "1. はじめに\n部署のAzure検証環境を管理しています。検証環境ではメンバーが自由にリソースを作成できる分、検証終了後も削除されず、そのまま残り続けることが良くあります。\nAzure Cost Management を使えばコスト状況は確認できますが、日常的にチェックす...",
+      "publishedAt": "2026-09-17T09:05:40.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "fdcef6012bc929190b2a39da980769bfe2c12fd903afc0695086ae42c69d51d0",
+      "title": "Lambda の「高度なログ制御」は何をしているのか",
+      "url": "https://dev.classmethod.jp/articles/taking-apart-lambda-logging-controls/",
+      "description": "AWS Lambda の高度なログ制御機能が、各ランタイムの Runtime Interface Client でどのように実装されているのかを、実際の実験を通じて徹底解説します。",
+      "publishedAt": "2026-09-17T07:42:05.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "1ab8148f63e4a10fbb8a8291705922af1e195129d54b81a062d7bcdf7d56dfe5",
+      "title": "製造業のAI活用でガバナンスと業務統合が課題か──Cloudera調査",
+      "url": "https://enterprisezine.jp/news/detail/25122",
+      "description": "Clouderaは2026年9月16日、調査レポート「データレディネス・インデックス2026」から製造業に関する調査結果を発表した。データへのアクセス、ガバナンス、インフラのパフォーマンスに課題が残...",
+      "publishedAt": "2026-09-17T07:25:00.000Z",
+      "feedName": "EnterpriseZine"
+    },
+    {
+      "id": "a3b462d76a69df7332bb21ec709b7afc4dff56e7da610a58f42a1ce0fe55ebca",
+      "title": "NinjaOne、社内ブラウザを可視化・制御する新ソリューション　情シスとセキュリティ部門の連携にも",
+      "url": "https://enterprisezine.jp/news/detail/25120",
+      "description": "NinjaOneは、企業のブラウザを可視化・制御する新たなソリューション「NinjaOne Browser Management」を発表した。\n\n　同ソリューションにより、NinjaOneが提供する...",
+      "publishedAt": "2026-09-17T06:14:00.000Z",
+      "feedName": "EnterpriseZine"
+    },
+    {
+      "id": "2898b9a4698347fff02e16e69cb03987f5b427e3398be94180a3a52c8ebd4c37",
+      "title": "Web開発向けツールの作成を支援するフレームワーク「Devframe」のバージョン1.0がリリース ——作成したツールをNext.jsやViteなどで再利用",
+      "url": "https://gihyo.jp/article/2026/09/devframe?utm_source=feed",
+      "description": "Anthony Fu氏は9月16日、Web開発向けツールの作成を支援するフレームワーク「Devframe」のバージョン1.0をリリースした。",
+      "publishedAt": "2026-09-17T05:51:00.000Z",
+      "feedName": "gihyo.jp"
+    },
+    {
+      "id": "e6c58db360e3d169ffabf5f1e40e651a8dfa6abe29c17f0a8f116e3c452067b5",
+      "title": "GitHub, GitLab のセキュリティスキャン機能を試す (第2回)",
+      "url": "https://qiita.com/kccs_natsuki-kanai/items/f13687eff78ebb7eae5a?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\nこんにちは、京セラコミュニケーションシステム 金井(@kccs_natsuki-kanai)です。\n前回に引き続き、GitLab のセキュリティスキャン機能を試していきたいと思います。\n※こちらは 第1回 の続きになります。\n\nこの記事は2026年8月時点の情...",
+      "publishedAt": "2026-09-17T02:32:04.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "cd98ea482e6e8c2776ea18018a071b010f35faae4d54004ad1e25c5bc4f31f47",
+      "title": "GitHub, GitLab のセキュリティスキャン機能を試す (第1回)",
+      "url": "https://qiita.com/kccs_natsuki-kanai/items/2e06310007743e3d4314?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\nこんにちは、京セラコミュニケーションシステム 金井(@kccs_natsuki-kanai)です。\n今回は GitHub, GitLab で CI/CD を行う際、とくに CI のセキュリティスキャンの部分で使える機能を調べていきたいと思います。\n\nこの記事は...",
+      "publishedAt": "2026-09-17T02:28:58.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "7b6c5f0cdbd7054b78b7ed92ed1c5390dcb7574c6c950ba5549f4f1d0b696ee7",
+      "title": "モバイルアプリのネイティブとクロスプラットフォームのパフォーマンスを比較する / ネイティブ v.s. Flutter v.s. React Native (Expo) ",
+      "url": "https://qiita.com/mitsuharu_e/items/4b523b0e2174e0f5b19f?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "先日、ネイティブアプリに Flutter、React Native (Expo)、Kotlin Multiplatform などで作った画面を埋め込んだ場合のパフォーマンスを比較しました。\n\nこの検証では、既存の iOS / Android アプリにフレームワークとして...",
+      "publishedAt": "2026-09-17T02:00:59.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "ad3ac1ab0ca8cae88ca38db425721ea33012e90f298b3bc8321a06f872a1ae3d",
+      "title": "Playwrightの失敗サマリーからDatadogのトレースを探せるようにしてみた",
+      "url": "https://zenn.dev/layerx/articles/c835873212b601",
+      "description": "はじめに\nLayerXのエンタープライズ向け生成AIプラットフォームAi Workforceでは、Playwrightを使ったE2EテストをGitHub Actionsで実行しています。\nテストが落ちたとき、エラーメッセージやスクリーンショットを見ながら、まずテストコードに問題がないか確認します。そこまで調べて「テスト側の問題ではなさそうだな」と思ったあと、QAのみなさんはどうしていますか？切り分けとして、次にどこを見たらいいのかわからないことがあるのではないでしょうか。私はあります。\nAi WorkforceではDatadogを利用しており、そこでエラーの情報が見れることは知ってい...",
+      "publishedAt": "2026-09-17T00:00:06.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "d3b12f945657fdccbd9dde4fff619abe43343779ee5b1e623baabf7309800b92",
+      "title": "AWS、中東のデータ「復旧不能」と正式発表。バーレーン全域とUAEの1ゾーンが永久喪失",
+      "url": "https://joho-todai.com/aws-middle-east-data-permanently-lost/",
+      "description": "AWSがイラン戦争で損傷した中東データセンターの復旧を断念し、バーレーンリージョン全域とUAE1ゾーンのリソース・データへのアクセスを回復できないと発表した。大手クラウド事業者の物理インフラが戦争で破壊され、顧客データが永久に失われた初めての事例となった。 この記事のポイント 何が起きた: AWSがバーレーン...",
+      "publishedAt": "2026-09-16T23:15:24.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "9851f4a344e04fdb27dd593af9d49d8ec8bd570ee1b603f21da3f7a30c4e2adf",
+      "title": "【AWS】Bedrock Mantleから呼び出すモデルにBedrock Guardrailsを適用するときの注意点",
+      "url": "https://qiita.com/yakumo_09/items/7d00939e593121780af2?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\nAmazon Bedrock で GPT-5.6 などの OpenAI モデルが使えるようになり、OpenAI SDK の base_url を Bedrock に向けるだけで動くようになりました。ですがbedrock guardrailは　bedrock-ru...",
+      "publishedAt": "2026-09-16T22:09:35.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "629eee795f7b8abfe15615382fe02314776f0d4b949a134218a158f39a98d30e",
+      "title": "【学習記録ツール追加実装】SPAアプリをSupabaseでデータ永続化＋CICD組み込み+自動テスト対応",
+      "url": "https://qiita.com/J-T_ky2g/items/4b95e23f84bef4341d8b?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "何をやったのか\n\n学習記録ツールに以下の対応を実施\n\nSupabaseでデータ永続化\nGithubActionsによるCICD\nVitestによる自動テスト\n\n気づきなど\n\nズラズラと書いていきます\n魅せるための記事というよりも、体験に基づく生きたメモとしたいため...",
+      "publishedAt": "2026-09-16T10:06:04.000Z",
       "feedName": "Qiita"
     }
   ]
