@@ -1,190 +1,6 @@
 {
   "articles": [
     {
-      "id": "277c6dbb25f164173716a54105f6c7bcfe141a278f8b7c2f4c60958cd98f65bc",
-      "title": "Upgrade .NET, React, and Next.js apps to latest versions with multiple AI Agents",
-      "url": "https://dev.to/qmmughal/upgrade-net-react-and-nextjs-apps-to-latest-versions-with-multiple-ai-agents-58fn",
-      "description": "Teaching an AI agent to upgrade .NET, React, and Next.js apps for real — not just talk about it\nEvery engineering team has that repo. The one running a framework version from three or four years ago. Everyone knows it needs an upgrade. Nobody wants to be the one who breaks production doing it.\nThat's the problem UpgradePilot — an open-source, multi-agent upgrade pipeline — is built to solve. And this week we shipped the piece that made it stack-agnostic: real, working upgrade automation for .NET, React, and Next.js, including repos that mix a .NET backend with a React or Next.js frontend in the same codebase.\nHere's what that actually means, because \"AI upgrades your code\" is a claim that's earned a lot of well-deserved skepticism.\nThe design principle: shell out to the real tool, never fake it\nThe easy version of this feature is an LLM that reads your package.json, guesses at new version numbers, and writes some plausible-looking code changes. That's not what we built.\nEvery step in UpgradePilot's pipeline calls the actual toolchain:\n.NET — real dotnet restore, dotnet build, dotnet list package --outdated, dotnet ef migrations add. Package version bumps are verified by an actual restore, not assumed to work.\n\n\nReact / Next.js — real npm install, npm run build, npm outdated. Codemods run through the actual react-codemod and @next/codemod CLIs — we pulled the real transform names directly from those projects' GitHub repos rather than guessing, because a fabricated transform name just fails at runtime.\n\n\nTarget versions aren't invented. PackageTargetVersions come from dotnet list package --outdated and npm outdated — the same commands you'd run yourself.\n\n\nCodemod selection isn't invented either. UpgradePilot pulls React's and Next.js's own GitHub release notes, classifies breaking changes, and matches them against a verified catalog of real codemod transforms.\n\n\n\nIf a step can't do something for real, it says so — with a confidence score and an explanation — instead of pretending.\nWhat's real today, stack by stack\n.NET\nNuGet package upgrades across every .csproj in a multi-project solution, not just the first one\nCentral Package Management support (Directory.Packages.props) — auto-detected, not assumed\nTarget Framework Moniker bumps (net6.0 → net8.0 → net10.0)\nRoslyn-based rename codemods for breaking API changes\nEF Core migration generation, with destructive operations (dropped tables/columns) flagged for review instead of silently applied\nReal dotnet build validation after every change\nReact\nReal npm install-verified package.json upgrades\nreact-codemod integration for known breaking-change patterns (legacy ReactDOM.render → createRoot, PropTypes migrations, deprecated lifecycle renames)\nJest and Vitest test-summary parsing — real pass/fail/skip counts, not just an exit code\nReal npm run build validation\nNext.js\nEverything React gets, plus @next/codemod integration\nPages Router vs. App Router detection — based on the actual required files each router uses (layout.* vs _app.*), not a guess from folder names\nBuild validation that also exercises route compilation, the closest thing to a route smoke test without spinning up a live server\nMixed repos (.NET + React/Next.js in one codebase)\nThe backend upgrades and validates first — a frontend calling into backend APIs should be upgrading against an already-working backend, not the reverse\nThe frontend half then resolves to React or Next.js automatically and runs through the same real pipeline\nIf the frontend can't be confidently identified, that half is explicitly flagged for manual review — never silently skipped, never guessed at\nWhy this matters more than it sounds like it should\nA huge amount of AI coding tooling right now optimizes for demo-ability: something that looks impressive on a green-path example. The failure mode that actually costs teams trust is quieter — a tool that claims success on a real repo but didn't actually verify anything.\nEvery one of these steps is designed around one question: does this survive contact with a real, imperfect codebase? That's why package bumps are verified by a real restore, why codemods run through the actual official tools instead of hand-rolled regex, and why every gap that isn't solved yet — renaming a method based on a release note, auto-coordinating a genuinely ambiguous mixed repo — is documented in the code as an open limitation, not hidden behind a confident-sounding summary.\nIt's open source\nUpgradePilot is Apache 2.0 licensed, and the agents that run in the free CLI are the same agents that power the hosted product — nothing is held back to make a paid tier look better. If you're maintaining a repo that's overdue for a .NET, React, or Next.js upgrade, the code is here:\ngithub.com/qmmughal/upgradepilot-core\nI'd genuinely welcome issues, PRs, and \"this codemod catalog is missing X\" reports — especially from teams running these upgrades for real. That's exactly the feedback that makes the difference between a tool that looks good in a demo and one you'd actually trust on your own repo.\n\n\n  \n  \n  OpenSource #DotNet #React #NextJS #AIAgents",
-      "publishedAt": "2026-08-31T03:42:39.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "2be0d6f4e20545c5845a1475f9163f9c31cc3790ac453742559060ef724215a7",
-      "title": "The Day I Became the One Being pip Installed: My Pre-Release Checks Caught 3 Leaks",
-      "url": "https://dev.to/secleeman/the-day-i-became-the-one-being-pip-installed-my-pre-release-checks-caught-3-leaks-3dfj",
-      "description": "(Translation of my Japanese article on Zenn.)\nThis is part 4 of a series where I keep delegating implementation to AI without being able to read the code, building a vulnerability triage CLI called triage-lens. This installment is about distribution rather than the tool's internals: the tool had been sitting on GitHub, and I published it to PyPI so a single pip install triage-lens brings it in.\nA confession first. Shipping took more nerve than any of the feature work did. And three \"leaks\" actually turned up right before release.\nI can't read code, but I have typed pip install before. Years ago I dabbled in Python out of curiosity, and the one thing that stuck was the experience of a useful tool arriving in one line. Now that I'm the one publishing, the other side of that one line finally became concrete. Someone builds a thing, shapes it into a package, and puts it on the public shelf called PyPI. That's why it installs in one line anywhere in the world. My turn to put something on the shelf.\nI delegated the release work to AI too: package metadata, the release workflow, and one thing I insisted on. Instead of an API token, authentication to PyPI uses Trusted Publishing (OIDC). Nothing like a long-lived password gets stored anywhere; you declare \"trust publishes from this workflow in this GitHub repository\" and that's it. A secret you never hold is a secret that can't leak.\nIn this project, nothing goes out to a public repository without passing a mechanical check. Procedures and tests, not eyeballs, verify that no personal or development-only information is mixed in. For three releases it came up empty. That's what insurance looks like.\nOn the fourth run it caught something real. Three somethings.\nFirst, test code had slipped into the distribution. The packaging tool's default behavior had a path where the whole development test suite gets bundled along. I was about to scatter files nobody needs into users' environments.\nThe second one scared me. The name of my private development repository was about to appear in a published artifact. I run this whole activity anonymously, and keeping the development side separate from the public face is a design I care about. That boundary nearly got crossed. The funny part is how it got in: the test that checks whether the dev repository name has leaked had that very name hardcoded in its own source, so the check itself was the source of the leak. Building a check doesn't make you safe. The check is something to distrust too.\nThe third was mundane: relative links in the README turn into 404s on the PyPI page. Links that work on GitHub break when displayed somewhere else.\nAll three were fixed before release and never went out. The point I want to make is not \"that was close.\" It's the opposite. A fixed procedure calmly caught things eyeballs would have missed. The value of turning verification into a mechanism shows up on the fourth run, after three swings at nothing.\nIt didn't end with a clean release. Two lessons came after publishing.\nOne: the description shown on the PyPI page is baked into the artifact at the moment you publish. Fix the README on GitHub afterward and the published version's page never changes. I had scheduled the README update for \"after the release succeeds,\" so the page right after launch showed stale instructions. I ended up shipping v0.4.1, identical in content down to the last character, just to line the page up. That lesson became one more line on the pre-release checklist.\nTwo: the post-release smoke check failed with \"that version does not exist.\" Not the tool's fault, not a config mistake. PyPI takes time to propagate; the dashboard showed the release while pip couldn't see it for a few dozen seconds. One more line on the checklist: confirm the new version is visible to pip before running the check.\nDistribution turned out to be a pile of small traps like these. None fatal. All of them unknown to me until I tried.\nA night after publishing, honestly: it doesn't feel real. Anyone in the world can now install it in one line. But \"can install\" is not \"is installing.\"\nWhether this tool is useful will show up from here on as download counts, quantitative and merciless. I've already built weekly automation that collects article reactions and package usage. The zeros might just keep lining up. Recording that too is what this series is for, so when the numbers come in, good or bad, I'll write them up.\nThe repository is public. pip install triage-lens gets you in.\nhttps://github.com/secleeman/triage-lens",
-      "publishedAt": "2026-08-31T03:15:19.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "1c801346f78d48777bbebd62556de974cea4481d2bb1c6a4e9a7c8fdcf086eae",
-      "title": "React Compiler Silent Bailouts: How to Detect and Fix Them in React 19",
-      "url": "https://dev.to/nainikmehta/react-compiler-silent-bailouts-how-to-detect-and-fix-them-in-react-19-4oai",
-      "description": "The Promise of \"Zero-Effort\" Memoization\n\n\nWhen React 19 was announced, the developer community collectively exhaled. For years, we had been manually managing performance with useMemo and useCallback. These hooks, while powerful, were often sources of bugs, boilerplate, and \"dependency hell.\" The React Compiler promised to solve this by automatically memoizing components and hooks, effectively making manual optimization a relic of the past.\nMany developers rushed to upgrade, enabled the React Compiler, and immediately purged their code of all those manual memoization calls. It felt like liberation. But there is a hidden danger in this \"zero-effort\" approach: the compiler is designed to be incredibly polite.\nThe React Compiler is a sophisticated tool, but it is not magic. It operates under specific constraints. When it encounters code that violates the Rules of React or uses patterns it cannot safely transform, it doesn't crash your build or stop your development server. Instead, it performs a \"silent bailout.\"\nIn a silent bailout, the compiler simply skips the optimization for that specific component or hook. Your app continues to function perfectly fine, but it does so without the memoization you expected. \nIf you have already deleted your useMemo and useCallback calls, you are now relying entirely on the compiler to handle performance. If it bails out on a high-frequency component—like a list item renderer or a complex data visualization—you are suddenly shipping code that performs worse than your React 18 version. You have lost your manual safety net, and the compiler has decided not to provide its own.\nSo, how do you know if the compiler is actually working? You cannot simply assume it is. You need to verify it.\nViolations of the Rules of React: This is the most common reason. If your code breaks the fundamental rules (e.g., calling hooks conditionally), the compiler cannot guarantee the safety of its transformations.\nUnsupported Syntax: While the compiler supports most modern JavaScript, certain complex patterns or experimental syntax may still cause it to skip over a block of code.\nEscaping the Compiler: Sometimes, we inadvertently write code that makes it impossible for the compiler to track dependencies accurately.\nYou need to shift from passive reliance to active auditing. You shouldn't be guessing about your bundle's performance; you should be measuring it.\nThe most effective way to catch these issues before they reach production is by using eslint-plugin-react-hooks (version 7 and above). This plugin is specifically tuned to work with the React Compiler's logic.\nConfigure your .eslintrc file to treat these as errors or high-priority warnings:\n// Example ESLint configuration for React 19\nmodule.exports = {\n  plugins: ['react-hooks'],\n  rules: {\n    'react-hooks/exhaustive-deps': 'warn',\n    'react-hooks/unsupported-syntax': 'error', // Catch compiler bailouts\n    'react-hooks/todo': 'error' // Highlight patterns violating Rules of React\n  }\n};\n\nThe React Compiler provides detailed output during the build process. If you are ignoring your build logs, you are ignoring the heartbeat of your application's performance. Look for warnings or notes indicating that the compiler was unable to transform specific files. \nThe React Compiler is a massive leap forward for developer experience and application performance. However, it requires a new mindset. We are moving from a world of explicit management to a world of implicit optimization. \nDon't let the \"zero-effort\" promise make you complacent. Set up your linting, monitor your build logs, and treat your performance as a critical part of your CI/CD pipeline. Your users will thank you for the extra effort.\nHave you checked your React Compiler build logs recently? It might be the most important thing you do for your app's performance this week.",
-      "publishedAt": "2026-08-31T03:02:12.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "01714247e5b9c19861e0a57d503e1f5af53e451fc4e6ff3e85a150f7279edf2f",
-      "title": "【AWS中級へのステップ】 SSE-KMS で暗号化された S3 へのクロスアカウントアクセス 2 選",
-      "url": "https://dev.classmethod.jp/articles/aws-step-to-intermediate-s3-cross-account-access-using-kms/",
-      "description": "SSE-KMS（カスタマーマネージドキー）で暗号化されたS3バケットへのクロスアカウントアクセスとして、「パターン1. S3が存在するアカウントのIAMロールにスイッチする」「パターン2. バケットポリシー＋KMSキーポリシーで他アカウントからのアクセスを許可する」を紹介します。",
-      "publishedAt": "2026-08-31T02:39:03.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "cb8c6dadc4078f3283916b4296d3d1c1e821917e4782ae2c451edff1868522fa",
-      "title": "[アップデート] EC2 の AMI に対応インスタンスタイプを設定できるようになったので試してみた",
-      "url": "https://dev.classmethod.jp/articles/ec2-ami-support-instancetype/",
-      "description": "EC2 の AMI に対応インスタンスタイプを指定できる新機能が追加されました。従来のアーキテクチャチェックに加え、特定のインスタンスタイプのみで起動を許可する細かい制御ができるようになったので、実際の動作を確認してみます。",
-      "publishedAt": "2026-08-31T02:21:45.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "7d577100592677681221821dbf8531766cef542a30b4f897de867f3ca3e26541",
-      "title": "PR： 【Q&Aで解説】VMware Cloud Foundation（VCF）9.1へのアップグレードを成功させるヒント",
-      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2608/31/news004.html",
-      "description": "「VMware vSphere 8.0」のサービス終了（EOS）が、2027年10月に迫っています。アップグレード計画の策定から設計、環境構築、テストに至るプロジェクト工程を考慮すると、あまり猶予はありません。アップグレード計画は何から始めるべきか、Q&A形式で解説します。",
-      "publishedAt": "2026-08-31T01:00:00.000Z",
-      "feedName": "＠IT"
-    },
-    {
-      "id": "ba58c387300d82ea68697e4bdd236c8684f5e6f6ff3d278bf7605fc0b7776431",
-      "title": "Snowflake Cortex Agents のバージョン管理および GitHub Actions での CI/CD を考えみた",
-      "url": "https://dev.classmethod.jp/articles/snowflake-cortex-agents-versioning/",
-      "description": "Snowflake Cortex Agents のバージョン管理とGitHub Actions を用いた CI/CD について考え、実際に検証してみました。",
-      "publishedAt": "2026-08-31T00:50:32.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "e388810a7886d4dc53cdd1bae4896ebc5ca77659ea898a8367d0847e6761e68f",
-      "title": "AIによる大規模サイバー攻撃に備えよ--OpenAIら155組織が防衛強化を呼びかけ",
-      "url": "https://japan.cnet.com/article/35252073/",
-      "description": "AIによる広範なサイバー攻撃への防御を強化できる「時間は限られている」として、OpenAIら150以上の組織が、企業や政府、その他の機関に対し、サイバーセキュリティー強化へ迅速に行動するよう呼びかけた。",
-      "publishedAt": "2026-08-31T00:34:00.000Z",
-      "feedName": "CNET Japan"
-    },
-    {
-      "id": "6c77c3affa13dd0b53dfe0341fea61e8e4735bf3b5954d4178eb123636f0cbd2",
-      "title": "TypeScript 7.0リリース！ Misskeyで検証",
-      "url": "https://gihyo.jp/article/2026/08/misskey-25?utm_source=feed",
-      "description": "今回は、MisskeyのコードベースでTypeScript 7.0のパフォーマンスを検証します。",
-      "publishedAt": "2026-08-30T23:58:00.000Z",
-      "feedName": "gihyo.jp"
-    },
-    {
-      "id": "1311f4a6d1ffc5f8efc3dd52d4521b2503f6c3ec3ad06d47db11c3c3b199868a",
-      "title": "Amazon EVS と NSX Federation によるディザスタリカバリとマルチサイトネットワーク",
-      "url": "https://aws.amazon.com/jp/blogs/news/amazon-evs-with-nsx-federation-for-disaster-recovery-and-multi-site-networking/",
-      "description": "Amazon Elastic VMware Service (Amazon EVS) が NSX Federation をサポートしました。これにより、AWS 上で VMware ワークロードを実行する際のエンタープライズ規模のネットワーク、ディザスタリカバリ (DR)、マルチサイトネットワークのための強力な新しいオプションが利用可能になります。 NSX Federation は、複数の NSX 環境を単一の Global Manager コントロールプレーンの下で接続する VMware のネットワーク機能です。オーバーレイネットワーク、セキュリティポリシー、ゲートウェイサービスを複数のロケーションに拡張し、各サイトを個別に設定するのではなく、複数サイトのネットワークを統一されたファブリックとして管理できます。",
-      "publishedAt": "2026-08-30T23:47:42.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "a4f5a9b339edc22cf4c569aa1fa421095fed539eed9b934c37d0b2695aae2476",
-      "title": "IAM Policy Autopilot 0.3.0 でサポートされた「Terraform の plan 結果からの IAM ポリシー生成」を試す - kakakakakku blog",
-      "url": "https://kakakakakku.hatenablog.com/entry/2026/08/27/130630",
-      "description": "はじめに 2026年8月18日に「IAM Policy Autopilot」で Terraform の plan 結果から IAM ポリシーを生成できるようになったというアップデートがリリースされていた💡 aws.amazon.com IAM Policy Autopilot は awslabs で公開されているツールで CLI と MCP サーバーとして使える．今回の機能は IAM Policy Autopilot 0.3...",
-      "publishedAt": "2026-08-30T15:29:11.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "d61bd66c69e332fd6fa8f0c6e93db147ea41812bc0d2ca9d8b22f2fda0c80fda",
-      "title": "Amazon Bedrock の GPT-5.6 で access_denied が返る原因を調査してみた",
-      "url": "https://dev.classmethod.jp/articles/bedrock-gpt56-access-denied-investigation/",
-      "description": "Amazon Bedrock で GPT-5.6 の呼び出しが access_denied で落ちる原因のうち、手元の IAM ポリシーやモデルアクセスを直しても解決しないものが2つあります。AWS 側でモデルが解放されていない場合と、組織の SCP で拒否されている場合です。この2つを OpenAI 互換 API を含む5経路で再現し、メッセージ本文だけで切り分ける方法と、誰に何を伝えるかをまとめました。",
-      "publishedAt": "2026-08-30T14:34:14.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "ca567875df4231014ca4702b406659f2adc85f2779d4b7ce00db899f2231d1ce",
-      "title": "AI Agentが決済で予算超過させた時インフラ制御で暴走を止められるのかをAgentCore Payments使って実験してみた",
-      "url": "https://qiita.com/R-You/items/e8cf2f1c783401563ef2?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "「2026 Japan AWS Jr. Champions 真夏のQiitaリレー」\nの30日目の投稿です！\n過去の投稿は以下の（リンク集）からご覧ください！\nhttps://qiita.com/ys-yoshida/private/6f7c7f85155a993e2c...",
-      "publishedAt": "2026-08-30T14:17:20.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "094531f35bd6594c1f6144f9debfba859fa25512d477619aa784f7d0696804a0",
-      "title": "【JavaScript】Uncaught TypeError: backButton.previousElementSibling is not a function",
-      "url": "https://qiita.com/J-T_ky2g/items/4aa2f0fc5ffffca987f5?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "はじめに\n\nある要素の前のdomを取得する実装をしていた\n\n問題\n\npreviousElementSiblingでdomを取得しようとしたができない\n\n解決\n\npreviousElementSiblingはメソッドではなくプロパティだった\npreviousElemen...",
-      "publishedAt": "2026-08-30T14:02:04.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "6fe23b0409de8671df16f6de67142e56b888d882dad52351c397be1aacf97132",
-      "title": "AWS Context Ontology Accelerator（COA）で日本語のオントロジーを構築してみた - 多言語検索等のサポート",
-      "url": "https://dev.classmethod.jp/articles/20260830-aws-context-v022/",
-      "description": "AWS の OSS「Context Ontology Accelerator」v0.2.2 で、日本語のような分かち書きしない言語の質問がオントロジーのラベルに到達できるようになりました。日本語データを用意して、実際に多言語検索を試してみた結果をお伝えします。",
-      "publishedAt": "2026-08-30T13:42:26.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "5da903ecdb4e8e484e7994dd1972774d9d83a7f030ebb34774b0147afa6a78fd",
-      "title": "TypeScript ライブラリとして動作する組版エンジン minitype を公開しました",
-      "url": "https://zenn.dev/inaniwaudon/articles/62f1def4bad627",
-      "description": "2025 年度下期未踏アドバンスト事業[1]にて開発してきた，TypeScript ライブラリとして動作する組版エンジン minitype を公開しました！ 従来は独立したシステムや専用言語として提供されることの多かった組版処理をライブラリとして提供することにより，LLM や外部アプリケーションを含む，様々な文書生成に活用される...",
-      "publishedAt": "2026-08-30T13:09:39.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "5da903ecdb4e8e484e7994dd1972774d9d83a7f030ebb34774b0147afa6a78fd",
-      "title": "TypeScript ライブラリとして動作する組版エンジン minitype を公開しました",
-      "url": "https://zenn.dev/inaniwaudon/articles/62f1def4bad627",
-      "description": "2025 年度下期未踏アドバンスト事業[1]にて開発してきた，TypeScript ライブラリとして動作する組版エンジン minitype を公開しました！ 従来は独立したシステムや専用言語として提供されることの多かった組版処理をライブラリとして提供することにより，LLM や外部アプリケーションを含む，様々な文書生成に活用されることを目指しています．\nhttps://typeset.jp/\n\n未踏アドバンスト事業：2025年度下期実施プロジェクト概要（和田PJ） | デジタル人材の育成 | IPA 独立行政法人 情報処理推進機構\n\nminitype の使用方法や活用例のデモは，以下の動画...",
-      "publishedAt": "2026-08-30T12:21:31.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "eb65b8b592147c17602c464281766579c48a26146ae40bad9d5e1a96e02efd54",
-      "title": "【CloudFront OAC × Lambda Function URL】SSRアプリのPOSTだけ403になった話",
-      "url": "https://qiita.com/yosuke-suzuki/items/3cbd19db1e33853a2f91?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "はじめに\n個人で運用している「AI模試ノート」(AWS認定試験の学習アプリ)を、ビルド時間に対する課金が膨らんできたため、AWS Amplify HostingからAWS CDK(Lambda Web Adapter + CloudFront)への移行をしたところ、ホステ...",
-      "publishedAt": "2026-08-30T12:15:55.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "3771459f52ab1da75c515c0dde69d584125fa82f89043157df2a206791e7b949",
-      "title": "【JavaScript】値の真偽を確認",
-      "url": "https://qiita.com/J-T_ky2g/items/b4ed286019668e5ea22c?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "はじめに\n\n実装中、真偽値この場合どっちだっけとなった\n\n問題\n\n値の真偽どっちだっけとなることがあった\n\n解決\n\nすぐ確認できるスクリプトを書いた\n\nconst judgementBool = (targetArray) => {\n  console.log(tar...",
-      "publishedAt": "2026-08-30T11:12:53.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "8757e207e715c946e6e2814ce613e2ba84a3e9f8bbe321a8f7320d0f3d0edd87",
-      "title": "DuckDB で Amazon S3 Tables に格納された表形式データセットへのアクセスを効率化する",
-      "url": "https://aws.amazon.com/jp/blogs/news/streamlining-access-to-tabular-datasets-stored-in-amazon-s3-tables-with-duckdb/",
-      "description": "DuckDB は軽量なインメモリ SQL エンジンで、追加のサーバー運用なしに対話型のデータ分析を実現します。本記事では、Amazon SageMaker Lakehouse Iceberg REST エンドポイントと AWS Lake Formation のアクセス許可を利用して、AWS CloudShell 上の DuckDB から Amazon S3 Tables に格納された Iceberg テーブルにアクセスし、クエリを実行する手順を紹介します。",
-      "publishedAt": "2026-08-30T10:56:07.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "bdcb75323b09de8b76f667187073f8f3246d5b194c6dd22aa36ec9637b939958",
-      "title": "Microsoft Entra ID と SAML フェデレーションでジャンプアカウント経由の個人識別ログインを実現してみた",
-      "url": "https://dev.classmethod.jp/articles/202608-entra-id-saml-jump-account-federation/",
-      "description": "AWS Organizations も IAM Identity Center も使えない環境で、Microsoft Entra ID と SAML フェデレーションを組み合わせ、IAM ユーザーを作らずにジャンプアカウント経由で各アカウントへログインし、個人識別と MFA を実現する方法を検証しました。",
-      "publishedAt": "2026-08-30T08:05:35.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "b5e152986158a845bdb99bae041e5082c06733b3f11600db7bcd84a6a34c614a",
-      "title": "【個人開発】MLBの試合日程をGoogleカレンダー・Appleカレンダーに自動同期するWebアプリを作りました【React/TypeScript/iCalendar】",
-      "url": "https://qiita.com/takahiro_honda/items/b44d4e2b526aa009f822?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "はじめに\nMLB（メジャー・リーグ・ベースボール）の試合日程をGoogleカレンダー・Appleカレンダーに自動同期するWebアプリを作成しました。\nその感想を書いていきます。\n\n開発理由\n最近、大谷翔平選手の所属するドジャースの試合にめちゃくちゃどハマりしています！\n...",
-      "publishedAt": "2026-08-30T08:00:11.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "244905582ebdb3b8ef69f86802f921586dd0b4fc4145e0498ed0f23718695c2a",
-      "title": "【Security Hub修復手順】[ECR.5] ECR リポジトリはカスタマーマネージド AWS KMS keys で暗号化する必要があります",
-      "url": "https://dev.classmethod.jp/articles/securityhub-fsbp-remediation-ecr-5/",
-      "description": "AWS Security HubのECR.5コントロール対応について、カスタマーマネージドキーによる暗号化が必須な理由と、見落としやすいAWSマネージドキーとの判別方法から修復手順まで、実践的な対応策をご紹介します。",
-      "publishedAt": "2026-08-30T07:59:48.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
       "id": "7cecd64366ecda67703eebe7a5c7dc171054505bb3598a411eaaf995f9f4c309",
       "title": "I Built 50+ AI Products in 4 Years — Here's What I Wish I Knew at the Start",
       "url": "https://dev.to/autor_tech/i-built-50-ai-products-in-4-years-ai-webdev-mahinelearning-typescriptheres-what-i-wish-i-1pio",
@@ -422,22 +238,6 @@
       "description": "Amazon Web Services（AWS）とNVIDIAは、AWSのグローバルインフラ全体に新たに200万基のNVIDIA GPUを導入する計画を発表した。また、AIファクトリー、CPU、ネッ...",
       "publishedAt": "2026-08-31T04:20:00.000Z",
       "feedName": "EnterpriseZine"
-    },
-    {
-      "id": "abd7a553c6ed4d009c5109ff3f681d0f65c69e4f0080398b1a832258d3030d88",
-      "title": "PR の概要や動作確認結果を HTML で共有するのに、zip 不要の GitHub Actions Artifact がちょうどよかった",
-      "url": "https://zenn.dev/she_techblog/articles/github-actions-artifact-no-zip",
-      "description": "こんにちは、SHE株式会社でエンジニアをしています hatsu です。\n日頃は CI の速度改善をしたり、Flaky テストを直したり、300 個以上のカラムに not null 制約を加えていったり、そういう改善をしています。\n今回はそんな中でも、GitHub Actions の Artifact に関しての話です。\n最近知ったのですが、2026年2月26日 に GitHub Actions の Artifact が zip 化なしでアップロードできるようになったんですね。\nこれがかなり便利で、今ではよく使っています。\n詳しくは後述しますが、今までプルリクエストを出すときには、デザイン...",
-      "publishedAt": "2026-08-31T00:00:06.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "c003480ad71fd76c7167ca8cf277687c210de4fab64a2d70b21bc12998ae3068",
-      "title": "インフラエンジニアでもない私がGradleをいじってチームイベント向けの計測ツールを作った話",
-      "url": "https://qiita.com/moyomoyomoyo/items/f67994a75b074350649f?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "はじめに\n私の所属するグループでは、半年に1回、グループ全体でのイベントを開催しています。\n今回は「チーム対抗で1日で特定パッケージのJUnitテストカバレッジをどれだけ上げられるか」を競うイベントを企画しました。この記事では、そのイベントを盛り上げるために作った、準リア...",
-      "publishedAt": "2026-08-30T14:16:34.000Z",
-      "feedName": "Qiita"
     },
     {
       "id": "f7ad9a85056b46164a093db51bf4ef4166b8df346e0b86f443b8483d912e05a0",
@@ -5686,6 +5486,350 @@
       "description": "ナレッジワークでQAエンジニアをしている かとあず です。\n探索的テストをすると、何かしらを見つけることが多くあります。細かい部分だったり、「そこを気にするんだ？」と言われそうなコーナーケースだったりします。しかし、「なぜそれに気づいたの？」と聞かれると、うまく説明できません。\n反対に、「探索的テストをしました。何も見つかりませんでした。」となると、「品質がよかった」とは思えません。「それって本当に探索できていたのかな？」「別の人が探索したら何か見つかったのかもしれない」と思ってしまうこともあります。\n\n 「探索できる人」は、いったい何をしているんだろう？\nそんなことを考えていたときに、...",
       "publishedAt": "2026-09-28T03:00:05.000Z",
       "feedName": "Zenn"
+    },
+    {
+      "id": "00f7cf6db2e4a9e86b62731c32f609eb1a9dd7b8e11839e805ebe08bb40db1ec",
+      "title": "How We Test LLM Features So They Don't Regress in Production",
+      "url": "https://dev.to/lycore/how-we-test-llm-features-so-they-dont-regress-in-production-56io",
+      "description": "We shipped an LLM-powered classification feature for a client last year. It worked well. Three weeks later, after a routine prompt tweak, it started miscategorising a specific edge case — one that the team had explicitly tested for during development. Nobody noticed for four days.\nThe problem was not the prompt change. The problem was that we had no automated check that would have caught it. Our test suite confirmed that the endpoint returned a 200 and that the response was valid JSON. It said nothing about whether the classification was actually correct.\nThis post is about how we fixed that, and what our eval stack looks like now across Django projects with LLM features.\nUnit tests and integration tests are built around determinism. You give a function an input, you assert the output matches what you expect. LLMs are not deterministic in that way — the same prompt can return slightly different wording on different runs, and what counts as \"correct\" is often a matter of degree rather than exact match.\nThis creates a gap. You can test that the LLM call succeeds. You cannot easily test that it produced the right answer — at least not with the same tools you use for the rest of your application.\nThe gap is where regressions hide.\nAn eval is a test that checks the quality of an LLM output, not just its shape. Evals come in a few forms:\nExact match — the output should contain a specific string, or match a specific value. Works well for classification, extraction, and structured outputs.\nModel-graded — you use a second LLM call to judge whether the output meets a criterion. More flexible, handles natural language outputs, but adds cost and latency to your test suite.\nHuman-labelled golden sets — a curated set of inputs with known-correct outputs, maintained by a human. The highest signal, the most expensive to build and maintain.\nWe use all three, at different layers.\nOur eval runner is a Django management command that runs against a fixed dataset we maintain in a JSON fixture file.\n# management/commands/run_evals.py\nimport json\nfrom django.core.management.base import BaseCommand\nfrom django.conf import settings\nfrom myapp.llm import classify_support_ticket\n\n\nEVAL_DATASET = settings.BASE_DIR / \"evals\" / \"support_classification.json\"\n\n\nclass Command(BaseCommand):\n    help = \"Run LLM eval suite against the golden dataset\"\n\n    def handle(self, *args, **options):\n        with open(EVAL_DATASET) as f:\n            cases = json.load(f)\n\n        passed = 0\n        failed = 0\n        failures = []\n\n        for case in cases:\n            result = classify_support_ticket(case[\"input\"])\n            expected = case[\"expected_label\"]\n\n            if result.label == expected:\n                passed += 1\n            else:\n                failed += 1\n                failures.append({\n                    \"input\": case[\"input\"][:100],\n                    \"expected\": expected,\n                    \"got\": result.label,\n                    \"confidence\": result.confidence,\n                })\n\n        total = passed + failed\n        pass_rate = (passed / total) * 100\n\n        self.stdout.write(f\"\\nEval results: {passed}/{total} passed ({pass_rate:.1f}%)\")\n\n        if failures:\n            self.stdout.write(\"\\nFailures:\")\n            for f in failures:\n                self.stdout.write(\n                    f\"  [{f['expected']} → {f['got']}] \\\"{f['input']}...\\\"\"\n                )\n\n        if pass_rate < 90.0:\n            raise SystemExit(\n                f\"Eval pass rate {pass_rate:.1f}% is below threshold (90%). \"\n                \"Review prompt or model before deploying.\"\n            )\n\nThe golden dataset looks like this:\n[\n  {\n    \"input\": \"My invoice shows the wrong amount and I need a refund immediately\",\n    \"expected_label\": \"billing\",\n    \"notes\": \"Clear billing intent despite urgency language\"\n  },\n  {\n    \"input\": \"I cannot log into my account, it says my password is wrong\",\n    \"expected_label\": \"account_access\",\n    \"notes\": \"Standard auth issue\"\n  },\n  {\n    \"input\": \"The app crashes every time I try to export to PDF on iOS 17\",\n    \"expected_label\": \"bug_report\",\n    \"notes\": \"Platform-specific bug, not a feature request\"\n  }\n]\n\nThis runs in CI on every PR that touches the LLM integration, and nightly against production to catch model drift. If the pass rate drops below 90%, the deploy is blocked.\nFor features where the output is prose — summaries, draft emails, explanations — exact match does not work. We use a lightweight model-graded eval instead:\nfrom openai import OpenAI\n\nclient = OpenAI()\n\n\ndef grade_summary(original_text: str, summary: str, criteria: list[str]) -> dict:\n    criteria_list = \"\\n\".join(f\"- {c}\" for c in criteria)\n\n    response = client.chat.completions.create(\n        model=\"gpt-4o-mini\",\n        messages=[\n            {\n                \"role\": \"system\",\n                \"content\": (\n                    \"You are evaluating AI-generated summaries. \"\n                    \"For each criterion, respond with PASS or FAIL and one sentence of reasoning. \"\n                    \"Be strict — partial credit is not given.\"\n                ),\n            },\n            {\n                \"role\": \"user\",\n                \"content\": (\n                    f\"Original text:\\n{original_text}\\n\\n\"\n                    f\"Summary to evaluate:\\n{summary}\\n\\n\"\n                    f\"Criteria:\\n{criteria_list}\"\n                ),\n            },\n        ],\n    )\n\n    raw = response.choices[0].message.content\n    results = {}\n    for criterion in criteria:\n        results[criterion] = \"PASS\" in raw.upper()\n\n    passed = sum(results.values())\n    return {\n        \"results\": results,\n        \"score\": passed / len(criteria),\n        \"raw_response\": raw,\n    }\n\nWe use gpt-4o-mini for grading — it is significantly cheaper than the model that generated the output, and accurate enough for pass/fail judgements on well-defined criteria.\nRunning evals once is useful. Running them consistently and tracking the results over time is where the real value is. We log every eval run to a simple Django model:\nclass EvalRun(models.Model):\n    feature = models.CharField(max_length=100)\n    model_used = models.CharField(max_length=100)\n    prompt_hash = models.CharField(max_length=64)\n    pass_rate = models.FloatField()\n    cases_run = models.IntegerField()\n    failures = models.JSONField(default=list)\n    run_at = models.DateTimeField(auto_now_add=True)\n    triggered_by = models.CharField(max_length=50)  # \"ci\", \"nightly\", \"manual\"\n\nWhen the pass rate on a nightly run drops by more than 3 points compared to the previous week, it pages the on-call engineer. That threshold catches model drift — cases where the underlying model behaviour has shifted without any code change on our side.\nLLM evals are not complicated to set up. A JSON fixture file and a management command that compares output labels against expected labels is enough to catch most regressions. The hard part is maintaining the golden dataset — adding new cases when you find edge cases in production, and reviewing failures rather than just rerunning until they pass.\nIf you ship LLM features without evals, you are relying on manual testing and user complaints to catch regressions. That is a slow feedback loop for something that can break silently and affect every user.\nStart with exact-match evals on your most critical features. Add a model-graded layer where the output is prose. Run both in CI. The eval suite that catches one production regression pays for itself immediately.\nLycore builds production AI systems for businesses — LLM integrations, agents, RAG pipelines, and custom AI applications on Django, React, Flutter, and .NET. Get in touch if you want to talk through your use case.",
+      "publishedAt": "2026-09-30T03:53:00.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "c74597a9143e80976c3443574f60f776f9ecb900dbd6c9eacd8884766dfb9772",
+      "title": "MarkItDown Python and MCP Experiment Log: 14 Fixtures and a Raw STDIO Handshake",
+      "url": "https://dev.to/jeremyym/shi-yan-ji-lu-markitdown-python-zhi-nan-mcp-zhi-nan-2026-09-23-4an8",
+      "description": "This log records the environment, commands, fixture results, and MCP handshake behind the Python guide and MCP setup guide. It reports one run from 2026-09-23; anything not tested is marked explicitly.\n\n\n\nField\nValue\n\n\n\n\nPost IDs\n\npython-guide / mcp-guide\n\n\n\nRun date\n2026-09-23\n\n\nOperator\nCommands executed with AI assistance; outputs recorded as returned (manual review pending)\n\n\nEnvironment\nmacOS (Darwin 26.5.1, Apple Silicon), uv 0.10.8, Python 3.12 (uv venv --python=3.12)\n\n\nTools\n\nmarkitdown 0.1.8 (released on PyPI 2026-09-21), markitdown-mcp 0.0.1a7 (released on PyPI 2026-09-14)\n\n\nConversion mode\nLocal CLI markitdown <file> (no LLM client, plugins, or Azure services); MCP over STDIO\n\n\nInputs\n14 public fixtures from samples/quality-gallery/files/\n\n\n\nOutput path\nTemporary directory, not committed; key results are excerpted here and in the companion guides\n\n\nStatus\n\nrun; manual review is pending\n\n\n\nThe following installation commands were run:\nuv venv --python=3.12 mdvenv\nuv pip install --python mdvenv/bin/python 'markitdown[all]' markitdown-mcp  # initially resolved markitdown to 0.1.5\nuv pip install --python mdvenv/bin/python --prerelease=allow 'markitdown[all]==0.1.8'  # upgraded to 0.1.8\n\nOne installation wrinkle: in this environment, the Azure-related extra for markitdown[all] 0.1.8 depended on a prerelease package. Without prereleases enabled, the resolver fell back to markitdown 0.1.5 without an error. Installing only the needed extras (for example, markitdown[pdf,docx,xlsx,pptx]) or enabling prereleases avoids that resolution path.\nmarkitdown 0.1.8)\n\n\n\nInput\nExit\nLines\nChars\nTable rows\nObservation\n\n\n\n\nrelease-overview.pdf\n0\n46\n1255\n0\nHeadings and paragraphs retained\n\n\nq3-results.pdf\n0\n23\n1453\n13\nPipeline table retained; numeric values matched, with blank spacer columns between value columns\n\n\nlibrary-note.pdf\n0\n34\n2556\n14\nTwo tables; usable\n\n\ncustomer-research-brief.docx\n0\n22\n581\n6\nHeadings and lists intact; a table header cell was empty\n\n\nq3-budget.xlsx\n0\n18\n582\n15\nSheet names became ## headings; an Unnamed: 1 header artifact appeared\n\n\nworkshop-budget.pptx\n0\n7\n189\n0\nText only; layout was not retained\n\n\nab-test-note.html\n0\n29\n1386\n0\nClean output\n\n\nurban-orchards.epub\n0\n28\n692\n5\nChapters became headings\n\n\nchurn-cohort-notebook.ipynb\n0\n24\n453\n0\nCell source was concatenated\n\n\nmoving-averages-scan.pdf\n0\n1\n1\n0\nNo text layer; output was one newline despite exit code 0 (silent failure)\n\n\nq3-results-scan.pdf\n0\n1\n1\n0\nSame: one newline despite exit code 0\n\n\ndelivery-note-scan.pdf\n0\n1\n1\n0\nSame: one newline despite exit code 0\n\n\nworkshop-budget-scan.png\n0\n2\n22\n0\nOnly ImageSize: 1600x1100 metadata\n\n\ndelivery-note-scan.png\n0\n2\n21\n0\nMetadata only\n\n\n\nFor these fixtures, headings, lists, and simple tables were usable, though some tables had artifacts. Three scanned PDFs returned a single newline with exit code 0, so a successful process exit did not guarantee useful output; check output length. This run did not test LLM image descriptions, the markitdown-ocr plugin, or Azure Document Intelligence / Content Understanding because credentials were unavailable. Any mention of those capabilities elsewhere is based on the official README, not on this run.\nmarkitdown-mcp 0.0.1a7 over STDIO)\n\n\nThe test wrote JSON-RPC messages to the markitdown-mcp process in this order: initialize → notifications/initialized → tools/list → tools/call, then read stdout.\ninitialize returned serverInfo = {\"name\":\"markitdown\",\"version\":\"\"} and protocol version 2025-06-18.\ntools/list returned one tool, convert_to_markdown, with one required string parameter: uri.\ntools/call with file:///…/q3-results.pdf returned isError: false and text content containing the converted Markdown. Its first lines matched the CLI output.\nThe package requirements recorded for this run were markitdown[all]>=0.1.1,<0.2.0 and mcp>=2.1.1,<3.0.0.\nClaude Desktop, Cursor, and Cline GUI configurations were not tested because those clients were not available in the environment. Their examples came from the official README and client documentation. The Docker image was not built or verified.\nAI disclosure: This article was translated and prepared with AI from the experiment record captured on 2026-09-23. The experiment is reported as run; manual review has not been completed. Claude Desktop, Cursor, and Cline GUI setup and the Docker image build were not tested.",
+      "publishedAt": "2026-09-30T03:50:08.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "28ec5d0ab27444266463a1bfcb38c72a50062485188a68a6b9040d93ed3983a1",
+      "title": "Why a pay-gap cost calculator should make zero network calls",
+      "url": "https://dev.to/olgadimitrova/why-a-pay-gap-cost-calculator-should-make-zero-network-calls-2n38",
+      "description": "I maintain a small open-source calculator that prices what it costs to close an unexplained gender pay gap under the EU Pay Transparency Directive (2023/970). You give it a CSV of employees (salary, gender, grade, tenure, category), and it prices two options: minimum compliance and full equalisation. It ships as a static HTML page and, separately, as an Excel workbook with the same calculation in live formulas.\nThe page makes no network requests at all. It doesn't promise to skip logging or to encrypt your data on a server, because there is no server. Open the browser's Network tab while you use it and it stays empty. Most of the design follows from that.\nA pay-gap calculation needs individual salaries by gender, category, grade and tenure. Most HR and reward teams would rather not let that leave the company, even briefly, even to a vendor with a data processing agreement and a SOC 2 report. A web app that uploads the CSV to a server asks every user to trust a company they have probably never audited, for a calculation their laptop does in milliseconds.\nSo index.html is the whole application. HTML, CSS and JavaScript sit in one file. There is no build step to run it and no backend to operate or patch, and nobody's salary file ends up on a server.\n\"Runs in your browser\" is easy to say. Keeping it true means giving up a few conveniences:\nNo CDN for fonts or libraries. A dependency is either vendored into the file or not used. The chart is plain SVG, not a charting library.\nNo analytics, error reporting or telemetry, including the \"just to see if people use it\" kind. Each of those is a network call.\nThe CSV comes in through an <input type=\"file\"> and is read into memory with the FileReader API. The page computes the result, and the data is gone on refresh. Nothing is written anywhere unless the user downloads a result.\nThe repo has two checks for this. check-render.js scans the built page and fails (exit 1) if it references any external script, stylesheet or image. check-meta.js opens the page in headless Chrome, records every network request made while it loads, and fails (exit 1) if there is even one. Without a test that can fail, \"no network calls\" only means \"no network calls that we noticed.\"\nIf you can't read JavaScript, the web page is hard to verify. Without developer tools, how do you see what it does with your data? So the same calculation also exists as an Excel workbook, all in live formulas: medians by rank, and the OLS regression written out with explicit sums and Cramer's rule instead of an array formula or a macro. Click a cell, read the formula, change an input and watch every downstream number move. There is no VBA and nothing hidden behind a button.\nI cross-checked the web version, the workbook and a third, independent Python port on the demo dataset, and they agree to 1e-9. The port is in the repo at pay-gap-calculator/build/excel/reference_calc.py. It follows pay-gap-calculator/build/calc.js step by step in a different language and prints every category, so you can rerun the comparison yourself instead of taking the README's word for it.\nOpen source and zero network calls answer \"can I trust this with my data.\" They don't answer \"is this the right method.\" The calculator prices the unexplained residual after controlling for grade and tenure (OLS) and remediates only that residual. It doesn't decide whether a gap is lawful, and it doesn't group work of equal value into categories for you. Categories too small to be statistically reliable get flagged rather than hidden. Those are choices, and someone else building the same tool could reasonably make different ones. Whether your salary data should touch a server to find out is a separate question, and I think it has one answer.\nRepo, workbook, sample CSV and the checks: https://github.com/OlgaDimitrovaGit/comp-budget-lab/tree/main/pay-gap-calculator",
+      "publishedAt": "2026-09-30T03:47:06.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "a4d1d61c658524be85fa9bc3904dad4c8adcb261fb0256c9d7bc18e545bd2f67",
+      "title": "Training Tesla Optimus: A Step‑by‑Step Guide for Factory Robots",
+      "url": "https://dev.to/leojulieta/training-tesla-optimus-a-step-by-step-guide-for-factory-robots-1d2m",
+      "description": "Tesla Optimus: How to Train a Humanoid Robot for the Factory Floor (Step‑by‑Step)\n\n\n\n  \n  \n  Introduction\n\n\nTesla’s Optimus humanoid is no longer a sci‑fi curiosity—it’s the fastest‑growing search term in robotics, AI, and manufacturing. In the last 24 hours the phrase “Optimus training pipeline” has jumped more than 350 %, and engineers on Reddit, IEEE Spectrum, and LinkedIn are asking the exact same question: How do I get a real‑world humanoid to lift, walk, and assemble parts in my plant?  \nThis guide cuts through the hype. We break down the hardware that makes Optimus tick, walk you through the complete on‑site training workflow, compare Tesla’s approach with other industry players, and give you a ready‑to‑run Unity + ML‑Agents simulation—including the exact Python scripts you need to collect tele‑operation data and train a policy. Finally, we look at the labor impact, outline a re‑skilling path, and provide a quick‑reference checklist for safety, cost, and compliance.\n\n\n\nComponent\nTesla Optimus\nTypical Industrial Humanoid\n\n\n\n\nActuators\n12 custom‑designed electric motors (6 hip/leg, 4 arm, 2 torso) with integrated harmonic drives\nOff‑the‑shelf servo/gearbox combos\n\n\nEdge AI\n“Dojo‑Lite” ASIC + 2 × NVIDIA Jetson Orin\nSingle GPU or CPU\n\n\nPerception\n12 × LiDAR (360 °), 8 × RGB‑D cameras, wrist/ankle force‑torque sensors\n1–2 cameras, optional depth sensor\n\n\nLatency\n< 10 ms closed‑loop control\n30–50 ms\n\n\nPayload\n30 kg (± 5 kg safety margin)\n10–15 kg\n\n\nPower\n5 kWh battery pack, 30 min continuous heavy‑load operation\n1–2 kWh, limited endurance\n\n\n\nThe combination of high‑bandwidth sensing and ultra‑low‑latency control lets Optimus perform tasks that would normally require a human worker—screw‑driving, palletizing, and even tool‑change—without a dedicated safety cage.\nYou don’t need a Dojo super‑computer to experiment. The core pipeline consists of three stages:\nData collection (tele‑operation) – Record joint trajectories, sensor streams, and video while a human drives the robot in a safe sandbox.\n\n\nDomain randomization (Unity) – Randomly vary lighting, friction, and object placement to teach the policy robust perception.\n\n\nPolicy learning (PPO) – Use Proximal Policy Optimization to turn the recorded data into a reusable control model.\nBelow is a minimal, reproducible setup that runs on an RTX 3070 (or any GPU with ≥ 8 GB VRAM).\n# Unity (2022 LTS) – install via Unity Hub\n# Python 3.10+\npip install mlagents==0.30.0 torch==2.2.0 torchvision==0.17.0 tqdm\n\n# teleop.py – records joint angles + camera frames\nimport mlagents_envs\nfrom mlagents_envs.environment import UnityEnvironment\nimport numpy as np, cv2, json, os\n\nenv = UnityEnvironment(file_name=\"OptimusSim\", seed=42, side_channels=[])\nenv.reset()\nbehaviour = list(env.behaviour_specs.keys())[0]\n\ndef save_step(step, obs, act):\n    os.makedirs(\"data/frames\", exist_ok=True)\n    cv2.imwrite(f\"data/frames/frame_{step:05d}.png\", obs[0])  # RGB image\n    with open(f\"data/steps.json\", \"a\") as f:\n        json.dump({\"step\": step, \"obs\": obs.tolist(), \"act\": act.tolist()}, f)\n        f.write(\"\\n\")\n\nfor step in range(10_000):\n    decision_steps, terminal_steps = env.get_steps()\n    # Simple keyboard controller – replace with joystick for real robots\n    keys = cv2.waitKey(1) & 0xFF\n    action = np.zeros((1, 12))  # 12‑DOF robot\n    if keys == ord('w'): action[0, 0] = 0.1   # hip forward\n    if keys == ord('s'): action[0, 0] = -0.1  # hip backward\n    env.set_actions(behaviour, action)\n    env.step()\n    obs = decision_steps.obs[0]  # RGB‑D image tensor\n    save_step(step, obs[0], action[0])\nenv.close()\n\nRun the simulation and press W/S to move the robot’s legs; the script stores every frame and the corresponding joint command.\nOpen the OptimusSim scene, add the Randomizer component (provided in the repo) and set the following ranges:\n\n\n\nParameter\nMin\nMax\n\n\n\n\nLight intensity\n300 lx\n1200 lx\n\n\nFloor friction\n0.3\n1.0\n\n\nObject size (box)\n0.05 m\n0.20 m\n\n\nCamera noise (Gaussian σ)\n0.0\n0.02\n\n\n\nThe randomizer will automatically vary these values each episode, producing a dataset that generalizes to real‑world factories.\n# train.py – PPO with ML‑Agents\nfrom mlagents.trainers import learn\nimport yaml\n\nconfig = \"\"\"\nbehaviors:\n  Optimus:\n    trainer_type: ppo\n    hyperparameters:\n      batch_size: 1024\n      buffer_size: 10240\n      learning_rate: 3.0e-4\n      beta: 5.0e-4\n      epsilon: 0.2\n    network_settings:\n      hidden_units: 256\n      num_layers: 2\n    reward_signals:\n      extrinsic:\n        gamma: 0.99\n        strength: 1.0\n\"\"\"\n\nwith open(\"config.yaml\", \"w\") as f:\n    f.write(config)\n\nlearn.run_training(\n    trainer_config_path=\"config.yaml\",\n    run_id=\"optimum_run\",\n    env_path=\"OptimusSim\",\n    base_port=5005,\n    seed=1234,\n    resume=False,\n)\n\nAfter ~ 4 hours on an RTX 3070 you’ll have a model.onnx that can be deployed back to the robot or used for simulation inference.\n\n\n\nFeature\nTesla Optimus\nAmazon Astro (service robot)\nBMW iRobot (factory prototype)\nFoxconn Humanoid\n\n\n\n\nTraining hardware\nDojo‑Lite + H100 (production) → RTX 3070 (dev)\nAWS Graviton + SageMaker\nNVIDIA Drive AGX\nCustom FPGA + RTX 2080\n\n\nPerception suite\n12 LiDAR + 8 RGB‑D\n2 RGB‑D + 1 LiDAR\n4 RGB‑D\n6 RGB‑D\n\n\nControl latency\n8 ms\n30 ms\n20 ms\n15 ms\n\n\nTask flexibility\n30 kg payload, 6 DOF arms\n5 kg, 4 DOF arms\n12 kg, 5 DOF arms\n25 kg, 6 DOF arms\n\n\nOpen‑source support\nML‑Agents tutorial (released 2024)\nLimited (AWS RoboMaker)\nProprietary\nNo public SDK\n\n\n\nTesla’s advantage lies in hardware‑software co‑design: the Dojo‑Lite chip processes LiDAR point clouds in < 2 ms, enabling reactive balance control that most competitors achieve only with external compute.\n\n\n\nImpact area\nWhat Optimus changes\nRecommended employee response\n\n\n\n\nErgonomic risk\nReplaces repetitive lifting & overhead work\nTrain workers on robot supervision, safety‑stop procedures\n\n\nQuality control\nHumans shift to visual inspection & AI‑assisted defect detection\nUpskill with computer‑vision basics (Python + OpenCV)\n\n\nProcess engineering\nNew data streams (force‑torque, LiDAR) enable predictive maintenance\nOffer courses on data analytics and PLC integration\n\n\nJob count\nNet‑neutral in pilot plants (≈ 5 % fewer line workers, ≈ 10 % more technical staff)\nCreate internal “Robotics Technician” tracks (6‑month bootcamps)\n\n\n\nA cost‑benefit snapshot for a 1,000 m",
+      "publishedAt": "2026-09-30T03:46:29.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "85e2d69b6e219b68519a1b0b4342b8db9176661d40d8671972c474e42804a391",
+      "title": "Entrena y despliega Optimus de Tesla en tu fábrica hoy",
+      "url": "https://dev.to/leojulieta/entrena-y-despliega-optimus-de-tesla-en-tu-fabrica-hoy-38cd",
+      "description": "Optimus de Tesla: cómo entrenar y usar el robot humanoide en la fábrica (guía práctica)\n\n\n\n  \n  \n  Introducción\n\n\nEn las últimas 48 horas el anuncio de Tesla Optimus ha saturado los foros de IA, los grupos de manufactura y, por supuesto, los buscadores. La pregunta que más resuena es: ¿cómo podemos poner a prueba ese robot humanoide en nuestras líneas de producción sin paralizar la planta? En este artículo encontrarás respuestas concretas, ejemplos de código y recursos listos para usar, de modo que cualquier ingeniero o aficionado pueda comenzar a simular y entrenar a Optimus hoy mismo.\n\n\n\nSub‑sistema\nComponentes clave\nFunción práctica\n\n\n\n\nEstructura\nAleación Al‑Mg, 3 D‑printed joints\nLigereza + resistencia estructural\n\n\nActuadores\nMotores brushless 24 V, servos hidráulicos de precisión\nMovimiento fluido en 7 grados de libertad\n\n\nSensores\nEncoders ópticos 12 bits, LIDAR corto (0‑2 m), IMU de 9 ejes\nPosicionamiento y detección de obstáculos\n\n\nCerebro\nNvidia Jetson AGX Orin (32 TOPS) + módulo de almacenamiento SSD 512 GB\nInferencia en tiempo real de la red neuronal de control\n\n\n\nTip: Si quieres probar la arquitectura en tu PC, puedes emular la Jetson con Docker usando la imagen oficial nvcr.io/nvidia/l4t-ml:latest.\ndocker run --gpus all -it --rm \\\n   -v $PWD:/workspace \\\n   nvcr.io/nvidia/l4t-ml:latest bash\n\nEl entrenamiento de Optimus se basa en un ciclo continuo que evita detener la producción:\nRecopilación de datos en sitio – Los operadores usan guantes hápticos y un visor AR (por ejemplo, Microsoft HoloLens 2). Cada interacción genera un registro JSON con posición, fuerza y cámara.  \n\n\nTeleoperación → Simulación – Los datos se suben a la nube y se convierten en episodios de entrenamiento en Unity + ML‑Agents.  \n\n\nRetroalimentación humana – Los supervisores etiquetan comportamientos “correctos” vs “incorrectos” mediante una UI web sencilla.  \n\n\nActualización del modelo – Se entrena una red de control (arquitectura Twin‑Delayed DDPG) y se despliega al robot vía OTA.  \n\n\n\n\n  \n  \n  2.1 Código de ejemplo: generación de un episodio en Unity\n\n\n\n\n\nusing Unity.MLAgents;\nusing Unity.MLAgents.Sensors;\nusing UnityEngine;\n\npublic class OptimusAgent : Agent\n{\n    public override void CollectObservations(VectorSensor sensor)\n    {\n        // posición del robot (x,y,z)\n        sensor.AddObservation(transform.localPosition);\n        // velocidad de las articulaciones\n        foreach (var joint in GetComponentsInChildren<ConfigurableJoint>())\n            sensor.AddObservation(joint.currentForce);\n        // datos del LIDAR (array de 360 distancias)\n        sensor.AddObservation(LidarSensor.Readings);\n    }\n\n    public override void OnActionReceived(float[] vectorAction)\n    {\n        // vectorAction contiene torques para cada motor\n        ApplyTorques(vectorAction);\n        // recompensa basada en la distancia al objetivo\n        float reward = -Vector3.Distance(transform.position, target.position);\n        SetReward(reward);\n    }\n}\n\n# 1. Compilar el modelo con TensorRT\ntrtexec --onnx=optimus_control.onnx --saveEngine=optimus_control.trt\n\n# 2. Subir al repositorio de OTA\naws s3 cp optimus_control.trt s3://tesla-optimus-updates/latest.trt\n\n# 3. En el robot, disparar la actualización\ncurl -X POST http://robot.local/api/ota \\\n     -d '{\"url\":\"s3://tesla-optimus-updates/latest.trt\"}'\n\nAutomatización directa: Según la International Federation of Robotics (IFR, 2024), los robots humanoides pueden cubrir entre 15 % y 30 % de tareas repetitivas en ensamblaje.\n\n\nNuevas competencias: Se crean puestos de re‑skilling en programación de ROS 2, mantenimiento de sensores LIDAR y gestión de datos de entrenamiento.\n\n\nPrograma interno de Tesla: Tesla Academy ofrece certificaciones gratuitas en “Robótica Industrial” y “Análisis de datos de teleoperación”.\n\n\n\n\nEjemplo práctico: Un operario de la línea A pasó de 4 h de inspección manual a 30 min usando Optimus para transportar piezas, y utilizó 2 días de la Academy para certificarse como Robot Supervisor.\n\n\n\nRecurso\nQué contiene\nEnlace\n\n\n\n\nTesla Optimus SDK (beta)\nAPIs para control de actuadores, streaming de sensores y OTA\nhttps://github.com/tesla/optimus-sdk\n\n\nSimulador Unity + ML‑Agents\nEscenarios de fábrica preconfigurados (cinta transportadora, zona de soldadura)\nhttps://github.com/Unity-Technologies/ml-agents/tree/main/examples/optimus_factory\n\n\nDataset de teleoperación\n200 GB de sesiones de guantes hápticos + video 1080p\nhttps://data.tesla.com/optimus/teleop\n\n\nGuía de ROS 2 para humanoides\nTutorial paso a paso para integrar Jetson con ROS 2 Foxy\nhttps://docs.ros.org/en/foxy/Installation/Ubuntu-Install-Debians.html\n\n\n\nInstala Docker y la imagen de Jetson (ver sección 1).\n\n\nClona el SDK y compila los controladores:\n\n\n\n\ngit clone https://github.com/tesla/optimus-sdk.git\ncd optimus-sdk\nmkdir build && cd build\ncmake .. -DCMAKE_BUILD_TYPE=Release\nmake -j$(nproc)\n\nEjecuta el simulador y genera los primeros 10 000 episodios:\n\n\n\n\npython train.py --env OptimusFactoryEnv --steps 1e7\n\nDespliega el modelo con el comando OTA del apartado 2.2.\n\n\n\nCon estos cuatro pasos tendrás una versión mínima de Optimus entrenada para mover cajas de 10 kg en una cinta transportadora.\nEl anuncio de Optimus ha despertado una ola de búsquedas y debates, pero lo que realmente importa son los pasos concretos que podemos dar hoy para probar y adaptar este robot en nuestras fábricas. Con el hardware descrito, el flujo de entrenamiento automatizado y los ejemplos de código listos para ejecutar, cualquier equipo técnico está a un par de comandos de comenzar a experimentar. Aprovecha los recursos gratuitos, inscríbete en la Tesla Academy y conviértete en pionero de la nueva generación de manufactura humanoide.  \n¿Tienes dudas o quieres compartir tus resultados? Déjanos un comentario y únete a la comunidad que está construyendo el futuro de la producción con Optimus.\nHerramienta mencionada: GitHub Copilot",
+      "publishedAt": "2026-09-30T03:45:34.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "754fc5ef0f1919f472fec7b35f0b3f4465cae6ca5688102d1949d5b5448be10b",
+      "title": "OCaml 5 の Effect Handler で依存性注入をやってみた",
+      "url": "https://tech.uzabase.com/entry/2026/09/30/124509",
+      "description": "はじめに こんにちは、塚田です。 OCaml 5 で Effect Handler が入りました。例外のように処理の途中から外側へ制御を渡せて、しかも外側から値を受け取って元の場所から処理を再開できる、という仕組みです。言語機能としてはかなり面白いのですが、実務のコードでうまく使えるのかは、実際に書いてみないとわかりません。 そこで、社内のマイクロサービスの API に OCaml を導入してみました。今回は、その API で Effect Handler をどう使っているかを書こうと思います。 Effect Handler とは OCaml は ML 系の静的型付け言語です。関数型言語ですが…",
+      "publishedAt": "2026-09-30T03:45:09.000Z",
+      "feedName": "Uzabase for Engineers"
+    },
+    {
+      "id": "6a153533c2801304401087dc06fe924e15147edb56e6caa2cd73e3510211d0a7",
+      "title": "2026年9月29日に終了・移行に関する告知が出た7サービス（DevOps Guruなど）の移行ガイドを確認してみた",
+      "url": "https://dev.classmethod.jp/articles/aws-service-availability-updates-2026-09-migration-guides/",
+      "description": "Amazon Chime SDK SIP media applications、Amazon WorkSpaces Secure Browser、Amazon Managed Blockchain、Amazon DevOps Guru、AWS Backint Agent for SAP ASE、AWS Infrastructure Composer の移行ガイドを確認しました",
+      "publishedAt": "2026-09-30T02:19:18.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "db8f080db6ed47215cc3d5ee116e3a5b9006f5166ec4ab9169002fdf5423af99",
+      "title": "「マルチエージェント」を名乗るだけの作品が続出　Googleが数千の応募から見つけた“勝てる設計”4つのパターン",
+      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2609/30/news048.html",
+      "description": "Googleは、AIエージェント開発コンテストの上位作に見られる4つの設計パターンを公開した。応募の多くが「マルチエージェントシステム」を掲げていたが、実態は単一のモデルがプロンプトをつなげているだけのものもあったという。",
+      "publishedAt": "2026-09-30T02:00:00.000Z",
+      "feedName": "＠IT"
+    },
+    {
+      "id": "0a4b392444b0aaa013576a15a9100a8309ea0582d76700d49dde298308329e05",
+      "title": "「AWSのセキュリティサービスで“アラートの山”」――ほぼ日はどう解消？",
+      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2609/30/news045.html",
+      "description": "ほぼ日は、自社サービスを支えるシステムのセキュリティ対策の強化を進めたものの、システムごとに必要な対策の見極めや、積み上がるアラートへの対処が課題になっていた。この状況をどう見直したのか。",
+      "publishedAt": "2026-09-30T02:00:00.000Z",
+      "feedName": "＠IT"
+    },
+    {
+      "id": "67b2ed7adc54eeae864f2171664a6909cf6249583d18041cd7b47a4552e2fcb5",
+      "title": "WindowsにLinuxコンテナ機能「WSLC」が正式登場　Docker Desktopなしで実行可能に | XenoSpectrum",
+      "url": "https://xenospectrum.com/wsl-containers-ga-architecture-docker-boundaries/",
+      "description": "この記事のポイント何が起きた: Microsoftが2026年9月29日、WSLコンテナを一般提供し、CLIとWindows向けAPIを正式投入した。なぜ重要か: Linuxコンテナの実行を通常のWSL環境から分け、Windowsの権限・管理・通信へ組み込む基盤となる。次に見るべき点: Composeの実装、配布チャネル表示の収束、Docker系ツールが必要と...",
+      "publishedAt": "2026-09-30T00:29:56.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "4a92d3e0f937830cf9900d3f245dad47c9dbf0f44003983d134d75627ccc2b2c",
+      "title": "セキュリティエンジニア視点のKubernetes環境の攻撃面と対策 - GMO Flatt Security Blog",
+      "url": "https://blog.flatt.tech/entry/kubernetes-attack-surface",
+      "description": "はじめに こんにちは。GMO Flatt Security株式会社 セキュリティエンジニアのてぃー(@k1rnt)と、@ei01241です。 Kubernetes(k8s)は、いまやコンテナオーケストレーションのデファクトスタンダードです。多くの企業がEKS、GKE、AKSといったマネージドサービスを利用してプロダクション環境を運用しています。 一方で、Kub...",
+      "publishedAt": "2026-09-30T00:23:42.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "4bdc05837a3dcba7828baa844a0087aa255679d6f1e333b642d0b32c1c85f466",
+      "title": "【開催報告】組み込みソフトウェア開発でも AI エージェントは活用できる ─ 日立産業制御ソリューションズ様とのワークショップ",
+      "url": "https://aws.amazon.com/jp/blogs/news/hiics-ai-sdlc-workshop/",
+      "description": "長期にわたって保守される組み込みソフトウェアの開発でも、AI エージェントは活用できます。2026 年 7 月、日立産業制御ソリューションズ様向けに、既存コードの読み解きから仕様化、実装、テストまでを Kiro で体験するハンズオンワークショップを 2 回開催し、102 名のエンジニアにご参加いただいた開催報告です。",
+      "publishedAt": "2026-09-30T00:00:45.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "697948a42d9765060d9714138608c59b6e58d5a68c18a501e33aac541b74f3b9",
+      "title": "ZOZOの情シスはCTO下で“開発を速める存在”へ──Claude利用を止めないガードレールの育て方",
+      "url": "https://enterprisezine.jp/article/detail/25125",
+      "description": "生成AIの急速な普及にともない、企業の生産性向上と情報セキュリティ確保のバランスが大きな論題となっている。情報システム部門が制御を強めすぎれば現場の変革が停滞し、逆に対応が遅れればシャドーITの横行を招く。ZOZOで執行役員兼CTOとIT統括本部長を兼任する瀬尾直利氏は、このジレンマに対して「セキュリティと生産性を天秤にかけない」という方針を提示する。同社が実践する“攻め”と“守り”を高いレベルで両立させるIT基盤戦略と具体策について詳述する。",
+      "publishedAt": "2026-09-30T00:00:00.000Z",
+      "feedName": "EnterpriseZine"
+    },
+    {
+      "id": "5b88e42be988a7ece6474bea26aa2935bed10eaf905558dc261d898741301468",
+      "title": "【アジャイルFAQ 第5回】ドキュメントが信用できない現行システム、何を『仕様』にして検証する？",
+      "url": "https://developer.mamezou-tech.com/blogs/2026/09/30/5_what_is_the_spec_to_verify/",
+      "description": "この記事を読んでいただきありがとうございます。アジャイルグループに所属する、藤井智弘です。\n 更改案件の「現行機能保証」を3つのサブテーマに分けて扱う3連作、その3回目（最終回）です。第3回で「現行」の実体を見て、第4回で合意できる「全体像」を作りました。今回のサブテーマは「検証し、予算を組み、配分する」です。\n質問\n#\n 更改案件で現行システムの仕様書を開いたら、最終更新は10年前でした。コードと一致している保証はなく、現場の人に聞くと「マニュアルにはないけど、実際はこうやっている」が次々に出てきます。何を「仕様」として検証すればいいのでしょうか？ 全部を人手で突き合わせる時間はありません。しかも、想定外が見つかるたびに追加予算の話になりそうで、正直なところ、発見するのが怖いくらいです。\n回答\n#\n 第4回で、ユースケースの粒度なら全体像を合意できる一方、その中身（スライス）は現物を動かさないと分からないことを見ました。本稿は、その「分からない中身」をどう発見して検証済みに変えていくか、そして発見を受け止める予算をどう組み、どう配分するかの話です。\n 結論を先に言えば、ドキュメントを信用できないなら、いちばん信用できるもの——動いている現物——を仕様にし、未知の仕様は、リリース後の事故として見つかるのを待たずに、開発中に小さく動かして見つけにいくことです。更改案件でアジャイルの型が効くのは、この「発見の手段」としてです。「ドキュメントが揃っていないから検証できない」は、「現行機能保証」「アジャイルは全件を確定しない」に続く、3つ目の思考を止める言葉です。そこで止まる前に、検証の相手を現物に替えられないか、一度考えてみましょう。\n 第3回で採り上げた「仕様の3つの実体」には、それぞれ別の検証手段が要ります。\n紙は当てにしない——ただし捨てもせず、現物との差分を探す手がかりに使う。\nコードがやっていることは、特性化テストで固定する。\n人がやっていることは、早期の部分稼働と現場のヒアリングでしか見つからない。\n      図1：3つの実装は、各々異なる検証手段で。\n\n 以下の処方は、おおむねこの順に並べ、続けて、見つかったものの扱いをプロダクトオーナー（PO）がまとめて判断する仕組みを置いています。\n処方——現物を仕様にし、未知を発見する\n#\n実際の利用データで「本当の現行機能」を測る\n特性化テストで「現物」を仕様として固定する\n一斉切替ではなく、部分的に動かして差分を発見する\n「人がやっていること」を発見できるのは、この部分稼働と現場のヒアリングだけです。昨今注目される「生成AIによるレガシー分析」も、読めるのは紙とコードまでです。その結果を「現行仕様」と信じて進めれば、第3回で見た事故の構図はそのまま残ります。発見された差分は、失敗ではなく、うれしい収穫です。第4回で、ユースケースの一覧を地図に見立てました。差分が見つかるたびに、その地図に道筋が書き足され、検証済みリストが伸びていきます。\n発見された「謎の挙動」の判断はPOに集約する\n     図2：「謎の挙動」はPOにゆだねる\n\n 決めておくべきは、次の3つです。\n誰が判断するか\nいつまでに判断するか\n判断が来なかったらどうするか\n 決めないまま始めると、検証の途中で判断待ちが積み上がります。発見の責任は問わず、扱いを決める役割は発注側にある——この分担だけは、どの現場でも共通です。判断の記録は、次回更改のための資産になります。\n残リスクは、保守運用に引き継がれる\n発見したものの置き場——バックログは開いている\n#\n 第2回で、バックログが「項目が後から流れ込むことを前提にしたリスト」であることを見ました。更改案件では、この性質がスコープ管理の意味を変えます。\n 第4回の粒度を当てはめると、ユースケースの一覧は、確定として扱われる——重い手続きの側に置かれる——ほぼ閉じたリストです（足し引きは、確定したものの変更として発注側が判断します）。その下のスライスは、開いたリストです。重い手続きは一覧の層だけに残し、スライスの層は開けておく。前節の処方で発見された挙動は、代替フローとして粛々と追加していきます。第4回で「スライスの入替は承認手続きの対象にはしない（ただし記録は残す）」と書いたのは、この意味です。承認は要らなくても、追加も入替もバックログの履歴に残るので、後から追えます。そして追加を責任問題にしないこと（第3回の「洗い出し漏れの責任問題にしない」と同じ布石です）。責任追及が始まれば発見は隠され、発見のためのプロセスが止まります。\n ただし、「バックログは開いている」は、開発チームには当たり前でも、稟議や契約を管理する部門にとっては当たり前ではありません。承認なしに追加や入替が起きるプロセスは、会社の手続きから見れば例外です。ここで「アジャイルへの理解を深めましょう」と正論で押しても、相手には「べき論の押し付け」と映り、かえってブレーキになります。\n一覧の層には重い手続きを残し、スライスの層だけを開ける——この線の引き方は、過渡期の組織で回るように仕立てた折衷案です。\n予算のハンドリング——発見したものの財布は開いているか\n#\n バックログが開いていても、財布が閉じていれば発見は受け止められません。第4回は、全体像から量（本数×規模、それに深さの初期設定）を出すところまででした。ここでは、その量を金額に換えて器を組み、開発を進めながら器の中を配分していく話をします。稟議の制度は組織ごとに違うので、以下は答えではなく、自組織で検討するときの素材として読んでください。\n稟議と契約は、別の場面\n稟議は、発注側の社内で予算の器（上限枠）を確保する場面。契約は、発注側と受注側の間で、何を約束し、何を調整の対象にし、どう支払うかを合意する場面です。契約金額は器の枠内で決まりますが、器と一致する必要はありません。稟議に出した内訳を契約の保証文言に転記しない——第3回で引いた一線は、この境界線のことです。以下は稟議の側の話です。\n量を期間と金額に換える——実測を先に置く\n稟議のための器の上限であって、契約金額でも最終支払でもありません。以降の予算管理は、上限から検証済みの分を差し引いていく形になり、予算が余ることもあります。それは失敗ではありません。\n器は固定したまま、配分の決め方を変える\n器は固定したまま、器の中の配分の決め方だけを変える折衷案を3つ挙げます。\n 第一に、器の内訳を **「約束枠」**と 「発見枠」に分けて稟議に書きます。約束枠は、移行対象のユースケースすべてについて、最小集合（第4回のL1）まで仕上げる分。発見枠は、最小集合の外の代替フローまで仕上げる分と、検証で見つかる未知への対応分で、総額の2〜3割。従来の予備費と違うのは、発見枠の使い方の規則を稟議の中に書くことです——「検証済みリストで最小集合が達成されたユースケースのうち、業務影響の大きいものから順に、最小集合の外の代替フローまで広げる。配分は担当者が定例で決め、総額・期限を超える場合のみ再稟議」。根拠は第4回の本数×規模と前項の実測で示せるので、書式は従来のまま。加わるのは、決裁権限の一部を担当者に委ねる条項だけです。\n発見への対応が、業務を止めないための最小集合の予算を食わないこと。\n担当者に委ねる範囲を発見枠に限れば、委譲の条項が稟議を通りやすくなること。\n予算が足りなくなったとき、見積の甘さ（約束枠の超過）と未知の多さ（発見枠の消化）を見分けられること。後者は想定内の事象なので、第3回で書いたとおり、責任問題にはしません。発見が発見枠の中に収まれば追加稟議は要らず、収まらない場合も、枠の消化状況から早い段階で見えてきます。\n\n 第二に、稟議を2段にして、実測を先に置きます。第1段は「実測スプリント」まで——数本のユースケースを実際に移行・検証する、小額・短期の準委任。第2段は、実測でベロシティが出た後に本体の器を申請する。これは「要件定義フェーズを先に発注する」という既存の慣行と同じ形なので、積み上げ式の組織でも通ります。違うのは、第1段の成果物が要件定義書ではなく、検証済みリストの最初の数行と、実測したベロシティであること。前項の実測も、特性化テストの最初の1本も、この第1段で行います。\n 第三に、年度の器は動かさず、案件の「予実＋見通し」を四半期ごとに更新します。検証済みリストの伸びとゴールの達成で見通しを更新し、発見枠の消化見込みを——余りそうなら、その見込みも——早めに示す。多くの組織が既にやっている四半期見直しの書式に、「移行対象のユースケースのうち、どこまで検証済みになったか」（第4回の「ユースケース×深さ」の表の集計）の行を足すだけです。余った予算は、代替フローをさらに仕上げるのに使うか返すかを、最後に判断します。年度の器の中で見通しを回し続けるこのやり方は、脱予算経営のローリング予測を、案件の単位で小さく試すことでもあります。\n 固定するのは総額・期限・約束枠、動かすのは発見枠の配分と見通し。それを可能にするのは、配分の権限委譲を稟議に書くことと、実測の分を先に小さく稟議にかけることの2つで、どちらも新しい制度ではなく、いまの書式への一行の追記です。制度を変える前に、制度の中で試せることがある、ということです。バックログが開いているだけでは足りない。財布も、同じだけ開いている必要があります。\nなぜこの質問は30年繰り返されるのか\n#\n 更改のたびに「ドキュメントがない」と嘆かれ、更改が終わるとまたドキュメントは更新されなくなる。この連鎖には理由があります。更改の終盤は、期限に追われて「動くこと」が最優先になり、判断の記録を残す余力が真っ先に削られる。そして次の更改では、前回の判断が「なぜこうなっているのか分からない挙動」として発見され、また調査から始まる。第4回で、いま人が手作業で担っていることの多くは、前回の更改で誰かが暗黙に削った代替フローの痕跡だ、と書きました。その正体は、記録されずに削られた判断の、30年分の堆積です。\n この連鎖を断つ最初の一歩は、「嘆くこと」ではなく、今回の案件で「検証済みリスト」と「判断の記録」を残すことです。特性化テストは、検証済みリスト（第4回の「ユースケース×深さ」の表）の各マスを裏付け、現物の挙動を機械が読める形で固定し続けるドキュメントです。謎の挙動の判断一覧は、「なぜこうなっているのか」への、初めて書かれる答えです。第3回の冒頭で、判断はいつしか慣習になり、誰も疑問を持たなくなると書きました。判断一覧は、慣習になる前の判断を、理由ごと次の世代に渡します。どちらも設計書一式を書き直すより手間は小さく、次の更改を担う人は、あなたがいま抱えている「全貌が不明」という状況の、少なくとも一歩外から始められます。第4回で残した「検収の根拠に、紙に代わる何を置くか」という問いへの私の答えも、この二つです。紙を書き足すのではなく、現物から採ったものを残す。それが、何よりのドキュメントです。\n 第3回の冒頭で、更改案件を扱う3本は波風を立てるつもりだと書きました。この3本で示した3つの視点——「現行」の実体を見る、合意できる全体像を作る、検証し、予算を組み、配分する——は、一つの見立てであって、正解ではありません。スクラムの型をそのまま当てたものでもなく、稟議と契約と多重下請けという日本の現場の文脈に合わせて、プロセスを仕立て直した一例です。「うちの現場では成り立たない」「稟議はそんなに単純ではない」「特性化テストの工数は誰が払うのか」…そういう異論こそ、この3本が引き出したかったものです。ぜひ職場で議論してみてください。\n これで、地雷の上から、無事に着地できたでしょうか？\n\n次回: 「デイリースクラムが進捗報告会になっています」",
+      "publishedAt": "2026-09-30T00:00:00.000Z",
+      "feedName": "豆蔵デベロッパーサイト"
+    },
+    {
+      "id": "f54b0c61ba6466b2f8b0210b38fc99e37f5777ed34db7f15fa409f4379f9e78a",
+      "title": "高崎市が約3800台の端末から「Google Workspace」へ直接接続　ネットワークをどう変えた？",
+      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2609/30/news046.html",
+      "description": "セキュリティを重視してインターネット接続を制限してきたネットワークで、クラウドサービスや生成AIをどう活用するか。群馬県高崎市は、職員が使う約3800台の端末やグループウェアの刷新を機に、ネットワーク構成を見直した。",
+      "publishedAt": "2026-09-29T23:00:00.000Z",
+      "feedName": "＠IT"
+    },
+    {
+      "id": "5237e3d2511f9d3a98d43f2058200f32fb12de725d541faec209ecfceef5481a",
+      "title": "[アップデート] SSM ドキュメントの共有がAWS RAM を使った新しい方式になりました",
+      "url": "https://dev.classmethod.jp/articles/systems-manager-sharing-documents-ram/",
+      "description": "RAM で共有管理できるようになった。旧方式より管理しやすくリスクも減って良さそうです",
+      "publishedAt": "2026-09-29T21:47:57.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "3d916de0d6af8bacd735ae27514535906248f1192bf349d22f93d602159cff7f",
+      "title": "「証明」によりAIの誤りを阻止しGPU上で動作する高速プログラミング言語「Bend」、C言語並みの処理速度・CUDAによる並列処理・Leanによる形式的証明・Python風の構文",
+      "url": "https://gigazine.net/news/20260930-bend-lang/",
+      "description": "「Bend」はAIが犯すかもしれない誤りを「証明」によってブロックすることを目指す新たなプログラミング言語です。 Bend https://bend-lang.com/ BendはポストAGIの経済社会において人間がコードの記述や読解から解放される未来を見据え、AIに対して意図を明確に伝えるための手段として開発されました。Bendは「法律(Laws...",
+      "publishedAt": "2026-09-29T21:04:47.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "b3ff6bddfe509e8a796cd050d1299c918501f0927dbd3c1e464be83522407aa9",
+      "title": "[アップデート]Amazon GuardDutyが漏洩したAWS Lambda認証情報の不正利用を検出できるようになりました(InsideAWS編)",
+      "url": "https://dev.classmethod.jp/articles/amazon-guardduty-resource-credential-exfiltration-insideaws/",
+      "description": "ついにAWS LambaでのInsiceAWSの不正利用も検出できるようになりました！Amazon Qを使った調査もおすすめですよ！",
+      "publishedAt": "2026-09-29T20:21:24.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "bd0d35ec5bc3abed1026d0e5ccd197c66e8ed9cb213e41a8aee6fea21f122656",
+      "title": "Amazon EC2 スポットプレイスメントスコアがローカルゾーンに対応したので確認してみた",
+      "url": "https://dev.classmethod.jp/articles/ec2-spot-placement-score-local-zones/",
+      "description": "AWS EC2のスポットプレイスメントスコアがローカルゾーン対応になったので、実際に使ってみて仕様や使い方をまとめました。",
+      "publishedAt": "2026-09-29T14:30:18.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "7b42cf31247ac2ce0cf9c6adb4a18b068b5e9d8ecdd76151bb14378b22f74069",
+      "title": "BedrockのClaudeに暗黙的なプロンプトキャッシュが登場！！とドキュメントにある（暗黙的とは？）",
+      "url": "https://qiita.com/moritalous/items/1b6a05842724fc1fff66?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "Claude Sonnet 5.5が出ましたね！当たり前のようにAWSのAmazon Bedrockでも使えます。\n\nドキュメントもすでに更新されています。（仕事が早い！）\n\n「RuntimeエンドポイントとMantleエンドポイントに対応、おすすめはRuntime...",
+      "publishedAt": "2026-09-29T12:34:51.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "912c6e793cc858bafa7734aee633bad6ad68a9f048d54a2b6765942ca0502a80",
+      "title": "【新資格】AWS Certified AI Business Strategist（AIB-C01）ベータ試験を受けてきた(コツコツ勉強できない人の感想)",
+      "url": "https://qiita.com/riz3f7/items/fe5704cc76755bb8700f?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\n2026年9月29日から AWS Certified AI Business Strategist（AIB-C01） のベータ試験が受けられるようになったので受けてきました。\nお祭り気分で受けてきた、コツコツお勉強できない属性の人の体験記です。\n（世の中にコツコ...",
+      "publishedAt": "2026-09-29T11:35:18.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "52221b25ad4309f228eb15ec3fad07f3777910a3778a8cb79fc3300584ea3d0a",
+      "title": "GitHub を使う上で知っておくと嬉しいかも Tips 2026 | ドクセル",
+      "url": "https://www.docswell.com/s/cybozu-tech/K4NM4D-github-tips-2026?utm_source=twitter&utm_medium=social&utm_campaign=singlepage",
+      "description": "GitHub 知っておくと便利かも Tips 2026 セキュリティ向上 Tips 特集号 開運研修 2026 社外公開版 2026.05.08 社内公開 2026.07.21 更新 サイボウズ株式会社 開発本部 開発支援副本部 技術支援部 生産性向上副部 平木場 風太 自己紹介: 平木場 風太（ひらこば ふうた） 社内でのニックネームは「きばちゃん」 所属 開発...",
+      "publishedAt": "2026-09-29T10:53:52.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "96a48dcefeffcb4ba76abceb42b26acd92ecd77e6e76904101f75695c8a170e9",
+      "title": "Amazon Textract の機能を整理した",
+      "url": "https://dev.classmethod.jp/articles/amazon-textract-apis-json-pricing/",
+      "description": "AWS の マネージド OCR サービス Amazon Textract の9つの機能について、実際の帳票を使いながら網羅的に検証してみました。取得したい項目の決まり方や信頼度の使い方など、VLM による帳票読み取り設計の参考になるヒントが満載です。",
+      "publishedAt": "2026-09-29T09:47:48.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "5d4ecdd28505adfd003b897bbbecf773ff80d5af64adcd4b2cb69712ae3bdd80",
+      "title": "NRIセキュア、欧州「NIS2指令」への準拠支援サービスを開始　EU現地法人と連携した一気通貫支援",
+      "url": "https://enterprisezine.jp/news/detail/25181",
+      "description": "NRIセキュアテクノロジーズ（以下、NRIセキュア）は、EU（欧州連合）のサイバーセキュリティ規制「NIS2（Network and Information Systems Directive 2）...",
+      "publishedAt": "2026-09-29T09:18:00.000Z",
+      "feedName": "EnterpriseZine"
+    },
+    {
+      "id": "cce83fcc231745a77dbc4554fbc49263b83be705b5520090bf8529f57d0d8e2b",
+      "title": "Tenable、エクスポージャー管理「Tenable One」でAIセキュリティ＆運用自動化が可能に",
+      "url": "https://enterprisezine.jp/news/detail/25180",
+      "description": "Tenableは、エクスポージャー管理プラットフォーム「Tenable One」におけるAIセキュリティ機能の強化を発表した。\n\n　今回のアップデートにより、Tenable One AI Expos...",
+      "publishedAt": "2026-09-29T09:00:00.000Z",
+      "feedName": "EnterpriseZine"
+    },
+    {
+      "id": "7699418f926b7a822808e79e1c6482ae4661179dd3b548b48418356255b9dfe7",
+      "title": "いちAWSエンジニアのAI活用を振り返る #devio2026 登壇資料",
+      "url": "https://dev.classmethod.jp/articles/devio2026-osaka-kawahara/",
+      "description": "DevelopersIO 2026 Osaka で発表した「いちAWSエンジニアのAI活用を振り返る」というセッションの内容です",
+      "publishedAt": "2026-09-29T08:44:38.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "cc8d46cec382abdb7cae28ef75d9492e634c8b03bc6c99051ccb374b694a4a1c",
+      "title": "Claude Code v2.1.284 の主要アップデート - Sonnet 5.5 登場 と auto mode 既定化の全プラン拡大",
+      "url": "https://dev.classmethod.jp/articles/20260929-cc-updates-v2-1-284/",
+      "description": "Claude Code v2.1.284 がリリースされました。Sonnet 5.5 の追加、権限モード未設定時の auto mode 既定化など、セキュリティとモデルの改善が進みます。実際に Sonnet 5.5 のコード向けに `/claude-api migrate` で移行した結果も合わせてお伝えします。",
+      "publishedAt": "2026-09-29T08:36:26.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "e02d1c1cbb8324b941a22da3267149558f866087db7a59024746fa8dc5511ede",
+      "title": "aws pricingコマンドでAmazon RDSのオンデマンド料金を取得してみた",
+      "url": "https://dev.classmethod.jp/articles/aws-pricing-command-rds-ondemand-hourly-rate/",
+      "description": "AWS CLIでAWS Price List Query APIを用いてAmazon RDSのオンデマンド料金を一括取得する方法を試しました。DBエンジンとリージョンくらいを指定すればあとは一括で取れるだろうと思っていたわたしの思いは打ち砕かれました。",
+      "publishedAt": "2026-09-29T08:14:59.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "8bff616da3fa6f03582d659093949423be43c77efc05e92a687de169bc3f567a",
+      "title": "AI 駆動開発で「設計」はどこに書くのか ― 振る舞いをテストで検証できる「仕様」にしてみる",
+      "url": "https://zenn.dev/softbank/articles/6f98cf7c4ebfd3",
+      "description": "はじめに\n日々の開発において、AI にコードを書いてもらうことは日常になってきました。要件を伝えれば既存のコードベースを調査し、その作法に合わせて機能を足してくれます。\n生成されたコードがいつも正しいわけではありませんが、それでも「コードを書く」という作業そのものは、以前ほど開発のボトルネックではなくなりつつあると感じています。\nその一方で、AI と一緒に開発していると、「何を実装してもらうか」を決める時間の比重が増えてきました。この記事では、その実感を出発点に、次の 3 つを順に考えてみました。\n\nAI 駆動開発で、設計はどこに書いておくとよいのか\n既存の設計成果物で、実装されたコ...",
+      "publishedAt": "2026-09-29T07:02:41.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "9f06b810828e432b38248733ff233f841eef6557f65fe6206a0a4f9256f929a1",
+      "title": "『re:Inventに行く前に知っておきたい現地参加のノウハウ』というタイトルでウェビナー登壇しました",
+      "url": "https://dev.classmethod.jp/articles/260908-aws-reinvent-webinar-onsite-tips/",
+      "description": "「AWS re:Invent 2026 徹底解説｜セッション計画術と失敗しない回り方」で、『re:Inventに行く前に知っておきたい現地参加のノウハウ』というタイトルで登壇しました。本記事で登壇資料を共有します。",
+      "publishedAt": "2026-09-29T05:47:19.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "9db40e63cc08847c3a6ddda836ce183c4a958f8503f8ae13eabc0cbdbc2987e2",
+      "title": "Cloudflare、全APIに対応しTypeScriptで設定可能な新コマンドラインツール「cf」をリリース",
+      "url": "https://gihyo.jp/article/2026/09/cloudflare-cf-cli?utm_source=feed",
+      "description": "Cloudflareは2026年9月28日、コマンドラインからCloudflare API全体を操作でき、TypeScriptで設定を記述できる新たなCLIツール「cf」をオープンベータ版としてリリースした。",
+      "publishedAt": "2026-09-29T05:33:00.000Z",
+      "feedName": "gihyo.jp"
+    },
+    {
+      "id": "e23dc3d55b77d29d407e911ec2421ceb63cf49d0bffd38af338a7afab41b284b",
+      "title": "Cloudflare の CLI を wrangler から cf に移行する",
+      "url": "https://zenn.dev/sora_kumo/articles/cloudflare-to-cf",
+      "description": "はじめに\nCloudflare から次世代の統合 CLI ツール cf（現在 v1.0.0-beta）が登場しました。\n従来の wrangler（wrangler.json / wrangler.jsonc / wrangler.toml）から、TypeScript ベースの型安全な設定ファイル cloudflare.config.ts への移行が推奨されています。\n公式には cf migrate という移行コマンドが用意されていますが、実行するだけでそのまま本番稼働できるわけではなく、いくつかの設定調整や実運用上のハマりどころが存在します。\nこの記事では、React Router（...",
+      "publishedAt": "2026-09-29T04:43:50.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "5636930c24e3f0bc2f19378c375e077bf1086d4f250406883fdf43d2eb84347f",
+      "title": "Amazon Bedrock Runtime の Grok 4.7 を AWS CLI で試してみた",
+      "url": "https://dev.classmethod.jp/articles/grok-47-bedrock-runtime/",
+      "description": "Amazon Bedrock の Grok 4.7 を、AWS CLI の converse から IAM 認証だけで呼び出しました。Grok 4.6 からは model-id の差し替えで移行でき、Structured outputs と reasoning effort も指定できます。",
+      "publishedAt": "2026-09-29T04:39:12.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "5408ae7613c21019fec5b4c8eb5b8213544cca2ebb44bc7c9a8569710624e851",
+      "title": "既存のバックアッププランの名称を変更する方法",
+      "url": "https://dev.classmethod.jp/articles/tsnote-aws-backup-change-planname/",
+      "description": "AWS Backupのバックアッププラン名を変更したいときは、AWS CLIのupdate-backup-planコマンドを使う方法があります。実際の手順を試してみました。",
+      "publishedAt": "2026-09-29T04:25:54.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "fd574709e71d3f85ab1b53af9a02e249ce94d2789fa816a2897fd36493e39315",
+      "title": "バッチ監視で学んだ4つの確認観点 ― 起動/生存/終了/復旧を確認しよう",
+      "url": "https://qiita.com/sewiihidekikudo/items/71d588760efd8224cd1f?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\nこんにちは。ソーイ株式会社の工藤です。\n今回、当社が担当した受託開発案件でバッチの監視・テストを担当する中で、バッチが「実行されたか」だけでなく、「正常に動き続けているか」「正常終了したか」「異常から復旧したか」まで確認する必要があることを学びました。\n本記事で...",
+      "publishedAt": "2026-09-29T02:46:30.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "07823131370326d699185b7ff24efdf8cfd6f51aa998c661a70f9edaa855dedb",
+      "title": "録音音声を扱うプロダクトでAIとテストするために初手で行った工夫と改善点",
+      "url": "https://zenn.dev/knowledgework/articles/96d88ab25da83f",
+      "description": "こんにちは。\n特撮に毎週元気をもらっているbunです。今年の8月（2026年）にナレッジワークにQAエンジニアとして入社しました。\nみなさん、AIとテストしてますか？私はAIがブラウザやモバイルアプリなどを容易に操作できるようになってから、機能テストを大きく以下のような3種類に分けて考えています。\n\n1: 手動テスト\n\nいわゆる従来からテスト技術者やQAエンジニアがやってきているもの\n「ちゃんと動いているかな」のほか、「こうしたらどうなるんだろう」という探索的な観点も含みます\n\n\n2: 自動テスト\n\nいわゆる従来からある自動テスト\n「手動でやっていたテストを、ただ自動化するだけにしない」...",
+      "publishedAt": "2026-09-29T02:00:05.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "2542bc46095242c390e34b628c7eb7a556e93194a02e010efe266bbc6cd3467a",
+      "title": "2026年9月29日 今日のQiitaトレンド記事をポッドキャストで聴こう！",
+      "url": "https://qiita.com/ennagara128/items/f09e622a5069f34b89c5?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "前日夜の最新トレンド記事のAIポッドキャストを毎日朝7時に更新しています。\n通勤中などにながら聴きしよう！\n（Qiita投稿は通勤には間に合わないと思われますが）\nフィードバックとか助かりますのでください\n↓こちらから\n\n出典\nAI感のないAWS構成図をAIエージェントに描...",
+      "publishedAt": "2026-09-29T01:55:07.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "a1b4e37978d2e09d0ff6c3842038463b68209aa4925f39851d0f30f4165370dc",
+      "title": "AI開発時代だからこそ、テストの役割を見つめ直す",
+      "url": "https://zenn.dev/ababup1192/articles/77b844dcfc1529",
+      "description": "AI がコードを書くようになり、「これからは E2E テストが大事だ」「いや、ユニットテストを厚くすべきだ」という議論をよく見かけます。けれども、テストの種類ごとに検出できる不具合は違い、その役割は AI が来ても変わりません。大事なのは、それぞれの役割を意識して使い分けることです。この記事では、テストの役割の違いと、AI と一緒に開発する時にそれぞれの役割をどう活かすかを整理します。\n\n 役割は、検出できる不具合の種類で決まる\nテストの種類を比べる時は、「どれが優れているか」ではなく「どの種類の不具合を検出できるか」で見ると整理しやすくなります。\nユニットテストは、関数やモジュールのロ...",
+      "publishedAt": "2026-09-29T01:00:44.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "9643c309bbf692ae5a63b09f3333a34e2a422956e4ff1dbfdc56e4512a67efbf",
+      "title": "本番でボタンが全部無反応だった——CSP の nonce と force-static は両立しない（Next.js App Router）",
+      "url": "https://qiita.com/sz_tak/items/bc1a124d90f1eac0c80a?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "結論\n\nNext.js App Router で、middleware がリクエストごとに nonce を発行する CSP（script-src 'self' 'nonce-…' 'strict-dynamic'）を使っていた\n同じアプリの一部のページに export c...",
+      "publishedAt": "2026-09-29T00:58:09.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "0d81709481a60cba3217b65d9bf25cd007ceb6ce6102e3e63569fb4328374487",
+      "title": "荒れたテストケースをコード管理で立て直してみた",
+      "url": "https://qiita.com/hamham999/items/ebee7540a82db6933854?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\n今いるチームでは、モバイルアプリのリリース前の確認を手動テストで行っています。\nテストケースの管理はずっとGoogleのスプレッドシート（以下スプシ）を使っていましたが、運用が破綻しかけていました。\nそこで、ケースの管理はコードベースで行い、実施だけをスプシで行...",
+      "publishedAt": "2026-09-28T23:10:50.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "d67ef1d3997d1d8a1dbb789f572175beba0a6ae4c1d9ad571bea6dc83b3c1b4b",
+      "title": "Reactの削除処理を書いて間違えた話",
+      "url": "https://qiita.com/J-T_ky2g/items/c4a2ce4db7a811dd2fa1?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\n\n業務ではテストコードは自分で書いて、実装はかなりAIで書いている\n\n問題\n\nこんな感じかな？で書いて間違えた\n\n  const deleteRecord = async  (id) => {\n      const newRecords = records....",
+      "publishedAt": "2026-09-28T16:37:33.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "399a49852286d3f202b403159fd0cd4658034e80b7065daec0d512372d51121a",
+      "title": "【自社開発1年目】「チーム経験ゼロ」の27歳元営業が、ダイレクト出版でAIを使い倒し本番コードを書くエンジニアになるまで",
+      "url": "https://qiita.com/kanzawa_kentaro/items/f69db1682fdc5ddb3ea8?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "TL;DR\n\n誰： 27歳元営業。エンジニア未経験でダイレクト出版のプロダクト企画部に入社して1年経過\n\nやったこと： 大阪で2ヶ月研修 ➔ FE（TypeScript, React）➔ BE（Go）➔ FE（現在）\n\n感想： 結論、入社してよかった。やらかしもしたが、...",
+      "publishedAt": "2026-09-28T14:51:38.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "9854d9726ef1f931a46a0bb2008caddd31fe5cde169951e291fad6695df0874b",
+      "title": "【JavaScript】Promise.resolveはPromiseでないオブジェクトもresolveするしそのせいで脆弱性がたくさんある",
+      "url": "https://qiita.com/rana_kualu/items/4bf77973ab94453a2699?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "どういうこと？\n\nthenインジェクション\nObject.prototype.then = function(resolve, reject) {\n  console.log('thenメソッド生やしてみた');\n  resolve(true);\n};\n\nasync fu...",
+      "publishedAt": "2026-09-28T10:59:42.000Z",
+      "feedName": "Qiita"
     }
   ]
 }
