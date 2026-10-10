@@ -1,245 +1,6 @@
 {
   "articles": [
     {
-      "id": "2f133062c8cd52a107e98a659088052c97f0d4430109f8ac4b036254ef04036a",
-      "title": "[登壇レポート] 勉強会opsmethod#4 「コスト最適化の「めんどくさい」を AWS FinOps Agent でチョット楽にする」というタイトルで登壇しました",
-      "url": "https://dev.classmethod.jp/articles/20260908-opsmethod4-cost-optimization-with-aws-finops-agent/",
-      "description": "AWS FinOps Agent を使ったコスト最適化の効率化について、勉強会での登壇内容をご紹介します",
-      "publishedAt": "2026-09-09T03:05:18.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "10a55d76747ad648ddb8561ba3b562d812aa27567a1572eb679379fa8f153fde",
-      "title": "NocoBase を Docker Compose でローカルで動かしてみよう！ 公式手順だけでは見落とす、後から変えにくい設定",
-      "url": "https://dev.classmethod.jp/articles/nocobase-docker-compose-local/",
-      "description": "NocoBase を Docker Compose でローカルに立てる手順を、公式ドキュメントに沿って最後まで通します。あわせて、バージョン・データベース・タイムゾーン・ボリュームという、公式手順だけでは見落としがちで後から変えにくい設定について、何を基準に決めるかを整理しました。",
-      "publishedAt": "2026-09-09T03:03:17.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "2b7e6b14e7b06b6cb0e9b26f4c94d23e325cd6006de42686fe308b9874819a3c",
-      "title": "A beginner's guide to the Qwen3.8-Flash-Next model by Qwen on Huggingface",
-      "url": "https://dev.to/aimodels-fyi/a-beginners-guide-to-the-qwen38-flash-next-model-by-qwen-on-huggingface-5aip",
-      "description": "This is a simplified guide to an AI model called Qwen3.8-Flash-Next maintained by Qwen. If you like these kinds of analysis, you should join AImodels.fyi or follow us on Twitter.\nQwen3.8-Flash-Next is an experimental open-weight causal language model with a vision encoder from Qwen. It targets coding agents, long-horizon tool use, multimodal computer tasks, multilingual software engineering, and reasoning. The most important point before adoption is that this is an architecture preview intended to underpin Qwen4, not the production-hosted Qwen3.8-Flash service: the hosted version adds production features such as 1M-token context by default and official built-in tools. The model has 125B total language-model parameters with 6B activated, plus 51B n-gram embedding parameters and 4B multi-token-prediction parameters. It provides 262,144 native context tokens and can extend to 1,000,000 tokens. The repository supplies post-trained weights and configuration in Hugging Face Transformers format, with compatibility listed for Transformers, vLLM, SGLang, TokenSpeed, and other serving systems. The model card lists the license as other; it does not provide terms that establish commercial-use rights, so legal review is required before commercial deployment.\nLong-horizon coding agents. The model suits repository-level coding, debugging, test execution, and tool-driven software work. It scores 62.5 on SWE-bench Pro, 81.0 on SWE-bench Multilingual, 58.7 on DeepSWE 1.1, and 91.9 on LiveCodeBench v6. Its 256K evaluation context, sparse attention design, multi-step training, and agent-oriented post-training support workflows that require reading large repositories, planning changes, invoking tools, and recovering from failures.\nMultilingual software engineering. Choose it for coding tasks across multiple programming-language and natural-language environments. Its 81.0 SWE-bench Multilingual score exceeds the listed results for Qwen3.8-27B at 73.8 and Qwen3.7-Plus at 75.8. The model’s general instruction-following score of 81.3 and competitive-coding score of 91.9 also support structured implementation and problem-solving tasks.\nTool-using productivity agents. The model performs well on office and professional workflows that require multiple actions rather than a single answer. It scores 73.9 on CoWorkBench, 55.7 on JobBench, 51.2 on Agents’ Last Exam, and 73.5 on Toolathlon Verified. These results make it a candidate for research assistants, document workflows, finance or legal task automation, and other systems that combine reasoning with external tools. The model card warns that reducing reasoning effort can lower total completion time in multi-turn agents by causing failures and retries, so per-turn latency is not the only performance metric.\nMultimodal computer-use systems. The vision encoder and multimodal benchmark results support tasks such as navigating Android applications, recreating applications across desktop, mobile, and web platforms, analyzing charts, and solving visual mathematics. It scores 84.5 on AndroidWorld, 19.4 binary and 52.3 partial on OSWorld 2.0, 49.9 on RecreationBench, 64.0 on Vision2Web, and 88.5 on RealWorldQA. These results favor research systems that connect screenshots or visual documents to actions and structured responses.\nScientific and visual reasoning. The model scores 91.7 on GPQA Diamond, 35.9 on HLE, 90.6 on MathVision without CI and 95.7 with CI, and 84.6 on CharXiv without CI and 90.6 with CI. It can support chart interpretation, visual math, scientific question answering, and multidisciplinary analysis. The HLE result remains below Claude-Opus-4.6 (Max) at 40.0, so it should not be treated as the strongest option for every frontier reasoning task.\nThe model is large despite its low 6B activated count. The 125B language-model weights, 51B n-gram embedding parameters, and 4B MTP parameters create substantial storage and memory demands. The provided material gives no VRAM requirement, quantization size, measured tokens-per-second result, latency figure, or recommended batch size. Do not infer hardware capacity from the activated-parameter count: n-gram embeddings and inactive weights still affect deployment memory, while framework implementation determines how much can be offloaded.\nThe model has a native context length of 262,144 tokens, with extension up to 1,000,000 tokens. The repository does not state the quality or speed behavior at the extended limit. Long context also increases serving complexity, and the model card provides no end-to-end latency measurements. Qwen claims that Qwen Sparse Attention reduces long-context latency, but the supplied information does not quantify the reduction.\nBenchmark results show uneven strengths. Qwen3.8-Flash-Next leads the listed models on many agentic, coding, instruction-following, and multimodal rows, but it does not lead every task. On NL2Repo-Bench it scores 48.1, below DeepSeek-V4-Flash-0731 at 54.2. On HLE it scores 35.9, below Claude-Opus-4.6 (Max) at 40.0. On CharXiv without CI it scores 84.6, below Qwen3.7-Plus at 85.8, although its with-CI score is 90.6. Benchmark harnesses, prompts, temperatures, and judges differ, so these numbers do not establish universal quality rankings.\nThe model operates in thinking mode by default and emits content in <think>\\n...\\n</think>\\n\\n before the final response. This can increase output length, cost, and latency. Non-thinking mode exists, but the supplied material does not include the actual disabling code. Sampling-parameter support varies by inference framework.\nThe license is listed only as other. No license terms appear in the supplied README, so commercial use, redistribution, modification, and hosted-service obligations remain unresolved. The model card also does not provide a detailed bias, safety, privacy, or misuse analysis. Teams need their own evaluation and policy controls.\nQwen3.8-Flash-Next-GGUF\n\n\nPick Qwen3.8-Flash-Next when you need the original Transformers-format weights and direct compatibility with Transformers, vLLM, SGLang, or TokenSpeed. Pick the GGUF alternative when local deployment through GGUF-compatible tooling and quantization matter more than retaining the original weight format. The supplied information does not provide quantized file sizes, quality deltas, VRAM requirements, or speed measurements, so it cannot establish a numeric cost or accuracy advantage.\nQwen3-Coder-Next\n\n\nPick Qwen3.8-Flash-Next for a broader multimodal and agentic system: it includes a vision encoder, reaches 1M-token extensibility, and reports strong computer-use and visual-reasoning results. Pick Qwen3-Coder-Next for coding-agent and local-development workloads when its specialized design and 3B activated parameters are the priority. The key tradeoff is general multimodal breadth and higher reported agent scores versus a smaller, coding-focused deployment profile.\nQwen3.6-35B-A3B\n\n\nPick Qwen3.8-Flash-Next when its reported coding-agent, tool-use, long-context, and multimodal capabilities justify a larger deployment. Pick Qwen3.6-35B-A3B when a smaller 35B-total, 3B-activated model better fits local serving constraints. The supplied benchmark table does not include Qwen3.6-35B-A3B, so no direct quality, speed, or cost comparison is available.\nQwen3.8-2.4T-A95B\n\n\nPick Qwen3.8-Flash-Next when you need a much smaller open-weight model with 6B activated parameters and a practical path to self-hosting. Pick Qwen3.8-2.4T-A95B when maximum model capacity is more important than infrastructure cost and complexity. The supplied information gives no shared benchmark results, latency data, or pricing, so the tradeoff can be stated only as model scale versus deployment burden.\nQwen3.5-35B-A3B\n\n\nPick Qwen3.8-Flash-Next for the newer experimental architecture, 125B total parameters with 6B activated, 262K native context, and the listed multimodal agent results. Pick Qwen3.5-35B-A3B when its 35B-total, 3B-activated profile offers a better fit for constrained infrastructure. The supplied material does not include direct benchmark, speed, pricing, or VRAM comparisons.\nQwen3.8-Flash-Next uses a causal language model with a vision encoder and includes both pre-training and post-training. Its architecture is an experimental preview for Qwen4.\nTotal language-model parameters: 125B.\nActivated language-model parameters: 6B.\nN-gram embedding parameters: 51B.\nMTP parameters: 4B.\nHidden dimension: 2,560.\nToken embedding size: 248,320, padded.\nN-gram embedding table: 20,000,000 entries, using bigrams and trigrams at layer 2.\nLayers: 48.\nHidden layout: 12 repetitions of three Gated DeltaNet-to-MoE blocks followed by one Qwen Sparse Attention-to-MoE block.\nGated DeltaNet: 48 linear-attention heads for V, 16 for QK, head dimension 128.\nQwen Sparse Attention: 24 Q heads, 2 KV heads, head dimension 256, rotary position-embedding dimension 64.\nQSA indexer: MQA with 4 query heads and 1 shared key head; indexer head dimension 128.\nQSA budget: 512 blocks or 2,048 tokens.\nMoE: 512 experts; 10 routed experts plus 1 shared expert activated; expert intermediate dimension 640.\nGated Residual: 4 branches; bottleneck rank 320.\nLM output size: 248,320, padded.\nMTP: one layer trained with multi-steps.\nContext: 262,144 tokens natively; extensible to 1,000,000 tokens.\nModel format: Hugging Face Transformers weights and configuration.\nListed serving compatibility: Hugging Face Transformers, vLLM, SGLang, TokenSpeed, and other compatible systems.\nRecommended production serving engines: SGLang, KTransformers, or vLLM.\nTraining recipe: Muon and AdamW applied to specific weight categories; batch-size warmups removed; training starts at the target batch size; refitted scaling laws support larger learning rates and fewer optimizer steps.\nArchitecture innovations: QSA selects micro-blocks rather than individual tokens; Gated Residual uses an element-wise data-dependent read gate and per-branch scalar write gate; n-gram embeddings provide a parameter-scaling path designed for offloading and memory-constrained accelerators.\nRepository downloads shown in the supplied metadata: 2,551.\nPipeline tag: image-text-to-text.\nLibrary metadata: transformers.\nModel tag: Text-to-Text.\nLicense metadata: other.\nThe README provides no training-dataset name or size, training-step count, compute budget, VRAM requirement, quantization specification, measured inference speed, or pricing.\nText prompts for causal language-model generation.\nMultimodal inputs supported by the model type and image-text-to-text pipeline designation.\nContext up to 262,144 tokens natively.\nContext extension up to 1,000,000 tokens.\nMulti-turn conversations and agent trajectories.\nTool-use workflows, when the surrounding serving or application framework supplies tools.\nThinking-mode generation by default.\nSampling parameters for thinking mode: temperature=1.0, top_p=0.95, top_k=20, min_p=0.0, presence_penalty=0.0, repetition_penalty=1.0.\nSampling parameters for instruct or non-thinking mode: temperature=0.7, top_p=0.80, top_k=20, min_p=0.0, presence_penalty=1.5, repetition_penalty=1.0.\nGenerated text from a causal language model.\nThinking-mode output containing <think>...</think> before the final response.\nFinal natural-language answers, code, plans, tool arguments, and agent actions as determined by the application.\nVision-conditioned text responses for image-text-to-text workflows.\nThe model card does not define a universal tool-call schema or built-in tool set for this open-weight release.\nApplications that expose thinking content should parse or filter the <think> section before presenting the final answer.\nThe supplied README does not include a complete Python loading and inference example. It recommends API use for streamlined integration and lists deployment recipes for SGLang, vLLM, and TokenSpeed. For production or high-throughput workloads, use a dedicated serving engine and consult the framework-specific recipe. The official hosted service is Qwen Cloud; the hosted Qwen3.8-Flash version adds production features beyond this preview.\nQ: Can I use Qwen3.8-Flash-Next commercially?\nA: The metadata lists the license as other, but the supplied README does not state the license terms. Do not assume commercial permission; obtain and review the applicable license before deployment.\nQ: How much VRAM does Qwen3.8-Flash-Next require?\nA: No VRAM requirement is provided. The model has 125B language-model parameters, 51B n-gram embedding parameters, and 4B MTP parameters, so the 6B activated count does not describe total storage or memory needs.\nQ: What context length does it support?\nA: It supports 262,144 tokens natively and is extensible to 1,000,000 tokens. The README does not provide quality or latency measurements for the extended range.\nQ: Does it accept images?\nA: The model type includes a vision encoder, and the metadata uses the image-text-to-text pipeline tag. The supplied material does not specify image resolution, image file formats, preprocessing rules, or a complete multimodal code example.\nQ: Is thinking enabled by default?\nA: Yes. The model emits <think>...</think> content before the final response. The README provides separate sampling recommendations for thinking and instruct or non-thinking modes, but the supplied excerpt does not include the code for disabling thinking.\nQ: Which framework should I use for serving?\nA: The weights and configuration use Hugging Face Transformers format and are listed as compatible with Transformers, vLLM, SGLang, and TokenSpeed. For production or high-throughput serving, the README recommends SGLang, KTransformers, or vLLM.\nQ: How fast is inference?\nA: The supplied information gives no tokens-per-second or latency measurements. Qwen claims that QSA cuts long-context latency by selecting micro-blocks rather than individual tokens, but the README provides no numeric comparison.\nQ: Is this the same as the hosted Qwen3.8-Flash model?\nA: No. Qwen3.8-Flash is the official hosted version based on this architecture preview and adds production features, including 1M-token context by default and official built-in tools.\nQ: Can I fine-tune it?\nA: The repository provides post-trained Transformers weights and configuration, but the supplied material does not document a fine-tuning recipe, supported parameter-efficient method, or hardware plan. Transformers compatibility provides an integration path, not a confirmed fine-tuning procedure.\nQ: Where can I read the related research?\nA: The Qwen3 technical report is available through the Qwen3 technical report. The model README also identifies a Qwen3.8-Flash-Next technical report, but no internal link for that report is provided here.\nClick here to read the full guide to Qwen3.8-Flash-Next",
-      "publishedAt": "2026-09-09T03:02:40.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "5879b4cb0600892d083e842ce9b41e6122666cc73d6c5f3f984c0d45fc58cb68",
-      "title": "React Context Is Not State Management: Stop Using It",
-      "url": "https://dev.to/nainikmehta/react-context-is-not-state-management-stop-using-it-4i3l",
-      "description": "The Architectural Trap: Why React Context Isn't a State Manager\n\n\nIn the modern React ecosystem, \"prop drilling\" is often cited as the ultimate developer productivity killer. To solve it, many teams reflexively reach for React Context. It’s built-in, it’s easy to use, and it seems to solve the problem of passing data through deeply nested component trees.\nHowever, after auditing dozens of enterprise-grade React codebases, I have identified a recurring architectural pattern that is quietly crippling application performance: using React Context as a high-frequency state management tool.\nIt is time to clarify a fundamental truth: React Context is a dependency injection tool, not a state manager. When you use it for the wrong purpose, you aren't just writing messy code—you are creating a performance bottleneck that will eventually choke your main thread.\nTo understand why Context fails under high-frequency updates, we have to look at how React handles re-renders. When a value provided by a Context.Provider changes, React notifies every single component that consumes that context.\nCrucially, this process bypasses React.memo. If your component consumes a context, it will re-render whenever the context value changes, regardless of whether the specific data the component cares about has actually changed.\nThe most common mistake I see involves passing an object literal directly into the provider:\n// The Anti-Pattern\n<Context.Provider value={{ state, dispatch }}>\n  {children}\n</Context.Provider>\n\nBecause React uses Object.is for reference equality checks, the object { state, dispatch } is re-created on every single render of the parent component. Even if state hasn't changed, the reference has. This forces a massive, unnecessary cascade of re-renders across your entire component tree.\nWe recently audited an enterprise dashboard featuring a complex form with 50+ fields. Users reported that typing in the fields felt sluggish and unresponsive. After profiling the application, we found the update latency was a staggering 250ms per keystroke.\nBy migrating the high-velocity UI state from a monolithic React Context to Zustand, we achieved a dramatic improvement. Zustand leverages atomic, selector-based subscriptions. This means that when a user types in a single input field, only that specific component re-renders. \nThe result? Update latency dropped from 250ms to a buttery-smooth 12ms.\nReact Context is not \"bad\"—it is simply a specialized tool. It excels at managing low-velocity global data that rarely changes.\nHere is the rule of thumb I recommend for your architecture:\nLow-Velocity Data Only: Use Context for data that changes infrequently, such as UI themes, user authentication status, or locale settings.\nSplit Your Contexts: If you must use Context for state, split your providers. Separate your StateContext from your DispatchContext. This ensures that components only interested in calling a dispatch function do not re-render when the state changes.\nExternal Stores for High-Frequency Data: For anything that changes on every keystroke, mouse movement, or real-time data stream, move that state into an external store like Zustand or Jotai. These libraries utilize useSyncExternalStore under the hood, providing a performant, predictable way to manage state without triggering global re-renders.\nAs we move through 2025, the complexity of our frontends continues to grow. We need to be more disciplined about our architectural choices. Stop using React Context as a catch-all solution. Your users deserve a responsive interface, and your main thread deserves a break.\nWhat is your go-to state management tool for React apps in 2025? Let’s discuss in the comments.",
-      "publishedAt": "2026-09-09T03:01:52.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "c590e1037b981804b33a3afe2e54e9c0f52ead4473734686cce81f0586f10449",
-      "title": "A PDF Exporter With No PDF Library",
-      "url": "https://dev.to/megapixel99/a-pdf-exporter-with-no-pdf-library-2hb9",
-      "description": "Longshot, a Firefox screenshot extension I have been building, exports to PDF. The exporter is 336 lines and pulls in nothing. That is not a boast about writing things from scratch, which is usually a bad reason to do anything; it is that the two jobs a PDF library would do here are both already done by the browser, and once you notice that, the remaining work is smaller than the dependency would have been. The code is not public, so this is a description rather than an invitation to read it.\nA PDF stores image data in a stream with a named filter, and the filters that matter here are /DCTDecode and /FlateDecode.\n/DCTDecode means \"this stream is a JPEG bitstream\". The viewer decodes it; a JPEG goes into the file verbatim, byte for byte, with no re-encoding and no image codec to ship. The browser already produced the JPEG.\n/FlateDecode means \"this stream is zlib-wrapped deflate\". CompressionStream('deflate') is native, and what it emits is zlib-wrapped deflate. Not deflate that needs a header bolted on, and not raw deflate: precisely the thing FlateDecode names. So there is no zlib to bundle either.\nThose two facts are why the exporter is small, and they are worth stating as facts about the formats rather than as cleverness. PDF's filters were specified around image and compression formats that were already standard in 1993, and the browser platform, decades later, exposes those same two formats through canvas.toBlob and CompressionStream. Nobody coordinated that. It just means an exporter written today can hand both straight through.\nIt also means the honest claim here is narrow. A general PDF library does typography, fonts, vector graphics, encryption, forms, incremental updates and a hundred other things. This one puts images on pages and adds an invisible text layer. Saying \"no dependency\" is only meaningful alongside saying what the dependency would have been for.\nEvery PDF ends with a cross-reference table: one entry per object, each entry a byte offset into the file. A viewer reads the table first and seeks. One wrong offset makes the whole document unreadable, and it does so in the worst possible way, because all the bytes are present and correct and simply unfindable. Nothing higher up notices; the image is there, and so is the text layer. The file is 1.4 MB of perfectly good data with a broken index.\nThe failure mode you get from a mistake like that is not a crash during export. It is a file that a user saves, keeps, and opens three weeks later.\nTwo things follow. The file is assembled as bytes and measured, never estimated from string lengths, because the moment an offset comes from a .length on something that has not been encoded yet, the number is a guess that happens to be right for ASCII.\nAnd the test does not check that a cross-reference table exists, or that it has the right number of entries, or that the offsets are plausible. It follows them: for each entry, seek to the offset it claims and confirm the object it points at is the one it is supposed to be. There are 21 assertions in that suite, and this is the one that would have caught the mistake worth catching.\npdf.js deliberately touches no canvas APIs. Everything to do with a canvas lives in a separate 115-line bridge.\nThat split is the only reason the byte-level testing above can happen in Node at all. A PDF writer that reached for canvas.toBlob internally would need a browser to run, which would put it behind the same wall as the print pipeline and the OCR chain, both of which need a real DOM and are covered by a browser harness instead. Keeping the byte assembly pure was not a purity exercise; it moved the component that can silently corrupt a file into the environment where it is cheapest to check.\nThat is a decision I would make again and did not make for the right reason the first time. It started as tidiness.\nTall captures split at page height rather than becoming one enormous page. A 30,000-pixel single page is valid PDF and practically useless: it cannot be printed, and most viewers scale it to illegibility. Valid and useless is a combination worth watching for in any format with generous limits.\nThe invisible OCR layer uses text render mode 3, which draws nothing while remaining selectable and searchable, with Tz horizontal scaling so a selection tracks the pixels underneath it. The font is base-14 Helvetica, WinAnsi-encoded, so Latin scripts only. Characters it cannot represent are dropped rather than written out as mojibake, on the grounds that a searchable layer containing wrong characters is worse than one containing fewer.\nThat last choice pairs with a related one in the OCR stage: words recognised below 60% confidence are discarded. A searchable layer is only useful if searching it finds the right thing, and OCR noise makes a search land on words that were never on the page. Both decisions trade completeness for the property people actually rely on.\n\"No dependencies\" is a description of effort until you can say what the dependency would have done, and both halves of that sentence have to be checkable. Here the answer is that a PDF library would have shipped a JPEG encoder and a zlib implementation, and the browser exposes both formats natively, so the honest version of the claim is that the platform already had the two pieces and the rest is 336 lines of file assembly.\nThe corollary is the more useful part. When a dependency turns out to be replaceable by something already present, the risk does not disappear, it moves. Here it moved into the cross-reference table, which is the one structure in the file with no redundancy and no way to self-check. That is where the test needed to be, and finding it meant asking which part of the output could be wrong in a way that nothing downstream would report.",
-      "publishedAt": "2026-09-09T03:00:00.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "b34afc8b508c3757a077a4c681f020e8b79ce6d457405f38192d65c9c29ec298",
-      "title": "AI を活用したスキャフォールディングで、フルスタックの AWS アプリケーションを数分で構築する",
-      "url": "https://aws.amazon.com/jp/blogs/news/build-full-stack-aws-applications-in-minutes-with-ai-powered-scaffolding/",
-      "description": "本記事は「Build full-stack AWS applications in minutes with […]",
-      "publishedAt": "2026-09-09T02:50:02.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "e4040feeb730e65ac17eebe766d502278f8e56622cb0d51620553ce6249732e1",
-      "title": "「四半期ごとのパッチ適用」はもう許されない　AWSが「フロンティアAI対策9項目」のポイントを解説",
-      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2609/09/news043.html",
-      "description": "高度な技術を持たない攻撃者であっても、生成AIや公開コードを活用して迅速にサイバー攻撃を実行できる時代に突入している。こうした中AWSは、金融庁と日本銀行が金融機関に求めた9つの短期的対応について、同社のサービス・機能がどう役立つかを整理して解説した。",
-      "publishedAt": "2026-09-09T02:30:00.000Z",
-      "feedName": "＠IT"
-    },
-    {
-      "id": "f59861242638f0e808faa1aa73d9e64ab9f229ad5f0c9d19b89cd60d01332990",
-      "title": "マルチリポジトリの共通PythonパッケージをAWS CodeArtifactでいい感じに配布する設計をまとめてみる",
-      "url": "https://dev.classmethod.jp/articles/codeartifact-shared-packages/",
-      "description": "複数のサービスを別々のリポジトリで開発する際、共通Pythonパッケージの共有をどう実現するか。コピー配置の破綻、Submoduleの手間、monorepoの過去の失敗を経て、AWS CodeArtifactをプライベートレジストリとした「いい感じに」管理する設計を紹介します。",
-      "publishedAt": "2026-09-09T02:00:06.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "2434e021034bdd2416030a465df8463f37e973b4d8aa9355c91da926ecd7cd9f",
-      "title": "警察庁と日本マイクロソフトが「サイバー対策」で協定--その中身とは",
-      "url": "https://japan.cnet.com/article/35252422/",
-      "description": "警察庁と日本マイクロソフトは9月7日、「官民連携によるサイバー事案対策の推進に関する協定」を締結した。両者は、サイバー事案の未然防止や被害拡大の防止、捜査に役立てるために情報を共有する。あわせて、子どもたちへのセキュリティ教育でも協力する。",
-      "publishedAt": "2026-09-09T01:30:00.000Z",
-      "feedName": "CNET Japan"
-    },
-    {
-      "id": "c0da59c299606c31371098d9789f05d664b558adbd47acc9361c4dc20936178b",
-      "title": "エージェンティックセキュリティ: マシンスピードでの検出と対応",
-      "url": "https://aws.amazon.com/jp/blogs/news/agentic-security-detection-and-response-at-machine-speed/",
-      "description": "自律型 AI エージェントの台頭は、セキュリティポスチャにとってクラウドへの移行以来最大の変化です。本記事では、SANS Institute と共同執筆した 2026 Cloud Security Exchange eBook の章から、エージェントのアイデンティティとガバナンス、振る舞いの監視とオブザーバビリティによる検出の進化、段階的な自動対応、マルチエージェントエコシステムへの備えという 4 つの基礎領域を紹介します。Amazon GuardDuty、Amazon Inspector、AWS Security Hub を活用し、マシンスピードでの検出と対応を実現する実践的なフレームワークを解説します。",
-      "publishedAt": "2026-09-09T01:29:18.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "142215a9e52ff694e9ce77b8a61f075712fa857bdfafdfe8584a92e6f4d86e8c",
-      "title": "【アジャイルFAQ 第1回】AI時代に問い直す！本当に必要？スクラム基礎の「意味」と「価値」",
-      "url": "https://developer.mamezou-tech.com/blogs/2026/09/09/1-do_we_still_need_scrum/",
-      "description": "連載をはじめるにあたって\n#\n この記事を読んでいただきありがとうございます。アジャイルグループに所属する、藤井智弘です。\n 「豆蔵最後のアルバイト」という謎の肩書でお客様を煙に巻きながら、日々研修やご支援に従事している中で、同じような質問を何年にも渡って繰り返しいただいてきました。アジャイル開発が世に出て30年近い年月が経ち、実践者の世代交代が進んでいるので、かつて議論し尽くされた（かに見えた）質問が、打者一巡よろしく繰り返し話題にのぼるのも当然とも思います。\n 対象となる読者像は、以下のように設定しました。\n研修や専門書での学習によって、「スプリントってなに？」という基本的な用語レベルは知っている\n新年度になってスプリントを回し始めて数ヶ月、「これでいいんだっけ？」という引っかかりが溜まりはじめた\n基礎を学んだ方がもう一歩…「知っているのに、現場でうまくいかないのはなぜか」…掘り下げて考える機会を作ろうということがねらいです。\n 実際にいただいた質問を起点にしているので、タイトルを見ると「開発者視点」と思われそうですが、「アジャイルに関わる人であれば知っておいたほうが良い内容」を意識しました。ですので、チームを率いるリーダーや、発注側・経営側としてスクラムのチームと向き合う立場の方もお付き合いください。\n 本題に入る前に、お断りを３ついれさせていただきます。\n「正解」ではなく「選択肢」。\n「AIツールの具体的な使い方」の開設ではありません。\n餅は餅屋、法的なことは専門家にまかせる。\n 少々前置きが長くなりました。初回のFAQには、いままさに研修や導入支援の場で受けることが増えている、この時代ならではの質問を選びました。\n質問\n#\n AIがコードを書き、テストを書き、設計案まで出してくれる時代です。開発のスピードは桁違いに上がりました。正直なところ、いまさらスクラムの基礎を学ぶ意味はあるのでしょうか？　スプリントで区切って人間が見積りや振り返りをするのは、AIのスピードの前では、“儀式”に見えます。\n回答\n#\n 学ぶ意味はあるし、重要性はむしろ増しているとさえ思います。なぜなら、スクラムが管理しているのは「作るスピード」ではなく「進むべき方向」だからです。\nAIが速くしたもの、しなかったもの\n#\n まず、冷静に仕分けをしましょう。生成AIが確かに変えたのは、実装・テストコード作成・定型設計・調査といった「どのように作るか」の領域です。ここが数倍（いやもっとかな？）速くなったという主張に異論はありませんし、私自身実感してもいます。\n では、次の問いはどうでしょうか。\nこの機能は誰のどんな業務課題を解決するのか。\nリリースした結果、狙った効果は出たのか。\n出なかったとして、次に何を変えるのか。\nチームの今のやり方は機能しているか…。\n これらは、人が主体的に意思決定するテーマであり、AIは答えを持っていません。もっともらしい答えの文章は生成してくれますが、その検証責任は人に残ります。そしてお気づきの通り、「何を作るか」「作った結果から何を学ぶか」「チームでどう検査と適応を回すか」は、アジャイルがこの30年間一貫して問うてきたことそのものです。AIは、アジャイルが担ってきたこれらの問いを何ひとつ引き受けてくれていない。むしろ、問いに向き合わないまま作れてしまうスピードだけが上がったのです（少なくともこれまでのところは）。\n“AIいいなり開発”という新しくて古い病気\n#\n その帰結として、現場で目にするようになった光景があります。AIの生成物を、十分な検証もせず、その意図を理解もせずただ丸呑みして積み上げていく開発…「それじゃぁ『AIいいなり開発（AI-Dictated-Development）』じゃないか！」と叫びたくなる姿です。本来の「AI駆動開発（AI-Driven-Development）」とは似て非なるものです。\n\n AIいいなり開発の特徴は、一つひとつの成果物がもっともらしいことです。コードは動き、テストは通り、ドキュメントは整っている。問題は、その全体が誰の何のために作られたのか、誰も満足に説明できないことです。検証されていない仮定の上に、検証されていない生成物が高速に積み上がっていく。従来なら数ヶ月かかった「間違った方向への行軍」が、数週間で再現できるようになりました。\n しかし、これは新しい病気ではありません。「要件定義書に書いてあったから作りました」「言われた通りに作りました」——意図を問わない開発は昔からありました。AIはそれを高速化し、かつ「作った感」で覆い隠すのがうまくなっただけです。\n 診断が同じなら、処方も同じ系統です。\nスクラムの基礎は、AIの出力に対してこそ効く\n#\n この連載で扱う基礎を、AIの文脈に置き直してみます。\n宛先と目的を問う習慣は、「このコードは誰の何のためか」(fig002)をAIの出力に対しても問わせます。生成物がもっともらしいほど、この問いだけが人の仕事として残ります\n\n小さく完成させて検査するリズムは、生成されたものを鵜呑みにせず、動かして・使わせて・学ぶ機会を強制的に確保します。スプリントは「人間が遅いから区切る」のではなく、「学習のリズムを設ける」ための仕組みなので、生成が速くなっても不要にはなりません。むしろ検証すべき生成物が増えた分、検査のリズムの価値は上がります\n計測と記録の規律は、「AIで速くなった気がする」を検証可能な事実に変えます。リードタイム（着手から届くまでの時間）は本当に縮んだのか、手戻りは増えていないか。道具の評価もまた、検査と適応の対象です\n 逆に、変わってよいものもあります。スプリントの長さ、見積りのやり方、ドキュメントの作り方…これらはスクラムの進行を調整する“運用パラメータ”であり、AIによって最適値が変わり得ます（この「基本」と「運用パラメータ」の区別は、次回以降の各論でも繰り返し登場します）。生成が速いなら、スプリントはもっと短くできるかもしれない。見積りの議論は、作って確かめる方が速い場面が増えるかもしれない。パラメータは大胆に見直してください。この技術の大変革の時代に、「批判精神なき前例踏襲は、“罪”」です。\n そして、ここまで説明した検査と適応のループそのものを外した瞬間、残るのは「高速ないいなり」です。\nなぜ、新しい技術が生まれるたびに、似たような質問が繰り返されるのか\n#\n 「新しい道具が来たから、プロセスの基礎はもう不要では？」という問いは、実はAIが初めてではありません。CASEツール（設計図からコードを自動生成する1980〜90年代のツール群）が自動生成する、RAD（試作を繰り返して短期間で作る1990年代の開発手法）で開発が桁違いに速くなる、ローコードでプログラマーが不要になる…新しい道具が現れるたびに、同じ問いが再演されてきました。打者一巡どころか、これはもう何巡目かの打席です。\n そして毎回、結論も同じでした。道具は「どのように作るか」を変え、ときに劇的に改善する。しかし「何を作るべきか」「作った結果から何を学ぶか」は道具の外に残り続け、そこを疎かにしたプロジェクトは、速い道具で速く失敗した…。\n AIが過去の道具と規模の違う変化であることは認めます。だからこそ、と言うべきでしょう。道具が強力になるほど、ハンドルを握る側の基礎が問われます。本連載がこれから扱うのは、そのハンドルの握り方です。\n\n今後の予定\n#\n 次回以降の予定ですが、タイトルと順序を以下に列挙しておきます。\n第2回: 保守運用チームにスクラムは合わないのでは？\n第3回: アップグレード案件の「現行機能保証」にどう向き合う？\n第4回: 更改案件の見積を、全機能を確定せずにどう出す？\n第5回: ドキュメントが信用できない現行システム、何を『仕様』にして検証する？\n第6回: デイリースクラムが進捗報告会になっています\n第7回: レトロスペクティブが機能しません…同じ改善案の再放送と、ToDoの列挙会\n第8回: スプリントレビューにステークホルダーが来なくなりました\n第9回: ストーリーポイントの人日換算を上司に求められます\n第10回: ベロシティが安定しません。計画に使っていいの？\n第11回: スプリント内に終わらないタスクが毎回出ます\n第12回: 割り込み作業はどう計画に入れる？\n第13回: POが多忙でチームに来ません\n第14回: スクラムマスターは何をする人？ 暇そうに見えます\n第15回: 自己組織化と言われても、結局リーダーが全部決めています\n第16回: 技術的負債の返済をPOが優先してくれません\n第17回: ドキュメントはどこまで書けばいい？\n第18回: 最初は改善が進んだのに、最近チームが停滞している気がします\n第19回（最終回）: 連載の総括\n 長い文章にお付き合いいただきありがとうございました。\n次回: 「保守運用チームにスクラムは合わないのでは？」",
-      "publishedAt": "2026-09-09T00:00:00.000Z",
-      "feedName": "豆蔵デベロッパーサイト"
-    },
-    {
-      "id": "e505e42e487ea60ab98243a53676674da313e14b8414d6c2319317e934838085",
-      "title": "COBOL、VMware、.NETまで――AWS「45億行に及ぶコード処理」で見えたAIレガシー刷新の現状",
-      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2609/09/news027.html",
-      "description": "何年もかかっていたレガシーシステムの刷新が、AIによって「6週間」に――。COBOL、VMware、.NETなどのシステムをAIを活用して移行、刷新する1年間の取り組みの成果をAWSが公開した。",
-      "publishedAt": "2026-09-08T23:00:00.000Z",
-      "feedName": "＠IT"
-    },
-    {
-      "id": "0628a7092153bef3f93ca136396576e09e62dc775d857b8c1a651a5cb3733a4c",
-      "title": "「AIエージェントはモデルだけじゃない」　NVIDIAらが説く“エージェント防御”の勘所と共有の仕組み",
-      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2609/09/news038.html",
-      "description": "Linux Foundationは、エージェント型AIのセキュリティインシデントを業界で共有するためのガイドライン「SAFE」について意見募集を始めた。NVIDIAやCisco、CrowdStrikeなどが初期案の作成に参加している。",
-      "publishedAt": "2026-09-08T23:00:00.000Z",
-      "feedName": "＠IT"
-    },
-    {
-      "id": "4863d43ce9fabe4941609eb09cf91031aa08e5a79e1e2cdfcc54f0996aef44fc",
-      "title": "Meta、パーソナルAIエージェント「Muse」発表。ユーザーの日常タスクを自律的に支援、セキュリティやプライバシーも考慮した設計うたう | テクノエッジ TechnoEdge",
-      "url": "https://www.techno-edge.net/article/2026/09/09/5476.html",
-      "description": "Metaは、米国のユーザー向けに新しいパーソナルAIエージェント「Muse」を発しました。Metaが独自に開発したAIモデル「Muse Spark」を採用し、ウェブブラウジングやファイル操作、フォームへの入力、購入手続きといった幅広いタスクをバックグラウンドで自律的に実行します。",
-      "publishedAt": "2026-09-08T22:45:12.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "18920254ccb8185ab3ad44f8e9221a021bd5a372ebac9c343b31de8bb7150ff7",
-      "title": "Amazon Linuxが4年ぶりにメジャーバージョンアップ、「Amazon Linux 2027」パブリックプレビュー。SELinuxがデフォルトで強制モードに",
-      "url": "https://www.publickey1.jp/blog/26/amazon_linux4amazon_linux_2027selinux.html",
-      "description": "Amazon Web Services（AWS）は、AWSに最適化されたLinux OSの4年ぶりとなるメジャーバージョンアップ「Amazon Linux 2027」をパブリックプレビューとしてリリースしました。 現時点の正式版はAmazon Linux 2023 Amazon LinuxはAWSによって無料で提供されているLinux OSのディストリビューションです。Amazon EC2などのAW...",
-      "publishedAt": "2026-09-08T14:40:17.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "be3c0ce9372b4106cb37e3250c7e9bd95d73555c5554b1e69c7693cc2a5b4237",
-      "title": "「JAWS-UG CDK支部 #26 〜CDKに関する真夏のLT大会〜」 にて「PMに『CDK使わなくていいよ』と言われて気付いたCDKの権限周りの話」 というテーマでLT発表しました！",
-      "url": "https://dev.classmethod.jp/articles/jaws-ug-cdk-0908-beginner-lt/",
-      "description": "JAWS-UG CDK支部のイベントで初めてのLT登壇をしました。",
-      "publishedAt": "2026-09-08T12:05:09.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "b703f804dcc1fb4499014768b0835ed43ae79d5623632ab6205ea1a57eeee81e",
-      "title": "AWS AgentCore Evaluationsを使ってAIエージェントを評価してみた",
-      "url": "https://qiita.com/ko_koyama_w/items/6531c511b4058d69d839?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "本記事では、AWSのマネージドサービス「Amazon Bedrock AgentCore Evaluations」を使って、学習用にサンプルとして構築したAIエージェントを評価してみた内容を紹介します。\n\nモチベーション\n「AIエージェント元年」と呼ばれた2025年を経て、...",
-      "publishedAt": "2026-09-08T12:01:33.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "869e1eb2e5dc1e4a6c18e46ec40e99d397859f13102aa09cbff94af0c8d73475",
-      "title": "Kubernetes access via an identity provider: Public client, not confidential",
-      "url": "https://www.cncf.io/blog/2026/09/08/kubernetes-access-via-an-identity-provider-public-client-not-confidential/",
-      "description": "Access control belongs on the same day-zero checklist as networking and storage. On most on-prem clusters, it never makes the list. The Identity Gap Managed cloud Kubernetes ships IAM or SSO integration out of the box....",
-      "publishedAt": "2026-09-08T11:30:00.000Z",
-      "feedName": "Cloud Native Computing Foundation"
-    },
-    {
-      "id": "680de7e30ee6d9d4b6b30e23c8811dbd873ba7ad746f78225c98d5fd7f9e47cd",
-      "title": "Distributed tracing for CI pipelines without touching a single workflow file",
-      "url": "https://www.cncf.io/blog/2026/09/08/distributed-tracing-for-ci-pipelines-without-touching-a-single-workflow-file/",
-      "description": "You’ve probably felt this one: GitHub Actions usage creeps up across your org, and your actual visibility into it doesn’t keep pace. Which workflows are slow? Which are flaky? How long are jobs sitting queued for...",
-      "publishedAt": "2026-09-08T11:00:00.000Z",
-      "feedName": "Cloud Native Computing Foundation"
-    },
-    {
-      "id": "3d0916a40ad972c1d9c3b8c68b642aabaf13d1d3019972908f31a7fd27827f2f",
-      "title": "ServiceNow、自律型AIを組み込んだ6つのセキュリティ統合ソリューションを発表",
-      "url": "https://enterprisezine.jp/news/detail/25040",
-      "description": "ServiceNow Japanは9月2日、「Autonomous Security」ビジョンおよびこのビジョンを加速化する6つの統合ソリューションを発表した。\n\n　同日に開催された記者説明会には、...",
-      "publishedAt": "2026-09-08T10:22:00.000Z",
-      "feedName": "EnterpriseZine"
-    },
-    {
-      "id": "aba6c5ce019aee5176abfe063dfe6a61fb3aaf6e78caf5c30077b51b50fb77a2",
-      "title": "AWS Weekly Roundup: AWS 版 Claude Fable 5.1、Amazon Linux 2027 プレビュー、AWS Certified AI Business Strategist など (2026 年 9 月 7 日)",
-      "url": "https://aws.amazon.com/jp/blogs/news/aws-weekly-roundup-claude-fable-5-1-on-aws-amazon-linux-2027-preview-aws-certified-ai-business-strategist-and-more-september-7-2026/",
-      "description": "2026 年 8 月 31 日週、Claude Fable 5.1 が AWS で利用可能になりました。Ant […]",
-      "publishedAt": "2026-09-08T09:58:54.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "95214323dd1592e00e9cc7a2d51584475286889fdb885d30f5d43e8846351132",
-      "title": "Github Appを使って別リポジトリのワークフローを実行するための一時的なPATを発行する",
-      "url": "https://dev.classmethod.jp/articles/generate-temporary-pat-by-github-app-on-github-actions/",
-      "description": "Github Appを使ってGithub Actions内で一時的なPATを生成する方法について試してみました。別リポジトリのワークフロー実行に必要な認証情報を、セキュアに取得できる手法をご紹介します。",
-      "publishedAt": "2026-09-08T09:30:12.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "cfe6c9e144b4d16f9d07fa0f84736e82dbc5a9616a5cd603c625bf45e32a7ffd",
-      "title": "Oracle VirtualBox의 VM을 AWS Transform MGN으로 EC2에 옮겨보기",
-      "url": "https://dev.classmethod.jp/articles/oracle-virtualbox-to-ec2-using-aws-transform-mgn-kr/",
-      "description": "Oracle VirtualBox의 VM에 Ubuntu에 AWS Replication Agent를 설치하고, AWS Transform MGN을 사용하여 EC2 테스트 인스턴스에서 실행하기까지의 절차를 소개합니다. 온프레미스 서버가 없어도 로컬 가상 머신에서 MGN의 동작을 확인할 수 있는 방법을 시험해 보았습니다.",
-      "publishedAt": "2026-09-08T08:59:28.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "9f32dab504a3ac0f646227a4e390128d52ebf874e7446ff5c5111ec4d37126ce",
-      "title": "AWS DevOps Agentのマルチアカウント構成をTerraformでデプロイしてみた",
-      "url": "https://dev.classmethod.jp/articles/aws-devops-agent-multi-account-terraform/",
-      "publishedAt": "2026-09-08T08:45:21.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "05b643011458466d73738244a022d50ac9dc821d43d0b1e01e7f347041df91d6",
-      "title": "OpenAI「GPT-6 Astra」発表　Codexのコーディングは前世代からどれだけ進化？",
-      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2609/08/news035.html",
-      "description": "OpenAIは、次世代AIモデル「GPT-6 Astra」を発表した。PC自律操作やコーディング、セキュリティ検証などの能力が大幅に向上し、抽象推論ベンチマークテスト「ARC-AGI-3」で99.9％のスコアを達成したという。",
-      "publishedAt": "2026-09-08T08:00:00.000Z",
-      "feedName": "＠IT"
-    },
-    {
-      "id": "2af46adb1f0a0aa603d2d94d0fde338f564c8ab44e3fc5e98e73f7b58948f191",
-      "title": "Control TowerのガードレールでRootユーザーを制限しつつCentralized root accessを使う方法",
-      "url": "https://dev.classmethod.jp/articles/control-tower-guardrail-root-user-with-centralized-root-access/",
-      "description": "AWS OrganizationsのCentralized root accessを有効化したものの、Control Towerのガードレールによって特権アクションが拒否される問題に遭遇しました。本ブログではその原因と解決方法をまとめます。",
-      "publishedAt": "2026-09-08T07:38:49.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "7de3c7b05135e92409546e10ad504d5686a38878e23640ba5a258de50e63653e",
-      "title": "AWS IoT CoreからInfluxDBへ送信できるようになったので試してみた",
-      "url": "https://dev.classmethod.jp/articles/try-iot-core-rule-influxdb/",
-      "description": "AWS IoT CoreにInfluxDBへ直接データを送信できる新しいルールアクションが追加されました。これまで必要だったLambdaが不要になり、設定だけでデータを送信できるようになったこの機能を実際に試してみたので、その検証結果と制限事項をご紹介します。",
-      "publishedAt": "2026-09-08T07:31:33.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "847916c7d38400a4bfc4580a79c9e181b816eba3c10ab5d5a2270e7053ce2306",
-      "title": "モバイルアプリ開発でもエージェントループを回したい！React Nativeで計画から検証・PRまで任せる",
-      "url": "https://zenn.dev/tellernovel_inc/articles/57b223dd4b8f5d",
-      "description": "こんにちは！テラーノベルでiOS/Android/Webとフロントエンド周りを担当している @kazutoyo です！\nOpus 4.5が出たあたりから、自分でコードを書くことがほとんどなくなりました。\n最近はループエンジニアリングという言葉も出てきて、エージェントに任せる流れがさらに加速している感じがあります。\nただ、モバイルアプリで同じことをやろうとすると、Webアプリと比べて検証がしづらく、そこだけ人の手が残っていました。\nそこで使っているのが、以前紹介した agent-device です。\nエージェント自身がiOS Simulator / Android Emulatorを操作し...",
-      "publishedAt": "2026-09-08T05:40:14.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "fcde69612e220b68bece90e2af809e2c572090f015a27eecd5997ec584a97452",
-      "title": "React 19移行で学んだpnpmの依存関係解決の仕組み",
-      "url": "https://zenn.dev/yamatechi/articles/vite-monorepo-react-dedupe",
-      "description": "React19移行で見つかった謎の不具合 pnpm workspaceとViteを使うモノレポで、複数あるReactアプリケーションの一つをReact19に更新しました。他のアプリはReact18のままだったため、両方のバージョンが共存している状態です。 変更後、検証していると謎の不具合に遭遇しました。 React19へ移行したアプリに古いReactが紛...",
-      "publishedAt": "2026-09-08T05:19:42.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "8ca462ff057e3bc13025d5cace946b7f17ab61f34a61f87e241d0a25204d54fb",
-      "title": "Kubernetes と Agones から Amazon GameLift Servers への移行",
-      "url": "https://aws.amazon.com/jp/blogs/news/migrating-from-kubernetes-and-agones-to-amazon-gamelift-servers/",
-      "description": "Kubernetes 上で動作する Agones は専用ゲームサーバーのホスティングによく使われますが、グローバル規模になると運用が複雑になります。本記事では、運用面とコスト面から Agones ベースのソリューションと Amazon GameLift Servers の違いを比較し、Agones から Amazon GameLift Servers へ移行する手順を解説します。",
-      "publishedAt": "2026-09-08T05:14:00.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
       "id": "7d80da6f6ad5d13e5d7ad272c75b68dafa76217941af4a8640fa49356d274083",
       "title": "How pdlc-skills Makes Progress, Change Impact, and Quality Trends Visible",
       "url": "https://dev.to/kanfu-panda/how-pdlc-skills-makes-progress-change-impact-and-quality-trends-visible-44me",
@@ -445,166 +206,6 @@
       "description": "序\nCopilot Studio でエージェントを作成して実際にテストしたときに（エラーの場合を除き）期待した回答が返ってこないことがあります。このような場合、モデルを変更したり、指示文（プロンプト）を見直したりする人は多いように思います。\n指示文の例であれば、より詳しく...",
       "publishedAt": "2026-09-10T08:59:14.000Z",
       "feedName": "Qiita"
-    },
-    {
-      "id": "fc97a45f3a39b29cd083a9fc6542ad1f18085993ca84f26742c3d5d79aebc5bb",
-      "title": "東京電力パワーグリッド、Genetecの統合セキュリティプラットフォームを採用　監視カメラの一元管理・運用効率化に寄与",
-      "url": "https://enterprisezine.jp/news/detail/25053",
-      "description": "東京電力パワーグリッド（以下、東電PG）は、Genetec（ジェネテック）の統合セキュリティプラットフォーム「Security Center」を導入した。\n\n　東電PGでは、従来利用していたITVシ...",
-      "publishedAt": "2026-09-10T03:51:00.000Z",
-      "feedName": "EnterpriseZine"
-    },
-    {
-      "id": "f9a7be4fb906f4b297910023d138839e7e47fe7d49c54850b3a1de34e6cfcb0a",
-      "title": "ChatGPTで機密資料を扱う前に --- 学習オフ・一時チャット・プロジェクト限定メモリの使い分け",
-      "url": "https://qiita.com/ootakazuhiko/items/d3e6a741aaac9868dd81?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "はじめに\nGPT-6を使っていると、複雑な相談への回答が以前より的確になったと感じます。そうなると、一般的な技術情報を聞くだけでなく、実際のシステム設計にも使いたくなります。\n例えばAWSのクラウドインフラを考えます。基本設計書や詳細設計書を読み込ませ、構成や依存関係を整...",
-      "publishedAt": "2026-09-10T02:12:44.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "57d40dc3034e5a4f1f9454f67c0c64dd2f10ba87b86e8be785e924c5ada24bf1",
-      "title": "ホンダが「28万人＆1600アプリのID管理がバラバラ」から脱却　セキュリティの不安と手間をどう解消？",
-      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2609/10/news039.html",
-      "description": "本社や研究所などで認証システムが異なり、IDや権限の管理も分散していたホンダ。グローバル規模で認証システムを見直し、セキュリティを確保しつつ、IDや権限の管理作業を効率化した。何をどう変えたのか。",
-      "publishedAt": "2026-09-10T02:00:00.000Z",
-      "feedName": "＠IT"
-    },
-    {
-      "id": "4002848fee1501d9891eba85b34b01cf83a2fd3ba5a6cc61fc63d69d25d1ce06",
-      "title": "Yahoo!ニュースの表示高速化で広告のクリックは増えるのか",
-      "url": "https://techblog.lycorp.co.jp/ja/20260910a",
-      "description": "こんにちは。LINEヤフーのディスプレイ広告（以下、ディスプレイ広告）の開発と兼務で、全社横断のWebパフォーマンス改善に取り組んでいるエンジニアの今宮です。一般にWebページの表示速度はユーザー体験...",
-      "publishedAt": "2026-09-10T02:00:00.000Z",
-      "feedName": "LINEヤフー Tech Blog"
-    },
-    {
-      "id": "fb693d1fbdc084326929eeb9248999c0318a8f9fff261e36d6ddfc76d3045107",
-      "title": "メモリに載らないGROUP BYをDuckDBはどう処理するのか",
-      "url": "https://zenn.dev/loglass/articles/7c140c6689d8c2",
-      "description": "!\nこの記事は毎週必ず記事がでるテックブログ Loglass Tech Blog Sprint の160週目の記事です！4年連続達成まであと52週となりました！\n\nログラスの龍島(@hryushm)です。先日スイカを一玉いただく機会があったのですが、とても大きいので一度に全部は食べきれず、切り分けて冷蔵庫に入れて数日かけて食べました。ということで今日はメモリに載りきらないデータの処理方法の話です。\n\n はじめに\n先日、DuckDBの開発元であるDuckLabsがAWSに加わることが発表されました[1]。そのDuckDBは、メモリより大きなデータを扱うのが得意だと言われます。公式ドキュメン...",
-      "publishedAt": "2026-09-10T01:42:07.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "5f49fc385cdb82707de56fbe3e7f2a8a7d5bc2fe0ec50e3d75bcf6e7a6d74a74",
-      "title": "勉強会文化ゼロの支社で、2026 Japan AWS Jr. Championsの私が立ち上げたクラウド勉強会——部署の壁を越えた交流とアウトプットの文化を作る",
-      "url": "https://qiita.com/MikuMatsuo/items/dd8295164f2d84c9bf61?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "1. はじめに\nこんにちは。BIPROGY株式会社の松尾です。\nこの記事は「2026 Japan AWS Jr. Champions 真夏のQiitaリレー」の41日目の記事となります。\n過去の投稿（リンク集）はこちらからご覧ください。\n\n2. 「肩書を活かしたい」...",
-      "publishedAt": "2026-09-10T01:37:51.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "78afb5c0611b220d85cd76d43caecec767aacceca0169a0d04c45d1f41fffd4b",
-      "title": "ドメインモデル実装におけるトリレンマに対するSoutherの回答",
-      "url": "https://zenn.dev/kawasima/articles/souther-ddd-trilemma",
-      "description": "ドメインモデル貧血症はなぜ生まれるのか — Decision パターンで DDD トリレンマを解く は Domain model purity vs. domain model completeness (DDD Trilemma)を非常に分かりやすく解説し、かつGoでこの循環を解消する方法として、domainの関数が「許可」「拒否」「まだ終わっていない、これを取ってきてほしい」の3種類を返すDecisionパターンを示している良い記事だと思いました。\n\nただ、Decisionパターンはやはり実装上の課題をドメインモデルに持ち込んでしまうので、外部I/Oをdomainの外に置ける一方、決...",
-      "publishedAt": "2026-09-10T01:11:08.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "7139fb20c012f4dc94e76c587093bbe99dec2f2bd9d970d46d74fd2077dc2feb",
-      "title": "【開催報告】Girls Meet STEM in AWS 2026 を開催しました",
-      "url": "https://aws.amazon.com/jp/blogs/news/girls-meet-stem-event-2026summer/",
-      "description": "2026 年 8 月 21 日、AWS は中高生女子向けプログラム「Girls Meet STEM」に参加し、麻布台ヒルズの新オフィスにて生成 AI 体験ワークショップ、オフィスツアー、パネルディスカッションを開催しました。",
-      "publishedAt": "2026-09-10T01:04:27.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "62a706af15a412754334ef56263c4b85a04651e937021fb493965c7e29049ff7",
-      "title": "AWS Shield Advanced が AWS WAF Anti-DDoS マネージドルールグループを採用: 変更点と準備方法",
-      "url": "https://aws.amazon.com/jp/blogs/news/aws-shield-advanced-is-embracing-the-aws-waf-anti-ddos-managed-rule-group-what-changes-and-how-to-prepare/",
-      "description": "AWS Shield Advanced は、アプリケーションレイヤー (L7) DDoS 保護のデフォルトとして AWS WAF Anti-DDoS マネージドルールグループを採用し、将来的には唯一の保護機能とします。2026 年 7 月 27 日から、対象のウェブ ACL への Count モードでのルールグループの追加が始まります。既存の L7 自動緩和と並行して動作するため、トラフィックへの影響はありません。この記事では、Anti-DDoS マネージドルールグループの機能、2027 年 1 月 1 日の Shield Advanced アプリケーションレイヤー自動緩和の終了までの 5 つのフェーズ、請求、モニタリングとメトリクスの変更点、IaC や AWS Firewall Manager ポリシーの更新など、移行に向けた準備方法を解説します。",
-      "publishedAt": "2026-09-10T00:47:18.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "8e5b225647a290e0764e8c596f1ab29221374c9fb690d248bb6838e4fb864f6e",
-      "title": "【アジャイルFAQ 第2回】保守運用チームにスクラムは合わないのでは？",
-      "url": "https://developer.mamezou-tech.com/blogs/2026/09/10/2_scrum_for_maintenance_teams/",
-      "description": "この記事を読んでいただきありがとうございます。アジャイルグループに所属する、藤井智弘です。\n質問\n#\n うちのチームは既存システムの保守運用が中心です。不具合対応や改善要望への対応がメインで、大きな新機能をスプリントで計画的に作っていくような仕事ではありません。研修で習ったスクラムは新規開発が前提のように見えますし、うちは割り込みも多い。\n回答\n#\n 合わないのは、スクラムではなく「スクラム解説の前提」のほうです。視点を変えると、保守運用はアジャイルにとってかなり自然な環境です。ウォーターフォール文化が身に染み付いた開発チームは、「最初にすべてを決めない」という考え方に慣れるのに苦労します。一方、保守運用の世界では「最初からすべて決めない」のは“当たり前”です。\n「新規開発」と「保守運用」は、本当に別物か\n#\n この質問の土台には、「新規機能の開発」と「保守運用の不具合対応・改善要望対応」はまったく違う仕事だ、という感覚があります。\n バックログの視点で両者を並べてみると、こうなります。\n新規開発系: 作りたい機能が並ぶ → 価値やリスクで優先順位をつける → 小さく完成させて届ける → フィードバックを得て次を決める\n保守系: 不具合報告や改善要望が流れ込む → 影響度や緊急度で優先順位をつける → 直して届ける → 利用者の反応や再発状況を見て次を決める\n では、何も違わないのかというと、差はあります。ただしそれは「種類の差」ではなく「程度の差」です。\n項目のサイズと独立性: 保守系の項目は小粒で、互いに独立していることが多い。新規開発系は大きく、項目間の依存が強くなりがち\n流入の予測可能性: 保守系は突発の流入が多く、来週何をやるかを今週決めきれない。新規開発系は（保守系と比べて）計画が立てやすい\n\nステークホルダーの期待の形: 新規開発系には「いつ、何が出るのか」が問われ、保守系には「どれだけ早く、確実に直るのか」が問われる\n これらはスプリントの長さ、ゴールの立て方、キャパシティの配分といった「運用パラメータ（第1回参照）」を変える理由にはなりますが、「スクラムをやる/やらない」を分ける理由にはなりません。同じ考え方の上で、パラメータ＝調整のしかたが違うだけです。\nスクラムが定義していない「もう半分」\n#\n もう一歩進めます。ここまでの話は、バックログと優先順位づけ、つまりスクラムが定義する「仕事の管理」の側面でした。しかしスクラムガイドを読み返すと、気づくことがあります。スクラムは「どう作るか」を一切定義していません。 テストをどう書くか、設計をどう保つか、どの頻度で統合しリリースするか…これらはスクラムの外にあります。\n アジャイルのこの「もう半分」を担ってきたのが、XP（エクストリーム・プログラミング）に代表される構築プラクティスです。自動テスト（そしてテストを先に書いてから実装するテスト駆動開発）、リファクタリング（動きを変えずに内部構造を整えること）、継続的インテグレーション（変更を頻繁に統合し自動でビルド・テストすること）、小さなリリース、シンプルな設計。スクラムだけを導入して「スプリントごとに動くものが出てこない」「スピードが落ち続ける」と悩むチームの多くは、この半分が欠けています。管理の枠組みだけあって、その中で回すモノづくりの足腰がない状態です。\n\n保守運用は、その「もう半分」を鍛える最良の舞台だ\n#\n ウォーターフォール文化に染まった開発チームがアジャイルに移行するとき、最大の障害はたいてい「全部決めてから作りたい」という習慣（いや欲求）です。線表を引き、要件を固め、設計を固め、実装へ…この習慣を捨てるのに、多くのチームが何ヶ月も、ときに何年も苦しみます。\n ところが保守運用の現場を見てください。\n「最初にすべて決めない」状態が、意図せずすでに達成されているのです。開発チームが苦労して手放す習慣が、環境としてそもそも成立しません。\n そして、ここからが本題です。保守運用の日常業務は、XPの技術プラクティスの練習問題そのものです。\n自動テスト: 不具合を直すとき、「まず再現するテストを書き、それを通す」のは最も自然な手順です。直した箇所が次の改修で壊れないよう回帰テストの網を増やしていくことも、保守の現場では「当然のこと」として受け入れられます。多くの未熟なアジャイルプロジェクトで「テストはリリース間際にやればよい」という誤解（開きなおり？）が平然と通っているのとは大きな違いです。\nリファクタリング: 保守系の変更は小粒です。「触ったところを少しだけきれいにして戻す」を毎回やる習慣が、大規模な作り直しをせずにコードを健全に保つ唯一の現実的な方法であり、保守運用は開発者に練習する機会を多く与えてくれます。\n継続的インテグレーションと小さなリリース: 項目が独立しているため、1件ずつ統合し、1件ずつ届けられます。「小さく完成させて届ける」サイクルが短く、ビルド・テスト・デプロイの自動化に投資する動機も見返りも、新規開発より明確です。\n完成の定義（何をもって「終わった」とするかのチームの合意）: スプリントごとに何度も「完成」を経験できるので、見積り・分割・「完成とは何か」の合意といった基本動作の練習回数を、新規開発案件よりはるかに多く稼げます。検査と適応のリズムも、障害の振り返りや再発防止という形で日常業務と地続きです。\n このように見ていくと、「保守運用にスクラムは合わない」のではなく、むしろ「スクラムの管理の枠組みと、XP的なモノづくりの技術の両方を身につけるなら、保守運用は良い舞台である」という見方が、十分に成り立ちます。\nでも限界も知っておこう\n#\n ただし、限界もあります。保守運用で鍛えやすいのはモノづくりの側であって、スクラムの管理の側には練習しにくいことが2つあります。\nスプリントゴールで仕事を「束ねる」力。小粒で独立した項目をこなすだけなら、ゴールは「今スプリントの分を終わらせる」に退化しがちです。バラバラの作業を1つの目的に束ねる練習は、意識しないと発生しません。\n価値の優先順位を巡る判断。「直すのが当然」の不具合が相手では、「もたらす価値に基づいて何を作り、何を作らないか優先順位をつける」という、プロダクトオーナーの筋トレの機会が乏しくなります。\n ほぼアジャイル初学者ばかりのチームが、いきなり本番開発に突撃して失敗している現場を少なからず見ていると、「まず保守運用でモノづくりの技術を身につける」→「新規開発でゴールやPOの筋トレに取り組みながら開発を進める」というアプローチは、十分に検討に値すると思います。\n とりわけ日本では、この「モノづくりの技術」への投資が構造的に不足しがちです。経営層の中には、アジャイルを「早い、安い」という文脈で捉えている方が少なくありません。その結果、体制の編成は単価優先になり、育成への投資が省かれ、設計からコーディング、テストに至る“モノづくり”の能力がチームとして整わなくなります。スクラムの研修は受けたが、テストの自動化もリファクタリングも誰もやったことがない——そんなチームが「スクラムを始めた」と称して本番開発に突撃する光景は、珍しくありません。責めるべきは個々のエンジニアではなく、この編成と投資の意思決定です。\n もっともこの意思決定も、コスト削減の制約の下では、その場その場では合理的な選択ではあります。合理的な選択の積み重ねが望まぬ結果に行き着く——この構造は、次回からの更改案件の話でも繰り返し登場します。\n 私見では、これがアジャイル開発の失敗の大きな要因のひとつです。保守運用を鍛錬の舞台にする提案は、この足腰を日常業務の中で鍛え直す提案でもあります。\n 経営層の方に、「早い、安い」の代わりに期待していただきたいのは、「変更1件のリードタイムが縮む」「切替やリリースの事故が減る」「見積の外れ幅が狭まる」という、測れる変化です。これらは、本連載の今後の回で採り上げようかと考えています。\n そしてもちろん、開発チームを「価値の創造エンジン」という目で見ていただきたい。コストセンターとして単価を削る対象ではなく、投資して育てる対象として。\nそれでも現場で困ることへの処方\n#\n 保守運用へ適用するとして、よく起こるだろう困りごとへの対処法もいくつか挙げておきましょう。\nスプリントゴールが立てられない\n もちろん、「ゴール決めを禁止する」意図はありません。ゴールを「機能のまとまり」で立てようとすると詰まります。改善・削減・安定化の観点で考えると立てやすくなるでしょう。「今月のアラート件数を半減する」「この手順書を廃止できる自動化を完成させる」「問い合わせ上位3件をFAQ化して問い合わせを減らす」。これらは立派なスプリントゴールであり、前述の「束ねる力」の練習にもなります。\n割り込みで計画が壊れる\nそもそもスプリントという区切りが実態に合わない\nなぜこの質問は30年繰り返されるのか\n#\n 理由は単純で、アジャイルの解説・研修・成功事例のほとんどが「新機能を開発するチーム」を暗黙の主人公にして書かれてきたからです。読者の多数派が保守運用に携わっているにもかかわらず、教材の主人公は常に新規開発チームでした。加えて日本では、新入社員研修でウォーターフォール型の開発はしっかり教えられる一方、アジャイルはほとんど扱われません。「教材がない」状態は、キャリアの入口から始まっているのです。\n しかし本稿で見たように、例外なのは現場ではなく教材の前提のほうです。「先が読めない中で、小さく完成させ、学びながら進む」というスクラムの舞台装置は整っている。そのうえ、スクラムが定義しないモノづくりの技術を鍛える練習問題が、毎日流れ込んでくる。\n 保守運用はアジャイルの周縁ではなく、むしろその足腰を作る場所だと考えてはいかがでしょうか？\n\n次回: 「アップグレード案件の『現行機能保証』にどう向き合う？」",
-      "publishedAt": "2026-09-10T00:00:00.000Z",
-      "feedName": "豆蔵デベロッパーサイト"
-    },
-    {
-      "id": "d521fa66ab6230b7bc06c53ce8a087892f460d73c7b123def790fbdf1cf1ec68",
-      "title": "Nuxt.js から Next.js へ ── フロントエンド技術リプレイスにおけるハーネスエンジニアリングと理解負債",
-      "url": "https://zenn.dev/mediba/articles/7d0d7d70678546",
-      "description": "はじめに\n株式会社 mediba でフロントエンドエンジニアをしている中畑です。\n弊社では Nuxt.js から Next.js への技術リプレイスプロジェクトが進行中です。この記事では、 Claude Code を活用した技術リプレイスの現状と課題をお伝えします。\n!\n要約\n\nハーネス(ルール・コンテキスト・フィードバック・スキル)を整備し、開発フローをスキル化して Claude Code による技術リプレイスを進めている\n移植精度の向上や高速化、属人化の防止というメリットがある一方、技術負債の移植や開発者の「理解負債」というデメリットが生じている\n現行システムに実際に触れる、モッ...",
-      "publishedAt": "2026-09-09T23:49:11.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "3678aa6930e885f0dffa6819ce0cb0c10a48371002152ebd654862d096e4fcec",
-      "title": "AWS 認定資格 (MLA、SAP、DVA) に関するアップデート: 2026 年 9 月",
-      "url": "https://aws.amazon.com/jp/blogs/news/september-2026-new-offerings/",
-      "description": "AWS が 3 つの認定試験を更新します。MLA-C02 のベータ登録はすでに開始しており、SAP-C03 と DVA-C03 は 2026 年 10 月 27 日より登録開始予定です。生成 AI・エージェンティック AI への対応や AI 支援開発など、今日のクラウドエンジニアに求められるスキルを反映した各試験の変更内容と重要な日程をお伝えします。",
-      "publishedAt": "2026-09-09T23:48:07.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "79af642cba7901dab08d9114adf77f4da8298422c174e01f8b0ae742d1f6cc54",
-      "title": "日本初日本発AWS GameDayで優勝して思ったこと",
-      "url": "https://qiita.com/takano0131/items/86c54a078fefa954ce76?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "2026/9/6の日本初・日本発 GameDayで優勝してきました。\n\n乳児の夜泣き（月齢2ヶ月）対応を優先しながらGameDayを遊ぶという暴挙でした。優勝が嬉しいので感想を記載します。\n\n今回のGameDayは\nAWS GameDayは、チーム対抗でリアルなA...",
-      "publishedAt": "2026-09-09T23:05:30.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "bf8f946e72708ef15d77558dcb6145816382c6735fb14935e115dd236ed1aefa",
-      "title": "なぜエージェントハーネスで開発パイプラインを作っているのか",
-      "url": "https://zenn.dev/xtm_blog/articles/689d035440c0ae",
-      "description": "クロステック・マネジメントでは docker-agent を使い、エージェントハーネスで開発パイプラインを構築しています。現時点の設計では、プロダクトオーナーやプロダクトマネージャーが要求仕様書を Markdown で記述すると、それを受け取って、要求を満たす Web アプリケーションの Pull Request を生成する、という流れです。\n\n 何を作っているのか\n私たちが作っているのは docker-agent の外側となるハーネスの部分で、全体像は以下のようになります。\n\n図の中の各工程は、別々のエージェントが非同期に分担するマルチエージェント構成になっています。次の段階へ進めるか...",
-      "publishedAt": "2026-09-09T23:00:05.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "dfce8675aca590e2444e347e0259687980bc050bc29e12c3a9ccb88eaac3c3c6",
-      "title": "SecureNavi、「SCS評価制度」★4取得の“第三者評価機関”立ち上げ支援コンサルティングを開始",
-      "url": "https://enterprisezine.jp/news/detail/25050",
-      "description": "SecureNaviは、経済産業省が主導する「サプライチェーン強化に向けたセキュリティ対策評価制度」（以下、SCS評価制度）における★4の第三者評価を担う「評価機関」の立ち上げを支援するコンサルティ...",
-      "publishedAt": "2026-09-09T23:00:00.000Z",
-      "feedName": "EnterpriseZine"
-    },
-    {
-      "id": "b1d2c3c95182517582c792ddecfa42e1e027524c19051477976f90283dded425",
-      "title": "Whose GPUs are these, anyway? Secure, self-service metrics for multi-tenant Kubernetes",
-      "url": "https://www.cncf.io/blog/2026/09/09/whose-gpus-are-these-anyway-secure-self-service-metrics-for-multi-tenant-kubernetes/",
-      "description": "The question that stopped the meeting It was a routine cost review. The slide showed the month’s GPU spend, the biggest line on the whole infrastructure bill, and someone asked a five-word question: “Are we using...",
-      "publishedAt": "2026-09-09T11:27:00.000Z",
-      "feedName": "Cloud Native Computing Foundation"
-    },
-    {
-      "id": "c81f55221ac317c70e2288422dac2de68ba7b064076d50a3d69098e3c94c48f6",
-      "title": "電通総研、経済産業省「SCS評価制度」対応支援コンサルティングを開始　申請・審査対応まで一貫支援",
-      "url": "https://enterprisezine.jp/news/detail/25046",
-      "description": "電通総研は、経済産業省が推進する「サプライチェーン強化に向けたセキュリティ対策評価制度」（以下、SCS評価制度）への対応を支援する「SCS評価制度支援コンサルティング」を提供開始した。\n\n　同サービ...",
-      "publishedAt": "2026-09-09T07:18:00.000Z",
-      "feedName": "EnterpriseZine"
-    },
-    {
-      "id": "73ced85e82fda2faef44a60edbe7974dfd4358ee6aa5554ecebfef2a9a9176c4",
-      "title": "Oracle Database@AWS を始める: オンボーディング完全ガイド",
-      "url": "https://aws.amazon.com/jp/blogs/news/getting-started-with-oracle-databaseaws-a-complete-onboarding-guide/",
-      "description": "Oracle Database@AWS のオンボーディングを、サービスの選定と調達から OCI テナンシのリンク、AWS と OCI 両側の IAM 設定まで 5 つのステップで解説します。ADB-S と ExaDB-XS のパブリックオファー経路、ExaDB-D と ADB-D のプライベートオファー経路の両方を扱います。購入者アカウントの選び方、ネットワーク計画、SCP の注意点、ジョブの分離まで、プロビジョニング前に押さえておくべきポイントをまとめました。",
-      "publishedAt": "2026-09-09T06:42:02.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "4b2805835c1dde7f3f7c67aa140b898b5dc72e1a7529f790f80e12dba78c3dd9",
-      "title": "Kiro が ISO/IEC 27001:2022 のカバレッジに対応",
-      "url": "https://aws.amazon.com/jp/blogs/news/iso-27001/",
-      "description": "調達・セキュリティ・ベンダーリスクの各チームが、Kiro の採用に関する意思決定を裏付ける、第三者によって独立に検証されたエビデンスを利用できるようになったことをお知らせします。Kiro は、AWS の ISO/IEC 27001:2022 認証の定義された範囲（スコープ）に含まれています。チームは Kiro を、ソースコード、システムアーキテクチャ、社内ドキュメント、その他のプロジェクトコンテキストとともに利用します。こうした情報には、知的財産や、組織のセキュリティポリシーによって管理されるデータが含まれることがあります。開発ツールを承認する前に、組織はそのツールを提供する組織が情報セキュリティリスクをどのように特定し、管理し、レビューしているのかについて、明確なエビデンスを必要とします。",
-      "publishedAt": "2026-09-09T05:54:37.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "9cc7242f7cf3f53644d2809311e976b2826bc8dc2b9b077e545a3519a975c53b",
-      "title": "クラウドストライク、自律対応ハーネスを備えたセキュリティ特化型フロンティアモデルをNVIDIAと共同開発",
-      "url": "https://enterprisezine.jp/news/detail/25045",
-      "description": "クラウドストライク（CrowdStrike）は、目的特化型セキュリティモデルおよびハーネスのファミリーであるエージェント型システム「CrowdStrike SafeMind」を発表した。\n\n　同シス...",
-      "publishedAt": "2026-09-09T05:31:00.000Z",
-      "feedName": "EnterpriseZine"
     },
     {
       "id": "c9ea61dbe5b78dc71306e3c220ec1327bcffac5efd045700958f5ed3e157e8ea",
@@ -892,14 +493,6 @@
       "description": "社内外で活用する端末のセキュリティ対策として、オンプレミスVDIやDaaSではなく「データレスクライアント」にすると、どれだけ費用が下がるのか。調査結果を基に探る。",
       "publishedAt": "2026-09-12T04:00:00.000Z",
       "feedName": "＠IT"
-    },
-    {
-      "id": "3145193930569ab5cbcb0ddabb4cd39ce60b3e6e85ec946fc2b0313124ae7151",
-      "title": "AIエージェントの評価と品質保証 — 「動く」を「信頼できる」に変える検収の技術",
-      "url": "https://zenn.dev/hampen2929/books/ai-agent-evaluation-guide",
-      "description": "AIに実装を任せたあと、何を根拠に受け入れ、改善し、モデルやプロンプトを更新するか。評価仕様、課題集、コードとLLMによる評価、評価器自体の検証、複数試行、継続評価、受け入れ記録を、共通のTypeScriptアプリでつなぎます。既知の六故障を使う評価器実験、一課題を六回実装した比較、四報告のLLM判定を収録。公開サンプルと保存成果物を再評価できる手順、各章の図解、テンプレート付き。実測と未検証の範囲を分けて学ぶ実践書です。",
-      "publishedAt": "2026-09-09T09:09:18.000Z",
-      "feedName": "Zenn"
     },
     {
       "id": "14d960642afcd75a514dd9ed19bdf2362ac0a0b409fd839fb4cbdb2fa0d8b466",
@@ -5581,6 +5174,270 @@
       "url": "https://qiita.com/kunitomo926/items/60aa36a9a54fc1de7919?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
       "description": "TL;DR\nGPT-6のSolとLunaを使い、同じ仕様のWebアプリを3つの構成で3回ずつ作らせました。\n\n計画とレビューをSol、実装をLunaにした分業構成は、今回の実験では隠しE2Eテスト合格率100%を、全部Solの47%のコストで達成した\nただし分業は3構成...",
       "publishedAt": "2026-10-06T22:42:06.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "a80e44331986e2866919c3354ebe393ae228cb158b0f63f0d75a728f256dfc75",
+      "title": "WildLens: an offline field notebook that tells you what you just found outside",
+      "url": "https://dev.to/aditi_2609/wildlens-an-offline-field-notebook-that-tells-you-what-you-just-found-outside-3j57",
+      "description": "This is a submission for the Hacktoberfest Open-Source AI Challenge Week 1: Touch Grass\nWildLens is a small field notebook that lives in your phone's browser. Point the camera at a plant, bird, animal or insect and it tells you what it thinks you're looking at. The identification runs entirely on your device, so your photos are never uploaded, and once the model has downloaded the app is built to keep working with no signal.\nI'm a developer, so I'm well aware of the irony of building an app to get people off screens. That's why I wanted the screen to be the shortest part of the experience: you spot something on a walk, take a photo, get a name in a few seconds, and put the phone back in your pocket. Every result also comes with a short \"Look closer\" prompt, a small observation task that turns the photo into a reason to keep looking at the real thing.\nI didn't want it to bluff, either. When WildLens isn't sure, it says so. It shows its top three guesses instead of one confident-sounding answer, and if it can't find a living subject in the photo, it tells you that. Anything hazardous gets a safety note, and every plant carries one fixed rule: never eat anything based on a photo.\nWhat you find can be saved to a local field journal with your own notes and, if you choose, an approximate location. It stays on your device, and you can export or clear it whenever you like.\nI gave it a quiet look on purpose: a parchment background, muted greens, a serif for scientific names, no gradients. It should feel like a notebook, not another app begging for attention.\nIt's for anyone who has stood on a trail or in a garden and wondered \"what is that?\"\nLive app: https://wildlens-57g9.onrender.com/\nIt works best on a phone. Open it, allow camera access, and on first launch let it download the model (about 330 MB) over Wi-Fi. That's a one-time download, and the model is kept in your browser's cache afterwards.\nHow it went outside: \n / \n        WildLens\n      \n    \n\nWildLens\nPoint your phone at a plant, bird, animal or insect and find out what it is. An open-weight vision model runs inside your browser, so your photos never leave your device.\nWildLens is a mobile-first, offline-first PWA with a calm \"field notebook\" look. It is built for the DEV \"Touch Grass\" challenge: an excuse to go outside, look closely at what is living around you, and keep notes.\nFeatures\nOn-device identification. The model runs in the browser with WebAssembly. Nothing is uploaded.\nHonest uncertainty. Results are confident, uncertain (top 3 candidates plus a best guess at the group, such as the cat family) or \"no subject found\". The app never forces a guess.\nSafety notes. Shown for anything hazardous. Plants always carry \"never eat from photo\".\nLook closer. A short observation prompt for each category, to get you noticing details instead of just tapping a result.\nField journal. Observations…\n\n  \nView on GitHub\nWildLens is a React, TypeScript, Vite and Tailwind app, installable as a PWA, with the journal stored in IndexedDB.\nThe AI at its core is BioCLIP, an open-weight vision model from the Imageomics Institute (MIT licensed) that was trained on biodiversity images across the tree of life. I exported its image encoder to ONNX once, in Google Colab, and the app runs it in the browser with ONNX Runtime Web (WebAssembly). There's no server and no API key.\nIdentification works like this. The photo is center-cropped and normalised, the encoder turns it into a vector, and that vector is compared with precomputed vectors for each species. BioCLIP responds best to full taxonomic names, so a small build script looks up every species on GBIF, and I embed \"a photo of\" plus the taxonomic string. Those text embeddings ship as a small file, so the phone only ever runs the image half of the model. A softmax turns the similarities into probabilities, and a set of \"not nature\" prompts catches photos that shouldn't become a species (a living room should never be reported as a gecko). When no single species wins clearly, the scoring adds up probabilities by genus, family, order and class, so it can lean on \"probably this family\" instead of a wrong species.\nThe model file is far too big for GitHub, so it lives in a Hugging Face model repo. The app downloads it once and keeps it in the browser cache. The app itself is a static site on Render.\nThe first version didn't work well. I started with OpenAI's CLIP (ViT-B/32, 8-bit) through Transformers.js, and it was wrong almost every time. I grew the label list, rewrote the prompts and tried prompt ensembling to separate a cat from a cheetah. Each tweak helped a little, but none fixed the real problem: CLIP is a general-purpose model, and BioCLIP actually knows biology.\nWhat saved me was keeping the whole UI behind one small NatureIdentifier interface. Switching models meant adding a new identifier class and updating the scoring, with no changes to any screen. After the swap, the answers finally started to make sense.\nIt's honest about its limits. It knows a few hundred species, not every organism on earth. Look-alikes (small brown birds, frogs, grasses) are hard for any model. And it's a notebook companion, not a safety tool.\nCredits: BioCLIP (Imageomics Institute), OpenCLIP, ONNX Runtime Web, GBIF for taxonomy, and Hugging Face for hosting the model files.\nI started with the trail. If you're hiking with no signal, a cloud vision API is just a spinner. Because the model weights are open, I could put the model on the phone itself: no connection needed, no per-photo cost, no API key to leak and no rate limit to hit.\nPrivacy mattered just as much. A wildlife photo carries a time and often a place, which is exactly the kind of data I didn't want sitting on a server I don't control. With a local model, the photo never leaves the device.\nOpen also meant I wasn't locked in when my first choice turned out to be wrong. With a closed API, \"this model isn't good at biology\" is a support ticket. With open weights it was a change I could make myself. Species are just text too, so adding a bird means adding a line, not retraining anything.\nWildLens is mostly other people's open work, glued together carefully: BioCLIP, ONNX Runtime, GBIF's taxonomy, Hugging Face's hosting. A closed API would have given me a black box that needed internet. Open innovation gave me a notebook that works at the edge of the trail.\nI used an AI coding assistant throughout, for scaffolding, for debugging the in-browser WebAssembly setup, and for the one-time model export. The decisions about what to build and what to keep were mine, and I tested the results myself.\nBest Use of Render: WildLens is deployed on Render as a static site, which serves the PWA front end. The model itself runs on the user's device.\nThanks for reading. If you try it, I'd love to hear what you found out there. Now go outside.",
+      "publishedAt": "2026-10-10T04:25:41.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "61fc0c5f793a8fee530c238b259fddacc765e8e9a877acd3353816ea810d5d7b",
+      "title": "Why Your Database Gets Slower as Your App Grows",
+      "url": "https://dev.to/arthur_luca/why-your-database-gets-slower-as-your-app-grows-2nmp",
+      "description": "Hello, I’m Arthur. One problem developers often face is that an application works perfectly when it has a few hundred records, but starts slowing down when the database grows.\nAt first, everything seems fine. Pages load quickly, API responses are fast, and database queries finish almost instantly.\nThen the application grows. More users join, more records are stored, and suddenly a query that used to take milliseconds takes several seconds.\nThe first reaction is often to upgrade the server. But sometimes, the real problem is the way the database is being queried.\nConsider this query:\nSELECT * FROM orders;\n\nIt returns every column and every row in the orders table.\nThat might be fine for a small test database, but it can become expensive when the table contains millions of records.\nIf your application only needs an order ID, status, and creation date, request those fields instead:\nSELECT id, status, created_at\nFROM orders;\n\nYou reduce the amount of data the database needs to return and the application needs to process.\nFor large tables, you should also limit the number of rows returned.\nImagine your application frequently searches for orders belonging to a particular customer.\nWithout a suitable index, the database may need to examine many rows to find matching records.\nYou could create an index like this:\nCREATE INDEX idx_orders_customer_id\nON orders(customer_id);\n\nNow the database has an additional structure it can use to locate matching rows efficiently.\nHowever, indexes aren't free. They consume storage and can make inserts, updates, and deletes more expensive.\nBefore adding an index, inspect the query plan using EXPLAIN in your database system. Test the change against realistic data.\nSuppose an application fetches 100 blog posts and then runs another query to retrieve each author's name.\nThat can result in 101 database queries instead of one or a few efficient queries.\nA join can often help:\nSELECT\n    posts.id,\n    posts.title,\n    authors.name\nFROM posts\nJOIN authors\n    ON posts.author_id = authors.id;\n\nThe best approach depends on your schema and application, but the key idea is to avoid repeatedly querying the database for related information when it can be fetched more efficiently.\nReturning thousands of records in one request can increase database work, memory usage, and response time.\nA simple SQL example is:\nSELECT id, title, created_at\nFROM posts\nORDER BY created_at DESC, id DESC\nLIMIT 20;\n\nFor a small dataset, LIMIT and OFFSET may be enough. For very large datasets, cursor-based pagination can perform better because large offsets may still require the database to scan and discard many rows.\nWhen a database becomes slow, check:\nWhich queries take the longest?\nAre indexes being used?\nAre too many queries running per request?\nIs the connection pool exhausted?\nIs the database waiting on disk operations?\nAre multiple transactions blocking one another?\nThese checks help distinguish a query problem from a resource problem.\nIf you've optimized your queries and confirmed that the database needs more resources, then reviewing CPU, RAM, storage performance, and network latency makes sense.\nFor applications that need more control over their hosting environment, you can compare HelloServer VPS hosting with other providers and evaluate the resources against your database workload.\nKeep in mind that hosting specifications alone don't guarantee database performance. Configuration, workload, and storage behavior matter too.\nWhen a query becomes slow, follow this process:\nMeasure its execution time.\nInspect the query plan.\nCheck the columns used in filters and joins.\nReview indexes and unnecessary data retrieval.\nTest the optimized query with realistic data.\nMeasure again and compare the results.\nChange one thing at a time so you can understand what actually improved performance.\nA growing database doesn't automatically require a bigger server.\nSometimes, selecting fewer columns, adding a carefully chosen index, fixing repeated queries, or introducing better pagination can make a noticeable difference.\nThe goal isn't to optimize every query blindly. It's to find the queries that matter, measure their behavior, and improve them based on evidence.",
+      "publishedAt": "2026-10-10T04:24:22.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "053221886bf3646a6342d6848863bebfb2fe124a98c54e6b35c8d2bec38c8436",
+      "title": "AWS Launches Serverless AI Runtime: No Code, Just Compute",
+      "url": "https://dev.to/techpulse01239/aws-launches-serverless-ai-runtime-no-code-just-compute-3c70",
+      "description": "Amazon Web Services (AWS) has officially unveiled its new Serverless AI Runtime, a major update to its cloud computing service that promises to eliminate the need for dedicated infrastructure when deploying machine learning models. Announced at its re:Invent conference in late November 2024, the feature allows developers to run inference workloads on demand without provisioning servers, marking a significant shift in how enterprises approach AI integration.\nFor years, deploying AI models in production has been a logistical nightmare. Engineers had to manage Kubernetes clusters, handle auto-scaling, and pay for idle resources—often leading to bloated cloud bills. The new AWS Serverless AI Runtime addresses this by providing a managed environment where users simply upload their model artifacts (such as ONNX or PyTorch formats) and define the input/output schemas. The service automatically allocates the necessary GPU or CPU resources only during active inference requests.\n\"We saw that 60% of our customers were struggling with the operational overhead of scaling AI workloads,\" said Swami Sivasubramanian, AWS VP of AI. \"This update removes the guesswork. You focus on the model, and we handle the compute, ensuring you pay only for the milliseconds your AI is actually working.\"\nThe implications for the tech industry are profound, particularly for startups and mid-sized companies. By removing the fixed cost of maintaining AI infrastructure, the barrier to entry for sophisticated AI applications drops significantly. Early beta testers report a 40-60% reduction in monthly cloud spend for inference-heavy workloads compared to traditional EC2-based deployments.\nThis move also intensifies the competition in the cloud market. While Azure and Google Cloud have similar serverless offerings, AWS’s deep integration with its existing ecosystem of data services and security controls gives it a distinct edge. Analysts at Gartner note that this feature could accelerate the adoption of generative AI in traditional industries like finance and healthcare, where latency and cost sensitivity are paramount.\nThe service supports a wide range of model architectures, including large language models (LLMs) up to 70 billion parameters. It integrates seamlessly with AWS Lambda and Step Functions, allowing for complex, event-driven workflows. Pricing is based on a per-request model, with a free tier available for small-scale prototyping. The service is currently generally available in US East (N. Virginia) and EU (Frankfurt) regions, with plans to expand to Asia-Pacific within the next quarter.\nDevelopers can begin testing the feature immediately via the AWS Console or CLI. The launch includes a new SDK for Python and Java, simplifying the process of packaging and deploying models. Security remains a priority, with end-to-end encryption for data in transit and at rest, as well as compliance with SOC 2 and HIPAA standards.\nAs AWS pushes further into the serverless AI space, we expect to see rapid innovation in third-party tools that leverage this new runtime. Startups may pivot their business models to build specialized AI applications on top of this low-cost foundation, potentially disrupting established SaaS providers. For developers, the era of managing AI infrastructure is coming to an end, replaced by a focus purely on model performance and application logic. This update solidifies AWS’s position as the leader in cloud computing innovation, setting a new benchmark for the entire industry.",
+      "publishedAt": "2026-10-10T04:24:07.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "ed0b9dbe1de8e9bfa5e07e079a155612c0f699c8f426f1d089f60ea97248ba9c",
+      "title": "金融庁、本人確認は「画像」から「ICチップ」へ　早期移行を要請　免許証の大規模流出を受け",
+      "url": "https://japan.cnet.com/article/35253438/",
+      "description": "金融庁は10月9日、金融機関などに対し、非対面の本人確認を、書類の画像を送る方法から書類のICチップ情報を読み取る方法へ、できるだけ早く切り替えるよう求めた。インターネット上の顧客向けサービスや業務システムへの不正アクセスが相次ぎ、運転免許証などの画像を含む顧客情報が漏えいしていることを受けた対応だ。あわせて、サイバーセキュリティ対策の点検も求めた。",
+      "publishedAt": "2026-10-09T23:58:00.000Z",
+      "feedName": "CNET Japan"
+    },
+    {
+      "id": "2a7244e806d02882f6f39c4b89f8b5bfc677772b5adbb8cb994e8c7c2357a0a5",
+      "title": "知り合いがAIに作らせたクローラーに大量のサイトを読み込ませたら、プロンプトインジェクションを受けてPCがマルウェアに感染「こういう事故はこれから増えていく気が…」",
+      "url": "https://togetter.com/li/2756400",
+      "description": "Mr.Genki | marketing & webdesign @genki_iii 知り合いがAIに作らせたクローラーに大量のサイトを読ませたら、プロンプトインジェクションを食らってPCがマルウェアに感染してた。AIで誰でも簡単に作れるようになった分、開発やセキュリティの知識がないまま動かす人も増えていて、こういう事故はこれから増えていく気...",
+      "publishedAt": "2026-10-09T23:42:54.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "9cb876f16f58ceeb331b310c6ec2e7a622aac93f26dec9a292366f99c7c32092",
+      "title": "「バイトル」会員メアド最大約389万件漏えい　海外から「仕様不備」突く不正アクセス",
+      "url": "https://www.itmedia.co.jp/news/article/2610/10/2000002186/",
+      "description": "漏えいしたのはメールアドレスのみで、氏名、電話番号、パスワード、クレジットカード情報などは含まれていない。 原因は、システムの一部機能の仕様の不備を突いた海外からの不正アクセス。10月6日に不正アクセスを確認し、海外からのアクセスを全て遮断してプログラムを改修した。修正を終え、セキュリティ対策と監視...",
+      "publishedAt": "2026-10-09T23:10:42.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "f39348517e2aff0211981581f16e2b3dfccbe0366a24311a08559ed48821f9aa",
+      "title": "不正アクセス被害激増、今、何をすべきか？　IPAから緊急の点検要請",
+      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2610/10/news008.html",
+      "description": "IPAは相次ぐ不正アクセス被害に向けて、公表事例から判明した、今狙われているシステムや攻撃手法の傾向から企業が直近でやるべき具体的なセキュリティ対策を示した。企業は今すぐチェックしてほしい。",
+      "publishedAt": "2026-10-09T23:00:00.000Z",
+      "feedName": "＠IT"
+    },
+    {
+      "id": "8ac3c4ce528a696828c7f1d04ec1ac27b251590be9975ef0bab0175747398cf1",
+      "title": "Cost Explorer の Amazon Bedrock product attributes でモデル別に集計してみた",
+      "url": "https://dev.classmethod.jp/articles/bedrock-product-attributes-cost-explorer/",
+      "description": "Cost Explorer の Amazon Bedrock product attributes を、コンソールと AWS CLI で試しました。SERVICE フィルタを使わずに、モデルごとに分かれる Bedrock の費用を provider や model でまとめて集計できます。",
+      "publishedAt": "2026-10-09T16:28:23.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "61b530d9f18bfc97b5a45ec3a94b2fb735532e19d2b3d09925659ca98d8eb6f0",
+      "title": "【Vercel / microCMS】ローカル環境で閲覧できたmicroCMSの記事がVercelでは閲覧できなくなっていた現象",
+      "url": "https://qiita.com/nagi-0106/items/bcd138b49c446f7df037?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "こんにちは。\nNext.js × microCMSのブログサイトを作成しVercelでデプロイ・公開しているのですが、\n2〜3週間前から「トップページとカテゴリ一覧は閲覧できるのに個別記事ページは閲覧できない」という事象が起きていました。\nその事象の内容と起きていた原因につ...",
+      "publishedAt": "2026-10-09T14:14:16.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "cc0f4445999535f497afb9400659272da48c1754e76c9950d9779b4a63d5ef5b",
+      "title": "Deno is joining Cloudflare | Deno",
+      "url": "https://deno.com/blog/cloudflare",
+      "description": "For years, we’ve been working to make building server software simpler. We questioned how modules could be distributed, what security guarantees a JavaScript runtime could provide, what belonged in a complete toolchain, and how easily an application could be distributed as a standalone executable...",
+      "publishedAt": "2026-10-09T13:21:58.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "20be37c415f4a7b7a9b5118d47b21643767ff443511a4f7d5fd0ab21074c0deb",
+      "title": "Pythonのロガーでログのマスキングを実装してみる",
+      "url": "https://dev.classmethod.jp/articles/python-logging-log-masking/",
+      "description": "Pythonの標準ロギングライブラリでマスキング機能を実装する方法を紹介します。AWS Lambda環境での使用を想定し、外部ライブラリに頼らない実装にしました。",
+      "publishedAt": "2026-10-09T10:13:47.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "42d736e7850e8c83c72b6fd85ce357dce6dbf44c5bc9e01ce610c5e554658c85",
+      "title": "CFnでゼロからWeb三層（マルチAZ）のWordPress環境を構築して、アクセスしてみた 〜EFSでEC2を2台構成に〜",
+      "url": "https://dev.classmethod.jp/articles/202610-web3tier-cfn-kensho/",
+      "description": "Web三層アーキテクチャでマルチAZなWordPress環境をCloudFormationで一括構築し、EFS共有とAuto Scalingで実際に動かしてみました。本番環境での注意点も交えながら、冗長構成の実装と障害テストの結果をご紹介します。",
+      "publishedAt": "2026-10-09T09:48:46.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "c5682b37086e05b56d1b662feec78ad955f89ee415f741c34f766ea4acda4f08",
+      "title": "脆弱性情報を入手するPowerShellコマンドで即座に情報収集する",
+      "url": "https://news.mynavi.jp/techplus/article/20261009-5099943/",
+      "description": "ITが浸透するにつれ、毎日のようにセキュリティに関する情報が飛び交うが、多くがソフトウェアの脆弱性に起因する。OSですら毎月のように懸念される脆弱性を防ぐための更新プログラムなどのパッチを提供しているが、新しく発見される脆弱性とそれを防ぐ世界各地の研究者との攻防は毎日のように繰り広げられている。 1980...",
+      "publishedAt": "2026-10-09T09:33:45.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "cb0e338c4233b19f601a8f2d9546064aec5a15ea2e737a219d05018b281b58c5",
+      "title": "Amazon EKS 모니터링 톺아보기: 첫 구성부터 운영까지",
+      "url": "https://dev.classmethod.jp/articles/eks-monitoring-overview-kr/",
+      "description": "EKS 모니터링의 전체 그림을 2026년 10월 기준으로 정리했습니다. \n\n로그, 메트릭, 트레이스, Kubernetes 이벤트의 4가지 시그널과 CloudWatch, Prometheus, Fluent Bit 등 각 도구의 역할을 구성도로 살펴보고, 상황별로 무엇부터 갖추면 좋을지, 알람이 울렸을 때 어디를 확인하면 되는지까지 담았습니다.",
+      "publishedAt": "2026-10-09T08:57:27.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "cf068c7e0e385518f76d53a517269366f05744b55103379dd52028aa9b18a79f",
+      "title": "Service Catalog でプロビジョニング済み製品のタグを変更しても反映されないのはどうしてですか",
+      "url": "https://dev.classmethod.jp/articles/tsnote-servicecatalog-provisioned-product-tag-update/",
+      "description": "AWS Service Catalogでプロビジョニング済み製品のタグを変更しても反映されない場合の原因と対応方法をご紹介します。タグの更新には管理者側での「RESOURCE_UPDATE制約」の設定が必須です。",
+      "publishedAt": "2026-10-09T08:17:59.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "e9203349dc89182cedefbbeeacc1c19697354248e364d57d42695db13f495285",
+      "title": "Who owns NIS2 and DORA on a Kubernetes platform team",
+      "url": "https://www.cncf.io/blog/2026/10/09/who-owns-nis2-and-dora-on-a-kubernetes-platform-team/",
+      "description": "There is a meeting that repeats across a lot of European engineering organizations right now. Someone from legal or risk brings a NIS2 control, a DORA article, or a “can we evidence this” request into the...",
+      "publishedAt": "2026-10-09T08:07:47.000Z",
+      "feedName": "Cloud Native Computing Foundation"
+    },
+    {
+      "id": "c164fd7f6f42b15ba903958ba354869639534f8b0fa4b02b7c9a37e06a7972a1",
+      "title": "AIエージェントの「暴走」をどう防ぐ？ マイクロソフトがアクセスを制限する「MXC」を提供開始",
+      "url": "https://japan.cnet.com/article/35253423/",
+      "description": "AIエージェントによるサイバーセキュリティ上の被害を防ぐため、マイクロソフトはエージェントの行動範囲を制限する「Microsoft Execution Containers（MXC）」の一般提供を開始した。",
+      "publishedAt": "2026-10-09T07:45:00.000Z",
+      "feedName": "CNET Japan"
+    },
+    {
+      "id": "33e741e748f9de8a79eaf63a98e44b8de042f64924e438091d0b26c1ae087cd4",
+      "title": "Haiku 5.5 を機に Sonnet 以下で動かしていたサブエージェントを見直した",
+      "url": "https://zenn.dev/genda_jp/articles/haiku-5-5-subagent-roles",
+      "description": "価格は公式の料金ページより。 Haiku 5.5 はプロンプトが 100,000 トークンを超えると $0.50 / $2.50 に上がります。 私は Claude Code のサブエージェントを .claude/agents/ に置いていて、そのうち 3 つを Sonnet 以下のモデルで動かしています。 テスト実行役の test-runner、調査役の code-explore、実装役の fast-...",
+      "publishedAt": "2026-10-09T07:09:31.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "7556ac8a1171b68a5c0b84019fb74409131a9a4d374f7c7b30f0ed0befb7e75c",
+      "title": "AWS Lambdaで自前JSONログがINFO扱いになる仕様と対処法",
+      "url": "https://dev.classmethod.jp/articles/lambda-log-level-filtering-json-timestamp/",
+      "description": "AWS Lambda のログレベルフィルタリングで自前 JSON ログを出力する際、timestamp が RFC 3339 形式でないと強制的に INFO 扱いになる仕様を解説。ERROR ログが CloudWatch Logs に届かなくなる原因と具体的な対処法をまとめました。",
+      "publishedAt": "2026-10-09T05:53:23.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "93e58947b08193af217eccc156fe885b1b5e1ed0d7376b19943e650bc8e9dacc",
+      "title": "AI を活用した脆弱性検出ハーネス (パート 2 設定編): ステアリングファイルで実現する証拠ベースの脆弱性トリアージ",
+      "url": "https://aws.amazon.com/jp/blogs/news/configuring-your-ai-vulnerability-harness-part-2-the-steering-file/",
+      "description": "AI モデルに経験豊富なセキュリティアナリストと同等の一貫性で脆弱性トリアージを実行させる、ステアリングファイルの設計と使い方を紹介します。重要な 5 つのセクションとして、構造的検証によるハルシネーションの抑制、証拠ベースの信頼度スコアリング、AWS WAF などの補完的コントロールを考慮したインフラストラクチャの評価、CISA KEV や EPSS を活用した脅威インテリジェンスの統合、P0～P3 の優先度分類を解説します。検証結果に加え、Kiro や Claude Code での導入方法も説明します。",
+      "publishedAt": "2026-10-09T03:37:58.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "01b556a9269b9b2d3fdeb00467b5d8068efb74c4b010eca08b61e0cdff9ca3a1",
+      "title": "【公共向け】AWS WAF 実践ワークショップ開催報告 ― AI 時代の Web アプリケーション防御",
+      "url": "https://aws.amazon.com/jp/blogs/news/aws-waf-workshop-report-ai-bot-protection/",
+      "description": "みなさん、こんにちは。ソリューションアーキテクトの梅田です。 AWS Japan パブリックセクターチームでは […]",
+      "publishedAt": "2026-10-09T03:24:16.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "180d521a18dbfbb5886944f025c6235d825dda4347aa3eafba35373091f578ed",
+      "title": "「最大30日」と回答する前に、Amazon BedrockでOpenAIのモデルに送った文がどこに何日残るか確かめた話（2026年版）",
+      "url": "https://qiita.com/ntaka329/items/1ad9131353e51c5b99fd?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\nGMOコネクトの永田です。\n生成AIを使う機能のセキュリティ確認で、「AIの事業者に送った文は、不正利用の監視のために最大30日保存される」という回答案を確かめることになりました。OpenAI の API について、以前からよく聞く数字です。そのまま通してよいと...",
+      "publishedAt": "2026-10-09T01:52:13.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "f13d1f5c60233deedb5970066df852d1290df0a3e664cefda1abddd72ca801c5",
+      "title": "【学習メモ】EC2からS3へのアクセスを例に、AWS IAMを整理する",
+      "url": "https://qiita.com/ito_kohhh/items/3063faabb4731fae880b?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\n基本はWebアプリケーションをメイン業務としている私ですが\n最近業務の中でもアプリケーションに近いところについてはAWSを触り始めました。\nAIと一緒にやればやれないことはないのですが、基礎的なところの理解が正直ふんわりしている感覚が拭えなかったので\n今回は具体...",
+      "publishedAt": "2026-10-09T00:54:07.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "0eaff1e3263e7b9ec8b98918e16772a3ab3e7cd4947f2627e8bb5fdaba894b1c",
+      "title": "【アジャイルFAQ 第7回】レトロスペクティブが機能しません…ToDo会議と再放送からの脱出法",
+      "url": "https://developer.mamezou-tech.com/blogs/2026/10/09/7_retrospectives_dont_work/",
+      "description": "この記事を読んでいただきありがとうございます。アジャイルグループに所属する、藤井智弘です。\n質問\n#\n KPT（Keep=続けること・Problem=問題・Try=次に試すことの3観点で振り返る手法）でレトロスペクティブを4ヶ月続けています。PもTryもたくさん出ますし、出たTryはだいたい実行しています。それなのに、チームが良くなっている実感がありません。\n回答\n#\n 最後のもやもやから片づけましょう。上司の指摘は、半分当たっています。ウォーターフォールには「設計工程で設計書を書く」という決まりがあり、その決まりがある限り「設計書がない」は起きにくい。つまり上司は、「あなたたちのチームには、抜けを防ぐ決まりがない」と言っているのです。これは正しい観察です。ただ、そこから「だからウォーターフォール」に飛ぶのは早い。決まり事は、工程表から引っ張らなくても、自分たちで作れます。そして、自分たちで作る場が、レトロスペクティブです。もやもやの正体は、「レトロが決まりを作る場として働いていない」ことを、上司が外から言い当てたことにあります。\n 残りの二つも、同じところに根があります。「PもTryも出て、実行もしている」のに実感がないのは、出た数と実行した数は増えても、チームのやり方が一つも変わっていないからです。「◯◯ドキュメントを作る」は、ドキュメントを一本増やしますが、次のスプリントには「△△ドキュメントがない」が出ます。消えたのは一つの事象（インスタンス）で、その根底にある同様な事象を繰り返し生んでいる仕組み——書く役割も、書くタイミングも、完成の基準も決まっていないこと——は、そのままだからです。これは改善ではなく作業です。逆に「コミュニケーションを改善する」は、来週誰が何を変えるのかが入っていないので、実行のしようがありません。こちらは改善ではなく願望です。質問者のレトロは、作業と願望の間にあるはずの「やり方の変更」を、一度も決めていません。\n  レトロの仕事は、思わしくない出来事を一つずつ消すことではなく、その出来事を繰り返し生んでいるチームのやり方を、一つ、小さく、次のスプリントで試せる形で変えることです。良いことについても同じで、今回はたまたまうまくいったことを、意図して起こせる形に変えることです。\n 以下、Tryの「粒度」と「置き場」の二つを手がかりに、質問者のレトロを組み立て直します。\n     図1: 出しては片づけ、また同じ付箋——列挙会と再放送\n\n「Tryは絞って、必ず実行しなさい」に、引っかかりはありませんでしたか？\n#\n 研修では、こう習います。\nレトロは毎スプリント行う。\nTryは少数に絞り、必ず実行する。\n 質問者はこれを守っていて、それでも効かない。\nPもTryも、たくさん出るのは良いことではないのか。出ないチームより、よほど健全では\nTryの実行率は高い。それでも駄目だと言うなら、何を見て「機能している」と言えばいいのか\n上司の「それならウォーターフォール」に、どう答えれば正しかったのか\n 私の答えはこうです。出る量は健全さの証ですが、レトロの成果ではありません。見るべきはTryの実行率ではなく、やり方が変わった数です。そして、上司には「おっしゃる通り、決まりがありません。来スプリントから、自分たちで一つずつ決めます」と答えればよかった。\nレトロスペクティブのあるある\n#\n 効かなくなったレトロには、決まった顔があります。質問者のチームがどれに近いか、思い浮かべながら読んでください。\nその１：列挙会型——Pに作業の抜けが並び、Tryでその一つひとつを「やる」に変え、あとの時間は担当の割り振りに消える顔です。終わった直後は片づいた感じがしますが、翌スプリントには別の抜けが（ときに同じ数だけ）並びます。\nその２：再放送型——「コミュニケーションを密に」「テストを増やす」「早めに相談する」のような、誰も反対しないが誰も着手できないTryが、スプリントをまたいで同じ文言で現れる顔です。実行したつもりでも、何をもって実行したと言うのかが曖昧なので、消えません。\nその３：消化率型——付箋の枚数とTryの消化率がレトロの指標になっている顔です。たくさん出て、たくさん片づく。数字は毎回良好、でもチームの働き方は何も変わらない。質問者のチームは、おそらくここにいます。\nその４：反省会型——付箋の主語が「誰が」になっている顔です。「◯◯さんの実装が遅れて」「△△の確認漏れで」。話し手の視線はチームメイトではなくリーダーに向き、発言は無難なものに寄っていきます。前回のデイリーで見た、宛先が管理者に向いた報告会と同じことが、レトロで起きている形です。\nその５：手法遍歴型——KPTからFun/Done/Learnへ、次は…、と「出し方」を変え続ける顔です。新しい手法は数回は新鮮で、確かに違う付箋が出ます。しかし出した後の扱いが同じなら、数回で元に戻ります。\n    図2: 出し方を変えても、出した後が同じなら数回で戻る\n\n五つの顔に共通する思い込み\n#\n 五つの顔はばらばらに見えて、同じ思い込みから出ています。**「出て、実行されれば、レトロは機能している」**という思い込みです。そう思っていると、たくさん出れば成功で、実行率が高ければなお良く、出なくなったら手法を変えればよい、という判断が次々に導かれます。五つの顔は、その判断を忠実に積み上げた先の姿です。\n この思い込みを前にして、先ほどの三つの疑問に戻ります。\n たくさん出るのは良いことではないのか——良いことです。出ないチームには、出させる工夫が先に要ります。ただし、出ることはレトロの入口であって、出口ではありません。付箋は、繰り返し起きていることを見つけるための材料です。「◯◯ドキュメントがない」は、それ単体では一つの出来事にすぎません。同じ種類の抜けが過去3回のレトロで何回出たかを数えたとき、初めて仕組みの問題——「書く役割と時点が決まっていない」など——が見えてきます。材料が多いのは良い。材料のまま終わるのが問題です。\n 実行率が高くても駄目なのか——実行したTryの粒度によります。Tryには粒度があって、細かすぎると作業、粗すぎると願望になります。「◯◯ドキュメントを作る」は細かすぎて、出来事を一つ消すだけ。「コミュニケーションを改善する」は粗すぎて、来週の誰の振る舞いも変えない。改善と呼べるのは、その間——「設計変更の連絡は受付チャンネルに集約して当番が起票する」「完成の定義に『誰向けの何』を書き、レビューで確認する」——のように、チームのやり方そのものを一つ変えるものです。見分け方は一つで、「それをやったら、同じ種類のPが次のスプリントで出なくなるか」。実行率が高くても、作業と願望しか実行していなければ、やり方が変わった数はゼロです。\n 上司にどう答えればよかったか——「決まりがない」という観察には、そのまま同意してよいのです。違うのは、決まりをどこからもらうかです。ウォーターフォールは、工程表と開発標準が「いつ、誰が、何を書くか」を最初に決めてくれます。スクラムは、第2回で見たとおり「どう作るか」を定義していません。その代わり、やり方を決める権限と責任をチームに渡していて、決める場がレトロです。レトロが決まりを作れていないチームは、工程表から決まりをもらっていたときより頼りなく見えます。上司の目にはそう映っていて、それは正しい。ただし、ウォーターフォールに戻れば解決するわけでもありません。第3回で見たように、工程で書かれた設計書は、書いた時点の現物しか写していません。「ドキュメントがない」が「ドキュメントはあるが古い」に変わるだけで、困りごとの中身は変わらない。そして工程表の決まりは最初に一度しか作れませんが、レトロの決まりはスプリントごとに直せます。だから答えはこうなります。「おっしゃる通り、いまのレトロは決まりを作れていません。設計工程に当たるものを、完成の定義として自分たちで定義します。来スプリントから、抜けを種類で数えて、仕組みを一つずつ改善していきます」。上司の指摘は、外からの検査として、むしろ有用だと言えます。\n なぜ「出て、実行されれば機能している」と思い込むのか——導入初期には、それで本当に機能するからです。始めたばかりのチームには「あからさまな無駄」が転がっていて、拾えば効く。出来事を一つ消すだけで、チームは目に見えて良くなる。その成功体験が、「出す・実行する」をレトロの型として固定します。無駄を拾い尽くし、残った問題が仕組みに根ざしたものになった頃、同じ型は空回りを始めます。もう一つ、多くのメンバーはスクラム以前に「反省会」の作法を身につけています。問題を挙げ、担当を決め、「以後気をつけます」で締める作法です。誰かが怠けているわけではなく、新しい器に古い作法が注がれているだけです。\n ではレトロは本来、何をする時間か。前回、スクラムの基本は経験主義で、その柱は透明性・検査・適応の3つだと書きました。デイリーが「今日の動き」を毎日回す小さなループなら、レトロは「チームのやり方」をスプリントごとに回すループです。\n透明性——このスプリントで何が起きたかが、意見ではなく事実として見えていること。ゴールの達成状況、持ち越しや割り込みの件数、待ち時間、そして「同じ種類のPが何回出たか」。付箋は、この事実の上で読まれて初めて意味を持ちます。\n検査——事実を、スプリントゴールと完成の定義に照らして、繰り返し起きているものと、それを生んでいるやり方を見つけること。単発の抜けと、仕組みの問題を仕分けるのはここです。\n適応——やり方を一つ変えると決め、担当者と完了条件をつけて、次のスプリントの計画に積むこと。変更は仮説で、効いたかどうかは次のレトロで確かめます。\n この三つに照らすと、質問者のレトロで何が抜けているかが見えます。出来事の透明性はあるが、繰り返しを見つける検査がなく、やり方を変える適応が計画に積まれていない。レトロを「出来事を消す会」から「やり方を一つ変える会」に置き直す。本稿の処方は、そのための手順です。\n なお、スクラムガイド2017には「前回のレトロスペクティブで特定した改善を、少なくとも1つスプリントバックログに含める」という一文がありました。スクラムガイド2020でこの一文は削除されましたが、レトロの成果物は意見ではなく計画に積まれたやり方の変更だ、という趣旨は、いまも有効な指針だと私は考えています。\n処方\n#\n ここから挙げるのは、どれも道具です。以前にも指摘させていただきましたが、形だけなぞって「できている感」で満足していると、手法遍歴型がひとつ増えるだけです。試したあとは、やり方が変わった数と、同じ種類のPが減ったかどうかで、効き目を確かめてください。\nまず、過去3回のPを種類で数える\n（1）単発と繰り返しを仕分ける\n（2）Tryの粒度を揃える\n（3）Tryは1個に絞り、バックログに積む\n    図3: 変えるのは出来事ではなく、やり方の歯車\n\n（4）レトロの冒頭は「前回Tryのその後」から\n（5）SMの問いかけを、出来事からやり方へ向ける\n「これは初めてですか？　過去3回のレトロで、同じ種類のPは何回出ましたか？」\n「それがなかったせいで、誰が、何に困りましたか？」\n「それを作る手順は、完成の定義やチェックリストのどこに書いてありますか？」\n「それは来週、誰が、何を、今までと違うようにやることですか？」\n「同じ状況に別の人が置かれていたら、違う結果になっていましたか？」\n「今回うまくいったのは、たまたまですか、それとも私たちが何かを変えた結果ですか？」\n「これをやると、同じ種類のPは次のスプリントに出なくなりますか？」\n 逆に、「なぜやらなかったのですか」「誰の担当でしたか」「次からどうしますか」は避けてください。答えが「気をつけます」にしかならず、視線を出来事と人に戻してしまいます。\n（6）やり方の変更を、上司に見える形で示す\n（7）それでも煮詰まったら、視点を変える\nなぜこの質問は30年繰り返されるのか\n#\n 長いあいだ、「いつ、誰が、何を書くか」という決まりは、工程表と開発標準が外から与えてくれるものでした。チームが自分でやり方を決める、という仕事は、多くの現場で経験されたことがありません。スクラムはその仕事をチームに渡しましたが、だからといって渡された側が十分に訓練されているわけではありません。だから最初は「あからさまな無駄」を拾って成功し、拾い尽くしたあとで、やり方を決める段階に入れずに止まります。そして止まったチームを外から見た人は、決まりを与えてくれる古い方法を思い出し、「それならウォーターフォール」と言う。この問答は、世代が替わるたびに繰り返されるでしょう。\n レトロの価値は、出た付箋の枚数でも、Tryの消化率でもなく、チームのやり方が何個変わったかで測られます。今回のレトロで、やり方が一つ変わり、それが次の計画に積まれたか——それだけ確かめれば、レトロが生きているかどうかは分かります。この基準さえ持てば、レトロにネタ切れはありません。チームが完璧になるまで、変えるべきやり方は無限に見つかるからです。そして完璧なチームには、少なくとも私は、まだ会ったことがありません。\n次回: 「スプリントレビューにステークホルダーが来なくなりました」",
+      "publishedAt": "2026-10-09T00:00:00.000Z",
+      "feedName": "豆蔵デベロッパーサイト"
+    },
+    {
+      "id": "24e972724ac698683ca6cc7f0461b807e7a9ae46ea91b11d19755c3849412186",
+      "title": "EC2スポット×vLLMをSSMでセキュア化！ポート開放ゼロで繋ぐ",
+      "url": "https://developer.mamezou-tech.com/blogs/2026/10/09/vllm_ssm_zero_inbound/",
+      "description": "はじめに\n#\n前回の記事（EC2スポットインスタンス×vLLMでGPUコストを大幅削減する）では、時差・価格・中断耐性を加味した「マルチリージョン総合優先度自動選定」を導入し、g6.xlarge（NVIDIA L4 24GB）を1時間あたり約80〜90円という格安価格でスポット調達する仕組みを構築しました。\nこれにより、高価なクラウドGPUを個人の手元から「使いたい時だけサッと起動し、終わったら即座に破棄する」エフェメラルな開発スタイルが確立できました。\nしかし、第3回までの運用構成には、セキュリティおよび運用の観点で看過できない2つの課題が残っていました：\nポート22（SSH）の開放リスク: インスタンスへのアクセスにSSHトンネル（ポート8000転送）を使用していたため、セキュリティグループでインバウンドのポート22を許可する必要がありました。IP制限をかけているとはいえ、自宅・オフィス・リモートワーク環境でグローバルIPが変わるたびにセキュリティグループの更新が必要になり、運用が煩雑でした。\nSSH秘密鍵（.pem）の管理負荷: 探索対象の複数リージョン（東京、オレゴン、バージニア等）それぞれにキーペアを事前作成し、ローカルに秘密鍵ファイルを安全に保持・管理する必要がありました。\nそこで今回は、AWSのマネージドサービスである 「AWS Systems Manager (SSM) Session Manager」のポートフォワーディング機能 を導入します。\nEC2セキュリティグループの インバウンドルールを完全に空（ポート開放ゼロ） にしたまま、ローカルPCのポート8000とEC2上のvLLM（ポート8000）を安全にトンネリングし、SSH秘密鍵の管理を完全に撤廃する手法を詳しく解説します。\n -->\n Information\n📚 関連する過去の検証記事\n第1回（基本構成）: AWS×UserDataでvLLMを自動起動！停止時コストほぼゼロのローカルLLM環境\n第2回（Cline連携）: 自前vLLMをOpen WebUI経由でVS Code（Cline）に接続！トークンフリーで開発する\n第3回（スポット活用）: EC2スポットインスタンス×vLLMでGPUコストを大幅削減する\nなぜSSHからSSMポートフォワーディングへ移行するのか？\n#\n📌 このセクションの要点\n1. ポート開放ゼロ（インバウンド許可一切不要）\n#\n従来のSSH接続では、EC2のセキュリティグループでインバウンドポート22を許可する必要がありました。\nしかし、SSM Session ManagerはEC2インスタンス内部で稼働する「SSM Agent」が、AWSのSSMエンドポイントに対して外向き（アウトバウンド HTTPS/443）にWebSocketセッションを張りに行くアーキテクチャを採用しています。\nflowchart LR\n    subgraph Client [\"ローカル開発端末 (WSL2 / Mac)\"]\n        direction TB\n        Cline[\"VS Code (Cline)\"]\n        CLI[\"AWS CLI (Session Manager Plugin)<br>localhost:8000\"]\n        Cline -->|\"http://localhost:8000\"| CLI\n    end\n\n    subgraph AWS [\"AWS バックボーン\"]\n        SSMEndpoint[\"SSM Service<br>(Session Manager)\"]\n    end\n\n    subgraph EC2Host [\"EC2 GPUインスタンス (g6.xlarge)\"]\n        direction TB\n        SG[\"セキュリティグループ<br>【インバウンドルール: 0件 (完全閉塞)】\"]\n        Agent[\"SSM Agent\"]\n        VLLM[\"vLLM Dockerコンテナ<br>(:8000)\"]\n        Agent -->|localhost:8000| VLLM\n    end\n\n    CLI ===|\"HTTPS / 443 (IAM認証)\"| SSMEndpoint\n    Agent ===|\"HTTPS / 443 (アウトバウンド確立)\"| SSMEndpoint\nこれにより、EC2セキュリティグループのインバウンドルールは 1つも存在しない（インバウンド0件） 状態にできます。インターネット側からのポートスキャンやブルートフォース攻撃をネットワーク的に遮断し、インバウンドの攻撃面（アタックサーフェス）を最小化できます。\n2. SSH秘密鍵（.pem）の完全撤廃\n#\n第3回のようにオレゴンやバージニアなど複数リージョンへインスタンスを立ち上げる場合、リージョンごとにキーペアを作成して手元のマシンに秘密鍵を保管しておく必要がありました。鍵のローテーションや紛失リスク、誤ってGitへコミットしてしまうリスクなど、鍵管理の心理的負荷は小さくありません。\nSSMポートフォワーディングを利用する場合、認証・認可はすべてAWS IAMに統合されます。\naws configure や SSO（IAM Identity Center）で設定したAWS認証情報（アクセスキーやセッショントークン）を使ってセッションを開始するため、SSH秘密鍵は1つも必要ありません。\n3. SSH接続とSSMポートフォワーディングの比較\n#\n項目\n従来のSSHトンネル (第3回)\nSSMポートフォワーディング (今回)\nメリット\n\n\n\n\nインバウンドポート\nポート 22 を開放必須\n完全閉塞（ポート開放ゼロ）\nインターネットからのインバウンド直接侵入経路を排除\n\n\n接続元IP制限\n自宅/オフィスのIP変更時にSG修正が必要\n不要（IAM認証で保護）\nリモートワークでもIP変更作業がゼロに\n\n\n鍵管理\nリージョンごとの .pem 秘密鍵の保管・管理が必要\n不要（鍵レス）\n秘密鍵自体の保管・ローテーション管理が不要に\n\n\n監査ログ\nSSH接続ログをサーバー内に収集する設定が必要\nCloudTrail / CloudWatch に自動記録\nいつ誰がセッションを開始したか証跡が残る\n\n\nマルチリージョン展開\nリージョンごとにKeyName作成が必要\n全リージョン共通で追加設定不要\nスクリプトの可搬性と自動化が容易\n\n\n\n\n\n前提条件とローカル環境の準備\n#\nSSMポートフォワーディングを使用するには、ローカルマシンに session-manager-plugin をインストールしておく必要があります。\nSession Manager Pluginのインストール\n#\nまだインストールしていない場合は、AWS公式ドキュメントに従ってインストールします。\nUbuntu / WSL2 の場合:\ncurl \"https://s3.amazonaws.com/session-manager-downloads/plugin/latest/ubuntu_64bit/session-manager-plugin.deb\" -o \"session-manager-plugin.deb\"\nsudo dpkg -i session-manager-plugin.deb\nrm session-manager-plugin.deb\n\n\n  \n\nmacOS (Homebrew) の場合:\nbrew install --cask session-manager-plugin\n\n\n  \n\nWindowsの場合:\nwinget install Amazon.SessionManagerPlugin\n\n\n  \n\nインストール後、以下のコマンドでバージョン情報が表示されれば準備完了です：\nsession-manager-plugin\n# 出力例: The Session Manager plugin is installed successfully. Use the AWS CLI to start a session.\n\n\n  \n\n\n\nAWSリソースの事前セットアップ\n#\nSSM経由での接続を実現するために、各リージョンに以下の2つのリソースを準備します：\nIAMインスタンスプロファイル: EC2がSSMエージェントを通じてAWS SSMサービスと通信するためのIAMロール（AmazonSSMManagedInstanceCore ポリシーを含む）。\nインバウンド全閉塞セキュリティグループ: インバウンドルールが0件で、アウトバウンドのみ許可されたセキュリティグループ（vllm-ssm-isolated-sg）。\nこれらを一括作成するセットアップスクリプトを用意しました。\n00_setup_ssm_assets.sh（クリックで展開）\n\n\n  \n#!/bin/bash\nset -euo pipefail\n\n# ==============================================================================\n# 00_setup_ssm_assets.sh\n# SSMポートフォワーディング用のIAMロールおよびインバウンド全閉塞SGを各リージョンに作成する\n# ==============================================================================\n\nROLE_NAME=\"vllm-ssm-instance-role\"\nPROFILE_NAME=\"vllm-ssm-instance-profile\"\nSG_NAME=\"vllm-ssm-isolated-sg\"\nREGIONS=(\"ap-northeast-1\" \"us-west-2\" \"us-east-1\" \"us-east-2\" \"eu-central-1\")\n\necho \"=== 1. IAMロール & インスタンスプロファイルの作成 ===\"\n\n# 信頼ポリシー (EC2)\nTRUST_POLICY='{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Effect\": \"Allow\",\n      \"Principal\": { \"Service\": \"ec2.amazonaws.com\" },\n      \"Action\": \"sts:AssumeRole\"\n    }\n  ]\n}'\n\nif ! aws iam get-role --role-name \"${ROLE_NAME}\" >/dev/null 2>&1; then\n    echo \"IAMロール ${ROLE_NAME} を作成中...\"\n    aws iam create-role --role-name \"${ROLE_NAME}\" --assume-role-policy-document \"${TRUST_POLICY}\"\n    \n    # SSM管理ポリシーの付与\n    aws iam attach-role-policy --role-name \"${ROLE_NAME}\" \\\n        --policy-arn \"arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore\"\n    # S3モデル読み取り権限\n    aws iam attach-role-policy --role-name \"${ROLE_NAME}\" \\\n        --policy-arn \"arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess\"\n    # ECRコンテナ読み取り権限\n    aws iam attach-role-policy --role-name \"${ROLE_NAME}\" \\\n        --policy-arn \"arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly\"\nelse\n    echo \"IAMロール ${ROLE_NAME} は既に存在します。\"\nfi\n\nif ! aws iam get-instance-profile --instance-profile-name \"${PROFILE_NAME}\" >/dev/null 2>&1; then\n    echo \"インスタンスプロファイル ${PROFILE_NAME} を作成中...\"\n    aws iam create-instance-profile --instance-profile-name \"${PROFILE_NAME}\"\n    aws iam add-role-to-instance-profile --instance-profile-name \"${PROFILE_NAME}\" --role-name \"${ROLE_NAME}\"\n    echo \"IAMインスタンスプロファイルの反映待機中 (10秒)...\"\n    sleep 10\nelse\n    echo \"インスタンスプロファイル ${PROFILE_NAME} は既に存在します。\"\nfi\n\necho \"=== 2. 各リージョンでの インバウンド全閉塞セキュリティグループ作成 ===\"\nfor REGION in \"${REGIONS[@]}\"; do\n    echo \"リージョン [${REGION}] を確認中...\"\n    VPC_ID=$(aws ec2 describe-vpcs --region \"${REGION}\" --filters \"Name=is-default,Values=true\" --query \"Vpcs[0].VpcId\" --output text)\n    \n    EXISTING_SG=$(aws ec2 describe-security-groups --region \"${REGION}\" --filters \"Name=group-name,Values=${SG_NAME}\" --query \"SecurityGroups[0].GroupId\" --output text 2>/dev/null || true)\n    \n    if [ -z \"${EXISTING_SG}\" ] || [ \"${EXISTING_SG}\" = \"None\" ]; then\n        echo \"  ${SG_NAME} を VPC (${VPC_ID}) に作成中...\"\n        SG_ID=$(aws ec2 create-security-group \\\n            --region \"${REGION}\" \\\n            --group-name \"${SG_NAME}\" \\\n            --description \"Zero-inbound security group for vLLM SSM port forwarding\" \\\n            --vpc-id \"${VPC_ID}\" \\\n            --query \"GroupId\" --output text)\n        \n        # デフォルトで全アウトバウンドは許可されるため、インバウンドルールは何も追加しない（ポート開放ゼロ）\n        echo \"  作成完了: ${SG_ID} (インバウンドルール: 0件)\"\n    else\n        echo \"  既に存在します: ${EXISTING_SG}\"\n    fi\ndone\n\necho \"事前準備が完了しました！\"\n\n\n  \n\n\nこのスクリプトを実行すると、各リージョンにインバウンドルールが1つもないセキュリティグループ vllm-ssm-isolated-sg と、SSM通信が許可されたインスタンスプロファイル vllm-ssm-instance-profile が作成されます。\n起動スクリプトのSSM対応\n#\n第3回の起動スクリプト（01_ec2_launch_spot_and_sync_openwebui.sh）から、SSH接続部分をSSMポートフォワーディングへと置き換えたスクリプト（01_start_vllm_ssm.sh）を作成します。\n主な変更ポイント\n#\nSSHキーの指定を削除:\n\naws ec2 run-instances に渡していた --key-name パラメータを完全に削除します。\nIAMインスタンスプロファイルとインバウンド全閉塞SGを指定:\n\n--iam-instance-profile Name=vllm-ssm-instance-profile を追加。\n--security-group-ids に vllm-ssm-isolated-sg を指定。\nSSMエージェントのオンライン待機:\n\n以前はSSHポート22の応答を nc -z でループ待機していましたが、今回はAWS SSM API（aws ssm describe-instance-information）を呼び出し、PingStatus == \"Online\" になるまで待機します。\nSSMポートフォワーディングセッションの確立:\n\naws ssm start-session でポートフォワーディングを開始し、バックグラウンド実行します。\naws ssm start-session \\\n    --region \"${AWS_REGION}\" \\\n    --target \"${INSTANCE_ID}\" \\\n    --document-name AWS-StartPortForwardingSession \\\n    --parameters '{\"portNumber\":[\"8000\"],\"localPortNumber\":[\"8000\"]}'\n\n\n  \n\n\n完全なスクリプト: 01_start_vllm_ssm.sh\n#\n01_start_vllm_ssm.sh（クリックで展開）\n\n\n  \n#!/bin/bash\nset -euo pipefail\n\n# ==============================================================================\n# 01_start_vllm_ssm.sh\n# スポットインスタンスを探索・起動し、SSMポートフォワーディングで安全に直結する\n# ==============================================================================\n\nSCRIPT_DIR=\"$(cd \"$(dirname \"${BASH_SOURCE[0]}\")\" && pwd)\"\nUSER_DATA_FILE=\"${USER_DATA_FILE:-${SCRIPT_DIR}/02_ec2_userdata.sh}\"\nINSTANCE_STATE_FILE=\"${SCRIPT_DIR}/.current_instance_id\"\nTUNNEL_PID_FILE=\"${SCRIPT_DIR}/.current_tunnel_pid\"\nREGION_STATE_FILE=\"${SCRIPT_DIR}/.current_region\"\nTUNNEL_LOG=\"${SCRIPT_DIR}/.current_tunnel.log\"\n\nCANDIDATE_REGIONS=(\"ap-northeast-1\" \"us-west-2\" \"us-east-1\" \"us-east-2\" \"eu-central-1\")\nCANDIDATE_INSTANCE_TYPES=(\"g6.xlarge\")\nIAM_PROFILE_NAME=\"vllm-ssm-instance-profile\"\nSG_NAME=\"vllm-ssm-isolated-sg\"\nEBS_SIZE_GB=\"40\"\n\necho \"=== 1. マルチリージョン スポット総合優先度探索 ===\"\nITYPE=\"${CANDIDATE_INSTANCE_TYPES[0]}\"\nSTART_TIME=\"$(date -u +%Y-%m-%dT%H:%M:%SZ)\"\n\n# Spot Advisor 中断頻度の取得\ndeclare -A REGION_INTR_TIERS\nPY_BIN=\"\"\ncommand -v python3 >/dev/null 2>&1 && PY_BIN=\"python3\" || (command -v python >/dev/null 2>&1 && PY_BIN=\"python\")\nif [ -n \"${PY_BIN}\" ]; then\n    ADVISOR_DATA=$(\"${PY_BIN}\" -c \"\nimport urllib.request, json\ntry:\n    with urllib.request.urlopen('https://spot-bid-advisor.s3.amazonaws.com/spot-advisor-data.json', timeout=4) as res:\n        adv = json.loads(res.read()).get('spot_advisor', {})\n        for r, info in adv.items():\n            print(f'{r}:{info.get(\\\"Linux\\\", {}).get(\\\"${ITYPE}\\\", {}).get(\\\"r\\\", 4)}')\nexcept Exception: pass\n\" 2>/dev/null || true)\n    while IFS=':' read -r r_id r_tier; do\n        r_id=$(echo \"${r_id}\" | tr -d '[:space:]')\n        r_tier=$(echo \"${r_tier}\" | tr -d '[:space:]')\n        [ -n \"${r_id}\" ] && REGION_INTR_TIERS[\"${r_id}\"]=\"${r_tier}\"\n    done <<< \"${ADVISOR_DATA}\"\nfi\n\ndeclare -A REG_STATUS REG_MIN_PRICES REG_AZ_COUNTS REG_SCORES REG_RANKS\nBEST_PRICE=\"999.0\"\n\nfor REGION in \"${CANDIDATE_REGIONS[@]}\"; do\n    RAW_PRICES=$(aws ec2 describe-spot-price-history \\\n        --region \"${REGION}\" \\\n        --instance-types \"${ITYPE}\" \\\n        --product-descriptions \"Linux/UNIX\" \\\n        --start-time \"${START_TIME}\" \\\n        --no-paginate \\\n        --query 'SpotPriceHistory[*].[AvailabilityZone, SpotPrice]' \\\n        --output text 2>/dev/null | tr -d '\\r' || true)\n\n    if [ -z \"${RAW_PRICES}\" ]; then\n        REG_STATUS[\"${REGION}\"]=\"unavailable\"\n        continue\n    fi\n\n    REG_MIN_PRICE=\"999.0\"\n    AZ_COUNT=0\n    while read -r AZ PRICE; do\n        AZ=$(echo \"${AZ}\" | tr -d '[:space:]')\n        PRICE=$(echo \"${PRICE}\" | tr -d '[:space:]')\n        [ -z \"${AZ}\" ] || [ -z \"${PRICE}\" ] && continue\n        AZ_COUNT=$((AZ_COUNT + 1))\n        if awk -v p=\"${PRICE}\" -v m=\"${REG_MIN_PRICE}\" 'BEGIN {exit !(p < m)}' 2>/dev/null; then\n            REG_MIN_PRICE=\"${PRICE}\"\n        fi\n    done <<< \"${RAW_PRICES}\"\n\n    if [ \"${REG_MIN_PRICE}\" = \"999.0\" ]; then\n        REG_STATUS[\"${REGION}\"]=\"unavailable\"\n        continue\n    fi\n\n    REG_STATUS[\"${REGION}\"]=\"ok\"\n    REG_MIN_PRICES[\"${REGION}\"]=\"${REG_MIN_PRICE}\"\n    REG_AZ_COUNTS[\"${REGION}\"]=\"${AZ_COUNT}\"\n\n    if awk -v p=\"${REG_MIN_PRICE}\" -v m=\"${BEST_PRICE}\" 'BEGIN {exit !(p < m)}' 2>/dev/null; then\n        BEST_PRICE=\"${REG_MIN_PRICE}\"\n    fi\ndone\n\n# スコア計算 (価格 40点 + 余剰AZ数 40点 + 中断頻度 20点 = 100点満点)\nfor REGION in \"${CANDIDATE_REGIONS[@]}\"; do\n    if [ \"${REG_STATUS[${REGION}]:-}\" != \"ok\" ]; then\n        echo \"  - [${REGION}]: 在庫なしまたは未提供\"\n        continue\n    fi\n\n    PRICE=\"${REG_MIN_PRICES[${REGION}]}\"\n    TIER=\"${REGION_INTR_TIERS[${REGION}]:-4}\"\n    AZ_COUNT=\"${REG_AZ_COUNTS[${REGION}]}\"\n\n    # 価格スコア (最大40点)\n    P_SCORE=$(awk -v min=\"${BEST_PRICE}\" -v cur=\"${PRICE}\" 'BEGIN {printf \"%.0f\", 40.0 * (min / cur)}')\n\n    # 中断頻度スコア (最大20点)\n    case \"${TIER}\" in\n        0) I_SCORE=20; I_TEXT=\"< 5% (極低)\" ;;\n        1) I_SCORE=15; I_TEXT=\"5-10% (低)\" ;;\n        2) I_SCORE=10; I_TEXT=\"10-15% (中)\" ;;\n        3) I_SCORE=5;  I_TEXT=\"15-20% (中高)\" ;;\n        *) I_SCORE=0;  I_TEXT=\"> 20% (高)\" ;;\n    esac\n\n    # キャパシティスコア (最大40点)\n    if [ \"${AZ_COUNT}\" -ge 5 ]; then C_SCORE=40\n    elif [ \"${AZ_COUNT}\" -eq 4 ]; then C_SCORE=32\n    elif [ \"${AZ_COUNT}\" -eq 3 ]; then C_SCORE=24\n    elif [ \"${AZ_COUNT}\" -eq 2 ]; then C_SCORE=16\n    else C_SCORE=8\n    fi\n\n    TOTAL_SCORE=$(( P_SCORE + I_SCORE + C_SCORE ))\n    REG_SCORES[\"${REGION}\"]=\"${TOTAL_SCORE}\"\n\n    if [ \"${TOTAL_SCORE}\" -ge 75 ]; then RANK=\"Rank S\"\n    elif [ \"${TOTAL_SCORE}\" -ge 65 ]; then RANK=\"Rank A\"\n    elif [ \"${TOTAL_SCORE}\" -ge 50 ]; then RANK=\"Rank B\"\n    else RANK=\"Rank C\"\n    fi\n    REG_RANKS[\"${REGION}\"]=\"${RANK}\"\n\n    PRICE_FMT=$(awk -v p=\"${PRICE}\" 'BEGIN {printf \"%.4f\", p}')\n    echo \"  - [${REGION}] 価格=\\$${PRICE_FMT}/h, 中断率=${I_TEXT}, 余剰AZ=${AZ_COUNT} -> 総合スコア: ${TOTAL_SCORE}点 (${RANK})\"\ndone\n\n# スコア順にソート (降順)\nSORTED_REGIONS=($(for r in \"${!REG_SCORES[@]}\"; do echo \"$r ${REG_SCORES[$r]}\"; done | sort -k2 -nr | awk '{print $1}'))\n\necho \"----------------------------------------------------------\"\necho \"総合優先度ランキング:\"\nfor i in \"${!SORTED_REGIONS[@]}\"; do\n    r=\"${SORTED_REGIONS[$i]}\"\n    echo \"  第$((i+1))位: ${r} (${REG_RANKS[$r]} / スコア: ${REG_SCORES[$r]}点, 最安: \\$${REG_MIN_PRICES[$r]}/h)\"\ndone\necho \"----------------------------------------------------------\"\n\n# --- 2. スポットインスタンス起動試行 ---\necho \"=== 2. スポットインスタンス起動試行 ===\"\nSELECTED_REGION=\"\"\nINSTANCE_ID=\"\"\n\nfor REGION in \"${SORTED_REGIONS[@]}\"; do\n    echo \"リージョン [${REGION}] でスポット起動を試行中...\"\n    \n    # インバウンド全閉塞SGのID取得\n    SG_ID=$(aws ec2 describe-security-groups --region \"${REGION}\" --filters \"Name=group-name,Values=${SG_NAME}\" --query \"SecurityGroups[0].GroupId\" --output text 2>/dev/null || true)\n    if [ -z \"${SG_ID}\" ] || [ \"${SG_ID}\" = \"None\" ]; then\n        echo \"  警告: ${REGION} に ${SG_NAME} が見つかりません。スキップします。\"\n        continue\n    fi\n\n    # Ubuntu 22.04 Deep Learning AMI (NVIDIA Driver & Docker導入済み) の動的取得\n    AMI_ID=$(aws ec2 describe-images \\\n        --region \"${REGION}\" \\\n        --owners amazon \\\n        --filters \"Name=name,Values=Deep Learning OSS Nvidia Driver AMI GPU PyTorch * (Ubuntu 22.04)*\" \"Name=state,Values=available\" \\\n        --query 'sort_by(Images, &CreationDate)[-1].ImageId' \\\n        --output text 2>/dev/null || true)\n\n    # UserDataの読み込みと環境変数の正確な注入\n    AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text 2>/dev/null || echo \"\")\n    S3_BUCKET_NAME=\"my-vllm-models-hackathon-2026-${AWS_ACCOUNT_ID}-${REGION}-an\"\n    DOCKER_IMAGE=\"${AWS_ACCOUNT_ID}.dkr.ecr.${REGION}.amazonaws.com/vllm-openai:latest\"\n    TMP_USERDATA=$(mktemp)\n    sed -e \"s|^AWS_REGION=.*|AWS_REGION=\\\"${REGION}\\\"|\" \\\n        -e \"s|^S3_BUCKET_NAME=.*|S3_BUCKET_NAME=\\\"${S3_BUCKET_NAME}\\\"|\" \\\n        -e \"s|^DOCKER_IMAGE=.*|DOCKER_IMAGE=\\\"${DOCKER_IMAGE}\\\"|\" \\\n        \"${USER_DATA_FILE}\" > \"${TMP_USERDATA}\"\n\n    LAUNCH_RES=$(aws ec2 run-instances \\\n        --region \"${REGION}\" \\\n        --image-id \"${AMI_ID}\" \\\n        --instance-type \"${ITYPE}\" \\\n        --iam-instance-profile Name=\"${IAM_PROFILE_NAME}\" \\\n        --security-group-ids \"${SG_ID}\" \\\n        --instance-market-options '{\"MarketType\":\"spot\",\"SpotOptions\":{\"SpotInstanceType\":\"one-time\",\"InstanceInterruptionBehavior\":\"terminate\"}}' \\\n        --block-device-mappings \"[{\\\"DeviceName\\\":\\\"/dev/sda1\\\",\\\"Ebs\\\":{\\\"VolumeSize\\\":${EBS_SIZE_GB},\\\"VolumeType\\\":\\\"gp3\\\",\\\"DeleteOnTermination\\\":true}}]\" \\\n        --user-data \"file://${TMP_USERDATA}\" \\\n        --tag-specifications \"ResourceType=instance,Tags=[{Key=Name,Value=vllm-ssm-spot-node}]\" \\\n        --query \"Instances[0].InstanceId\" \\\n        --output text 2>&1 || true)\n    rm -f \"${TMP_USERDATA}\"\n\n    if [[ \"${LAUNCH_RES}\" =~ ^i-[0-9a-f]+$ ]]; then\n        INSTANCE_ID=\"${LAUNCH_RES}\"\n        SELECTED_REGION=\"${REGION}\"\n        echo \"  起動成功！ Instance ID: ${INSTANCE_ID} (${SELECTED_REGION})\"\n        break\n    else\n        echo \"  キャパシティ不足またはエラーのためスキップ: ${LAUNCH_RES}\"\n    fi\ndone\n\nif [ -z \"${INSTANCE_ID}\" ]; then\n    echo \"エラー: 全候補リージョンでスポット起動に失敗しました。\"\n    exit 1\nfi\n\necho \"${INSTANCE_ID}\" > \"${INSTANCE_STATE_FILE}\"\necho \"${SELECTED_REGION}\" > \"${REGION_STATE_FILE}\"\n\necho \"インスタンスが running 状態になるのを待機中...\"\naws ec2 wait instance-running --region \"${SELECTED_REGION}\" --instance-ids \"${INSTANCE_ID}\"\n\n# Git Bash環境向けにSessionManagerPluginのパスを追加\nif [ -d \"/c/Program Files/Amazon/SessionManagerPlugin/bin\" ]; then\n    export PATH=\"${PATH}:/c/Program Files/Amazon/SessionManagerPlugin/bin\"\nfi\n\n# --- 3. SSMエージェントのオンライン待機 ---\necho \"=== 3. SSMエージェントのオンライン待機 ===\"\necho \"EC2インスタンス内部のSSM Agentが接続されるのを待機中...\"\nSSM_OK=false\nfor i in {1..30}; do\n    STATUS=$(aws ssm describe-instance-information \\\n        --region \"${SELECTED_REGION}\" \\\n        --filters \"Key=InstanceIds,Values=${INSTANCE_ID}\" \\\n        --query \"InstanceInformationList[0].PingStatus\" \\\n        --output text 2>/dev/null || true)\n    \n    if [ \"${STATUS}\" = \"Online\" ]; then\n        echo \" SSM Agent が Online になりました！ (${i}回目の試行)\"\n        SSM_OK=true\n        break\n    fi\n    echo -n \".\"\n    sleep 3\ndone\necho \"\"\n\nif [ \"${SSM_OK}\" != \"true\" ]; then\n    echo \"エラー: SSM Agent が Online になりませんでした。IAMロールやアウトバウンド通信を確認してください。\"\n    exit 1\nfi\n\n# --- 4. サーバー側での vLLM 起動待機 (S3モデルDL・コンテナ起動) ---\necho \"=== 4. サーバー側での vLLM 起動待機 (http://127.0.0.1:8000/health) ===\"\necho \"UserDataによるS3モデルダウンロードとvLLM起動を待機しています（通常2〜4分程度）...\"\nSERVER_READY=false\nfor i in {1..90}; do\n    CMD_ID=$(aws ssm send-command \\\n        --region \"${SELECTED_REGION}\" \\\n        --instance-ids \"${INSTANCE_ID}\" \\\n        --document-name \"AWS-RunShellScript\" \\\n        --parameters 'commands=[\"curl -s -m 2 http://127.0.0.1:8000/health >/dev/null && echo OK || echo WAITING\"]' \\\n        --query \"Command.CommandId\" \\\n        --output text 2>/dev/null || true)\n    \n    if [ -n \"${CMD_ID}\" ]; then\n        sleep 2\n        RES=$(aws ssm get-command-invocation \\\n            --region \"${SELECTED_REGION}\" \\\n            --command-id \"${CMD_ID}\" \\\n            --instance-id \"${INSTANCE_ID}\" \\\n            --query \"StandardOutputContent\" \\\n            --output text 2>/dev/null || true)\n        if [[ \"${RES}\" =~ \"OK\" ]]; then\n            echo \" サーバー側の vLLM が正常に応答しました！\"\n            SERVER_READY=true\n            break\n        fi\n    fi\n    echo -n \".\"\n    sleep 5\ndone\necho \"\"\n\nif [ \"${SERVER_READY}\" != \"true\" ]; then\n    echo \"警告: サーバー側のvLLM起動待機がタイムアウトしました。UserDataログを確認してください。\"\nfi\n\n# --- 5. 既存トンネルの整理と新規SSMポートフォワーディング確立 ---\necho \"=== 5. SSMポートフォワーディングの確立 (ポート開放不要トンネル) ===\"\nif [ -f \"${TUNNEL_PID_FILE}\" ]; then\n    OLD_PID=$(cat \"${TUNNEL_PID_FILE}\" | tr -d '[:space:]')\n    if [ -n \"${OLD_PID}\" ] && ps -p \"${OLD_PID}\" > /dev/null 2>&1; then\n        echo \"古いポートフォワードプロセス (PID: ${OLD_PID}) を終了します...\"\n        kill -9 \"${OLD_PID}\" 2>/dev/null || true\n    fi\n    rm -f \"${TUNNEL_PID_FILE}\"\nfi\npkill -f \"AWS-StartPortForwardingSession.*8000\" 2>/dev/null || true\n\n# バックグラウンドでSSMポートフォワーディングを開始（ログを .current_tunnel.log に出力）\nnohup aws ssm start-session \\\n    --region \"${SELECTED_REGION}\" \\\n    --target \"${INSTANCE_ID}\" \\\n    --document-name AWS-StartPortForwardingSession \\\n    --parameters '{\"portNumber\":[\"8000\"],\"localPortNumber\":[\"8000\"]}' \\\n    > \"${TUNNEL_LOG}\" 2>&1 &\n\nTUNNEL_PID=$!\necho \"${TUNNEL_PID}\" > \"${TUNNEL_PID_FILE}\"\necho \"SSMポートフォワーディングを開始しました (PID: ${TUNNEL_PID})\"\nsleep 2\n\n# --- 6. ローカル疎通確認 ---\necho \"=== 6. ローカル疎通確認 (http://localhost:8000/health) ===\"\nLOCAL_OK=false\nfor i in {1..10}; do\n    if curl -s -m 3 \"http://localhost:8000/health\" > /dev/null 2>&1; then\n        echo \" ローカルからの直結疎通を確認しました！ (HTTP 200 OK)\"\n        LOCAL_OK=true\n        break\n    fi\n    echo -n \".\"\n    sleep 2\ndone\necho \"\"\n\nif [ \"${LOCAL_OK}\" != \"true\" ]; then\n    echo \"警告: ローカル接続に失敗しました。トンネルログを確認してください:\"\n    cat \"${TUNNEL_LOG}\" 2>/dev/null || true\nfi\n\necho \"==========================================================\"\necho \" ポート開放ゼロ SSM環境の起動が完了しました！\"\necho \" EC2 Instance ID : ${INSTANCE_ID} (Spot, Region: ${SELECTED_REGION})\"\necho \" セキュリティ      : インバウンドルール 0件（完全閉塞）\"\necho \" トンネル接続      : localhost:8000 -> EC2:8000 (SSM暗号化)\"\necho \" Web UI / API    : http://localhost:8000/v1\"\necho \"\"\necho \" VS Code の Cline から接続してください (Base URL: http://localhost:8000/v1)\"\necho \" 検証終了時は以下のコマンドで完全破棄してください:\"\necho \"   ./02_stop_vllm_ssm.sh\"\necho \"==========================================================\"\n\n\n  \n\n\n\n\n実際に動かしてみる\n#\n1. スクリプトの実行\n#\nスクリプトを実行すると、マルチリージョン探索、スポットインスタンスの起動、SSMエージェントの接続待機、サーバー側vLLM起動待機、ポートフォワーディングの確立がすべて全自動で進みます。\n$ ./01_start_vllm_ssm.sh\n=== 1. マルチリージョン スポット総合優先度探索 ===\n  - [ap-northeast-1] 価格=$0.5510/h, 中断率=< 5% (極低), 余剰AZ=3 -> 総合スコア: 72点 (Rank A)\n  - [us-west-2] 価格=$0.3850/h, 中断率=< 5% (極低), 余剰AZ=4 -> 総合スコア: 92点 (Rank S)\n  - [us-east-1] 価格=$0.5830/h, 中断率=5-10% (低), 余剰AZ=6 -> 総合スコア: 81点 (Rank S)\n  - [us-east-2] 価格=$0.4210/h, 中断率=< 5% (極低), 余剰AZ=3 -> 総合スコア: 80点 (Rank S)\n  - [eu-central-1] 価格=$0.4120/h, 中断率=< 5% (極低), 余剰AZ=3 -> 総合スコア: 81点 (Rank S)\n----------------------------------------------------------\n総合優先度ランキング:\n  第1位: us-west-2 (Rank S / スコア: 92点, 最安: $0.3850/h)\n  第2位: us-east-1 (Rank S / スコア: 81点, 最安: $0.5830/h)\n  第3位: eu-central-1 (Rank S / スコア: 81点, 最安: $0.4120/h)\n  第4位: us-east-2 (Rank S / スコア: 80点, 最安: $0.4210/h)\n  第5位: ap-northeast-1 (Rank A / スコア: 72点, 最安: $0.5510/h)\n----------------------------------------------------------\n=== 2. スポットインスタンス起動試行 ===\nリージョン [us-west-2] でスポット起動を試行中...\n  起動成功！ Instance ID: i-0abc12345678def01 (us-west-2)\nインスタンスが running 状態になるのを待機中...\n\n=== 3. SSMエージェントのオンライン待機 ===\nEC2インスタンス内部のSSM Agentが接続されるのを待機中...\n..... SSM Agent が Online になりました！ (5回目の試行)\n\n=== 4. サーバー側での vLLM 起動待機 (http://127.0.0.1:8000/health) ===\nUserDataによるS3モデルダウンロードとvLLM起動を待機しています（通常2〜4分程度）...\n................................ サーバー側の vLLM が正常に応答しました！\n\n=== 5. SSMポートフォワーディングの確立 (ポート開放不要トンネル) ===\nSSMポートフォワーディングを開始しました (PID: 41820)\n\n=== 6. ローカル疎通確認 (http://localhost:8000/health) ===\n ローカルからの直結疎通を確認しました！ (HTTP 200 OK)\n\n==========================================================\n ポート開放ゼロ SSM環境の起動が完了しました！\n EC2 Instance ID : i-0abc12345678def01 (Spot, Region: us-west-2)\n セキュリティ      : インバウンドルール 0件（完全閉塞）\n トンネル接続      : localhost:8000 -> EC2:8000 (SSM暗号化)\n Web UI / API    : http://localhost:8000/v1\n\n VS Code の Cline から接続してください (Base URL: http://localhost:8000/v1)\n 検証終了時は以下のコマンドで完全破棄してください:\n   ./02_stop_vllm_ssm.sh\n==========================================================\n\n\n  \n\n\n2. インバウンドルール0件の確認\n#\nAWSマネジメントコンソールやAWS CLIで対象インスタンスのセキュリティグループを確認してみます。\n$ aws ec2 describe-security-groups \\\n    --region us-west-2 \\\n    --filters \"Name=group-name,Values=vllm-ssm-isolated-sg\" \\\n    --query \"SecurityGroups[0].IpPermissions\"\n[]\n\n\n  \n\n出力は []、つまりインバウンドルールは1件も登録されていません。\n外部から一切の着信ポートが存在しないにもかかわらず、手元の端末からは http://localhost:8000/v1/models で普通にモデル情報が取得できます：\n$ curl -s http://localhost:8000/v1/models | jq .data[0].id\n\"Qwen/Qwen2.5-Coder-14B-Instruct-AWQ\"\n\n\n  \n\n外部に対するインバウンドポートを一切開けずに手元から透過的に直結できる体験は、従来のSSH運用と比べても管理負荷とセキュリティの両面で大きなメリットがあります。\n検証終了時の完全破棄スクリプト\n#\n作業が終わったら、破棄スクリプト（02_stop_vllm_ssm.sh）を実行してリソースを解放します。\n02_stop_vllm_ssm.sh（クリックで展開）\n\n\n  \n#!/bin/bash\nset -euo pipefail\n\n# ==============================================================================\n# 02_stop_vllm_ssm.sh\n# SSMポートフォワードプロセスを終了し、スポットインスタンスを完全破棄する\n# ==============================================================================\n\nSCRIPT_DIR=\"$(cd \"$(dirname \"${BASH_SOURCE[0]}\")\" && pwd)\"\nINSTANCE_STATE_FILE=\"${SCRIPT_DIR}/.current_instance_id\"\nTUNNEL_PID_FILE=\"${SCRIPT_DIR}/.current_tunnel_pid\"\nREGION_STATE_FILE=\"${SCRIPT_DIR}/.current_region\"\nTUNNEL_LOG=\"${SCRIPT_DIR}/.current_tunnel.log\"\n\nAWS_REGION=$(cat \"${REGION_STATE_FILE}\" 2>/dev/null | tr -d '[:space:]' || echo \"ap-northeast-1\")\nINSTANCE_ID=$(cat \"${INSTANCE_STATE_FILE}\" 2>/dev/null | tr -d '[:space:]' || echo \"${1:-}\")\n\n# 1. SSMポートフォワードプロセスの終了\necho \"=== 1. SSMポートフォワードプロセスの終了 ===\"\nif [ -f \"${TUNNEL_PID_FILE}\" ]; then\n    TUNNEL_PID=$(cat \"${TUNNEL_PID_FILE}\" | tr -d '[:space:]')\n    if [ -n \"${TUNNEL_PID}\" ] && ps -p \"${TUNNEL_PID}\" > /dev/null 2>&1; then\n        echo \"SSMポートフォワードプロセス (PID: ${TUNNEL_PID}) を終了中...\"\n        kill -9 \"${TUNNEL_PID}\" 2>/dev/null || true\n    fi\n    rm -f \"${TUNNEL_PID_FILE}\"\nfi\npkill -f \"AWS-StartPortForwardingSession.*8000\" 2>/dev/null || true\n\n# 2. EC2インスタンスの完全終了 (Terminate)\nif [ -n \"${INSTANCE_ID}\" ]; then\n    echo \"=== 2. EC2インスタンスの完全終了 (Terminate) ===\"\n    echo \"対象インスタンスID: ${INSTANCE_ID} (${AWS_REGION})\"\n    aws ec2 terminate-instances --region \"${AWS_REGION}\" --instance-ids \"${INSTANCE_ID}\" --output table\n    echo \"インスタンスの終了完了を待機中...\"\n    aws ec2 wait instance-terminated --region \"${AWS_REGION}\" --instance-ids \"${INSTANCE_ID}\"\nfi\n\nrm -f \"${INSTANCE_STATE_FILE}\" \"${REGION_STATE_FILE}\" \"${TUNNEL_LOG}\"\necho \"==========================================================\"\necho \" スポットインスタンス、EBSボリューム、SSMトンネルの完全破棄が完了しました！\"\necho \"==========================================================\"\n\n\n  \n\n\n実行すると、バックグラウンドのポートフォワーディングプロセスが終了し、EC2インスタンスとEBSがTerminateされ、これ以降の課金は完全にストップします。\nまとめ\n#\n今回は、第3回で構築した「マルチリージョン・スポットvLLM環境」の通信レイヤーを根本から見直し、AWS Systems Manager Session Managerによるポートフォワーディングへと刷新しました。\nポート開放ゼロ（インバウンド全閉塞）の達成: セキュリティグループのインバウンド許可を完全に撤廃し、不特定多数からのポートスキャンや直接攻撃のリスクを遮断。\nSSH鍵管理の完全撤廃: リージョンごとの鍵ペア作成や .pem ファイルの管理・配布・紛失リスクから完全に解放。\nIAMによる認可と監査: AWS認証情報に基づくアクセス制御とCloudTrailによるセッション開始ログの取得により、企業ユースでも求められるアクセス統制とセッション監査ログの取得に対応。\n使い勝手は変わらず快適: ローカルPC上ではこれまで通り localhost:8000 にアクセスするだけで、Open WebUIやClineからの透過的な推論が可能。\nセキュリティと運用利便性の双方を大きく向上させた強固な基盤が整いました。\n低コストなスポットGPUをさらにセキュアに活用したい方の参考になれば幸いです。",
+      "publishedAt": "2026-10-09T00:00:00.000Z",
+      "feedName": "豆蔵デベロッパーサイト"
+    },
+    {
+      "id": "3fef983fa82342ac92a0d9bd607dc94467238720eb160e3da4d7331e47dc4c92",
+      "title": "攻撃者はWebアプリのどこを狙う？ 初心者でも今すぐできるセキュリティチェックリスト",
+      "url": "https://qiita.com/Koukyosyumei/items/8aaa44ff15a3b404fd8b?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "こんにちは。コロンビア大学の博士課程でシステムセキュリティを研究しているKoukyosyumeiです。\nここ数日、セキュリティインシデントに関するニュースを目にする機会が増えています。こうしたニュースを見ると、「自分のWebサービスは大丈夫だろうか？」と考える方も多いのでは...",
+      "publishedAt": "2026-10-08T22:11:35.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "81dbd6488946f90e24a58338322c488b96f4168cdd401498f96bcb8defa5318d",
+      "title": "Windows端末の操作ログを標準機能だけでCloudWatch Logsに集める",
+      "url": "https://qiita.com/infra365/items/9856ab92f4f29c97d5d1?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\n誰がいつどのサーバへ接続し、端末上で何を実行したかを記録として残したいことがあります。今回は追加のソフトウェアを使わず、AWSの標準機能だけでWindows端末のログを取得する方法を検証しました。\n\n水色が端末側で設定するもの、緑がAWS側のサービスです。\nAc...",
+      "publishedAt": "2026-10-08T20:26:44.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "a8fc6bc02fbe41197fae93d33e3be4adcc44c0abd7ffacf82e020bf46fc29111",
+      "title": "AIのスケーリングに小規模言語モデルを活用すべき理由",
+      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2610/09/news002.html",
+      "description": "AIの企業利用が本格化する一方、導入規模の拡大に伴い、ガバナンスやセキュリティ、コスト管理が課題となっている。こうした中、特定の業務に特化し、管理性や予測可能性に優れる小規模言語モデル（SLM）が注目を集めている。企業のAI活用においては、SLMと大規模言語モデル（LLM）のワークロードに応じた使い分けが重要になりそうだ。",
+      "publishedAt": "2026-10-08T20:00:00.000Z",
+      "feedName": "＠IT"
+    },
+    {
+      "id": "472f4be5d517cc8e82324586d2d0d4774c057b8958059767067349dc63644f09",
+      "title": "Kubernetesのログ入門",
+      "url": "https://qiita.com/yosshi_/items/361016945c68880297c3?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\nKubernetesを普段使っていても、kubectl logsでPodのログが見られることは分かるものの、実際にどんな種類のログがあるのか、どういう形で管理されているのか、保存期間はどれくらいなのか、長期間保存するにはどうすればいいのか、といったところまではな...",
+      "publishedAt": "2026-10-08T14:48:45.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "7379065c504390507886e187eb3b1cd5da204ad7bb48820caf0255f757ee372a",
+      "title": "EC2 ではなく AWS Lambda MicroVMs 上の code-server で Strands Decider ハンズオンを完走した話",
+      "url": "https://qiita.com/k_adachi_01/items/82d66350c44f7d3f2bea?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "やったことと結論\nAmazon EC2（t4g.xlarge）向けに公開された「Strands Decider ハンズオン」を、AWS Lambda MicroVMs 上の自作 code-server 環境へ移植し、一連の演習ステップを完走しました。\n検証を通じて確認でき...",
+      "publishedAt": "2026-10-08T14:06:12.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "5b6de670872fe249eb2309baaf9c2a411cf770714cb542f89a190a3a61ca1638",
+      "title": "AIのガバナンスやランタイム保護が「過度な期待」ピーク期に──Gartnerハイプ・サイクル",
+      "url": "https://enterprisezine.jp/news/detail/25254",
+      "description": "ガートナージャパン（Gartner）は、日本におけるセキュリティ（AI時代のサイバーセキュリティ）のハイプ・サイクルを発表した。\n\n　同ハイプ・サイクルでは、AIエージェントの急拡大とフロンティアA...",
+      "publishedAt": "2026-10-08T09:00:00.000Z",
+      "feedName": "EnterpriseZine"
+    },
+    {
+      "id": "c05ed3ebd470d449e0e9dce25a9597370b04c490c3402698663631947bc4cba7",
+      "title": "若手エンジニアに必要だと感じた「AIを使う力」",
+      "url": "https://zenn.dev/muit_techblog/articles/6ea28887c79457",
+      "description": "若手エンジニアに必要だと感じた「AIを使う力」\n\n はじめに\n私は現在、JavaやReactを使った金融系Webアプリの開発に携わっています。開発経験はまだ浅く、業務では分からないことに遭遇する場面も多くあります。そのため、調査、実装、文章作成、レビューなど、さまざまな場面でAIを使ってきました。私自身、AIを使うことで実装や調査を効率化できる場面が多くありました。一方で、使えば使うほど「若手エンジニアがAIを使う際に陥りやすい問題」もあると感じるようになりました。\n若手エンジニアの方には、自身のAIの使い方を振り返るきっかけとして、若手を支援する立場の方には「若手がどこで迷いやすい...",
+      "publishedAt": "2026-10-08T08:29:40.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "fd123d1e937ba300d43dc797b479a6399b59b1c7b6e1309d3761cbc42ae1d3e8",
+      "title": "【AWS AI League】Bedrock AgentCore でAIエージェントを作ってハマった6つのこと",
+      "url": "https://qiita.com/AyaKunisawa/items/4e1d87e075a3bae93f40?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "何をやったのか\nAWS がやっている「AWS AI League」の Agentic AI チャレンジに参加してきました。\n参加したのは、DNPグループ会社向けにプライベート開催された回で、League開催期間は72時間でした。\nルール自体はめちゃくちゃシンプルで、自分...",
+      "publishedAt": "2026-10-08T01:01:51.000Z",
       "feedName": "Qiita"
     }
   ]
