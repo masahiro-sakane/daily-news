@@ -112,102 +112,6 @@
       "feedName": "Qiita"
     },
     {
-      "id": "14ebff547c1a06ac42f2be1ba6b3caade5ff92289ec42e520a8b4a2ed1963210",
-      "title": "DeepSeek、画像理解に対応した「V4.1-Flash」を発表",
-      "url": "https://gihyo.jp/article/2026/09/deepseek-v4.1-flash?utm_source=feed",
-      "description": "DeepSeekは2026年9月10日、画像を理解する機能を備えたAIモデル「DeepSeek-V4.1-Flash」を発表した。同社の新しいアーキテクチャを採用するモデル群の中で最小規模に当たる。",
-      "publishedAt": "2026-09-11T03:43:00.000Z",
-      "feedName": "gihyo.jp"
-    },
-    {
-      "id": "c550210c3fe6536bfc4e004a3a6c1b429dd94055bceaa9a975711b6fd23d9258",
-      "title": "単体テストの実行時間を6割程度削減してみた",
-      "url": "https://zenn.dev/dress_code/articles/5dd5de5020d9ef",
-      "description": "はじめに こんにちは、Dress Code 株式会社でプロダクトエンジニアをやっている津田です。 AI が実装の大半を担ってからずいぶんと経ち、単体テストによってある程度の動作の保証をしてくれるようになった一方で、いつの間にか単体テストの実行時間が伸びていました。CI環境で50件計測し、p90 で 16分14秒 にもなってい...",
-      "publishedAt": "2026-09-11T03:09:58.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "09d5e57c387449251e68b0781f3946c117c17e438e66f7044cf16353734cddf8",
-      "title": "「DeepSeek-V4.1-Flash」が登場、複数テストでClaude Opus 5やGPT-5.6 Solを超える性能のオープンモデル",
-      "url": "https://gigazine.net/news/20260911-deepseek-v4-1-flash/",
-      "description": "中国企業のDeepSeekがAIモデル「DeepSeek-V4.1-Flash」を2026年9月10日に公開しました。複数のベンチマークテストでClaude Opus 5やGPT-5.6 Solを上回る性能を示しつつ、オープンモデルとして無償公開されています。また、API料金も低く抑えられています。 🚀 Introducing DeepSeek-V4.1-Flash: smarter, faster, more e...",
-      "publishedAt": "2026-09-11T02:51:18.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "c550210c3fe6536bfc4e004a3a6c1b429dd94055bceaa9a975711b6fd23d9258",
-      "title": "単体テストの実行時間を6割程度削減してみた",
-      "url": "https://zenn.dev/dress_code/articles/5dd5de5020d9ef",
-      "description": "はじめに\nこんにちは、Dress Code 株式会社でプロダクトエンジニアをやっている津田です。\nAI が実装の大半を担ってからずいぶんと経ち、単体テストによってある程度の動作の保証をしてくれるようになった一方で、いつの間にか単体テストの実行時間が伸びていました。CI環境で50件計測し、p90 で 16分14秒 にもなっていました。これには GitHub Actions の setup 等も含め、ですが、単体テストの実行時間だけでも14分30秒かかっていました。\nCIに時間がかかると、そのまま開発体験の悪さにも直結します。軽微な不具合修正であったとしてもリードタイムとしてその程度以上...",
-      "publishedAt": "2026-09-11T02:30:05.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "2395172e563c36187b04e41555f32da175c90ff37dfca5bb13bf5591849157f9",
-      "title": "オープンソース版GFXBenchをAndroidで動かす（2）実行編",
-      "url": "https://developer.mamezou-tech.com/blogs/2026/09/11/gfxbench_2/",
-      "description": "はじめに\n#\nGFXBenchというGPUベンチマークソフトを取り上げたシリーズの2回目です。\nベンチマーク紹介\n#\nGFXBenchは様々なベンチマークから構成されており、起動時に選択して実行する様になっています。\n今回取り上げるのは 高レベルテスト の方で、その中からいくつか抜粋して紹介します。\n -->\n Information\n以降画像は筆者のスマートフォンのGFXBench実行時スクリーンショットより引用\nT-Rex\n#\n\nManhattan\n#\n\nManhattan 3.1\n#\n\nCar Chase\n#\n\nAztec Ruins\n#\n\n色々説明されていますが、まずは \"Required minimum API\" の部分だけに注目してみます。\nベンチマーク\nOpenGL ES version\n\n\n\n\nT-Rex\n2.0\n\n\nManhattan\n3.0\n\n\nManhattan 3.1\n3.1\n\n\nCar Chase\n3.1 + AEP (Android Extension Pack)\n\n\n\nそのため、そのAndroid端末が対応している OpenGL ESバージョン によって実行出来るベンチマークが変わります。実行できない場合は後のベンチマーク選択画面で選択出来ない状態となります。\n※ Aztec Ruins は路線が変わった様なので省略（APIのバージョンではなくマルチAPIでのベンチマークというニュアンスになった模様）\nベンチマークインストール\n#\n前回ビルドを行ったapkファイルをAndroid端末にインストールします。\nadb install gfxbench-5.1.5+corporate.apk\n\n\n  \n\n\nベンチマーク実行\n#\nAndroid端末上からGFXBenchのアイコンをクリックし起動します。\n\n「OK」を選択してapkバンドルのデータをアプリデータ領域にコピーをします。\n -->\n Information\n前回も触れましたが初回起動時にこのコピー分だけアプリサイズが増える事になります。\n起動すると、ベンチマークの初期画面が表示されます。\n\nそこで \"テスト選択\" ボタンを押すと テスト選択 の画面になります。\n\n実行するベンチマークとしては筆者の思い入れより以下の2つとします。\nT-Rex\nManhattan\nまた、それぞれについて、オンスクリーン版とオフスクリーン版があります。\n最初起動すると全ベンチマークがチェックされた状態になっているので、実行したいベンチマークのみをチェックし \"開始\" ボタンを押します。\nベンチマーク実行結果\n#\n実際にオフスクリーン版を実行してみます。\nなお、今回対象とするAndroid端末のスペック帯はベンチマークスコアが最大でも 100台半ば 程度のfpsのものとします。\n以下、実測した結果例です。ベンチマークスコアはオフスクリーン版のfps値です。\n -->\n Caution\nあくまで 「筆者の環境および測定時点における一例」 であり、同様のGUP、手順で測定された場合でも、環境によって異なる結果となる可能性がある点をご了承ください。\nGPU\nSoC\nDriver version\nAndroid version\nT-Rex score\nManhattan score\n\n\n\n\nARM Mali G57 MC1\nAllwinner A537\nOpenGL ES 3.2 v1.r51p0-00eac0.26a7a06524af59d6533aad5e5bab3098\n15\n19\n13\n\n\nARM Mali G57 MC2\nMediatek Helio G99\nOpenGL ES 3.2 v1.r32p1-01eac0.394145956bc7cd8e697b330aba11e3d3\n13\n57\n37\n\n\nARM Mali G57 MC3\nMediatek Dimensity 800U\nOpenGL ES 3.2 v1.r32p1-01eac0.461cd25a1c7796cc6d3ad05234c053ac\n12\n85\n54\n\n\n\n偶然にも:-) core数(MC)違いのGPUですが、core数が多いもの程いい結果となりました（それはそう）。\nGPU\nT-Rex/core score\nManhattan/core score\n\n\n\n\nARM Mali G57 MC1\n19\n13\n\n\nARM Mali G57 MC2\n28.5\n18.5\n\n\nARM Mali G57 MC3\n28.3\n18\n\n\n\n今回のAndroid端末のMC2, MC3のものは同じ傾向（同等MC1想定値からの比例関係）である事がわかります。\nおわりに\n#\n今回はGFXBenchの内容紹介と、前回ビルドしたGFXBenchを実際に実行してベンチマークスコアを確認しました。\nライセンスおよび免責事項\n#\n本記事に掲載しているスクリーンショット、検証結果は、BSD 3-Clause Licenseのもとで公開されている Kishonti-Opensource/gfxbench のソフトウェアおよびアセットを利用・引用したものです。\nOriginal Copyright: (c) 2005–2025 Kishonti Ltd.\nLicense: BSD 3-Clause License\n画像等の権利について: 記事内で引用しているGFXBenchのベンチマーク実行画面およびUIの著作権は、原著作者であるKishonti Ltd.に帰属します。\n【免責事項】\n本記事に掲載している手順、ベンチマークスコア等の測定結果は、特定の検証環境における現状のまま（AS IS）のものであり、その正確性、安全性、再現性を保証するものではありません。\n本情報の利用や検証の実行により生じた直接的・間接的な損害について、筆者および株式会社豆蔵は一切の責任を負いません。内容を十分にご確認の上、ご自身の責任においてご利用ください。",
-      "publishedAt": "2026-09-11T00:00:00.000Z",
-      "feedName": "豆蔵デベロッパーサイト"
-    },
-    {
-      "id": "dc778c78f9ca6ee48e02f064bc9b6e0a64636a5b9caf8b884c138932d1176525",
-      "title": "生成AIカンファレンス2026参加記 — 生成AIで仕事は速くなる。では、その仕事は正しいのか？",
-      "url": "https://developer.mamezou-tech.com/blogs/2026/09/11/generative-ai_speed-and-correctness/",
-      "description": "アジャイルグループの中村です。\n生成AIカンファレンス2026に参加しました。生成AIの社会実装をテーマに、産業・開発・知能の3つの視点から、AIエージェントやフィジカルAIなど幅広いテーマを扱うイベントです。\nAIで速くなった、その先への不安\n#\n2026年に入り、AIエージェントによるコーディングの高速化は一気に現実味を増しました。自身も個人開発アプリのメンテでPoC程度に触れましたが、その程度の経験でも「10倍の生産性」といった表現が、以前ほど大げさには聞こえなくなりました。エンジニアとしては、素直に興奮します。\n一方、アジャイルコーチとしての自分は、ふたつの不安を覚えました。\nひとつは、成果物を大量に作れるようになれば、テストからリリースまでの後工程が渋滞するのではないか。\nもうひとつは、製造コストの制約が薄くなれば、「どんどん作って、後から考えよう」と要件定義が雑になるのではないか。\n今回のカンファレンスでは、このふたつの懸念が国内の現場でどう現れているのかを確かめたいと考えていました。百聞は一見に如かず、です。\n結論から言えば、懸念していた構造は、すでに現場の課題として現れていました。ただし、それを前提に仕事のあり方を変えようとする実践も、すでに始まっています。\nどのセッションも、いわゆる「キラキラ事例」とは一線を画す、生々しく骨太な内容でした。\nそのなかから、ふたつの不安にそれぞれ重なったセッションを紹介します。\n不安その1：速くなった仕事は、後工程で渋滞するのではないのか\n#\n『生成AIの現在地：最前線の研究を社会実装する』\n#\n＜Sakana AI株式会社 大村壮太氏＞\nAIと科学をテーマに、AIによる研究活動の高速化と、その先で顕在化している課題が紹介されました。いくつか提示された課題の中で、いちばん印象に残ったのが次のキーワードです。\n「頭と終わりは人間」\n頭とは「問題空間の定義」です。\n科学者としてのAIの性能は上がり続け、研究のループは高速化しました。一方で、AIの介入によって、科学の扱う問題空間そのものが狭まってしまう懸念もあります。\n終わりとは「理解・解釈」です。\n思考の一部をAIに任せられても、成果を理解し、意味を解釈する人間の仕事までは消えません。AIが成果を生み出す速度に、人間側の処理能力が追いつかなくなる。研究助成の審査や論文査読は、その具体例として挙げられていました。\nまた、「理解がないと、知識と創造が阻害される。フィードバックループがない」との言葉にも、深くうなずかされました。\nソフトウェア開発のレビューや検収に当てはめれば、開発リーダーや顧客に負荷が集中することは容易に想像できます。\n不安その2：作るのが安くなったら、要件定義が雑になるのではないか\n#\n『“PoC止まり”を超える、小売AXの最前線』\n#\n＜株式会社アンドエスティHD 甲斐裕樹氏 / 株式会社Algomatic 鴨居啓人氏＞\nアパレル小売店舗の店長業務を支援する「店長AIエージェント」の事例です。\n売上分析や在庫検索などをAIエージェントから利用できる仕組みで、在庫検索業務を75％削減したと紹介されていました。\n「まず現場で使ってもらえるもの」\nこの言葉こそ、ふたつ目の不安に対するひとつの答えに見えました。\n製造コストが下がったから、とりあえず作るのではない。誰の何を変えたいのかを先に置き、使ってもらいながら確かめる。作ることが容易になるほど、むしろ問題設定とフィードバックの質が重要になる。\nそして驚いたのは、大企業へAIを浸透させていく実行力です。\n店長の業務を変えるという明確なニーズから出発し、数店舗からスモールスタートする。現場のフィードバックに基づいて改善しながら対象店舗を増やし、スコープも広げていく。非IT部門も含む部門横断チームが方向性を示し、オーナーシップをもって主導する。\n活字に書き出してしまうと、ユースケースや進め方に目新しさはありません。\n当たり前のことをやり抜く。その積み重ねが、75％という数字につながったのだと受け止めました。\nまとめ\n#\n私なりに整理すると、問いはふたつです。\nその仕事は正しいか。\n仕事は正しく行われているか。\n生成AIによって仕事は速くなります。だからこそ、こうした昔からの問いに向き合うことが、より重要になると考えます。\n要求工学を価値の柱としてきた弊社こそ、ここに出番があるのでは――と、小さくガッツポーズしつつ、このふたつの問いを自分自身の宿題としても持ち帰りたいと思います。",
-      "publishedAt": "2026-09-11T00:00:00.000Z",
-      "feedName": "豆蔵デベロッパーサイト"
-    },
-    {
-      "id": "28e8b1f50b18607d57a236dcfc6c944f45af4fa6fefe53e415c664b404c96bb9",
-      "title": "[アップデート] AWS Transform for .NET のモダナイゼーションが GA となり CLI でも実行できるようになりました",
-      "url": "https://dev.classmethod.jp/articles/aws-transform-dotnet-cli/",
-      "description": ".NET、ATX CLI対応してなかったのか",
-      "publishedAt": "2026-09-10T23:57:09.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "527ae00aeb4c1c05dc3149276e962ed93842a7c63c0e68ff06dbb3aef49f167e",
-      "title": "【読書記録】「セキュア・バイ・デザイン」という考え方",
-      "url": "https://qiita.com/ito_kohhh/items/29fbc52a6ca588f7555e?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "はじめに\n昨今複数の大規模システムでセキュリティインシデントが発生し、社会全体でセキュリティへの感度が高くなっているのを感じています。\n普段はアプリケーション部分の機能開発を担当している私もセキュリティへの感度をより高めていくために、セキュア・バイ・デザインという書籍を読...",
-      "publishedAt": "2026-09-10T23:13:32.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "008320433cb5b8cc3371b594327958e365cb1ead6dbdb87d8794c67334e884f9",
-      "title": "(新登場)Nx Plugin for AWSでフルスタックAWSアプリのひな型を作ってみた",
-      "url": "https://qiita.com/yama3133/items/fb49a632a7822fc7a86b?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "はじめに\nAWS Labsが公開しているNx Plugin for AWSというツールがあります。React/tRPC/FastAPI/Strands Agents/CDK/Terraformといった構成のフルスタックAWSアプリを、Nxのジェネレーターでひな型化してくれ...",
-      "publishedAt": "2026-09-10T14:31:33.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "6cf048cd22f64549eb7dc2062454b23fd98f136f50ef26f8ff148f1a89f53958",
-      "title": "Kubernetes disaster recovery: Guidance from three reproducible failure scenarios",
-      "url": "https://www.cncf.io/blog/2026/09/10/kubernetes-disaster-recovery-guidance-from-three-reproducible-failure-scenarios/",
-      "description": "Scope This document describes three failure scenarios that separate having backups from being able to recover, and the guidance that follows from each. Every scenario is reproducible on a laptop from the lab repository above, and...",
-      "publishedAt": "2026-09-10T11:37:00.000Z",
-      "feedName": "Cloud Native Computing Foundation"
-    },
-    {
-      "id": "c92c039f3c6964fbe4ab22e2ff07c9bbfadb15454628b70f03abf966c8f0b0c3",
-      "title": "AWS AI セキュリティフレームワーク: レイヤーとフェーズに応じた適切なセキュリティコントロール",
-      "url": "https://aws.amazon.com/jp/blogs/news/the-aws-ai-security-framework-securing-ai-with-the-right-controls-at-the-right-layers-at-the-right-phases/",
-      "description": "AWS AI Security Framework は、適切なコントロールを適切なユースケース・レイヤー・フェーズに対応づけ、AI をプロトタイプから本番、そしてスケールまで安全に進めるための体系的なモデルです。多層防御を「インフラストラクチャ」「アイデンティティとデータ」「AI アプリケーション」の 3 レイヤーに整理し、Foundational / Enhanced / Advanced の 3 フェーズで段階的にセキュリティを強化する方法を解説します。",
-      "publishedAt": "2026-09-10T11:16:48.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "aee36e3d13806261e83a4bc95733c58e8e210013a7219c382beb6ae90028a27c",
-      "title": "Copilot Studio の回答精度を疑う前に考えたい５つのこと",
-      "url": "https://qiita.com/eigogakuto/items/f4fb1b987d1218b2e63b?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "序\nCopilot Studio でエージェントを作成して実際にテストしたときに（エラーの場合を除き）期待した回答が返ってこないことがあります。このような場合、モデルを変更したり、指示文（プロンプト）を見直したりする人は多いように思います。\n指示文の例であれば、より詳しく...",
-      "publishedAt": "2026-09-10T08:59:14.000Z",
-      "feedName": "Qiita"
-    },
-    {
       "id": "c9ea61dbe5b78dc71306e3c220ec1327bcffac5efd045700958f5ed3e157e8ea",
       "title": "Smarter Python Configs: an OOP Framework",
       "url": "https://dev.to/wisl/smarter-python-configs-an-oop-framework-2ggj",
@@ -5438,6 +5342,134 @@
       "url": "https://qiita.com/AyaKunisawa/items/4e1d87e075a3bae93f40?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
       "description": "何をやったのか\nAWS がやっている「AWS AI League」の Agentic AI チャレンジに参加してきました。\n参加したのは、DNPグループ会社向けにプライベート開催された回で、League開催期間は72時間でした。\nルール自体はめちゃくちゃシンプルで、自分...",
       "publishedAt": "2026-10-08T01:01:51.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "3da50e4ca4de96d4f3996888adc581884f675c2978df5b5eaf1eccf71bc31bc7",
+      "title": "TouchGrass AI: Building a Local AI Companion That Gets You Outside 🌿",
+      "url": "https://dev.to/renuka_kamani_f063f91b63c/touchgrass-ai-building-a-local-ai-companion-that-gets-you-outside-26g9",
+      "description": "TouchGrass AI: Building a Local AI Companion That Gets You Outside 🌿\n\n\nAn AI companion designed to help you spend less time on screens and more time in the real world.\nAs developers, we spend hours staring at terminals, code editors, documentation, and pull requests. Even when our eyes feel tired and our minds need a break, stepping away from the computer isn't always easy.\nAnd when we finally go outside, we often take our screens with us. We check notifications, scroll through social media, or open another app.\nWe're physically outdoors, but mentally, we're still online.\nFor Hacktoberfest 2026 Week 1, themed “Touch Grass,” I wanted to build something different: an AI application that doesn't encourage people to stay on the screen longer.\nInstead, I built TouchGrass AI — a local AI companion that helps you put your device away and explore the world around you.\nTouchGrass AI turns your available free time, mood, surroundings, and preferred activities into a personalized outdoor micro-adventure.\nInstead of generating another long conversation, it gives you a practical mission you can remember and complete away from your screen.\nUsers can choose:\nAvailable time: 10, 20, 30, 60, or 120 minutes.\nMood: Stressed, Bored, Energetic, Curious, or Peaceful.\nActivity: Walking, Gardening, Observation, Birdwatching, or Surprise.\nEnvironment: Neighborhood, Park, Garden, Campus, or Balcony.\nAccessibility preferences: Adapt the mission to the user's mobility and comfort needs.\nEach generated adventure contains:\nA creative title and a short narrative hook.\nThree to five clear, sequential steps.\nA sensory observation challenge, such as noticing different leaf shapes or listening for bird calls.\nA screen-free instruction encouraging users to silence and pocket their phones.\nA reflection question to consider after returning.\nA distraction-free active mode that displays only the information needed before heading outside.\nThe goal is simple: use AI to make the screen the shortest part of the experience.\nI chose Google Gemma through Ollama because the project's purpose is to encourage people to disconnect, and its personal inputs should remain private.\nA user's mood, preferences, and reflections can be personal. By running inference locally through Ollama, TouchGrass AI can generate missions without sending those inputs to a cloud AI provider, provided the application uses only local endpoints and does not transmit the data elsewhere.\nOnce the application dependencies and model weights have been downloaded, the core mission-generation workflow can operate without an internet connection while the local Ollama service is available.\nThis is useful when someone wants to prepare an activity before leaving home or visiting a location with poor connectivity.\nUsing an open-weight model makes it possible to experiment with different models, adjust prompts, inspect the application logic, and build without requiring a paid cloud AI API key.\nGemma is an open-weight model distributed under Google's Gemma Terms of Use. Its terms still apply, so open-weight should not be confused with unrestricted licensing.\nFor this project, local inference is not just a technical choice. It supports the central idea: technology should help people reconnect with the world around them.\nTouchGrass AI uses a modular Python architecture with a Streamlit interface, Ollama for local inference, Pydantic for data validation, and SQLite for progress tracking.\nPython: Core application logic.\nStreamlit: User interface.\nOllama: Local model serving.\nGoogle Gemma: Open-weight language model.\nPydantic: Input and output validation.\nSQLite: Adventure history and observation progress.\nPytest: Automated testing.\nThe application follows this flow:\n![ ](https://dev-to-uploads.s3.us-east-2.amazonaws.com/uploads/articles/q11fnt53ny17kvpy7vt1.png)\napp.py\nProvides the Streamlit interface, collects user preferences, and displays generated missions in a nature-inspired visual design.\nservices/ollama_service.py\nCommunicates with Ollama's local HTTP API, including model discovery and generation. It handles connection failures, missing models, and timeouts.\nservices/mission_generator.py\nBuilds prompts, requests structured JSON output, extracts the JSON payload, and validates the result against a Pydantic model called OutdoorMission.\nservices/progress_service.py\nStores adventure history and observation completions in SQLite. It calculates consecutive-day streaks from recorded dates rather than inventing progress.\nOne of the most interesting challenges was making small local models return structured, usable mission data.\nA model may produce conversational text before its answer, wrap JSON in Markdown code fences, omit required fields, or return malformed output.\nThat becomes a problem when the application expects a specific structure.\nI addressed this with three layers of protection.\nThe generation request uses \"format\": \"json\" to encourage valid JSON output.\nAn extract_json helper isolates the JSON object from surrounding text or Markdown formatting.\nThis makes the parser more tolerant of unexpected presentation, although malformed or incomplete JSON can still fail.\nThe extracted object is validated against the OutdoorMission schema. If generation fails or the output cannot be validated, the application can use its curated offline mission library.\nThe fallback is explicitly labeled “🍂 Curated Offline Library”, so users can distinguish a locally generated AI mission from a predefined mission.\nThis approach matters because a local model should not be allowed to break the entire user experience just because one response is malformed.\nI treated reliability as an important part of the project rather than relying only on a successful demonstration.\nThe automated test suite uses Pytest and mocked Ollama endpoints to test behavior without requiring live inference for every test.\nThe test cases cover:\nUser preference validation.\nOutdoor mission schema validation.\nJSON extraction from plain text and Markdown.\nFallback behavior when Ollama cannot connect.\nFallback behavior after a timeout.\nConsecutive-day streak calculation.\nHistorical streak retention and multiple sessions on the same day.\nThe test run recorded for this project was:\n14 out of 14 tests passed\nExecution time: 0.18 seconds\nThese results should correspond to the actual test run in the published repository.\nA recorded inference run with gemma:2b generated the following mission:\nTitle: Floral Fable Hunt\nDuration: 10 minutes\nSteps: 4\nObservation challenge: Identify at least five different types of plant leaves and notice their textures.\nScreen-free rule: Keep your phone in silent mode and focus on the natural world around you.\nGeneration source: Local Gemma model\nThe recorded run completed without using the curated fallback library.\nYou can run the project on your own computer with Python and Ollama.\nDownload and install Ollama from https://ollama.com.\nPull the model used by the project:\nollama pull gemma:2b\n\nOllama normally runs in the background after installation. If its server is already running, you do not need to start another instance with ollama serve.\nReplace the URL below with the actual public repository URL.\ngit clone YOUR_GITHUB_REPOSITORY_URL\ncd touchgrass-ai\n\nOn Windows:\npython -m venv venv\n.\\venv\\Scripts\\Activate.ps1\npip install -r requirements.txt\n\nOn macOS or Linux:\npython -m venv venv\nsource venv/bin/activate\npip install -r requirements.txt\n\npytest tests -v\n\nstreamlit run app.py\n\nOpen http://localhost:8501 in your browser.\nChoose your preferences, generate an adventure, memorize the steps, and head outside.\nFor offline use, make sure the required dependencies and model weights have already been installed and downloaded.\nThere are several directions in which TouchGrass AI could grow:\nOffline nature soundscapes: Optional ambient audio for rain, wind, and flowing water.\nPrintable field notes: Exportable PDF or Markdown checklists for screen-free nature journaling.\nSeason-aware missions: Adapt activities to seasonal changes and locally relevant environmental conditions.\nMore model choices: Allow users to configure different compatible local models.\nAccessibility improvements: Offer more ways to adapt activities to individual needs and surroundings.\nThese improvements would expand the experience without losing its main purpose.\nBuilding TouchGrass AI reinforced an idea I find important: AI does not always have to maximize engagement with technology.\nSometimes, the most useful application is the one that helps us close the laptop, leave the notifications behind, and pay attention to what's around us.\nOpen-weight models and local inference make this experience more private, customizable, and accessible to people who want to experiment without depending on a paid cloud AI service.\nThe best AI interaction might be the one that inspires you to stop interacting and start exploring. 🌱\nGitHub repository: [https://github.com/Renuka-Kamani/touchgrass_ai]\n\n\nApplication screenshots: [\n\n\n\n\nBuilt for the Hacktoberfest 2026 Open-Source AI Challenge — Week 1: Touch Grass.",
+      "publishedAt": "2026-10-11T04:02:57.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "b5f910dc3d660f0f62a1cfb7aa3ef583afd49ba6c5f9f23f6b6409e0447a5787",
+      "title": "I built a one-photo Burning Bridges video generator",
+      "url": "https://dev.to/jy_wang_2c4d36f4d66adea80/i-built-a-one-photo-burning-bridges-video-generator-1ja1",
+      "description": "I built Drake Burning Bridges AI, a small web app that takes one portrait and generates a personal version of the Burning Bridges party scene.\nYou choose the main character with your photo. I’ve configured the video reference and prompt, so you don’t have to write scene instructions. The output is a 20-second, 720p, landscape MP4 with the supplied soundtrack.\nFor this post, I wanted to share the implementation choices behind that short upload flow.\nThe studio accepts one portrait. The photo provides the appearance reference for the main subject; the video reference guides the party setting, gestures and camera movement.\nI kept the scene and output settings fixed. Users can choose who appears in the foreground, but they can’t cast each guest or change the duration. That limits what you can make, and it gives the upload page a clear job: help you choose a usable photo and understand the expected result.\nThe server checks file size, image type and dimensions. A file extension or a browser-provided MIME type alone isn’t enough to validate an upload.\nI’m using React and TanStack Start for the app, with Better Auth for authentication. The application runs on Cloudflare Workers. I store task and credit records in D1, and uploaded photos and finished videos in R2.\nThe app calls an external video generation service. Workers handle the application flow rather than running video inference themselves.\nA video request needs to survive the user leaving the page. I store the job before processing it and track its progress through these states:\nqueued → processing → composing → saving → succeeded\n\nThe composition step adds the supplied soundtrack. I mark a task as successful after saving the finished video, rather than when the generation provider first reports success.\nUsers can return to My videos to check an existing task. The browser doesn’t have to stay open for the whole operation.\nEach generation uses one credit. I use a request ID to connect a submission to its job. If the same user sends the same request again, the application returns the existing job. Reusing that ID with different input is rejected.\nIn the database, I connect job creation to the credit debit with a trigger. If the debit can’t complete, the job insert rolls back. I also give failed-job credit returns a unique ledger reference, so processing the same failure again doesn’t add another credit.\nThe less obvious case is a timeout while submitting to the video provider. The provider might have accepted the job even though my application didn’t receive its response. Submitting a fresh request at that point could create a second paid generation.\nI record that submission attempt and keep an uncertain outcome for reconciliation. A confirmed failure returns the credit; a missing response needs more investigation. This leaves some cases requiring support review, but avoids treating an unknown result as permission to submit again.\nAI can change facial details or hands as the person moves. A completed job means the user received a video, not that the model preserved their appearance in every frame.\nI’ve included examples so visitors can inspect the intended scene. Those are supplied 480p samples, not evidence of a paid generation through the app. The configured output is 720p.\nThe site is an independent project with no affiliation with Drake. Users should upload photos they have permission to use, with the subject’s consent.\nYou can see the project at drakeburningbridgesai.video. I’d welcome feedback on the upload flow, or how you handle uncertain provider responses in apps that charge per task.",
+      "publishedAt": "2026-10-11T03:59:51.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "f05b257be5d0b6181bc89c741d10bab808385eef7cfc6aff2a7c2fba4bd1f8b6",
+      "title": "🌿TrailMate AI — Make Room for Outside",
+      "url": "https://dev.to/anton_luckshman/trailmate-ai-make-room-for-outside-3kb1",
+      "description": "This is a submission for the Hacktoberfest Open-Source AI Challenge Week 1: Touch Grass\n🌿 TrailMate AI — Your AI-powered outdoor activity planner\nTrailMate AI helps people spend less time staring at screens and more time exploring the outdoors. Instead of endlessly scrolling for things to do, users can generate personalized outdoor activity plans based on their starting location, available time, preferred activity pace, and favorite scenery.\nWhether you have just 20 minutes for a short walk or 90 minutes for a nature adventure, TrailMate AI suggests activities, provides a simple itinerary, recommends what to bring, and includes basic outdoor safety reminders.\nThe project is designed for students, busy professionals, travelers, and anyone who wants to make getting outside easier.\nThe main idea is simple: use AI to help people leave their screens, not spend more time on them.\n🌐 Live Demo: [Not Ready Yet]\n📸 Screenshots:\n\n\n\nThe demo currently includes a sample-planning mode, so users can explore the experience without configuring an AI model.\n💻 GitHub Repository: [https://github.com/antonluckshman/TrailMate-AI]\nTrailMate AI is built with React and Vite. The source code includes the user interface, activity-planning logic, sample plans, and optional local AI integration.\nFeel free to explore the code, suggest improvements, report issues, or contribute new outdoor activities and planning features!\nI built TrailMate AI using React, Vite, and open-source AI models that can run locally.\nThe application has two planning modes:\nDemo mode: Generates sample outdoor plans immediately, allowing users to try the application without setting up an AI model.\nLocal AI mode: Can connect to Ollama to run a supported open-weight language model locally, such as Llama 3.2 or Qwen2.5.\nUsers choose their starting location, available time, preferred pace, and scenery. The application uses those preferences to generate an outdoor activity plan with suggested activities, a checklist, and safety reminders.\nI wanted to make the project accessible to people who don't have access to paid AI APIs. By supporting local inference, TrailMate AI provides a path toward experimenting with AI without requiring a paid model API key.\nThe current version is an MVP. Its plans are suggestions, not verified hiking routes or live recommendations based on weather, trail conditions, or real-time maps.\nOpen innovation makes it possible for developers to experiment, learn, and build useful applications without depending entirely on proprietary platforms.\nFor TrailMate AI, open-weight models and local inference offer several advantages:\nAccessibility: Developers and users can experiment without necessarily paying for a commercial AI API.\nPrivacy and control: With a properly configured local setup, prompts can be processed on the user's machine rather than sent to a hosted AI provider.\nFlexibility: Different supported models can be tested and compared for activity planning.\nCommunity collaboration: Other developers can contribute new activity types, improve prompts, add local outdoor knowledge, and extend the application.\nLearning by building: Open tools make it easier to explore how AI fits into a complete application, from the user interface to model inference.\nA closed API could also generate outdoor plans, but open-weight models give developers more flexibility over where inference happens and which model they choose. They also make experimentation more accessible.\nI believe open innovation is especially valuable when building small projects: it lowers barriers to experimentation and gives the community a starting point that others can adapt to their own needs and locations.",
+      "publishedAt": "2026-10-11T03:57:42.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "e5ac370ad910e9f89ed6ebc5088154fc954b478e001edac3b31f9b5fc0170796",
+      "title": "Auditable Fintech Access by Polling SMS OTP Delivery Status Without Webhooks",
+      "url": "https://dev.to/eliasfischer8351/auditable-fintech-access-by-polling-sms-otp-delivery-status-without-webhooks-46pd",
+      "description": "Short answer: use bounded polling only to improve the login screen, never to decide whether an OTP is valid. The least complex defensible design records one immutable send attempt, polls a provider-neutral status adapter for a short deadline, and writes every observed transition to an audit log. Verification remains a separate, atomic operation. A terminal invalid-recipient result suppresses later sends; an unknown result ends the poll without pretending that delivery succeeded or failed.\nThe bill is made of message attempts, status lookups, stored evidence, and operational review. For a symbolic workload of N OTP sends, p polls per send, and r retained status rows, the dominant variable term is visible without a price sheet: polling creates N * p lookups, while evidence storage creates roughly N * r rows. A policy of six checks therefore creates up to six status reads per send. Reducing six checks to three halves that lookup count; shortening retention does not. Settle that arithmetic before arguing about databases.\nThis separation also fits the security boundary described by the OWASP Forgot Password Cheat Sheet: codes should be generated securely, linked to an individual user, invalidated after use, and protected by rate limiting. Delivery state is useful evidence and useful UX input. It is not proof that the person entering a code is entitled to the account.\nIt means a bounded sequence of stale snapshots. The first lookup may still report an accepted or queued state after the handset has received the message; a later lookup may expose a terminal failure. No polling interval removes that epistemic limit. The login page should say that a code was sent, offer a controlled new attempt after a server-defined delay, and avoid promises such as \"delivered\" unless the adapter has mapped a terminal delivery state while preserving its source evidence.\nFor an illustrative policy, poll after 1, 2, 4, 8, 12, and 18 seconds, then stop at 45 seconds. These are design parameters, not carrier guarantees. Add per-attempt jitter so a traffic spike does not produce synchronized status traffic, and cancel outstanding checks when a terminal state appears. The short deadline contains load and latency; the widening gaps spend fewer reads on states unlikely to change immediately.\nThe awkward case matters most: the poll deadline expires while the OTP is still valid. Keep those clocks independent. Expiring observation must not expire authentication, and an authentication timeout must not rewrite the delivery record. Delivery can be duplicated or remain uncertain; verification and new-attempt eligibility should therefore use compare-and-swap semantics around one attempt identifier.\nBounded polling has a clear limitation: it is unsuitable when the product requires immediate server-side reaction at high message volume, because every additional check multiplies read traffic while still observing a snapshot. An authenticated event callback or a queue-fed delivery event is the better mechanism in that case, provided signatures, replay protection, deduplication, and evidence persistence are implemented. Polling remains reasonable where callbacks are unavailable and a short-lived UX hint, rather than instantaneous automation, is the actual requirement. This is the central trade-off.\npackage otp\n\nimport (\n    \"context\"\n    \"errors\"\n    \"time\"\n)\n\ntype State string\n\nconst (\n    Queued           State = \"queued\"\n    Delivered        State = \"delivered\"\n    InvalidRecipient State = \"invalid_recipient\"\n    Failed           State = \"failed\"\n    Unknown          State = \"unknown\"\n)\n\ntype Snapshot struct {\n    AttemptID string\n    State     State\n    SourceRef string\n    Observed  time.Time\n}\n\ntype StatusReader interface {\n    Read(context.Context, string) (Snapshot, error)\n}\n\ntype EvidenceWriter interface {\n    Append(context.Context, Snapshot) error\n}\n\nfunc Observe(ctx context.Context, id string, reader StatusReader, log EvidenceWriter, waits []time.Duration) (State, error) {\n    for _, wait := range waits {\n        timer := time.NewTimer(wait)\n        select {\n        case <-ctx.Done():\n            timer.Stop()\n            return Unknown, ctx.Err()\n        case <-timer.C:\n        }\n\n        snap, err := reader.Read(ctx, id)\n        if err != nil {\n            continue // A transport error is not a delivery verdict.\n        }\n        if err := log.Append(ctx, snap); err != nil {\n            return Unknown, errors.New(\"status observed but evidence was not persisted\")\n        }\n        switch snap.State {\n        case Delivered, InvalidRecipient, Failed:\n            return snap.State, nil\n        }\n    }\n    return Unknown, nil\n}\n\nThe adapter owns status normalization. The ledger owns history. Keeping those responsibilities apart prevents a provider vocabulary change from silently changing suppression policy.\nA single blocked flag loses the reason, scope, and evidence behind a decision. Model the normalized recipient, channel, reason class, source attempt, observation time, policy version, and reversal record. Preserve the provider's opaque reference, but do not make business logic depend on it. The write that creates a terminal invalid-recipient observation and the write that activates suppression should share one transactional boundary or one idempotent event key.\n\n\n\nObserved condition\nLogin response\nSuppression action\nEvidence\n\n\n\n\nQueued or accepted\nContinue the OTP screen\nNone\nAppend the snapshot\n\n\nDelivered\nContinue verification\nNone\nAppend the terminal snapshot\n\n\nInvalid recipient\nOffer another recovery path\nSuppress this channel and address\nRecord reason, source, and policy version\n\n\nGeneric failure\nPermit policy-controlled retry\nDo not infer invalidity\nRecord the failure class\n\n\nPoll deadline reached\nKeep verification independent\nNo suppression\nRecord observation timeout\n\n\n\nDo not collapse a transient lookup error into Failed. Do not suppress on Unknown. Those shortcuts make dashboards look decisive while corrupting the recipient registry, and the resulting false suppression is hard to distinguish from a legitimate compliance control months later.\nEmail bounces may enter the same suppression ledger when email is a recovery channel, but they should retain their own reason taxonomy. The FTC's CAN-SPAM compliance guide applies to commercial email and describes obligations including a functioning opt-out mechanism; it should not be stretched into an SMS OTP rule. Shared evidence storage is reasonable. Shared legal semantics are not.\nAn audit record should answer four questions without replaying application logs: what was observed, which rule evaluated it, what changed, and which actor or process authorized that change. Use append-only observations plus a separately versioned current projection. Corrections then become new records rather than edits that erase history.\nI would make the idempotency key (attempt_id, normalized_state, source_sequence) when the upstream system supplies a stable sequence; otherwise, use a canonical hash of stable source fields and retain the raw source reference for investigation. This is a design choice, not a universal recipe. A lossy status vocabulary can map several upstream states to queued, so the evidence record should carry both the normalized and original values even though policy reads only the normalized one.\nTest the failure boundaries, not merely the happy path. Replay the same terminal snapshot twice and assert one suppression decision. Deliver observations out of order and assert that a late nonterminal state cannot reverse a terminal one. Simulate a timeout between evidence append and projection update, then verify that replay repairs the projection without creating a second decision. Finally, race two correct OTP submissions and require one successful consumption.\nFive checks expose the important mistakes:\nDuplicate observations produce one effective transition.\nUnknown states never suppress a recipient.\nA repeated send creates a new attempt while preserving the earlier trail.\nLogs and metrics contain attempt identifiers but no OTP values.\nRetention deletion removes payload detail without erasing the minimum decision provenance required by policy.\nThe fifth check is where compliance evidence and cost collide. Keep compact decision records longer than verbose polling payloads if policy permits, and document the two retention classes.\nStorage rarely dominates while raw payloads are small, yet indefinite retention expands privacy exposure and turns every schema change into a migration obligation. A practical ledger separates short-lived source payloads from longer-lived normalized decisions, with durations set by counsel, regulation, contractual duties, and investigation needs rather than copied from an unrelated system. US and EU deployments may require different policy configurations; the evidence model can remain common while approved durations and access controls differ.\nWhat should be deleted first? Drop repetitive nonterminal polling bodies after their short investigation window, retaining the normalized transition, timestamp, source reference, and policy version for the approved evidence period. Stop keeping OTP secrets in observability data at all; OWASP's guidance that codes are stored securely, single-use, and expire makes broad log retention the wrong place for them.\nThere is a real cost to this restraint. If a carrier or provider dispute arrives after raw payload deletion, investigators may be able to prove the decision taken but not reconstruct every upstream field that preceded it. I accept that loss only when the retention policy names it, the deletion job is itself auditable, and a legal or incident hold can suspend deletion through an authorized process.\nKeep less, deliberately.\nOWASP, \"Forgot Password Cheat Sheet\": https://cheatsheetseries.owasp.org/cheatsheets/Forgot_Password_Cheat_Sheet.html\n\nUS Federal Trade Commission, \"CAN-SPAM Act: A Compliance Guide for Business\": https://www.ftc.gov/business-guidance/resources/can-spam-act-compliance-guide-business",
+      "publishedAt": "2026-10-11T03:57:35.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "a4f6604594f2b29f8f18c2e4b4715c733a5080106d02e46028d81ddae3031931",
+      "title": "[アップデート] AWS Transfer Family のマネージドワークフローのログを専用の CloudWatch ロググループに出力できるようになりました",
+      "url": "https://dev.classmethod.jp/articles/transfer-family-custom-cloudwatch-log-groups/",
+      "description": "レガシーなログ記録ロール方式から解放されよう",
+      "publishedAt": "2026-10-11T00:02:35.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "0280311fd083a93beb5221c8d081c8a4537a2f79ddcab16acef429bb24fb4050",
+      "title": "「知識の地図を描く ─ オントロジーとは何か？」というタイトルで DevelopersIO 2026 Sapporo に登壇しました #devio2026",
+      "url": "https://dev.classmethod.jp/articles/20261009-devio2026-ontology/",
+      "description": "AI エージェントに正しい判断をさせるには、データに隠れた意味を機械が読める形で渡す必要があります。DevelopersIO 2026 Sapporo のセッションで、AWS Context Ontology Accelerator を実際に動かしながら、オントロジーの役割と、データカタログ・ナレッジグラフとの違いを紹介しました。",
+      "publishedAt": "2026-10-10T18:55:36.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "e24a6062417362f47feeaead4ff9cb04cb2f1c2464a563ba73aa234602afd0aa",
+      "title": "SQLite 本体にベクトル検索拡張 vec1 がやってきた",
+      "url": "https://zenn.dev/mattn/articles/6e9996319ac099",
+      "description": "はじめに\n2026 年 9 月 30 日、SQLite のソースツリーに ext/vec1/ というディレクトリが追加されました。コミットしたのは FTS5 などでおなじみの Dan Kennedy 氏。コミットメッセージはたった 1 行です。\nImport vec1 sources into directory ext/vec1/ of this project.\nこれまで別の場所で開発されていた vec1 が、まるっと SQLite 本体のリポジトリに取り込まれました。本体は vec1.c の 1 ファイルで約 1 万 3 千行。それに 50 ファイル、約 6,700 行のテスト...",
+      "publishedAt": "2026-10-10T17:16:42.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "6423ab95ee244b616cdc46076f1afa899cec420366f9ca705f317f4186b2f1b9",
+      "title": "Bedrock の OpenAI モデルでも reasoning summaries が使えるようになったので試してみた",
+      "url": "https://dev.classmethod.jp/articles/bedrock-openai-reasoning-summaries/",
+      "description": "OpenAI モデルの推論過程の要約を受け取る reasoning summaries の利用が Amazon Bedrock でも可能になったので、curl と AWS CLI でその動作を試しました。",
+      "publishedAt": "2026-10-10T15:16:18.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "d7f588c18a535c73be58cbb06b2129fe413828f2e61249b7e0630ebf724c3f3f",
+      "title": "飲食店ヒアリングでみるDDD",
+      "url": "https://qiita.com/o68606007/items/ed509abcae244a4f3ae8?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\nドメイン駆動設計についての記事です。\n今回、コードはなく、エンジニアと専門家（今回は店主）との会話から、DDDについての学びを深めていきます。\n\n背景・目的\nDDDは、業務を正しくとらえ理解し、コードに落とし込むことまでが大切になります。\nでは、その業務はどうや...",
+      "publishedAt": "2026-10-10T11:51:08.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "f133968897430953dcf5adc2926c1ab15a53174e46bdf97a1aeee437481cd896",
+      "title": "Microsoft セキュリティ、これをやってください！～ 実践ベストプラクティス",
+      "url": "https://qiita.com/carol0226/items/bdb16dbd5c16a2c43ad5?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\n2026年9月下旬以降、国内でもサイバー攻撃による被害が相次いで報道されています。\nその侵入経路は、ネットワーク機器の脆弱性を突くものや、フィッシングメールなど、さまざまです。\nまた今後は、利用者自身だけでなく、AI エージェントが外部のコンテンツやサービスへア...",
+      "publishedAt": "2026-10-10T07:41:11.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "ef4702d8490bcbf775915ddf6f70f14e327fcd4046c8938e8dc64f680faae9ab",
+      "title": "【Prisma 8】Docker起動時にTodoアプリへ初期データを投入する",
+      "url": "https://qiita.com/keikeigo/items/eddf5a3d844174f72c3a?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\n現在Todoアプリを React/Hono/Prisma/PostgreSQL/Docker で作成しています。\nその際に初期データの投入機能をつけたので備忘録として残しておきます。\n\n前提\n\nDockerですでにTodoアプリが完成している\nPrisma v8...",
+      "publishedAt": "2026-10-10T07:06:21.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "4be82556972cc5b8112c3e3b96738bd1f15c3a70bc58fa006f6fcd761054bf8d",
+      "title": "GitHub ActionsのOIDCでAWS認証が通らない時にsubクレームを確認して信頼ポリシーを直してみた",
+      "url": "https://dev.classmethod.jp/articles/try-github-actions-oidc-immutable-subject-claim/",
+      "description": "GitHub ActionsからAWSへのOIDC認証が新しいリポジトリだけ失敗する場合、GitHubの仕様変更「immutable subject claim」が原因かもしれません。本記事では、認証エラーを再現してsubクレームを確認し、信頼ポリシーを修正する手順を紹介します。",
+      "publishedAt": "2026-10-10T06:43:42.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "2d4a4344a4ad0c7784805856a223fddba30567fee57a56218d8f20f769dbd85d",
+      "title": "【React】zodのbrandで値オブジェクトを実装する（classを使わない方法）",
+      "url": "https://qiita.com/shun123/items/24f5d01004bc5ac8ea9b?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\nDDD（ドメイン駆動設計）でよく登場する「値オブジェクト」は、classで実装する例が多く見られます。しかしReactでは、classのインスタンスはstate管理やシリアライズ（Server Components、localStorage、状態管理ライブラリな...",
+      "publishedAt": "2026-10-09T14:12:41.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "1f561937e0888494c1d708b9a39e019ab35ac63de007aa2b7e2596ef191c30f7",
+      "title": "とりあえずTypeScriptのコード書いて挙動を確認したいだけなのに、eslint警告「TS6133: 変数名 is declared but its value is never read.」が出てdisableしても1つ目の変数しか抑制されない",
+      "url": "https://qiita.com/J-T_ky2g/items/4d3c2a748373b1bf9ed0?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\n\n仮でコードを書いてみたい\n\n問題\n\nこれでは最初の変数しかエラー抑制されない\n\n/* eslint-disable @typescript-eslint/no-unused-vars */\n/* @ts-expect-error テスト用 */\n\nconst...",
+      "publishedAt": "2026-10-09T13:33:04.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "fdf052b6ce32068f88795ee41c1f08604271b9a784bc8d740311ae580f0a61c7",
+      "title": "【Vite】Could not resolve entry module “react-router” の解決方法",
+      "url": "https://qiita.com/shun123/items/07f09fd8602cc186d8ce?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\nReact Router を v7 に上げたところ、Vite の本番ビルドが Could not resolve entry module \"react-router\". で失敗するようになりました。\n最初は「node_modules のインストールがうまくいっ...",
+      "publishedAt": "2026-10-09T04:15:14.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "d41ab9e4db921a961d33491485d472b20ab334e549dcd40928a512567c4795c6",
+      "title": "【Spring Boot 4】ゼロから作るタスク管理API ①環境構築〜Hello World、テストまで",
+      "url": "https://qiita.com/y-matsuo/items/e47b0aa113df1e6f6fad?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\nJavaの実務経験はありますが、Spring Bootはまったくの初学者です。\nこのシリーズでは、Spring Bootをゼロから学びながら「JWT認証付きのタスク管理REST API」を完成させるまでの過程を、全8本の記事にまとめていきます。\n\n#\nテー...",
+      "publishedAt": "2026-10-08T09:03:34.000Z",
       "feedName": "Qiita"
     }
   ]
