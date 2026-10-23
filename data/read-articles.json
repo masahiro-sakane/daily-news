@@ -185,94 +185,6 @@
       "feedName": "はてなブックマーク - テクノロジー"
     },
     {
-      "id": "3fcf8774ce0827349024281baffc8585e2e6e986b3c4638f29a390c67ac049fd",
-      "title": "[アップデート] Amazon API Gateway の REST API にポスト量子暗号を含む TLS セキュリティポリシーが2つ追加されました",
-      "url": "https://dev.classmethod.jp/articles/api-gateway-tls-security-rest-apis-ext2-fips/",
-      "description": "特定のコンプライアンス対応が必要な時に役に立つ",
-      "publishedAt": "2026-09-23T01:25:26.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "657b26e098f862d1da77f3b770d2fa4728c91b6f735191ba1cc2578f2caebc62",
-      "title": "【AWS 障害対応】わざとアラートを出して復旧する自作自演やってみた",
-      "url": "https://zenn.dev/silver252/articles/7ca85e26f9a6e5",
-      "description": "何をやったか\n今回はAWS CDKで、EC2・RDS・ElastiCache・CloudWatchを使った小さなWebシステムを構築します。\nその後、意図的に障害を発生させます。 そこから調査→復旧までを行いました。\n\n なぜ作ろうと思ったか\n結論、実務に近い状況で勉強したかったから。となります。\n自分は実務でAWSを触るという機会が多くはありません。けれどAWSないしはクラウドインフラやセキュリティに興味があり、そちらを専門にやりたいと思っています。\nですが現在はそれができる環境にはないので、「だったら自分でそういう環境を作って実践してやろう」 と思ったわけですね。\nもちろん、実務...",
-      "publishedAt": "2026-09-23T01:01:13.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "3de9b67c808408de8eb6d4d661497397b5a3b90b2b3d973cc8e54cc065720318",
-      "title": "攻撃者の視点でセキュリティを理解したいエンジニアへ。bashで学ぶ侵入技術の実践書",
-      "url": "https://qiita.com/yasu1109/items/1002367721b1650fcdf3?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "脆弱性診断のレポートを読んでも、どういう手順で攻撃者がそこにたどり着くのか実感が湧かない。守る側の知識だけを積み上げていると、対策の優先順位を誤ってしまうことがある。『侵入技術入門 ―bashで学ぶ攻撃者の技法』は、あえて攻撃者の手順を追体験させることでその感覚のズレを埋め...",
-      "publishedAt": "2026-09-22T23:56:43.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "eeef6b56f71279f10d3c2e7e8bad4a699bbf2558f39c9fe3a27b277d6d66773b",
-      "title": "クラウドもシャドーITも「見えない」　千葉銀行はグループ20以上の組織のセキュリティを、どう一元化した？",
-      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2609/23/news010.html",
-      "description": "クラウド利用の広がりによってアタックサーフェスが拡大し、シャドーITのリスクも浮上している。ID、端末、データ、クラウドの利用状況を一元的に把握、管理してリスクを統合的にコントロールするセキュリティ体制の構築が急務だ。千葉銀行は、どう対応したのか。",
-      "publishedAt": "2026-09-22T23:00:00.000Z",
-      "feedName": "＠IT"
-    },
-    {
-      "id": "ab55d2bdacea48463dee1663b092ed00b03aef538d0eaca162e81f9593622faa",
-      "title": "【AWS】Lambda Durable FunctionsのSDKの使い方まとめ",
-      "url": "https://qiita.com/PDC-Kurashinak/items/2a0684a98638a0b83e66?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "どうもこんにちは。\n先日ですね、ServerlessDays Tokyo 2026というイベントに参加させていただきまして、Day2のワークショップに参加させていただきました。\n\nこのワークショップで、AWS LambdaのDurable FunctionsとLambd...",
-      "publishedAt": "2026-09-22T15:55:28.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "2a75704689413cd5430eca14445374f2116ee53ae21e87d21f0ae23f40cae2a3",
-      "title": "[Welcome to AWS 企画] DuckDB v2.0 alpha のクライアント/サーバー構成（quack ＋ CONNECT）で Amazon S3 Tables を試してみた",
-      "url": "https://dev.classmethod.jp/articles/20260922-duckdb-v20-alpha-quack/",
-      "description": "DuckDB v2.0 のプレビューが公開され、ほぼ同じ時期に開発元の DuckLabs が AWS に加わることが発表されました。本日は、v2.0-alpha を導入して、新しい のクライアント/サーバー構成（quack ＋ CONNECT）と Amazon S3 Tables の組み合わせを試してみました。",
-      "publishedAt": "2026-09-22T13:50:59.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "cdbd47467481fa0863282806dee3426f4f099a98e399390750d80a50e8141e61",
-      "title": "あらゆるCLIを「jev化」するツール jany を作った",
-      "url": "https://qiita.com/yukihirop/items/e0d8ffb121c1a753075a?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "はじめに\nコマンドラインツールの引数を毎回正確に思い出すのが面倒です。\nfind の -mtime と -mmin、curl の -X と -H、docker run の -p と --name。\n使い慣れたコマンドでも、少し複雑になると README や --help ...",
-      "publishedAt": "2026-09-22T13:03:50.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "b0d6e4c3a25d420fec939693ef87eb732476d6fc54ac8410aa0646d6aaf74f1b",
-      "title": "Next.js vs TanStack Start の違いを10項目で検証してみた",
-      "url": "https://zenn.dev/643866/articles/48eae6e7b845f8",
-      "description": "はじめに\nこの記事では、Next.js と TanStack Start を、実際にコードを書きながら 10項目 で比較検証します。\nNext.jsは、Vercel社が開発し、App Router / RSCといった特徴を持つReactフレームワークです。\n一方TanStack Start は TanStack Router と Vite をベースにしたフルスタック React フレームワークです。\n結論を先に書くと、\n\nエコシステムが成熟・高パフォーマンス・安定運用を重視するならNext.js\n型の一貫性・デプロイ先の自由度を重視するならTanStack Start\n\nという分類に...",
-      "publishedAt": "2026-09-22T09:30:05.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "5330585ad093c0f2e3a6da44668b321c68e019e7219a43297528fd62f6a81b80",
-      "title": "50代プログラミング未経験者が7年かけてAtCoderで入緑した話",
-      "url": "https://qiita.com/rinrion/items/b381ccf563d6d8e96ce9?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "こんにちは！AtCoderユーザーの rinrion です。\n2026年9月19日に行われたJIJプログラミングコンテスト 2026（AtCoder Beginner Contest 476）にて、アルゴリズムレートで入緑することができました。\nAtCoder歴7年4か月、...",
-      "publishedAt": "2026-09-22T08:18:33.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "3af3550dfd469ff01b683694e3edbd1aabd7ab6fadff5870210ae73964f209d1",
-      "title": "7割が“知っているだけ”の総務省AIセキュリティガイドライン　“放置リスク”を避ける第一歩とは？",
-      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2609/22/news011.html",
-      "description": "AIが普及する一方、そのセキュリティリスクも顕在化しています。総務省は対策のガイドラインを公開したものの、その活用は十分に広がっていないようです。AIセキュリティ対策をどこから始めればよいのでしょうか。",
-      "publishedAt": "2026-09-22T04:00:00.000Z",
-      "feedName": "＠IT"
-    },
-    {
-      "id": "4f12114bd7f3eafabdfbf57ea10c8904bd4094dc6b86e34633f6f57eb22b57a5",
-      "title": "Aikido、オープンウェイトのセキュリティ向けAIモデル「Altar-1」を公開",
-      "url": "https://gihyo.jp/article/2026/09/aikido-altar-1?utm_source=feed",
-      "description": "Aikido Securityは2026年9月21日、同社初のオープンウェイトのセキュリティ向けAIモデル「Altar-1」を発表した。",
-      "publishedAt": "2026-09-22T03:45:00.000Z",
-      "feedName": "gihyo.jp"
-    },
-    {
       "id": "952265f994765b97c4012c4c025984decc72c4dd61f8123e14b4ed81ea4f7f9b",
       "title": "EU shop rules: what developers need to change this weekend",
       "url": "https://dev.to/luca_kingsley/eu-shop-rules-what-developers-need-to-change-this-weekend-59ca",
@@ -589,14 +501,6 @@
       "url": "https://zenn.dev/cscloud_blog/articles/9968d12b332c03",
       "description": "どうもセキュリティエンジニアの西川です。シルバーウィーク楽しみましたか？私は今回ご紹介する AWS DevOps Agent のセキュリティについてほとんどの時間を使いました。（汗）ということで、ぜひご覧ください（笑）\nと言いつつも、記事を読む前に　Elevated Role や Directed Actions については事前に調べていただいた方がよいです。最近出たものなので、特徴を理解していると話が入ってきやすいかと思います。Elevated Role の説明を合わせて書こうかと思ったのですが、その解説だけで一つの記事になりそうだったので諦めました。。\n参考: https://doc...",
       "publishedAt": "2026-09-24T00:36:37.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "894e8df8e00c87f8aedd6cefcb6728052b714f7ce4736ef74fcff401ef54e137",
-      "title": "みんなJevの話してる。やってないの俺だけ",
-      "url": "https://zenn.dev/unsoluble_sugar/articles/jev-system-one-model-intro",
-      "description": "はじめに\n2026年9月中旬あたりから、タイムラインが急に「Jev」の話題で埋まりました。「LLMより200倍速い」「出力トークン無料」「ハルシネーションしない」と景気のいい言葉が並ぶ一方で、自分はまだAPIキーすら持っていません。\nやってないのは俺だけか…という焦りを燃料に、Jevとは何か、なぜ騒がれているのか、LLMと何が違うのかを一次情報と検証記事から調べた整理メモです。\n!\nJevは2026年9月15日公開で、アーキテクチャや技術論文は未公開です。執筆時点（9月22日）は需要超過で新規登録が停止中です。掲載した公称性能は開発元による評価です。\n\n\n そもそもJevとはなんぞや...",
-      "publishedAt": "2026-09-22T13:11:24.000Z",
       "feedName": "Zenn"
     },
     {
@@ -6598,6 +6502,349 @@
       "description": "はじめに\nWYSIWYGエディタの Summernote は、画像を挿入するとデフォルトでは base64に変換してHTMLに直接埋め込みます。\nbase64のままだと画像がテキストとして本文に含まれてしまうため、画像ファイルのままAWSのストレージであるS3に保存したい...",
       "publishedAt": "2026-10-20T22:16:16.000Z",
       "feedName": "Qiita"
+    },
+    {
+      "id": "195f2a4f4f02b77990adb48be35ea71d149e6cc62df7b9db2153c80ce69804ca",
+      "title": "A Note App You Can Delete",
+      "url": "https://dev.to/rahulnsanand/a-note-app-you-can-delete-42pl",
+      "description": "Every notes app has an export button. Few have a good answer to the real question: what's left when I stop using you? Usually it's a zip of HTML with the styling stripped. That's not \"you can leave\". That's a weekend.\nSo before any feature, Papyra got one rule: uninstalling it must leave you with what you'd have had anyway. That rule decides the whole architecture.\n\nEvery note is a Markdown file with a small YAML header:\n\nThere is a SQLite database and a search index. Both are caches. The test of \"cache\" is whether you can throw it away, so there's an endpoint that does exactly that:\n\nThrow the index away, ask for it back, lose nothing.\nBefore adding any column I ask: if I delete this table, can I rebuild it from the files? If not, it belongs in the file, or it's UI state that's allowed to get lost.\nStop the container. Remove the image. You have this:\n\nObsidian opens it. VS Code opens it. grep reads it. Pictures sit next to it in media/, linked the way Obsidian links them.\nWhat you lose is presentation and plumbing, never a sentence you wrote:\n\nOne honest exception: locked notes are encrypted on disk. That's the point of locking them.\n\nSo for locked notes the exit has one extra step: unlock your vault and use Export, which writes them out as plain Markdown in their own folder.\nOther tools can write to your notes, and Papyra keeps up:\n\n\nOne deserves a closer look: catching up after downtime. The server was off; Syncthing wasn't. Notes arrived, changed, vanished. So at startup Papyra compares every file to its cache before it opens the port. Here's that, done for real:\n\nWhen it runs is the interesting part:\n\nASP.NET Core's BackgroundService would run it while the port opens, so the first search could see stale results. Doing the work in IHostedService.StartAsync makes the host wait for it. Startup is slower; the first request is right.\nAnd the log line says what it did. After an ordinary upgrade it reads 0 (re)indexed, 0 pruned, and you know nothing moved underneath you.\nFor notes, yes. Notes are small and independent, there's no cross-note rule worth a transaction, and what people fear is the ten-year risk. Plain files have the best ten-year record of any format.\nIf your data has foreign keys that must hold, or many writers that must merge, use a database. Files won't thank you.\nThe app should have to earn the next day. Not trap you into it.\nI'm Rahul. I vibe-coded Papyra: what would have taken me a year or more to build by hand took a few months. It's GPLv3 and self-hosted: one Docker container, your notes as plain Markdown files.\nGitHub · Live demo, no signup · Docs",
+      "publishedAt": "2026-10-23T03:30:26.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "f275b7ef0a450d9c3e0a17303fb06f854599ac23e6656ad03368cc299fb0d6b5",
+      "title": "Why my portfolio looks like a newspaper (and what that taught me about design systems)",
+      "url": "https://dev.to/suraj_nandan_dcd78e7ec898/why-my-portfolio-looks-like-a-newspaper-and-what-that-taught-me-about-design-systems-46m9",
+      "description": "Most developer portfolios are a dark gradient with a glowing card. I wanted something people would remember, so mine is a newspaper: The Nandan Review.\nUnderneath it is a small design system I call The Press. This post is about how it works, why the newspaper idea held together, and what it taught me about design systems in general. If you've ever stared at a blank stylesheet wondering what shade of grey to use, this is for you.\nA newspaper press is mechanical, precise and industrial. It stamps ink onto paper with force and intention. I wanted every interaction on the site to feel the same way: deliberate and a little permanent.\nThat gave me a first principle that I could test every decision against:\nEverything should feel printed.\nWhat does that rule out?\nGlowing or fluorescent colours. Print is muted and natural.\nRounded, soft borders. Rules in print are hard and sharp.\nFloaty blurred shadows. Print shadows, if they exist, are sharp and dark, cast by a light that never moves.\nOnce I had that single sentence, dozens of tiny decisions stopped being decisions.\nThe second principle is typographic hierarchy: every font serves one purpose and never overlaps.\nArchivo (variable) for display headlines. Heavy weight, tight letter-spacing, commands attention.\nNewsreader (variable) for body text. Elegant serifs and a comfortable reading rhythm.\nSpace Mono for metadata, labels and code. Its monospaced precision tells you \"this is a technical detail, not narrative.\"\nThe enforcement matters more than the choice. Because each font has exactly one role, the typography becomes invisible. Readers absorb content without ever thinking about the typeface, which is the goal.\nThe palette is deliberately tiny: a warm paper tone, a near-black ink, and an oxblood accent. That's it.\nHere's the practical effect. When I add a new component, I never ask \"what shade should this be?\" The answer is already decided: it's paper, ink or oxblood. In a design system, that's what \"tokens\" are for. Instead of hard-coding colours, I name them:\n:root {\n  --paper:    /* warm off-white */;\n  --ink:      /* near-black */;\n  --oxblood:  /* the one accent colour */;\n}\n\n.press-card {\n  background: var(--paper);\n  color: var(--ink);\n  border: 2px solid var(--ink);\n  box-shadow: 4px 4px 0 var(--ink);   /* hard shadow, no blur */\n}\n\n.press-tag {\n  font-family: 'Space Mono', monospace;\n  color: var(--oxblood);\n}\n\nNotice there's no blur radius on that shadow. A hard, offset shadow is the whole \"printed\" look in one line.\nLayouts follow a strict column grid that gives the page a visual rhythm. But it flexes at breakpoints, like a newspaper reformatting for different editions:\nDesktop: a multi-column layout that mirrors a broadsheet.\nMobile: a single column that reads like a pocket edition.\nBecause everything snaps to the same underlying grid, elements align vertically across the page, which creates the quiet order that print designers perfected over centuries.\nA design system isn't only tokens. It's a set of reusable pieces that carry those tokens everywhere. The Press has a handful of primitives:\nPressSection: the paper background with a subtle noise texture overlay.\nSectionMasthead: section headers with an animated rule that draws across the page, like a press stamping down the title.\nPressTag and PressButton: consistent interactive elements with hard borders and monospaced labels.\nEach one is small, but because every section uses them, the whole site feels like one publication instead of a collage.\nMy motion rule: animation must explain something. It isn't decoration.\nContent reveals with a gentle stagger and slight upward motion, like sheets of paper being fed through a press. It guides attention from one thing to the next.\nSection rules draw horizontally, simulating the mechanical action of a press.\nIf an animation doesn't help someone understand order or structure, it doesn't ship.\nA developer portfolio is fundamentally a record of work. A newspaper is a format people already know how to scan:\nProjects become front-page stories.\nCertifications become archive entries.\nSkills become classified listings.\nThe metaphor gives structure to content that would otherwise be a pile of cards. It also makes the page feel intentional, because a theme that's applied consistently reads as craft.\nI'm not going to pretend a strong theme is free.\nA strong theme can become a cage. Some content just doesn't fit a newspaper layout, and you end up bending it or leaving it out.\nAccessibility needs deliberate checking. Beige paper plus grey text is an easy way to fail contrast requirements. Muted palettes need extra attention, not less.\nThemes age. If you make the metaphor the whole identity, changing it later is a rebuild.\nIt's not for everyone. Many visitors just want the facts fast, and a distinctive layout adds a tiny cost to that.\nThree lessons I'm confident about:\nA design system isn't a component library. It's a list of decisions you refuse to remake. The components are just where the decisions live.\nFewer options means faster shipping. Three colours and three fonts removed more work than any plugin could.\nWrite the rules in a sentence. \"Everything should feel printed\" settled arguments I hadn't even had yet.\nIf you're building your own system, start with the sentence, not the Figma file.\nHere's a tiny version you can paste into a page to feel the approach. The colour values are examples for this demo, so choose your own.\n:root {\n  --paper:    #f4efe6;\n  --ink:      #1c1c1c;\n  --oxblood:  #7a1f1f;\n}\n\nbody {\n  background: var(--paper);\n  color: var(--ink);\n  font-family: 'Newsreader', Georgia, serif;\n  line-height: 1.6;\n}\n\nh1, h2 { font-family: 'Archivo', system-ui, sans-serif; letter-spacing: -0.02em; }\n\n.label { font-family: 'Space Mono', monospace; font-size: .8rem; color: var(--oxblood); text-transform: uppercase; }\n\n.card  { border: 2px solid var(--ink); box-shadow: 4px 4px 0 var(--ink); padding: 1rem; background: var(--paper); }\n\n.rule  { border: 0; border-top: 3px double var(--ink); }\n\n<p class=\"label\">Front page</p>\n<h1>Local developer ships honest portfolio</h1>\n<hr class=\"rule\" />\n<div class=\"card\"><h2>Project</h2><p>A one-paragraph story.</p></div>\n\nThat's about all the \"style\" it takes: three colours, three fonts, a hard shadow and a double rule.\nA muted palette needs a deliberate accessibility check. WCAG asks for a contrast ratio of at least 4.5:1 for normal body text. For the example colours above:\n\n\n\nPair\nContrast ratio\nPasses body-text minimum?\n\n\n\n\nInk on paper\nabout 14.9 : 1\nYes\n\n\nOxblood on paper\nabout 9.0 : 1\nYes\n\n\nMid-grey (#8a8a8a) on paper\nabout 3.0 : 1\nNo\n\n\n\nThe last row is the classic trap: a soft grey that looks elegant but fails. You can calculate the ratio yourself from relative luminance, or use any browser dev-tools contrast checker.\n[ ] A one-sentence principle (\"everything should feel printed\")\n[ ] 3–5 colour tokens, named by role, not by hue\n[ ] Fonts with one job each\n\n[ ] A spacing scale (4, 8, 16, 24, 32…)\n[ ] 4–6 primitive components\n[ ] A motion rule (\"animation must explain something\")\n[ ] A contrast check on every colour pair\n[ ] A mobile layout\n\"Won't a strict theme limit me?\" Yes, deliberately. The limit is the feature.\n\"How do I pick the principle?\" Look at something physical whose feel you admire (paper, signage, a machine) and describe it in one sentence.\n\"How many tokens is too many?\" If you can't remember them, there are too many.\n\"Dark mode?\" A themed system needs a second palette designed, not just inverted. For a print theme, a dark variant can be \"newsprint at night\", muted rather than neon.\n\nIf you want to see it in action, the site is at surajnandan.in. What's the single sentence that defines your design taste?",
+      "publishedAt": "2026-10-23T03:30:00.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "d13faab09cab7449f64120f1af9c3c7c89f24e6cb403837d0f0a21b7c4bc614c",
+      "title": "Motion graphics from a prompt, written as code",
+      "url": "https://dev.to/deepvariance/motion-graphics-from-a-prompt-written-as-code-3mi8",
+      "description": "Some videos should not be filmed. A sale that starts on Friday, a product that launches next week, a bakery that opens on Saturday: the message is a few words, a date and maybe a picture. What makes it work is how the words move. That is motion graphics: designed type, shapes and pictures, animated to music.\nDV4 makes motion graphics from a prompt. This post explains how, because the method is unusual. There is no template behind it.\nFilmed shots are good at people, places and things in light. Motion graphics are good at messages: a launch date, three reasons to buy, a before and after, an opening announcement. They read clearly on a phone with the sound off, and every word is exact, because every word is set as type.\nIn DV4 a motion graphics video is designed motion with your pictures and music. No footage is generated. It is on the paid plans, in landscape or vertical.\nA common way to make an animated video from a prompt is a template: a set of layouts and moves with your words dropped in. It is fast, and every customer gets the same moves.\nDV4 has no templates. A model writes each film as code: the layout of every scene, the type, the colours, the way each element enters and leaves, the cuts. It works the way a motion designer who writes code would, with a file of its own that it edits, renders and edits again.\nSo that two requests do not get the same film, there is no house style. No default palette, no default easing, no end card that every video shares. Each job draws its own style direction and its own references, and the model commits to them unless your prompt or your pictures say otherwise.\nHow the rest of DV4 works, the planning, the checks and the assembly, is in From one line to a finished video.\nWriting code for a film without seeing it is like setting type with your eyes closed. So the model renders a draft, looks at frames from it and fixes what it sees: a title that is too small, a scene that crowds the edge, a transition that hides the next line before you can read it.\nIt cannot skip that step. The model can only finish once the version it is finishing has rendered and been looked at.\nThe model is not the only one looking. Code checks every render and hands the findings back before the film can be finished:\nFrozen stretches. If nothing on screen moves for longer than half a second outside the final moment, the model is told where, so it can keep something moving.\nWords at the edge. Text recognition reads the frames. A word that touches the edge of the frame, or crowds it, is reported with its time.\nBlack frames. A flash of black between scenes is caught and named.\nBefore you see the finished film, its words and its frames go through DV4's safety checks, as every video does. The code itself is scanned before it ever runs, may not call the network, and runs only in a headless browser on our own workers.\nAnimated statistics are a motion graphics favourite, and a liability. A model that is asked for \"three big numbers\" will happily make some up.\nDV4's plan is checked for exactly that. A statistic appears only when the figure came from you. A quote appears only when you wrote the words in quotation marks. If you want \"40% off\" on screen, put \"40% off\" in your prompt.\nYou can add your own pictures, of the product, the shop or the team, and the film is designed around them rather than around stock shapes. For sound, DV4 composes music for the film, and the scenes are cut to its beats. If you have a track you want to use, upload it as your soundtrack instead.\nMotion graphics play over music, not over speech. A motion graphics video does not take a voice recording.\nSay what the film is for, what it must say and how it should feel:\nA 15-second vertical announcement for Bloom Bakery's grand opening this Saturday at 9 am. Warm and lively. Show the date big. End with the address: 12 Elm Street.\nA few habits help:\nPut every exact word in the prompt. Names, dates, prices and addresses appear as you wrote them.\nGive the length and the format. Vertical for reels and stories, landscape for the web.\nName a feeling, not a font. \"Calm and premium\" or \"loud and fast\" gives the model room to design.\nAdd your pictures when the film is about something real.\nMotion graphics in DV4 are not narrated: there is no voice-over. The film does not use a brand kit yet, so give your colours in the prompt if they matter. It does not edit a video you already have. And when a film fails, which can happen with a model writing code, the job is refunded and you can run it again.\nWrite the announcement you have been putting off, in one paragraph, and watch DV4 design it, look at its own drafts and finish it. You can make motion graphics in DV4 on any paid plan.\nEvery draft is rendered and every frame is checked, and all of it runs on GPUs and CPUs that cost money by the second. Making that work faster and cheaper is the other half of what we do at Deep Variance: we build the auto-tuning inference stack for open-source diffusion models, and DV4 runs on the stack.\nOriginally published on the Deep Variance blog.",
+      "publishedAt": "2026-10-23T03:28:50.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "64ba841712f6597b334af6223ee25711fe704946048131e5b874ee42ed98e708",
+      "title": "I built a GitHub year-in-review video. Counting was the hard part",
+      "url": "https://dev.to/fernando_callata_dev/i-built-a-github-year-in-review-video-counting-was-the-hard-part-fj9",
+      "description": "Open your GitHub profile and look at it the way a recruiter would. There's a grid of green squares, a few pinned repositories and a language bar. You can read that page because you know what a contribution is. Someone who hires developers but doesn't write code can tell you were busy, and not much else.\ngitreplay.club is meant for that moment. It turns your GitHub activity into a vertical, 20-second video you can send before an interview: commits, pull requests, top languages, your longest streak and a heatmap of the year. It's the same idea as the \"GitHub Wrapped\" recaps that go around every December, and you can make one any time of year, for any year back to 2008 or for a single month.\nRendering the video was the easy part. It's a Remotion composition rendered on AWS Lambda, and it takes about a minute and a half. Getting the numbers right was harder.\nThe obvious source for a commit count is contributionsCollection.totalCommitContributions in GitHub's GraphQL API. For a lot of developers that number is too low. It counts commits in public repositories. Commits in private repositories are pooled into restrictedContributionsCount, a single number that also includes other kinds of contributions and never says which repository they came from. If most of your year happened in private repos, as it does for many people who code for a living, the obvious number leaves most of your year out.\nSo gitreplay.club asks each repository instead. For every repo the token can read, it requests the default branch's history, filtered by author and date range:\ndefaultBranchRef {\n  target {\n    ... on Commit {\n      history(author: { id: $authorId }, since: $since, until: $until) {\n        totalCount\n      }\n    }\n  }\n}\n\nThe commit total is the sum of those counts, merge commits included, with GitHub's own figure kept as a floor. Some repositories stay unreadable even with your token, such as organization repos behind SAML single sign-on or OAuth app restrictions. Their commits come from GitHub's per-repository contribution data instead. Those repos don't trigger the video's partial-data warning, which only appears when a public repository has disappeared.\nLanguages took three tries. The first version added up the language bytes of every repository you own, the same data that draws the language bar on a repo page. That describes the history of your account rather than your year: a repository you last touched in 2019 counted as much as the one you worked in every day.\nThe second version tried to be exact. It walked every commit you authored in the period and ran the changed files through linguist-js, a port of GitHub's Linguist, to classify them. It was accurate, and it couldn't finish for prolific accounts. With one API request per commit, the cost grew with how much you wrote, and heavy users ran past the collection time budget and GitHub's secondary limit of 900 points per minute. It failed for exactly the people with the busiest years.\nThe version running now takes each repository's language mix and weights it by the commits you made there in the period. If a repo is 80% TypeScript and you made 200 commits there, that adds 160 commits' worth of TypeScript. It costs one GraphQL request per 25 repositories, however many commits you made. It doesn't measure which lines you personally wrote, and I'd rather say so here than let the chart imply it.\nThen there's work GitHub can't see at all, like code on GitLab or in a company repo you lost access to when you changed jobs. Premium users can correct their numbers on a review screen before the video renders. Before a correction saves, you confirm the numbers are yours to report, and anyone watching the video or opening the share page sees a \"Self-reported stats\" label. A recap you could edit freely would be a résumé with animations, and a recruiter would be right to ignore it. One that can't be corrected is wrong for anyone whose work lives outside GitHub. The label is the compromise.\nYou can try it without signing in. Put any GitHub username after gitreplay.club/ and you get that account's public year, drawn as a terminal screen with the avatar in ASCII art, a bit like neofetch. Mine is gitreplay.club/fernandohre. That page only uses public data.\nSigning in with GitHub adds your private work to the totals and lets you make the video. You review the numbers, pick a year or a month and a style, and the MP4 is ready in about a minute and a half. You can download it or share a link, and the share page can hide your repository names if your repos are client work. The video is free in the GitHub Dark style, with a watermark. Premium is a one-time US$15 that adds four more styles, removes the watermark and turns on the self-reported corrections.\nIf a number in your recap looks wrong, tell me which one in the comments and what you expected it to be.",
+      "publishedAt": "2026-10-23T03:27:41.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "182d67946d5247a6fd139c8dfc338ca5619e325ad7c595df0e96c1c01ecdb27e",
+      "title": "Tableau 製品のセキュリティ関連通知を確認する方法を教えてください",
+      "url": "https://dev.classmethod.jp/articles/tsnote-howto-tableau-security-notification-page/",
+      "description": "Tableau製品のセキュリティ関連通知を確認する方法をご紹介します。Salesforceの Trust Status ページを活用して、セキュリティアドバイザリを確認し、通知設定を行う手順をまとめました。",
+      "publishedAt": "2026-10-23T02:38:32.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "2095d94220809390fe903416a171a6311c5ab76cf423b4291abd4c40d78454fd",
+      "title": "ソフォス、シャドーAIを可視化する「Sophos AI Defense」の一般提供を開始",
+      "url": "https://enterprisezine.jp/news/detail/25355",
+      "description": "ソフォスは2026年10月23日、従業員やアプリケーションが使用しているAIツールを検知し、ポリシーを適用する「Sophos AI Defense」の一般提供を開始したと発表した。セキュリティチーム...",
+      "publishedAt": "2026-10-23T02:35:00.000Z",
+      "feedName": "EnterpriseZine"
+    },
+    {
+      "id": "b6d33840e297a895904a003f57237924820c32889874a3827decb8453294633f",
+      "title": "Claude Code v2.1.308〜v2.1.309 の主要アップデート - ultrareview の信頼確認必須化と sed -i の挙動変更",
+      "url": "https://dev.classmethod.jp/articles/20261023-cc-updates-v2-1-309/",
+      "description": "Claude Code v2.1.309 がリリースされました。今回は `sed -i` の挙動変更や `claude ultrareview` のセキュリティ強化など、運用に影響する破壊的変更が含まれています。注目のアップデートと実機での確認結果をご紹介します。本日は、`sed -i` の挙動変更を試してみました。",
+      "publishedAt": "2026-10-23T02:09:43.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "adf3fb29d514e7d73d1ac5f43be873676c674beed020b7fe24c14373d9b3b1fc",
+      "title": "アカウントに適用されている RDS for Oracle ライセンス込み (License Included) インスタンス数の上限値を確認したい",
+      "url": "https://dev.classmethod.jp/articles/tsnote-service-quotas-rds-for-oracle-license-included-db-instance/",
+      "description": "RDS for Oracle のライセンス込みインスタンス数の上限値を確認する方法について説明します。Service Quotas では確認できないため、AWS サポートへの問い合わせが必要です。デフォルトは最大 10 インスタンスまでの制限があります。",
+      "publishedAt": "2026-10-23T02:00:35.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "ee86f8cad8349e1477d833c8b0556ec9c2d2ebed1e1f59a618f02d63673c9742",
+      "title": "Amazon Bedrock コンソールの「sagemaker:ListHubContents」エラーを回避するには",
+      "url": "https://dev.classmethod.jp/articles/tsnote-bedrock-console-sagemaker-listhubcontents-error-avoid/",
+      "description": "AWS マネジメントコンソールで Bedrock を使用する際、bedrock:* だけでは不十分で、SageMaker のアクセス許可も必要な理由と、その対応方法をご紹介します。",
+      "publishedAt": "2026-10-23T01:45:15.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "396fda1fc08cca60e5e123abbbe73a58d65f9bb27a06baf4248aee689f05fcaf",
+      "title": "金融リファレンスアーキテクチャ日本版 v2のSkillsをKiroに読み込ませたら、回答はどう変わるのか試してみた",
+      "url": "https://dev.classmethod.jp/articles/202610-mitsuguchi-kiro-fsi-reference-architecture/",
+      "description": "金融リファレンスアーキテクチャ日本版v2のAgent Skillsを Kiroで使用し、FISC対応の設計回答がどう変わるのか。同じ質問をスキルなし→ありで比べて、ID・番号の正確性や、実務での使い所を検証してみました。",
+      "publishedAt": "2026-10-23T01:00:05.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "3e5f68a1741f6ae8b853635f37aa1dce1b319d386164653f6528bc211dc45e97",
+      "title": "AI普及の阻害要因「トークノミクスとGPU飢餓」の打開策──データ移動ゼロで実現するROI創出とTCO削減",
+      "url": "https://enterprisezine.jp/article/detail/25312",
+      "description": "生成AIの企業活用が本格化する中、市場の主戦場はAIモデルのトレーニングから、日常業務のコンテキスト（文脈）を活かす「推論」や「Applied AI（応用AI）」の現場適用へと急シフトしている。 しかし、AIエージェントの利用拡大にともないトークン消費コスト（トークノミクス）が膨れ上がることや、パブリッククラウドへ大量データを転送する際に発生する費用（エグレスコスト）、さらには高度なAI人材の不足が、多くの企業においてROI向上を阻む大きな壁となっている。Clouderaはシンガポールで開催した年次カンファレンス「EVOLVE26」において、データを外部に移動させない「Zero Data Egress」構想と、統合アーキテクチャ「Cloud AI Factory」を提示。さらに、Applied AI部門による「Forward Deployed Engineer（FDE」の無償伴走支援を打ち出すとともに、製薬大手AbbVieによるナレッジプラットフォーム構築や、エネルギー大手ExxonMobilのペタバイト級データを活かしたフィジカルAI事例を通じて、実効性あるビジネス価値創出の全貌を明かした。",
+      "publishedAt": "2026-10-23T00:00:00.000Z",
+      "feedName": "EnterpriseZine"
+    },
+    {
+      "id": "9d80556f206ae0d657473f34919a1e99ad305ab2a449599bbe13fc95fc657641",
+      "title": "自作 VS Code 拡張をまた3年ぶりにアップデート 〜過去の自分と AI に助けてもらった話〜",
+      "url": "https://developer.mamezou-tech.com/blogs/2026/10/23/update-my-vscode-extension-after-3years/",
+      "description": "はじめに\n#\n3年ちょっと前に自作の VS Code 拡張を更新した記事を書きました。VS Code の拡張を Marketplace に公開するには、日頃全然使わない Azure DevOps のプロジェクトで PAT(Personal Access Token)を発行する必要があり、その手順が超絶がわかりにくかったので自分用のメモとして残したものです。\n/blogs/2023/07/11/update-vs-code-extension/\n\n筆者が公開している VS Code 拡張は ChangeLog を書くことを支援するものです。\nhttps://marketplace.visualstudio.com/items?itemName=kondoumh.changelog-support\n\nGitHub リポジトリはこちらです。\nhttps://github.com/kondoumh/changelog-support\n\n -->\n Information\n前の記事にも書きましたが、Markdown の CHANGELOG.md ではなく、Emacs などでサポートされている (Markdown 登場以前からある) ChangeLog フォーマットを扱うものです。ChangeLog を日々の作業のログ・メモとして活用するというための拡張です。\n初めての機能拡張リクエスト\n#\nこの Marketplace で星もついてない、5年間で620件ぐらいしかダウンロードされていない弱小 Extension に 先日 enhancement issue が3つも登録されていました。\nauto-complete / go to filenames · Issue #27 · kondoumh/changelog-support\nsetting language \"none\" to not insert weekday · Issue #28 · kondoumh/changelog-support\nadd outline · Issue #29 · kondoumh/changelog-support\nauto-complete / go to filenames · Issue #27\n「ChangeLog のアイテム入力中に、ファイル名を補完したり、更にファイル内の関数などのシンボル(トークン)の入力もアシストしてほしい。さらに当該ファイルにジャンプする機能も欲しい。」という要望でした。自分のユースケースでは使わないですが、よく IDE にある機能ですし面白そうなので対応することにしました。ディレクトリ内のファイル列挙やパースの実装が肝になりそうです。VS Code 拡張で実装するには、CompletionProvider や DefinitionProvider にこれらの情報を渡す必要があるようです。\nsetting language \"none\" to not insert weekday · Issue #28\nchangelog-support では日付のエントリを出力する機能があり、曜日を日本語で出すか英語で出すかを dayOfWeekLang オプションの en/ja 切り替えで指定していました。\nen の場合\n2026-10-23 Fri <kondoumh@local>\n\nja の場合、\n2026-10-23 (金) <kondoumh@local>\n\ndayOfWeekLang のオプションに none を追加して曜日を出さないオプションを追加して欲しいという内容でした。シンプルな内容なので対応することにしました。\nadd outline · Issue #29\nChangeLog のアウトライン構造を、VS Code 標準のアウトラインウィジェットに表示して欲しいという内容です。アウトラインは DocumentSymbolProvider を使って実装する模様。拡張の機能としてはリッチ感も出るので、これも対応することにしました。\n成果\n#\n#27 ファイル名トークン補完とジャンプ\n#\nChangeLog のアイテム * hoge: の入力中、ディレクトリ内の ChangeLog ファイルからの相対パスにあるファイルから入力中アイテムにマッチするファイルを列挙し、選択時に補完。さらに * hoge() の入力を検知したらファイル内をパースしてシンボルを列挙。アイテム右クリックでファイルジャンプできるようになりました。自分では使わないけど便利そうです☺️\n\n#28 日付エントリに曜日を出さないオプションを追加\n#\nこれはシンプルな機能なので割愛。\n#29 アウトライン表示\n#\nChangeLog の内容がアウトライン表示されるようになりました。拡張っぽくてかっちょいい😄\n\n -->\n さらなるリクエスト\nenhancement issue を登録してくれた人が「せっかくだから VSX Registry にも公開してよ。」っていうリクエストの issue を登録してました。Marketplace へのアクセスが阻まれている時や VS Code 互換の Web IDE に拡張を入れたい時などには VSX が簡単に入手できるようにしておくと便利なんでしょうね。\nFR: please co-publish on Open VSX Registry · Issue #34 · kondoumh/changelog-support\nこれは次のリリース時にでも対応したいと思います。\nMarketplace への公開手順のアップデート\n#\n前回の記事のとほぼ同じ手順で Azure DevOps プロジェクトで公開用の Personal Access Token を発行。UI は多少変わってましたが、なんとか迷わずにたどり着けました。\n前回は vsce コマンドは、npm でグローバルインストールしてましたが、npx でサクッと実行する方がスマートでした。\nnpx @vscode/vsce login <publisher-name>\n\nnpx @vscode/vsce publish\n\n\n  \n\n -->\n Information\n今回は、バージョンを 0.3.0, 0.3.1 と上げましたが、npm の version サブコマンドを使いました。\nnpm version 0.3.0\n\npackage.json（+ lockfile）更新、コミット、タグ作成まで一気にやってくれます。こんな便利なコマンドがあるの知りませんでした（Copilot さんに教えてもらいました）。\npackage.json の engines.vscode のバージョン(以下の例では 1.80.0)を devDependencies の @types/vscode のバージョンと整合させないといけないのを把握しておらず、公開時にエラーでハマりました。このバージョン指定は新しければよいというものでもなく、サポートする VS Code の最古バージョンを指定するので注意が必要です。\npackage.json\n  \n{\n  \"name\": \"changelog-support\",\n  \"description\": \"Extension to support writing ChangeLog.\",\n  \"version\": \"0.3.1\",\n  \"publisher\": \"kondoumh\",\n  \"engines\": {\n    \"vscode\": \"^1.80.0\"\n  },\n  :\n  \"devDependencies\": {\n    \"@types/vscode\": \"1.80.0\",\n  },\n\n\n  \n\n\nさいごに\n#\n前回記事のおかげで、Marketplace への公開時に浦島太郎にならずに済みました。やはりブログは自分用の記録としても書いておいた方がいいですね。\n熱心なユーザー？から機能拡張リクエストをもらうと、やはり作者としてはモチベが上がりますね。\n今回は、ファイルのパース部分とか、アウトライン構造の構築などで、ゴリっとコードが増えてましたが、AI が既存コードも理解してやってくれるので、3つの issue の対応は要件把握からテストまで含めて2時間ぐらいで終わりました。\n個人開発の OSS でも issue 到着からリリースまでのリードタイムが短縮できますね。",
+      "publishedAt": "2026-10-23T00:00:00.000Z",
+      "feedName": "豆蔵デベロッパーサイト"
+    },
+    {
+      "id": "5fb4dad82dbd8315332b6a582b988a328686e69f830a4aadf355bcf492e61ed1",
+      "title": "PHP2Shell、公表4日前に悪用の試み　「公表日より前にさかのぼって調査を」とAmazon",
+      "url": "https://www.itmedia.co.jp/news/article/2610/23/2000002530/",
+      "description": "米Amazonの脅威インテリジェンスチーム「Amazon Threat Intelligence」は10月21日（米国時間）、PHPの「緊急」レベルの脆弱性2件（CVE-2026-109618、CVE-2026-109619、通称「PHP2Shell」）を悪用しようとする試みを、脆弱性公表の4日前に当たる10月17日に観測していたと、AWSの公式ブログで明らかにした。攻撃者をおびき...",
+      "publishedAt": "2026-10-22T22:08:24.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "07512372dc6889e4453e34863c21969dcb3a46e41fb714689eeca0681234d801",
+      "title": "地政学的リスク下で求められるデータ移転シナリオの策定",
+      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2610/23/news001.html",
+      "description": "地政学的な不安定さとデータレジデンシー規制の進展により、企業はコンプライアンスと事業継続性の両立という課題に直面している。サイバーセキュリティリーダーには、機密データの越境移転に関する法的要件を満たしながら、緊急時にも迅速にデータやワークロードを移転できる体制の整備が求められる。その策として、データの移転に関する法務・技術・運用面の対応を体系化する「データモビリティプレイブック」の策定が重要になっている。",
+      "publishedAt": "2026-10-22T20:00:00.000Z",
+      "feedName": "＠IT"
+    },
+    {
+      "id": "54e20c6f5294506dee8975b4ef70eb05304a1425f03787a3ce5e4fe3b148cabc",
+      "title": "Node.jsの2026年10月セキュリティリリースに、手元の50リポジトリとVercel・Cloud Runで対応した",
+      "url": "https://zenn.dev/yoshinani_dev/articles/0e6513a56eb629",
+      "description": "!\n受託案件を含むため、リポジトリ名・プロジェクト名・チーム名・URL は伏せています。数字は、実際に数えた値と測った値です。\n\n2026年10月21日に Node.js のセキュリティリリースが出ました。修正は10件で、Brotli デコーダの範囲外書き込み（CVE-2026-111497、RCE のおそれ）や、TLS 証明書のホスト名チェックを回避できるものなど、High が4件あります。\nhttps://nodejs.org/en/blog/vulnerability/october-2026-security-releases\n修正版は 24.22.1 / 22.23.4 / 2...",
+      "publishedAt": "2026-10-22T17:52:59.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "d34e6ae3d0685edbbff2886cdd0d2bac8e558ebc9c6e08b3c97a514d39507111",
+      "title": "【Security Hub修復手順】[KMS.1] IAM カスタマー管理ポリシーでは、すべての KMS キーの復号アクションを許可しないでください",
+      "url": "https://dev.classmethod.jp/articles/securityhub-fsbp-remediation-kms-1/",
+      "description": "AWS Security Hubの「KMS.1」コントロールに対応するため、IAMカスタマー管理ポリシーでKMS復号アクションの権限を特定キーに限定する修復手順をご紹介します。",
+      "publishedAt": "2026-10-22T16:07:46.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "e34bd7b1f4c351f583feb94c2315d916bb363d4adff56f585da6f7a30098ec85",
+      "title": "【Security Hub修復手順】[KMS.2] IAM プリンシパルは、すべての KMS キーで復号アクションを許可する IAM インラインポリシーを使用しないでください",
+      "url": "https://dev.classmethod.jp/articles/securityhub-fsbp-remediation-kms-2/",
+      "description": "AWS Security HubのKMS.2コントロールで検出されたIAMインラインポリシーの修復手順をご紹介します。すべてのKMSキーへの復号を許可するポリシーを特定のキーに限定する方法を、実際の設定例とともに説明します。",
+      "publishedAt": "2026-10-22T16:06:57.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "8fb5afac09fe54f0d0930444b671f36ab216dc3a9666f8ba7f635d36b9c074b4",
+      "title": "eMudhraの中間CAの秘密鍵が公開された証明書から復元可能と判明、pip・uvなどの開発ツールに修正版 | gihyo.jp",
+      "url": "https://gihyo.jp/article/2026/10/emudhra-ca-key-compromise-dev-tools-fixes",
+      "description": "eMudhraの中間CAの秘密鍵が公開された証明書から復元可能と判明⁠⁠、pip⁠⁠・uvなどの開発ツールに修正版 認証局eMudhraの中間CA証明書8件で、公開された証明書から秘密鍵を復元できる問題が判明した。このうちTLS用の中間CAの秘密鍵を使えば、攻撃者が偽のHTTPS証明書を作成できる。Python関連ツールやGo、Node.js、Rust...",
+      "publishedAt": "2026-10-22T14:46:48.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "50c367686721be8162692ae3f7c5d37d2f96d158b8b42aec85a53bebfe8c4e65",
+      "title": "AWS ウィークリーラウンドアップ: AWS Lambda Web Functions、Vercel Marketplace の Amazon S3 など (2026 年 10 月 19 日)",
+      "url": "https://aws.amazon.com/jp/blogs/news/aws-weekly-roundup-aws-lambda-web-functions-amazon-s3-on-the-vercel-marketplace-and-more-october-19-2026/",
+      "description": "2026 年 10 月 13 日週に起きたことは、新しい種類のコンピュートを追加したわけではありません。代わり […]",
+      "publishedAt": "2026-10-22T14:22:55.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "ea3a262b2a46e62a4d606b9465ae7d7b849d6d8199523a8c014fade5704236b5",
+      "title": "AWS Security Hub CSPM 経由の検出結果を特定 OU 配下のアカウントに絞って通知する仕組みを Lambda で作ってみた",
+      "url": "https://dev.classmethod.jp/articles/security-hub-cspm-notify-specific-ou-lambda/",
+      "description": "Security Hub CSPM 経由の検出結果を特定 OU 配下のアカウントに絞って通知する仕組みを Lambda で実装してみました。AWS Organizations の API を活用して対象アカウントを動的に判定し、SNS 経由で通知します。",
+      "publishedAt": "2026-10-22T14:07:52.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "24320970f8a6647cbb53b32e801f168dec0527578bf13767cc6d7899a379295b",
+      "title": "自宅サーバーの定期バックアップの失敗に気付かなかった話",
+      "url": "https://zenn.dev/komorebi_note/articles/d9df64e7e1da82",
+      "description": "はじめに\nはじめまして。現在はLinuxを勉強中で、中古パソコンに写真管理サーバーを動かしています。\nこの記事では、設定したはずのバックアップが機能していなかったので、その過程を書きます。\n\n 背景\nGoogleフォトに頼らず写真を自分で管理すべくImmichを使用している。スマホで撮った写真はImmichに自動で保存し、スマホからは手動で削除している。つまり写真はサーバーにしかないため、サーバーが壊れたら全ての写真が無くなる。そこで、rcloneでGoogleドライブに暗号化してバックアップする設定をしていた。\n\n 環境\n\n中古PC + Rocky Linux\nDocker で I...",
+      "publishedAt": "2026-10-22T13:11:28.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "25f2d918c49bd09ad3cf597d7ead2bcf04783a864d05345d5d1f2b75287219a0",
+      "title": "ログ検索体験から逆算するログ基盤設計",
+      "url": "https://speakerdeck.com/hirosi1900day/rogu-kensaku-taiken-kara-gyakusan-suru-rogu-kiban-sekkei",
+      "description": "tcpdump で追う Datastream 障害調査と Transit Gateway × VPN のリアーキテクチャ設計",
+      "publishedAt": "2026-10-22T13:10:31.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "27b5dc089b2f7bd60de0c27b48b1a726fc5049b7f83d44930b06b6ca41b28fcf",
+      "title": "Rootless Dockerと学ぶSELinux【初心者向け】",
+      "url": "https://zenn.dev/nexryai/articles/afb828d7dda6b7",
+      "description": "!\nこの記事の作成にあたって、図の生成、調査、校正に生成AIを使用していますが、本文は人の手で書かれたものです。\n\n\n 環境\n\nRocky Linux 10.2\n\n\n あらすじ\n私の自宅サーバーでは、/var/composeにDocker Composeのファイル一式を格納し、composeユーザーでRootless Dockerを動かしています。\nRocky Linux（というかRHEL）ではデフォルトでrootで動作する常駐プロセスがありますが、これらからのアクセス制限がどんな感じでかかってるのかを調査してSELinuxの基礎を学んだというお話です。\n\n 前提知識\nSELinuxは主...",
+      "publishedAt": "2026-10-22T11:50:59.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "30622bf6b5849af2c1498ca3e258e132dd98f3055af42a2c819156fbcee917e5",
+      "title": "AWS Provider に aws_devopsagent_agent_space が追加されたので、AWS DevOps Agent の Agent Space を Terraform で作ってみた",
+      "url": "https://dev.classmethod.jp/articles/aws-devops-agent-terraform-aws-provider-agent-space/",
+      "publishedAt": "2026-10-22T11:32:09.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "47b2ec1140ea7ebf6ecf9bde86ffef86529d6ead268457d48b317ab9eb8bc70d",
+      "title": "PHP 8.5.12の緊急リリースにpixivはどう対応したか - pixiv inside",
+      "url": "https://inside.pixiv.blog/2026/10/22/193321",
+      "description": "こんにちは、Platform Division Infrastructure Unitのpicopicoです。 2026年10月21日、PHPに深刻な脆弱性（通称PHP2Shell）が見つかり、緊急のセキュリティリリースが予告されました。今回の脆弱性への対応にあたられた皆さま、そして現在も対応を続けている皆さまに、心より敬意を表します。 ピクシブでは影響を受ける...",
+      "publishedAt": "2026-10-22T10:38:41.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "e1da2664313dd8a68dce61f157ecb0ce0806d56dc7c0e74621357b13350e0cfd",
+      "title": "Reactのレビュー基準を公式ドキュメントに揃えたいので、Claude Codeで50項目のチェックリストを作ってみた話",
+      "url": "https://dev.classmethod.jp/articles/react-review-checklist-claude-code/",
+      "description": "React公式ドキュメントを基にした、50項目のコードレビューチェックリストを作成しました。感覚的なコメントから脱却し、公式の推奨事項を根拠にしたレビューを実現する方法と、実際の適用結果を共有します。",
+      "publishedAt": "2026-10-22T09:07:00.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "6257928b9bcf0a15f2bb660fd18ffec6c00a4ec03323c8cf71a91e195840a31c",
+      "title": "Alteryx 製品のセキュリティ関連通知を確認する方法を教えてください",
+      "url": "https://dev.classmethod.jp/articles/tsnote-howto-alteryx-security-notification-page/",
+      "description": "Alteryx製品のセキュリティ関連通知を確認する方法について紹介します。MyAlteryxのセキュリティ速報ページで最新のセキュリティアドバイザリをチェックし、Preference Centerで通知設定を行う方法をご説明します。",
+      "publishedAt": "2026-10-22T08:32:32.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "3f41d03e9adc6181f73546461eae2297853de84793017f502e1ee459c9e93f30",
+      "title": "AWS Continuum for penetration testing の検出結果から、プライベートリポジトリにコード修正 PR を作ってみた",
+      "url": "https://dev.classmethod.jp/articles/2026-10-22-security-agent-pentest-code-remediation/",
+      "description": "AWS Continuum for penetration testingの、検出結果からコード修正のPRを作る機能を、プライベートリポジトリで試しました。PRの作成、複数の検出結果を指定したときの挙動、マージ後の再検証からPRコードレビューコメントの挙動まで深ぼって確認しています。",
+      "publishedAt": "2026-10-22T06:59:25.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "9470e8031f295f3a7aa087ea6b1c4fbe447d090d5076b78049d44d08102613e9",
+      "title": "【アップデート】Network Firewall の SNI 詐称対策が強化されたので、再現して確かめてみた",
+      "url": "https://dev.classmethod.jp/articles/network-firewall-resolved-ip-validation/",
+      "description": "AWS Network Firewall の Route 53 Resolved IP validation で、SNI 詐称を試しました。標準のドメインルールだけでは通った詐称が、ポリシーを DROP にすると止まり、名前解決した example.com への接続は通りました。",
+      "publishedAt": "2026-10-22T06:29:58.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "9196baee52fc7415f5a0ef91d7ca58c790a53496f31b538c34e20567b4cbc86c",
+      "title": "eMudhraの中間CAの秘密鍵が公開された証明書から復元可能と判明、pip・uvなどの開発ツールに修正版",
+      "url": "https://gihyo.jp/article/2026/10/emudhra-ca-key-compromise-dev-tools-fixes?utm_source=feed",
+      "description": "認証局eMudhraの中間CA証明書8件で、公開された証明書から秘密鍵を復元できる問題が判明した。このうちTLS用の中間CAの秘密鍵を使えば、攻撃者が偽のHTTPS証明書を作成できる。Python関連ツールやGo、Node.js、Rustなどで、対策を取り込んだ更新版が提供されている。",
+      "publishedAt": "2026-10-22T05:24:00.000Z",
+      "feedName": "gihyo.jp"
+    },
+    {
+      "id": "fa5e304240c47d53ebf674326132b2bf3040294cf68cd9beb87a66300737bbd2",
+      "title": "リョーサン菱洋、東京エレクトロンの半導体製造装置向け製品セキュリティ向上を支援",
+      "url": "https://enterprisezine.jp/news/detail/25347",
+      "description": "リョーサン菱洋は2026年10月22日、東京エレクトロン（以下、TEL）の製品セキュリティ向上を支援したと発表した。装置への負荷を抑えつつ、サイバー攻撃に対する防御力を強化するソリューション導入、保...",
+      "publishedAt": "2026-10-22T04:50:00.000Z",
+      "feedName": "EnterpriseZine"
+    },
+    {
+      "id": "cd7459e64f90b3702efdae6adc0cb94223a0f22a2c836c5dcc3da3ae92d14c07",
+      "title": "【緊急】Node.jsの重大脆弱性に対応するセキュリティアップデートを安全に適用する方法",
+      "url": "https://qiita.com/superdora-cloud/items/8cad27487cd0e67d088c?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\n2026年10月21日、Node.jsプロジェクトが脆弱性10件を修正するセキュリティリリースを公開しました。同じ日にPHPの重大な脆弱性も話題になったため、見逃した方もいるかもしれません。\nこの記事では、次の内容を初心者向けに整理します。\n\n何が修正されたのか...",
+      "publishedAt": "2026-10-22T04:46:40.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "8aafabf58dda1cd24b52dda4b5fbb168f865a53b152c81708ef660e4bb423129",
+      "title": "ServiceNowとデロイト トーマツ サイバー、AI時代のサイバー攻撃に備えるソリューション発表",
+      "url": "https://enterprisezine.jp/news/detail/25345",
+      "description": "ServiceNow Japan（以下、ServiceNow）とデロイト トーマツ サイバー（以下、DTCY）は、AI時代のサイバーセキュリティ運用に向けて、戦略的な協業関係に基づき両社の技術基盤、...",
+      "publishedAt": "2026-10-22T04:30:00.000Z",
+      "feedName": "EnterpriseZine"
+    },
+    {
+      "id": "0e64d2e33f58f9ba7382ed283253b25d871e9b0aa33c097d0ba69b9931c935dc",
+      "title": "NTTドコモ、フロントエンド基盤「LAMP」のAPIゲートウェイにKongを採用",
+      "url": "https://enterprisezine.jp/news/detail/25344",
+      "description": "Kongは2026年10月22日、NTTドコモが推進するフロントエンド基盤刷新プロジェクト「LAMP（ランプ）」に、Kongが採用されたと発表した。マイクロサービス間通信を制御・管理するAPIゲート...",
+      "publishedAt": "2026-10-22T04:14:00.000Z",
+      "feedName": "EnterpriseZine"
+    },
+    {
+      "id": "dd7f5db12d2a038580c387084b3ff543dbf432a30e48bb2c9861022f9431ed96",
+      "title": "AWS WAF を使用した PHP2Shell RCE 脆弱性 (CVE-2026-109618 および CVE-2026-109619) の緩和策",
+      "url": "https://aws.amazon.com/jp/blogs/news/using-aws-waf-to-apply-mitigations-for-php2shell-rce-vulnerabilities-cve-2026-109618-and-cve-2026-109619/",
+      "description": "PHP2Shell (CVE-2026-109618 および CVE-2026-109619) は、PHP コアランタイムに存在する認証不要の RCE 脆弱性です。完全な修正は PHP のアップグレードのみですが、本記事ではパッチ適用期間中に AWS WAF で露出を低減する方法を紹介します。セッションアップロード進捗フィールドや multipart リクエストのブロック、本文サイズの上限設定、レートベースのルールについて、AWS WAFv2 の JSON ルール例と Count モードから Block への段階的なデプロイ手順を解説します。また、AWS WAF による保護の限界と、補完するサーバー側の緩和策についても説明します。",
+      "publishedAt": "2026-10-22T03:51:00.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "6c68cf5f0a09670f93fab50823552fe13a85f82edacd9bfbbb1b622a8a048a40",
+      "title": "AWS セキュリティ速報（2026-143-AWS）と AWS Security Blog で紹介された PHP2Shell を緩和する AWS WAF ルールを試してみた",
+      "url": "https://dev.classmethod.jp/articles/aws-security-bulletin-php2shell-waf-rules/",
+      "description": "PHP2Shell（CVE-2026-109618、CVE-2026-109619）を緩和する 2 つのルール（PHP2Shell と Block-Oversize-Body）を AWS WAF に入れ、止まる・通るリクエストを curl で確かめ、正当なリクエストが止まる副作用も確認しました。",
+      "publishedAt": "2026-10-22T03:49:43.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "ef3116c3bb587aa335e4496ffb4de5af7f94589dc9559906a84be6c0b1f793b1",
+      "title": "脆弱性管理の仕組みを整えた",
+      "url": "https://zenn.dev/dress_code/articles/be5550254695cd",
+      "description": "はじめに\nこんにちは、Dress Code 株式会社でプロダクトエンジニアをやっている津田です。\n以前、SOC2 Type1 取得に向けてやったことを整理した記事を投稿しました。\nhttps://zenn.dev/dress_code/articles/1823b6c22c2534\n引き続き、プロダクトセキュリティを見ており、社内の協力もあって SOC2 Type2 の継続審査も終えることができました。\n今回は、今後の継続審査に向けて、脆弱性を管理する仕組みを整えたので書いてみます。\n特に、これからプロダクトの脆弱性管理の仕組みを用意しようとしている方や、すでにある対策を一連の運用と...",
+      "publishedAt": "2026-10-22T01:30:07.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "065536e3b493c185839941e978c77a52e198376b30682292b96cde9c59d510ac",
+      "title": "PHP2Shell をどう追ったか — Sysdig Secure AI を活用した影響調査と対処の記録",
+      "url": "https://qiita.com/takao-shimizu/items/6aa0a1e48debecb01ef7?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "2026年10月、PHP コミュニティから緊急性の高いセキュリティ修正が公開されました。対象となったのは、CVE-2026-109618 と CVE-2026-109619。いずれも PHP Core に起因する重大な問題で、未認証のリモートコード実行 につながる可能性があ...",
+      "publishedAt": "2026-10-22T00:21:30.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "3398598d4117ddbd0e851c12d48f302489eac368a9255d7ce6308717d290385d",
+      "title": "MCPサーバーを5分で作る — TypeScript + @modelcontextprotocol/sdk の最小実装",
+      "url": "https://qiita.com/joinclass/items/60abfc1f42358424b26f?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに：自動化ジョブが33個あると、「今どうなってる？」に答えるだけで一苦労\n当社（合同会社ジョインクラス）では、社内業務のほとんどを Claude Code と launchd で動かしています。2026年9月に棚卸ししたところ、ジョブは 33個 ありました。STAT...",
+      "publishedAt": "2026-10-21T23:30:06.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "b9ae994b64167e9c29b00d5b2de6f598120169cb09707decde5b0e631d5844dd",
+      "title": "is-* クラスや data-state を活用しよう！ HTML・CSS・JS の責務分離",
+      "url": "https://qiita.com/Yudai-HARA/items/73d20fd44b626dc74840?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\nWeb ページを作っている皆さん！\n「is-* クラス」や「data-state」をうまく活用していますか？\n「そんなの聞いたことないよ」という人も多いかもしれません。私もそうでした。\nしかし、これらは HTML・CSS・JavaScript の責務を整理し、\n...",
+      "publishedAt": "2026-10-21T11:34:10.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "caffdeac845ee2875b76e2f29c4c680caefedbdfe09bb3c2adcf126196c213f0",
+      "title": "GMO、企業システムをAIで「抜き打ち攻撃」　脆弱性発見の助けに　一律98万円で",
+      "url": "https://japan.cnet.com/article/35253841/",
+      "description": "GMO Flatt Securityは10月21日、AIで企業のシステムへの侵入を試す「不正アクセス抜き打ちテスト byGMO」の提供を開始した。個人情報などを持ち出したり、システムを乗っ取ったりできる状態かを調べる。2026年12月31日までの申し込みに限り、対象規模にかかわらず一律98万円（税別）で利用できる。",
+      "publishedAt": "2026-10-21T11:00:00.000Z",
+      "feedName": "CNET Japan"
+    },
+    {
+      "id": "3de3068eea05f4a45a9df3349252193c7ab67f0411347539dc54bf37a070dc3d",
+      "title": "PHPに重大な脆弱性2件、21日23時に修正版公開へ　IPAが事前準備呼びかけ",
+      "url": "https://japan.cnet.com/article/35253836/",
+      "description": "ウェブサイトの開発などに使われるプログラミング言語「PHP」で、重大な脆弱性2件を修正するセキュリティ更新が、日本時間10月21日午後11時に公開される予定だ。PHPのセキュリティチームが10月20日に予告した。情報処理推進機構（IPA）も、公開後すぐに適用できるよう事前準備を呼びかけている。",
+      "publishedAt": "2026-10-21T10:02:00.000Z",
+      "feedName": "CNET Japan"
+    },
+    {
+      "id": "745d062cdfc9484476e1b3cf17beb976678d91ccfa03b0a9620fc3ea16e8cb2c",
+      "title": "Next.js の脆弱性に Dependabot が反応しなかったので、GitHub Advisory Database までの流れを追った",
+      "url": "https://zenn.dev/rakko_inc/articles/dependabot-cve-to-pr-flow",
+      "description": "最近のセキュリティ被害を見て、ウェブアプリのセキュリティを見直している人や、とりあえず Dependabot を入れている人向けの記事です。\nNext.js の脆弱性が公表されたのに、うちのリポジトリには Dependabot から alert も PR も来ない。そういえばどういう流れで検知してるんだろう？と思い調査してみました。\n\n TL;DR\n\n今回の Next.js の脆弱性は、メンテナ側では 2026-10-14 に公表済みでしたが、GitHub Advisory Database には約 1 週間後の 10-20 になっても載っていませんでした\n\nDependabot al...",
+      "publishedAt": "2026-10-21T04:55:56.000Z",
+      "feedName": "Zenn"
     }
   ]
 }
