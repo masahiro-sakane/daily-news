@@ -168,142 +168,6 @@
       "feedName": "gihyo.jp"
     },
     {
-      "id": "19f1d2ba8000f3cd24ea903b44ce797da276c4e368e7f3b21d2c3a0b98ab87a3",
-      "title": "株式会社クリエイティブ・ウェブ様の AWS 開発事例「Amazon Connect Customer を活用した AI ロールプレイ研修システムの高速構築」のご紹介",
-      "url": "https://aws.amazon.com/jp/blogs/news/aicc-case-study-creative-web/",
-      "description": "本ブログは 株式会社クリエイティブ・ウェブ 様 と Amazon Web Services Japan 合同会 […]",
-      "publishedAt": "2026-09-25T02:10:40.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "a70bf54c27d9e7f227e6e1ae4751379c8b5b02be2e20d08762594757f5f1b057",
-      "title": "ステートマシンでフォームの分岐を管理して失敗した (データから導出できる値を状態にすべきでない)",
-      "url": "https://zenn.dev/bita/articles/f1872707871b2c",
-      "description": "!\nVue.jsを使っていますが、コアのロジックはTypeScriptで実装してあるのでVue.jsが分からなくても問題ありません。\n\n\n\n はじめに\nユーザが入力した値によって「遷移する画面」と「ユーザが選択可能な項目」が変わるフォームを実装したことがありました。例えばサンドウィッチを作るフォームでは、以下のように画面や選択肢が変わります。\n\nベジタリアンを選ぶと肉と魚を含む具材選択ページに遷移しない(遷移する画面が変わる)\nエビNGを選ぶと、サイドメニューでガーリックシュリンプを選べない(ユーザの選択可能な項目が変わる)\n\nこういったユーザ入力によって変わる状態は複雑で管理が大変で...",
-      "publishedAt": "2026-09-25T01:08:15.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "156f1feca01c7b0a4b51fccbd1eab337ceecbf8d38a55697c6c9831a376b1511",
-      "title": "YKK APのセキュリティリーダーが形骸化した施策に喝！パッチ適用・基盤刷新も“強気の姿勢”で推進",
-      "url": "https://enterprisezine.jp/article/detail/25059",
-      "description": "YKK APは、形骸化していたセキュリティ委員会にあえて事前演出で緊張感をもたらし、関係者の当事者意識を醸成。コロナ禍でのテレワーク急拡大に対しては、経営陣へリスクと対策案を提示して即断を迫り、全社EDR導入を実現した。また、縦割り組織の壁を越えたパッチ配信基盤の刷新や、IT-BCP訓練を通じた経営陣との「身代金支払い基準」の不一致解消など、有事の判断基準を明文化している。Gartner主催の「ガートナー セキュリティ＆リスク・マネジメント サミット」にて、その詳細が語られた。",
-      "publishedAt": "2026-09-25T00:00:00.000Z",
-      "feedName": "EnterpriseZine"
-    },
-    {
-      "id": "19cfbea5398392ee15a24c2405b12120c082a2a51638e4fe177199dc7a36d093",
-      "title": "【アジャイルFAQ 第3回】アップグレード案件の「現行機能保証」にどう向き合う？",
-      "url": "https://developer.mamezou-tech.com/blogs/2026/09/25/3_current_functionality_guarantee/",
-      "description": "この記事を読んでいただきありがとうございます。アジャイルグループに所属する、藤井智弘です。\n 判断の積み重ねは、いつしか慣習になります。そして一度慣習になると、誰も疑問を持たなくなります。前例踏襲という「思考停止」の完成です。今回からの3回は、そのひとつ、更改案件の「現行機能保証」を扱います。対処するには3つの視点が必要で、それぞれをサブテーマとして、3回に分けて扱います。\n第3回（本稿）: 「現行」の実体を見る\n第4回: 合意できる「全体像」を作る\n第5回: 検証し、予算を組み、配分する\n この3本のねらいは、「読者の職場に波風を立てる」ことです。「更改案件は〇〇するものだ」「アジャイルは〇〇だ」——さまざまな決まり文句が、私たちの思考を止めています。そろそろそれらに疑問の目を向けて、「ほんとにムリなのか、1回考えてみようよ」というお誘いです。\n質問\n#\n うちの部署の仕事は、既存システムの更改・アップグレード案件が中心です。今度の案件を「アジャイルで進める」という方針が出たのですが、正直なところ、メリットがわかりません。\n回答\n#\n いいですね、その“違和感”。その違和感や疑問を、まず大事にしてください。\n JUASの「企業IT動向調査2026」でも、IT予算の増加理由に「既存システム・基盤の刷新・更新・増強」が挙げられています——この質問の背景は、業界の実態そのものでもあります。\n…ちょっと刺激的すぎますか?\n 厄介なのは、この曖昧な文言が判定基準として使われることです。何が「現行通り」かが不明なまま全件を保証する約束は、約束の中身を変えないかぎり、契約の形をどんなに工夫しても、実務上、履行のしようがありません。できないと分かっていることを、片や「できないと困るんです」と押し通し、片や契約欲しさに「できます」と装っているうちは、泥沼が約束されます。\n 「できないことはできない」と素直に認めることが、解決のスタートラインです。\n さてそこで、「メリットがわからない」に立ち戻ると…メリットどころか、アップグレード案件は、アジャイルの適地だと、私は考えています。ポイントは、曖昧なものを、管理可能な形に置き換えることです。\n では、「現行」ってなんだろう？ というところから始めていきましょう。\n「現行通り」の正体——仕様は1つではなく3つある\n#\n そもそも「現行通り」とは、何を指すのでしょうか?\n紙に書いてあること（明文化された仕様）\nある時点では現物を反映していたかもしれませんが、最新と一致している保証はありません。この紙を持っているのは、発注側と、受注側の見積担当です。\nコードがやっていること（実装された挙動）\n人がやっていること（現場の使い方）\n\n 「現行機能保証」と言うとき、発注側が本当に守りたいのは**3「人がやっていること」です。しかし、契約や検収の根拠にされるのは1「紙」で、移行の実作業が向き合うのは2「コード」**です。この3つは、リリースした日にはだいたい一致していたはずです。ズレを作るのは、その後の時間です。\n障害対応の緊急改修で、コードだけが変わる\n法改正や組織変更には、システム改修の予算が付くまで、現場の運用が先に対応する\n紙は「次の大きな改修のときにまとめて直す」と後回しになる\n どれも、その場では合理的な判断です。その積み重ねで、年を経るにつれ三者は別物になります。担当者の怠慢や努力不足ではなく、当然の帰結です。そしてこのズレが、更改案件で「テストは全部通ったはずなのに、リリース後に業務が止まった」事故が繰り返される、構造面での理由です。\n 三者は一致しない。それなのに、見積と契約の席に置かれるのは紙だけです。発注側には全件を把握する手立てが残っておらず、受注側の上層には材料がなく、材料を持つ末端には声を上げる機会がない。\n誰も全件を持っていないのに、全員が全件を約束している\nそれでもアジャイルが効く理由\n#\n 個々の挙動の粒度で全件を把握できないなら、その粒度では「発見しながら進む」しかありません。これは、アジャイルの中核である経験主義——やってみて、観察して、次を調整する——そのものです。\nドキュメントの完全性に期待できず、未知が多い\n検証相手として現物があり、答え合わせができる\nいちどきに切り替えて失敗すると、業務が止まる\n どれも「小さく検証を積み重ねる」進め方に向いた特性です。「既存システムがあるのだから機能は全件洗い出せる、だからウォーターフォールのほうが安全だ」と思われがちですが、実際には「洗い出せる気がしている」だけです。その前提自体が、更改系の特性と相容れません。\n処方——保証を組み替える\n#\n 「全件が必要」と「全件を確定しないハズ」の対立をどうするか? 曖昧な“全件”を、管理可能な形に置き換えます。\n「全件の暗黙保証」を「検証済みリスト＋残リスク」に組み替える\n\n ポイントは、後から仕様が発見されることを、「当然起こりうること」とみなし、「洗い出し漏れの責任問題」にしないことです。残ったリスクを最後に誰が引き受けるかは、この組み替えの中で最初に話しておくべき問いです（答えは組織によって違います）。スプリントごとに検証済みリストが伸び、残リスクが減る——進捗がそのまま保証範囲の拡大として見える構図です。\n見積の内訳を、保証の文言に流し込まない\n発注側の担当者と、社内説明の語彙を共有する\n開発者が今日できること——事故を3つに分類してみる\nなぜこの質問は30年繰り返されるのか\n#\n 三者が一致していないことは、現場の人ならうすうす知っています。それでも紙だけが置かれ続けるのは、もっともな事情があるからです（図3）。\n\n 最初に「現行機能保証」という書式や文言を選んだ判断は、合理的で保守的だったはずです——オープン化・ダウンサイジングの波から数えて、およそ30年前のことです。問題は、その時々の臨機応変な判断が、ノウハウとして引き継がれるとは限らないことです。全件保証で乗り切れた案件は「この書式で守れた」という成功体験として稟議の前例に残ります。一方、保証を緩めてうまくいった案件の判断は、書式には残りません。だから選択は毎回少しずつ保守的な側に倒れ、それを見直す機会がないまま、担当者が入れ替わっても書式だけが引き継がれていく。「対象不明の全件保証」を抱えた案件が世代を超えて再生産されるのは、こういう仕組みです。\n 一度見直してみても、バチは当たらないと思うのですが、いかがですか?\n#\n 思考を止める言葉は、受注側にもあります。質問者も口にしていた「アジャイルは全件を確定しない」です。そして、両側に共通する「確定」という言葉そのものも、疑ってみる価値があります。\n ウォーターフォールも、要件を本当に確定しているわけではありません。要件は変わりえます。ただ、変えれば見積額に響くので、変更管理委員会のような重い意思決定プロセスを通すことになります（少なくともPMBOKの考え方では）。その重さが「変えずに済ませよう」という動機につながり、結果として確定しているように見えるのです。\n\n次回: 「更改案件の見積を、全機能を確定せずにどう出す？」",
-      "publishedAt": "2026-09-25T00:00:00.000Z",
-      "feedName": "豆蔵デベロッパーサイト"
-    },
-    {
-      "id": "e36133fae9bd0fa11242041e3e07ed153ad6ea0482600fa6aa3fd512b2b437c0",
-      "title": "【アジャイルFAQ 第4回】更改案件の見積を、全機能を確定せずにどう出す？",
-      "url": "https://developer.mamezou-tech.com/blogs/2026/09/25/4_estimating_without_fixing_scope/",
-      "description": "この記事を読んでいただきありがとうございます。アジャイルグループに所属する、藤井智弘です。\n 更改案件の「現行機能保証」を3つのサブテーマに分けて扱う、その2回目です。前回（第3回）は、「現行」と呼ばれるものの実体が3つあることを見て、最後に「確定」という前提を疑いました。本稿では、発注側と合意できる「全体像」の作り方を考えます。\n質問\n#\n 既存システムの更改案件で、アジャイルで進める提案をしたところ、発注側から「見積の根拠として機能一覧を出してほしい」と言われました。「アジャイルは最初に全件を確定しない進め方です」と説明すると、「では何にいくら払うのか」と返され、そこで話が止まりました。\n回答\n#\n 見積の根拠として全体像を求められたら…出せます。鍵は、どの粒度で出すか、です。粒度を選べば、発注側が慣れた形の一覧と、そこからの規模感が出せます。ただしそれは、開発する中身がすべて最初に固定されることを意味しません。\nどこまでを重い手続きに載せ、どこからを手続きなしで変えられる範囲として残すか」へ置き換えました。提出した機能一覧は、おそらく確定として扱われる——重い手続きの側に置かれます。ならば、その側に置いても守れる粒度を選び、柔軟性はその内側に残せばよい。\n「全体像を見たい」は当たり前の要求——ただし、言葉の粒度が発注側と受注側で違う\n#\n 現場の支援でよく感じるのは、発注側と受注側は、同じ「機能」という言葉を使いながら、思い浮かべている粒度が違うのではないか？ ということです。受注側のアジャイルチームが思い浮かべるのは「ストーリー」——研修で、スプリント（1〜2週間）でテストまで終えるんだぞと習ったアレです。一方、発注側の頭にあるのは、予算獲得の根拠になった機能一覧——画面や帳票の単位で書かれた、ストーリーよりかなり大きな粒度です。この粒度の違いが議論の俎上に載ることは、ほとんどありません。だから、予算やスケジュールの都合で「ある機能の開発をやめる」となったとき、失うものの大きさの受け止め方が、発注側と受注側で食い違うことも珍しくありません。\n 粒度の認識の違いに加えて、研修で「更改系の文脈」を教わる機会がほとんどないことも、問題を難しくしています。\nなぜユースケースか——粒度の構造が、最初から決まっている\n#\n 「アジャイルといえばストーリー」というイメージが定着していますが、アジャイルの世界にも粒度を整理する仕組みはあります。エピックやフィーチャーといったタイプを加え、大きな括りから小さな単位へと粒度を変え、それぞれの粒度で何を見るか——事業の狙いか、利用者の使い方か——という視点まで整理する仕組みです。ただ、このタイプの扱いは手法によって異なり、粒度の設計をチームが自分で決める部分が多いため、経験の浅いチームには大きな負担になります。\nユースケースを紹介します（あくまで「選択肢を提示する」という本連載の趣旨に沿って、ひとつの選択肢として）。参考にするのは、Ivar Jacobsonらの「Use-Case 3.0」（Jacobson, Spence, de Mendonca, 2024年）——ユースケースを、アジャイル開発を駆動する軽い実践として整理し直したガイドで、ユーザーストーリーとの併用を前提にしています。\n 具体的な使い方は、のちほどサンプルでお見せします。その前に、基礎を確認しておきましょう。\n ユースケースとは、「ある特定の利用者の目的を達成するための、システムの使い方のすべて」と定義できます。構成要素は3つです。\nアクター（誰が）\nユースケース（何のために、何ができればいいか）\nフロー（どうやって）——基本フロー（目的に至る最も単純な道筋）と、そこから枝分かれする代替フロー（別の道筋、例外、失敗時の扱い）の束\n          図１：ユースケース図\n。\n 図1は、アクターとユースケースの関係を表すユースケース図です。誰が何のためにシステムを使うのか、全体を俯瞰できます。\n このように、ユースケースには、全体を俯瞰する段（アクターとユースケース）と、個々の中身を見る段（フロー）が、道具として組み込まれています。これが「構造があらかじめ定義されている」の意味です。\n ここまでを足がかりに、実際の例をみて理解を深めましょう。\n請求業務で組んでみる——4つの手順と、そこで使う概念\n#\n ここからは、請求業務を例に、ユースケースで更改案件を組む手順を4つに分けてなぞり、各手順で使う概念をその場で定義していきます。例はあくまで一例で、手順と概念は業務を選びません。エピック／フィーチャー／ストーリーで組みたい方は、ユースケースを、お使いの手法でいちばん近い段（エピックかフィーチャー）に、スライスをストーリーの束に読み替えてください。\n（1）一覧を作る——画面ではなく、目的で数える\nユースケース（アクター＋目的）\n対応する現行の画面・帳票・IF\n\n\n\n\n経理担当が、請求書を発行する\n請求書発行画面、請求一覧画面、請求書PDF、月次一括発行バッチ、請求取消画面\n\n\n営業担当が、担当顧客の請求状況を確認する\n請求一覧画面\n\n\n経理担当が、入金を請求と突き合わせる\n入金照合画面、銀行入金IF\n\n\n経理責任者が、月次の請求を締める\n月次締め処理画面\n\n\n経理担当が、仕訳を会計システムへ連携する\n会計連携IF（夜間バッチ）\n\n\n\n 表を見ると、2つのことに気づきます。請求取消画面には、独立した目的がありません。「請求書を発行する」という大きな目的の中での処理の一つであり、ユースケースでは代替フロー（発行済みを取り消す）として組み入れられます。逆に請求一覧画面は、経理担当と営業担当が別の目的で使うので、2本のユースケースにまたがります。手動起動のバッチのように、現物から見えにくいものはヒアリングで補います。\n業務が回るかどうかは、目的の集合が業務をカバーするかどうかで決まるからです。情報は現行の画面単位で集めますが、やりたいことは画面を再現することではありません。新しいシステムでは画面を一からデザインし直すことも珍しくなく、画面の数や並びは変わりえます。変わらないのは、誰が何のためにそれを使うか——目的のほうです。\n こうして採った5本を、アクターとの関係で1枚に描いたものがユースケース図（前出の図1）です。誰が、何のためにこのシステムを使うのかを俯瞰でき、この時点で抽象度の高い全体像がつかめます。業務領域ごとに同じ作業をすれば、案件全体の一覧になります。この一覧が全体像の骨組みです。見積の根拠にするには、次の（2）（3）までを、移行対象のユースケースすべてについて済ませておきます。\n（2）ユースケースごとに、1枚のアウトラインを書く——今把握できている範囲を明示する\nユースケース: 請求書を発行する\n    図２：ユースケース記述（ユーザによる操作フローとバリエーション）\n\n この1枚が、その目的のためにシステムがどう使われるかの全体です。A1〜A5は、いま分かっている代替フローです。この先に未発見の道筋があること、その位置が「A5の次」だと言えることが、この1枚の値打ちです。ユースケースなら、分かっている範囲と分かっていない範囲を同じ1枚の上で言える。全体感とは、全部を知っていることではなく、知らない部分の位置が分かっていることです。Use-Case 3.0も、ユースケースの大きさと複雑さを把握するには、この程度のアウトラインが必要だとしています。範囲外と判断したユースケースは、一覧に名前を残すだけで構いません。\n（3）最小集合を決める——業務が止まらない線を引く\n最小集合で、これが受入条件になります。残りのA1・A3・A5は、後で見る「深さ」で調整する側に回ります。最小集合を業務部門と定義しておかないと、「業務が回ると言ったのに回らない」問題が起きます。最小集合も、移行対象のユースケースごとに、見積の前に決めておきます。\n（4）スライスを切る——スプリントで仕上げる単位\nスライス——ユースケースの始点から終点までを通る道筋を1本以上、テストケースごと切り出したもの——で、1スプリントで検証まで終えられる大きさに切ります。「請求書を発行する」なら、最初のスライスは「通常の請求を1件、基本フローで発行する」——テストケースは、締め済み取引1件から請求書PDFが出るまで。次に「A2 月初に一括発行する」、その次に「A4・A5 発行できない場合の扱い」をまとめて1つ、という具合に、最小集合から順に切り出します。A1とA3は未着手のまま1枚の上に残しておき、深さを上げる判断が出たときに切ればよいのです。\n             図３：\n\n粒度の3段——何を「1件」と数えるか\n業務領域: 「請求業務」「在庫管理」のような括り\nユースケース（発注側の「機能」に相当）: アクターと目的の組。一覧に載せ、全体像として合意し、見積る単位\nスライス（スプリントゴールに相当）: バックログに載る単位。チームがストーリーを使うなら、スライスを数枚のストーリーに割って実装する\n             図４：\n\n 第3回で保留した「何を1件と数えるか」の答えが、これです。全件が把握できないのはスライスの粒度の話で、ユースケース（フローを含む）の粒度なら全件は現物から取れます。またこれは、画面を起点として会話を進めることで、発注側がこれまで慣れてきた粒度で全体像を議論できるようになります。そして、「その時点で把握できないもの」は、スライス以下で扱われます。「アジャイルは全件を確定しない」は、更改系に限って言えば「スライスの粒度では確定しない」です。一覧と最小集合なら、現物が有限なので、確定として扱われても——重い手続きの側に置いても——守れます。深さとスライスはその内側で、手続きなしで動かせる側に残し、内訳として約束の文言にも入れません（第3回で引いた一線です）。\n ユースケースの一覧は、いわば地図として働きます。業務影響の大きいものから現物を動かして検証し、見つかった道筋を代替フローとして足していくことで、地図ができあがっていくのです。\n処方——全体像を、見積と合意の道具にする\n#\n何を約束し、何を調整するか\n深さ——最小集合まで（L1）か、主な代替フローまで（L2）か、採取済みの全フローまで（L3）か——です。スライスの入替や優先順位づけは、プロダクトオーナー（PO）と開発チームが日常的に行い、承認手続きの対象にはしない（ただし記録は残す）。ユースケース単位の取捨（利用実績のないものは「移行しない」と判断して外す、など）は、確定したものの変更として、発注側が明示的に判断します。誰がどの粒度で決めるかを最初に決めておくと、「勝手に変えた」も「全部やると言ったはずだ」も起きにくくなります。検証済みリストを「ユースケース×深さ」の表にしておくと、進捗と残リスクが発注側にもそのまま読めます。\n             図5：\n\n 深さを浅くしたとき、つまり最小集合の外にある代替フローを削ったときに変わるのは、その業務を「どれだけ楽に、どれだけ広い状況で」回せるかです。削った分は業務手順（手作業）で担うことになり、負担は業務部門側に移るので、代替手順の合意は削る判断とセットで行います。第3回の「仕様は3つある」に戻れば、代替フローを削るとは、意識的に「人がやっていること」を作ることです。いま人が手作業で担っていることの多くは、前回の更改で誰かが暗黙に削った代替フローの痕跡で、今回の違いは、判断の記録を残して削ることです。\n稟議に載せる見積——本数×規模\n本数×規模で出します。本数は一覧の件数で、「ユースケース×画面」の対応表を添えれば画面一覧にも読み替えられます。規模は各ユースケースの相対サイズで、画面の項目数ではなく、代替フローが何本ぶら下がっているかという塊の厚み——「請求書を発行する」は厚く、「担当者マスタを保守する」は薄い——をポイントにします（S＝1、M＝3、L＝8など）。これに深さの初期設定（L1〜L3）が重なり、L1にとどめるものが多ければ総量は小さく、L3まで上げるものが多ければ大きくなります。優先度と深さの初期値の根拠には、現行の利用実績（利用件数・利用部署数）を使います。\n決めておくべき問い\n注意——ユースケースが「紙」に戻る瞬間\nなぜこの質問は30年繰り返されるのか\n#\n 開発標準も、契約テンプレートも、アジャイルの教科書も、「機能」を一語で語ってきました。粒度のズレが言葉に隠れている限り、どちらの側も相手が約束を破ったように感じ、その感覚が世代を超えて引き継がれます。\n 本稿の3段の粒度は「解」ではなく、止まっていた対話を再開するためのきっかけとなる道具です。「全件は確定できない」で終わっていた話を、「どの粒度で線を引くか」という具体的な問いに変える。「アジャイルならストーリー」も「うちは機能分解だからアジャイルは無理」も、道具と運び方を混同した思考停止です。標準の言葉ではなく、実プロジェクトの粒度で話す。それだけで、30年止まっていた会話の形は変えられるのではないでしょうか。\n 残るのは、スライス粒度の未知をどう発見して検証済みに変えていくか、その発見を受け止める予算をどう組み、どう配分するかです。次回、別の質問として扱います。\n 筆者もこれまで各種の媒体で記事を書いてきましたが、この3連作ほど、「自分はいま地雷の上に両足で乗っている」と実感したことはありません。次回は、この地雷の上で「何を仕様にして検証するのか」まで踏み込み、3本を着地させましょう。\n次回: 「ドキュメントが信用できない現行システム、何を『仕様』にして検証する？」",
-      "publishedAt": "2026-09-25T00:00:00.000Z",
-      "feedName": "豆蔵デベロッパーサイト"
-    },
-    {
-      "id": "30b60775ad37b4e1daf060c1c1e299b48e93e70725a702a0d2937beb3e9b2985",
-      "title": "王の凱旋—Opus 5.5 React習熟度ベンチマーク—",
-      "url": "https://zenn.dev/uhyo/articles/react-profession-bench-17",
-      "description": "皆さん、こんにちは。React習熟度シリーズの17記事目です。これまで、このベンチマークで首位を保ち続けていたのはClaude Opus 5でした。GPT系の最先端モデルであるGPT-6 AstraもOpus 5には追いつけていませんでした。\nこの状況を変化させたのは、新世代のOpusでした。\n前回の記事はこちらです。\nhttps://zenn.dev/uhyo/articles/react-profession-bench-16\n\n 結果\n例によって、まずは順位表です。\n\n\n\n順位\nモデル\neffort\nスコア\n\n\n\n\n1\nOpus 5.5\nmax\n94.46\n\n\n2\nOpus 5.5...",
-      "publishedAt": "2026-09-24T15:36:51.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "c76e80d47885781f168ecb646c8782843ba5439579f5fadaa3c65a77863443b9",
-      "title": "AWS Graviton 向けに pixi で Bioconda コンテナを作ってみた",
-      "url": "https://dev.classmethod.jp/articles/bioconda-container-with-pix/",
-      "description": "pixi を使って Bioconda のツールを含む arm64 向け Docker イメージを作成してみました。ロックファイルの準備からマルチステージビルド、実際の動作確認まで、その手順と結果を紹介します。",
-      "publishedAt": "2026-09-24T14:06:50.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "051304ac1328c69801f6dc0efdd6fab5f4fb68a3acca8254a6791dc369c22283",
-      "title": "Kubernetes入門：Podが動くまでに中で何が起きているのか、クラスタの構成要素を整理する",
-      "url": "https://qiita.com/yushibats/items/16b6b3c8ec5acd6bdc8b?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "はじめに\nKubernetesは、コンテナの配置や運用を自動化するソフトウェアですが、中でどんな部品が動いていて、どうやって自動化しているのかを説明できますか？\nこの記事は、Kubernetesを構成する部品を、kubectl apply というコマンドを実行してからコン...",
-      "publishedAt": "2026-09-24T13:27:04.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "f966821d01f685c6f3d9ff16786d866c227c1be1b3105ac53d655a67646cd02f",
-      "title": "週刊AWS – 2026/9/14週",
-      "url": "https://aws.amazon.com/jp/blogs/news/aws-weekly-20260914/",
-      "description": "AWS Direct Connect が専用接続の定額料金を発表、AWS PrivateLink が Tunnel Endpoint を発表、AWS Elastic Beanstalk が Cluster Mode を導入、Moonshot AI の Kimi K3 が Amazon Bedrock で一般提供開始、Amazon Q Console から CloudTrail イベントを自然言語で分析、Amazon Connect Talent が一般提供開始、Amazon Connect Customer がカスタムメトリクスの API による作成・管理・検索に対応、Amazon ECS が Amazon S3 Files のサポートを Amazon EC2 起動タイプに拡張、Amazon Quick が個別シートの生成と画像からの分析構築に対応、AWS Transfer Family が Network Load Balancer (NLB) 配下の SFTP サーバーで送信元 IP 保持をサポート、新しい AgentCore Runtime が Amazon Bedrock AgentCore で利用可能に",
-      "publishedAt": "2026-09-24T13:27:01.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "a19693bd5956dda07877935042fe1d2874fa0d279732a81e8d2efeeef0e84dd0",
-      "title": "AWS サポートのよりきめ細かな許可を使ったアクセス制御に対応してみる",
-      "url": "https://dev.classmethod.jp/articles/aws-support-console-access-control/",
-      "description": "AWSサポートコンソールのアクセス許可が2026年11月16日に変わるらしいです。\nなのでCloudTrailのログを見比べながら、何が変わるのか、そしてどう対応すればよいのかをまとめました。",
-      "publishedAt": "2026-09-24T10:29:46.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "12307b87d8157040aa17abde3888c06d5a007cbc92dcb2d1bd5ade1ff57423bc",
-      "title": "S3バケットから最終更新日が古いオブジェクトを洗い出してリスト化してみた",
-      "url": "https://dev.classmethod.jp/articles/s3-bucket-list/",
-      "description": "数十万オブジェクトが格納されたS3バケットの棚卸しを行う際に、AWS CLIとシェルスクリプトを使って「最終更新日時が古いオブジェクト」をフォルダ単位で集計し、削除候補のリストを作成してみました。",
-      "publishedAt": "2026-09-24T10:19:38.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "8b86b2ef0a7e1ecb74dfe6483eee08eb8f77b0c90e4d4d7bd9ea89949f19ddfb",
-      "title": "AWS IoT Core クレーム証明書のローテーション手順",
-      "url": "https://dev.classmethod.jp/articles/aws-iot-core-claim-certificate-rotate/",
-      "description": "AWS IoT CoreのFleet Provisioning機能でクレーム証明書が漏洩した場合のローテーション手順。検知から復旧までの4段階フロー、証明書状態管理、IoTポリシー制限など実装上の重要事項を解説します。",
-      "publishedAt": "2026-09-24T09:14:50.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "80a33d1b70258ff742fe95c2c332e48a00a231dab1258ab7a6b1d6fc4a7480d4",
-      "title": "型安全・低コスト・低遅延なJSON Modeのすごいやつ？ - TypeSafe AIのJevをSDKから使ってみて、その仕組みを考えてみた",
-      "url": "https://dev.classmethod.jp/articles/typesafe-ai-jev-architecture/",
-      "description": "TypeSafe AIのモデル「Jev」を解説。テキスト生成を捨て、型安全・低コスト・低遅延で判定や分類に特化した仕組みや、従来のJSON Modeとの違い、アーキテクチャと実務での注意点を紹介します。",
-      "publishedAt": "2026-09-24T08:26:53.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "4739af7aa9cb7a5e51201054a90b99a3960a9697469323b1635570e7c1db5112",
-      "title": "Google・AWS・OktaらIT大手12社、AIエージェント保護の共通基準を策定へ",
-      "url": "https://enterprisezine.jp/news/detail/25136",
-      "description": "米現地時間2026年9月22日、Oktaをはじめ、Amazon Web Services（AWS）、CrowdStrike、Databricks、Docker、Google Cloud、Lovabl...",
-      "publishedAt": "2026-09-24T05:31:00.000Z",
-      "feedName": "EnterpriseZine"
-    },
-    {
-      "id": "0f639cf4ff3f1ae2f2787381eda5b5fc3a42d7c7b7ee41eafed6d3d93cd3fdcc",
-      "title": "週刊生成AI with AWS – 2026/9/14 週",
-      "url": "https://aws.amazon.com/jp/blogs/news/weekly-genai-20260914/",
-      "description": "今週の週刊生成 AI with AWSでは、AI の「正しさ」をどう測るかという話題が目立ちました。Byron Cook 氏による自動推論の翻訳記事 3 本もあわせて公開されています。国内事例では、第一興商のカラオケ聴感採点 AI、レスターの営業情報プラットフォーム、NTTドコモの AI-DLC 実践（全 2 回）をご紹介します。サービスアップデートでは、新しい AgentCore Runtime が東京リージョンを含む 5 リージョンで利用可能になり、Moonshot AI の Kimi K3 が Amazon Bedrock で一般提供されています。Kiro 関連では、GPT‑5.6 の 1M コンテキスト対応、Claude Fable 5.1 のエンタープライズ向け提供、Kiro Web の自律モードで 2 年以上残っていた issue を人間の作業 5 分未満で解決した事例、Kiro Crew で 1 週間に 1,000 件の PR をマージした話と今週も盛りだくさんです。",
-      "publishedAt": "2026-09-24T04:49:26.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "195d8d8211be1f8149911fc167c4e513de4762ee0212f6df715969d78442d7e9",
-      "title": "AWS ウィークリーラウンドアップ：AWS Builder Center モバイルアプリ、Amazon Connect Talent の一般提供開始、Amazon Corretto 27 など（2026 年 9 月 21 日）",
-      "url": "https://aws.amazon.com/jp/blogs/news/aws-weekly-roundup-aws-builder-center-mobile-apps-amazon-connect-talent-ga-amazon-corretto-27-and-more-september-14-2026/",
-      "description": "オランダに住んでいる私は、電車で過ごす時間がかなり多く、たいていその時間を使って、ビルダーコミュニティが発信し […]",
-      "publishedAt": "2026-09-24T04:30:50.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "4f98b086bff968bdb7762b2f5d5454f306278d6029409b25bd01431a00c64423",
-      "title": "「OSSレジストリのただ乗りは限界」　GoogleやMicrosoftなど12社が企業の費用負担を巡り共同声明",
-      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2609/24/news032.html",
-      "description": "生成AIの普及でソフトウェア開発が激変する中、セキュリティ脅威も深刻化し、OSSレジストリの運用負荷が高まっている。こうした背景を踏まえOpenSSFは「現在の無料モデルは維持不可能である」との認識を示し、持続可能な資金調達モデルへの移行を表明した。GoogleやMicrosoftなど主要12社・団体が声明に賛同している。",
-      "publishedAt": "2026-09-24T04:00:00.000Z",
-      "feedName": "＠IT"
-    },
-    {
       "id": "36650ab53a1d8acb2252fa1514de508f0b651cf615741da50dc1c745669d7ca6",
       "title": "We Had Skills, Experts, Connectors, and Projects. Why Build Plugins?",
       "url": "https://dev.to/techflag/we-had-skills-experts-connectors-and-projects-why-build-plugins-1ijo",
@@ -6821,6 +6685,190 @@
       "description": "PHPセキュリティチームは2026年10月20日、重大な脆弱性2件を修正するセキュリティリリースを予告した。公開は10月21日14時（UTC）、日本時間の同日23時を予定している。",
       "publishedAt": "2026-10-21T01:14:00.000Z",
       "feedName": "gihyo.jp"
+    },
+    {
+      "id": "5a27c64c6a65206288a341812ce9e171dea689b8d707e47c1aeccdaf4e248ea9",
+      "title": "Knovum 0.0.2: Building an Open-Source Local-First AI Canvas with Tauri 2, Vue 3, and Rust",
+      "url": "https://dev.to/zand/knovum-002-building-an-open-source-local-first-ai-canvas-with-tauri-2-vue-3-and-rust-441i",
+      "description": "Like many developers and researchers, I've spent the past two years experimenting with local LLMs (via Ollama) and local RAG. But existing desktop frontends repeatedly hit two frustrating walls:\nThe 1D Chat Trap: Linear chat streams work well for simple Q&A, but break down during deep research synthesis. Earlier reasoning turns scroll off the top, and you cannot visually compare multiple document excerpts side-by-side.\nThe Electron Memory Tax: Most desktop AI wrappers idle at 700MB–1GB RAM before you even load model weights into VRAM.\nTo solve this, we built Knovum — an open-source, local-first desktop AI knowledge workspace built on an infinite 2D canvas with Tauri 2, Rust, and Vue 3. \nToday we just shipped v0.0.2, so I wanted to share the engineering decisions behind the architecture, what we learned building it, and what's new.\n┌────────────────────────────────────────────────────────┐\n│             Vue 3 Spatial Frontend                     │\n│  (Konva Infinite 2D Canvas + JSON Canvas Specification) │\n└───────────────────────────┬────────────────────────────┘\n                            │ Tauri 2 IPC (Channels)\n┌───────────────────────────▼────────────────────────────┐\n│                    Rust Backend Core                   │\n│   ┌────────────────────┐      ┌────────────────────┐   │\n│   │   SQLite Storage   │      │ Embedded LanceDB   │   │\n│   │  (Notes, Boards,   │      │ (In-Process Vector │   │\n│   │   Numbered Migr.)  │      │   Search Engine)   │   │\n│   └────────────────────┘      └────────────────────┘   │\n│   ┌────────────────────┐      ┌────────────────────┐   │\n│   │    Ollama API      │      │ Embedded Whisper   │   │\n│   │ (Local LLM Router) │      │ (Speech-to-Text)   │   │\n│   └────────────────────┘      └────────────────────┘   │\n└────────────────────────────────────────────────────────┘\n\nBy leveraging native OS WebViews (WKWebView on macOS, WebView2 on Windows) orchestrated by a compiled Rust backend, Knovum cold-boots in sub-second time and idles around 45MB of RAM. This leaves virtually all of your machine's physical memory dedicated to loading model weights.\nSQLite: The canonical single source of truth for notes, cards, and relations, guarded by strict numbered migrations.\nEmbedded LanceDB: Runs in-process on disk for fast vector similarity search without requiring Docker, external daemons, or Python runtimes.\nEvery visual workspace is stored directly on your local filesystem using the open JSON Canvas (.canvas) specification. You can open, edit, and inspect any Knovum board directly in Obsidian Canvas or parse it with custom scripts.\nHere are the key improvements shipped in our 0.0.2 release:\nIn traditional vector RAG setups, updating a document collection often triggers expensive full re-indexes. In 0.0.2:\nRebuilding a space indexes only the gap (delta) instead of re-processing the entire space.\nThe live index stays fully readable and searchable while the background rebuild runs.\nIndexing is managed as a first-class, cancellable job in the unified Task Center.\nStreaming LLM answers now respect clear block boundaries instead of erasing or slicing through previous turns. Concurrency is strictly owned by a single writer per execution run.\nKnovum includes an on-device Whisper transcription engine. In 0.0.2, the voice library can be audited and heard before selection, and visualizes the active speaker in real time.\nShips an opaque window with the WebView2 bootstrapper directly embedded.\nStartup failures fail visibly instead of leaving hidden zombie windows.\nThe main window is revealed safely from the async runtime, eliminating white flashes on launch.\nLocal model memory verification admits memory the OS can dynamically allocate rather than hard-failing.\nWhen an LLM synthesizes an insight from your notes, the citation anchors to exact sentence-level character spans in the source note. If you edit or mutate the source note later, the citation badge automatically flags that the source has evolved—preventing silent hallucination decay.\nKnovum is 100% free and open-source under the Apache-2.0 license.\nGitHub Repository: https://github.com/madebyzan/knovum\n\n\nv0.0.2 Release Downloads: https://github.com/madebyzan/knovum/releases/tag/v0.0.2\n\n\nmacOS (Apple Silicon .dmg & Intel .dmg)\nWindows (x64-setup.exe)\nIf you're interested in local-first software, spatial computing, or running LLMs on your own hardware, give the repository a ⭐ on GitHub and let us know your feedback!",
+      "publishedAt": "2026-10-25T03:12:53.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "865b4eaf750609af8da20e0b60e54377ef69d764f9661ad140270f3be0837322",
+      "title": "Where your Codex usage actually goes (and how to make the window last longer)",
+      "url": "https://dev.to/xcrai/where-your-codex-usage-actually-goes-and-how-to-make-the-window-last-longer-314o",
+      "description": "If you use Codex every day, you know the moment. The plan is clear, half the feature is written, the tests are almost green, and the usage window closes. You didn't do anything unusual. You just did a normal afternoon of AI coding.\nThe frustrating part is that most of us don't really know which part of the work used the allowance. So let's break that down, look at how to check where you stand, and then talk about a workflow change that made the biggest difference for us.\nQuick disclosure before we start: I work on XCR, the plugin I mention later in this post. The habits in the first half work with or without it.\nCodex comes with ChatGPT plans, and each plan has usage limits. OpenAI's Codex help article lists what drives usage: the model, where the task runs, task complexity, context size, reasoning effort, speed and tools. A long-running agentic task can use a lot more than a short request.\nTwo details trip people up:\nUsage is tracked in two windows: a five-hour window and a weekly window.\nOn plans with shared allowances, Codex draws from the same pool as other agent features in ChatGPT.\nThe exact numbers change by plan and over time, so check the current ChatGPT plans page for yours rather than trusting a screenshot from a forum thread.\nWhen you look at a session after the fact, the expensive parts are pretty predictable.\n1. Implementation loops. Write code, run tests, read the failure, patch, run again. Every round re-reads the context. A feature with three or four rounds of test fixes is where most of the window goes.\n2. Long threads. Everything Codex has read and written in the thread rides along with each new turn. A thread that started as \"add an endpoint\" and wandered into \"also refactor auth\" is carrying a lot of baggage.\n3. Repository exploration. Opening file after file to understand a codebase before writing the first line. Useful, but heavy.\n4. Heavy reasoning on routine work. The strongest models with high reasoning effort use the allowance fastest. Using them to rename a prop is overkill.\nCompare that to planning a change or reviewing a diff. Those are light. Codex reads your request, thinks about the approach, or reads a diff and comments on it. It's the build (multi-file edits plus the test-fix loop) that's heavy.\nKeep that split in mind, because the rest of this post depends on it.\nDon't guess. Before starting something large:\nOpen Settings or the usage dashboard in ChatGPT or the Codex app to see which allowance you've used and when it resets.\nIn an active Codex CLI session, run:\n\n\n\n\n/status\n\nAnd one myth to kill: starting a new chat does not reset your limits. A fresh thread makes each turn lighter because old context stops riding along, but the windows reset on their own schedule.\nBefore any tooling, these habits do help:\nOne task per thread. Switch threads when you switch topics.\nFront-load the requirement. Goal, constraints and how to verify it, all in the first message. Drip-fed requirements mean rework.\nName the files. \"Look at orders/service.ts and orders/export.test.ts\" is far cheaper than \"find where orders are handled.\"\nKeep AGENTS.md lean. Codex reads it on every task, so every extra paragraph costs you on every task.\nMatch model and effort to the task. Lighter settings for routine edits; save the heavy settings for design questions and nasty bugs.\nThese all help. But they're still optimizing the heavy part, not moving it.\nHere's the idea that changed the math for us. If planning and review are cheap and the build is expensive, then the build is what you want off your Codex window. Codex is great at understanding what you want, choosing an approach and catching problems in a diff. That's the part that needs Codex.\nMy team built a plugin for exactly this split. It's called XCR, and it works with Codex, Claude Code, Cursor and Grok Build.\nThe flow looks like this:\nCodex hands the task over. Anything bigger than a small edit (multi-file changes, features, tests, refactors) gets passed to XCR. Quick questions and one-line fixes stay in Codex, same as before.\nXCR builds it. It hands the heavy steps off to other models, writes the change on a copy of your project, runs your project's own checks (type check, lint, tests) and repairs failures within the task's budget.\nCodex reviews. It gets a short report back: requirements done, files changed, check results. Then it checks the change against what you asked for.\nSo your Codex quota goes to the thinking and the reviewing, and the heavy build doesn't run on your Codex window. That's how the quota lasts longer.\nOn privacy, here's the short version: checks run on your machine. Code is sent to the model only for the task, and XCR doesn't store it.\nOpen the install page on xcr.ai and sign in with the link that gets emailed to you. No password, no card needed.\nIn the console, open Install on a computer and pick the Codex tab.\nRead \"What XCR will change on your computer\", tick the box, click Copy install instruction, paste it into Codex and allow the command.\nRestart Codex.\nUnder the hood, XCR registers itself as an MCP server in ~/.codex/config.toml and adds one short rule to ~/.codex/AGENTS.md so Codex knows when to hand work over. Your original files are backed up first.\nThen just work normally. Try something like:\nAdd CSV export to the orders page, with filters by date and status.\nWhen the checks pass, the change lands in your working tree without a commit, so you review it in your usual diff.\nA few things that matter if you're cautious (you should be):\nUndo: ask Codex to undo the XCR change.\nSpending caps: set a daily cap per computer, and every task has its own spending cap.\nPause: pause with one click in the console.\nUninstall: tell Codex \"Uninstall XCR from this computer\" and it removes exactly what XCR added and restores your files.\nThe Codex usage limit stings most when you don't know where the usage went. Most of it goes to the build-and-fix loop, not to the thinking. Tighten your habits, check /status before big sessions, and think about moving the heavy builds somewhere other than your Codex window.\nAI coding quota always running short? Hand the heavy work to XCR and make your quota last longer.\nOriginal article: Codex usage limit: make your Codex quota last longer\n\nSetup walkthrough: XCR quick start\n\n\n\nDisclosure, again: I work on XCR, so weigh my take accordingly.",
+      "publishedAt": "2026-10-25T03:12:27.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "7e09f6f371ce4e5f02da5557e3c760dc81e5a768b283f63bb2fd790cc711c0d3",
+      "title": "DSPy: The End of Prompt Engineering - Kevin Madura, AlixPartners | 告别提示词工程：用DSPy构建模块化、可优化的AI程序",
+      "url": "https://dev.to/cognitalk/dspy-the-end-of-prompt-engineering-kevin-madura-alixpartners-58oo",
+      "description": "https://www.youtube.com/watch?v=-cKUW6n8hBU\n想象一下，你以前指挥一个超级聪明的助手（大语言模型）做事，得事无巨细地写小纸条（提示词），比如“请用JSON格式输出，先思考再回答，语气要专业……”，这就像提示词工程，很繁琐，而且换一个助手（换模型）可能就得重写纸条。\n现在，有了一个叫 DSPy 的新工具。它让你换个思路：不用再纠结于怎么写小纸条，而是像搭乐高积木一样，用Python代码来设计一个工作流程。\n  关键点：\n\n\n  从“写提示”到“写程序”：你不再跟模型说“你要怎么做”，而是定义一个函数，告诉它“输入是什么，输出是什么”（这叫签名）。至于中间怎么实现，交给DSPy和模型自己去搞定。\n  模块化：你可以把复杂的任务拆解成一个个小的、独立的模块（比如“情感分析模块”、“文档摘要模块”），像搭积木一样组合起来。\n  自动优化：这是最酷的一点。当你搭好程序后，DSPy可以像一个智能教练，通过反复测试，自动帮你调整那些藏在背后的提示词，让你的程序表现更好，或者换成更便宜的小模型也能达到同样的效果。\n简单说，DSPy就是把“写提示词”这种手艺活，变成了“写代码”这种工程活，让你能更快、更稳定地开发基于大模型的应用程序。\n 演讲目的与风格：演讲者Kevin Madura开场表示，本次分享会很随意，欢迎大家随时提问。他计划用一半时间讲概念，另一半时间演示代码。\n 听众调查：现场大部分人都听说过DSPy，但只有少数人在生产环境中日常使用。演讲者希望今天能转化更多人去尝试。\n DSPy的定义：DSPy是一个声明式框架，用于构建模块化软件。它不是用来迭代提示词的，而是用来构建真正的Python程序。\n 个人使用动机：作为一个技术顾问，Kevin经常面对各种不同的问题（如法律调查、流程改进、合同审查）。DSPy让他和他的团队能够非常快速地迭代，构建出解决这些问题的应用。\n 核心价值：DSPy最大的好处是能将你的逻辑分解成一个把大语言模型（LLM）当作一等公民的程序。你最终只是在调用一个函数，而这个函数恰好背后是个LLM。DSPy提供了关于输入和输出类型的保证，让你可以专注于构建程序本身。\n 恰到好处的抽象层级：DSPy不像LangChain那样会让你感觉受到限制。它不会让你去处理 choices、messages、content 这些底层细节，也不需要你自己写字符串解析器。你只需要声明你的意图。\n 创建的是计算机程序：你是在构建一个程序，只是碰巧用了LLM。这比来回调整字符串式的提示词要高级得多。\n 系统思维与可迁移性：DSPy的创始人Omar提到，它是用“系统思维”构建的。关键在于，你设计的系统结构和控制流不会因为底层模型能力的快速变化而过时。你可以轻松地在不同模型之间切换，而无需重写整个程序。\n 便利性与精确性并存：DSPy提供了开箱即用的便利（如无需手动解析JSON），同时也保留了足够的精度和控制力。如果你想了解底层发生了什么，可以深入查看；否则，只需专注于你想做的事。\n 对模型和范式变化的鲁棒性：你可以保留程序的逻辑，同时灵活地嵌入不同的LLM。\n 签名 (Signatures)：这是DSPy最核心的概念。它用来指定你想要函数做什么，即定义输入和输出的类型。你可以用简单的字符串（如 \"text -> sentiment\"）或更复杂的类（基于Pydantic）来定义。字段名本身就充当了微型提示词，会被传递给模型。这是DSPy强大又有点奇怪的地方。\n\n\n  应对已有好提示词的情况：如果你已经有一个精心打磨过的提示词，完全可以将其作为系统指令注入到签名或模块中，作为优化的起点。\n 模块 (Modules)：模块是逻辑上组织程序的方式，基于签名构建。它们类似于PyTorch中的模块概念。DSPy内置了许多常用模块（如 Predict， ChainOfThought， ReAct），你也可以创建自己的模块。例如，一个模块可以先调用LLM，再进行一些硬编码的业务逻辑。\n 工具 (Tools)：在DSPy中，工具本质上就是Python函数。你可以很容易地将任何Python函数暴露给LLM使用（例如，一个天气查询函数、一个网络搜索函数）。\n 适配器 (Adapters)：适配器位于签名和实际的LLM调用之间。它们负责将你的输入输出签名翻译成最终的提示词格式（如JSON、XML、BAML）。不同的适配器可能会影响模型的表现（性能差异可达5-10%）。\n 优化器 (Optimizers)：这是DSPy最引人注目也最有争议的部分。优化器可以自动、量化地提升程序性能。它通过在后台迭代地调整发送给LLM的提示词来实现。这使得模型和用例之间的迁移成为可能，例如，你可以先用强大的模型优化程序，然后将其迁移到更便宜的小模型上，同时保持不错的性能。\n 指标 (Metrics)：指标与优化器配合使用，用来定义什么是“成功”。优化器会利用指标来判断每次调整是否有效。指标可以是严格的（如完全匹配），也可以是主观的（如让另一个LLM来评判）。\n 环境设置：演示了如何使用Phoenix（Arize的观测平台）来追踪LLM调用。定义了多个LLM（如Claude、Gemini、GPT-4.1 mini），并展示了如何在程序中混合使用它们。\n 简单的情感分类器：用一个极其简短的签名 \"text -> sentiment\" 就创建了一个情感分类器。通过添加额外指令（如“数字越低越负面”）来微调结果。展示了DSPy内置的缓存和用量统计功能。\n 处理PDF文档（简易RAG）：使用 attachments 库轻松加载在线PDF（如英伟达的SEC Form 4表单）。无需关心OCR或图像提取的细节，直接将其作为输入传给模型，询问“总共卖出了多少股？”。\n 灵活的文档分析：\n\n\n  无结构输出：创建一个签名，让模型自己决定从文档中提取哪些重要信息，并以字典形式返回。\n  有结构输出：预先定义好一个Pydantic模型（如包含交易日期、类型、数量等字段），然后让模型按照这个严格的结构提取信息，方便后续用 . 符号访问数据。\n 适配器对比：分别使用默认的JSON适配器和BAML适配器来处理同一个任务，并通过 inspect_history 查看底层生成的提示词。展示了BAML适配器生成的提示词更简洁、更易读，在某些复杂场景下性能更好。\n 多模态示例：上传一张包含街道标志的图片，询问“现在可以在这里停车吗？什么时候必须离开？”。演示了DSPy处理图像输入的能力。\n 自定义模块：将上述的图像分析逻辑封装成一个Python类（模块），并在其中添加计数器等业务逻辑，展示了模块的可复用性和可扩展性。\n 工具调用（ReAct Agent）：创建了一个“简历分析Agent”，它可以使用两个工具（Perplexity搜索和获取URL内容）来查找人物背景。演示了如何异步执行多个这样的Agent，并获取其工具调用的轨迹（trajectory）用于调试。\n 优化器（Jeepo）实战：以一个客服消息分类为例，展示了完整的优化流程。\n\n\n  创建一个包含多个签名和模块的程序。\n  定义基于数据集的指标（如“紧急程度是否匹配”）。\n  运行优化器，它会使用一个更强大的“教师模型”来提供反馈，迭代地改进提示词。\n  优化结果是一个新的、经过优化的程序模块，可以被序列化保存或直接调用。\n 综合案例：通用文件处理器：这是一个端到端的示例，演示了如何构建一个能处理多种文件（合同、SEC文件、城市基础设施图片）的单一DSPy程序。\n\n\n  路由逻辑：程序首先使用一个分类器判断文件类型。\n  差异化处理：如果是SEC文件，则提取特定信息；如果是合同，则进行递归摘要；如果是图片，则进行视觉解读。不同的处理步骤甚至可以调用不同的模型（如图片用Gemini，文本用GPT-4.1）。\n  文档边界检测：演示了如何通过将PDF页面转为图片，再用一个ReAct Agent进行自我反思和工具调用，来自动识别合同的章节边界（如主文档、附件一、附件二等）。\n 优化器的经验：只要你有质量良好、结构清晰的数据（10-100个输入输出对），优化效果就很显著。优化器不仅能提升整体分数，还能按指标分解，帮助你理解模型的强项和弱项。\n 优化器的输出是什么：优化器的输出本质上就是一个优化后的程序模块，你可以像使用其他模块一样保存、加载和调用它。其核心是一个被动态构建的、更优的提示词字符串。\n 优化器的工作原理：它本质上是LLM引导的，即用AI来构建AI。它通过分析失败案例，发现你没有明说的潜在要求（如“名字必须大写”），并将其添加到提示词中。\n 成本与上下文管理：\n\n\n  成本：DSPy本身不昂贵，成本取决于你调用了多少次LLM。虽然签名会增加一些提示词长度，但这通常不是主要的成本驱动因素。\n  长上下文：如果你担心长上下文带来的成本和性能问题，可以在程序或适配器中加入上下文压缩的逻辑。演讲者认为，随着模型上下文窗口越来越大，这个问题未来可能会被抽象掉。\n 持续学习：可以将用户反馈（如点赞/点踩）收集起来，加入到训练数据集中，然后定期重新运行优化器，实现离线版本的持续优化。\n 总结：DSPy为你提供了构建任意复杂工作流所需的基本构件（primitives）。它让你能够构建模块化、可组合的系统，并且拥有自动优化的能力。",
+      "publishedAt": "2026-10-25T03:10:18.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "7e7f212b4d71dc7a799fa0626c777e499cf634bce5a33a9c11529b8450978c34",
+      "title": "Why copying AI answers into Word still breaks (and how I built a client-side converter for LaTeX & tables)",
+      "url": "https://dev.to/xianye_huang_4becb58afe1a/why-copying-ai-answers-into-word-still-breaks-and-how-i-built-a-client-side-converter-for-latex--445o",
+      "description": "Live Tool:​ https://aitoword.online/en/\nIf you only work in Markdown, copying responses from ChatGPT, Claude, or DeepSeek is trivial. You click the copy button, paste it into Obsidian, VS Code, or Notion, and everything renders as expected.\nThe problem starts when you have to hand off a deliverable to someone who lives in Microsoft Word—a client report, a lab assignment, or internal documentation.\nDepending on how you copy an AI response into Word, you usually hit one of three failure modes:\nHighlighting and copying from the browser UI: Word inherits the web page's inline CSS. You get dark or gray background shading behind every paragraph, mismatched font sizes, and broken table widths.\nClicking the AI's \"Copy\" button and pasting into Word: Because the clipboard contains raw Markdown, Word treats # headings, ** bold markers, and | table pipes as literal characters.\nThe LaTeX math wall: ChatGPT and DeepSeek frequently wrap inline and block equations in \\(...\\) and \\[...\\] (or $...$ and $$...$$). Pasting these into Word leaves you with raw TeX strings. Worse, many online converters rasterize equations into static PNG images, meaning you cannot fix a single subscript in Word without re-generating the whole document.\nTo solve this without installing a local Pandoc + LaTeX toolchain on every machine, I built Aitoword—a free, browser-based converter that turns AI Markdown and supported LaTeX into editable .docx files entirely on the client side.\nHere is a breakdown of the formatting problems it solves, how the in-browser pipeline works, and the trade-offs involved.\nStandard Markdown math parsers usually look for $...$ and $$...$$. However, most LLMs default to LaTeX-style \\(...\\) and \\[...\\] delimiters unless explicitly prompted otherwise.\nA naive regex replacement across the whole document will accidentally corrupt escaped brackets inside fenced code blocks or inline code spans (for example, array indexing or regex literals in JavaScript).\nBefore building the .docx document tree, the parser has to isolate code blocks and inline code tokens first, and only normalize math delimiters in prose nodes:\nfunction normalizeMathOutsideCode(markdown) {\n  // Split by fenced code blocks and inline code spans first\n  const segments = markdown.split(/(```\n{% endraw %}\n[\\s\\S]*?\n{% raw %}\n\n\n|[^\\n]+`)/g);\nreturn segments\n  return segment\n    // Convert \\[ ... \\] display math to $$ ... $$\n    .replace(/\\\\\\[([\\s\\S]*?)\\\\\\]/g, (_, expr) => `$$${expr}$$`)\n    // Convert \\( ... \\) inline math to $ ... $\n    .replace(/\\\\\\(([\\s\\S]*?)\\\\\\)/g, (_, expr) => `$${expr}$`);\n})\n.join('');\n\n}\n\nOnce normalized, supported expressions (fractions, roots, subscripts/superscripts, sums, integrals, and basic matrices) are parsed via KaTeX into MathML and mapped into OMML (Office Math Markup Language)​.\nWhen you paste a raw Markdown table into Word, you get lines of pipe characters (|). When you copy an HTML table from a chat window, column widths often overflow the page margins.\nHeadings (H1–H6) map to native Word heading styles, so they immediately show up in Word's Navigation Pane and can be used to generate an automatic Table of Contents.\nComparison of Export Methods\n\n\n\nMethod\nHeadings & Bold\nLaTeX Math ($...$ / [...])\nTables\nPrivacy & Setup\n\n\n\n\nSelect & Copy from Web UI\nKeeps styles, but often brings gray background shading\nUsually pasted as plain text or uneditable DOM fragments\nBorders and column widths frequently break\nZero setup; requires manual \"Clear Formatting\" in Word\n\n\nClick AI \"Copy\" Button -> Word\nLeaves literal ### and ** characters\nLeaves raw LaTeX source code\nLeaves raw\npipe characters\n\n\nLocal Pandoc CLI\nNative Word styles\nNative OMML equations\nNative Word tables\nHigh privacy, but requires CLI setup and reference .docx templates\n\n\n​Aitoword (In-Browser)​\nNative Word H1–H6 & inline styles\nEditable native Word equations (OMML)\nNative bordered Word tables\nNo login, 100% client-side in browser, zero server uploads\n\n\n\nMany \"free online document converters\" work by uploading your text or .md file to a backend server, running a Python or LibreOffice worker, and returning a download link. If you are converting internal work notes, unpublished research, or client drafts, uploading that text to a third-party server is a non-starter.\nNo server round-trip:​ Whether you paste text or import a local .md / .txt file, the .docx Blob is packed in memory using JavaScript and downloaded directly via URL.createObjectURL().\n). Automatically fetching and embedding those images from the browser would leak your IP address to external image hosts and hit CORS errors. Instead, Aitoword deliberately converts external image links into plain text descriptions so no outbound requests are triggered.\nIf you regularly need to move ChatGPT, DeepSeek, or Markdown notes into Word without spending twenty minutes fixing equations and stripping # symbols, you can try it here (no account or signup required):\nGuide on fixing hashtags, asterisks, and gray backgrounds:​ How to Copy ChatGPT to Word and Fix Formatting Problems\nFeedback on edge-case LaTeX expressions or Markdown structures that trip up the parser is very welcome!",
+      "publishedAt": "2026-10-25T03:07:33.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "6b9d514cf130117d9a0719f5c649317392bb4c18db5c4eec5310b57e379ed35f",
+      "title": "AIも「自分の間違い」を認められない？　Claude Mythos 5、攻撃を正当化し続行",
+      "url": "https://japan.cnet.com/article/35253932/",
+      "description": "Anthropicと英国AIセキュリティ研究所（AISI）は10月23日、AIモデル「Claude Mythos 5」がサイバー攻撃の能力試験中に、試験とは無関係の実在の開発者を攻撃しようとした問題について、それぞれ分析結果を公表した。Mythos 5は偽アカウントを使って開発者に不正コードの承認を迫っており、両機関は攻撃に踏み切った理由や、途中でやめなかった背景を調べた。",
+      "publishedAt": "2026-10-25T02:33:00.000Z",
+      "feedName": "CNET Japan"
+    },
+    {
+      "id": "f9a59446b09067d5d969fba2007fc84a4fe004c9921ea0f18fc0fe5277d24f02",
+      "title": "AWS SDK for JavaScript v3 で requestTimeout を設定したのに、時間切れにならない原因を教えてください",
+      "url": "https://dev.classmethod.jp/articles/tsnote-sdk-js-v3-requesttimeout-throwonrequesttimeout/",
+      "description": "AWS SDK for JavaScript v3 で `requestTimeout` を設定しても効かなくなった問題と、その解決方法を紹介します。@smithy/node-http-handler の仕様変更により `throwOnRequestTimeout: true` の設定が必要になりました。",
+      "publishedAt": "2026-10-25T01:00:10.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "6c4479c6f573b73ff5e41a92df5fe9f04e3453098e89eff3eb1d87e5849a489e",
+      "title": "AWSにデプロイせず、FastAPI製Lambdaのarm64実行をCIで検証する",
+      "url": "https://zenn.dev/shingokumon/articles/4da5acb9697d56",
+      "description": "はじめに\nFastAPIで開発している案件判定API「SUMI Job Engine」に、AWSへデプロイせずにLambda向けパッケージを検証するCIを追加しました。\n今回確認したかったのは、「SAMでビルドできるか」の一歩先です。ビルドした成果物をarm64のLambda公式Pythonコンテナに読み込ませ、実際のハンドラーを呼び出せるかを確かめました。\nこの記事では、実プロジェクトで使った構成とコードの要点を紹介します。コードは既存アプリからの抜粋です。単独で動くサンプル一式ではないため、導入する場合はハンドラー、パス、環境変数を自分のアプリに合わせて置き換えてください。\n!\n...",
+      "publishedAt": "2026-10-24T16:07:43.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "d53271e162147ceeb877b15576d4a6fcade509be08d396250b73b849c55f89a7",
+      "title": "わからない言葉を、わからないままにしない。React基礎用語の学び直し！",
+      "url": "https://qiita.com/jota9613/items/138c3a90bd981659844f?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\n分からない単語（わかっている風な単語のこと）があるので\n自分の言葉で説明できる様にするためにブログを書きます！\n\nアジェンダ\n\nSPA\nツールチェーン\nJSX\nトランスパイラー\nモジュール\nバンドラー\n\nアウトプット\n\nSPA（Single Page App...",
+      "publishedAt": "2026-10-24T13:53:48.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "6d93eb08c59709e4197ab5797cbbbc10e7a0c7838c83635a8dc0cc410a1510e0",
+      "title": "「HTTP2Shell」CVE-2026-111497、Node.js・Python・Bun・Envoyに影響 Brotliの重大脆弱性と修正版を確認|セキュリティニュースのセキュリティ対策Lab",
+      "url": "https://rocket-boys.co.jp/security-measures-lab/brotli_cve-2026-111497_http2shell_20261024/",
+      "description": "「HTTP2Shell」CVE-2026-111497、Node.js・Python・Bun・Envoyに影響　Brotliの重大脆弱性と修正版を確認 2026年10月21日、Node.js開発チームは、Brotliの展開処理に起因するメモリ破壊の脆弱性「CVE-2026-111497」を修正したセキュリティアップデートを公開しました。問題はNode.js固有のコードではなく、広く利用され...",
+      "publishedAt": "2026-10-24T12:12:42.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "0c69430f6081b838a3b1a62128835108967544f99e59f5a44ba41d260cda4fff",
+      "title": "AWS CDK でデプロイした Lambda 関数を以前のコードに戻したいです。以前のアセットはどこに残っていますか",
+      "url": "https://dev.classmethod.jp/articles/tsnote-cdk-lambda-rollback-asset-s3-cdk-gc/",
+      "description": "AWS CDK で Lambda 関数をデプロイした後、コードに不具合が見つかった時の切り戻し方法について解説します。ブートストラップ S3 バケットにアセットがどう残るのか、`cdk gc` で削除される仕組み、そして素早く対応するための方法をまとめました。",
+      "publishedAt": "2026-10-24T11:10:06.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "1218f6976bee3fb0ffb5db171338a51c6c5b6f9b5e12bc15decd8567d12c0100",
+      "title": "DevelopersIO 2026 TOKYOで 「バックアップは“消されないこと”が9割 〜AWS Backupで考えるランサムウェア対策とVaultの選び方〜」というタイトルで登壇しました #devio2026",
+      "url": "https://dev.classmethod.jp/articles/devio2026tokyo-aws-backup-ransomware/",
+      "description": "DevelopersIO（Tokyo）でランサムウェア対策とAWS Backupについて登壇してきました！初めての登壇で緊張もありましたが、満席のご来場をいただき、無事に終えることができたので、その様子をお伝えします。",
+      "publishedAt": "2026-10-24T11:08:49.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "16fff0232cacd80f809e49da684558ff1266a29a6feb1c210c3fe16cc324fe70",
+      "title": "AIで加速するサイバー攻撃と、防御をめぐる動き ――脆弱性の修正から、AIエージェントの行動制御まで | gihyo.jp",
+      "url": "https://gihyo.jp/article/2026/10/ai-security-defense",
+      "description": "AIで加速するサイバー攻撃と⁠⁠、防御をめぐる動き ――脆弱性の修正から⁠⁠、AIエージェントの行動制御まで 「約18カ月、持ちこたえる必要がある⁠」⁠。AnthropicのDeputy CISO（副最高情報セキュリティ責任者⁠）⁠、Jason D. Clinton氏は2026年10月22日、Xへの投稿で、サイバーセキュリティをめぐる直近4日間の深刻な状況に...",
+      "publishedAt": "2026-10-24T09:15:05.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "1695e20dec84ad3aa447c0758be2f07ef65f5042c227266a03e97b14c0e201a6",
+      "title": "GMO、不正取引の被害額を補償へ　見舞金5000円も　「お名前.com」FX用VPSへのサイバー攻撃で",
+      "url": "https://www.itmedia.co.jp/news/article/2610/24/2000002566/",
+      "description": "GMOインターネットは10月24日、FX自動売買用VPS「お名前.com デスクトップクラウド」がサイバー攻撃を受け、利用者の取引口座が不正操作された問題をめぐり、サービス利用中の全ユーザーに「お見舞金」として5000円を支払う他、不正取引で発生した損失を補償することを発表した。また、システムに「セキュリティ上の問題...",
+      "publishedAt": "2026-10-24T08:33:10.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "f5552725c82530482bf3b206366163fc098e124e2599e296439eec6b86bb0eb0",
+      "title": "リンクで確認した SNS のメール購読に、作り直さずに「解除の保護」を付ける",
+      "url": "https://zenn.dev/sk8jp/articles/260e3c0fa07ed9",
+      "description": "はじめに\nAmazon SNS のメール購読は、確認するときに AuthenticateOnUnsubscribe を true にすると、解除に AWS の認証（署名つきのリクエスト）が必要になります。メールの unsubscribe のリンクからは解除できなくなります。\nこの指定は確認するときにしか付けられず、確認のメールのリンクを押して確認すると付きません。\n\n\nAuthenticateOnUnsubscribe は、購読を確認する API（ConfirmSubscription）の引数です。確認の後に購読の属性を変える API（SetSubscriptionAttribute...",
+      "publishedAt": "2026-10-24T08:24:15.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "395997fe6cc5c6cfd0dc311e908ab4f717bed38d82623b6680f13158b41bb45c",
+      "title": "Contributing to Vite+ Inside Stories | ドクセル",
+      "url": "https://www.docswell.com/s/naokihaba/K4N7JN-2026-10-15-132213",
+      "description": "Contributing to Vite+ Inside Stories Naoki Haba Vue Fes Japan 2026 October 24, 2026 In This Talk How my journey with Vite+ began Moving from bug fixes to shaping core behavior Getting started with open source in the age of AI",
+      "publishedAt": "2026-10-24T08:08:36.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "67d9a81c29584cfb4b4e2b8166cfc57d749234153a86b6a15d7df526e83b3601",
+      "title": "「AWS DevOps Agentはどこまで任せられるか 〜機能の現在地と、機能拡張の実践〜」というタイトルでDevelopersIO 2026 TOKYOで登壇しました #devio2026",
+      "url": "https://dev.classmethod.jp/articles/devio2026tokyo-devops-agent/",
+      "description": "DevelopersIO 2026 TOKYOで登壇したAWS DevOps Agentの機能進化と、標準機能では届かないOS調査・自動修復の領域をMCPやEventBridgeで拡張した実践例を紹介します",
+      "publishedAt": "2026-10-24T08:07:56.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "5b9154f2c207bafe92f870766affdabe77fb0858fa1848f63bcd0da344d5b926",
+      "title": "[登壇レポート] DevelopersIO 2026 Tokyo で「知ってると差がつくかも？ AWS Control Tower / Organizations の小ネタ集」というタイトルで登壇しました",
+      "url": "https://dev.classmethod.jp/articles/202610-developersio-2026-tokyo-control-tower-organizations-tips/",
+      "description": "DevelopersIO 2026 Tokyo での登壇資料を共有します。Control Tower / Organizations の構築・運用で役立つ小ネタとして、Config ベースラインの使い分け、Bedrockのクロスリージョン推論とリージョン制限の工夫、SCP の NotResource を使った許可リスト管理、そして Guardrail を組織で強制する方法を紹介しました。",
+      "publishedAt": "2026-10-24T07:27:47.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "b8def9778c724967a47b7e612535af818ccb86c6be32c47a90d2f0470d07f2ab",
+      "title": "JSがこんなに減る！ HTML・CSS最新技術2026",
+      "url": "https://ics-ikeda.github.io/261024_vuefes_2026/",
+      "description": "Vue Fes Japan 2026 池田泰延の発表資料。HTML・CSSの新機能を使ったUI実装と、Vue.jsとの連携を紹介。",
+      "publishedAt": "2026-10-24T07:22:52.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "28b9fc17ecdccb432bbfd61132ed4166d8dde28d58148af32634e1bd58f2b300",
+      "title": "[登壇資料] 「AI駆動開発の開発環境のセキュリティの考え方」についてお話しました #devio2026",
+      "url": "https://dev.classmethod.jp/articles/ai-dev-environment-security-devio2026/",
+      "description": "AI駆動開発の時代において、開発環境のセキュリティをどう考えるべきか。Classmethod Odysseyでの登壇資料を共有します。",
+      "publishedAt": "2026-10-24T07:13:32.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "db58c500509c08c8e341c7662f9b1a767703032d478e9a619678e658dc98867e",
+      "title": "なぜその UI アニメーションは気持ちいいのか？ (Vue Fes Japan 2026) - Katashin .info",
+      "url": "https://katashin.info/slides/satisfying-ui-animation/",
+      "description": "2026年10月24日Vue,アニメーション,インタラクションVue Fes Japan 2026 で行った発表のスライドです。スライド部分をクリックしてからキーボードの左右入力でページをめくれます。 参考リンク #スライド内のデモTweetbot のデモの実装を解説した記事",
+      "publishedAt": "2026-10-24T05:49:49.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "d9bfde98b74b6da7e24819974ae8865c915acbf7f14c103fe6690bafb29df0e1",
+      "title": "ReActとPlan-Executeを実装して比較する — タスク特性ごとの向き不向き【TypeScript】",
+      "url": "https://qiita.com/joinclass/items/21ec0a1cb73de7a270e0?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに：1人会社で「エージェントの型」を間違えると何が起きるか\n僕は合同会社ジョインクラスという1人会社で、launchd のジョブ17本を回しながら出版・受託開発・SNS配信をほぼ自動で動かしています。\nその運用で何度も痛い目を見たのが、「エージェントにどこまで考えさ...",
+      "publishedAt": "2026-10-23T23:30:02.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "271806cd6c3c82b8478a550e38b92122b4ada5a0cbad9238b01db95cd905a477",
+      "title": "AIに美容室の社長を演じてもらい、コアドメインを探すヒアリング練習をしたら「強み」を掴めなかった話",
+      "url": "https://qiita.com/ken_risu_dev/items/c2e392bdb0d8ffd50fc6?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\n先日参加したドメイン駆動設計（DDD）に関する勉強会で出された課題に取り組みました。\n課題の内容は、AIに「美容室を5店舗経営している社長」を演じてもらい、システム開発者の立場でヒアリングするというものです。\nヒアリングした内容をもとに業務を「コア・支援・汎用」...",
+      "publishedAt": "2026-10-23T23:16:55.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "0a8dbf2a244530d4f24161b43f2241a9e32fa306f15b3b1ee2382ecca3492de5",
+      "title": "【JavaScript】lodashのインストール方法",
+      "url": "https://qiita.com/fomalhaut219/items/e2830a71e62c41f4cf54?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "【npm】 lodash のインストール方法\nこの記事では、JavaScript の定番ユーティリティライブラリ lodash を\nnpm を使って正しくインストールし、実行できる状態にするまでを解説します。\n\nはじめに\n株式会社Fieldの吉田です。\n日頃は大学に通いな...",
+      "publishedAt": "2026-10-23T02:02:12.000Z",
+      "feedName": "Qiita"
     }
   ]
 }
