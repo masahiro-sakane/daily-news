@@ -1,270 +1,6 @@
 {
   "articles": [
     {
-      "id": "00f7cf6db2e4a9e86b62731c32f609eb1a9dd7b8e11839e805ebe08bb40db1ec",
-      "title": "How We Test LLM Features So They Don't Regress in Production",
-      "url": "https://dev.to/lycore/how-we-test-llm-features-so-they-dont-regress-in-production-56io",
-      "description": "We shipped an LLM-powered classification feature for a client last year. It worked well. Three weeks later, after a routine prompt tweak, it started miscategorising a specific edge case — one that the team had explicitly tested for during development. Nobody noticed for four days.\nThe problem was not the prompt change. The problem was that we had no automated check that would have caught it. Our test suite confirmed that the endpoint returned a 200 and that the response was valid JSON. It said nothing about whether the classification was actually correct.\nThis post is about how we fixed that, and what our eval stack looks like now across Django projects with LLM features.\nUnit tests and integration tests are built around determinism. You give a function an input, you assert the output matches what you expect. LLMs are not deterministic in that way — the same prompt can return slightly different wording on different runs, and what counts as \"correct\" is often a matter of degree rather than exact match.\nThis creates a gap. You can test that the LLM call succeeds. You cannot easily test that it produced the right answer — at least not with the same tools you use for the rest of your application.\nThe gap is where regressions hide.\nAn eval is a test that checks the quality of an LLM output, not just its shape. Evals come in a few forms:\nExact match — the output should contain a specific string, or match a specific value. Works well for classification, extraction, and structured outputs.\nModel-graded — you use a second LLM call to judge whether the output meets a criterion. More flexible, handles natural language outputs, but adds cost and latency to your test suite.\nHuman-labelled golden sets — a curated set of inputs with known-correct outputs, maintained by a human. The highest signal, the most expensive to build and maintain.\nWe use all three, at different layers.\nOur eval runner is a Django management command that runs against a fixed dataset we maintain in a JSON fixture file.\n# management/commands/run_evals.py\nimport json\nfrom django.core.management.base import BaseCommand\nfrom django.conf import settings\nfrom myapp.llm import classify_support_ticket\n\n\nEVAL_DATASET = settings.BASE_DIR / \"evals\" / \"support_classification.json\"\n\n\nclass Command(BaseCommand):\n    help = \"Run LLM eval suite against the golden dataset\"\n\n    def handle(self, *args, **options):\n        with open(EVAL_DATASET) as f:\n            cases = json.load(f)\n\n        passed = 0\n        failed = 0\n        failures = []\n\n        for case in cases:\n            result = classify_support_ticket(case[\"input\"])\n            expected = case[\"expected_label\"]\n\n            if result.label == expected:\n                passed += 1\n            else:\n                failed += 1\n                failures.append({\n                    \"input\": case[\"input\"][:100],\n                    \"expected\": expected,\n                    \"got\": result.label,\n                    \"confidence\": result.confidence,\n                })\n\n        total = passed + failed\n        pass_rate = (passed / total) * 100\n\n        self.stdout.write(f\"\\nEval results: {passed}/{total} passed ({pass_rate:.1f}%)\")\n\n        if failures:\n            self.stdout.write(\"\\nFailures:\")\n            for f in failures:\n                self.stdout.write(\n                    f\"  [{f['expected']} → {f['got']}] \\\"{f['input']}...\\\"\"\n                )\n\n        if pass_rate < 90.0:\n            raise SystemExit(\n                f\"Eval pass rate {pass_rate:.1f}% is below threshold (90%). \"\n                \"Review prompt or model before deploying.\"\n            )\n\nThe golden dataset looks like this:\n[\n  {\n    \"input\": \"My invoice shows the wrong amount and I need a refund immediately\",\n    \"expected_label\": \"billing\",\n    \"notes\": \"Clear billing intent despite urgency language\"\n  },\n  {\n    \"input\": \"I cannot log into my account, it says my password is wrong\",\n    \"expected_label\": \"account_access\",\n    \"notes\": \"Standard auth issue\"\n  },\n  {\n    \"input\": \"The app crashes every time I try to export to PDF on iOS 17\",\n    \"expected_label\": \"bug_report\",\n    \"notes\": \"Platform-specific bug, not a feature request\"\n  }\n]\n\nThis runs in CI on every PR that touches the LLM integration, and nightly against production to catch model drift. If the pass rate drops below 90%, the deploy is blocked.\nFor features where the output is prose — summaries, draft emails, explanations — exact match does not work. We use a lightweight model-graded eval instead:\nfrom openai import OpenAI\n\nclient = OpenAI()\n\n\ndef grade_summary(original_text: str, summary: str, criteria: list[str]) -> dict:\n    criteria_list = \"\\n\".join(f\"- {c}\" for c in criteria)\n\n    response = client.chat.completions.create(\n        model=\"gpt-4o-mini\",\n        messages=[\n            {\n                \"role\": \"system\",\n                \"content\": (\n                    \"You are evaluating AI-generated summaries. \"\n                    \"For each criterion, respond with PASS or FAIL and one sentence of reasoning. \"\n                    \"Be strict — partial credit is not given.\"\n                ),\n            },\n            {\n                \"role\": \"user\",\n                \"content\": (\n                    f\"Original text:\\n{original_text}\\n\\n\"\n                    f\"Summary to evaluate:\\n{summary}\\n\\n\"\n                    f\"Criteria:\\n{criteria_list}\"\n                ),\n            },\n        ],\n    )\n\n    raw = response.choices[0].message.content\n    results = {}\n    for criterion in criteria:\n        results[criterion] = \"PASS\" in raw.upper()\n\n    passed = sum(results.values())\n    return {\n        \"results\": results,\n        \"score\": passed / len(criteria),\n        \"raw_response\": raw,\n    }\n\nWe use gpt-4o-mini for grading — it is significantly cheaper than the model that generated the output, and accurate enough for pass/fail judgements on well-defined criteria.\nRunning evals once is useful. Running them consistently and tracking the results over time is where the real value is. We log every eval run to a simple Django model:\nclass EvalRun(models.Model):\n    feature = models.CharField(max_length=100)\n    model_used = models.CharField(max_length=100)\n    prompt_hash = models.CharField(max_length=64)\n    pass_rate = models.FloatField()\n    cases_run = models.IntegerField()\n    failures = models.JSONField(default=list)\n    run_at = models.DateTimeField(auto_now_add=True)\n    triggered_by = models.CharField(max_length=50)  # \"ci\", \"nightly\", \"manual\"\n\nWhen the pass rate on a nightly run drops by more than 3 points compared to the previous week, it pages the on-call engineer. That threshold catches model drift — cases where the underlying model behaviour has shifted without any code change on our side.\nLLM evals are not complicated to set up. A JSON fixture file and a management command that compares output labels against expected labels is enough to catch most regressions. The hard part is maintaining the golden dataset — adding new cases when you find edge cases in production, and reviewing failures rather than just rerunning until they pass.\nIf you ship LLM features without evals, you are relying on manual testing and user complaints to catch regressions. That is a slow feedback loop for something that can break silently and affect every user.\nStart with exact-match evals on your most critical features. Add a model-graded layer where the output is prose. Run both in CI. The eval suite that catches one production regression pays for itself immediately.\nLycore builds production AI systems for businesses — LLM integrations, agents, RAG pipelines, and custom AI applications on Django, React, Flutter, and .NET. Get in touch if you want to talk through your use case.",
-      "publishedAt": "2026-09-30T03:53:00.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "c74597a9143e80976c3443574f60f776f9ecb900dbd6c9eacd8884766dfb9772",
-      "title": "MarkItDown Python and MCP Experiment Log: 14 Fixtures and a Raw STDIO Handshake",
-      "url": "https://dev.to/jeremyym/shi-yan-ji-lu-markitdown-python-zhi-nan-mcp-zhi-nan-2026-09-23-4an8",
-      "description": "This log records the environment, commands, fixture results, and MCP handshake behind the Python guide and MCP setup guide. It reports one run from 2026-09-23; anything not tested is marked explicitly.\n\n\n\nField\nValue\n\n\n\n\nPost IDs\n\npython-guide / mcp-guide\n\n\n\nRun date\n2026-09-23\n\n\nOperator\nCommands executed with AI assistance; outputs recorded as returned (manual review pending)\n\n\nEnvironment\nmacOS (Darwin 26.5.1, Apple Silicon), uv 0.10.8, Python 3.12 (uv venv --python=3.12)\n\n\nTools\n\nmarkitdown 0.1.8 (released on PyPI 2026-09-21), markitdown-mcp 0.0.1a7 (released on PyPI 2026-09-14)\n\n\nConversion mode\nLocal CLI markitdown <file> (no LLM client, plugins, or Azure services); MCP over STDIO\n\n\nInputs\n14 public fixtures from samples/quality-gallery/files/\n\n\n\nOutput path\nTemporary directory, not committed; key results are excerpted here and in the companion guides\n\n\nStatus\n\nrun; manual review is pending\n\n\n\nThe following installation commands were run:\nuv venv --python=3.12 mdvenv\nuv pip install --python mdvenv/bin/python 'markitdown[all]' markitdown-mcp  # initially resolved markitdown to 0.1.5\nuv pip install --python mdvenv/bin/python --prerelease=allow 'markitdown[all]==0.1.8'  # upgraded to 0.1.8\n\nOne installation wrinkle: in this environment, the Azure-related extra for markitdown[all] 0.1.8 depended on a prerelease package. Without prereleases enabled, the resolver fell back to markitdown 0.1.5 without an error. Installing only the needed extras (for example, markitdown[pdf,docx,xlsx,pptx]) or enabling prereleases avoids that resolution path.\nmarkitdown 0.1.8)\n\n\n\nInput\nExit\nLines\nChars\nTable rows\nObservation\n\n\n\n\nrelease-overview.pdf\n0\n46\n1255\n0\nHeadings and paragraphs retained\n\n\nq3-results.pdf\n0\n23\n1453\n13\nPipeline table retained; numeric values matched, with blank spacer columns between value columns\n\n\nlibrary-note.pdf\n0\n34\n2556\n14\nTwo tables; usable\n\n\ncustomer-research-brief.docx\n0\n22\n581\n6\nHeadings and lists intact; a table header cell was empty\n\n\nq3-budget.xlsx\n0\n18\n582\n15\nSheet names became ## headings; an Unnamed: 1 header artifact appeared\n\n\nworkshop-budget.pptx\n0\n7\n189\n0\nText only; layout was not retained\n\n\nab-test-note.html\n0\n29\n1386\n0\nClean output\n\n\nurban-orchards.epub\n0\n28\n692\n5\nChapters became headings\n\n\nchurn-cohort-notebook.ipynb\n0\n24\n453\n0\nCell source was concatenated\n\n\nmoving-averages-scan.pdf\n0\n1\n1\n0\nNo text layer; output was one newline despite exit code 0 (silent failure)\n\n\nq3-results-scan.pdf\n0\n1\n1\n0\nSame: one newline despite exit code 0\n\n\ndelivery-note-scan.pdf\n0\n1\n1\n0\nSame: one newline despite exit code 0\n\n\nworkshop-budget-scan.png\n0\n2\n22\n0\nOnly ImageSize: 1600x1100 metadata\n\n\ndelivery-note-scan.png\n0\n2\n21\n0\nMetadata only\n\n\n\nFor these fixtures, headings, lists, and simple tables were usable, though some tables had artifacts. Three scanned PDFs returned a single newline with exit code 0, so a successful process exit did not guarantee useful output; check output length. This run did not test LLM image descriptions, the markitdown-ocr plugin, or Azure Document Intelligence / Content Understanding because credentials were unavailable. Any mention of those capabilities elsewhere is based on the official README, not on this run.\nmarkitdown-mcp 0.0.1a7 over STDIO)\n\n\nThe test wrote JSON-RPC messages to the markitdown-mcp process in this order: initialize → notifications/initialized → tools/list → tools/call, then read stdout.\ninitialize returned serverInfo = {\"name\":\"markitdown\",\"version\":\"\"} and protocol version 2025-06-18.\ntools/list returned one tool, convert_to_markdown, with one required string parameter: uri.\ntools/call with file:///…/q3-results.pdf returned isError: false and text content containing the converted Markdown. Its first lines matched the CLI output.\nThe package requirements recorded for this run were markitdown[all]>=0.1.1,<0.2.0 and mcp>=2.1.1,<3.0.0.\nClaude Desktop, Cursor, and Cline GUI configurations were not tested because those clients were not available in the environment. Their examples came from the official README and client documentation. The Docker image was not built or verified.\nAI disclosure: This article was translated and prepared with AI from the experiment record captured on 2026-09-23. The experiment is reported as run; manual review has not been completed. Claude Desktop, Cursor, and Cline GUI setup and the Docker image build were not tested.",
-      "publishedAt": "2026-09-30T03:50:08.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "28ec5d0ab27444266463a1bfcb38c72a50062485188a68a6b9040d93ed3983a1",
-      "title": "Why a pay-gap cost calculator should make zero network calls",
-      "url": "https://dev.to/olgadimitrova/why-a-pay-gap-cost-calculator-should-make-zero-network-calls-2n38",
-      "description": "I maintain a small open-source calculator that prices what it costs to close an unexplained gender pay gap under the EU Pay Transparency Directive (2023/970). You give it a CSV of employees (salary, gender, grade, tenure, category), and it prices two options: minimum compliance and full equalisation. It ships as a static HTML page and, separately, as an Excel workbook with the same calculation in live formulas.\nThe page makes no network requests at all. It doesn't promise to skip logging or to encrypt your data on a server, because there is no server. Open the browser's Network tab while you use it and it stays empty. Most of the design follows from that.\nA pay-gap calculation needs individual salaries by gender, category, grade and tenure. Most HR and reward teams would rather not let that leave the company, even briefly, even to a vendor with a data processing agreement and a SOC 2 report. A web app that uploads the CSV to a server asks every user to trust a company they have probably never audited, for a calculation their laptop does in milliseconds.\nSo index.html is the whole application. HTML, CSS and JavaScript sit in one file. There is no build step to run it and no backend to operate or patch, and nobody's salary file ends up on a server.\n\"Runs in your browser\" is easy to say. Keeping it true means giving up a few conveniences:\nNo CDN for fonts or libraries. A dependency is either vendored into the file or not used. The chart is plain SVG, not a charting library.\nNo analytics, error reporting or telemetry, including the \"just to see if people use it\" kind. Each of those is a network call.\nThe CSV comes in through an <input type=\"file\"> and is read into memory with the FileReader API. The page computes the result, and the data is gone on refresh. Nothing is written anywhere unless the user downloads a result.\nThe repo has two checks for this. check-render.js scans the built page and fails (exit 1) if it references any external script, stylesheet or image. check-meta.js opens the page in headless Chrome, records every network request made while it loads, and fails (exit 1) if there is even one. Without a test that can fail, \"no network calls\" only means \"no network calls that we noticed.\"\nIf you can't read JavaScript, the web page is hard to verify. Without developer tools, how do you see what it does with your data? So the same calculation also exists as an Excel workbook, all in live formulas: medians by rank, and the OLS regression written out with explicit sums and Cramer's rule instead of an array formula or a macro. Click a cell, read the formula, change an input and watch every downstream number move. There is no VBA and nothing hidden behind a button.\nI cross-checked the web version, the workbook and a third, independent Python port on the demo dataset, and they agree to 1e-9. The port is in the repo at pay-gap-calculator/build/excel/reference_calc.py. It follows pay-gap-calculator/build/calc.js step by step in a different language and prints every category, so you can rerun the comparison yourself instead of taking the README's word for it.\nOpen source and zero network calls answer \"can I trust this with my data.\" They don't answer \"is this the right method.\" The calculator prices the unexplained residual after controlling for grade and tenure (OLS) and remediates only that residual. It doesn't decide whether a gap is lawful, and it doesn't group work of equal value into categories for you. Categories too small to be statistically reliable get flagged rather than hidden. Those are choices, and someone else building the same tool could reasonably make different ones. Whether your salary data should touch a server to find out is a separate question, and I think it has one answer.\nRepo, workbook, sample CSV and the checks: https://github.com/OlgaDimitrovaGit/comp-budget-lab/tree/main/pay-gap-calculator",
-      "publishedAt": "2026-09-30T03:47:06.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "a4d1d61c658524be85fa9bc3904dad4c8adcb261fb0256c9d7bc18e545bd2f67",
-      "title": "Training Tesla Optimus: A Step‑by‑Step Guide for Factory Robots",
-      "url": "https://dev.to/leojulieta/training-tesla-optimus-a-step-by-step-guide-for-factory-robots-1d2m",
-      "description": "Tesla Optimus: How to Train a Humanoid Robot for the Factory Floor (Step‑by‑Step)\n\n\n\n  \n  \n  Introduction\n\n\nTesla’s Optimus humanoid is no longer a sci‑fi curiosity—it’s the fastest‑growing search term in robotics, AI, and manufacturing. In the last 24 hours the phrase “Optimus training pipeline” has jumped more than 350 %, and engineers on Reddit, IEEE Spectrum, and LinkedIn are asking the exact same question: How do I get a real‑world humanoid to lift, walk, and assemble parts in my plant?  \nThis guide cuts through the hype. We break down the hardware that makes Optimus tick, walk you through the complete on‑site training workflow, compare Tesla’s approach with other industry players, and give you a ready‑to‑run Unity + ML‑Agents simulation—including the exact Python scripts you need to collect tele‑operation data and train a policy. Finally, we look at the labor impact, outline a re‑skilling path, and provide a quick‑reference checklist for safety, cost, and compliance.\n\n\n\nComponent\nTesla Optimus\nTypical Industrial Humanoid\n\n\n\n\nActuators\n12 custom‑designed electric motors (6 hip/leg, 4 arm, 2 torso) with integrated harmonic drives\nOff‑the‑shelf servo/gearbox combos\n\n\nEdge AI\n“Dojo‑Lite” ASIC + 2 × NVIDIA Jetson Orin\nSingle GPU or CPU\n\n\nPerception\n12 × LiDAR (360 °), 8 × RGB‑D cameras, wrist/ankle force‑torque sensors\n1–2 cameras, optional depth sensor\n\n\nLatency\n< 10 ms closed‑loop control\n30–50 ms\n\n\nPayload\n30 kg (± 5 kg safety margin)\n10–15 kg\n\n\nPower\n5 kWh battery pack, 30 min continuous heavy‑load operation\n1–2 kWh, limited endurance\n\n\n\nThe combination of high‑bandwidth sensing and ultra‑low‑latency control lets Optimus perform tasks that would normally require a human worker—screw‑driving, palletizing, and even tool‑change—without a dedicated safety cage.\nYou don’t need a Dojo super‑computer to experiment. The core pipeline consists of three stages:\nData collection (tele‑operation) – Record joint trajectories, sensor streams, and video while a human drives the robot in a safe sandbox.\n\n\nDomain randomization (Unity) – Randomly vary lighting, friction, and object placement to teach the policy robust perception.\n\n\nPolicy learning (PPO) – Use Proximal Policy Optimization to turn the recorded data into a reusable control model.\nBelow is a minimal, reproducible setup that runs on an RTX 3070 (or any GPU with ≥ 8 GB VRAM).\n# Unity (2022 LTS) – install via Unity Hub\n# Python 3.10+\npip install mlagents==0.30.0 torch==2.2.0 torchvision==0.17.0 tqdm\n\n# teleop.py – records joint angles + camera frames\nimport mlagents_envs\nfrom mlagents_envs.environment import UnityEnvironment\nimport numpy as np, cv2, json, os\n\nenv = UnityEnvironment(file_name=\"OptimusSim\", seed=42, side_channels=[])\nenv.reset()\nbehaviour = list(env.behaviour_specs.keys())[0]\n\ndef save_step(step, obs, act):\n    os.makedirs(\"data/frames\", exist_ok=True)\n    cv2.imwrite(f\"data/frames/frame_{step:05d}.png\", obs[0])  # RGB image\n    with open(f\"data/steps.json\", \"a\") as f:\n        json.dump({\"step\": step, \"obs\": obs.tolist(), \"act\": act.tolist()}, f)\n        f.write(\"\\n\")\n\nfor step in range(10_000):\n    decision_steps, terminal_steps = env.get_steps()\n    # Simple keyboard controller – replace with joystick for real robots\n    keys = cv2.waitKey(1) & 0xFF\n    action = np.zeros((1, 12))  # 12‑DOF robot\n    if keys == ord('w'): action[0, 0] = 0.1   # hip forward\n    if keys == ord('s'): action[0, 0] = -0.1  # hip backward\n    env.set_actions(behaviour, action)\n    env.step()\n    obs = decision_steps.obs[0]  # RGB‑D image tensor\n    save_step(step, obs[0], action[0])\nenv.close()\n\nRun the simulation and press W/S to move the robot’s legs; the script stores every frame and the corresponding joint command.\nOpen the OptimusSim scene, add the Randomizer component (provided in the repo) and set the following ranges:\n\n\n\nParameter\nMin\nMax\n\n\n\n\nLight intensity\n300 lx\n1200 lx\n\n\nFloor friction\n0.3\n1.0\n\n\nObject size (box)\n0.05 m\n0.20 m\n\n\nCamera noise (Gaussian σ)\n0.0\n0.02\n\n\n\nThe randomizer will automatically vary these values each episode, producing a dataset that generalizes to real‑world factories.\n# train.py – PPO with ML‑Agents\nfrom mlagents.trainers import learn\nimport yaml\n\nconfig = \"\"\"\nbehaviors:\n  Optimus:\n    trainer_type: ppo\n    hyperparameters:\n      batch_size: 1024\n      buffer_size: 10240\n      learning_rate: 3.0e-4\n      beta: 5.0e-4\n      epsilon: 0.2\n    network_settings:\n      hidden_units: 256\n      num_layers: 2\n    reward_signals:\n      extrinsic:\n        gamma: 0.99\n        strength: 1.0\n\"\"\"\n\nwith open(\"config.yaml\", \"w\") as f:\n    f.write(config)\n\nlearn.run_training(\n    trainer_config_path=\"config.yaml\",\n    run_id=\"optimum_run\",\n    env_path=\"OptimusSim\",\n    base_port=5005,\n    seed=1234,\n    resume=False,\n)\n\nAfter ~ 4 hours on an RTX 3070 you’ll have a model.onnx that can be deployed back to the robot or used for simulation inference.\n\n\n\nFeature\nTesla Optimus\nAmazon Astro (service robot)\nBMW iRobot (factory prototype)\nFoxconn Humanoid\n\n\n\n\nTraining hardware\nDojo‑Lite + H100 (production) → RTX 3070 (dev)\nAWS Graviton + SageMaker\nNVIDIA Drive AGX\nCustom FPGA + RTX 2080\n\n\nPerception suite\n12 LiDAR + 8 RGB‑D\n2 RGB‑D + 1 LiDAR\n4 RGB‑D\n6 RGB‑D\n\n\nControl latency\n8 ms\n30 ms\n20 ms\n15 ms\n\n\nTask flexibility\n30 kg payload, 6 DOF arms\n5 kg, 4 DOF arms\n12 kg, 5 DOF arms\n25 kg, 6 DOF arms\n\n\nOpen‑source support\nML‑Agents tutorial (released 2024)\nLimited (AWS RoboMaker)\nProprietary\nNo public SDK\n\n\n\nTesla’s advantage lies in hardware‑software co‑design: the Dojo‑Lite chip processes LiDAR point clouds in < 2 ms, enabling reactive balance control that most competitors achieve only with external compute.\n\n\n\nImpact area\nWhat Optimus changes\nRecommended employee response\n\n\n\n\nErgonomic risk\nReplaces repetitive lifting & overhead work\nTrain workers on robot supervision, safety‑stop procedures\n\n\nQuality control\nHumans shift to visual inspection & AI‑assisted defect detection\nUpskill with computer‑vision basics (Python + OpenCV)\n\n\nProcess engineering\nNew data streams (force‑torque, LiDAR) enable predictive maintenance\nOffer courses on data analytics and PLC integration\n\n\nJob count\nNet‑neutral in pilot plants (≈ 5 % fewer line workers, ≈ 10 % more technical staff)\nCreate internal “Robotics Technician” tracks (6‑month bootcamps)\n\n\n\nA cost‑benefit snapshot for a 1,000 m",
-      "publishedAt": "2026-09-30T03:46:29.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "85e2d69b6e219b68519a1b0b4342b8db9176661d40d8671972c474e42804a391",
-      "title": "Entrena y despliega Optimus de Tesla en tu fábrica hoy",
-      "url": "https://dev.to/leojulieta/entrena-y-despliega-optimus-de-tesla-en-tu-fabrica-hoy-38cd",
-      "description": "Optimus de Tesla: cómo entrenar y usar el robot humanoide en la fábrica (guía práctica)\n\n\n\n  \n  \n  Introducción\n\n\nEn las últimas 48 horas el anuncio de Tesla Optimus ha saturado los foros de IA, los grupos de manufactura y, por supuesto, los buscadores. La pregunta que más resuena es: ¿cómo podemos poner a prueba ese robot humanoide en nuestras líneas de producción sin paralizar la planta? En este artículo encontrarás respuestas concretas, ejemplos de código y recursos listos para usar, de modo que cualquier ingeniero o aficionado pueda comenzar a simular y entrenar a Optimus hoy mismo.\n\n\n\nSub‑sistema\nComponentes clave\nFunción práctica\n\n\n\n\nEstructura\nAleación Al‑Mg, 3 D‑printed joints\nLigereza + resistencia estructural\n\n\nActuadores\nMotores brushless 24 V, servos hidráulicos de precisión\nMovimiento fluido en 7 grados de libertad\n\n\nSensores\nEncoders ópticos 12 bits, LIDAR corto (0‑2 m), IMU de 9 ejes\nPosicionamiento y detección de obstáculos\n\n\nCerebro\nNvidia Jetson AGX Orin (32 TOPS) + módulo de almacenamiento SSD 512 GB\nInferencia en tiempo real de la red neuronal de control\n\n\n\nTip: Si quieres probar la arquitectura en tu PC, puedes emular la Jetson con Docker usando la imagen oficial nvcr.io/nvidia/l4t-ml:latest.\ndocker run --gpus all -it --rm \\\n   -v $PWD:/workspace \\\n   nvcr.io/nvidia/l4t-ml:latest bash\n\nEl entrenamiento de Optimus se basa en un ciclo continuo que evita detener la producción:\nRecopilación de datos en sitio – Los operadores usan guantes hápticos y un visor AR (por ejemplo, Microsoft HoloLens 2). Cada interacción genera un registro JSON con posición, fuerza y cámara.  \n\n\nTeleoperación → Simulación – Los datos se suben a la nube y se convierten en episodios de entrenamiento en Unity + ML‑Agents.  \n\n\nRetroalimentación humana – Los supervisores etiquetan comportamientos “correctos” vs “incorrectos” mediante una UI web sencilla.  \n\n\nActualización del modelo – Se entrena una red de control (arquitectura Twin‑Delayed DDPG) y se despliega al robot vía OTA.  \n\n\n\n\n  \n  \n  2.1 Código de ejemplo: generación de un episodio en Unity\n\n\n\n\n\nusing Unity.MLAgents;\nusing Unity.MLAgents.Sensors;\nusing UnityEngine;\n\npublic class OptimusAgent : Agent\n{\n    public override void CollectObservations(VectorSensor sensor)\n    {\n        // posición del robot (x,y,z)\n        sensor.AddObservation(transform.localPosition);\n        // velocidad de las articulaciones\n        foreach (var joint in GetComponentsInChildren<ConfigurableJoint>())\n            sensor.AddObservation(joint.currentForce);\n        // datos del LIDAR (array de 360 distancias)\n        sensor.AddObservation(LidarSensor.Readings);\n    }\n\n    public override void OnActionReceived(float[] vectorAction)\n    {\n        // vectorAction contiene torques para cada motor\n        ApplyTorques(vectorAction);\n        // recompensa basada en la distancia al objetivo\n        float reward = -Vector3.Distance(transform.position, target.position);\n        SetReward(reward);\n    }\n}\n\n# 1. Compilar el modelo con TensorRT\ntrtexec --onnx=optimus_control.onnx --saveEngine=optimus_control.trt\n\n# 2. Subir al repositorio de OTA\naws s3 cp optimus_control.trt s3://tesla-optimus-updates/latest.trt\n\n# 3. En el robot, disparar la actualización\ncurl -X POST http://robot.local/api/ota \\\n     -d '{\"url\":\"s3://tesla-optimus-updates/latest.trt\"}'\n\nAutomatización directa: Según la International Federation of Robotics (IFR, 2024), los robots humanoides pueden cubrir entre 15 % y 30 % de tareas repetitivas en ensamblaje.\n\n\nNuevas competencias: Se crean puestos de re‑skilling en programación de ROS 2, mantenimiento de sensores LIDAR y gestión de datos de entrenamiento.\n\n\nPrograma interno de Tesla: Tesla Academy ofrece certificaciones gratuitas en “Robótica Industrial” y “Análisis de datos de teleoperación”.\n\n\n\n\nEjemplo práctico: Un operario de la línea A pasó de 4 h de inspección manual a 30 min usando Optimus para transportar piezas, y utilizó 2 días de la Academy para certificarse como Robot Supervisor.\n\n\n\nRecurso\nQué contiene\nEnlace\n\n\n\n\nTesla Optimus SDK (beta)\nAPIs para control de actuadores, streaming de sensores y OTA\nhttps://github.com/tesla/optimus-sdk\n\n\nSimulador Unity + ML‑Agents\nEscenarios de fábrica preconfigurados (cinta transportadora, zona de soldadura)\nhttps://github.com/Unity-Technologies/ml-agents/tree/main/examples/optimus_factory\n\n\nDataset de teleoperación\n200 GB de sesiones de guantes hápticos + video 1080p\nhttps://data.tesla.com/optimus/teleop\n\n\nGuía de ROS 2 para humanoides\nTutorial paso a paso para integrar Jetson con ROS 2 Foxy\nhttps://docs.ros.org/en/foxy/Installation/Ubuntu-Install-Debians.html\n\n\n\nInstala Docker y la imagen de Jetson (ver sección 1).\n\n\nClona el SDK y compila los controladores:\n\n\n\n\ngit clone https://github.com/tesla/optimus-sdk.git\ncd optimus-sdk\nmkdir build && cd build\ncmake .. -DCMAKE_BUILD_TYPE=Release\nmake -j$(nproc)\n\nEjecuta el simulador y genera los primeros 10 000 episodios:\n\n\n\n\npython train.py --env OptimusFactoryEnv --steps 1e7\n\nDespliega el modelo con el comando OTA del apartado 2.2.\n\n\n\nCon estos cuatro pasos tendrás una versión mínima de Optimus entrenada para mover cajas de 10 kg en una cinta transportadora.\nEl anuncio de Optimus ha despertado una ola de búsquedas y debates, pero lo que realmente importa son los pasos concretos que podemos dar hoy para probar y adaptar este robot en nuestras fábricas. Con el hardware descrito, el flujo de entrenamiento automatizado y los ejemplos de código listos para ejecutar, cualquier equipo técnico está a un par de comandos de comenzar a experimentar. Aprovecha los recursos gratuitos, inscríbete en la Tesla Academy y conviértete en pionero de la nueva generación de manufactura humanoide.  \n¿Tienes dudas o quieres compartir tus resultados? Déjanos un comentario y únete a la comunidad que está construyendo el futuro de la producción con Optimus.\nHerramienta mencionada: GitHub Copilot",
-      "publishedAt": "2026-09-30T03:45:34.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "754fc5ef0f1919f472fec7b35f0b3f4465cae6ca5688102d1949d5b5448be10b",
-      "title": "OCaml 5 の Effect Handler で依存性注入をやってみた",
-      "url": "https://tech.uzabase.com/entry/2026/09/30/124509",
-      "description": "はじめに こんにちは、塚田です。 OCaml 5 で Effect Handler が入りました。例外のように処理の途中から外側へ制御を渡せて、しかも外側から値を受け取って元の場所から処理を再開できる、という仕組みです。言語機能としてはかなり面白いのですが、実務のコードでうまく使えるのかは、実際に書いてみないとわかりません。 そこで、社内のマイクロサービスの API に OCaml を導入してみました。今回は、その API で Effect Handler をどう使っているかを書こうと思います。 Effect Handler とは OCaml は ML 系の静的型付け言語です。関数型言語ですが…",
-      "publishedAt": "2026-09-30T03:45:09.000Z",
-      "feedName": "Uzabase for Engineers"
-    },
-    {
-      "id": "6a153533c2801304401087dc06fe924e15147edb56e6caa2cd73e3510211d0a7",
-      "title": "2026年9月29日に終了・移行に関する告知が出た7サービス（DevOps Guruなど）の移行ガイドを確認してみた",
-      "url": "https://dev.classmethod.jp/articles/aws-service-availability-updates-2026-09-migration-guides/",
-      "description": "Amazon Chime SDK SIP media applications、Amazon WorkSpaces Secure Browser、Amazon Managed Blockchain、Amazon DevOps Guru、AWS Backint Agent for SAP ASE、AWS Infrastructure Composer の移行ガイドを確認しました",
-      "publishedAt": "2026-09-30T02:19:18.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "db8f080db6ed47215cc3d5ee116e3a5b9006f5166ec4ab9169002fdf5423af99",
-      "title": "「マルチエージェント」を名乗るだけの作品が続出　Googleが数千の応募から見つけた“勝てる設計”4つのパターン",
-      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2609/30/news048.html",
-      "description": "Googleは、AIエージェント開発コンテストの上位作に見られる4つの設計パターンを公開した。応募の多くが「マルチエージェントシステム」を掲げていたが、実態は単一のモデルがプロンプトをつなげているだけのものもあったという。",
-      "publishedAt": "2026-09-30T02:00:00.000Z",
-      "feedName": "＠IT"
-    },
-    {
-      "id": "0a4b392444b0aaa013576a15a9100a8309ea0582d76700d49dde298308329e05",
-      "title": "「AWSのセキュリティサービスで“アラートの山”」――ほぼ日はどう解消？",
-      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2609/30/news045.html",
-      "description": "ほぼ日は、自社サービスを支えるシステムのセキュリティ対策の強化を進めたものの、システムごとに必要な対策の見極めや、積み上がるアラートへの対処が課題になっていた。この状況をどう見直したのか。",
-      "publishedAt": "2026-09-30T02:00:00.000Z",
-      "feedName": "＠IT"
-    },
-    {
-      "id": "67b2ed7adc54eeae864f2171664a6909cf6249583d18041cd7b47a4552e2fcb5",
-      "title": "WindowsにLinuxコンテナ機能「WSLC」が正式登場　Docker Desktopなしで実行可能に | XenoSpectrum",
-      "url": "https://xenospectrum.com/wsl-containers-ga-architecture-docker-boundaries/",
-      "description": "この記事のポイント何が起きた: Microsoftが2026年9月29日、WSLコンテナを一般提供し、CLIとWindows向けAPIを正式投入した。なぜ重要か: Linuxコンテナの実行を通常のWSL環境から分け、Windowsの権限・管理・通信へ組み込む基盤となる。次に見るべき点: Composeの実装、配布チャネル表示の収束、Docker系ツールが必要と...",
-      "publishedAt": "2026-09-30T00:29:56.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "4a92d3e0f937830cf9900d3f245dad47c9dbf0f44003983d134d75627ccc2b2c",
-      "title": "セキュリティエンジニア視点のKubernetes環境の攻撃面と対策 - GMO Flatt Security Blog",
-      "url": "https://blog.flatt.tech/entry/kubernetes-attack-surface",
-      "description": "はじめに こんにちは。GMO Flatt Security株式会社 セキュリティエンジニアのてぃー(@k1rnt)と、@ei01241です。 Kubernetes(k8s)は、いまやコンテナオーケストレーションのデファクトスタンダードです。多くの企業がEKS、GKE、AKSといったマネージドサービスを利用してプロダクション環境を運用しています。 一方で、Kub...",
-      "publishedAt": "2026-09-30T00:23:42.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "4bdc05837a3dcba7828baa844a0087aa255679d6f1e333b642d0b32c1c85f466",
-      "title": "【開催報告】組み込みソフトウェア開発でも AI エージェントは活用できる ─ 日立産業制御ソリューションズ様とのワークショップ",
-      "url": "https://aws.amazon.com/jp/blogs/news/hiics-ai-sdlc-workshop/",
-      "description": "長期にわたって保守される組み込みソフトウェアの開発でも、AI エージェントは活用できます。2026 年 7 月、日立産業制御ソリューションズ様向けに、既存コードの読み解きから仕様化、実装、テストまでを Kiro で体験するハンズオンワークショップを 2 回開催し、102 名のエンジニアにご参加いただいた開催報告です。",
-      "publishedAt": "2026-09-30T00:00:45.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "697948a42d9765060d9714138608c59b6e58d5a68c18a501e33aac541b74f3b9",
-      "title": "ZOZOの情シスはCTO下で“開発を速める存在”へ──Claude利用を止めないガードレールの育て方",
-      "url": "https://enterprisezine.jp/article/detail/25125",
-      "description": "生成AIの急速な普及にともない、企業の生産性向上と情報セキュリティ確保のバランスが大きな論題となっている。情報システム部門が制御を強めすぎれば現場の変革が停滞し、逆に対応が遅れればシャドーITの横行を招く。ZOZOで執行役員兼CTOとIT統括本部長を兼任する瀬尾直利氏は、このジレンマに対して「セキュリティと生産性を天秤にかけない」という方針を提示する。同社が実践する“攻め”と“守り”を高いレベルで両立させるIT基盤戦略と具体策について詳述する。",
-      "publishedAt": "2026-09-30T00:00:00.000Z",
-      "feedName": "EnterpriseZine"
-    },
-    {
-      "id": "5b88e42be988a7ece6474bea26aa2935bed10eaf905558dc261d898741301468",
-      "title": "【アジャイルFAQ 第5回】ドキュメントが信用できない現行システム、何を『仕様』にして検証する？",
-      "url": "https://developer.mamezou-tech.com/blogs/2026/09/30/5_what_is_the_spec_to_verify/",
-      "description": "この記事を読んでいただきありがとうございます。アジャイルグループに所属する、藤井智弘です。\n 更改案件の「現行機能保証」を3つのサブテーマに分けて扱う3連作、その3回目（最終回）です。第3回で「現行」の実体を見て、第4回で合意できる「全体像」を作りました。今回のサブテーマは「検証し、予算を組み、配分する」です。\n質問\n#\n 更改案件で現行システムの仕様書を開いたら、最終更新は10年前でした。コードと一致している保証はなく、現場の人に聞くと「マニュアルにはないけど、実際はこうやっている」が次々に出てきます。何を「仕様」として検証すればいいのでしょうか？ 全部を人手で突き合わせる時間はありません。しかも、想定外が見つかるたびに追加予算の話になりそうで、正直なところ、発見するのが怖いくらいです。\n回答\n#\n 第4回で、ユースケースの粒度なら全体像を合意できる一方、その中身（スライス）は現物を動かさないと分からないことを見ました。本稿は、その「分からない中身」をどう発見して検証済みに変えていくか、そして発見を受け止める予算をどう組み、どう配分するかの話です。\n 結論を先に言えば、ドキュメントを信用できないなら、いちばん信用できるもの——動いている現物——を仕様にし、未知の仕様は、リリース後の事故として見つかるのを待たずに、開発中に小さく動かして見つけにいくことです。更改案件でアジャイルの型が効くのは、この「発見の手段」としてです。「ドキュメントが揃っていないから検証できない」は、「現行機能保証」「アジャイルは全件を確定しない」に続く、3つ目の思考を止める言葉です。そこで止まる前に、検証の相手を現物に替えられないか、一度考えてみましょう。\n 第3回で採り上げた「仕様の3つの実体」には、それぞれ別の検証手段が要ります。\n紙は当てにしない——ただし捨てもせず、現物との差分を探す手がかりに使う。\nコードがやっていることは、特性化テストで固定する。\n人がやっていることは、早期の部分稼働と現場のヒアリングでしか見つからない。\n      図1：3つの実装は、各々異なる検証手段で。\n\n 以下の処方は、おおむねこの順に並べ、続けて、見つかったものの扱いをプロダクトオーナー（PO）がまとめて判断する仕組みを置いています。\n処方——現物を仕様にし、未知を発見する\n#\n実際の利用データで「本当の現行機能」を測る\n特性化テストで「現物」を仕様として固定する\n一斉切替ではなく、部分的に動かして差分を発見する\n「人がやっていること」を発見できるのは、この部分稼働と現場のヒアリングだけです。昨今注目される「生成AIによるレガシー分析」も、読めるのは紙とコードまでです。その結果を「現行仕様」と信じて進めれば、第3回で見た事故の構図はそのまま残ります。発見された差分は、失敗ではなく、うれしい収穫です。第4回で、ユースケースの一覧を地図に見立てました。差分が見つかるたびに、その地図に道筋が書き足され、検証済みリストが伸びていきます。\n発見された「謎の挙動」の判断はPOに集約する\n     図2：「謎の挙動」はPOにゆだねる\n\n 決めておくべきは、次の3つです。\n誰が判断するか\nいつまでに判断するか\n判断が来なかったらどうするか\n 決めないまま始めると、検証の途中で判断待ちが積み上がります。発見の責任は問わず、扱いを決める役割は発注側にある——この分担だけは、どの現場でも共通です。判断の記録は、次回更改のための資産になります。\n残リスクは、保守運用に引き継がれる\n発見したものの置き場——バックログは開いている\n#\n 第2回で、バックログが「項目が後から流れ込むことを前提にしたリスト」であることを見ました。更改案件では、この性質がスコープ管理の意味を変えます。\n 第4回の粒度を当てはめると、ユースケースの一覧は、確定として扱われる——重い手続きの側に置かれる——ほぼ閉じたリストです（足し引きは、確定したものの変更として発注側が判断します）。その下のスライスは、開いたリストです。重い手続きは一覧の層だけに残し、スライスの層は開けておく。前節の処方で発見された挙動は、代替フローとして粛々と追加していきます。第4回で「スライスの入替は承認手続きの対象にはしない（ただし記録は残す）」と書いたのは、この意味です。承認は要らなくても、追加も入替もバックログの履歴に残るので、後から追えます。そして追加を責任問題にしないこと（第3回の「洗い出し漏れの責任問題にしない」と同じ布石です）。責任追及が始まれば発見は隠され、発見のためのプロセスが止まります。\n ただし、「バックログは開いている」は、開発チームには当たり前でも、稟議や契約を管理する部門にとっては当たり前ではありません。承認なしに追加や入替が起きるプロセスは、会社の手続きから見れば例外です。ここで「アジャイルへの理解を深めましょう」と正論で押しても、相手には「べき論の押し付け」と映り、かえってブレーキになります。\n一覧の層には重い手続きを残し、スライスの層だけを開ける——この線の引き方は、過渡期の組織で回るように仕立てた折衷案です。\n予算のハンドリング——発見したものの財布は開いているか\n#\n バックログが開いていても、財布が閉じていれば発見は受け止められません。第4回は、全体像から量（本数×規模、それに深さの初期設定）を出すところまででした。ここでは、その量を金額に換えて器を組み、開発を進めながら器の中を配分していく話をします。稟議の制度は組織ごとに違うので、以下は答えではなく、自組織で検討するときの素材として読んでください。\n稟議と契約は、別の場面\n稟議は、発注側の社内で予算の器（上限枠）を確保する場面。契約は、発注側と受注側の間で、何を約束し、何を調整の対象にし、どう支払うかを合意する場面です。契約金額は器の枠内で決まりますが、器と一致する必要はありません。稟議に出した内訳を契約の保証文言に転記しない——第3回で引いた一線は、この境界線のことです。以下は稟議の側の話です。\n量を期間と金額に換える——実測を先に置く\n稟議のための器の上限であって、契約金額でも最終支払でもありません。以降の予算管理は、上限から検証済みの分を差し引いていく形になり、予算が余ることもあります。それは失敗ではありません。\n器は固定したまま、配分の決め方を変える\n器は固定したまま、器の中の配分の決め方だけを変える折衷案を3つ挙げます。\n 第一に、器の内訳を **「約束枠」**と 「発見枠」に分けて稟議に書きます。約束枠は、移行対象のユースケースすべてについて、最小集合（第4回のL1）まで仕上げる分。発見枠は、最小集合の外の代替フローまで仕上げる分と、検証で見つかる未知への対応分で、総額の2〜3割。従来の予備費と違うのは、発見枠の使い方の規則を稟議の中に書くことです——「検証済みリストで最小集合が達成されたユースケースのうち、業務影響の大きいものから順に、最小集合の外の代替フローまで広げる。配分は担当者が定例で決め、総額・期限を超える場合のみ再稟議」。根拠は第4回の本数×規模と前項の実測で示せるので、書式は従来のまま。加わるのは、決裁権限の一部を担当者に委ねる条項だけです。\n発見への対応が、業務を止めないための最小集合の予算を食わないこと。\n担当者に委ねる範囲を発見枠に限れば、委譲の条項が稟議を通りやすくなること。\n予算が足りなくなったとき、見積の甘さ（約束枠の超過）と未知の多さ（発見枠の消化）を見分けられること。後者は想定内の事象なので、第3回で書いたとおり、責任問題にはしません。発見が発見枠の中に収まれば追加稟議は要らず、収まらない場合も、枠の消化状況から早い段階で見えてきます。\n\n 第二に、稟議を2段にして、実測を先に置きます。第1段は「実測スプリント」まで——数本のユースケースを実際に移行・検証する、小額・短期の準委任。第2段は、実測でベロシティが出た後に本体の器を申請する。これは「要件定義フェーズを先に発注する」という既存の慣行と同じ形なので、積み上げ式の組織でも通ります。違うのは、第1段の成果物が要件定義書ではなく、検証済みリストの最初の数行と、実測したベロシティであること。前項の実測も、特性化テストの最初の1本も、この第1段で行います。\n 第三に、年度の器は動かさず、案件の「予実＋見通し」を四半期ごとに更新します。検証済みリストの伸びとゴールの達成で見通しを更新し、発見枠の消化見込みを——余りそうなら、その見込みも——早めに示す。多くの組織が既にやっている四半期見直しの書式に、「移行対象のユースケースのうち、どこまで検証済みになったか」（第4回の「ユースケース×深さ」の表の集計）の行を足すだけです。余った予算は、代替フローをさらに仕上げるのに使うか返すかを、最後に判断します。年度の器の中で見通しを回し続けるこのやり方は、脱予算経営のローリング予測を、案件の単位で小さく試すことでもあります。\n 固定するのは総額・期限・約束枠、動かすのは発見枠の配分と見通し。それを可能にするのは、配分の権限委譲を稟議に書くことと、実測の分を先に小さく稟議にかけることの2つで、どちらも新しい制度ではなく、いまの書式への一行の追記です。制度を変える前に、制度の中で試せることがある、ということです。バックログが開いているだけでは足りない。財布も、同じだけ開いている必要があります。\nなぜこの質問は30年繰り返されるのか\n#\n 更改のたびに「ドキュメントがない」と嘆かれ、更改が終わるとまたドキュメントは更新されなくなる。この連鎖には理由があります。更改の終盤は、期限に追われて「動くこと」が最優先になり、判断の記録を残す余力が真っ先に削られる。そして次の更改では、前回の判断が「なぜこうなっているのか分からない挙動」として発見され、また調査から始まる。第4回で、いま人が手作業で担っていることの多くは、前回の更改で誰かが暗黙に削った代替フローの痕跡だ、と書きました。その正体は、記録されずに削られた判断の、30年分の堆積です。\n この連鎖を断つ最初の一歩は、「嘆くこと」ではなく、今回の案件で「検証済みリスト」と「判断の記録」を残すことです。特性化テストは、検証済みリスト（第4回の「ユースケース×深さ」の表）の各マスを裏付け、現物の挙動を機械が読める形で固定し続けるドキュメントです。謎の挙動の判断一覧は、「なぜこうなっているのか」への、初めて書かれる答えです。第3回の冒頭で、判断はいつしか慣習になり、誰も疑問を持たなくなると書きました。判断一覧は、慣習になる前の判断を、理由ごと次の世代に渡します。どちらも設計書一式を書き直すより手間は小さく、次の更改を担う人は、あなたがいま抱えている「全貌が不明」という状況の、少なくとも一歩外から始められます。第4回で残した「検収の根拠に、紙に代わる何を置くか」という問いへの私の答えも、この二つです。紙を書き足すのではなく、現物から採ったものを残す。それが、何よりのドキュメントです。\n 第3回の冒頭で、更改案件を扱う3本は波風を立てるつもりだと書きました。この3本で示した3つの視点——「現行」の実体を見る、合意できる全体像を作る、検証し、予算を組み、配分する——は、一つの見立てであって、正解ではありません。スクラムの型をそのまま当てたものでもなく、稟議と契約と多重下請けという日本の現場の文脈に合わせて、プロセスを仕立て直した一例です。「うちの現場では成り立たない」「稟議はそんなに単純ではない」「特性化テストの工数は誰が払うのか」…そういう異論こそ、この3本が引き出したかったものです。ぜひ職場で議論してみてください。\n これで、地雷の上から、無事に着地できたでしょうか？\n\n次回: 「デイリースクラムが進捗報告会になっています」",
-      "publishedAt": "2026-09-30T00:00:00.000Z",
-      "feedName": "豆蔵デベロッパーサイト"
-    },
-    {
-      "id": "f54b0c61ba6466b2f8b0210b38fc99e37f5777ed34db7f15fa409f4379f9e78a",
-      "title": "高崎市が約3800台の端末から「Google Workspace」へ直接接続　ネットワークをどう変えた？",
-      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2609/30/news046.html",
-      "description": "セキュリティを重視してインターネット接続を制限してきたネットワークで、クラウドサービスや生成AIをどう活用するか。群馬県高崎市は、職員が使う約3800台の端末やグループウェアの刷新を機に、ネットワーク構成を見直した。",
-      "publishedAt": "2026-09-29T23:00:00.000Z",
-      "feedName": "＠IT"
-    },
-    {
-      "id": "5237e3d2511f9d3a98d43f2058200f32fb12de725d541faec209ecfceef5481a",
-      "title": "[アップデート] SSM ドキュメントの共有がAWS RAM を使った新しい方式になりました",
-      "url": "https://dev.classmethod.jp/articles/systems-manager-sharing-documents-ram/",
-      "description": "RAM で共有管理できるようになった。旧方式より管理しやすくリスクも減って良さそうです",
-      "publishedAt": "2026-09-29T21:47:57.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "3d916de0d6af8bacd735ae27514535906248f1192bf349d22f93d602159cff7f",
-      "title": "「証明」によりAIの誤りを阻止しGPU上で動作する高速プログラミング言語「Bend」、C言語並みの処理速度・CUDAによる並列処理・Leanによる形式的証明・Python風の構文",
-      "url": "https://gigazine.net/news/20260930-bend-lang/",
-      "description": "「Bend」はAIが犯すかもしれない誤りを「証明」によってブロックすることを目指す新たなプログラミング言語です。 Bend https://bend-lang.com/ BendはポストAGIの経済社会において人間がコードの記述や読解から解放される未来を見据え、AIに対して意図を明確に伝えるための手段として開発されました。Bendは「法律(Laws...",
-      "publishedAt": "2026-09-29T21:04:47.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "b3ff6bddfe509e8a796cd050d1299c918501f0927dbd3c1e464be83522407aa9",
-      "title": "[アップデート]Amazon GuardDutyが漏洩したAWS Lambda認証情報の不正利用を検出できるようになりました(InsideAWS編)",
-      "url": "https://dev.classmethod.jp/articles/amazon-guardduty-resource-credential-exfiltration-insideaws/",
-      "description": "ついにAWS LambaでのInsiceAWSの不正利用も検出できるようになりました！Amazon Qを使った調査もおすすめですよ！",
-      "publishedAt": "2026-09-29T20:21:24.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "bd0d35ec5bc3abed1026d0e5ccd197c66e8ed9cb213e41a8aee6fea21f122656",
-      "title": "Amazon EC2 スポットプレイスメントスコアがローカルゾーンに対応したので確認してみた",
-      "url": "https://dev.classmethod.jp/articles/ec2-spot-placement-score-local-zones/",
-      "description": "AWS EC2のスポットプレイスメントスコアがローカルゾーン対応になったので、実際に使ってみて仕様や使い方をまとめました。",
-      "publishedAt": "2026-09-29T14:30:18.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "7b42cf31247ac2ce0cf9c6adb4a18b068b5e9d8ecdd76151bb14378b22f74069",
-      "title": "BedrockのClaudeに暗黙的なプロンプトキャッシュが登場！！とドキュメントにある（暗黙的とは？）",
-      "url": "https://qiita.com/moritalous/items/1b6a05842724fc1fff66?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "Claude Sonnet 5.5が出ましたね！当たり前のようにAWSのAmazon Bedrockでも使えます。\n\nドキュメントもすでに更新されています。（仕事が早い！）\n\n「RuntimeエンドポイントとMantleエンドポイントに対応、おすすめはRuntime...",
-      "publishedAt": "2026-09-29T12:34:51.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "912c6e793cc858bafa7734aee633bad6ad68a9f048d54a2b6765942ca0502a80",
-      "title": "【新資格】AWS Certified AI Business Strategist（AIB-C01）ベータ試験を受けてきた(コツコツ勉強できない人の感想)",
-      "url": "https://qiita.com/riz3f7/items/fe5704cc76755bb8700f?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "はじめに\n2026年9月29日から AWS Certified AI Business Strategist（AIB-C01） のベータ試験が受けられるようになったので受けてきました。\nお祭り気分で受けてきた、コツコツお勉強できない属性の人の体験記です。\n（世の中にコツコ...",
-      "publishedAt": "2026-09-29T11:35:18.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "52221b25ad4309f228eb15ec3fad07f3777910a3778a8cb79fc3300584ea3d0a",
-      "title": "GitHub を使う上で知っておくと嬉しいかも Tips 2026 | ドクセル",
-      "url": "https://www.docswell.com/s/cybozu-tech/K4NM4D-github-tips-2026?utm_source=twitter&utm_medium=social&utm_campaign=singlepage",
-      "description": "GitHub 知っておくと便利かも Tips 2026 セキュリティ向上 Tips 特集号 開運研修 2026 社外公開版 2026.05.08 社内公開 2026.07.21 更新 サイボウズ株式会社 開発本部 開発支援副本部 技術支援部 生産性向上副部 平木場 風太 自己紹介: 平木場 風太（ひらこば ふうた） 社内でのニックネームは「きばちゃん」 所属 開発...",
-      "publishedAt": "2026-09-29T10:53:52.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "96a48dcefeffcb4ba76abceb42b26acd92ecd77e6e76904101f75695c8a170e9",
-      "title": "Amazon Textract の機能を整理した",
-      "url": "https://dev.classmethod.jp/articles/amazon-textract-apis-json-pricing/",
-      "description": "AWS の マネージド OCR サービス Amazon Textract の9つの機能について、実際の帳票を使いながら網羅的に検証してみました。取得したい項目の決まり方や信頼度の使い方など、VLM による帳票読み取り設計の参考になるヒントが満載です。",
-      "publishedAt": "2026-09-29T09:47:48.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "5d4ecdd28505adfd003b897bbbecf773ff80d5af64adcd4b2cb69712ae3bdd80",
-      "title": "NRIセキュア、欧州「NIS2指令」への準拠支援サービスを開始　EU現地法人と連携した一気通貫支援",
-      "url": "https://enterprisezine.jp/news/detail/25181",
-      "description": "NRIセキュアテクノロジーズ（以下、NRIセキュア）は、EU（欧州連合）のサイバーセキュリティ規制「NIS2（Network and Information Systems Directive 2）...",
-      "publishedAt": "2026-09-29T09:18:00.000Z",
-      "feedName": "EnterpriseZine"
-    },
-    {
-      "id": "cce83fcc231745a77dbc4554fbc49263b83be705b5520090bf8529f57d0d8e2b",
-      "title": "Tenable、エクスポージャー管理「Tenable One」でAIセキュリティ＆運用自動化が可能に",
-      "url": "https://enterprisezine.jp/news/detail/25180",
-      "description": "Tenableは、エクスポージャー管理プラットフォーム「Tenable One」におけるAIセキュリティ機能の強化を発表した。\n\n　今回のアップデートにより、Tenable One AI Expos...",
-      "publishedAt": "2026-09-29T09:00:00.000Z",
-      "feedName": "EnterpriseZine"
-    },
-    {
-      "id": "7699418f926b7a822808e79e1c6482ae4661179dd3b548b48418356255b9dfe7",
-      "title": "いちAWSエンジニアのAI活用を振り返る #devio2026 登壇資料",
-      "url": "https://dev.classmethod.jp/articles/devio2026-osaka-kawahara/",
-      "description": "DevelopersIO 2026 Osaka で発表した「いちAWSエンジニアのAI活用を振り返る」というセッションの内容です",
-      "publishedAt": "2026-09-29T08:44:38.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "cc8d46cec382abdb7cae28ef75d9492e634c8b03bc6c99051ccb374b694a4a1c",
-      "title": "Claude Code v2.1.284 の主要アップデート - Sonnet 5.5 登場 と auto mode 既定化の全プラン拡大",
-      "url": "https://dev.classmethod.jp/articles/20260929-cc-updates-v2-1-284/",
-      "description": "Claude Code v2.1.284 がリリースされました。Sonnet 5.5 の追加、権限モード未設定時の auto mode 既定化など、セキュリティとモデルの改善が進みます。実際に Sonnet 5.5 のコード向けに `/claude-api migrate` で移行した結果も合わせてお伝えします。",
-      "publishedAt": "2026-09-29T08:36:26.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "e02d1c1cbb8324b941a22da3267149558f866087db7a59024746fa8dc5511ede",
-      "title": "aws pricingコマンドでAmazon RDSのオンデマンド料金を取得してみた",
-      "url": "https://dev.classmethod.jp/articles/aws-pricing-command-rds-ondemand-hourly-rate/",
-      "description": "AWS CLIでAWS Price List Query APIを用いてAmazon RDSのオンデマンド料金を一括取得する方法を試しました。DBエンジンとリージョンくらいを指定すればあとは一括で取れるだろうと思っていたわたしの思いは打ち砕かれました。",
-      "publishedAt": "2026-09-29T08:14:59.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "8bff616da3fa6f03582d659093949423be43c77efc05e92a687de169bc3f567a",
-      "title": "AI 駆動開発で「設計」はどこに書くのか ― 振る舞いをテストで検証できる「仕様」にしてみる",
-      "url": "https://zenn.dev/softbank/articles/6f98cf7c4ebfd3",
-      "description": "はじめに\n日々の開発において、AI にコードを書いてもらうことは日常になってきました。要件を伝えれば既存のコードベースを調査し、その作法に合わせて機能を足してくれます。\n生成されたコードがいつも正しいわけではありませんが、それでも「コードを書く」という作業そのものは、以前ほど開発のボトルネックではなくなりつつあると感じています。\nその一方で、AI と一緒に開発していると、「何を実装してもらうか」を決める時間の比重が増えてきました。この記事では、その実感を出発点に、次の 3 つを順に考えてみました。\n\nAI 駆動開発で、設計はどこに書いておくとよいのか\n既存の設計成果物で、実装されたコ...",
-      "publishedAt": "2026-09-29T07:02:41.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "9f06b810828e432b38248733ff233f841eef6557f65fe6206a0a4f9256f929a1",
-      "title": "『re:Inventに行く前に知っておきたい現地参加のノウハウ』というタイトルでウェビナー登壇しました",
-      "url": "https://dev.classmethod.jp/articles/260908-aws-reinvent-webinar-onsite-tips/",
-      "description": "「AWS re:Invent 2026 徹底解説｜セッション計画術と失敗しない回り方」で、『re:Inventに行く前に知っておきたい現地参加のノウハウ』というタイトルで登壇しました。本記事で登壇資料を共有します。",
-      "publishedAt": "2026-09-29T05:47:19.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "9db40e63cc08847c3a6ddda836ce183c4a958f8503f8ae13eabc0cbdbc2987e2",
-      "title": "Cloudflare、全APIに対応しTypeScriptで設定可能な新コマンドラインツール「cf」をリリース",
-      "url": "https://gihyo.jp/article/2026/09/cloudflare-cf-cli?utm_source=feed",
-      "description": "Cloudflareは2026年9月28日、コマンドラインからCloudflare API全体を操作でき、TypeScriptで設定を記述できる新たなCLIツール「cf」をオープンベータ版としてリリースした。",
-      "publishedAt": "2026-09-29T05:33:00.000Z",
-      "feedName": "gihyo.jp"
-    },
-    {
-      "id": "e23dc3d55b77d29d407e911ec2421ceb63cf49d0bffd38af338a7afab41b284b",
-      "title": "Cloudflare の CLI を wrangler から cf に移行する",
-      "url": "https://zenn.dev/sora_kumo/articles/cloudflare-to-cf",
-      "description": "はじめに\nCloudflare から次世代の統合 CLI ツール cf（現在 v1.0.0-beta）が登場しました。\n従来の wrangler（wrangler.json / wrangler.jsonc / wrangler.toml）から、TypeScript ベースの型安全な設定ファイル cloudflare.config.ts への移行が推奨されています。\n公式には cf migrate という移行コマンドが用意されていますが、実行するだけでそのまま本番稼働できるわけではなく、いくつかの設定調整や実運用上のハマりどころが存在します。\nこの記事では、React Router（...",
-      "publishedAt": "2026-09-29T04:43:50.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "5636930c24e3f0bc2f19378c375e077bf1086d4f250406883fdf43d2eb84347f",
-      "title": "Amazon Bedrock Runtime の Grok 4.7 を AWS CLI で試してみた",
-      "url": "https://dev.classmethod.jp/articles/grok-47-bedrock-runtime/",
-      "description": "Amazon Bedrock の Grok 4.7 を、AWS CLI の converse から IAM 認証だけで呼び出しました。Grok 4.6 からは model-id の差し替えで移行でき、Structured outputs と reasoning effort も指定できます。",
-      "publishedAt": "2026-09-29T04:39:12.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
       "id": "1672daf8392f67b4ca63ea6cd52574c94f7672dcbc9363c8cef3a488adee1212",
       "title": "Open-Source Device CVEs: What to Patch by Vertical (September 2026)",
       "url": "https://dev.to/raghu_bharadwaj_404e60eb0c/open-source-device-cves-what-to-patch-by-vertical-september-2026-o2f",
@@ -615,70 +351,6 @@
       "description": "AIが社会にもたらす並外れた可能性は、AIの安全性（AI Safety）を解決して初めて実現される──NVIDIA ジェンスン・フアン会長の言葉だ。NVIDIAは、「NVIDIA Open Agen...",
       "publishedAt": "2026-09-30T10:06:00.000Z",
       "feedName": "EnterpriseZine"
-    },
-    {
-      "id": "fe74ce730a7ec9568ebd448e7ce45e33c960779396fb7f8409f65e74245679d9",
-      "title": "「当てる」だけでは足りない ― Numeraiに学ぶ、クオンツ戦略を評価する5つの原則",
-      "url": "https://qiita.com/tikeda123/items/c807ba2c1bb2f5d6210b?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "はじめに\n\n新しい予測モデルを作り、バックテストの成績もよかった。ところが、既存の戦略と組み合わせても、ほとんど改善しない。\n別のモデルを作ったつもりでも、実は同じ情報に反応し、同じ局面で利益を出し、同じ局面で損をしていた。そんな可能性がある。\n問うべきは「このモデル...",
-      "publishedAt": "2026-09-30T03:38:23.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "78ea0af16fa2d82461d4bb5a4c0bca9a60ed392f9996924090b53c058a83019b",
-      "title": "ヘキサゴナルアーキテクチャを実装レベルで確かめてみた（その1）ポート・アダプター・アプリケーションはコードではどうなるのか",
-      "url": "https://zenn.dev/aws_japan/articles/hexagonal-architecture-lambda-1",
-      "description": "ヘキサゴナルアーキテクチャ（Ports and Adapters）は、解説を読むと六角形の図と「アプリケーションを中心に置き、ポートとアダプターで外の世界とつなぐ」という説明で理解できた気になるのですが、いざ自分で書こうとすると、ポートは具体的にどんなクラスにすればよいのか、アダプターとの境目はどこか、そしてそこまでして何が楽になるのか、というところで手が止まる、ということがあるのではないでしょうか。概念の説明を読むだけでは埋まらない部分なので、実際に動くコードを読み、手を入れて、手触りとして確かめてみます。\n題材には、Lambda + DynamoDB でヘキサゴナルアーキテクチャを実...",
-      "publishedAt": "2026-09-30T01:04:42.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "cd91094eda13e9389d7cab5152cc2c7e52f5f315c18e667b6bd5e7d57c48f2ec",
-      "title": "0から学ぶセキュリティの基礎　〜CSRF編〜",
-      "url": "https://qiita.com/Pigeon_gate/items/b33b4e337c15dddae20a?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "はじめに\n未経験から実務に飛び込んだ私にとって、開発に携わる工程のうち、全く想像だにしていなかった領域がある。それがWebシステムのセキュリティだ。\nオリジナルアプリを作る上では微塵も考慮していなかったセキュリティ面がいざ自身の関わるプロダクトで問題として立ち上がってきた...",
-      "publishedAt": "2026-09-30T00:50:37.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "863a4542c2f9a2209ca08943d0c4cf37da4b64ffde9604cc92a783ec23b50e4f",
-      "title": "新規プロダクトのバックエンド自動テスト戦略 ─UT 中心から API テスト中心へ─",
-      "url": "https://zenn.dev/canary_techblog/articles/348d976da70857",
-      "description": "こんにちは！\n株式会社カナリーで新規プロダクトを開発している tom-uchida です。\n新規プロダクトのバックエンドでは自動テストをユニットテスト（以下、UT）中心で整備してきたのですが、API 単位で仕様どおりに動作することを保証する仕組みがなかったため、runn による API テストを導入し、品質保証の主軸を UT から API テストへ切り替えました。本記事では、次の 3 点をご紹介できればと思います：\n\n切り替えの背景と、新しく定めたテスト戦略\nAPI テストのアーキテクチャ\nチームメンバーが品質に自信を持てるようになった変化\n\nなお、runn そのものの特徴や使い方につい...",
-      "publishedAt": "2026-09-30T00:45:25.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "19c5a3b16f8cdea261cd84ea1dcdab7a196a1c46b9afd4e15929b182969498cb",
-      "title": "Kubernetes の nftables モードについて",
-      "url": "https://qiita.com/yosshi_/items/406da8322313c93f0a2d?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "はじめに\nkube-proxy に nftables モードが入って、GA してからもうしばらく経ちます。ノード数・Pod数が多いクラスタでは iptables のルール同期が遅れるという長年の悩みがあり、それを直すための変更なので、影響の大きさが気になって調べてみました...",
-      "publishedAt": "2026-09-29T18:40:54.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "74a357afed8ded38cea8e44cc3a7ac4375a36c5b44da49dc16609739d8e1d3b2",
-      "title": "AWS Certified AI Business Strategist (ベータ試験)を受験してきました",
-      "url": "https://qiita.com/Seria_GovCloud/items/d65af248f67b85784ed2?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "AWS Certified AI Business Strategist とは？\n既にご存じの方も多いと思いますが、2026年9月に公表されたAWSの新しいAI系認定試験です。\n従来の Foundational, Associate, Professional, Spec...",
-      "publishedAt": "2026-09-29T17:27:59.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "f374f2ba3f7501891c5733d3342e9d7af78cb6cd1200dc5c146b6053d3bea753",
-      "title": "jQueryの定番処理をReactへ移す対比リファレンス",
-      "url": "https://qiita.com/TechStudioLab/items/b106c8b04287c3142c50?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "はじめに\njQueryからReactへの移行に関わっていると、最初に困るのはJSXの書き方そのものではありません。\n$('.button').on('click', ...) はReactで何になるのか。addClass() はどうするのか。$.ajax() はfetc...",
-      "publishedAt": "2026-09-29T12:04:01.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "5a90ee0e5ff2902eb03a5b9bda6c9224573e6202a0d7be4c5cacfb5c9d60e52f",
-      "title": "受託開発でClaude Codeを安全側に倒す設定",
-      "url": "https://qiita.com/TechStudioLab/items/8b3700a065a47983d531?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "はじめに\nClaude Codeのようなコーディングエージェントを開発で使うと、コードを読むだけでなく、ファイルを書き換えたり、テストを実行したり、Gitを操作したりするところまで任せられます。\n便利なのですが、受託開発で気になるのは「正しいコードを書けるか」だけではあり...",
-      "publishedAt": "2026-09-29T05:32:40.000Z",
-      "feedName": "Qiita"
     },
     {
       "id": "21dc518e6b4c67fed8d586fdf7e9b6672d2c6c9a4d4ce87279095243afe26134",
@@ -6678,6 +6350,310 @@
       "url": "https://zenn.dev/polyco/articles/26624b38c951b5",
       "description": "この記事に書いてあること\n\nE2E を主要シナリオだけでなく網羅的に整備した\n実装から拾った確認対象とシナリオの対応漏れをチェックし漏れがあれば CI で落とす\n開発ワークフローの品質ゲートにローカル E2E 実行を組み込んでいる\n毎回全シナリオを回すのではなく、実装に関連する箇所のみ回している（でかいリファクタの時は回帰テストとして全シナリオ回す）\nやるなら e2e ライブラリがいいよという話\n\n\n 前提となる構成\nWeb も API も TypeScript で書いている業務アプリ\npnpm workspaces でのモノレポ構成\npackages/\n├── web/     R...",
       "publishedAt": "2026-10-26T01:18:03.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "4a749687c38def1a64b5755b2ba2e138a423585e41b07667a89a5e519390d520",
+      "title": "I counted every skill my AI invoked across 55 sessions. Here's the leaderboard.",
+      "url": "https://dev.to/rakno/i-counted-every-skill-my-ai-invoked-across-55-sessions-heres-the-leaderboard-1e3a",
+      "description": "I had over a hundred skills installed while building ParkEase. Which ones actually pulled their weight?\nInstead of guessing, I counted. Claude Code keeps a transcript of every session, so I searched all 55 ParkEase sessions (10 September to 19 October) for every time the agent explicitly invoked a skill.\nOne caveat up front: this counts explicit invocations only. A skill already loaded keeps shaping the work without being re-invoked, so these are \"times it was called on\", not \"times it mattered\".\n\n\n\nSkill\nInvocations\nWhat it does\n\n\n\n\nflow\n28\nThe project's workflow router: phases, gates, which skills apply\n\n\nbrainstorming\n17\nSettles how before any code\n\n\nimpeccable\n12\nFrontend design critique and polish\n\n\nwriting-plans\n10\nTurns a task into small, checkable steps\n\n\nui-ux-pro-max\n10\nPalettes, type pairings, UX guidelines\n\n\npostgres-migration-reviewer\n10\nChecks every migration for locking and breaking changes\n\n\nmobile-app-design\n8\nMobile UI conventions and accessibility\n\n\nsecurity-review\n7\nReviews the branch's pending changes for vulnerabilities\n\n\nponytail\n6 (+9 typed by me)\nThe YAGNI pass: delete before adding\n\n\n\nBehind those: test-driven development, archify (architecture diagrams), executing plans and code review.\nThe router came first. flow doesn't write a line of code. It decides which other skills run. That it topped the list says something: the most-used tool in an AI workflow was the one that sets up the workflow.\nDesign skills outnumbered code skills. impeccable, ui-ux-pro-max and mobile-app-design together: 30 invocations. A code review can tell you code is wrong; it can't tell you a screen looks generic. The design skills existed because the AI's default UI output was competent and forgettable.\nThe boring safety net ranked high. Ten migration reviews. Every database migration was checked for things that lock a production table or break running code. No migration review ever made a demo exciting, which is exactly the point.\ntest-driven-development ranked low by count, high by effect. Only 4 explicit calls, because it was loaded once per build phase and stayed loaded. Its output, 3,246 unit tests and 1,080 integration tests, is the clearest proof that invocation counts undersell the skills that stick.\nSeparate from skills are subagents: single-lens reviewers the agent can dispatch. Ranked by dispatches, the specialists that ran most were the security reviewer, the silent-failure hunter (swallowed errors, empty catches, lost stack traces), the TypeScript reviewer, the test-coverage analyzer and the database reviewer.\nThe silent-failure hunter is the one I'd recommend to anyone. AI-written code is very good at \"handling\" an error by catching it and doing nothing, and a lens that only looks for that finds things the general reviewers skim past.\nA workflow router for your project (write your own; it's mostly a table).\nBrainstorming and a planning skill: think before typing.\nTest-driven development.\nA verification skill that demands evidence before \"done\".\nOne design skill, if anything you build has a screen.\nA YAGNI skill like ponytail, to keep the volume honest.\nEverything else is situational. And more isn't better: post 13 is about being offered 292 skills and installing 21.\nNext: a practical guide. How to get more out of AI-assisted development, from the habits that made the biggest difference here.\nParkEase is a peer-to-peer parking marketplace for India, built solo with Claude Code.\nCode: https://github.com/Deonkar/parkease",
+      "publishedAt": "2026-10-30T04:30:00.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "9d8b43384972305f8123b49a83036e335f9c62890ad308d03bfddc163b6ad169",
+      "title": "Draw an SVG icon in Flutter without a package: SVG path commands to CustomPainter",
+      "url": "https://dev.to/chanpenh/draw-an-svg-icon-in-flutter-without-a-package-svg-path-commands-to-custompainter-2fa1",
+      "description": "flutter_svg is the right answer when you need to show a lot of SVG files. But for a single icon you want to animate, recolour per path, clip with, or ship with zero dependencies, a plain CustomPainter is often nicer. The good news: SVG path data maps almost one to one onto Flutter's Path API.\n\n\n\nSVG\nFlutter Path\n\n\n\n\n\nM x y\nmoveTo(x, y)\n\n\nL x y\nlineTo(x, y)\n\n\n\nH x / V y\n\n\nlineTo with the other coordinate unchanged\n\n\nC x1 y1 x2 y2 x y\ncubicTo(x1, y1, x2, y2, x, y)\n\n\nQ x1 y1 x y\nquadraticBezierTo(x1, y1, x, y)\n\n\nA rx ry rot large sweep x y\narcToPoint(Offset(x, y), radius: Radius.elliptical(rx, ry), rotation: rot, largeArc: large == 1, clockwise: sweep == 1)\n\n\nZ\nclose()\n\n\n\nLowercase (relative) commands have relative… versions (relativeLineTo, relativeCubicTo, relativeArcToPoint and so on), or you can add the current point yourself.\nTwo commands have no direct method:\nS and T are \"smooth\" curves. Their first control point is the previous curve's last control point mirrored around the current point: x1 = 2 * currentX - previousX2, y1 = 2 * currentY - previousY2. If the previous command was not a curve of the same kind, the control point is the current point.\nA looks scary, but Flutter's arcToPoint takes exactly SVG's endpoint parameters. The only translation is the flags: large-arc-flag → largeArc, sweep-flag 1 → clockwise: true. rotation is in degrees, like SVG. A radius of 0 means a straight line in SVG, so draw a lineTo instead.\nSVG coordinates live in the viewBox. To fit them into whatever size the widget gets, scale uniformly and centre, which is what browsers do by default (xMidYMid meet):\nfinal scale = math.min(size.width / 48, size.height / 48);\ncanvas.translate((size.width - 48 * scale) / 2, (size.height - 48 * scale) / 2);\ncanvas.scale(scale);\n\nIf the viewBox does not start at 0 0, add canvas.translate(-minX, -minY) after the scale.\nThis icon:\n<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 48 48\" fill=\"none\">\n  <rect x=\"4\" y=\"4\" width=\"40\" height=\"40\" rx=\"8\" fill=\"#1E88E5\"/>\n  <path d=\"M14 25L21 32L35 17\" stroke=\"white\" stroke-width=\"4\"\n        stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n</svg>\n\nbecomes:\nimport 'dart:math' as math;\n\nimport 'package:flutter/widgets.dart';\n\nclass CheckIconPainter extends CustomPainter {\n  const CheckIconPainter();\n\n  @override\n  void paint(Canvas canvas, Size size) {\n    final scale = math.min(size.width / 48, size.height / 48);\n    canvas.translate((size.width - 48 * scale) / 2, (size.height - 48 * scale) / 2);\n    canvas.scale(scale);\n\n    // rect with rx=\"8\": straight edges joined by arcs\n    final path0 = Path()\n      ..moveTo(12, 4)\n      ..lineTo(36, 4)\n      ..arcToPoint(const Offset(44, 12), radius: const Radius.circular(8))\n      ..lineTo(44, 36)\n      ..arcToPoint(const Offset(36, 44), radius: const Radius.circular(8))\n      ..lineTo(12, 44)\n      ..arcToPoint(const Offset(4, 36), radius: const Radius.circular(8))\n      ..lineTo(4, 12)\n      ..arcToPoint(const Offset(12, 4), radius: const Radius.circular(8))\n      ..close();\n    canvas.drawPath(path0, Paint()..color = const Color(0xFF1E88E5));\n\n    final path1 = Path()\n      ..moveTo(14, 25)\n      ..lineTo(21, 32)\n      ..lineTo(35, 17);\n    canvas.drawPath(\n      path1,\n      Paint()\n        ..style = PaintingStyle.stroke\n        ..strokeWidth = 4\n        ..color = const Color(0xFFFFFFFF)\n        ..strokeCap = StrokeCap.round\n        ..strokeJoin = StrokeJoin.round,\n    );\n  }\n\n  @override\n  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;\n}\n\nUse it with CustomPaint(size: const Size(48, 48), painter: const CheckIconPainter()).\nDefault fill is black. An SVG shape with no fill attribute is filled black, and stroke defaults to none. fill=\"none\" on the root is inherited by every child.\n<line> is never filled, even if a fill is inherited. Only its stroke draws.\nSVG colours are alpha-last, Flutter's are alpha-first. #1E88E580 in SVG is Color(0x801E88E5) in Flutter.\nGroup opacity applies to the group as a whole in SVG. Multiplying it into each child's colour is close, but overlapping children inside a translucent group will look slightly different.\nText, gradients and <use> need work first. Convert text to paths in your editor, and expand clones.\nI wrote a small converter and tested it the boring way: twelve SVGs covering every path command, all four arc flag combinations, rotated and too-small arc radii, basic shapes, nested transforms and real Figma and Inkscape exports were drawn by the generated painters in flutter test (via PictureRecorder → toImage) and compared pixel by pixel with Chrome's rendering of the same files. Differences stayed under 0.6% of pixels, all on anti-aliased edges. Flipping a single arc flag on purpose produced 6.8% strongly different pixels, so the check does catch real mistakes.\nThe converter is free and runs in the browser (disclosure: I built it): SVG to Flutter CustomPainter. It lists anything it could not convert instead of silently dropping it.",
+      "publishedAt": "2026-10-30T04:29:31.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "20878c147e13fe33f9df945bed2ed3f659daa44b6ddcc129e23774b42dbd9cce",
+      "title": "Headless CMS Explained: A Developer's Guide Beyond WordPress",
+      "url": "https://dev.to/aimencoders/headless-cms-explained-a-developers-guide-beyond-wordpress-37l3",
+      "description": "For developers, the headless question is an architecture question, not a CMS fashion choice. This post explains the split between content and frontend in plain language first, then covers the decisions that actually matter in a build: rendering strategy, API shape, previews, and the migration steps that protect search traffic.\nA headless CMS is a content system with the display layer removed. Your content lives in one place, and it is delivered through an API to a separately built frontend: a website, an app, a customer portal, or all three at once. That separation is the whole idea. Nothing else about it is magic, and it is not the right answer for every business.\nIf your WordPress site still does its job and your team can update it without calling a developer every week, you probably do not need this article. If every small change now needs a plugin, a workaround, or a developer, keep reading.\nThink of a traditional WordPress site as one machine that does two jobs. It stores and organises your content, and it also decides how that content looks to visitors. Themes and plugins handle the display, and everything runs inside the same system.\nA headless setup splits those two jobs apart. The CMS still stores and organises the content. A separate frontend, built with tools like Next.js or Astro, decides how visitors see it. The bridge between them is an API, which is simply a standard way for one piece of software to ask another for content and receive it in a structured form.\nOne practical result: you write a service description once, and the same content feeds your website, your mobile app, and a customer dashboard without anyone retyping it three times.\nThere is a middle ground worth knowing about. WordPress itself can run headless: your team keeps writing in WordPress, and a separate frontend displays the site using the WordPress REST API or a GraphQL layer. For many businesses this is the sensible first step, because it changes one half of the system instead of both.\nHow you render the frontend decides much of the result. Server-side rendering and static generation are usually the safe defaults for marketing pages, because the HTML arrives complete and crawlable. Pure client-side rendering can leave content invisible until JavaScript runs, so use it only where interactivity genuinely needs it. On the API side, the WordPress REST API already exposes posts and pages as JSON, for example GET /wp-json/wp/v2/posts, which a Next.js or Astro frontend can fetch at build time or on request. Whichever CMS you choose, agree the content model first: fields, relationships, and preview behaviour. Rebuilding the content model mid-project is where headless migrations usually go over budget.\nThese are warning signs, not a verdict. Several of them can be fixed by cleaning up a messy WordPress install, changing hosting, or dropping a bad theme. Treat them as reasons to investigate, not as proof that you must migrate.\nWhen each request adds a plugin, the site slowly becomes a stack of other people's code. Updates start conflicting, and your team stops asking for improvements because they expect something to break.\nA layout tweak or a checkout change should not require rebuilding half the theme. When developers keep saying \"WordPress does not really work that way,\" the theme and plugin stack is boxing you in.\nImages are compressed, caching is on, hosting is decent, and the site is still slow, especially on mobile. The bottleneck may then be structural: too many scripts or a heavy theme. A new frontend helps only if the frontend is the real cause; it will not fix slow hosting or unoptimised images.\nA shop that also runs an app, or a service business with a customer portal, publishing the same pricing on a website, an app, and in-store screens. Copying content between systems by hand is slow and error prone, and prices drift out of sync. One shared content source starts to make business sense.\nYour marketing team wants to publish a landing page today, but the theme cannot do it without custom work. When two teams cannot move without tripping over each other, separating content from the frontend can unblock both.\nYou want a custom quoting tool, a member area, or a product configurator, and every option feels like a compromise forced by the theme. The question is no longer whether the site works today, but whether it can grow into what the business needs next year.\nNeither side wins on every point. Here is the comparison we walk clients through at aimEncoders.\nWhere traditional WordPress wins:\nFaster and cheaper to launch, with a huge library of themes and plugins.\nA familiar editor. Non-technical staff can publish, edit, and preview with little training.\nPublishing workflows, previews, and user roles work out of the box.\nPlenty of developers and agencies know it, so you are rarely locked to one supplier.\nWhere a headless CMS wins:\nFull control over the frontend, built exactly to the design and interactions you need.\nContent reused across websites, apps, and portals from one source.\nFrontend and backend teams can work independently, on their own release cycles.\nMore control over how pages are rendered and delivered, which can help performance when done well.\nWhat you give up with headless: the simplicity. Editing previews have to be built, not assumed. Plugin features need replacements. And you need developer time on an ongoing basis, not just at launch.\nOne caution: headless does not automatically mean faster, more secure, or better ranked. Those outcomes depend on how the site is built, hosted, cached, and maintained. A well built WordPress site will beat a badly built headless site on every measure that counts.\nStay with traditional WordPress if:\nYour site is mainly service pages, a blog, and a contact form, and it works.\nYour team needs to make visual changes themselves, often, without developer help.\nYour current plugins and theme already cover what you need.\nYou have no developer available for ongoing frontend maintenance.\nThe extra build and maintenance cost has no clear business payoff.\nA local consultancy with fifteen service pages and a blog does not need a custom React frontend. A well maintained WordPress site is the better business decision there, and we have told clients exactly that.\nMigration is a project, not an install. Here is the sequence we follow when a client does move, for example when a business needs custom web applications that actually convert rather than another theme tweak.\nList every page, post, image, and custom field. Note which pages bring in search traffic and enquiries, which forms and integrations matter, and which plugins do real work. Anything nobody uses gets cut, not carried over.\nKeep WordPress as the headless backend, or move content into a dedicated headless CMS, then pick the frontend approach, usually Next.js or Astro. This choice is hard to reverse, so it should follow the content audit, not precede it.\nDesign and build templates for each page type: homepage, service pages, blog posts, landing pages, forms. Recreate navigation, mobile layouts, and interactive elements, and build editorial previews early so editors can see what they are publishing before launch.\nThis step decides whether migration helps or hurts. Keep URLs the same wherever possible. Where a URL must change, map it to the closest relevant new page and set a permanent 301 redirect. Move titles, meta descriptions, headings, alt text, and canonical settings across, and check internal links, the sitemap, structured data, and robots rules. Crawl staging and test every redirect before launch. Rankings can dip temporarily even when everything is done right, so keep redirects in place for at least a year. The same discipline applies in our local SEO guide for Pakistani businesses: protect what already brings you customers before chasing anything new.\nTest on real phones, not just a desktop browser. Check forms, booking flows, tracking, and analytics. After launch, watch Search Console for crawl errors, compare enquiries against the pre-launch baseline, and keep a rollback plan ready for launch week.\nAt aimEncoders, every rebuild gets a QA pass before launch: broken links, forms, mobile layouts, and speed checks on staging. A new architecture does not remove the need for testing. It increases it.\nBe sceptical of anyone who says headless is cheaper. The build usually costs more, because the frontend is custom work. Hosting can split into two bills, one for the CMS and one for the frontend, and some platforms charge by usage. Plugin costs may fall, but developer time usually rises.\nThe honest cost question is not \"which is cheaper to host.\" It is \"does the flexibility pay for the extra development and maintenance.\" For one website, usually not. For a website, an app, and a portal fed from one source, often yes.\nAsk three questions. Is the current setup blocking work your business actually needs? Would a shared content source or a custom frontend change how your team works day to day? Do you have developer support to maintain a separate frontend for years, not weeks? If all three answers are yes, headless is worth a serious conversation. If any answer is no, fix the WordPress site you have: audit the plugins, replace the heavy theme, improve hosting, and retest. Many businesses discover they had not outgrown WordPress at all, only the particular build they were given.\nTraditional WordPress combines content management and display in one system. A headless CMS manages content only, delivering it through an API to a separately built frontend. WordPress can also be used headless, with another application handling display.\nNot automatically. SEO depends on content quality, technical implementation, page speed, and crawlability. A well built headless site can rank well, but poor rendering or migration mistakes can damage visibility. Protecting URLs and redirects matters more than the label.\nYes. WordPress can serve content through its REST API or a GraphQL layer while a frontend built with Next.js or Astro displays the site. Your team keeps the WordPress editor.\nIt can cost more to build and maintain than traditional WordPress, because it usually needs separate frontend development, hosting, and technical support.\nNo. A business with a straightforward website and a manageable WordPress install is often better served by improving what it has. Headless earns its complexity when customisation or multiple content channels make the current setup a real obstacle.\nMuhammad Asad Ullah is the founder of aimEncoders, a web development and QA agency in Faisalabad, Pakistan. His team builds custom websites and web applications, tests them like they are going to break on launch day, and keeps them running afterwards.",
+      "publishedAt": "2026-10-30T04:27:07.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "24dd9d7e6db1b2d54ad673888ec5aba325f8698ab1aadbb55653a586c93767b4",
+      "title": "Stop Using cat for Everything: 9 Better Ways to Read Linux Files",
+      "url": "https://dev.to/asepsayyad007/stop-using-cat-for-everything-9-better-ways-to-read-linux-files-25",
+      "description": "Practical tools to inspect, page, slice, and debug files without freezing your terminal\n\n\nRunning cat /var/log/nginx/access.log on an active server is an unforced error that most engineers make once before watching their shell lock up.\nThe utility name is short, muscle memory takes over, and the binary exists on every Unix host in existence. But cat stands for concatenate. Its original Unix design was to join multiple input streams together and ship the output down a pipeline. It was never built as an interactive file viewer.\nWhen you use cat to inspect files interactively, you offload stream buffering directly to your terminal emulator. If that file happens to be a multi-gigabyte JSON log or an active audit trail, your terminal tries to process, parse, and render millions of lines into its local scrollback window. Your terminal emulator consumes gigabytes of memory, remote SSH sessions drop keystrokes, stray escape sequences scramble font settings, and you have zero ability to pause, scroll, or search inline.\nLinux comes with specialized utilities built to inspect, page, slice, reformat, and navigate files without wasting system resources or locking your session.\nHere are nine better ways to read files on Linux, along with the exact flags to use in production.\nIf you want to view a configuration file, shell script, or source code file directly on stdout without opening an interactive viewer, bat is the modern replacement for cat.\nOn Debian and Ubuntu distributions, the package is installed as batcat to prevent name clashes with another system binary:\nsudo apt-get install bat\nalias bat=\"batcat\"\n\nUnlike raw cat, bat inspects file extensions and shebang lines to apply high-contrast syntax highlighting across hundreds of languages. It renders line numbers automatically and integrates directly with Git to show added, modified, and removed lines directly in the left gutter.\nTo view an Nginx configuration with line numbers and syntax highlighting:\nbat /etc/nginx/nginx.conf\n\nOne of the best features in bat is automatic smart paging. If the target file fits within the height of your terminal screen, bat writes the output straight to stdout and drops you back at your shell prompt. If the output exceeds your terminal height, it routes the stream through an interactive pager automatically.\nYou can also use bat to expose non-printable control characters, trailing spaces, and hidden carriage returns:\nbat -A /etc/environment\n\nThe -A flag displays tab stops as arrows, spaces as subtle dots, and newlines as explicit symbols, making syntax debugging straightforward.\nWhen a file exceeds a few megabytes, printing it straight to stdout is risky. The less pager remains the industry benchmark for high-performance file viewing because it does not load the entire file into RAM before displaying it.\nless uses memory mapping (mmap) to read only the small slice of bytes needed to fill your current terminal dimensions. You can open a 50GB database dump or a massive systemd log instantaneously without causing memory pressure or disk thrashing on the host:\nless -FXRS /var/log/syslog\n\nThe four flags combined here make less behave cleanly for system administration:\n-F tells less to exit immediately if the entire file fits on a single terminal screen.\n-X stops less from sending the terminal initialization strings that clear the screen on exit, leaving the inspected lines visible in your terminal scrollback.\n-R processes raw ANSI color escape codes properly, ensuring colored log output from modern CLI tools renders correctly instead of displaying garbled control sequences.\n-S disables line wrapping. Long log lines are truncated horizontally instead of wrapping into messy multi-line blocks. You can pan horizontally using the left and right arrow keys to inspect wide timestamps and JSON structures.\nInside less, you navigate quickly using single keystrokes:\nPress G to jump straight to the end of the file.\nPress g to return to the first line.\nType / followed by a search pattern to search forward using regular expressions.\nType ? followed by a search pattern to search backward through previous entries.\nPress n to jump to the next search match, or N to jump to the previous match.\nPress +F to enter follow mode, which updates the view in real time as new lines append to the file, identical to tail -f. Pressing Ctrl+C drops you back into scrollable, searchable mode without closing the file.\nYou can set these flags permanently by adding this export to your shell configuration (~/.bashrc or ~/.zshrc):\nexport LESS=\"-FXRS\"\nexport PAGER=\"less\"\n\nMost operational debugging tasks focus on either the beginning of a configuration file or the very latest events recorded by an application. Reading the entire file to find those lines wastes I/O bandwidth.\nhead and tail let you slice specific boundaries with minimal overhead:\n# Print the first 25 lines of a configuration file\nhead -n 25 /etc/redis/redis.conf\n\n# Print the last 40 lines of an audit log\ntail -n 40 /var/log/audit/audit.log\n\nA common operational trap occurs when tracking active server logs using tail -f. Standard tail -f hooks into the underlying file descriptor of the target file. When background services like logrotate compress and rotate logs, the active file is renamed or moved, and a brand-new file is created with the original filename.\nBecause standard tail -f follows the inode rather than the filename, it remains attached to the old, unlinked file descriptor and stops displaying new lines.\nTo avoid missing critical production events, use -F (capitalized):\ntail -F /var/log/nginx/access.log\n\nThe -F flag instructs tail to track the file by its filename rather than its file descriptor. If the underlying inode changes or the file is temporarily unavailable during log rotation, tail re-establishes its handle on the new file as soon as the service recreates it.\nYou can also use tail to slice from a specific line number to the end of a file using the plus notation:\n# Display output starting from line 150 through the end of the file\ntail -n +150 /var/log/messages\n\nTroubleshooting is chronologically inverted. When an alert fires or a container crashes, you want to inspect the failure event that occurred five seconds ago, not the initialization messages recorded when the system booted three weeks ago.\nThe standard core utility tac prints lines in reverse order, starting from the final line and working backward to the first.\ntac /var/log/dpkg.log | head -n 30\n\nThis command surfaces the thirty most recent package installations or upgrades without piping through sort -r or forcing the shell to buffer thousands of lines.\nWhen paired with sed, tac provides an efficient way to pull the most recent stack trace from an application log:\ntac /var/log/app/error.log | sed '/TRACEBACK_START/q' | tac\n\nThe inner tac reverses the log so the latest crash appears first. The sed statement reads until it matches the start marker of the traceback, prints it, and quits immediately. The second tac restores normal chronological order. You get the exact crash context without reading hundreds of megabytes of older events.\nOn production machines, log rotation policies quickly compress historical logs using gzip (.gz), xz (.xz), or zstandard (.zst) to save disk space.\nExtracting these files to disk with gunzip or unxz simply to check an error message consumes disk storage, adds write cycles to your drive, and creates leftover files that require cleanup.\nLinux provides compression-aware utilities that decompress data directly into memory streams:\n# Read a gzipped log file using full less keybindings\nzless /var/log/nginx/access.log.2.gz\n\n# Stream an xz-compressed archive directly into grep\nxzcat /var/log/syslog.3.xz | grep -i \"oom-killer\"\n\n# Inspect modern zstandard compressed logs\nzstdcat /var/log/journal.zst | head -n 25\n\nzless works with all standard less navigation commands, including forward search (/), backward search (?), and horizontal scrolling (-S). You inspect multi-gigabyte compressed files without writing a single uncompressed byte to disk.\nOpening production configuration files inside an active text editor like vim or nano is dangerous. An accidental key press, stray paste buffer, or an unthinking write command (:wq) can modify critical runtime configurations without leaving a clear trace in your command history.\nUsing view (which opens Vim in read-only mode, equivalent to vim -R) gives you complete structural navigation tools while protecting the file from accidental writes:\nview /etc/kubernetes/manifests/kube-apiserver.yaml\n\nInside view, the buffer modification flag is disabled. You get the full power of Vim syntax parsing and movement commands:\nPress % while your cursor is over an opening parenthesis, bracket, or curly brace to jump directly to its matching closing counterpart.\nPress * to find the next occurrence of the word currently under your cursor.\nUse zo and zc to open and close code folds, collapsing long YAML blocks or nested structures.\nType :set number to turn on contextual line numbering.\nIf you accidentally strike an edit key, the editor displays an explicit warning and prevents saving changes to disk.\nWhen people want line numbers, they often run cat -n. While cat -n works, it numbers every single line indiscriminately, including empty whitespace, trailing breaks, and formatting separators.\nThe dedicated nl (number lines) utility gives you fine-grained control over how lines are counted, formatted, and displayed:\nnl /etc/pam.d/common-auth\n\nBy default, nl only assigns numbers to non-empty lines, keeping the output clean and visually tied to functional configuration directives.\nYou can modify its numbering logic to suit specific file structures:\n# Number all lines including blank ones, right-aligned with 4 digits and zero padding\nnl -b a -n rz -w 4 /etc/hosts\n\n# Number only lines matching a specific regex pattern\nnl -b p'^[[:space:]]*server' /etc/nginx/nginx.conf\n\nnl also understands logical page delimiters (\\:\\:\\:, \\:\\:, and \\: for headers, body, and footers), allowing you to restart line numbering automatically across distinct sections of generated source files or technical reports.\nReading delimited text files such as /etc/passwd, /etc/fstab, or CSV exports with cat produces jagged, misaligned output because fields have different lengths.\nThe column utility parses delimited input and aligns it into neat, human-readable vertical tables:\n# Format /etc/passwd using the colon delimiter\ncolumn -t -s \":\" /etc/passwd | head -n 15\n\nThe -t flag instructs column to determine the number of columns dynamically, and -s sets the delimiter character.\nFor whitespace-delimited files like storage mount configurations:\ngrep -v '^#' /etc/fstab | column -t\n\nInstead of struggling to see where mount points end and filesystem options begin, every field aligns neatly under its respective column.\nA frustrating shell issue happens when a bash script exits with cryptic syntax errors, yet opening the script with cat shows clean, correct code.\ncat does not reveal invisible characters, including:\nWindows carriage returns (\\r\\n or CRLF) inserted by editors on non-Linux systems.\nZero-width non-breaking spaces copied from online documentation.\nUTF-8 Byte Order Marks (BOM) added at the beginning of text files.\nEmbedded null bytes or escape codes from corrupted data transfers.\nWhen text files behave unexpectedly, inspect their underlying bytes directly:\n# Inspect the first 128 bytes with hex and ASCII side by side using xxd\nxxd -l 128 /etc/environment\n\n# Use hexdump in canonical format to check character offsets\nhexdump -C /usr/local/bin/deploy.sh | head -n 10\n\n# Inspect character representations with od\nod -c /usr/local/bin/entrypoint.sh | head -n 15\n\nRunning od -c exposes line endings immediately. A proper Linux newline appears as \\n. A file containing Windows line endings displays explicit \\r \\n character pairs. Catching this with od in five seconds saves hours of debugging broken shell loops.\nSyntax highlighting & code files:\nbat. It provides language-aware colorization, git status in the left gutter, and automatic pager fallback when output overflows your screen.\nMulti-gigabyte logs & large dumps:\nless -FXRS. It memory-maps files with zero RAM overhead, provides forward and backward regex search, and avoids terminal lockups.\nLive log monitoring:\ntail -F. It tracks files across rotation and inode updates rather than losing track of the file descriptor.\nRecent errors & stack traces:\ntac. It traverses files bottom-up so recent events appear first without needing sorting pipelines.\nCompressed archives (.gz, .xz, .zst):\nzless, xzcat, or zstdcat. They stream and inspect compressed files directly in RAM without extracting data to disk.\nSafe configuration inspection:\nview. It provides full Vim movement and syntax folding while preventing accidental modifications.\nReadable line numbers:\nnl. It numbers non-blank lines by default and supports custom regex patterns and padding styles.\nJagged delimited files (CSV, /etc/passwd):\ncolumn -t -s \":\". It aligns delimiter-separated text into structured vertical columns.\nInvisible characters & encoding errors:\nod -c or hexdump -C. It reveals carriage returns, zero-width spaces, and binary corruption instantly.\nThe cat command was written in 1971 by Ken Thompson and Dennis Ritchie for the First Edition of Unix. Its sole intended purpose was concatenating files: reading contents from multiple sources and combining them into a single stream.\nBy 1995, engineers overusing cat as a file viewer had become so widespread that the Usenet community created the Useless Use of cat Award (UUOC). The award called out shell pipelines that ran cat file | command instead of using direct shell redirection (command < file) or passing the file as an argument (command file), which eliminates an unnecessary subshell, process fork, and context switch.\nHabits are hard to change, but defaulting to cat for file inspection creates unnecessary friction and risks shell lockups on busy production nodes.\nA simple step is adding an alias to your interactive shell profile:\nalias cat=\"bat 2>/dev/null || less\"\n\nSave cat for its original purpose: gluing multiple files together into a pipe (cat chunk.* > full_archive.tar). For reviewing configurations, debugging errors, and inspecting logs, pick the tool designed for that specific data format.\nWhat command or alias do you reach for when a multi-gigabyte log file is filling up disk space on a production server?\nIf this breakdown saved you hours of debugging or gave you something practical to use in production, consider buying me a coffee. Your support directly fuels independent, zero-fluff Linux and DevOps technical guides.\nAsep Sayyad is a Linux and DevOps engineer passionate about Linux administration, automation, cloud technologies, containers, and open-source software. He enjoys solving real-world infrastructure challenges and sharing practical knowledge through in-depth technical articles, tutorials, and hands-on guides.\nHis goal is to help aspiring and experienced engineers build stronger Linux and DevOps skills with content focused on real production scenarios rather than theory alone.\nPortfolio: asepsayyad007.in\n\n\nBlog: asepsayyad007.in/blogs\n\n\nGitHub: github.com/asepsayyad007\n\n\nLinkedIn: linkedin.com/in/asepsayyad\n\n\nMedium: asepsayyad007.medium.com\n\n\nSupport: buymeacoffee.com/asepsayyad007\n\n\n\n\n  \n  \n  Enjoyed this article?\n\n\nIf this guide saved you hours of debugging or gave you something practical for production, consider:\nBuying me a coffee: Your support directly fuels independent, zero-fluff Linux and DevOps engineering breakdowns.\nStarring my open-source projects on GitHub.\nSharing this article with fellow Linux and DevOps engineers.\nYou can also follow me for more practical content on Linux, DevOps, Cloud, Containers, Automation, and Open Source. Thanks for reading, and enjoy your learning!\n© 2026 Asep Sayyad",
+      "publishedAt": "2026-10-30T04:25:29.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "41c780fe0fbd320dc68c03f5648c48b6c6ddb2314a133f9b77fd7d63b20010e2",
+      "title": "CloudWatch Logs の storedBytes をロググループとログストリームで比較してみた",
+      "url": "https://dev.classmethod.jp/articles/cloudwatch-logs-storedbytes-cli/",
+      "description": "CloudWatch Logs のロググループとログストリームの `storedBytes` を AWS CLI で比較してみました。同じ項目でも、リソースによって仕様が異なることが判明したため、その結果をまとめます。",
+      "publishedAt": "2026-10-30T04:02:36.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "0ac75646b86999190ae51a4cec675fc672a846512602f73ca7ce5873c6594a21",
+      "title": "CloudShell でコマンドを実行すると、Error when retrieving credentials from \"IAM 名\" のエラーが発生",
+      "url": "https://dev.classmethod.jp/articles/cloudshell-credentials/",
+      "description": "CloudShellで認証情報の受け渡しに失敗する「500 - Internal Server Error」が発生している場合の対処方法を紹介します。「cloudshell:PutCredentials」権限の追加や「AWS CloudShellFullAccess」ポリシーの使用について説明します。",
+      "publishedAt": "2026-10-30T02:51:36.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "e4020354eb2c2f179cdd36df128cd1d42c19e567a7839ef645b8b26b43961b82",
+      "title": "AWS Weekly Roundup: Amazon Polly の Generative エンジン、Trainium 向け TorchNeuron など (2026 年 10 月 26 日)",
+      "url": "https://aws.amazon.com/jp/blogs/news/aws-weekly-roundup-amazon-polly-generative-engine-torchneuron-for-trainium-and-more-october-26-2026/",
+      "description": "数週間前、サンパウロにある AWS オフィスで、ブラジルの農業関連ビジネスに携わるビジネス部門と技術部門のリー […]",
+      "publishedAt": "2026-10-30T02:42:40.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "68b4fef7049d563bfbe113f1434584481e65619adc6685c6014a9fb2dd29c882",
+      "title": "AWS Continuum for code vulnerabilities が一般提供を開始しました",
+      "url": "https://aws.amazon.com/jp/blogs/news/aws-continuum-for-code-vulnerabilities-is-now-generally-available/",
+      "description": "2026 年 10 月 22 日、AWS Continuum for code vulnerabilities […]",
+      "publishedAt": "2026-10-30T01:55:47.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "ddb6b7ceddce568357f07aa018f1becf50cdfed19964f1cd39940d27d30283c7",
+      "title": "「Codex」などの内蔵ブラウザーに脆弱性--プロジェクト外のファイル読み出しの恐れ",
+      "url": "https://japan.cnet.com/article/35254198/",
+      "description": "開発支援ツール「Codex」や「Visual Studio Code（VS Code）」の内蔵ブラウザーで、パソコン内の悪意あるHTMLファイルを開くと、プロジェクト外のファイルを読み取られるおそれがあると、セキュリティ企業Forever Securityが10月29日に報告した。両製品の問題は公表時点で未修正だとしている。",
+      "publishedAt": "2026-10-30T01:40:00.000Z",
+      "feedName": "CNET Japan"
+    },
+    {
+      "id": "7dca0c34cdc419889a9dab7bf4beb814cf4c791527fb2861564e305138bed174",
+      "title": "AI時代に変わるPC調達の常識　価格・性能だけでなく「侵害後」をどう設計するか",
+      "url": "https://enterprisezine.jp/article/detail/25203",
+      "description": "2026年9月17日、EnterpriseZine編集部は、セキュリティカンファレンス「Security Online Day 2026 Autumn」を開催した。「検知の限界を超えて ― AI×サプライチェーン×耐量子時代に、端末を『外』と『内』から設計で守る」と題して登壇したのは、日本HPでセキュリティエバンジェリストとして活躍する木下和紀エドワルド氏だ。AIによる攻撃の高速化、サプライチェーンに起因するリスク、将来の耐量子暗号への対応など、企業を取り巻くセキュリティ環境は複雑さを増している。検知をすり抜ける事態も前提として、被害を最小化し、業務の継続・復旧につなげるには、どのような対策を講じるべきか。",
+      "publishedAt": "2026-10-30T01:00:00.000Z",
+      "feedName": "EnterpriseZine"
+    },
+    {
+      "id": "35397fd24ef9c0cb73621b9788bd735bf794593666e4450f7966e97922a64a2d",
+      "title": "【アジャイルFAQ 第11回】なぜいつも終わらない？スプリント持ち越しタスクの本当の理由と処方箋",
+      "url": "https://developer.mamezou-tech.com/blogs/2026/10/30/11_unfinished_tasks_every_sprint/",
+      "description": "この記事を読んでいただきありがとうございます。アジャイルグループに所属する、藤井智弘です。\n質問\n#\n 毎スプリント、2〜3個のPBIが終わらずに次のスプリントに持ち越しになります。持ち越したPBIのポイントは付け直すべきでしょうか？　また、8割方できているものを「未完了」として扱うのは、頑張ったメンバーに酷な気もします。持ち越しが常態化しているチームは、どこから直せばいいでしょうか？\n回答\n#\n 質問に3つの問いが含まれているので、短く答えてから本題に入ります。\n持ち越したPBIのポイントは付け直すべきか——不要です（理由は後述します）\n8割できたものを未完了扱いにするのは酷ではないか——酷なようですが、未完了です。「ほぼ完成」は、リリースできず顧客に価値をもたらさないという点で、「未着手」と同じです\n常態化しているチームはどこから直すか——持ち越しを責めることでも隠すことでもなく、原因を分類することから始めます\n 持ち越しは失敗ではなく、チームの計画と作業の実態を映す鏡であり大事なデータです。以下、「完成／未完成を二値で扱い続けること」と「持ち越しの原因を種類で分けること」の二つを軸に話を進めます。\n\n「終わらなかったものは未完了です」と言われたら、ちょっとショックではありませんか？\n#\n 研修や現場で、「スプリント内に完成しなかったPBIは未完了です」「部分的な完成にポイントを計上してはいけません」と指導されたことのある方は多いと思います。そのとき、こんな疑問を持ちませんでしたか？\n8割の仕事は確かに進んでいる。それを0として扱うのは、実態を歪めているのではないか\n持ち越しをゼロにするのが目標なら、最初から少なめに計画すればいいだけでは\n頑張ったメンバーの成果が数字に残らない。士気に響くのではないか\n 三つとも、現場の実感に根ざした疑問です。先に結論だけ言えば、未完了の扱いは「頑張りの評価」のためではなく「予測の材料の鮮度」の話です。\n8割は進んでいても、残り2割の不確実性は0ではない（ということは、進んだと思っている対象が8割かどうかすら定かではない）。\n持ち越しゼロは目標ではなく、原因を潰した結果として起きること。\n数字に残すべきは、頑張りではなく完成したかどうか。\n 持ち越しがどんな扱われ方をしがちかを見てから、順に戻ってきましょう。\n持ち越しのアンチパターン\n#\n 持ち越しが常態化したチームには、いくつかのアンチパターンがあります。ご自分のスプリントの風景と、重ねてみてください。\nその１：出来高計上型——「8割できたので8割のポイントを計上」「持ち越し分は残り2割のポイントに付け直し」という型です。ポイントの合計は長い目で見れば同じになるので、一見、害はなさそうに見えます。けれど部分計上はスプリントごとのばらつきを人工的に潰し、前回見た「幅」を実際より狭く見せます。残り2割に潜むリスクも数字から消えます。しかも「あとちょっと」が3日かかった、いやそれどころか予想以上にズルズルと引っ張られた経験は、誰にでもあるはずです。\nその２：黙認型——持ち越しが毎回出るのに、レトロでもプランニングでも議題にならない型です。「まあ、いつものことだから」。持ち越しは記録されず、原因は分析されず、次のスプリントも同じ量を積みます。持ち越しが常態化しているチームの多くは、実はこの型です。遅れも常態化し、遅れていること自体を問題と思わなくなったチームに出会うことも、珍しくありません。\nその３：犯人探し型——持ち越しが出るたびに「誰が遅かったか」が問われる型です。以降、持ち越しは隠されるか、言い訳されるか、帳尻を合わされるものになり、原因分析の材料には決してなりません。持ち越しを正直に報告できる空気が失われた時点で、チームは自分の実態を見る手段を失います。\nその４：テスト先送り型——業務系の現場でよく見る変種です。実装は終わるが、テストだけが毎回間に合わない。テストの多くが手作業のままで、スプリント内に完成（テスト込み）を収めるスピードが出ない。これを「仕方ない」と受け入れてテストをスプリントの外へ追い出し始めると、システムテストや統合テストがリリース間際に積み上がり、スプリントの見た目をした「テスト先送りの一括開発」ができあがります。\n\n持ち越しを「失敗」にしている前提\n#\n 四つの型は、同じ土台の上に立っています。**「持ち越しは、計画を守れなかった失敗だ」**という前提です。この前提に立つと、失敗は小さく見せるべきであり（出来高計上）、触れないほうがよく（黙認）、責任者がいるはずであり（犯人探し）、間に合わない工程は外に出せばよい（テスト先送り）、という判断がすべて自然に導かれます。\n まず、8割を0として扱うのは、実態を歪めているのではないか。逆です。8割を8割として扱うほうが、実態を歪めます。スクラムが「完成の定義」にこだわるのは、精神論ではありません。8割できたPBIの残り2割には、テストの通っていないコード、レビュー未了の設計、結合していないモジュールが含まれています。ソフトウェア開発では、残り2割にこそリスクが集中します。完成／未完成の二値で扱うのは、この「あとちょっとの不確実性」を計画から締め出すための規律です。部分ポイントを計上したり、持ち越し時にポイントを付け直したりしないのも同じ理由で、中途半端な計上はベロシティを実態より滑らかに見せます。持ち越したPBIは元のポイントのまま運び、完成したスプリントで初めて計上する。地味ですが、これが一番嘘のない記録になります。なお、対外的に出来高ベースの進捗報告が必要なら、それは別に出せばよい。ただしベロシティには混ぜないことです。\n 次に、最初から少なめに計画すればよいのではないか。半分正解です。前回、確実に入れる分は悲観値で積む、と書きました。それでも持ち越しが出るなら、問題は量ではなく、PBIの大きさか、キャパシティの見立てか、着手の仕方にあります。量を減らすだけでは、見かけは解決したように見えて、本質的な原因は残ったままです（そして、それ以降も繰り返し同じ状況に陥ります）。持ち越しゼロは目標ではなく、原因を潰した結果として起きることです。\n そして、頑張りが数字に残らないのは士気に響かないか。響くとすれば、それは「完成」がチームの成果として認められていないからです。ベロシティは個人の頑張りを記録する数字ではなく、チームが届けたものを記録する数字です。個人の8割を認めたいなら、数字ではなく言葉で認めればよい。数字に残すのは完成だけ、という規律のほうが、長い目で見ればメンバーを守ります。「あと少しなのに」を毎回抱えるより、小さく切って毎回完成させるほうが、はるかに気持ちのよい働き方だからです。\n では、計画を守れなかった失敗という前提の出どころはどこか。計画は守るものであり、未達は失敗であるという、スクラム以前からの規範に根ざしています。線表を引き、遅れを詰め、未達には理由書を出す——多くのメンバーはこの文化を身につけてからスクラムチームにやってきます。責める相手はいません。ただ、スプリントの計画に、この古い規範がそのまま適用されるだけです。\n 一方、本来の持ち越しは何か。スクラムはこの規範を反転させます。計画は仮説であり、未達は仮説と現実のずれを教えてくれる観測結果です。\n観測——何が、どれだけ、なぜ終わらなかったかを、そのまま記録する。責めず、隠さず、丸めない。\n検査——持ち越しの原因を種類で分け、繰り返しているものを見つける。「誰が遅かったか」ではなく「今回の持ち越しはどの種類か」を問う。\n適応——種類ごとに、次のスプリントの計画や作業の仕方を変える。分割、キャパシティの見直し、着手の仕方。\n これに照らすと、黙認型と犯人探し型の欠落が見えます。前者は観測を捨て、後者は観測を歪めている。どちらも検査に進めません。「失敗を小さく見せる」から「原因を分類して次の計画に反映する」へ、向きを変えます。この転換が、以下の処方の土台になります。\n処方\n#\n ここからは手当てです。分割の技法もキャパシティ設計も有識者の提案は多く、どれを選んでもかまいません…と、毎回言ってますね。そのうえで一つだけ。「分割しました」と言って終わりなら、原因を見ずに量を減らしたのと同じことです。試したあとは、持ち越しの数が減ったか、減っていないならどの種類が残っているかで判断してください。\nまず、持ち越しを3種類に分類する\n大きすぎる: PBIが1スプリントに対して大きすぎる、または受け入れ条件が曖昧で「どこまでやれば完成か」が着手後に膨らんでいく\n削られた: 割り込み対応や欠員で、計画時に想定したキャパシティが実際には存在しなかった\n散らばった: 全員がそれぞれ別のPBIに着手し、どれも8割で並ぶ。着手数が多すぎて完成が出ない\n 持ち越しが出たスプリントのレトロで、1個ずつ「1〜3のどれか」を問い、記録してください。3スプリント分たまると、このチームの持ち越しがどの種類に偏っているかが分かり、処方が選べます。犯人探しは分類を歪めます。持ち越しを正直に報告できる空気は、それ自体がチームの資産です。\n原因1（大きすぎる）には、分割の技術を\n原因2（削られた）には、実績ベースのキャパシティ設計を\n原因3（散らばった）には、スウォーミングを\nテスト先送り型には、テスト自動化への投資を\n\nなぜこの質問は30年繰り返されるのか\n#\n 「持ち越し＝悪」という感覚は、研修一回で消えるものではありません。線表と理由書の文化を身につけた新しいメンバーが入るたびに、チームに持ち込まれ直します。だからこの質問は、チームが入れ替わるたびに、形を変えて戻ってきます。\n 持ち越しを罰するチームは同じ持ち越しを繰り返し、持ち越しから学ぶチームは計画の精度を上げていきます。分かれ目は能力ではなく、未達をどう扱うかの文化です。今回の持ち越しは種類ごとに記録され、次の計画に反映されたか——その一点で、このチームが持ち越しをデータとして使えているかが分かります（念のため: これは社内の計画観の話です。対外的な納期の約束を軽んじてよい、という話ではありません）。\n次回: 「割り込み作業はどう計画に入れる？」",
+      "publishedAt": "2026-10-30T00:00:00.000Z",
+      "feedName": "豆蔵デベロッパーサイト"
+    },
+    {
+      "id": "d67643fa56e39c4ec6a2df316bde8fac05e12c4b6bf62f9d6470796dd74d68ee",
+      "title": "pwn request対策でpull_request_targetは12月2日から許可制に。残る経路と洗い出し方",
+      "url": "https://dev.classmethod.jp/articles/github-actions-pull-request-target-pwn-request/",
+      "description": "GitHub Actionsのpwn request対策で、actions/checkoutはフォークPRのコード取得をデフォルトで拒否し、パブリックリポジトリのpull_request_targetも12月2日から許可制になります。残る経路と洗い出しコマンドの結果をまとめます。",
+      "publishedAt": "2026-10-29T23:50:46.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "76d24bc959c89cdce6178bf8f2c90ec554659cf91dff96f022635b24f4546f2d",
+      "title": "「3年以内に車はランサムウェアに狙われる」　9割の開発者が回答",
+      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2610/30/news023.html",
+      "description": "ソフトウェアのアップデートが提供される自動車車両（SDV）が本格的に普及した場合の最大のリスクは何か。その問いへの答えとして開発者たちが挙げたのが「サイバーセキュリティの脆弱性」だ。回答者の中には3年以内に車がサイバー攻撃に狙われると考えている人もいるという。",
+      "publishedAt": "2026-10-29T23:15:00.000Z",
+      "feedName": "＠IT"
+    },
+    {
+      "id": "cba4f53b4a8fa3638c991c8a01ac40d036b929b1435487be96fbe0cf71a6b122",
+      "title": "Linuxカーネルに重大な脆弱性「CVE-2026-98432」、CVSS 9.8 Claudeが遠隔root権限実行を実証|セキュリティニュースのセキュリティ対策Lab",
+      "url": "https://rocket-boys.co.jp/security-measures-lab/linux_kernel_cve_2026_98432_ubuntu_anthropic_20261030/",
+      "description": "LinuxカーネルのIPv4ネットワーク処理に、遠隔からの悪用につながるUse-After-Free（解放済みメモリの再利用）の脆弱性「CVE-2026-98432」が確認されました。Canonicalが2026年10月15日に公開し、28日に更新したUbuntuの脆弱性情報では、CVSS v3.1の基本値は9.8（Critical）、Ubuntu独自の優先度は「High」と評価されて...",
+      "publishedAt": "2026-10-29T22:47:13.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "53bc5b1778b6288d2b1ce8659f246afe7ca8f184148ceec03565d70682a296e9",
+      "title": "デザインは見た目ではなく意思決定だった ─ フロントエンドエンジニアがデザインシステム導入で学び直したこと - Findy Tech Blog",
+      "url": "https://tech.findy.co.jp/entry/2026/10/30/070000",
+      "description": "こんにちは。こんばんは。 ファインディでリードエンジニアをしている@shootaです。 これまでFindy Team+のフロントエンドリードとして、モノレポのリアーキテクチャやCIの高速化、AIレビューの仕組みづくりといった記事を書いてきました。 tech.findy.co.jp 今回はそこから少し離れ、別のプロダクトに一人で入ってデザ...",
+      "publishedAt": "2026-10-29T22:25:22.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "d612e87bd9836cf6850f1628a4cdc72463cb11fd1e66683a3bc7e2c9c215c27f",
+      "title": "AWS Toolkit で EC2 に VS Code 接続してみた（Mac は OK、Windows は WSL か Remote - SSH で）",
+      "url": "https://dev.classmethod.jp/articles/aws-toolkit-connect-vscode-to-ec2-windows/",
+      "description": "AWS Toolkit for Visual Studio Code を使って EC2 に接続する方法を試しました。Mac では問題なく動作しましたが、Windows では接続できなかった理由と、その対策方法についてまとめます。",
+      "publishedAt": "2026-10-29T13:28:54.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "96eb97cfb5be1dc2809145a9658b8a3ebb8339f388a4c9650fc4ddbed6502267",
+      "title": "peer typescript@\">=4.8.4 <6.1.0\" from typescript-eslint@8.72.1",
+      "url": "https://qiita.com/J-T_ky2g/items/67b9ae882aab63fea9a9?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\n\nReact TypeScriptなプロジェクトをviteで立ち上げ中、npm iがこけた\n\n問題\n\ntypescript-eslint （eslintをtypescriptのコードに対して有効にするもの）がtsパッケージとバージョン合わず npm i 時エ...",
+      "publishedAt": "2026-10-29T13:22:12.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "e997343e9050d7a039bcf74080bee5d3b79bdb3938dde33bd5538d90e5259c76",
+      "title": "Amazon EKS の高度な Kubernetes コントロールプレーン設定の紹介",
+      "url": "https://aws.amazon.com/jp/blogs/news/introducing-advanced-kubernetes-control-plane-configuration-in-amazon-eks/",
+      "description": "2026 年 8 月に、Amazon EKS で、Kubernetes のコントロールプレーンのコンポーネント (API サーバー、スケジューラ、コントローラーマネージャー) を EKS API で直接設定できるようになりました。この記事では、設定できる項目を説明し、2 つのウォークスルーで実際に試します。1 つは Pod の配置を最適化する MostAllocated のビンパッキングの有効化、もう 1 つはイベントの保持期間の調整です。",
+      "publishedAt": "2026-10-29T13:03:32.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "1d38b7610002fe837d979b441f86443af8beaeb01a66b9863bfd7adbbc436050",
+      "title": "静的解析でTypeScript怒られている時、本当に問題か確認する",
+      "url": "https://qiita.com/J-T_ky2g/items/8c90a50de77b8c1c6315?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\n\nIDEを使っている\n\n問題\n\nIDEのキャッシュで怒られてるが本当は問題ない時があった\n\n解決\n\nnpm run buildなどtscが実行されるものでも同じエラーが出るか確認する\n\n終わりに\n\nGUIでダメならCLIで確認は他のことにも応用できそう",
+      "publishedAt": "2026-10-29T12:43:11.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "e0daa0c2dde63c1d596dbbd31561994719dc572375775471419b39605b0b7ad1",
+      "title": "[アップデート] AWS Secrets Manager コンソールの推奨アクションで何が指摘されるか試してみた",
+      "url": "https://dev.classmethod.jp/articles/secrets-manager-console-recommended-actions/",
+      "description": "AWS Secrets Manager のコンソールに推奨アクションが追加されました。暗号化キーとローテーションの設定を変えた色々なシークレットを作り、どんな推奨が表示されるかを検証しました。",
+      "publishedAt": "2026-10-29T11:28:22.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "1b701d5b08af91d66d75c1d0eae6f13a4ad16d1135dafe575f30f5ddc8727e03",
+      "title": "緊急時に、安全に変更を届けられる開発・運用基盤って何だろう",
+      "url": "https://qiita.com/poku_log/items/e57ac8276df88a2a32d1?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "1. はじめに\n\n想定読者\n\nWebアプリケーションの開発・運用に携わっている方\nCI/CDやコンテナ、GitOpsを利用している、または導入を検討している方\n脆弱性対応などの緊急変更を、平時の開発・運用とどう接続するか考えたい方\n\n先日、pixivの脆弱性対応につ...",
+      "publishedAt": "2026-10-29T10:08:08.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "41e4f198e1aee525e025adfc383f494ca1dabfb5e1d94d6874da5f8b36317724",
+      "title": "# 【Python × MT5】日次損失-5%で即失格のプロップファーム(FTMO)に挑む！自律型AIヘッジファンドから派生させた「米国株デイトレ特化AI」の設計と実装全記録",
+      "url": "https://qiita.com/ramuza0113/items/9a7de4fa25bad8916f43?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\n先週、個人開発している自律型AIヘッジファンド『Lumina AI』のアーキテクチャ解説記事をQiitaに投稿したところ、大変ありがたいことに多くの反響とストックをいただきました。\n\n本家のLumina AIは、**「米株・日本株の現物スイングトレード（数日...",
+      "publishedAt": "2026-10-29T09:39:20.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "4445a45835057380bfb3212c138266c1cc58596146124875d10b80c9523f5ba9",
+      "title": "IPA、SCS評価制度の各種ガイド・解説書を公開　★取得目指す企業や第三者評価機関向けなど4つを展開",
+      "url": "https://enterprisezine.jp/news/detail/25400",
+      "description": "情報処理推進機構（IPA）は、サプライチェーン強化に向けたセキュリティ対策評価制度（SCS評価制度）の「★3・★4 自己評価等ガイド」「★4 第三者評価ガイド」「★4 技術検証ガイド」および「★3・...",
+      "publishedAt": "2026-10-29T09:04:00.000Z",
+      "feedName": "EnterpriseZine"
+    },
+    {
+      "id": "b011454443320e5f0ad8c1c44017e89f592ab5693c8aa43f6f9c44eb27ed7902",
+      "title": "GitHub Actions で checkout@v7 のようなバージョン指定を書くのはやめよう！ 時代は actions.lock！",
+      "url": "https://zenn.dev/progate/articles/24b1140180300c",
+      "description": "Progate で業務委託エンジニアをしている横江( @yokoe24 )です！ セキュリティの話が重要視される昨今ですが、 みなさんは GitHub Actions の Workflow ファイルで、こんな書き方をしていませんか？ ・・・私は書いています！！🙈 この記事を書きながら、過去の個人リポジトリ、直さなきゃなぁ……って思っています。 @v7 ...",
+      "publishedAt": "2026-10-29T09:02:09.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "3a77c2ad052e71483012d5c4c793d46ae9a00ac9e876731f7ffe471a72cdc346",
+      "title": "「ダウンロード」フォルダに「AI指示書」（.md）を置かないで--CodexやClaude Codeを操る攻撃",
+      "url": "https://japan.cnet.com/article/35254160/",
+      "description": "AI開発支援ツールが「ダウンロード」フォルダーに置かれた悪意ある指示ファイルを読み込み、不正なソフトを導入しようとした事例が確認された。セキュリティ企業Forever Securityが10月22日に報告した。",
+      "publishedAt": "2026-10-29T08:45:00.000Z",
+      "feedName": "CNET Japan"
+    },
+    {
+      "id": "202676c9dfc2c802cbebbafd3d911088f842c0a969f52734a18ae4f62a1e1774",
+      "title": "GrafanaのアラートからDevOps Agentの調査を自動で起動して、結果をSlackに通知してみた",
+      "url": "https://dev.classmethod.jp/articles/devops-agent-grafana-alert-webhook-slack/",
+      "description": "ECS FargateでセルフホストしたGrafanaのアラートから、公式の通知テンプレートでAWS DevOps Agentの調査を自動で起動し、結果をSlackに通知してみました。アラートの`summary`の書き方による調査の違いや、アラートが再発火したときの挙動も確認しました。",
+      "publishedAt": "2026-10-29T07:01:52.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "d40c1a45d07cb31e6acd520f814859bc87d2a19be5ea7c9ef6aff786497eab74",
+      "title": "AWS セキュリティハンズオン連続開催のご案内",
+      "url": "https://aws.amazon.com/jp/blogs/news/aws-security-handson-series/",
+      "description": "AWS Japan では、2026 年 11 月から、AWS のセキュリティサービスを実際に操作するオンラインハンズオンを週次で開催します。AWS Security Agent、AWS WAF、Amazon Inspector、フロンティアモデルを活用したソースコードの脆弱性対策などをテーマに、座学とハンズオンで、ご自身の組織で試すための最初の一歩までをお伝えします。本記事は、開催日程を随時更新する案内ページです。",
+      "publishedAt": "2026-10-29T06:39:47.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "ff64234300bb7c136ecb04634155f214aaf518fed5f2cd6fcf16bff1f52a9c52",
+      "title": "マイクロソフト、Windows・PC関連は2割減収　それでもクラウド好調で全社は2割増収",
+      "url": "https://japan.cnet.com/article/35254158/",
+      "description": "米Microsoftは10月28日（現地時間）、2026年7〜9月期（2027会計年度第1四半期）の決算を発表した。クラウド基盤「Azure」の売上高は前年同期比48％増だった一方、PCメーカー向けWindowsライセンスと自社製端末などの合計売上高は22％減少した。",
+      "publishedAt": "2026-10-29T06:20:00.000Z",
+      "feedName": "CNET Japan"
+    },
+    {
+      "id": "aff116b8f1f6d5d0cc9daf04c0cfb8392f4980692b5c425d52120dd60cd229b3",
+      "title": "ペンタセキュリティ、AI脅威にともない新たな防御基準「サイバーセキュリティ宣言」を発表",
+      "url": "https://enterprisezine.jp/news/detail/25395",
+      "description": "ペンタセキュリティは2026年10月28日、「サイバーセキュリティ宣言」を発表した。AI技術の発展にともない、サイバー脅威は高度化し予測が困難になっている。宣言はこうした脅威に対応するための新たな防...",
+      "publishedAt": "2026-10-29T05:40:00.000Z",
+      "feedName": "EnterpriseZine"
+    },
+    {
+      "id": "ffab33c595d298541e2b809bd87ceb608ac94a0e09de712a098e3712c0b13a38",
+      "title": "Claude Codeで「QAチーム」を組んだら、効いたのは「捨てる仕組み」だった ― AIだけが見つけた不具合・見逃しは？",
+      "url": "https://zenn.dev/sre_holdings/articles/d4acb079680a79",
+      "description": "SREホールディングス株式会社でプロジェクトマネージャ（PM）をしている鍋谷です。\n「AIにテストを手伝わせたい。でも、AIの『できました』はどこまで信用していいのか分からない」\nそんなモヤモヤ、あなたのチームにもありませんか？\n本記事では、Claude Code で「AIのQAチーム」を組み、社内の業務SaaSで1か月、手動の機能テストを回してみた結果として、AIだけが見つけた不具合、AIが見逃した不具合、そしてAIが自信満々に出してきた誤指摘をどう捨てたかを紹介します。\n\n 結論\n\nClaude Code のスキルとサブエージェントで「リーダー1・テスター複数・懐疑的な検証者」のQA...",
+      "publishedAt": "2026-10-29T05:00:29.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "b011454443320e5f0ad8c1c44017e89f592ab5693c8aa43f6f9c44eb27ed7902",
+      "title": "GitHub Actions で checkout@v7 のようなバージョン指定を書くのはやめよう！ 時代は actions.lock！",
+      "url": "https://zenn.dev/progate/articles/24b1140180300c",
+      "description": "Progate で業務委託エンジニアをしている横江( @yokoe24 )です！\nセキュリティの話が重要視される昨今ですが、\nみなさんは GitHub Actions の Workflow ファイルで、こんな書き方をしていませんか？\nsteps:\n  - uses: actions/checkout@v7\n・・・私は書いています！！🙈\nこの記事を書きながら、過去の個人リポジトリ、直さなきゃなぁ……って思っています。\n\n @v7 と書くリスク\nnpm の件などで敏感になっている方はお気付きかもしれませんが、\n@v7 のような書き方は、最新の v7.x.x に追従でき便利な一方[1]、\n攻撃...",
+      "publishedAt": "2026-10-29T03:48:15.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "91f85620027356ae9822e1c70c98b89da8b657150dde842087c64e9d283fc772",
+      "title": "PHP5.4 から PHP8.5へ",
+      "url": "https://zenn.dev/ctrlzr/articles/5a88eb939b3bfd",
+      "description": "PHP5.4で放置動かしていたサービスを、PHP8.5へ更新しました。\nPHPの脆弱性対策について\n\n システムの概要\n旧環境: CentOS 7 + PHP 5.4 + Apache\n新環境: php:8.5.12-apache-trixie\n\n 修正方針\n\n\nmysql_* は書き換えない（修正箇所が多いため）\nリファクタリングはしない\n\n\n 作業の流れ\n\nDockerイメージを更新\n\nmysql_ラッパーを追加\n埋め込み変数の書式を修正\nコンストラクタ追加\nデフォルトnullパラメータの書式を修正\n引用符なし文字列を引用符で囲む\ncsv系関数の引数を修正\ncurlのファイル送信にC...",
+      "publishedAt": "2026-10-29T02:37:00.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "f6286cc26f9d9481f034fa79a87315d756af2b752ed7954d7a7ba7eb7c4fd952",
+      "title": "パスキーはなぜ偽サイトに強い？登録とログインの流れを図で追う",
+      "url": "https://qiita.com/kuma_3838/items/1781531150821e2f0491?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\n弊社の代表から、セキュリティの高いログイン方式であるパスキーについて学んでほしい、と声がかかりました。セキュリティへの意識が高い会社として、取り組みを外にも伝えていきたいという話もありました。\n私はそれまで、パスキーの存在は知っていたものの、どういうものかを知り...",
+      "publishedAt": "2026-10-29T00:59:26.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "3073ce41d4e9fed487942eed7d6e0af35712532c33d0f87f49264e4b8642fdfe",
+      "title": "単体テストの本をデータ基盤チームで輪読会した話 - yasuhisa's blog",
+      "url": "https://www.yasuhisay.info/entry/2026/10/29/093840",
+      "description": "背景 課題感 解決策: チーム内の輪読会 前段階を整備する 進め方 輪読会を通じて得られた学び 輪読会をやってよかったこと 背景 データ基盤チームはSWE出身のメンバーだけでないことが多い アナリティクスエンジニアやアナリスト出身の人、PdMやマーケター出身の人など様々なバックグラウンドを持ったチームであることが...",
+      "publishedAt": "2026-10-29T00:52:08.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "d2cdc9b427472b3171c2b8da9202f919965b56ed4435329f35445e0ee5c00caa",
+      "title": "AIと結合テスト自動化で進める、具体と抽象の反復開発",
+      "url": "https://qiita.com/sc-sato/items/f92bcb49308a70633c59?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\nこんにちは。Shizen ConnectのSato Toshiakiです。\n組み込み開発では、実機や周辺機器との連携、通信状態も含めた確認が必要です。私はこの確認を開発中に繰り返し使えるツールにするため、結合テスト自動化フレームワークを構築して運用しています。\n...",
+      "publishedAt": "2026-10-29T00:42:04.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "6fd9a535765ab14dcb5d4c31b66e6a429f5299da73a1c1c11dac9c2bfd7a8ce9",
+      "title": "【Oracle】OAW2026 アプリケーションのセキュリティは、アプリケーションコードを書かずAPEXlangで守る",
+      "url": "https://qiita.com/nisshii0/items/d68f789f6c9f9b6307a7?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "「AI時代、信頼は後付けできない。アーキテクチャに組み込む」\n\nOracle AI World 2026にて発表\n2026年10月に開催されたDB Product Spotlightにて、Oracle Database Technologies担当エグゼクティブ・バイスプ...",
+      "publishedAt": "2026-10-28T22:15:00.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "1d3a7c97dfc7f4d047468fa978787f7a09e53f86d5519d8c026fe785bc324600",
+      "title": "研修中の僕がSlackに海外のIT情報を運ぶbotを作ったら、だいたい何が起きたか",
+      "url": "https://qiita.com/EricYu/items/147bf8e5fdb1b04f6d54?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "海外のIT情報を日本語要約つきでSlackに流すbotを、研修中に作って二ヶ月運用した。使ったのはTypeScript、GitHub Actions、Claude Haiku（Bedrock）で、月百円未満で動いている。この記事は、その構成の紹介が半分、「動くけれど読まれな...",
+      "publishedAt": "2026-10-28T02:44:24.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "c967fb19e3c273145c99309b712b4ffe6bbb699516e9de8adb86fd440eb9438a",
+      "title": "Claude Codeで半年分のレビュー指摘を分類してみた",
+      "url": "https://zenn.dev/port_inc/articles/a4bc3b39f44459",
+      "description": "はじめに\n新卒でエンジニアとして入社し、実務に入ってからレビューの指摘で手戻りが多く発生することに悩んでいました。\n一度受けた指摘は、今後のタスクで踏まないように気をつけることができます。しかし、実務に入ったばかりの段階では、自分が受けた指摘だけでは踏んでいない落とし穴に気づけず、手戻りを減らすのは難しい状況でした。\nそこで、これまで蓄積された他の人の PR レビュー指摘をまとめて振り返ってみることにしました。調べてみると、既存の書き方に揃っていない、テストが足りない、不要なコードなどといった指摘が、担当者や PR が違っても何度も出てきていました。\nこの記事では過去のレビュー指摘を...",
+      "publishedAt": "2026-10-28T01:00:06.000Z",
       "feedName": "Zenn"
     }
   ]
