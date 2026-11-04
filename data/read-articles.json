@@ -233,125 +233,6 @@
       "feedName": "Zenn"
     },
     {
-      "id": "86f020eb00f05e01555a862cb504ac4e27b57d25c2c115e1399d024891cfcb5f",
-      "title": "週刊生成AI with AWS – 2026/9/28週",
-      "url": "https://aws.amazon.com/jp/blogs/news/weekly-genai-20260928/",
-      "description": "週刊生成AI with AWS, 朝晩すっかり涼しくなった2026年9月28日週号 – オリックス様のAmazon Bedrock AgentCore GatewayによるPATPOSTのMCPサーバー化事例、日立産業制御ソリューションズ様とのKiroワークショップ、Kiro workflowsの紹介含む18件のブログ記事を紹介。サービスアップデートでは、Claude Sonnet 5.5・GPT-6.1 Sol・Grok 4.7のAWS提供開始、Amazon Bedrock Managed Agents, powered by OpenAIのプレビュー開始、AWS MCP Serverの東京リージョン対応含む25件を紹介。",
-      "publishedAt": "2026-10-05T04:42:37.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "bd188a96d1c9c8dafeb6d92114a5a367a484e524865e4da94e2e3386a919d5e3",
-      "title": "クラウド環境を最適化するための AI を活用したインテリジェンスである AWS Well-Architected Agent の発表 (プレビュー)",
-      "url": "https://aws.amazon.com/jp/blogs/news/announcing-aws-well-architected-agent-an-ai-powered-intelligence-to-optimize-your-cloud-environment-preview/",
-      "description": "2026 年 10 月 1 日、AWS Well-Architected Agent のパブリックプレビューを […]",
-      "publishedAt": "2026-10-05T04:37:13.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "ed97ba04139bd2727feeeeed631141ac662f4dc3dbf57432de064ec673202566",
-      "title": "AI 主導で office.js のモックライブラリを開発し、実際の E2E テストで使いながら育てた話",
-      "url": "https://tech.uzabase.com/entry/2026/10/05/133420",
-      "description": "こんにちは。株式会社ユーザベース スピーダ事業の沖です。 私のチームでは Excel アドインを開発しています。Excel アドインは、Web の技術（HTML / JavaScript）で作る Excel の拡張機能です。アドインから Excel を操作するには、Microsoft が提供する JavaScript ライブラリである office.js を読み込み、office.js が用意する Excel や CustomFunctions といったオブジェクトを通して操作します。 このアドインをテストするために、office.js をメモリ上で再現するモックライブラリを作り、プロダクトの…",
-      "publishedAt": "2026-10-05T04:34:20.000Z",
-      "feedName": "Uzabase for Engineers"
-    },
-    {
-      "id": "f87df043f6d617aa05d119db98c4e6308503d651ea8b994e7ec66485ee4143a3",
-      "title": "「JSConf JP 2026」11/22に開催、チケット販売中",
-      "url": "https://gihyo.jp/article/2026/10/jsconfjp-2026?utm_source=feed",
-      "description": "JavaScriptに関する年次カンファレンス「JSConf JP 2026」が、2026年11月22日（日）に東京、ベルサール神田で開催される。10月1日にチケット販売が開始されている。",
-      "publishedAt": "2026-10-05T02:57:00.000Z",
-      "feedName": "gihyo.jp"
-    },
-    {
-      "id": "d81967fa23514b741f9f7b25927067a3c66a193b027a62f9d7cabbe3b4c6c9c0",
-      "title": "正解のないKiro Skillsをチームでどう育てるか",
-      "url": "https://qiita.com/CEC_Cloud_Community/items/35b6df6caeda750d863a?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "はじめに\nこんにちは。株式会社シーイーシーのAWSコミュニティチームです。\n今回は、2026 Japan AWS Jr. Championsの長井崇文が執筆します。\nKiroは、AWSが提供するAIを活用した開発環境で、仕様の整理からコード、ドキュメント、テストの作成まで...",
-      "publishedAt": "2026-10-05T02:55:54.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "661583e9d906c6fedfa873d1522fd19028fc784874bc986f392d7b2137bf9e19",
-      "title": "みずほFG、自律型AIエージェント基盤「みずほCowork」を開発　業務適用に向けPoC開始",
-      "url": "https://enterprisezine.jp/news/detail/25226",
-      "description": "みずほフィナンシャルグループは2026年10月5日、自律型AIエージェント基盤「みずほCowork」を開発したと発表した。同基盤は、金融機関での利用に必要なセキュリティと統制を確保している。今後、専...",
-      "publishedAt": "2026-10-05T02:45:00.000Z",
-      "feedName": "EnterpriseZine"
-    },
-    {
-      "id": "fe12ca53d0ca0fc9d0ea61f2ffb13a27d2441ad211f9115ca111b588d1a02be8",
-      "title": "週刊AWS – 2026/9/28週",
-      "url": "https://aws.amazon.com/jp/blogs/news/aws-weekly-20260928/",
-      "description": "Amazon Route 53 Resolver DNS Firewall で Palo Alto Networks Advanced DNS Security が GA、AWS Backup の論理的エアギャップボールトが Amazon FSx for NetApp ONTAP に対応、OpenAI GPT-6.1 Sol が Amazon Bedrock で GA、Aurora PostgreSQL から Apache Iceberg / Parquet データを直接クエリ可能に、Amazon Aurora serverless のスケーリングが高速化、Amazon RDS で AMD ベースの M8a インスタンスをサポート、Amazon CloudWatch Logs で頻繁にクエリされるフィールドを自動インデックス化、AWS IAM Identity Center のマルチリージョンサポートの対象リージョンを拡大、AWS Health に version catalog 追加、AWS アカウントで電話番号の検証をサポート等",
-      "publishedAt": "2026-10-05T02:44:09.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "edbca6665c8d9130374c1655c8eca664775aa20d1e3030e26e212729dc5d54ca",
-      "title": "PR： AI特有の脅威・リスクにどう立ち向かう？　「CompTIA SecAI+」で身に付けるAI時代のセキュリティスキル",
-      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2610/06/news002.html",
-      "publishedAt": "2026-10-05T01:00:00.000Z",
-      "feedName": "＠IT"
-    },
-    {
-      "id": "1395c8f325d2afc3686fd0d84632d125c449f73a77d903b65c6ab78fbbdb5ce5",
-      "title": "「実装に問題が無いか調査して」は意味が無い?　AIレビューが空振りする理由と効果的な指示のテンプレ",
-      "url": "https://qiita.com/nolanlover0527/items/2e4e3322c5c36545a246?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "はじめに\nAIに実装を任せたあと、とりあえずこう投げていませんか。\n\n「あなたが実装した内容が問題ないか調査して」\n\nこのあと返ってくるのは、たいてい丁寧な報告です。\n\n「確認しました。大きな問題は見当たりません」\n\n安心してマージしたら、テスト環境や本番でエラーが発生....",
-      "publishedAt": "2026-10-04T23:53:12.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "62a8f92f956fd1cbed9d29420dba262ea5307da14f368d91d882b646232f1c03",
-      "title": "AWS ベースの EDA 環境で Rebellions の次世代 AI NPU 開発を加速する",
-      "url": "https://aws.amazon.com/jp/blogs/news/rebellions-eda-aws/",
-      "description": "Rebellions は EDA ツールの実行時間というボトルネックを解消して設計開発全般の生産性をさらに高めるため、実際の NPU 開発ワークロードに基づいて AWS 環境における EDA の性能と拡張性を検証しました。本記事では AWS ParallelCluster と Amazon FSx を活用した EDA 環境の構成とともに、Logic Simulation、DFT、Physical Design の各ワークロードで確認した性能改善の結果を紹介します。",
-      "publishedAt": "2026-10-04T22:57:17.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "5bf088ef7c3190f210ca25e46877afee878728b99a1342283fa609cc1bd7d4d2",
-      "title": "本誌記者も参加、「生物学的年齢」の若返りを競うコンテスト",
-      "url": "https://www.technologyreview.jp/s/392113/a-new-contest-pits-competitors-against-each-other-in-a-race-to-biological-youth/",
-      "description": "最近40歳になったばかりの記者が申し込んだコンテストで問われるのは暦年齢ではなく、臓器や身体の加齢の状態を測る生物学的年齢だ。最終的に約500人が参加する見込みで、6カ月かけて、さまざまな指標で測る生物学的年齢の若返りを目指す。ただ、老化時計はまだ個人の生物学的年齢を推定できるほど精度が高くない。",
-      "publishedAt": "2026-10-04T21:25:05.000Z",
-      "feedName": "MITテクノロジーレビュー"
-    },
-    {
-      "id": "aa6ffa255bf895d30102251679958ac2c5177ed87a733789b54c56be125c99f0",
-      "title": "Claude Codeの「Claude Mods」とは？ 入れてみた3つのmodと、安全に入れる手順",
-      "url": "https://zenn.dev/yoshihiko555/articles/ea2db6070058b3",
-      "description": "Claude Modsは、Claude Codeの公式の拡張の仕組みだ。Claude Codeの中で動くTypeScript（またはJavaScript）の関数で、画面にペインを足したり、プロンプトやツール呼び出しを書き換えたりできる。2026年10月1日（米国時間）のv2.1.287で正式にリリースされた（公式ブログ、リリースノート）。\n私は発表の数日後に、公開されているmodを3つ入れた。この記事では、modsでできること、入れた3つのmodの使い方、入れる前に中身を確かめる手順を順に書く。\n先に結論を書く。\n\nmodsはpluginに入れて配られる。入れて使うだけならTypeScr...",
-      "publishedAt": "2026-10-04T17:22:57.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "d863376511a02beaee070e6162a4264c433e8c1f9712183f33681adabc871d0a",
-      "title": "Redisでポケモン図鑑のAPI呼び出しをキャッシュしたら、1000件取得が5.29秒から0.64秒になった【React/Hono/PokéAPI/Redis/Docker】",
-      "url": "https://qiita.com/keikeigo/items/160eb2d62d294a07f573?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "はじめに\nRedis、キャッシュの理解を目的に、ポケモン図鑑を作りました！\nその過程で気づいたことや困ったことを紹介します。\n↓今回作成したアプリのリポジトリ\n\n作ったもの\n\nポケモン図鑑\n\n1000匹のポケモンを検索、表示することができます！\n\n技術スタック\n\nR...",
-      "publishedAt": "2026-10-04T13:30:25.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "aa886686ef1dc3f7e4e48a2bbe8977b539ac46aaa3d806077cf53986c9bb3ec1",
-      "title": "[アップデート] AWS Security Agent の PR 自動レビューが対象ブランチやラベルで絞れるようになりました",
-      "url": "https://dev.classmethod.jp/articles/security-agent-pr-review-condition/",
-      "description": "今までは対象リポジトリであれば全部対象だった",
-      "publishedAt": "2026-10-04T10:49:55.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "7277035ca7aedde1ebf6e40e1f1cc0bcdf066f2a488c8298e9648eb5b8550019",
-      "title": "JSONはシンプルで明快な仕様が魅力ですが、そんなJSONでも微妙な実装差異が生じる罠がいくつかあります。本稿はこうした機微を実装の比較を通",
-      "url": "https://zenn.dev/qnighy/articles/json-ambiguity",
-      "description": "タイトルは「JSONはシンプルで明快な仕様が魅力ですが、そんなJSONでも微妙な実装差異が生じる罠がいくつかあります。本稿はこうした機微を実装の比較を通じて明らかにします。」です。\n\n JSON とは\nJSON (JavaScript Object Notation) はテキストベースでスキーマレスな、構造化されたデータ交換用フォーマットです。\nJavaScript の Expression 構文のサブセットとなることを意識して作られているため、この名前があります。\n\n JSON の仕様\nJSON はインターネット標準と産業標準の2つの形で標準化されています。\n\nインターネット標準として...",
-      "publishedAt": "2026-10-04T08:18:23.000Z",
-      "feedName": "Zenn"
-    },
-    {
       "id": "84bd5f73790e191bf3ffb7d76fc7f603ef2ecccdac4eabf47409d425d27c2df7",
       "title": "Gomponents v1.4.0 Released: Performance Boosts and New Feature for Go HTML Component Library",
       "url": "https://dev.to/viklogix/gomponents-v140-released-performance-boosts-and-new-feature-for-go-html-component-library-40i6",
@@ -6743,6 +6624,300 @@
       "description": "理解していないAIのコードを出してよいのか、開発者がHacker Newsで議論 10月19日、Hacker Newsに「理解していないAIのコードをリリースすることに、どう向き合えばいいか」という投稿が立ちました。コメントでは、全体の流れは分かっても細部を把握できないことや、AIがコードとテストの両方を書いたときの見逃しが話題...",
       "publishedAt": "2026-11-01T04:48:57.000Z",
       "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "310253948f21b446a3439946ead16068f4ffafa65b188e6f19fe8f13235e3886",
+      "title": "One Image for Every OnePassApps Link: What the Open Graph and Twitter Card Tags Say",
+      "url": "https://dev.to/onepassapps/one-image-for-every-onepassapps-link-what-the-open-graph-and-twitter-card-tags-say-khm",
+      "description": "I work on OnePassApps, so this is our own site, and everything below is a measurement of our own public pages - fetched and decoded, not a guess.\nWhen you paste a link to app.onepassapps.com into a chat app, a document, or a social post, what a reader sees before they click is not the page. It is a preview: a title, a line of description, and one image. That preview is built from tags in the page's <head>, and it is a layer of the site that almost nobody looks at.\nSo I looked at it. Sixteen public URLs, fetched one by one, and the preview image itself decoded pixel by pixel.\nHow this was measured: plain HTTPS GETs with a browser User-Agent - no JavaScript, no browser tab, no sign-in - one request per URL in the sitemap. For each page I read the Open Graph and Twitter card tags out of the <head>. The preview image was then downloaded and its PNG chunks decoded locally (IHDR for the header, then zlib-inflate and un-filter the scanlines), so the colours below are the file's own bytes rather than a browser's rendering of it.\nAll sixteen pages point at the same preview file:\nhttps://app.onepassapps.com/og-image.png\n\nIt answers 200 with image/png, 42,818 bytes, 1200 by 630 pixels, 8-bit truecolour with no alpha channel, not interlaced.\nDecode it and it is a single composition: a near-black background at #0B0D0F, a teal circle at #00E5D0 holding the robot mark, the wordmark \"OnePassApps\" in off-white #F8F5EF, and the line \"Useful apps, one membership\" underneath in grey #A3A3A3.\nThe same file backs every one of the sixteen URLs. The title and the description change from page to page; the picture never does. So a reader scrolling a chat thread sees the OnePassApps card over and over, and the only thing that tells two links apart is the line of text under it.\nPer page, on all sixteen:\nog:title matches the page's <title>, and twitter:title matches it too.\nog:description and twitter:description are both the page's meta description, word for word.\nog:url is the page's own URL, matching its canonical exactly.\nog:type is website, og:locale is en_GB, og:site_name is OnePassApps.\nog:image and og:image:secure_url are the same absolute URL, og:image:type is image/png, og:image:width is 1200, og:image:height is 630.\ntwitter:card is summary_large_image, twitter:url is the page's own URL, twitter:image is the same PNG.\nTwo things in that list are worth pulling out.\nThe alt text is the same on every page. og:image:alt reads \"OnePassApps — Useful apps, one membership\" on all sixteen pages, and twitter:image:alt repeats it. The alt describes the card, not the page it stands in for. That is a deliberate-looking choice - the card is the brand, so the brand's name and line is the honest description - but it does mean a screen reader hears the same sentence whatever it is announcing.\nNo account is attached to the card. There is no twitter:site and no twitter:creator on any of the sixteen pages. The card renders and it is unattributed: no handle, no account name, nothing for a reader to follow back to. If you are building a preview and want the card to name the account, that tag is where it goes.\nog:type is website on all sixteen pages - including the seven studios and the two hosted apps. The structured data on those same pages calls them WebApplication nodes, with applicationCategory values of UtilitiesApplication, ReferenceApplication and EntertainmentApplication, and a featureList naming each studio's tools.\nSo the JSON-LD says \"this is an app\" and the Open Graph says \"this is a website\", on the same URL, on the same request. Both are defensible in their own vocabulary, but if you are deciding how to render a preview, the JSON-LD is the richer description.\n/privacy is a 301 whose Location header is /terms#privacy. The privacy notice is a section of the terms document, not a page of its own, and a fragment is never sent to the server - so /terms is served identically either way.\n/support answers 200 and is linked from the home page, and it is the one page on the site that asks crawlers to stay away: its robots tag reads noindex, nofollow. It carries no canonical tag and no structured data block at all. A reader who clicks it gets a support and feedback page - \"Create and follow support requests and product feedback for OnePassApps.\" - while a crawler is told there is nothing here to index.\nBoth guide pages end with a \"Common questions\" section - the NewsFlow guide asks three of them, about listening without an account, about whether every story from a source is included, and about what it costs.\nNone of that is marked up as structured data. The JSON-LD on both guide pages is the same four nodes - Organization, WebSite, WebPage, BreadcrumbList - with no FAQPage and no QAPage anywhere in the document. The questions are in the page as headings and paragraphs; they are not in the page as questions and answers a search engine can quote.\ncurl -s https://app.onepassapps.com/studios/image | grep -o '<meta property=\"og:[^>]*>'\ncurl -s https://app.onepassapps.com/studios/image | grep -o '<meta name=\"twitter:[^>]*>'\ncurl -s https://app.onepassapps.com/og-image.png -o card.png && file card.png\n\nNo login, no uploads, nothing to install - the same browser tools the guides walk through, described in one page each. Start with the Image Studio, or browse the app guides.\nDisclosure again: I work on OnePassApps, the team behind app.onepassapps.com.",
+      "publishedAt": "2026-11-04T04:46:03.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "39b4b2fb8882ebacfca8e4c29c74369b26026db5fc97e79c098ea9bb0165b176",
+      "title": "One documentation site from five sources",
+      "url": "https://dev.to/474443481/one-documentation-site-from-five-sources-16eh",
+      "description": "If your repository mixes languages, you almost certainly ship four kinds of documentation that four different tools generate: the HTTP API reference from OpenAPI, the C and C++ pages from Doxygen, Go and Rust pages from godoc and rustdoc, and the guides sitting in a Markdown folder that every tool renders differently. Each generator brings its own theme, its own search, and its own idea of where output belongs.\nThe fix is boring and effective: treat documentation as a build artifact. Leave every source where it already lives, then run a single build that turns all of them into one static site.\nStatic HTML has three properties that matter in 2026. It hosts anywhere: a bucket, a CDN, a small VPS, or a folder inside the repo. It needs no runtime, so it cannot rot when a server dependency breaks. And it can be read by anything, including the agents people now point at documentation.\nA single build matters because readers do not care which generator produced which page. They want one search box, one navigation tree, one place where the version number is correct. If the API reference says 2.4.0 and the guide says 2.3.1, trust is gone.\nA realistic project needs at least three of these sources:\nOpenAPI or Swagger definitions for the HTTP API.\nDoxygen XML for C and C++ code.\ngodoc for Go packages.\nrustdoc for Rust crates.\nMarkdown for guides, tutorials, and changelogs.\nMCP server definitions, if the project exposes tools to agents.\nEach source already has a canonical extractor. Doxygen parses C and C++ comments into XML. godoc reads Go doc comments. rustdoc ships with cargo. OpenAPI is a YAML file. The only real decision is what renders the final site.\nDoxygen plus a theme is still the standard for C and C++, and it now emits usable HTML on its own. Sphinx owns the Python world and handles Markdown through MyST. MkDocs with Material is the default for Markdown-first projects and is easy to wire into CI. Redoc and Swagger UI render OpenAPI well but stop there; they do not know about the rest of your documentation.\nThere is also a newer option worth a look: Sourcey, a free, self hosted documentation generator that takes OpenAPI, MCP, Doxygen, godoc, rustdoc, and Markdown in the same build and outputs static HTML. It is AGPL-3.0, installs with npx sourcey init, needs Node 22 or newer, and ships four themes with custom CSS. The detail I care about is that the same build also emits llms.txt, OpenAPI, and API catalogs, so agent facing readers get machine readable versions without a second pipeline. You can see the engine at https://sourcey.com/docs and the source at github.com/sourcey/sourcey.\nKeep sources under docs/ and let the build own build/site:\ndocs/\n  guides/*.md\n  openapi.yaml\n  doxygen/Doxyfile\nsrc/                # godoc and rustdoc read from here\n\nA CI job runs the extractors first, then the site build, then deploys build/site to your host. Cache the extractor outputs; Doxygen on a large C++ tree is the slow step, and it does not need to rerun when only a guide changed.\nTwo rules keep this honest. First, the version string comes from one file, not from prose. Second, a broken link fails the build, not the reader's afternoon.\nClient side search over static files works fine up to a few thousand pages. Past that, prebuild the index at build time and ship it as a static asset.\nThe agent question is newer. If your product exposes an MCP server or an API that agents call, your docs are part of the interface. Agents do not click; they fetch. Serving llms.txt, a clean OpenAPI file, and plain HTML without JavaScript requirements costs almost nothing and removes a whole class of failures. A documentation build that emits these by default saves you from bolting them on later.\nPick the one build that already understands your largest source. Add the other sources one at a time. Deploy the static output somewhere boring. Then spend the remaining time on the guides, because the generator was never the hard part.\nDocumentation is a product surface. Treat the build like code: versioned, tested, deployed on every merge. The rest is details.",
+      "publishedAt": "2026-11-04T04:45:53.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "7a114f832fe86688383663f3d71a3707da4035c34a23ac23a5938f139e61056e",
+      "title": "When Programmatic SEO Works (and 3 Signs It Won't)",
+      "url": "https://dev.to/growganic/when-programmatic-seo-works-and-3-signs-it-wont-3ia4",
+      "description": "When programmatic SEO works, it turns a spreadsheet of structured data into thousands of ranking pages that attract real search traffic, without a content team. But the line between a traffic engine and a domain-burning liability is thinner than most founders think. If you get the data, the demand, or the template wrong, you don't break even, you go backwards.\nThis guide walks through exactly what makes programmatic SEO tick, the three project types that actually work, and the validation steps most people skip. GrowGanic's autonomous pipeline solves the scaling part; the thinking behind it is laid out here.\nYou have a database. You have real search demand. The template you build can create unique, useful pages at scale. Those three conditions must all be true. Miss one, and you're generating digital noise, not assets.\nPut plainly, the strategy fails without scalable data, clear intent, and validated keyword patterns. seoClarity drives the point further, long-tail pages built from thin data become dead weight the moment Google's quality thresholds tighten.\nIt's permanent. You can't easily recall 10,000 pages once they're indexed. If they're low-quality, you've polluted your own site. Google's classifiers don't forget. Each one dragged down the average, and the domain never recovered.\nThat's why we designed GrowGanic's scoring engine to flag thin pages before they ever touch a CMS. The gates aren't magic, they're just the same checks a decent editor would run. But they run every time, on every page, without exceptions.\nProgrammatic SEO creates many SEO-optimized pages at once from existing data and pre-programmed rules. That's the definition Zapier's own team published, and it holds. It's not a trick. It's not black-hat. It's just a systematic way to build pages when the data already lives somewhere else.\nThink of Zapier's \"Connect X to Y\" pages. Airbnb's city-level listings. Tripadvisor's destination guides. Indeed's job pages. Each one comes from a database. Each one targets a search term that real people type. That's the pattern.\nThe opposite is thin affiliate spam: pages with zero original data, stitched together with synonyms, hoping to rank for \"best [x] in [y]\" without any human having reviewed the thing. Programmatic SEO succeeds when every page has at least one genuine atomic fact that exists nowhere else in that exact combination. For more on that, we've written a full breakdown in What Is Programmatic SEO? The Founder's Guide to Scaling Pages. (yes)\nIt's a scalability play, not a revenue shortcut. If you can export your data to a spreadsheet with consistent columns, you have the raw material. The columns become the variables. The page becomes the output.\nMangools defines it similarly: an automated or semi-automated approach that can target thousands of pages. The key is that automation doesn't strip away the usefulness. Every page must solve a real searcher problem.\nNot all programmatic pages are created equal. We group them into three categories based on the data and intent they serve. The distinction matters because each type needs a different template design and a different validation check.\n\n\n\nType\nData Source\nSearch Intent\nReal-World Example\n\n\n\n\nLocation-based\nGeographic coordinates, service areas, local NAP\n\"dentist in Austin\", transactional, high local intent\nA dental chain's city pages\n\n\nEntity-combination\nProduct features, category lists, comparison logic\n\"best CRM for real estate agents\", comparison or recommendation\nA SaaS comparison site\n\n\nTemplate-driven resource\nStructured steps, integration lists, job databases\n\"how to connect X to Y\", how-to or transactional\nZapier's integration pages\n\n\n\nSeothe research backs this: location pages and product variations are the most common winners because the data is naturally rich. The danger zone lies with entity-combination pages where the template assumes a comparison is helpful but the searcher wants a table, not a narrative.\nYou need clean, accurate NAP data for every location. You need a template that generates unique content by pulling in nearby landmarks, local testimonials, or service variations. If your template just swaps the city name, you've built a penalty magnet.\nLocal SEO tools handle this well. GrowGanic isn't the best for pure local play, we don't auto-build citations. But if your location pages also serve as content hubs with neighborhood guides, we can generate the supporting content that makes those pages distinctive.\nEntity-combination pages thrive when you have a comparison rubric and unique data points per pair. For example, a CRM comparison page for real estate agents should cite actual feature differences, pricing, and user reviews, not just a templated sentence saying \"X is a great CRM for Y.\"\nWe built GrowGanic's proprietary content generation to handle this. The engine pulls live research and fact-grounds every claim. That means a \"best CRM for real estate agents\" page gets real data, not filler. It's not a script swapping words, it's a pipeline that treats each page like a standalone article.\nThis is a sequence. Each step depends on the one before it, so we're putting it in order.\n Audit your existing data. Do you have a database of locations, products, services, or integrations? If not, programmatic SEO probably isn't your first move. Start by building the asset that generates that data.\n Validate search demand. Run keyword research on the pattern. \"Best [tool] for [industry]\" must show search volume and clear intent. Ahrefs' tools can surface these patterns quickly.\n Define the template. Map the data fields to the page structure. What stays the same? What changes? The template must allow enough variation to keep the pages distinct.\n Build the generation pipeline. This could be a custom script, a CMS plugin, or an autonomous engine like GrowGanic. The pipeline handles the research, generation, optimization, and publishing in one loop.\n Monitor and iterate. Track rankings, clicks, and conversions. When a page underperforms, adjust the data or the template. This is not a set-it-and-forget-it strategy, it's an asset that needs maintenance.\nWe automated steps 2 through 5 inside GrowGanic's pipeline. You feed the domain, and the engine discovers demand patterns, generates unique pages, scores them for quality, and ships them to your CMS. If you're a solo founder with no time for manual monitoring, the fully autonomous SEO engine guide spells out the whole loop.\nNo. The entire method rests on structured data. If your data is just a list of ideas, you're not doing programmatic SEO, you're doing mass content creation, and that rarely ends well. The database is what gives each page a unique reason to exist.\nThey treat them exactly like any other page. If the content is thin, duplicate, or irrelevant, they ignore it or penalize it. Google's guidelines are clear: generate pages for users, not search engines. The scale doesn't matter. The value per page does. Search Engine Journal has a strong breakdown of the crawl budget and indexing behavior.\nYou can't fix zero-search-volume pages later. They're dead on arrival. So the validation step is non-negotiable.\nLook for patterns with long-tail modifiers and clear modifiers, location, industry, use case. \"CRM for real estate agents\" is strong. \"CRM for happiness\" is not. The pattern must match a real user query. Moz emphasizes the importance of clustering keywords that share the same template skeleton.\nOur on-page SEO checklist covers the template requirements in detail. Everything from title tag structure to internal linking matters more when machines write the pages, because no human editor is there to catch the drift.\nWe won't publish the gate architecture, that's the moat. But we can describe what the pipeline does at a high level.\nFor location pages, the mechanism layers geographic data with service descriptions and local schema markup. The engine draws from location-specific cues so no two pages read identically.\nFor entity-combination pages, the engine extracts entities, constructs a comparison logic path, and anchors every claim in a cited fact. Search Engine Land has covered similar approaches. The critical piece is avoiding the trap where every comparison page says the same thing with different nouns.\nFor template-driven resource pages, the engine fills in the blanks from a structured database and auto-links to related resources. Every page gets internal links that strengthen the cluster.\nA common failure mode is generating pages that look identical to Google's classifiers. Even if the text varies slightly, the structural fingerprint can flag them. That's why our scoring engine evaluates Google readiness and AI-search readiness in a single pass. The same template that ranks well on Google also needs to be cited by generative engines.\nEntity-combination pages require the deepest research. The model has to understand that \"best CRM for real estate agents\" implies a comparison of CRM features against the specific workflows of agents. That's not a simple substitution. It's a reasoning step, and most generic AI content fails it. We wrote about that in Why AI Content Doesn't Rank (And the Fix Everyone Missed).\nThe most common mistake is building pages for patterns with zero search volume. A subtler trap, and the one that kills sites, is using a template that produces pages with 80% identical content. Google's thin-content thresholds don't care that you meant well.\nThe most expensive failure is intent mismatch. Searchers want a comparison table, but the page gives them a 2,000-word listicle. They bounce. Google notices. Rankings tank.\nThe template was essentially \"[City] dentist\" with swapped city names and no original content. Another case: 500 product comparison pages with unique review snippets and side-by-side specs ranked within 90 days. The difference was the atomic facts per page.\nThere is another layer: even valid data and demand aren't enough if the page doesn't earn links. Without links, the pages exist in a crawl budget black hole. That's the infrastructure problem we built GrowGanic to route around, the engine publishes and auto-refreshes pages as SERPs shift. But outbound link building stays manual.\nIf your template produces a carbon copy of an existing H1, you're competing on identical signals with worse authority. You lose every time.\nThe fix is brutal: you kill the pages that don't rank within three months. We bake that into our auto-refresh loop: if a keyword drops, the article re-optimizes itself. If it fails to recover, the cycle ends. No sentimental attachment.\nThis article was researched, written and published by GrowGanic, which does the same on a business's own site: it picks the searches the business can win, writes the articles and publishes them on WordPress, Shopify, HubSpot or a hosted blog. The first article is free at growganic.io.",
+      "publishedAt": "2026-11-04T04:41:25.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "28e9b50549479a517156907f70aa48616c66be0d62515194a30929a9e1d9ef91",
+      "title": "権限は「誰に渡すか」ではなく「何をするか」で分ける 〜AWS IAM Identity Centerの許可セットを5種類に揃えた話〜 - Findy Tech Blog",
+      "url": "https://tech.findy.co.jp/entry/2026/11/04/070000",
+      "description": "こんにちは。 CTO室/Platform開発チームでSREを担当している富田(@Cooking_ENG)です。 ファインディでは、プロダクトごとにAWSアカウントを分け、AWS IAM Identity Center（以降、Identity Center）で各AWSアカウントへのサインインと権限を管理しています。AWSアカウントが増えても、サインイン方法を意識する必要はあ...",
+      "publishedAt": "2026-11-04T02:48:34.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "b1f8de7ef963f347d7840d8055acc3284589a544de7a26fbcf228c6e56450d96",
+      "title": "なぜEDRを入れても大規模サイバー攻撃被害を防げないのか？低アラートに潜む組織の運用課題を洗いだせ",
+      "url": "https://enterprisezine.jp/article/detail/25129",
+      "description": "近年、アサヒグループやアスクル、ニチレイのような大企業を狙うサイバー攻撃が高度化・巧妙化する中、エンドポイントを守る最後の砦といえるEDR（Endpoint Detection and Response）の重要性はますます高まっている。一方、ツールを導入しただけでは検知後の調査、優先順位付け、端末隔離を迅速に進められるとは限らない。外部のセキュリティ運用支援サービスを活用する場合も、責任分界やエスカレーション、改善の仕組みが曖昧であれば、防御力を十分に引き出すことは難しい。求められるのは、ライセンス価格や外部支援の費用だけでなく、運用工数、教育、インシデント対応まで含めたTCOの視点と、組織が主体的に運用を改善しつづける体制だ。本記事では、クラウドネイティブ社の吉田浩和氏へのインタビューを通じ、「Microsoft Defender for Endpoint P2」を活用したEDR運用の最適化と、外部の知見を生かして自社の防御力を高める考え方について探る。",
+      "publishedAt": "2026-11-04T01:00:00.000Z",
+      "feedName": "EnterpriseZine"
+    },
+    {
+      "id": "90415fbff4d5ff75fb05ce152fb0506435df9ea2858fb2c3ca15bb6ec10e03c9",
+      "title": "PR： 【Q&Aで解説】Windows Server 2016のEOSに「Azure Arc」で備えるアプローチとは？",
+      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2611/04/news006.html",
+      "description": "2027年1月に延長サポートが終了するWindows Server 2016。Azure Arcでオンプレミスとクラウドのサーバを一元的に可視化して管理し、AI基盤の整備につなげる方法を、Q&A形式で解説します。",
+      "publishedAt": "2026-11-04T01:00:00.000Z",
+      "feedName": "＠IT"
+    },
+    {
+      "id": "36eda49e1f3c6bdb20ac2ddacbce727ab42f5b5838f9c682d9ac03b1334486ad",
+      "title": "AWS WAF は Websocket 通信をサポートしますか",
+      "url": "https://dev.classmethod.jp/articles/waf-websocket/",
+      "description": "AWS WAFがWebsocket通信に対応しているのかについて、その仕様と実際の動作を詳しく解説します。",
+      "publishedAt": "2026-11-04T00:08:33.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "d49f0ad102db4740c70f3131706390cdcc9397474528f5aeb9d2e7f2e2db962f",
+      "title": "2026年10月にリリースされたSnowflakeの新機能・変更点のまとめ #SnowflakeDB",
+      "url": "https://dev.classmethod.jp/articles/snowflake-latest-info-202610/",
+      "description": "2026年10月にリリースされたSnowflakeの新機能・変更点を、セキュリティアドバイザリから最新機能まで幅広くピックアップしました。AI機能の拡充、Icebergテーブルの強化、そしてガバナンス面での充実を中心とした内容になっています。",
+      "publishedAt": "2026-11-04T00:07:26.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "b8ce16ced9048d5667fed5fd521f793736c29ca00a6b128e844656d71e25c3c0",
+      "title": "「思い出すと震える」悪夢のランサムウェア攻撃、被害からの回復、そしてセキュリティ企業の立ち上げへ――その生々しい経緯をCyber Governance Labの達城利元社長が語る【Security Days Fall 2026】",
+      "url": "https://internet.watch.impress.co.jp/docs/event/2152285.html",
+      "publishedAt": "2026-11-03T23:11:56.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "75ae1e654e4c8c362766d33f8b120b08f9b9f0a255d1b4b20e2b1dd5cc4457a1",
+      "title": "レッドハット、フロンティアAI時代の脆弱性対策を発表──IBMと共同のOSS修正パッチサービス「Lightwell」の役割とは",
+      "url": "https://enterprisezine.jp/news/detail/25414",
+      "description": "レッドハット株式会社 代表取締役社長 三浦 美穂氏\n\n\n　レッドハットは2026年10月29日、東京都内で記者説明会を開き、AIによる脆弱性の発見と悪用が加速するなかでの企業のセキュリティ対策を説明し...",
+      "publishedAt": "2026-11-03T23:00:00.000Z",
+      "feedName": "EnterpriseZine"
+    },
+    {
+      "id": "710f25b27517b324d263485774862b73aeabd7f49e9682b4f0c695ddaa4f691b",
+      "title": "「フックではもう物足りない」　Claude Codeの動作を自分で変える「mod」でどこまでできる？",
+      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2611/04/news024.html",
+      "description": "Anthropicは、AIコーディングツール「Claude Code」の動作を変更できるTypeScriptコード「mod」を発表した。プロンプトの書き換えやUIの追加、組み込み機能の置き換えができる。",
+      "publishedAt": "2026-11-03T22:45:00.000Z",
+      "feedName": "＠IT"
+    },
+    {
+      "id": "463231f81d44f862bae0c25e6cfa83ad4743ff78439b27e728961cb2c7a11768",
+      "title": "2026 年 10 月の AWS テクニカルサポートノートまとめ",
+      "url": "https://dev.classmethod.jp/articles/summary-of-aws-technical-support-notes-for-october-2026/",
+      "publishedAt": "2026-11-03T22:38:03.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "8e8f5b72cdd855879d186d2b716bb75a7e6c3342d30297a92401119f9b1f9fdc",
+      "title": "2026年10月くらいのAWS最新情報ブログとかをキャッチアップする – AWSトレンドチェック勉強会用資料",
+      "url": "https://dev.classmethod.jp/articles/aws-trendcheck-202610/",
+      "description": "AWSの最新情報や私の独断と偏見で面白いと感じたブログをまとめています。みんなでトレンディになろう。",
+      "publishedAt": "2026-11-03T22:10:29.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "dc97f29f55bc0624e3eef9912e75494aadf58c7f8368c96f4488f7419c65283c",
+      "title": "E2Eテスト大全（あなたの知らない、E2Eテスト周辺の理論） - 若くない何かの悩み",
+      "url": "https://blog.kuniwak.com/entry/e2ebok",
+      "description": "目次 前置き 独自用語の整理と拡張について E2Eテストの境界と定義 UIテストとの概念的な差異 UIを操作しないE2Eテスト E2Eテストで検知可能な欠陥 正当性違反 妥当性違反 E2Eテストの利点 単体テストでは検知できない結合バグの検出 高い忠実度 内部設計への非依存性 E2Eテストの欠点と数理的制約 実行コストの高さ 保...",
+      "publishedAt": "2026-11-03T21:27:17.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "ae1e2e8b6ef07ef7a636c95e18b938fababc8bc9ce0c7d3c776b2d58dbac9802",
+      "title": "アダルト動画サイトに組み込まれた情報窃取スクリプト群を追う - Weekend Researcher Tsurezure Diary",
+      "url": "https://disconinja.hatenablog.com/entry/2026/11/03/230647",
+      "description": "要約 rivo.vinの名称を表示するアダルト動画サイトのHTMLに、非表示iframeとJavaScriptを動的に追加するコードを確認しました。収集したHTMLそのものには、3件の非表示iframeと5件の外部scriptを追加するローダーが存在しました。その後に改めて確認すると、メインページと2つのiframeで、当初の静的HTMLの一覧に加えてm...",
+      "publishedAt": "2026-11-03T17:23:01.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "5888e9e8997b2e36eda01a5b40ca0fdff91988243a580df5fdd4dd754bb208dc",
+      "title": "テストする側から創る側になって気づいたこと - 初めてSlackBotを制作した話",
+      "url": "https://qiita.com/Mihyang_Cho/items/498e916f68ea91b977c8?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\nGENEROSITYでは今年8月から、全社的な文化づくりの一環として、社員同士が日頃の感謝や尊敬の気持ちをメッセージで送り合うチャンネルが開設されました。\nQAエンジニアである私は、この仕組みの設計・開発を進める過程で、開発メンバーの視点や現場のリアルを身をもっ...",
+      "publishedAt": "2026-11-03T15:07:38.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "1238e11f2839c1a5d4c6ca7a097bdc23529cb2336e08ca6cb5b339dfeab6560c",
+      "title": "プロダクト検証基盤の整備に向けてテスト工程を支えるスキルを作成した",
+      "url": "https://qiita.com/Mihyang_Cho/items/dfa26f98b73326734943?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\nGENEROSITYに入社して、早いもので約1年が経ちました。\n仕事では主に品質マネジメントシステム（QMS）の運用管理と改善を中心に行っていました。また、プロダクトの検証基盤を強化の一環として、テスト工程における課題の調査や、より効率的にテストを進めるための仕...",
+      "publishedAt": "2026-11-03T15:06:48.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "96fe1a9004711e4d7696e9451f5a030695768015ff50f09b9570f9304cd2f68d",
+      "title": "Claude Code でグラレコ風の「AWS構成管理 できることマップ」を作ってみた",
+      "url": "https://qiita.com/j_mori/items/98b075700d059b713aae?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\nこんにちは、mori (@morimori) です。\n皆さん、AWS Config と AWS CloudTrail を使いこなせていますか？\n私は正直、「何かあったときのために、とりあえず設定しておくもの」くらいの認識でした。そんな中、とあるお客様から「構成管...",
+      "publishedAt": "2026-11-03T15:02:51.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "21463e07cba5fd704b5a2381bdcd80725494512a395067fcd6d67066a162f677",
+      "title": "[AWS]日本語OCRがついにきちゃー！ ~Textractにいろいろ読ませてみた~",
+      "url": "https://qiita.com/kikuziro/items/9aff0fefe89cfa13192e?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "📣 はじめに\n2026年11月2日にAWSのAmazon Textract（OCRしてくれるやつ）が日本語に対応して東京リージョンでも使えるようになりました。以下記事がとてもわかりやすいので是非ご参照ください。\n\nこの記事ではいろんな画像をTextractに読ま...",
+      "publishedAt": "2026-11-03T13:54:09.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "c0c5c363597748bae17fa21ebf177cee0b341940d6fab923c227a3c743b52a9c",
+      "title": "GitHubが従来比180倍のスループット性能向上を実現へ、来年初頭に。AIエージェント時代に対応。GitHub Universe 2026",
+      "url": "https://www.publickey1.jp/blog/26/github180aigithub_universe_2026.html",
+      "description": "GitHubは、米サンフランシスコで10月28日と29日の2日間開催した年次イベント「GitHub Universe 2026」で、AIエージェント時代に対応した大幅な性能向上を実現することを明らかにしました。 性能向上はGitHubの基盤をMicrosoft Azureへ移行し、コンピュートとストレージを分離する新アーキテクチャの採用と、ロックをリポ...",
+      "publishedAt": "2026-11-03T13:31:58.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "af995911e268af792baba2cf71164179e36126dd910ab46faf7dde715cc7ec99",
+      "title": "Android「SMS of Death」脆弱性、SMS受信だけで通話切断・再起動ループの恐れ CVE-2026-58882をGoogleがCriticalで修正|セキュリティニュースのセキュリティ対策Lab",
+      "url": "https://rocket-boys.co.jp/security-measures-lab/android-sms-of-death-cve-2026-58882-zero-click-dos/",
+      "description": "Android「SMS of Death」脆弱性、SMS受信だけで通話切断・再起動ループの恐れ　CVE-2026-58882をGoogleがCriticalで修正 Androidの電話機能を、細工されたSMSを受信させるだけで停止させる脆弱性「CVE-2026-58882」が公表されました。「SMS of Death」と呼ばれるこの問題は、利用者がメッセージを開く操作をしなくても発...",
+      "publishedAt": "2026-11-03T13:06:50.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "f3c7f7d4f9143c13d9bfba7d3e769f61951c0270eaef9f610e69e17c52c7132e",
+      "title": "OpenKruise Agents v0.6.0: Leaping ahead in agent Sandbox security and automation",
+      "url": "https://www.cncf.io/blog/2026/11/03/openkruise-agents-v0-6-0-leaping-ahead-in-agent-sandbox-security-and-automation/",
+      "description": "About OpenKruise Agents OpenKruise Agents is a sub-project of OpenKruise, the CNCF open-source application automation and workload orchestration project. It provides full lifecycle management for Agent Sandboxes running at scale on Kubernetes, together with a complete...",
+      "publishedAt": "2026-11-03T12:00:00.000Z",
+      "feedName": "Cloud Native Computing Foundation"
+    },
+    {
+      "id": "d7b67da5173fa339ee63018321d151d81ed220e7d764023b78b1b5092aebb3b4",
+      "title": "Obsidian 1.15のCLIで見出しを指定して追記する",
+      "url": "https://dev.classmethod.jp/articles/obsidian-append-under-heading/",
+      "description": "Obsidian 1.15で、CLIとURIの追記に見出しを指定するheadingが加わりました。追記される位置、見出し名の一致条件、URIのspacing、見出しが見つからないときの挙動をテスト用のVaultで確かめ、1.14.5とも比べています。",
+      "publishedAt": "2026-11-03T09:35:41.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "dcdcd0244dae9839abe8e6359c4fddff99aedce0153d1c69c81c73ca7658430f",
+      "title": "Claude Code v2.1.317 の主要アップデート - 別モデルのサブエージェントの effort 変更と Read のスタブ削除",
+      "url": "https://dev.classmethod.jp/articles/20261103-cc-updates-v2-1-317/",
+      "description": "Claude Code v2.1.317 がリリースされました。別モデルで動くサブエージェントの effort 変更と Read ツールのスタブ削除を中心に、87 件の変更内容をセキュリティ・破壊的変更・新機能の視点から解説します。本日は、別モデルのサブエージェントの effort を試してみました。",
+      "publishedAt": "2026-11-03T09:26:22.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "912dd5ad517ca5e2715c619b492df30590c810f6e950f52434399f9e6b5cec3b",
+      "title": "EC2 の OS（Ubuntu 24.04 ） パッチ運用を Patch Manager 前提で考えてみた",
+      "url": "https://dev.classmethod.jp/articles/shoma-designed-os-patch-operations-for-ubuntu-24-04-ec2-based-on-patch-manager/",
+      "description": "EC2 の OS パッチ更新を Ubuntu と Patch Manager で運用する方法を考える機会がありました。現状の調べ方と、セキュリティ更新を Dev・Stg・Prod で段階的に当てる運用ルールをまとめます。",
+      "publishedAt": "2026-11-03T09:11:26.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "30490d1d51aac5888d02ca07ff64fcd86aea53eb0e09aa5665699b36065c9889",
+      "title": "環境センサー52台・1か月分のデータを流して、AWS IoT Coreで遠隔監視の仕組みを作ってみた",
+      "url": "https://dev.classmethod.jp/articles/hasuto-iot-core-52-sensors-remote-monitoring/",
+      "description": "公開されている環境センサー52台・約1か月分のデータをAWS IoT Coreに流し、遠隔監視の仕組みを作りました。Grafanaでの現在値表示、Athenaでの月次レポート、停止検知と電池警告を実装し、台数が増えて初めて出た問題と対処をまとめます。",
+      "publishedAt": "2026-11-03T09:06:37.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "b2cbd7176662b236bbea0fdd3339f88dc950e8cc150572cc4287204f15d46e83",
+      "title": "個人情報を扱う常駐型AIエージェント「Muse」のセキュリティの仕組み｜npaka",
+      "url": "https://note.com/npaka/n/ncccb2783a262",
+      "description": "1. はじめに2026年9月8日、Metaは常駐型AIエージェント「Muse」のセキュリティ設計について、技術記事「How We Built Safety Into Muse」を公開しました。 Museは、ユーザーの好みや個人情報を記憶し、メールの確認、予定の管理、買い物、Web操作などを自律的に実行するAIエージェントです。 こうした機能は便利ですが、...",
+      "publishedAt": "2026-11-03T08:33:54.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "202006ca3e6e03f75b6b64785ccd23df009e50d6cd62aa4a914d6cf8fd32e677",
+      "title": "防御側の LLM 活用：ログ分析・アラート一次対応・脅威インテリジェンスで「ログを入力として疑う」設計",
+      "url": "https://qiita.com/shalXXXX/items/5920c6ba75c2f1203f1b?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "SOC（セキュリティ監視の現場）でも、LLM にログを要約させる、アラートの一次判定をさせる、脅威レポートから IoC（侵害の痕跡となる IP アドレスやドメイン）を抜き出させる、といった使い方が広がっています。件数の多い作業を減らせる一方で、防御側の LLM には特有の弱...",
+      "publishedAt": "2026-11-03T08:00:25.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "a849a34e107e6ad203ac87b017aa4da280e710c759fc58223b2bf93c643a2c41",
+      "title": "1 人チームでKiro CLI とISUCON2026に参加した記録：エージェントに任せたこと、任せきれなかったこと",
+      "url": "https://zenn.dev/ndmxjp/articles/isucon2026-kiro-agent-ops",
+      "description": "はじめに\nこんにちは！ AWSでソリューションアーキテクトをしている齋藤 拓巳です。\n2026 年 10 月 31 日のISUCON2026に、1 人チーム「takumi_」で参加しました。作業のほとんどは手元の Kiro CLI に任せ、最終スコアは 109,240 点、順位は 149 位でした。\n8 時間で試した変更は 42 個です。ただ、優勝の 625,857 点とは約 5.7 倍の差があり、「こうすれば勝てる」と言える結果ではありません。この記事は、作業のほとんどをエージェントに任せた 1 人チームが、何を用意し、当日どう動かし、どこで行き詰まったかの記録です。用意したキット...",
+      "publishedAt": "2026-11-03T06:33:45.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "3d69438f6180acb53d26e22b2557a7928d64060c81457237c682d1865723f7e7",
+      "title": "【AWS】GitHubのトラフィックを定期的に集計するダッシュボードを作ってみた",
+      "url": "https://qiita.com/yakumo_09/items/e3a3235210220486621d?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\nGitHub のリポジトリには Insights → Traffic という画面があって、ビュー数やクローン数を見られます。ただ、見られるのは直近14日分だけです。\n\nそこで、トラフィックを毎日集計して DynamoDB に貯め、累計をダッシュボードで見られるよ...",
+      "publishedAt": "2026-11-03T06:00:39.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "7155a73e75ab282ffb1088a00e6007157e243663d16cb92e4766cf301920beaa",
+      "title": "バイブコーディングで機能を継ぎ足していて見えてきたClaudeCodeの実装のクセ",
+      "url": "https://zenn.dev/uguisu_blog/articles/45d1f446ece415",
+      "description": "「業務フローがよくわからないんだよね」という状態でも、チャラくバイブコーディングで自力でシステムが作れる時代が来ました。特にエンジニアは、アイディアをすぐに形にできます。普段からClaude CodeなどのAIエージェントに慣れ親しんでいれば、バイブコーディングのハードルは数ミリ程度まで下がっています。その結果、要件定義できるほどの解像度はない、できてからいろいろ意見はしたい、でも人の介在は最小限にしたい、という ガチのシステム屋さんに言ったら殴られそうな 要望を持つことも多いでしょう。\n\n TL;DR\n\n要件が固まらないままClaude Codeでバイブコーディングしたら、テストは通る...",
+      "publishedAt": "2026-11-03T03:30:05.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "50c6802d12c25e077c611583bdee929fa23368ae985e3acfc0d877adc822bc0c",
+      "title": "Claude CodeとArduino CLIは相性バツグン！時代はバイブIoTだー",
+      "url": "https://qiita.com/moritalous/items/744f13ec61892e9c520b?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "M5STACKご存知でしょうか？こういうやつです。\n\n私が持ってるのは「Core2 For AWS」というAWSカラーのものです！\n\nこの四角いもの以外にも、色んな形があります。ケーブルで接続するだけで使えるセンサーとかもあって、楽しいです。\n\n一昔前（？）までは...",
+      "publishedAt": "2026-11-03T02:14:37.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "7c85425c56d709e7083aaafcdc7a0bdc48136303b83d772f1d973da5b409d8d9",
+      "title": "テストが数十分かかる・固まる原因はiCloudだった",
+      "url": "https://qiita.com/hiroshi_buildup/items/4204953f2439f58425b6?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\nReact + TypeScriptのプロジェクトでJestを実行したところ、テストが終わらない、終わっても十数分〜二十分以上かかる、という状態になりました。\n原因を追った結果、プロジェクトを ~/Desktop に置いていて、iCloud Driveの同期対象...",
+      "publishedAt": "2026-11-03T02:08:22.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "8e8643e46f6a64b0a544c38c35923ec56dc72a747bb97be2c5e7db2f0ec6d8eb",
+      "title": "Vitest, RTL導入メモ",
+      "url": "https://qiita.com/J-T_ky2g/items/711a6059a17a549edde0?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "メモ\n\nコマンド\nnpm -D i vitest\nnpm -D i jsdom\nnpm install --save-dev @testing-library/react @testing-library/dom @types/react @types/react-dom...",
+      "publishedAt": "2026-11-02T15:53:33.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "64e8cc81d89f3f873e2d105d6507350c93c264b4d2daa3c664fa28d2a5f5aac4",
+      "title": "Human-out-of-the-loop(もどき)で戦うISUCON2026 (301,558 点 | 12 位)",
+      "url": "https://zenn.dev/ponyo877/articles/2a8a24acc2ea3b",
+      "description": "ISUCON2026に応援とちょっかい出しの二人とClaude Code(Opus 5.5+Fable 5.1)のチームで参加しました。\n結果は 301,558 点で856 チーム中 12 位でした 🎉\n\nISUCONとは与えられたWebアプリを8時間でどこまで速くできるかを競うコンテストです。\n運営が用意したベンチマーカーを走らせるとスコアが出ます、楽しいです。\n今回は人間は方針を伝えるだけにしてコードの修正からデプロイ、ベンチ、結果の判断、記録までをエージェントに任せてみました\n人間が一手ずつ確認する「ヒューマン・イン・ザ・ループ」の逆、人間がループの外にいる形なので、ヒューマン・ア...",
+      "publishedAt": "2026-11-02T14:52:35.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "a0064f68b48ceec92c20a010c18422c02e296dbd23fca574c1b133c7e6c0ea49",
+      "title": "インフラの開発環境構築を3ヶ月→1ヶ月にしたClaude Codeの使い方（AWS / ECS 9サービス）",
+      "url": "https://qiita.com/shainfra07/items/c149c06162ab1f3b136a?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\nAWS上の開発環境の構築を、Claude Codeを使って3ヶ月→1ヶ月で終えました。\nこの記事では、何をClaude Codeに任せ、何を任せなかったのか、なぜ短縮できたのかを書きます。\n※案件が特定されないよう、構成は一般化しています。\n\n作った環境\n\nクラ...",
+      "publishedAt": "2026-11-02T12:25:03.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "7d8b456d77f44d943b0e9c41e7b0471179d88a90a5db5b6e75905fb91cd3737e",
+      "title": "弊社がAIでPlaywrightテストコードを生成するために調整したこと",
+      "url": "https://zenn.dev/castingone_dev/articles/casone_playwright_for_claude",
+      "description": "こんにちは！CastingONEの大沼です。\n\n 始めに\n弊社では毎回のQA期間で行うテスト工数を減らすために、Playwrightを使った自動テストを導入しました。テストコードはAIで生成したものを使っていましたが、最初は品質が悪く色々調整する必要があったため、この辺について備忘録としてまとめました。\n\n AIが生成したコードで微妙だった点と対策\nどういったルールが必要なのか僕も分からなかったので一旦AIに色々書かせてみて、ここは調整した方が良いなと思ったのをいくつか紹介します。なお、最初のルールはとりあえず公式が説明している方法で出力されたルールを日本語訳にしたものを使いました。\nh...",
+      "publishedAt": "2026-11-02T02:58:52.000Z",
+      "feedName": "Zenn"
     }
   ]
 }
