@@ -1,190 +1,6 @@
 {
   "articles": [
     {
-      "id": "8c9c4a0d5f3249872656f6c12e0c2d71b6bc73433c33fa81798194344cac9ed0",
-      "title": "GitOS: Graph-Powered Ecosystem Defense & Intelligence Layer for GitHub",
-      "url": "https://dev.to/naimish21/gitos-graph-powered-ecosystem-defense-intelligence-layer-for-github-48j",
-      "description": "Why We Built GitOS: The Graph-Powered Defense Layer Open Source Desperately Needs\n\n\nBy Naimish Singh & Team BitBuddies (Graph Hacks: Context for AI Agents 2026)\nIf you maintain an open-source library with more than a few hundred stars, you already know what happened over the last twelve months:\nYour notifications exploded. But they didn’t explode with deep bug reports or thoughtful refactors. They exploded with AI-generated pull requests.\nSomeone pastes an issue into a frontier LLM, prompts it to \"fix this,\" and hits Submit PR without reading a single line of the diff. On the surface, the PR looks articulate. The markdown description is immaculate, formatted with bullet points and emojis. But when you inspect the code:\nVariable names were renamed cosmetically across 18 files.\nA modified helper function in routing.py broke 14 callers across unrelated modules because the author never ran the test suite.\nA newly hallucinated utility function was injected into the codebase that is never called by anything (in_degree == 0).\nWorse: existing automated \"AI review bots\" chime in by generating 50-comment threads, burning tens of thousands of LLM tokens on speculative guesses while spamming everyone on the thread.\nWe watched maintainers of projects like FastAPI, Flask, and React spend their weekends acting as human spam filters. \nWe asked ourselves a simple engineering question:\nWhy are we using stochastic, token-hungry LLMs to guess at structural code relationships when a graph database can determine them with 100% mathematical certainty in under 10 milliseconds?\nThat question gave birth to GitOS.\nBefore building GitOS, we laid down three non-negotiable architectural axioms:\nZero LLM Tokens for Structural Math: An LLM should never be asked \"what functions call add_api_route?\" That is a graph traversal problem.\nZero Disk Clone: Open-source maintainers don’t want a bot cloning 5GB repositories to a third-party server. Everything must parse directly from GitHub’s recursive Git Trees API in-memory.\nZero Unconsented Bot Spam: No automated comments, labels, or PR closures unless a human maintainer clicks a button with an explicit confirmation dialog under their own authenticated OAuth session.\nTo make this possible, we needed a graph engine with sub-millisecond traversal latencies on in-memory topologies. That engine was FalkorDB.\nWhen a maintainer or contributor pastes a GitHub PR URL into GitOS, the system doesn’t prompt an LLM. Instead, it triggers a 4-layer deterministic pipeline:\n[GitHub PR URL] \n      │\n      ▼ (In-Memory Tree Fetch - 0 Disk Clones)\n[Universal AST Parser (Python & Tree-Sitter)]\n      │\n      ▼ (Subgraphs Persisted by commit_sha)\n[(FalkorDB Graph Engine)]\n      │\n      ├──> Filter 1: Untested Call-Graph Impact ([:TESTED_BY] Traversal)\n      ├──> Filter 2: AST Delta vs. Raw Text Diff Ratio (Cosmetic Churn)\n      ├──> Filter 3: Dead Code Injection (In-Degree == 0)\n      └──> Filter 4: Maintainer Architectural Boundaries (Forbidden Edges)\n      │\n      ▼ (Sub-10ms Subgraph Results)\n[3D Interactive Force Graph & Multi-Agent Swarm]\n\nWe extract classes, functions, calls, and imports into formal graph primitives:\nNodes: (:Function), (:Class), (:Module), (:Test)\n\nRelationships: [:CALLS], [:IMPORTS], [:TESTED_BY], [:DEFINES]\n\n\n\n\n  \n  \n  2. The FalkorDB Cypher Queries Doing the Heavy Lifting\n\n\nInstead of asking an AI to \"spot bugs\", GitOS executes deterministic Cypher queries directly against FalkorDB.\nA. Multi-Hop Blast Radius:\nMATCH (target:Function) WHERE target.id IN $modified_targets\nMATCH path = (caller:Function)-[:CALLS*1..$hops]->(target)\nRETURN caller.id, target.id, length(path) AS hop_distance\nORDER BY hop_distance ASC LIMIT 100;\n\nIn FalkorDB, this recursive traversal returns in 3 to 7 milliseconds. It instantly reveals that changing APIRouter.add_api_route in Python cascades into an unverified TypeScript gateway controller two hops away.\nB. Catching Hallucinated Dead Code:\nMATCH (fn:Function {commit_sha: $commit_sha})\nWHERE NOT fn.name STARTS WITH 'test_' AND NOT fn.name STARTS WITH '__'\nOPTIONAL MATCH (caller:Function)-[:CALLS]->(fn)\nWITH fn, count(caller) AS in_degree\nWHERE in_degree = 0\nRETURN fn.id, fn.file_path, fn.line_start;\n\nIf in_degree == 0, GitOS immediately flags the injected symbol as potential AI hallucination. Zero tokens spent.\nC. Cosmetic Churn Ratio:\nOnly after FalkorDB computes the deterministic metrics does our 5-agent swarm take the stage:\nTriageAgent: Synthesizes the blast radius score and maintainer executive brief.\nGraphAgent: Traverses isolated repository graphs (gitos_{owner}_{repo}) to identify cross-module dependency regressions.\nSecurityAgent: Scans for AST security sinks (eval, command injection) and package slopsquatting.\nOnboardingAgent & Pathfinder: Translates open GitHub issues into precise AST symbol edit scopes for contributors.\nReleaseAgent: Analyzes AST changes to automatically determine semantic SemVer impacts (PATCH, MINOR, or MAJOR) and draft structured release notes.\nBecause FalkorDB compresses the entire problem into a tiny, high-density subgraph, when we do call an LLM (Groq Llama 3.3 70B), the prompt is under 800 tokens. No prompt bloat, no token bankruptcy, and no hallucinations.\nWhen we started the hackathon, we experimented with relational joins and document stores. They fell apart the moment we hit multi-hop traversals across enterprise codebases like Flask and FastAPI.\nWith FalkorDB:\nSpeed is real: Running recursive graph traversals on Redis-backed memory primitives gave our agents sub-second responsiveness on live UI keystrokes.\nMulti-Graph Isolation is a superpower: FalkorDB lets you create isolated graphs (gitos_fastapi_fastapi, gitos_pallets_flask) on the fly inside a single instance without deploying separate database clusters. This made multi-tenant per-repo memory effortless.\nTraceability replaces guesswork: In an era where AI agents are accused of being black boxes, a Cypher query path (A)-[:CALLS]->(B)-[:CALLS]->(C) is deterministic proof you can show to any senior engineer.\nWe made sure anyone—especially hackathon judges—can run GitOS locally with a single command:\ngit clone https://github.com/ace-ify/GitOS.git\ncd GitOS\ncp .env.example .env\n# Add your GitHub token in .env\ndocker-compose up --build\n\nOpen http://localhost:3000 to interact with the 3D topology graph.\nAPI Swagger docs live at http://localhost:8000/docs.\nTest suite: 40/40 unit & integration tests passing out of the box.\nAI shouldn’t make open source harder to maintain. It should make ecosystems cleaner, safer, and more accessible.\nBy pairing modern AI agents with the structural rigor of FalkorDB graph databases, we don't just guess what code does—we trace it, defend it, and understand it.\nCheck out the open-source code on GitHub: https://github.com/ace-ify/GitOS",
-      "publishedAt": "2026-10-19T03:16:56.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "4d128d58f437afeddb2d5e14abee806869200be54f4c34660f850e1f4badc167",
-      "title": "Gemma 4 reads, code decides: offline NDIS invoicing that caught 20 of 22 restraints",
-      "url": "https://dev.to/ottodeviant1904/gemma-4-reads-code-decides-offline-ndis-invoicing-that-caught-20-of-22-restraints-4kj8",
-      "description": "This is a submission for the Hacktoberfest Open-Source AI Challenge Week 2: Side Hustle\nSunday night in Melbourne. Mel has four participants and a phone full of notes like this:\nTues (Cup day!!) - Jake 3 till 8:30ish. Footy training then tea at his place.\nLocked the pantry so he would stop snacking before dinner, he was pretty upset about it.\n\n\nMel is not a real person; she is a composite from published rate guides and NDIS Commission material. BUt the job is real: an independent NDIS support worker on an ABN, unpaid for the hours it takes to turn that diary into invoices. That line holds two traps.\nThe price. Melbourne Cup Day is a public holiday in Melbourne and most of Victoria, and in no other state, so all 5.5 hours go on the public-holiday item at $163.46 an hour, not the weekday $73.58. On an ordinary Tuesday the shift crosses 8pm and the whole support takes the higher rate; splitting at 8pm underclaims.\n\nThe pantry. Locking a pantry to stop someone snacking is an environmental restraint under the NDIS (Restrictive Practices and Behaviour Support) Rules 2018. For a registered provider, unauthorised use is a reportable incident: 5 business days to notify the NDIS Commission, 24 hours if it caused harm. An unregistered sole trader like Mel may not use one at all, and the Commission asks for it to be raised with them. Either way it reads like an ordinary note; Mel would have invoiced it and moved on.\n\nArvo does the Sunday-night job and asks the awkward question. Type, photograph or dictate the week; get back invoice lines a plan manager will accept, a printable invoice per participant, a CSV, and a red flag quoting the exact sentence with a notify-by date. Gemma 4 runs through Ollama on the worker's laptop; nothing is sent anywhere.\nWho pays. Independent ABN support workers, at a proposed $12 a month or $99 a year. The platforms that already do NDIS invoicing are priced for agencies: ShiftCare charges per user and says \"All plans start at a minimum of five staff\". Her alternative is a spreadsheet and an unbilled hour.\n  \n  \n\n\nLive demo page (a saved real run, no install): https://otto-deviant1904.github.io/arvo/\n\n13.6 seconds from button to invoices (the wait is sped up; the button's counter is real).\nThe page is docs/demo/run.json rendered: gemma4:e4b on docs/demo/diary.txt, 7 shifts, 10 invoice lines, 3 flags, 13.3 seconds on a laptop RTX 4050 (6 GB). Your own diary: ollama pull gemma4:e4b (6.6 GB), clone, python -m arvo serve. Python 3.12 standard library, nothing else.\n\nThat week is all right, and I had seen it while building; the held-out numbers are below.\nThen I tried it on real handwriting. I copied one of the test weeks onto lined paper in my own writing, photographed it with my phone and ran it once. Gemma 4 did far worse than on the rendered test photos: 0 of 7 shifts fully right. It got every date and most times, but it read my \"Jake\" as \"Jane\" and my \"Tom\" as \"7om\", so 6 of 7 shifts matched nobody on the roster; my \"km\" reads as \"pm\", so every distance was lost; and \"Thurs - nothing on\" became an empty shift. What held: every one of those shifts came back with a check, the unmatched names were never priced, and the garage note was still flagged as seclusion. On my handwriting Arvo is a first draft for a human to fix, not an invoice.\n\nAnd from voice memos recorded in the car. Gemma 4 hears the audio itself, no separate speech model. Here it read \"half 11\" as 10:30, and the check after the fix put it back to 11:30 and told the worker why.\n\n / \n        arvo\n      \n    \n\nArvo\nSunday-night invoicing for NDIS support workers, on a laptop, with nothing sent anywhere.\nAn independent (ABN) NDIS support worker in Victoria types, photographs or dictates their week of shifts the way they actually write them:\nTues (Cup day!!) - Jake 3 till 8:30ish. Footy training then tea at his place\nLocked the pantry so he would stop snacking before dinner, he was pretty upset about it.\n\n\nArvo gives back:\nInvoice lines a plan manager will accept. Support item number, date, hours, rate and total for every shift, priced by code against the official NDIS Pricing Schedule 2026-27 and the Victorian public-holiday calendar. That shift is on Melbourne Cup Day, so the whole 5.5 hours goes on 04_102_0125_6_1 at $163.46/h. The same shift on an ordinary Tuesday crosses 8pm, so all of it is claimed at the evening rate, not split (Schedule s2.4(c)).\nA red flag for the sentence that…\n\n  \nView on GitHub\nMIT. One shape:\ndiary text ─┐\nphoto ──────┼─> Gemma 4 reads ─> shifts (who, date, start, end, km) ─> code checks fields against the diary\nvoice memo ─┘                                                                      │\n        invoice lines, printable invoice, CSV <─ pricing from the official JSON <──┘\n                                                 (band, Vic holiday, s2.4(c), item number)\n\neach note ─> Gemma 4 reads ─> possible restrictive practice ─> quote must be in the note, or dropped ─> notify-by date\n\narvo/extract.py and arvo/rp.py make the two model calls; pricing.py, calendar_au.py and prices.py are the rules, fed by data/ndis_prices_2026_27.json, where every figure cites a document and page; voice.py hands audio to Gemma 4 directly; server.py plus one HTML file, on 127.0.0.1; eval/ holds every fixture, gold label and result, frozen under SHA-256 sums.\nGemma turns messy text into shifts and never picks a price, an item number or a deadline. For Nonna's Thursday evening its entire contribution is {\"participant_id\": \"nonna\", \"date\": \"2026-11-05\", \"start\": \"19:00\", \"end\": \"21:30\"}. The band, the item number and the $202.68 are code reading the Schedule. The model never saw a dollar sign.\n\nThe rule that matters most is s2.4(c) of the NDIS Pricing Schedule 2026-27 (p5): \"Where a support a support crosses between different times of day or days of week and is delivered by a single worker, the higher of the amounts applies to the whole support.\" (The doubled words are in the official PDF.) In Arvo it is a test, not a prompt:\n\ndef test_crosses_8pm_whole_shift_at_evening_not_split(roster):\n    ln, _ = only(roster, \"priya\", \"2026-10-14\", \"15:00\", \"20:30\")\n    # 5.5 x 81.07 = 445.885 -> ROUND_HALF_UP 445.89 (float round() would give 445.88)\n    assert (ln.item_number, ln.quantity, ln.unit_price, ln.total) == (SELF[\"weekday_evening\"], 5.5, 81.07, 445.89)\n    assert ln.rule.startswith(\"Crosses 8pm: whole shift at Weekday Evening rate\")\n    assert \"s2.4(c)\" in ln.rule\n\nFlags get the same split. Gemma must return its evidence as a sentence copied from the note, and find_verbatim checks it is there; if not, the flag is dropped with a warning. A model that paraphrases is a model that can invent.\nNo real participant data anywhere. 24 template weeks come from eval/gen_fixtures.py, gold from the generator, never a model. 8 \"wild\" weeks were written by another AI agent imitating tired people (run-on prose, unpunctuated dictation, strike-throughs, \"odo 45213 to 45231\"); a second model labelled them blind and agreed on 58 of 58 shifts. 42 restrictive-practice notes came from another agent; a test fails if any 5-word run of one appears in the prompt. Voice memos are Piper TTS. Prompts and code were tuned on 8 dev weeks only; everything else ran once on code frozen at tag eval-freeze-1.\n\n\n\n\nHeld-out set\nArvo (Gemma 4 e4b reads, code prices)\nBaselines\n\n\n\n\nTest split: 16 template weeks, 119 shifts\n93.3% shifts exact; 10/16 weeks right to the cent\ncode-only parser 91.6%, 9/16; Gemma pricing the week itself 0/16, line recall 49.5%\n\n\nWild diaries: 8 weeks, 58 shifts\n75.9% exact; $121 mean error per week; 2/8 to the cent\ncode-only 39.7%, $1,207 per week, 0/8; Gemma alone $366 per week, 0/8\n\n\nRestrictive-practice notes: 42 (22 restraints, 20 innocent with trap words)\ndetection F1 88.9% (precision 87.0%, recall 90.9%); 1/20 innocent flagged\nkeyword list F1 45.7%, 5/20 flagged; gemma4:e2b F1 41.4%\n\n\nRendered photos of a paper diary: 4 weeks\n90.0% exact; 2/4 to the cent\n\ngemma4:e2b 76.7%, 1/4\n\n\nMy own handwriting: 1 week, 7 shifts, one run\n0/7 exact; dates 7/7, start 6/7, end 5/7, names 1/7, distances lost; all 7 misses flagged\n\n\n\nVoice memos: 10, voice never used in development\n6/10 every field right; participant, date, start 10/10; word error rate 12.0%\n(memos I tuned on: 11/12)\n\n\n\nThe first row embarrassed me: a hand-written parser with no model nearly matches Gemma on the template weeks (91.6% against 93.3%) with lower dollar error ($132 a week against $195). The templates were too regular to prove anything. The wild row is where the model earns its keep, and the notes are where size matters: e2b reads shifts almost as well as e4b (89.1% against 93.3%) and misses 16 of 22 restraints. Size buys judgement, not transcription.\nArvo got 14 of 58 wild shifts wrong. Read one by one, 7 were my own code overwriting a value Gemma had right, and code invented 2 phantom shifts out of the worker's corrections (~~12~~ 16km read as a 12-16 shift; 10-2. actually 10-1 split in two). What it said, against what was true:\ntom 9 30 till 1 30 (wild week 2, dictated). Gemma: 09:30-13:30, right. My parser took \"9\" and \"1\" as the hours and wrote 09:00-13:00 over it: start set to 09:00 from '9 30 till 1 30' (model said 09:30).\ntwenty two k (same week). Gemma: 22 km, right. Code found no \"22\" in the diary and zeroed it.\nodo 61044 to 61058 (week 7). Gemma: 10 km. True: 14. Code zeroed that too.\npri 9:30 to 12:15pm Sundy (test week 18). Gemma: Sunday 31 January, right. Code did not know \"Sundy\", fell back to the heading 29/1 - Priya and moved the shift to Friday, which changes the rate.\n\"Gave Jake his usual night meds at 8 off the chart\". Gemma: chemical restraint. True: innocent; \"off the chart\" means read off the medication chart.\n\"I left her out on the back verandah with the screen door latched for an hour\". Gemma: environmental restraint. True: a restraint, but seclusion.\nSame 42 notes, gemma4:e2b: 6 of 22 restraints found, 16 missed.\nHeld-out voice, end times spoken as \"half 11\", \"half 4\" and \"half 5\": heard right in the transcript, end time wrong on all three. A car-noise memo came out as \"Massdenic Copper\".\n\nThe guardrails exist because a model can invent a time or a km figure; tuned on 8 template weeks, they were overconfident. The fix is a principle: code overrules the model only when its own reading is unambiguous and the model's value is impossible; otherwise the model's value stands and the disagreement becomes a warning the worker sees.\n\n\n\n\nFrozen (held out)\nAfter the fix (not held out)\n\n\n\n\nTest split, exact shifts\n93.3%\n95.0%\n\n\nTest split, weeks right to the cent\n10/16\n11/16\n\n\nWild, exact shifts\n75.9%\n94.8%\n\n\nWild, weeks right to the cent\n2/8\n7/8\n\n\nWild, mean $ error per week\n$121\n$68\n\n\nVoice memos with every field right\n6/10\n8/10\n\n\n\nThe right-hand column is not held out: I fixed the code while looking at those exact diaries, so the wild number is the one I trust least. Two things got worse, the cost of the rule (eval/results/postfix/).\nThe verbatim-quote check proves the sentence exists in the note, nothing more. It cannot tell that the screen door was seclusion, not environmental restraint, or that \"off the chart\" is no restraint at all. On the 42 held-out notes it dropped 0 flags: a floor against invention, not evidence of judgement. Pricing is the same: code prices to the cent, but only the shift it is given. Move Priya's Sunday to Friday and the arithmetic is perfect and the invoice is wrong. So the worker sees every shift Gemma read, with its span, before any invoice.\nI went looking for the 2026-27 \"Pricing Arrangements and Price Limits\", the PAPL, where the time-band and travel rules have always lived. There is none: for 2026-27 the NDIA published a prices-only Pricing Schedule, and ndis.gov.au still lists the 2025-26 PAPL v1.1 as current guidance. So the boundary rule comes from the Schedule (s2.4(c), p5), the km rules from the 2025-26 PAPL, and the JSON records the document and page for each figure. If a plan manager disputes a line, the argument is about a page, not about what a model was thinking.\nLimits. Victoria, non-remote, standard-intensity self-care and community-access items only; 42 notes is a small set. The 5-business-day duty belongs to registered providers; an unregistered sole trader must not use regulated restrictive practices at all, and no official source gives her a deadline, so Arvo labels the date as the registered provider's and gives her the Commission's contact details. It flags; it does not decide. Not legal or compliance advice.\nData and credits: NDIS Pricing Schedule 2026-27 and NDIS Commission material; Business Victoria public holidays; Gemma 4 via Ollama; Piper voices for the synthetic memos; Comic Neue for the synthetic diary photos.\nShift notes are health information, \"sensitive information\" under s 6 of the Privacy Act, and the OAIC recommends not entering personal information into publicly available generative AI tools. A worker who pastes \"Gave PRN lorazepam 0.5mg\" and a name into a hosted chatbot has a problem before she has an invoice. With open weights the model runs on her laptop, the server binds to 127.0.0.1, and nothing leaves. That is the product, not a feature of it.\n\nWhere a closed model would win: a frontier model would likely read \"9 30 till 1 30\" and \"half 4\" better than a 4B model, and might tell seclusion from environmental restraint. It would still need the same pricing code, because right-to-the-cent is a rules job, and it would send disability health notes to someone else's server. That is the trade; for this job I take the local side.\nOpen also means offline, where the memo gets recorded; $0 a week in tokens behind a $12 subscription; and a model swap that is one flag, which is how I learned e2b reads nearly as well and judges much worse.\nI built Arvo with Claude Code as my coding agent. It wrote most of the code and the first draft of this post; I set the brief, directed the video, wrote and photographed the handwriting test, and edited the write-up. The decision log is in JOURNEY.md.\nBest Use of Gemma. Gemma 4 (gemma4:e4b and gemma4:e2b, open weights) through Ollama on the worker's machine, for typed text, photos of a paper diary (vision) and voice memos (audio in, no separate speech model). The held-out eval above is the case for it, including where it loses.\nBest Use of GitHub Copilot. The category text says \"automate your project with GitHub Actions\". ci.yml runs the tests on every push; gemma-smoke.yml installs Ollama on a CPU-only runner, pulls gemma4:e2b and runs the whole pipeline and a one-week eval with no GPU and no key: run 38347559687. I did not use the Copilot coding agent.",
-      "publishedAt": "2026-10-19T03:16:14.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "5546127d9864f2d5a9d8ce01b11ca854bba58244fcd0577390cd5359fe29d9af",
-      "title": "How to Test JWT Authentication and Silent Token Refresh in React Without a Backend",
-      "url": "https://dev.to/nileslabs/how-to-test-jwt-authentication-and-silent-token-refresh-in-react-without-a-backend-3ecp",
-      "description": "I once lost an entire Saturday afternoon trying to debug a silent JWT token refresh loop in a React app I was building.\nThe login modal and user dashboard were completely done. But testing the actual security mechanics was driving me up the wall:\nHow was I supposed to test what happens when an access token expires after 15 minutes?\nHow could I verify that my Axios interceptor cleanly caught the 401 Unauthorized, paused queued requests, called /auth/refresh, and retried the original request without logging the user out?\nHow could I test updating authenticated profile data via PATCH /auth/me?\nThe backend team wasn't ready yet, and none of the public mock APIs in the ecosystem offered realistic JWT authentication. They either didn't support auth at all, or returned static dummy strings that couldn't be decoded or verified.\nTo test a simple React AuthContext and an Axios interceptor loop, I was suddenly forced to stop frontend work and spend hours building a custom Express auth microservice with bcrypt, jsonwebtoken, database tables, and refresh token rotation logic from scratch.\nIt was infuriating. Frontend engineers shouldn't have to build an entire custom authentication backend just to test whether their Bearer token interceptor and login redirects work.\nI thought: Why can't a mock API offer real, verifiable JWT authentication with /auth/login, /auth/refresh, and /auth/me built directly into the sandbox?\nThat frustration was the exact reason I built a full JWT Auth Simulation engine into Playground API.\nIn this guide, I'll walk you through how to implement and test a complete React authentication lifecycle — including login, token storage, silent refresh interceptors, and protected routes — without writing backend code.\nA production frontend authentication flow typically follows this sequence:\nsequenceDiagram\n    autonumber\n    actor User as React Application\n    participant Auth as Auth API Sandbox\n\n    User->>Auth: 1. POST /auth/login { username, password }\n    Auth-->>User: 200 OK { access_token (15m), refresh_token (7d), user }\n\n    User->>Auth: 2. GET /auth/me (Authorization: Bearer <access_token>)\n    Auth-->>User: 200 OK { id: 1, name: \"Leanne Graham\", ... }\n\n    Note over User,Auth: Time passes... Access token expires\n\n    User->>Auth: 3. GET /auth/me (Expired Token)\n    Auth-->>User: 401 Unauthorized\n\n    User->>Auth: 4. POST /auth/refresh { refreshToken }\n    Auth-->>User: 200 OK { access_token (Fresh 15m) }\n\n    User->>Auth: 5. Retry original GET /auth/me with fresh token\n    Auth-->>User: 200 OK\nPlayground API by Niles Labs provides built-in JWT authentication simulation endpoints under /api/v1/auth:\n\n\n\nEndpoint\nMethod\nPayload / Headers\nDescription\n\n\n\n\n/api/v1/auth/login\nPOST\n{ username, email, password }\nAuthenticates user; returns signed 15-minute access_token and 7-day refresh_token.\n\n\n/api/v1/auth/register\nPOST\n{ name, username, email }\nCreates user in your session overlay and returns auth tokens.\n\n\n/api/v1/auth/refresh\nPOST\n{ refreshToken }\nValidates refresh token and issues a fresh access_token.\n\n\n/api/v1/auth/me\nGET\nAuthorization: Bearer <token>\nVerifies JWT signature and returns the authenticated user profile.\n\n\n/api/v1/auth/me\nPATCH\nAuthorization: Bearer <token>\nUpdates profile attributes within the caller's session overlay.\n\n\n\nLet's implement a production-grade Axios client that automatically catches 401 Unauthorized errors, performs a silent token refresh, and retries the failed request.\nhttpClient.js)\n\n\n\n\n\n// src/services/httpClient.js\nimport axios from 'axios';\n\nconst BASE_URL = 'https://playground.nileslabs.com/api/v1';\n\n// In-memory token storage (Best practice for XSS mitigation)\nlet accessToken = null;\nlet refreshToken = localStorage.getItem('playground_refresh_token');\n\nexport const setTokens = (access, refresh) => {\n  accessToken = access;\n  refreshToken = refresh;\n  if (refresh) {\n    localStorage.setItem('playground_refresh_token', refresh);\n  } else {\n    localStorage.removeItem('playground_refresh_token');\n  }\n};\n\nexport const getAccessToken = () => accessToken;\n\n// Create Axios Instance\nexport const apiClient = axios.create({\n  baseURL: BASE_URL,\n  headers: { 'Content-Type': 'application/json' },\n});\n\n// Request Interceptor: Attach Bearer token\napiClient.interceptors.request.use((config) => {\n  if (accessToken && !config.headers.Authorization) {\n    config.headers.Authorization = `Bearer ${accessToken}`;\n  }\n  return config;\n});\n\n// Response Interceptor: Catch 401 and handle silent refresh\napiClient.interceptors.response.use(\n  (response) => response,\n  async (error) => {\n    const originalRequest = error.config;\n\n    // Check if error is 401 and we haven't already retried\n    if (error.response?.status === 401 && !originalRequest._retry && refreshToken) {\n      originalRequest._retry = true;\n\n      try {\n        // Request fresh access token\n        const refreshRes = await axios.post(`${BASE_URL}/auth/refresh`, {\n          refreshToken: refreshToken,\n        });\n\n        const newAccessToken = refreshRes.data.access_token;\n        setTokens(newAccessToken, refreshToken);\n\n        // Update Authorization header and retry original request\n        originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;\n        return apiClient(originalRequest);\n      } catch (refreshErr) {\n        // Refresh token failed or expired -> log out user\n        setTokens(null, null);\n        window.location.href = '/login';\n        return Promise.reject(refreshErr);\n      }\n    }\n\n    return Promise.reject(error);\n  }\n);\n\nAuthContext Provider (AuthContext.jsx)\n\n\n\n\n\n// src/context/AuthContext.jsx\nimport React, { createContext, useContext, useState, useEffect } from 'react';\nimport { apiClient, setTokens, getAccessToken } from '../services/httpClient';\n\nconst AuthContext = createContext(null);\n\nexport function AuthProvider({ children }) {\n  const [user, setUser] = useState(null);\n  const [loading, setLoading] = useState(true);\n\n  // Fetch current user on startup if token exists\n  useEffect(() => {\n    const initAuth = async () => {\n      const storedRefresh = localStorage.getItem('playground_refresh_token');\n      if (storedRefresh) {\n        try {\n          // Attempt token refresh on boot\n          const refreshRes = await apiClient.post('/auth/refresh', {\n            refreshToken: storedRefresh,\n          });\n          setTokens(refreshRes.data.access_token, storedRefresh);\n\n          // Fetch authenticated profile\n          const meRes = await apiClient.get('/auth/me');\n          setUser(meRes.data);\n        } catch {\n          setTokens(null, null);\n        }\n      }\n      setLoading(false);\n    };\n\n    initAuth();\n  }, []);\n\n  // Login action\n  const login = async (username, password) => {\n    const res = await apiClient.post('/auth/login', { username, password });\n    setTokens(res.data.access_token, res.data.refresh_token);\n    setUser(res.data.user);\n    return res.data.user;\n  };\n\n  // Logout action\n  const logout = () => {\n    setTokens(null, null);\n    setUser(null);\n  };\n\n  return (\n    <AuthContext.Provider value={{ user, login, logout, loading }}>\n      {children}\n    </AuthContext.Provider>\n  );\n}\n\nexport const useAuth = () => useContext(AuthContext);\n\nProtectedRoute.jsx)\n\n\n\n\n\n// src/components/ProtectedRoute.jsx\nimport React from 'react';\nimport { useAuth } from '../context/AuthContext';\n\nexport default function ProtectedRoute({ children }) {\n  const { user, loading } = useAuth();\n\n  if (loading) {\n    return <div style={{ padding: '2rem' }}>🔒 Verifying session...</div>;\n  }\n\n  if (!user) {\n    return (\n      <div style={{ padding: '2rem', color: '#dc2626' }}>\n        <h3>🚫 Access Denied</h3>\n        <p>Please log in to view this protected dashboard.</p>\n      </div>\n    );\n  }\n\n  return children;\n}\n\nKeep Access Tokens in Memory:\nNever store short-lived access tokens in localStorage where they are vulnerable to Cross-Site Scripting (XSS). Store access tokens in a JavaScript variable or React Context.\nPrevent Refresh Token Storms (Queue Retries):\nIf multiple simultaneous requests fail with 401, ensure only one /auth/refresh request is triggered while other pending requests wait in a queue.\nHandle Expired Refresh Tokens Gracefully:\nIf the refresh token itself is invalid or expired, immediately clear client state and redirect the user to the login screen with a friendly message.\nAuthentication doesn't have to be a blind spot in your frontend development workflow. By pairing a robust Axios interceptor with a real JWT sandbox that verifies tokens and simulates refresh lifecycles, you can test and bulletproof your authentication flows without writing a line of backend auth code.\nTest JWT login, refresh tokens, and protected routes with Playground API by Niles Labs.",
-      "publishedAt": "2026-10-19T03:15:00.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "c699f2a4f18889442c54849b88007153cccf0b310b7e42d021dddf601b9fa088",
-      "title": "I Built a Client-Side Favicon Generator (60-Second Tutorial)",
-      "url": "https://dev.to/bowentse/i-built-a-client-side-favicon-generator-60-second-tutorial-2aho",
-      "description": "Your logo looks great at 1200px. At 16x16, it's a smudge.\nThat's the entire favicon problem in one sentence. Every site needs that tiny tab icon, and the standard workflow for making one is embarrassingly bad: upload your logo to some generator, create an account, wait in a queue, download a watermarked PNG, realize it's a single 32px file with no ICO, no Apple touch icon, no manifest — and start over.\nI got tired of that loop, so I built a favicon generator that runs 100% in the browser: type 1–3 initials or pick an emoji, set colors, preview at real tab sizes, and download the full pack (ICO, PNGs, Apple touch icons, PWA manifest). No upload, no signup, no watermark. This post is the 60-second tutorial plus the one canvas technique that makes it all work.\n1. Type initials or pick an emoji. Two bold letters (\"TK\") survive 16px far better than a full wordmark. An emoji works too — it gets rendered into icons at every size, 512px down to 16px.\n2. Set background and foreground colors. Contrast is everything at small sizes. Pick a shape (rounded square is the safe default) and keep the default 18% padding so the glyph doesn't touch the icon edges.\n3. Check the tiny preview. This is the step most generators skip: look at your design at 64, 48, 32, 24, and 16px side by side. If the 16px version fails, simplify — thicker strokes, fewer characters, more contrast. A favicon that only looks good at 64px fails at its one job.\n4. Download the pack. One click gives you the multi-size ICO, PNGs, Apple touch icons, site.webmanifest, the HTML snippet, and install notes for plain HTML, Next.js, and React/Vite.\n5. Paste three lines into your <head>:\n<link rel=\"icon\" href=\"/favicon.ico\" sizes=\"any\">\n<link rel=\"apple-touch-icon\" href=\"/apple-touch-icon.png\">\n<link rel=\"manifest\" href=\"/site.webmanifest\">\n\nThen hard-refresh — browsers cache favicons aggressively, and a stale cache is the #1 reason \"my new favicon isn't showing.\"\nThe core trick is simple: render once at a large master size, then downscale. Text drawn directly at 16px is at the mercy of the browser's font rasterizer; text drawn at 512px and scaled down keeps clean edges. Here's the essence:\nfunction renderFavicon(text, bg, fg, padding = 0.18) {\n  const S = 512; // master size\n  const canvas = document.createElement('canvas');\n  canvas.width = canvas.height = S;\n  const ctx = canvas.getContext('2d');\n\n  // Background: rounded square with padding\n  const pad = S * padding;\n  ctx.fillStyle = bg;\n  ctx.beginPath();\n  ctx.roundRect(pad, pad, S - pad * 2, S - pad * 2, S * 0.22);\n  ctx.fill();\n\n  // Foreground: centered initials, sized to the padded box\n  const box = S - pad * 2;\n  ctx.fillStyle = fg;\n  ctx.textAlign = 'center';\n  ctx.textBaseline = 'middle';\n  ctx.font = `700 ${box * 0.52}px system-ui, sans-serif`;\n  ctx.fillText(text, S / 2, S / 2 + box * 0.04);\n\n  return canvas;\n}\n\n// Downscale the master to every target size\nfor (const size of [16, 32, 180, 192, 512]) {\n  const c = document.createElement('canvas');\n  c.width = c.height = size;\n  c.getContext('2d').drawImage(master, 0, 0, size, size);\n  const png = c.toDataURL('image/png'); // one per size\n}\n\nThree details worth stealing for your own projects:\nroundRect + padding keeps the glyph optically centered and clear of the edges where launchers clip. The 18% default is a good starting point.\nThe + box * 0.04 vertical nudge compensates for font metrics — most fonts render slightly high when centered by middle baseline. Without it, initials look like they're floating.\nOne master, many downscales beats re-rendering text per size. drawImage downscaling from 512px produces cleaner 16px output than drawing text at 16px directly.\n(Emoji favicons use the same pipeline — draw the emoji glyph with fillText at master size and downscale. Canvas handles the rasterization; you handle the sizes.)\nICO is the broadly compatible workhorse — one file bundles multiple sizes, every browser understands it. Your baseline.\nPNG serves specific sizes: Apple touch icon (180x180), PWA manifest (192/512). Crisp, universal.\nSVG only when your source is a true, safe vector. Wrapping a raster logo in SVG gains nothing.\nThe full checklist: 16x16 + 32x32 (tabs, inside the ICO), 180x180 (iOS), 192 + 512 (PWA manifest).\nDark mode tabs. A dark mark vanishes on dark browser chrome. Preview on both themes before exporting — a light rounded-square background behind a dark glyph survives either.\nGoogle controls final rendering. Google shows favicons in mobile search results, but on its own schedule. Keep the icon square, stable, and crawlable; updates take time to propagate.\nDisclosure, plainly stated: I built this tool — ToolkitLoop's free favicon generator — because I was tired of the upload-an-account-watermark loop. Everything renders locally in your browser; nothing you type ever leaves the tab.\nSixty seconds, five steps, one download. And now a question for the comments: what's the worst favicon crime you've seen in a browser tab? A stretched logo? A white square on a dark tab? A 404 where the icon should be? I'm collecting specimens for the next iteration — show me your smudges. 👇",
-      "publishedAt": "2026-10-19T03:12:37.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "939d2a6832628d096f4425611493ab8624705cb8713a73e43893adcc72f8058a",
-      "title": "AWS User Notifications で Health イベント通知を設定する方法を教えてください",
-      "url": "https://dev.classmethod.jp/articles/tsnote-user-notifications-health-event-notification-setup/",
-      "description": "AWS User Notifications でAWS Health のパブリックイベントをメール受信するには、ユーザー設定通知を選択する必要があります。設定手順と確認ポイントを紹介します。",
-      "publishedAt": "2026-10-19T02:44:14.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "5c40a291b34ef0c433f6b48b086edad5bf0aecd48ef3642c23f844a0686f63c1",
-      "title": "「アーキテクチャConference 2026」NOTA、Base44を含む特別登壇者4名を追加発表！AI時代の設計判断に確かな軸を、11月26日・27日開催。",
-      "url": "https://prtimes.jp/main/html/rd/p/000000280.000045379.html",
-      "description": "「アーキテクチャConference 2026」NOTA、Base44を含む特別登壇者4名を追加発表！AI時代の設計判断に確かな軸を、11月26日・27日開催。昨年5,549名が参加申込、登壇者の著書・訳書24点を集めた記念フェアも2書店で初開催！ ファインディ株式会社（東京都品川区、代表取締役：山田 裕一朗、以下「当社」）は、2026年11月2...",
-      "publishedAt": "2026-10-19T01:23:18.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "f137c579e2305faa3f3beeab167706b515b855ba494fdddcd71d75b888b11383",
-      "title": "PR： 「ネットワーク構成図にない端末」が普通？　OTセキュリティを難しくする工場の現実と“泥臭い”対策",
-      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2610/19/news007.html",
-      "description": "工場のOTネットワークには、サポート期限切れのOSや現場導入のIoT機器、構成図にない端末など、ITの常識だけでは扱い切れない“OTあるある”が存在する。こうした制約を前提に、何を守り、誰が判断し、どう対応するのか。OTセキュリティの有識者が集い対策を語り合った。",
-      "publishedAt": "2026-10-19T01:00:00.000Z",
-      "feedName": "＠IT"
-    },
-    {
-      "id": "59f216c1daba2a4bdc6467a9f89c7dd03e93a1743deb124e56f4690e1b08a785",
-      "title": "Amazon Bedrock における最小権限アクセスの実装",
-      "url": "https://aws.amazon.com/jp/blogs/news/implementing-least-privilege-access-for-amazon-bedrock/",
-      "description": "生成 AI アプリケーションでは、Amazon Bedrock や大規模言語モデル (LLM) などを組み合わせるため、さまざまなレベルでのアクセスコントロールが欠かせません。この記事では、モデルの選択、適応、テスト、運用の各フェーズで最小権限の原則を適用する方法を紹介します。サービスコントロールポリシー (SCP)、VPC エンドポイントポリシー、KMS キーポリシー、Amazon Bedrock Guardrails、Amazon Bedrock Agents を使ったポリシーの例も示します。あわせて、モデル呼び出しログの機密データ保護と、IAM Access Analyzer によるアクセス許可の定期的な見直しについても説明します。",
-      "publishedAt": "2026-10-19T00:08:27.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "ecf5a5345c93346de77db311cf0f2dfa2dabb9d0d72a40587b5f571ab8cd49ee",
-      "title": "AWS セキュリティサービスでアクセスキーの漏えいリスクを最小限に抑える実践的な手順",
-      "url": "https://aws.amazon.com/jp/blogs/news/practical-steps-to-minimize-key-exposure-using-aws-security-services/",
-      "description": "漏えいした長期的な認証情報 (アクセスキー) は、AWS Customer Incident Response Team (CIRT) が観測したセキュリティインシデントで、現在も脅威アクターに最も多く使われる侵入経路です。この記事では、Amazon Q Developer や AWS IAM Access Analyzer を使用して、漏えいしたキーや未使用のアクセスを検出する方法を紹介します。さらに、SCP と RCP によるデータ境界の確立、Amazon Inspector や AWS WAF によるランタイム環境の保護、Secrets Manager によるキーの自動ローテーション、Amazon GuardDuty による異常な IAM アクティビティの検出を取り上げます。これらを組み合わせた多層防御の実践的な手順を説明します。",
-      "publishedAt": "2026-10-19T00:06:18.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "816b19224cbdeca5c56c94946074174307ad219e5c71df3d50965393b218a90a",
-      "title": "Amazon Bedrock API キーの保護: 実装と管理のベストプラクティス",
-      "url": "https://aws.amazon.com/jp/blogs/news/securing-amazon-bedrock-api-keys-best-practices-for-implementation-and-management/",
-      "description": "Amazon Bedrock API キーを安全に実装、管理するためのベストプラクティスを紹介します。AWS STS の一時的な認証情報を優先し、使用できない場合は短期 API キー、最終手段として長期 API キーを選ぶという判断基準を整理します。そのうえで、SCP と条件キーによる作成と使用の制御、CloudTrail、Amazon EventBridge、AWS Config ルールによる監視、侵害時のインシデント対応手順を、NIST CSF 2.0 に沿って解説します。",
-      "publishedAt": "2026-10-19T00:04:08.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "f4e32c31e6de77d0ae01e43d7bda886b20618b290c463f2834fd871983ab3747",
-      "title": "米紙が報じる「日本がサイバー攻撃の格好の標的になる理由」 | 脆弱なセキュリティインフラと対策の遅れ",
-      "url": "https://courrier.jp/news/archives/462989/",
-      "description": "日本の企業や自治体がサイバー攻撃の被害に遭う事件が頻発し、個人情報の流出が相次いでいる。米紙「ニューヨーク・タイムズ」もこの一連の攻撃に注目して被害状況を伝えたうえで、「なぜ日本が狙われるのか」について次のように報じている。 サイバー能力は世界最低レベル 世界4位の経済規模を誇り、ロボットや自動車、...",
-      "publishedAt": "2026-10-18T19:47:23.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "795ca18f5b790aecabb45bf34dbf554106897dddf57e0e31330187efe4e58a37",
-      "title": "アプリケーションの自動テストとデプロイをCircleCIからGitHub Actionsに移行した",
-      "url": "https://zenn.dev/tsukulink/articles/fea41a6e4113cf",
-      "description": "こんにちは！ツクリンクでエンジニアをしている oieioi です。\nツクリンクは開発用の CI を CircleCI から GitHub Actions に移行しました。移行してから半年間障害なく運用できているので、移行時にしたことを書いてみます。\n\n 移行したもの\n移行対象は3つあった。\n\nプルリクエストに対する継続的なテスト\n検証環境(AWS)へのデプロイ\n\nインフラのデプロイ\nアプリケーションのデプロイ\n\n\n商用環境(AWS)へのデプロイ\n\nインフラのデプロイ\nアプリケーションのデプロイ\n\n\n\nデプロイは terraform と ecspresso でコード化してあった。\n\n 移行...",
-      "publishedAt": "2026-10-18T15:00:05.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "791b658f6d1dacfa422cb2ff0fba4f0bb2c9b1e9927de9519fa02e42743f67dd",
-      "title": "[アップデート] Agent Toolkit for AWS の AWS AI/ML スキルで、Claude Code から SageMaker AI の Processing job を実行してみた",
-      "url": "https://dev.classmethod.jp/articles/20261018-agent-toolkit-for-aws-amazon-sagemaker-ai/",
-      "description": "AWS AI/ML スキルが Agent Toolkit for AWS のコアスキルになり、SageMaker AI の対応範囲が大幅に拡張されました。Claude Code から実際にモデル推薦と Processing job を実行し、その動作を検証してみました。",
-      "publishedAt": "2026-10-18T14:58:04.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "fedb582a3fdb513f85f11fe244c6062d5d33d1ac569359ab0d3b1b6c22d74457",
-      "title": "AWS Continuum for penetration testingでタスク時間の上限設定（予算管理）を試してみた",
-      "url": "https://dev.classmethod.jp/articles/2026-10-18-security-agent-pentest-budget/",
-      "description": "AWS Continuum for penetration testingに追加されたタスク時間の上限設定を、20時間に設定して実行し上限で止まったときにコンソール・CLI・CloudWatch Logs・レポートにどう残るかまで確認しました。",
-      "publishedAt": "2026-10-18T13:28:40.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "7f844c727c7eccc727a619349816e22404da715adeba1bc08cd9b02d85756828",
-      "title": "AWS Continuum for penetration testingの検出結果の再検証を試してみた",
-      "url": "https://dev.classmethod.jp/articles/2026-10-18-security-agent-pentest-finding-revalidation/",
-      "description": "AWS Continuum for penetration testingに追加された検出結果の再検証を、実際の検出結果に対してインフラ側の修正とアプリ側での修正の2パターンを入れて挙動を確認しました。",
-      "publishedAt": "2026-10-18T13:28:35.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "0281d42d39999461d8ac1772d15ba9d63a00d48574261865a20b0a7b6e6d8909",
-      "title": "GitHub - padovanl/portop: htop for your ports. Inspect processes, Docker & systemd, detect port drift, audit Compose, and manage it all from TUI, Web or Cockpit.",
-      "url": "https://github.com/padovanl/portop",
-      "description": "portop is an htop-style terminal UI for the TCP and UDP sockets on a machine. For every port it shows the process, its systemd unit or Windows service, its Docker, Podman or Kubernetes container, who can reach it and what the firewall does with it, and it lets you inspect or stop the owner from t...",
-      "publishedAt": "2026-10-18T13:13:01.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "f3c8a41176f2e82aaa6f24d6dba27aa35c0030250cf390a45c4818165307dd2b",
-      "title": "CIで使うLambda MicroVMs 最高なんだよなぁ！",
-      "url": "https://speakerdeck.com/kuracchi_enj1/ci-de-tsukau-lambda-microvms-saikouna-nda-yonaa",
-      "description": "JAWS-UG彩の国埼玉支部 #12 AWS re:Invent 2026準備回",
-      "publishedAt": "2026-10-18T13:08:54.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "cc210085614b156a3a216e425ea0c7341a6258e4b5b9609a4d0cceb7b004a5e0",
-      "title": "AWS Continuum で実現するデプロイごとのペネトレーションテスト | Amazon Web Services",
-      "url": "https://aws.amazon.com/jp/blogs/news/penetration-testing-every-deployment-with-aws-continuum/",
-      "description": "Amazon Web Services ブログ AWS Continuum で実現するデプロイごとのペネトレーションテスト 本ブログは 2026 年 10 月 14 日に公開された AWS Blog “Penetration testing every deployment with AWS Continuum” を翻訳したものです。 静的解析 (SAST)、ソフトウェア構成分析 (SCA)、動的スキャナー (DAST) など、CI/CD...",
-      "publishedAt": "2026-10-18T12:55:32.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "79066005d9e79f0db1396fe4094efbdba4adf00002b4603296b20cc97824f900",
-      "title": "AWS CloudTrail を使ったインシデント調査・対応ガイド – パート 1 | Amazon Web Services",
-      "url": "https://aws.amazon.com/jp/blogs/news/incident-response-guide-for-aws-cloudtrail-investigations-part-1/",
-      "description": "Amazon Web Services ブログ AWS CloudTrail を使ったインシデント調査・対応ガイド – パート 1 本ブログは 2026 年 9 月 3 日に公開された AWS Blog “Incident response guide for AWS CloudTrail investigations – Part 1” を翻訳したものです。 AWS CloudTrail ログには、AWS 環境で疑わしいアクティビティを調査する...",
-      "publishedAt": "2026-10-18T12:44:57.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "bd14cb925fa9006f3a4f5ddb703e3cbbfe1e914ff3355aa6ce2db6c2bdeda117",
-      "title": "リトルの法則で考える障害時のキャパシティプランニング",
-      "url": "https://zenn.dev/rea9r/articles/littles-law-capacity-planning",
-      "description": "はじめに\nサーバーサイドの開発や運用をしていると、こんな場面に出会うことがあります。\n\n呼び出し元のメトリクスで、このサービスへのリクエストのタイムアウトが、ほとんどのエンドポイントで増えている\nサーバーの負荷状況を確認しても、CPU もメモリも余っていて、サーバー側のエラー率もほとんど上がっていない\nコンテナが再起動を繰り返していて、Kubernetes のイベントでは liveness probe がタイムアウトしている\n\nデプロイも設定の変更もしておらず、トラフィックも普段どおりです。そこで、サーバーが呼び出している外部の API のレイテンシを見てみると、1つだけ応答が遅くな...",
-      "publishedAt": "2026-10-18T09:54:19.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "ca3b567e1127e4123a1d0aa19baf7d47d3d056202b69dc3a8235649f006b5bf5",
-      "title": "👀 ひとつで、セキュリティ調査が走り出す——Sysdig Secure のリアルタイム脅威検知におけるインシデントレスポンスを、Factory の Droid で自動化して自宅ラボで試してみた",
-      "url": "https://qiita.com/takao-shimizu/items/65f233bb8043c0f102e6?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "セキュリティ監視サービスの Sysdig が脅威を見つけて Slack に通知したとき、その通知に 👀 を付けるだけで、Factory の AI エージェント「Droid」が自動で調べて報告する。その仕組みを、TK の自宅のホームラボで試した報告です。\n（2026-10-1...",
-      "publishedAt": "2026-10-18T09:10:26.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "18be11e95a741220e0414ce4800c3112481daddd66822e0c51f7a01879192989",
-      "title": "【Vite】ビルド時に出た Error: Cannot find native binding. npm has a bug related to optional dependenciesを解決",
-      "url": "https://qiita.com/ryu0947/items/03af280e053c5d967168?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "はじめに\nViteでnpm run devを実行したらエラーが出たのでその解決方法をまとめます。\nエラーが出た環境のバージョンは以下になります。\n\nVite 8.3.0\nNode.js 24.22.0\nnpm 11.19.1\nVolta 2.0.2\n\nエラーが出た状況\n...",
-      "publishedAt": "2026-10-18T09:02:42.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "5c7c4da800c65af526d9feec90a84541a63fc490aa84282b6950cd20726a6f8b",
-      "title": "async/await と Promise(then) の違いを、出力順で比べてみた",
-      "url": "https://qiita.com/mmsbox/items/e1a201822b51b753e2ca?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "はじめに\n筆者は、プログラミングスクールで JavaScript の非同期処理を学んでおり、その中である疑問にぶつかりました。\nPromise のあとに async/await を学んで、「Promise をシンプルに書ける構文」という説明は理解できたのですが、await...",
-      "publishedAt": "2026-10-18T08:36:06.000Z",
-      "feedName": "Qiita"
-    },
-    {
       "id": "4ce6ae262dea7482291fa777104537ac451865e279e377d4f10f955ad90de91c",
       "title": "From 32KB SQL Joins to 46 Bytes: Architecting an O(1) Habit Streak Engine with Valkey/Redis Bitmaps & POPCNT",
       "url": "https://dev.to/khanhduong22/from-32kb-sql-joins-to-46-bytes-architecting-an-o1-habit-streak-engine-with-valkeyredis-bitmaps-298g",
@@ -391,86 +207,6 @@
       "description": "生成 AI は、スタジオのプレミアムコンテンツ制作のあり方を根本から書き換えつつあります。映画品質の画像、動画、音声、3D アセットを生成できるモデルは日々更新されており、それらがもたらすクリエイティブな可能性には期待が高まるばかりです。しかし、AI は高品質なコンテンツを自動的に生成する魔法のボタンではありません。AI は、熟練したストーリーテラーが活用することで、より速く、より高品質で、よりコスト効率の良いアウトプットの創出を支援し得る、非常に効率的なツールなのです。 本ガイダンスでは、AI-Powered Studio (AI を活用したスタジオ)というコンセプトを紹介します。このアーキテクチャは、AI 生成コンテンツから価値を引き出すために必要な 5 つのコアな役割—— Consistency (一貫性)、Context (コンテキスト)、Control (コントロール）、Compliance (コンプライアンス)、Cost (コスト) 規律——を軸に構成されています。",
       "publishedAt": "2026-10-19T06:03:32.000Z",
       "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "288a7b6c966b77d8077bee4953f9fd8ade0817efbfe1b2ea50325a732bc5f6e8",
-      "title": "AWS Physical AI Toolchain を発表",
-      "url": "https://aws.amazon.com/jp/blogs/news/introducing-aws-physical-ai-toolchain/",
-      "description": "本記事は 2026 年 10 月 7 日に公開された “Introducing AWS Physical AI […]",
-      "publishedAt": "2026-10-19T05:56:41.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "0d262b8e3aa6fe356b5e99dde7976352442ab033c3d73d34ed531f14fefbd777",
-      "title": "DevelopersIO のバックエンドを ECS から Lambda Web Functions に移行して、マルチリージョン化してみた",
-      "url": "https://dev.classmethod.jp/articles/developersio-lambda-web-functions-multiregion/",
-      "description": "ECS で稼働していた DevelopersIO の Next.js バックエンドを AWS Lambda Web Functions へ移行しました。グローバルエンドポイントを採用し、アクセスの多い記事の実測で、北米・欧州のエッジでキャッシュミスしたときの応答時間が短くなりました。ビルドとデプロイの時間も短くなりました。",
-      "publishedAt": "2026-10-19T05:29:19.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "555dded619113ca4b0187bf4e11c31137ae6ea11864ee084b67368038dd3da76",
-      "title": "AWS Lambda Web FunctionsでImpossible Location検知の課題をまとめて解決！ + 昨今の攻撃への有効性",
-      "url": "https://zenn.dev/cscloud_blog/articles/f4ce99ffeb8ee3",
-      "description": "これまで下記の 2 本の記事で、Amazon CloudFront を使ってセッションハイジャックを検知・ブロックする仕組みを紹介してきました。\n\n\nCloudFront Functions + KVS 編：エッジで高速に検証できる。ただしアプリ改修が必要で、KVS の 5MB 上限・TTL なし・結果整合と付き合う必要がある\n\nLambda@Edge 編：アプリ無改修。ただし署名付き Cookie なのでセッション単位の失効ができない\n\nCloudFront Functions 編の最後で、\n\n結論として、CloudFront Functions のエッジ完結という利点を活かすには K...",
-      "publishedAt": "2026-10-19T04:08:01.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "3d4a10ec3ff870879904135cc0c94bb02e0bc766260c230f3f82a9335fff5d7b",
-      "title": "PostgreSQLで遅いSQLの実行計画を自動で取得しNew Relicで確認する - auto_explainの活用方法",
-      "url": "https://qiita.com/kobadain/items/e57c61375be6006dfe27?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "PostgreSQLで遅いSQLの実測情報付き実行計画をauto_explainを用いて自動で取得し、New Relicで確認する方法について紹介します。\n\nはじめに\nデータベースのパフォーマンストラブルは経験ありますか。なぜか時間経過により遅くなるSQL、特定の時間帯や条...",
-      "publishedAt": "2026-10-19T02:50:44.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "a2f1366db7a35bc84ef1308686da70999c5d4889bbfb900f6210bc4734ce1bc4",
-      "title": "AIが書いた139件のテストは本当に別物か、Vitestの重複を静的解析で調べた",
-      "url": "https://qiita.com/figueiredoluiz/items/9dae44b202aec123d7c4?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "はじめに\nコーディングエージェントに頼めば、コーヒーを飲み終える前に100件のテストが通る状態になります。テスト件数は増え、カバレッジは緑になり、プルリクエストは丁寧に見えます。ただ、そのうち何件がほかのテストと違うことを確認しているのかは、誰も教えてくれません。\n私はV...",
-      "publishedAt": "2026-10-19T01:03:57.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "8a265321ea51e34ccba4b5718d34ee300e9f5370fc35fbea2a0dea6a579e1192",
-      "title": "Claude Codeのステップごとのレビューを既定から外した理由",
-      "url": "https://zenn.dev/ara_jlu/articles/per-task-review-dropped",
-      "description": "Claude Code で開発を回す自分のハーネス（設定やスキルを組み合わせた、自分用の開発の回し方）から、実装の1ステップごとにレビュー担当のサブエージェントを立てていた層を外しました。今はセキュリティに関わるステップにだけ入れています。\n「レビューは積むほど安全」という感覚でずっと入れていたものです。8月に構成を比べる実験をし、その後の運用で各レビューが見つけた欠陥を数え、10月に設計書のレビューを足したときに見直しました。この記事はその経緯と、外したあとに何を置いたかを書きます。\nこの記事では、開発の依頼1件（1ブランチ、1つの PR になる単位）を「タスク」、その実装計画を分けた...",
-      "publishedAt": "2026-10-19T00:30:14.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "7d1bb9bf470133f0ce54ea6fef0b19c316c2f6c5319c28d5811d6212857b2f80",
-      "title": "ドメインの境界を引くだけでは、業務はつながらない",
-      "url": "https://zenn.dev/dress_code/articles/4a76f1b88e360d",
-      "description": "はじめに\nDress Code 株式会社のかわうそです。\nDDDの設計を考えていると、Bounded Contextをどこで分けるか、Aggregateに何を含めるかに意識が向きます。業務の言葉を掘り下げ、守るべきルールをモデルにする。この設計には時間をかけるべきだと思います。\nただ、そこで各ドメインのモデルができても、プロダクト全体の設計が済んだとは言えません。別々のモデルが同じ人物を指すこともあれば、ある領域の変更によって別の領域の業務が始まることもあります。そのとき、何を共有し、何を依頼し、どこで判断するのか。境界の内側を詰めるのと同じくらい、この接点にも設計が要ります。\nDR...",
-      "publishedAt": "2026-10-19T00:00:00.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "edc38358aea68d26b93555cda86039b27c3efed0b07c1386a19ecf88e43c07a0",
-      "title": "【JISSEN】セキュリティ勉強会のアウトプット",
-      "url": "https://qiita.com/J-T_ky2g/items/9d6f381b5f38cbc071d0?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "IDOR\n\n認可の不足や漏れで他ユーザーのリソースなどを不正に閲覧できること\n認証してるからOKではなく、認可も正しく行う必要がある\n\n認証だけではなく認可もする\n\nSSRF\n\nサーバーから意図しない外部リソースへのリクエストを起こすもの\nユーザーから受け取った値を...",
-      "publishedAt": "2026-10-18T18:10:36.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "5312d70e2c65d64a106cb66fcc7ced7d8ab66fcc65f23b236cca7c851a6b6fff",
-      "title": "【Lambda Web Functions × CloudFront OAC】Lambda Web Functionsを使えばx-amz-content-sha256なしのPOSTが403になる問題が解決します！",
-      "url": "https://qiita.com/yosuke-suzuki/items/68c533536352475c4b4e?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "はじめに\n個人で「AI模試ノート」というAWS認定試験の学習アプリを運用しています。\n2026年8月にLambda Web Adapter + Function URL + CloudFrontの構成へ移したのですが、OACを付けるとPOSTだけが403になりました。\n原...",
-      "publishedAt": "2026-10-18T14:59:15.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "5c69901ea9cd092d8b47ece08d5027c1af7eb322adbb5d85c958853f91465d11",
-      "title": "オリジン弁当に通い詰めた俺が「Origin」について解説してみた！",
-      "url": "https://qiita.com/jota9613/items/6ea5f40526fb7e4df157?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "はじめに\n今回はオリジン弁当に通い詰めはや1年\nそんな俺がわかりやすく、WebセキュリティのOriginについてわかりやすく解説してやる！\nこれを読めば君もOriginをマスターするしオリジン弁当に行きたくなることまちがいなし！\n\n目的（ゴール）\n下記の3点の理解を目的に...",
-      "publishedAt": "2026-10-18T14:22:17.000Z",
-      "feedName": "Qiita"
     },
     {
       "id": "93b3401e38cc32ddb93e654a25f8fd925eb26b5565f1e0e8c657a0064a88a8c3",
@@ -749,14 +485,6 @@
       "url": "https://qiita.com/rana_kualu/items/efbfc20416e65f86e728?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
       "description": "ていうか今まで使えなかったのか。\n\nだめな正規表現\nconst str = `javascript:evil();/*\nhttps://example.com\n*/`;\n\n// 文字列がURLかを確認する\nconst re = /^https.*$/m;\nre.exec(s...",
       "publishedAt": "2026-10-19T12:29:18.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "1b5ebeb378cc7b884be554f50c11fcf9d084987da9ec221420cc2e180839ce24",
-      "title": "ローカルAIに実装を任せればClaudeのトークンは減る？ 実測したら逆だった（と、そこから分かったこと）",
-      "url": "https://qiita.com/yukio3239/items/e02c811664e444686fe5?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "はじめに\n「設計はクラウドAI（Claude）、実装はローカルAI（Qwen）」と分担すれば、クラウドAIのトークン消費を減らせるのではないか。そう考えて、実際に測ってみました。\n先に結論を書きます。\n\nテスト1（クイック検索）では、Claude の料金は減るどころか約 ...",
-      "publishedAt": "2026-10-19T02:14:42.000Z",
       "feedName": "Qiita"
     },
     {
@@ -6916,6 +6644,286 @@
       "description": "はじめに\nモジュール ‘./utils/calcTotalTime.js’ の宣言ファイルが見つかりませんでした のエラーについてまとめました。\n\n問題\nReactとTypeScriptの環境で、jsファイルでUtilを作成し、tsxファイルにインポートしたら表題のエラー...",
       "publishedAt": "2026-11-14T13:14:29.000Z",
       "feedName": "Qiita"
+    },
+    {
+      "id": "7d233dc7d58b20b910cbe8a2008000acdeb9ab57ddf49bc45970e35c4688e63b",
+      "title": "The ethics of AI-assisted development",
+      "url": "https://dev.to/icka/the-ethics-of-ai-assisted-development-4f66",
+      "description": "Lately there's been a lot of discussion about the morality of creating software using artificial intelligence. I've noticed a growing wave of anti-AI sentiment particularly directed at independent developers, even those wh odon't use generative AI to create visual or audio assets, but rely on it solely as an assistant for writing code and documentation.\nI think there's a fundamental misunderstanding here that needs to be addressed; AI-assisted coding and generative AI \"art\" are two different things.\nProgramming isn't an abstract form of creative expression in the same way visual art is. It's built on logic, mathematics, and problem solving, there are only so many ways to implement a particular funcionality. Sure, there can be countless variations in how code is written, structured and organized, but the underlying logic and possible solutions are constrained by the problem itself.\nIt's simply not reasonable to accuse a developer of stealing another developer's work just because they used AI assistance to write a piece of code that happens to resemble something someone else has written. It's inevitable that developers will independently arrive at similar solutions, whether they use AI or not. Of course, if the end result is an identical copy of someone else's software, then we're talking about plagiarism or outright theft of someone else's work, but that's an entirely different issue.\nNow, looking at this from a broader socioeconomic perspective, AI is here to stay, it's not something we can realistically fight our way out of, and while the concerns behind the anti-AI movement are often legitimate, I think a lot of that criticism is being directed at the wrong target. Big tech companies and major game studios are actively embracing AI, yet they rarely seem to face the same level of public backlash, but when an independent developer releases a game and includes a disclaimer stating that they used AI to assist with coding, the reaction can be completely different; I've come across accounts on Reddit from indie developers who experienced waves of harassment and negative Steam reviews simply because they disclosed using AI for coding assistance.\nI'm not an unconditional supporter of AI. I understand the environmental concerns, especially the impact of data centers, their energy consumption, and the strain they put on water resources and local environments, these are real issues, and I don't think they should be dismissed. But I can't help seeing a parallel with the way environmental responsibility is often discussed. We're constantly told to be more conscious as individuals, to take shorter showers, consume less, and change our habits, while massive industries are allowed to keep exploiting natural resources in pursuit of ever-increasing profits.\nIt's a contradiction and, in many ways, I think the anti-AI movement falls into a similar trap, focusing its anger on individuals and small developers instead of addressing the companies, economic structures, and business practices that are actually driving the larger problem.\nAnyway, this has been on my mind for a while, and I felt like putting my thoughts out there, so here's my take on it.",
+      "publishedAt": "2026-11-18T05:47:17.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "6c93077e85cb6e38f45167aa4c0654ad434dc654b3cdd0836e1c3eedede920b6",
+      "title": "How We Hit 100/100 Mobile PageSpeed & 90% SEO Across 332,000+ Next.js 16 Game Pages on $0/Month",
+      "url": "https://dev.to/jenishkumar/how-we-hit-100100-mobile-pagespeed-90-seo-across-332000-nextjs-16-game-pages-on-0month-164i",
+      "description": "Modern PC game releases routinely exceed 140 GB, making fast compression indexing and zero-bloat mobile web performance critical for global gamers.\nWhile building RepackDeck — indexing 7,385+ lossless PC game repacks, 597+ official FLiNG single-player trainers, and 100% campaign mission walkthroughs across 45 languages — we hit three tricky Next.js 16 + SEO engineering problems and solved all of them on a $0.00/month Cloud Run + Cloudflare + Supabase stack.\nloading.tsx Silently Hid <h1> From Non-JS HTML Crawlers\n\n\nIn Next.js App Router, adding a loading.tsx file inside a dynamic route segment wraps the page in <Suspense>. Browsers hydrate the streamed <div hidden id=\"S:0\"> payload cleanly, but non-JavaScript HTML crawlers only inspect the initial shell—causing thousands of false h1_missing and thin-content alerts.\nRemoving loading.tsx inside /[lang]/game/[slug] and setting htmlLimitedBots: /.*/ in next.config.ts jumped our live on-page SEO score from 60% → 90% across 332,000+ localized pages.\nDefer all third-party ad and analytics scripts strictly to physical user gestures (scroll, pointerdown, touchstart, keydown) with zero <45s fallback timers.\nReserve explicit CSS min-h wrappers (0 CLS) and optimize above-the-fold responsive covers (192w, 256w) with matching <link rel=\"preload\" imageSrcSet>.\nLive result on Google PageSpeed Insights API v5: 100/100 Mobile Performance, Accessibility, Best Practices & SEO on our Low-Spec PC Game Repacks Hub (1.1s LCP, 0 CLS).\nWe also shipped an edge SVG badge generator (Free SVG Verification Badges) and an open GitHub Pages PC Compression & MD5 Reference.",
+      "publishedAt": "2026-11-18T05:47:01.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "f19d249121b04e302198cba02d0dc4ed677c1678bcf5a0c17c995463886937d4",
+      "title": "[レポート]The Code IS the Law：宇宙空間のサイバーセキュリティガバナンスにおける民間企業の規範形成 - CODE BLUE 2026 #codeblue_jp #codeblue2026",
+      "url": "https://dev.classmethod.jp/articles/codeblue-2026-day2-track1-1410/",
+      "description": "CODE BLUE 2026で行われた「The Code IS the Law：宇宙空間のサイバーセキュリティガバナンスにおける民間企業の規範形成」というセッションのレポートです。",
+      "publishedAt": "2026-11-18T03:06:55.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "f2a378d487ba4fb2742e5317beac9407a36c70c11ad22783b63d958a164e7261",
+      "title": "わずか3時間で標的に侵入、AIを悪用したサイバー攻撃にFBIが警告",
+      "url": "https://japan.cnet.com/article/35255059/",
+      "description": "米連邦捜査局（FBI）によると、ハッカーはAIを活用したセキュリティテストツール「ARTEX」を使い、世界各地の組織のシステムに侵入している。",
+      "publishedAt": "2026-11-18T03:05:00.000Z",
+      "feedName": "CNET Japan"
+    },
+    {
+      "id": "edd7aaaa591d90525e2ed318fd28be72a13591b2b9832db879c53ab107654d41",
+      "title": "AI エージェントをより SAP の身近に: AWS for SAP MCP Server の新機能",
+      "url": "https://aws.amazon.com/jp/blogs/news/bringing-ai-agents-closer-to-sap-whats-new-in-aws-for-sap-mcp-server/",
+      "description": "AWS for SAP MCP Server に新機能が追加されました。Custom Catalog による SAP SuccessFactors 連携、OData V4 サポート、On-Behalf-Of によるアイデンティティ伝播と Microsoft EntraID 対応、Amazon Bedrock AgentCore Runtime V2 サポートにより、AI エージェントが SAP データへ安全かつ効率的にアクセスできます。さらにサンパウロ、ミラノ、スペインの 3 リージョンが加わり、合計 17 リージョンで利用可能になりました。",
+      "publishedAt": "2026-11-18T02:43:53.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "13b4c57a40aaa99643c9afdc5840bfd6e470847a131dcb132cef280cb0c1e72b",
+      "title": "AWS Systems Manager for SAP が SAP HANA スケールアウト構成をサポート",
+      "url": "https://aws.amazon.com/jp/blogs/news/aws-systems-manager-for-sap-now-supports-sap-hana-scale-out-deployments/",
+      "description": "AWS Systems Manager for SAP（SSM for SAP）が SAP HANA スケールアウト構成をサポートしました。マルチノードの SAP HANA システムを 1 つのアプリケーションとして登録し、AWS Backup によるバックアップ、アプリケーションを認識した起動・停止、認証情報の更新をシングルノードと同様に実行できます。Amazon EventBridge Scheduler と組み合わせれば非本番環境のコスト削減も可能です。追加料金なしで、SSM for SAP 対応の全リージョンで利用できます。",
+      "publishedAt": "2026-11-18T02:41:01.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "c3811cdb4efcca04b2997879a55a49cf87e03ebe004ff1dd16b8f6cbd6856066",
+      "title": "Java4Shell（CVE-2026-114938）対策として Amazon Corretto の更新、JVM フラグ、AWS WAF の Count ルールを試してみた",
+      "url": "https://dev.classmethod.jp/articles/java4shell-corretto-jvm-flag-waf-count/",
+      "description": "Java4Shell の対策に使える Amazon Corretto の修正版、JVM フラグ、AWS WAF の Count ルールをまとめました。Docker ではフラグの反映を CLI で確認でき、WAF では不正な Base64 トークンを含むリクエストを Count できました。",
+      "publishedAt": "2026-11-18T02:25:23.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "eff544f6670dbc20f3e02ff03bbb317e951e8e508f3f598d16725a3d87f03af0",
+      "title": "[アップデート] AWS Backup の論理エアギャップボールトが Amazon RDS に対応したので、RAM で別アカウントに共有してリストアまでやってみた",
+      "url": "https://dev.classmethod.jp/articles/aws-backup-lag-vault-rds-cross-account-restore/",
+      "description": "AWS Backup の論理エアギャップボールトが RDS に対応しました。実際にバックアップを取り、RAM で別アカウントに共有してリストアするところまで試しています。aws/rds で暗号化したインスタンスの挙動も確認しました。",
+      "publishedAt": "2026-11-18T02:08:42.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "fa97ccfd9cecb0d31515c8f2d3fc53d8c1ec493f9f961faa169ca7c0e0dc6966",
+      "title": "楽天証券への不正アクセスについてまとめてみた - piyolog",
+      "url": "https://piyolog.hatenadiary.jp/entry/2026/11/18/100525",
+      "description": "2026年11月17日、楽天証券は第三者による不正アクセスに伴い、保有する顧客情報の一部が漏えいした可能性があると公表しました。ここでは関連する情報をまとめます。 テスト環境から顧客情報漏えいのおそれ 楽天証券は11月16日に一部システムへの第三者による不正アクセスの可能性を検知し、該当箇所へのアクセスを遮断...",
+      "publishedAt": "2026-11-18T01:53:39.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "ef58ffb023b3e04cf43baf516cd4a3e024efda6fdc0e600403ad2b968649b901",
+      "title": "Javaの「Java4Shell」（CVE-2026-114938）をOracleが正式公表 認証不要で悪用可能な脆弱性、Java 17・21・25・27などに影響|セキュリティニュースのセキュリティ対策Lab",
+      "url": "https://rocket-boys.co.jp/security-measures-lab/java4shell-cve-2026-114938-oracle-openjdk-base64-rce-20261118/",
+      "description": "Javaの「Java4Shell」（CVE-2026-114938）をOracleが正式公表　認証不要で悪用可能な脆弱性、Java 17・21・25・27などに影響 Oracleは2026年11月17日、Java SEのセキュリティ更新を公開し、「Java4Shell」と呼ばれる脆弱性「CVE-2026-114938」を正式にリスク評価表へ掲載しました。Oracleの評価はCVSS 3.1で8.1（High）...",
+      "publishedAt": "2026-11-18T00:59:57.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "f1560133298d24de8f10652c55e0b52a86d92896daa092f7e0e0d0da8967003d",
+      "title": "Nitro Sandboxes: すべての EKS ポッド、ECS タスク、EC2 ワークロードをハードウェアで分離",
+      "url": "https://aws.amazon.com/jp/blogs/news/nitro-sandboxes-hardware-isolation-for-every-eks-pod-ecs-task-and-ec2-workload/",
+      "description": "AWS Nitro Sandboxes は、各コンテナにハードウェアで分離された仮想マシン (VM) の境界を提供する Amazon EC2 の新しいビルディングブロックです。EKS ポッド、ECS タスク、EC2 ワークロードを分離でき、機密サンドボックスではクラスター管理者や AWS にもメモリを読み取られないよう保護します。本記事では、機密サンドボックスと分離サンドボックスの 2 つのモードの違いと、アテステーションおよび AWS KMS を活用した機密データの保護を紹介します。AI エージェントや SaaS などのユースケース、EKS、ECS、EC2 での開始方法も説明します。Nitro Sandboxes は追加料金なしで利用できます。",
+      "publishedAt": "2026-11-18T00:51:49.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "99afd283892a8ac4da10aafca5c0ef1a1a70648cc0e4ff4b9d1002956f34ad6f",
+      "title": "まだ残る「Internet Explorer」の亡霊　改修できないシステムを“IEごと”PCから切り離す方法",
+      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2611/18/news032.html",
+      "description": "「IEモード」に依存するシステムの刷新は容易ではない。業務を止めずに、セキュリティリスクを抑えながら使い続けるには、どのような方法があるのだろうか。実証実験で確認した技術と運用のポイントを紹介する。",
+      "publishedAt": "2026-11-18T00:45:00.000Z",
+      "feedName": "＠IT"
+    },
+    {
+      "id": "e9cbfec463ff87da5733603a39f1b88202499ce9137119d77b0b127d5bb2d1b0",
+      "title": "マルチスレッド環境での AWS KMS データキーのキャッシュ: 大規模なイベント駆動型システムにおけるテナントごとの暗号化",
+      "url": "https://aws.amazon.com/jp/blogs/news/caching-kms-data-keys-in-multi-thread-environments-per-tenant-encryption-for-event-driven-systems-at-scale/",
+      "description": "マルチテナントの SaaS 環境で、テナントごとのエンベロープ暗号化を行う高スループットのシステムでは、キャッシュスタンピードによって AWS KMS の冗長な呼び出しが発生します。この記事では、この問題が発生する仕組みと 2 つの解決策を説明します。1 つは DynamoDB を使用した AWS 推奨の階層キーリング、もう 1 つは Caffeine を使用した AWS KMS クライアントのカスタムキャッシュです。また、テナントごとの暗号化の分離を維持しながら AWS KMS のコストを 77% 削減した NICE Actimize の事例も紹介します。",
+      "publishedAt": "2026-11-18T00:08:52.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "d39005d231cdadbd9c41bebdcc12dbd058b556ccd774af27f8aeb07a54142134",
+      "title": "未使用の AWS KMS キーの特定と誤削除の防止",
+      "url": "https://aws.amazon.com/jp/blogs/news/identify-unused-aws-kms-keys-and-prevent-accidental-key-deletions/",
+      "description": "AWS Key Management Service (AWS KMS) の新しい GetKeyLastUsage API を使用して、KMS キーが最後に暗号化オペレーションに使用された日時を確認する方法を紹介します。CloudTrail ログを検索しなくても未使用キーを特定できるため、監査とコスト最適化に役立ちます。追跡期間の考え方や、Amazon EBS ボリュームを例にした削除前の注意点も説明します。さらに、kms:TrailingDaysWithoutKeyUsage 条件キーをキーポリシーで使用し、最近使用されたキーが誤って削除・無効化されるのを防ぐ方法も解説します。",
+      "publishedAt": "2026-11-18T00:03:24.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "00b5eb5dc037fa762466bb453f3816e4c9919e9ad8762dab364f7ce99af38389",
+      "title": "AWS Key Management Service (AWS KMS) の対称キーローテーション間隔の短縮をめぐる考察",
+      "url": "https://aws.amazon.com/jp/blogs/news/the-curious-case-of-faster-aws-kms-symmetric-key-rotation/",
+      "description": "AWS Key Management Service (AWS KMS) の対称キーで、自動キーローテーションの期間を 90～2,560 日の範囲で設定できるようになりました。オンデマンドローテーション、ListKeyRotations API によるローテーション履歴の可視化、2 回を超えるローテーションが行われたキーへの料金上限も紹介します。また、カエサル暗号から NIST SP 800-57 までのキーローテーションの歴史を振り返ります。そのうえで、HSM でキーの漏洩リスクを最小限に抑え、KDF でキーの消耗リスクを軽減する AWS KMS では、どのような場合にローテーションが必要かを解説します。",
+      "publishedAt": "2026-11-18T00:00:36.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "28f165de20d0a474807a4bbfab08dc2baf82445ead31b46227a0b4219a403ee9",
+      "title": "paizaで90万件超の個人データにアクセス可能、“13年間認証情報変更なし”　マズ過ぎる運用実態",
+      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2611/19/news012.html",
+      "description": "本番環境のセキュリティ対策には力を入れていても、開発用の環境はどうだろうか。paizaで最大90万2576件の個人データに第三者がアクセスできる状態が発覚した。背景にあったのは、13年見過ごされてきた認証情報と権限管理の不備だ。決して人ごとではないこのインシデントから得るべき教訓とは。",
+      "publishedAt": "2026-11-17T23:00:00.000Z",
+      "feedName": "＠IT"
+    },
+    {
+      "id": "1868ab0c20569a5b301870a6d8cdd55b2565c823b2568790cd199077ca601d74",
+      "title": "「JavaScriptを抜いた」　10年かけて首位になった言語は？　Java衰退・PHP半減が示す開発現場のリアル",
+      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2611/18/news031.html",
+      "description": "JetBrainsは、開発者エコシステムの現状を調査した年次レポートの最新版を発表した。プログラミング言語のシェアにおける10年間の変動や、AIの活用状況、雇用などを分析している。",
+      "publishedAt": "2026-11-17T22:45:00.000Z",
+      "feedName": "＠IT"
+    },
+    {
+      "id": "08320515bc871e888b5b45ff8b91d44f05e372d934750db4ea3a489edcf5185a",
+      "title": "AWS RAM で AWS KMS キーの Organization 共有を試してみた",
+      "url": "https://dev.classmethod.jp/articles/aws-kms-key-sharing-ram-organization/",
+      "description": "AWS KMS のキーを AWS RAM で共有できるようになりました。対称暗号化キーを Organization 宛てに共有し、default キーポリシーを変更しないまま、Organization 内の受け側アカウントから Encrypt と Decrypt ができることを確認しました。",
+      "publishedAt": "2026-11-17T18:49:26.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "1e2bf861913350a348b55b90a5587d0fa7676bc6c845a751fd9b78d47f8193ed",
+      "title": "AWS Backup の logically air-gapped (LAG) vault が RDS に対応しました",
+      "url": "https://dev.classmethod.jp/articles/aws-backup-lag-vault-rds-support/",
+      "description": "RDS の DB インスタンスのバックアップを LAG vault に保存できるようになり、設定した保持期間が満了するまで削除も変更もできない形で保管できます。東京リージョンで LAG vault とプライマリ指定・コピー先指定のバックアッププランを作成し、DB インスタンスの割り当てまで確認しました。",
+      "publishedAt": "2026-11-17T17:43:50.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "df1f2101a190df54605f689091da4f6efaa126e28ae1200ac8c019432382f97c",
+      "title": "[AWS] S3Vectorsは全文検索エンジンとしてOpenSearchの代わりになるのか？ - Qiita",
+      "url": "https://qiita.com/kikuziro/items/cd1389f6a1601494895f?utm_campaign=post_article&utm_medium=twitter&utm_source=twitter_share",
+      "description": "📝 はじめに S3Vectorsが全文検索に対応しました。 この記事では全文検索の定番であるOpenSearchとS3Vectorsを比べてみました。 👀 対象読者 OpenSearch全文検索のコストが高すぎてヒィヒィ言ってる方 小さめの全文検索機能を安く作りたい方 アップデートの中身 2026年11月17日にS3Vectorsがハイブリッド検索に対応しま...",
+      "publishedAt": "2026-11-17T14:00:55.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "9ebd1068612dbd4ccc6eb2d0c14207d644d28f5988dee6a5949df97af5c7687e",
+      "title": "[AWS] S3Vectorsは全文検索エンジンとしてOpenSearchの代わりになるのか？",
+      "url": "https://qiita.com/kikuziro/items/cd1389f6a1601494895f?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "📝 はじめに\n\nS3Vectorsが全文検索に対応しました。\nこの記事では全文検索の定番であるOpenSearchとS3Vectorsを比べてみました。\n\n👀 対象読者\n\nOpenSearch全文検索のコストが高すぎてヒィヒィ言ってる方\n小さめの全文検索機能を安く作りたい...",
+      "publishedAt": "2026-11-17T12:55:43.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "fba0feaa55882c6de62f6a5d0f45f317ac82af069307ff430da11ea8449317ab",
+      "title": "Kubernetesの構成要素にガチ入門する",
+      "url": "https://qiita.com/har1101/items/ebd90aa7ce654c9c8c97?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "こんにちは、ふくちです。\n最近Kubernetesが話題ですね。色んな企業のソフトウェアファクトリー事例で活用されているのを見ています。どちらかというと先進的な事業会社さんの取り組み例な気がしますが、そういうトレンドが若干あるのかなと。\n\nとはいえ私は...",
+      "publishedAt": "2026-11-17T11:21:35.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "65c789a21e885bdf598af302ec808ff22343297fa9303ab28a59113573265ff7",
+      "title": "【AWS】CloudWatch Omni、なんか良さそうなので触ってみた！",
+      "url": "https://qiita.com/kuracchi_enj/items/f771a426c68df7972ba4?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "どうもこんにちは。\n9月末くらいに、CloudWatch Omniという機能が提供開始されておりまして、「CloudWatch Omniと戯れたいなぁ...」と思いながら1ヶ月以上が経ってしまいまして...\nOmniさんもさぞ寂しい思いをしたことでしょう（絶対そんなことない...",
+      "publishedAt": "2026-11-17T11:16:13.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "150b1360d4e20041788437fa52bfe16919612d4d27a3b77fffeea1f8dbebf76c",
+      "title": "AWS DevOps Agent のインシデント調査に Lambda durable functions で時間の上限を設けてみた",
+      "url": "https://dev.classmethod.jp/articles/aws-devops-agent-investigation-timeout-durable-functions/",
+      "description": "Lambda durable functions の関数 1 個で、調査の開始から上限時間を過ぎた調査の取り消しまでを行えました。",
+      "publishedAt": "2026-11-17T10:11:54.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "5b727db071bb93360b56eb2f831cae939204ed51f62613b690cdc9d155c4b1e9",
+      "title": "おい、 Mutation Test をやれ。テスト品質を、測るために",
+      "url": "https://zenn.dev/mizchi/articles/mutation-test-quality",
+      "description": "AIがコードを書き散らして認知的負荷が限界に達する今日この頃、皆様いかがお過ごしでしょうか。\nAIによってテストカバレッジを上げることは容易になりました。僕も「分岐カバレッジを80%以上にしろ」みたいな雑なプロンプトを書いて昼飯に行ったりします。帰ってきたらヨシっ！ってマージするわけですね。\nところでそのヨシッは何を担保しているのでしょうか？\nこの記事は次の記事の熱い思いに応えるために書かれています。\nhttps://zenn.dev/polyco/articles/e05cb28c569801\n\nClaude が最初「mutator 良いと思うけど出してるの個人だしスターも少ないしバー...",
+      "publishedAt": "2026-11-17T09:53:47.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "3e257fa0148537ad4cb748c1237ace6232c4fca654cdccb8a2af4c0d64c64485",
+      "title": "AWS DevOps Agent のインシデント調査に Step Functions で時間の上限を設けてみた",
+      "url": "https://dev.classmethod.jp/articles/aws-devops-agent-investigation-timeout-step-functions/",
+      "description": "Step Functions から調査を開始し、上限時間を過ぎても終わっていない調査を、AWS SDK 統合の UpdateBacklogTask で取り消す仕組みを作りました。",
+      "publishedAt": "2026-11-17T09:14:35.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "3b13c535f16f4b8d9b96395038fc8da1391d7b76713f66738a8f5a672e342854",
+      "title": "AWS KMS: キーはいくつ必要か? 4 つの原則から考えるキー管理戦略",
+      "url": "https://aws.amazon.com/jp/blogs/news/aws-kms-how-many-keys-do-i-need/",
+      "description": "AWS KMS を使用する際、「実際にいくつのキーが必要か?」は多くのお客様が抱く疑問です。この記事では、データ分類、アプリケーション、AWS サービス、職務の分離という 4 つの指針となる原則に基づき、必要な KMS キーの数を判断する方法を解説します。一元的なアプローチ、分散型アプローチ、ハイブリッドモデルの比較と具体例に加え、AWS マネージドキーとカスタマーマネージドキーの選択基準、コスト、管理性といった考慮事項も紹介します。",
+      "publishedAt": "2026-11-17T07:10:28.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "96bff5b822fabe890d7e9099dd4f7632a4a0f525b4170a49791ea6abd3e14a9d",
+      "title": "Instagramのメッセージ専用アプリ「Direct」発表、アカウントなしでも使える",
+      "url": "https://japan.cnet.com/article/35255009/",
+      "description": "Metaは、「Instagram」のメッセージをやり取りする独立したアプリ「Direct」のテストを、タイとトルコで開始したと発表した。",
+      "publishedAt": "2026-11-17T06:55:00.000Z",
+      "feedName": "CNET Japan"
+    },
+    {
+      "id": "7c81678b78cde28231625bcd93d770aeb8f912475034d07355fac33e7b22fe67",
+      "title": "フロントエンドの logic と UI は、エージェントの責任範囲で分けられるのか",
+      "url": "https://zenn.dev/xtm_blog/articles/20261116-fd1702b0ba06cd",
+      "description": "こんにちは、クロステック・マネジメント Foundation Dept. 所属の水本です。 Foundation Dept. では、要求仕様書を渡すと、設計から実装、テスト、PR 作成までを AI エージェントが完走する開発基盤を作っています。 エージェントに工程を自律的に回させるための実行の仕組みを、私たちはエージェントハーネスと呼んで...",
+      "publishedAt": "2026-11-17T06:46:55.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "59a71ca483d2ee70c55cab58271c35c56ccf400a71afac2bd9999881be64b08b",
+      "title": "LTを盛り上げよう！AWSサービス応援うちわ制作裏話",
+      "url": "https://zenn.dev/namiki64/articles/7aab23e02d1dc4",
+      "description": "はじめに\n私が運営に携わっているJAWS-UG大阪で、「あなたの推しサービス教えて！」 というLTイベントを開催しました。\nhttps://jawsugosaka.connpass.com/event/408808/\nこちらのイベントにて、よりLTを盛り上げるために 応援うちわ を作りました。\n\nイメージ図\n私自身はアイドル文化に疎くライブにも行ったことがないのですが、アイドル側がファンを楽しませるだけでなく、ファン側もオリジナルうちわを作ったりオタ芸をしたり、お互いが場を盛り上げる文化が素敵だなと思っていました。\nそこで、まるでアイドルを応援するかように推しサービスを応援して盛り上...",
+      "publishedAt": "2026-11-17T03:55:17.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "6f1c656889bae1cfd332e34b5308836a8d186ad32ce6bccd2340c5037acd1018",
+      "title": "Claude Desktop 開発のすゝめ",
+      "url": "https://zenn.dev/peoplex_blog/articles/vscode-to-claude-desktop",
+      "description": "はじめに\nPeopleX でプロダクト開発をしている Aki です。もともとフロントエンドのエンジニアで、最近はバックエンドの実装にも挑戦しています。\n私のメインのエディタは、ここ数年 VS Code でした。使い始めたのは前の職場にいた2018年ごろだったと思います（その前は Atom を使っていました）。ちょうど Subversion から GitHub に本格的に移り、JavaScript から TypeScript に書き換えていった時期です。\nいまは Claude Desktop の Code タブで開発のほとんどを済ませていて、VS Code は 2026年7月27日を最...",
+      "publishedAt": "2026-11-17T03:41:36.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "b9fe16cb2885b5fcce584b4d8e380f060a22fe5263e72f0e6b08104a5b2d86c1",
+      "title": "AI に書かせたテストは、どれだけ穴を見つけるのか。Claude Code・Codex・Gemini CLI のテストを変異テストで48回採点したら、95%以上を見抜き、仕様を渡すと点が下がった",
+      "url": "https://qiita.com/suwa_nobu/items/faf0d787a602cc5ec74c?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "「AI がテストを書いて、全部通りました」。それで本当に確かめられているのかは、テストが通ったことだけでは分かりません。\n11月9日の「AI「テスト通りました」← これ､本当？ Stryker でテストの穴を塞いだ話」は、変異テストでこの穴を見つける方法を紹介し、11月17...",
+      "publishedAt": "2026-11-17T03:05:14.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "cfacdcda822076a3747672157c1ffadd8c3c6fe781e2a3324cee4e7c1125f3f2",
+      "title": "Everything Claude Code（ECC）入門：ルール・スキル・フックで開発環境を整える",
+      "url": "https://qiita.com/takuya035035/items/8a43c6f44aa8a9f6ea0d?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\nClaude Codeで開発を進めていると、プロジェクトの決まりを毎回伝える場面があります。\n「既存の実装パターンを確認してから変更してほしい」\n「不具合を直すときは、再現するテストも残してほしい」\n「レビューでは、認証や権限制御も確認してほしい」\nこうした指示...",
+      "publishedAt": "2026-11-16T07:33:28.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "3af91cdc8a8d64ac2830737613fc0665ccd3cbc24edcb467c4289d9205f05add",
+      "title": "CSS では書きにくいアニメーションを Web Animations API で書く",
+      "url": "https://zenn.dev/omu_tryangle/articles/b5817393592229",
+      "description": "Web サイトに動きを付けたいとき、まず使うのは CSS の Transitions や Animations だと思います。ホバーしたら色が変わる、モーダルがふわっと出てくる、といった動きは CSS だけで書けますし、そのほうが簡単です。\nしかし、次のような場面では CSS アニメーションで書こうとすると少し面倒になります（できないわけではないですが）。\n\nボタンを押すたびに、同じアニメーションを最初から再生したい\nJavaScript で計算した値を使ってアニメーションさせたい\n前のアニメーションが終わる前に次のアニメーションを始めて、2 つの動きを足し合わせたい\n\nこういうときに使...",
+      "publishedAt": "2026-11-16T06:35:01.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "c42ecaea34d80132adbd55f934f9de3619da7d81a28958f0c87fce22513ccfb8",
+      "title": "14年間使ってきたWordPressをやめて、個人ブログを作り直した話｜星影｜Tech Hunter",
+      "url": "https://note.com/unsoluble_sugar/n/n58c97b4dee67",
+      "description": "仕組みを簡単に説明すると、WordPressはアクセスされるたびにサーバー側で処理を行ってページを表示しますが、静的サイトでは、あらかじめ作っておいたHTMLファイルをそのまま配信します。 毎回プログラムを動かす必要がないので、表示が速くなり、セキュリティ上のリスクも抑えられます。 サイトの置き場所には「Cloudf...",
+      "publishedAt": "2026-11-16T01:04:11.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
     }
   ]
 }
