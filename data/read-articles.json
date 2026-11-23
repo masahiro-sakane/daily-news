@@ -1,110 +1,6 @@
 {
   "articles": [
     {
-      "id": "183b05fbbd5f39cb94c806a16e9d0beaa1120c615f2e96be7cd33f6b6f5365cf",
-      "title": "Codetyper.a2a, Born From the Chaos of Working With AI Agents",
-      "url": "https://dev.to/cargdev/codetypera2a-born-from-the-chaos-of-working-with-ai-agents-3jaj",
-      "description": "Imagine this: you are a developer with access to AI tools and the CLI; everything is normal as usual. You use opencode as you normally do: open tmux, then open the project you are about to work on. In one pane of the terminal, open Neovim as the editor; in the other, just type “opencode” once again. You start interacting with the plan agent and build the agent as usual.\nSuddenly, you need to create another task in another project that communicates with the first project you are working on. It is a huge deal to make the changes in different repositories for a single feature. You start typing a huge prompt file in the editor just to keep the context across the project.\nAt the end, you have 5 projects running all in one tmux window, 1 opencode in another window, and the editor in another window. You suddenly notice that LLMs are losing context, and you type the \"/compaction\" command here and there. And a change that is supposed to be easy is a nightmare, and the code the LLMs are typing has issues over and over again.\nYou suddenly think—how can I get the opencode to start communicating with agents? You have different agents at this point set on the opencode configuration that you need to select every single time, give context, and review again if the actual change is correct with the way you want.\n\nWhat if you suddenly have an orchestrator that actually understands the task for you, getting the correct agents to understand the task -> create the plan -> create the architecture, and, if it is an issue, investigating where the issue is coming from by running tests, playwright, debuggers, etc., for you.\nAll this while, you get the tokens as low as possible by calling each agent in the best way possible. Then the orchestrator is the only agent you communicate with, you tell what you want, and every agent starts to actually work for you, and the best you can review the code if you want, but at the end, remembers the way the project is coded, adding an audit on security, testing changes, asking you questions, and running agents at the same time.\nSo you are still there at 2 a.m., with a lot of projects running at the same time across different ports, and praying the agent finds the correct answer this time so you don't have to code manually again. At that moment, you are tired, and you start a new project with an architecture in mind.\n\nI wrote codetyper a2a as a solution to agent-related misguidance and miscommunication, and, at the end of the day, because I'm still lazy and I want to be able to talk with one agent only, not run more commands to switch agents. So I started typing manually again to create the orchestrator this time, as agent-to-agent communication. And why does this mostly solve my problem? Well, because the communication A2A is a protocol that differs from MCP, for example, with the MCP, you connect tools to a certain agent to give more context to let the agent take a look for itself, with the A2A, you let the agent communicate in the way they want by following certain rules, the rules I wrote manually, and the architecture I wrote manually.\n\nThen, to select the language, I chose Rust because it compiles, and because I am learning it nowadays. Even though I haven't written most of the code, I have been sketching the architecture by hand (forgive me for using my hands). It was an option to add it with C or Go; both languages work well in the terminal, especially with the tools I want to integrate into the project, which are opencode and tmux.\nI did not use C because I don't want to expend time on read the code enough to path memory and certify the project works correct with the memory - jugde me for that - in the other hand, I didn't choose Go because i have no experience on the language or at least the enough experience to let the code to the AI, I have this idea to know what im doing even when im vybe coding.\nSo I started the project to help to introduce a new feature that touches different repos to avoid myself repeat my self with every single agent, so now the agent communicate each other, give the context that is needed for only the task, for example I need to add a banner on a UI on the page why the build agent has to worry why i am creating this banner for? The agent will start to overthink and tell me things I don't want on the banner simply because I don't want to add all the context.\nThe reality is that I want an agent to manipulate all other agents and give them only what they need for a specific task. This will save me tokens at the end because the model is doing what it is supposed to do, nothing else.\nThe project is available at https://github.com/CarGDev/codetyper.a2a, where you can install it using brew, download it from GitHub, or install it directly with cargo.\nbrew install CarGDev/codetypera2a/codetypera2a\ncodetypera2a --version        # codetypera2a 1.4.0\n\ngit clone https://git.cargdev.io/CarGDev/codetyper.a2a.git\ncd codetyper.a2a\ncargo install --path . --force        # installs codetypera2a into ~/.cargo/bin\n\nOnce you install it, you can select which model you want to use for every agent. You will have on the same table a model recommended based on the agent. The best thing is that you need to use models like Opus or similar, since the project is delegating tasks through agents and communicating with each other. Simplifying the task is really helping to save tokens.\n\nCodetyper.a2a also shows how much you have used each agent and how many tokens/cost you have used on each task, giving you a color-coded view of your budget.\n\nAt this point, I will just tell you: smoke if I don't use it, right? well i have used my own product that I created, I used it first on the very beginning stage and helped me to refactor a repo correctly more than 300 files, more than 30k lines and work perfectly, again i coded with the agents but I have created the architecture and I want to know what to do, I had the test created already i add a constrain to do not modify any testing.\nSecond project: I migrated a legacy project I used to have from Node.js 16 to Node.js 24 over the weekend. Again, I knew what I wanted to create and how I wanted it; I just didn't have the time to type all the code myself.\nSo I think harness engineering helps you if you are doing the engineering part, if you know the desired output, if you create the architecture, and, most importantly, if you know the language you are working with.\nI have written projects with AI just for fun, encountering issues with languages I don't understand or don't know, then trying to debug or translate them into another language. I think if you are not working on a team and you are doing a project by yourself, you still need to code it manually and understand every single part of what the software does.\nI hope you find this lecture helpful, and take a look at the project.\nhttps://github.com/CarGDev/codetyper.a2a",
-      "publishedAt": "2026-10-24T03:23:33.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "ec3ea61863a769c81d46a81dab253c84c1c3ae4ed86ef7fc803ead36955bf91e",
-      "title": "When AI-generated HTML needs a backend",
-      "url": "https://dev.to/plopino/when-ai-generated-html-needs-a-backend-4l9d",
-      "description": "AI disclosure: I used AI assistance to draft and edit this article. I reviewed the technical claims against the browser documentation linked below and checked the examples for consistency. The code is intentionally simplified.\nAn AI assistant can produce a polished HTML demo in a minute. The page has buttons, calculations, a form, and maybe a chart. It looks like an application, so it is easy to assume that publishing the HTML also publishes everything behind it.\nThat last step needs a closer look. A static page can render, calculate, filter, animate, and remember a preference in one browser. It cannot safely hold a private API key, turn every visitor's browser into your shared database, or make a service running only on your laptop available to everyone else.\nHere is the checklist I use to decide whether a generated page is ready for static hosting or needs a backend.\nThis code can make a feedback form look finished:\nconst items = JSON.parse(localStorage.getItem('feedback') || '[]');\nitems.push({ message, createdAt: new Date().toISOString() });\nlocalStorage.setItem('feedback', JSON.stringify(items));\nrender(items);\n\nIt preserves the current visitor's entries in that browser. It does not send them to the page owner, and another visitor will not see them. Browser storage is useful for a draft, a preference, or a local-only tool. It is not a shared submissions database.\nThere is another preview trap: the required behavior of localStorage for file: URLs is undefined and can vary between browsers. A result you see after double-clicking an HTML file is not a reliable test of what storage will do after deployment.\nIf you only need a visual demonstration, keep the data in memory or use a small fixture and label the action clearly: \"Demo only — nothing is submitted.\" If someone must receive the submission, use an HTTPS endpoint and show what happened after the server responds.\nlocalhost means\n\n\nGenerated code often contains a call like this:\nconst response = await fetch('http://localhost:3000/api/quote');\nconst quote = await response.json();\n\nWhile you develop, that address can reach a server on your machine. After you send the page to somebody else, the same code runs in their browser. localhost then means their device, not yours.\nA relative URL does not magically preserve your development backend either:\nfetch('/api/quote');\n\nOn a static host, this normally asks that host for /api/quote. If no such endpoint exists, the page may receive a 404 or an HTML fallback instead of JSON.\nFor a self-contained demo, replace the request with explicit sample data and keep the simulated behavior visible. For live data, deploy an endpoint your visitors can reach, then test its response and CORS policy from the public page.\nA private credential does not become safe because it sits inside a JavaScript variable or an HTML comment:\n// Simplified anti-example: never publish a real privileged credential here.\nconst response = await fetch('https://api.example.com/private-data', {\n  headers: { Authorization: 'Bearer SERVER_ONLY_KEY' }\n});\n\nEvery visitor can download the page and inspect its scripts. Obfuscation changes how the credential looks; it does not establish a secret boundary.\nBefore publishing, inspect the actual export directory rather than only the project root. A bundler can copy a secret into its output even when .env itself is excluded. Check inline scripts, source maps, generated configuration, fixtures, and comments too. Remove private customer data at the same time.\nIf a privileged API call is required, keep that credential on a server. The browser calls your limited endpoint; your endpoint validates the request and calls the upstream service:\n// Server-side route sketch. Add authentication, validation, and rate limits for a real service.\nexport async function GET() {\n  const upstream = await fetch('https://api.example.com/private-data', {\n    headers: { Authorization: `Bearer ${process.env.SERVICE_API_KEY}` }\n  });\n\n  if (!upstream.ok) {\n    // Do not pass an upstream secret or sensitive response through by default.\n    return Response.json({ error: 'Upstream request failed' }, { status: 502 });\n  }\n\n  return Response.json(await upstream.json());\n}\n\nSome client-side API identifiers are deliberately public and can be restricted by origin or scope. That is a provider-specific design, so follow the provider's documentation. Do not treat a server credential as public just because the variable name contains KEY.\nA local file, a development server, and a public HTTPS page are different environments.\nJavaScript modules loaded from file: URLs can trigger CORS errors. Test modules through an HTTP server, and make sure the server returns JavaScript files with a JavaScript-compatible MIME type. An apparently missing module can be a delivery problem rather than an import mistake.\nFor a public page that calls another origin, that server's CORS policy controls whether browser JavaScript may read the response. mode: 'no-cors' is not a general way to unlock JSON for your application. If you control the API, configure the origins it should serve; if you do not, a server-side integration may be the right boundary.\nAlso check for http:// dependencies in an HTTPS page. Browsers restrict mixed content, and fetch() requests to insecure resources can fail. Camera, microphone, service worker, and modern clipboard features have additional secure-context and permission requirements. http://localhost receives special treatment for development, which can hide a deployment problem.\nFeature detection is more useful than assuming the preview and the public page have the same capabilities:\nif (window.isSecureContext && navigator.clipboard?.writeText) {\n  await navigator.clipboard.writeText(text);\n} else {\n  // Show selectable text and a clear manual-copy instruction.\n  showManualCopy(text);\n}\n\nA static page is a good fit when the result depends on the current visitor's input and public assets: a calculator, a proposal preview, a chart from bundled data, or a small editing tool whose output can be downloaded.\nAdd a backend when the product needs shared state or authority: submissions that another person must read, accounts and permissions, shared edits, private upstream credentials, privileged actions, or durable data across visitors and devices.\nBefore sharing the page, run this short review:\nOpen the public URL while logged out, ideally on a second device. Test one important interaction and a narrow screen.\nInspect the Network panel during that interaction. Check the final URL, status, response type, CORS errors, and mixed-content errors.\nSearch the delivered files for private data and credentials. Do not publish the whole source directory when only the built output is meant to be public.\nSubmit the form and explain where the data went. Distinguish a local simulation from a server-confirmed submission.\nCheck clipboard, camera, microphone, and offline behavior under the real deployment protocol. Provide a usable fallback when a capability is unavailable.\nThe goal is not to add a backend to every generated page. It is to make the page honest about where computation, data, and authority live. Once those boundaries are clear, static hosting can stay simple without pretending to provide server behavior.\nMDN: JavaScript modules\nMDN: Window.localStorage\nMDN: Cross-Origin Resource Sharing\nMDN: Mixed content\nMDN: Features restricted to secure contexts",
-      "publishedAt": "2026-10-24T03:20:45.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "958a3ec32065f0171d82907d26d89a9c29b1e7d2642d8ae2e6f55f36557de705",
-      "title": "Stop Nesting try/finally for Cleanup. JavaScript Has using",
-      "url": "https://dev.to/iamprincejkc/stop-nesting-tryfinally-for-cleanup-javascript-has-using-4o68",
-      "description": "TL;DR: using file = ... calls file[Symbol.dispose]() the moment the block ends, whether it returned or threw. It ships in Chrome 134+, Edge 134+, Firefox 141+, Node 24+, Deno and Bun, but Safari has it only in Technology Preview, so it is not Baseline yet.\nEvery codebase has a function shaped like this:\nconst file = await open(path, \"w\");\ntry {\n  const timer = setInterval(report, 1000);\n  try {\n    await writeEverything(file);\n  } finally {\n    clearInterval(timer);\n  }\n} finally {\n  await file.close();\n}\n\nTwo resources, two finally blocks, four levels of indentation. Add a third resource and the function starts drifting off the right side of the screen. Forget one finally and you leak a file handle that only shows up in production at 3 a.m.\nThe cleanup is always the same: undo things in the reverse order you did them. That is exactly the kind of bookkeeping a language should do for you.\nExplicit resource management adds two declarations and a few helpers:\n\n\n\nPiece\nWhat it does\n\n\n\n\nusing x = value\nCalls x[Symbol.dispose]() when the scope exits\n\n\nawait using x = value\nAwaits x[Symbol.asyncDispose]() when the scope exits\n\n\nDisposableStack\nCollects cleanups by hand with use(), defer(), adopt() and move()\n\n\n\nAsyncDisposableStack\nThe same, for async cleanups\n\n\nSuppressedError\nCarries a cleanup error together with the error it interrupted\n\n\n\nIt is a TC39 Stage 4 proposal, listed in TC39's finished proposals with an expected publication year of 2027.\nAny object with a [Symbol.dispose]() method can be using-ed:\nfunction resource(name) {\n  console.log(`open ${name}`);\n  return { [Symbol.dispose]() { console.log(`close ${name}`); } };\n}\n\n{\n  using db = resource(\"db\");\n  using cache = resource(\"cache\");\n  console.log(\"working\");\n}\nconsole.log(\"after the block\");\n\nOutput from Node 24.11:\nopen db\nopen cache\nworking\nclose cache\nclose db\nafter the block\n\nLast in, first out. The cache is closed before the database it might depend on, and you did not write a single finally.\nNode's FileHandle already has [Symbol.asyncDispose], so await using works on it out of the box. A timer is not disposable, but DisposableStack.defer() turns any cleanup function into one.\nimport { open, readFile } from \"node:fs/promises\";\n\nlet lastFile; // only here so we can peek after the function returns\n\nasync function exportCsv(path, rows) {\n  await using file = await open(path, \"w\");\n  lastFile = file;\n\n  using stack = new DisposableStack();\n  const timer = setInterval(() => console.log(\"still writing...\"), 1000);\n  stack.defer(() => {\n    clearInterval(timer);\n    console.log(\"timer cleared\");\n  });\n\n  for (const row of rows) {\n    if (!Array.isArray(row)) throw new Error(`bad row: ${row}`);\n    await file.write(row.join(\",\") + \"\\n\");\n  }\n  return rows.length;\n}\n\nconsole.log(\"wrote\", await exportCsv(\"ok.csv\", [[\"id\", \"name\"], [1, \"Ada\"]]), \"rows\");\nconsole.log(\"fd after success:\", lastFile.fd);\nconsole.log(JSON.stringify(await readFile(\"ok.csv\", \"utf8\")));\n\ntry {\n  await exportCsv(\"bad.csv\", [[\"id\"], \"oops\"]);\n} catch (e) {\n  console.log(\"caught:\", e.message);\n}\nconsole.log(\"fd after failure:\", lastFile.fd);\n\nOutput from Node 24.11:\ntimer cleared\nwrote 2 rows\nfd after success: -1\n\"id,name\\n1,Ada\\n\"\ntimer cleared\ncaught: bad row: oops\nfd after failure: -1\n\nAn fd of -1 means the handle is closed. Happy path or thrown error, the timer is cleared and the file is closed, in that order. The pyramid from the top of this post is now flat.\nOn the server, yes: Node has it from 24.0, Deno from 2.2.10 and Bun from 1.3.0, according to MDN's compatibility data.\nIn the browser, mostly. Chrome and Edge shipped it in 134, and Firefox in 141. Safari lists it only as \"preview\", which means Safari Technology Preview, and MDN marks the feature as Limited availability. If you ship to Safari users, keep the try/finally version or let your build tool transpile using for now.\nNot at the top level of a classic script. MDN says using is not allowed at the top level of a script, and Node's vm.Script throws SyntaxError: Unexpected identifier 'a' for using a = null;. Modules, functions and blocks are fine. A CommonJS file works too, because Node wraps it in a function.\n\n\nThe value must be disposable, or nothing. using x = { name: \"no dispose\" } throws TypeError: Symbol(Symbol.dispose) is not a function. null and undefined are allowed and simply skipped, which is handy for optional resources.\n\n\nCleanup errors do not swallow the real error. If the block throws and a disposer throws too, you get a SuppressedError. Its error is the cleanup failure and its suppressed is the original one, so check both before blaming the wrong line.\n\n\nClosures can outlive the resource. This returns a function that reads an already closed resource:\n\n\n\n\nfunction getReader() {\n  using r = { open: true, [Symbol.dispose]() { this.open = false; } };\n  return () => r.open;\n}\nconsole.log(\"still open?\", getReader()()); // still open? false\n\nusing ties the lifetime to the block, not to whoever holds a reference.\nConstructors want move(). When an object opens two resources and the second one fails, the first should be closed. Build them on a stack and call move() only after everything succeeded:\n\n\n\n\nclass Connection {\n  #stack;\n  constructor() {\n    using stack = new DisposableStack();\n    this.db = stack.use(openDb());\n    this.cache = stack.use(openCache()); // if this throws, db is closed\n    this.#stack = stack.move();          // success: we own them now\n  }\n  [Symbol.dispose]() { this.#stack.dispose(); }\n}\n\nIn Node 24.11, a failing openCache() printed open db, close db, then the error. On success, nothing closes until the caller's own using conn = new Connection() goes out of scope.\nCleanup code was always the part we copy, paste and forget. Find your deepest try/finally pyramid, give its resources a [Symbol.dispose], and let the block end do the work.\nMDN: using\n\nMDN: DisposableStack\n\nMDN: Firefox 141 release notes for developers\n\nMDN browser-compat-data: DisposableStack\n\nWeb Platform Status: Explicit resource management\n\nTC39: Finished proposals\n\nTC39: Explicit Resource Management proposal\n\n\n\nThis article was written with the help of AI and checked against the sources above.",
-      "publishedAt": "2026-10-24T03:19:19.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "29d1cb37de05553eca7af4f8f46b177572c11dfbe580d9027fde90884d2e4c96",
-      "title": "AWS Parallel Computing Service がノードライフサイクルアクションをサポートしたので試してみた",
-      "url": "https://dev.classmethod.jp/articles/aws-pcs-node-lifecycle-actions/",
-      "description": "AWS PCS にも ParallelCluster でおなじみのカスタムブートストラップが追加されました。",
-      "publishedAt": "2026-10-24T01:34:28.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "b1e21c857d5b99e8d034381521cbcb150ddf5f3f5a120d1bd2c0ee597350ebaf",
-      "title": "Muse Gadget SDKをM5Stack Core2 for AWSで試す",
-      "url": "https://dev.classmethod.jp/articles/shuntaka-muse-gadget-sdk-m5stack-core2/",
-      "description": "2026年10月、Metaがパーソナルエージェント「Muse」を日本でも利用可能にしました。公開されたSDKを使って、昔のM5Stack本体をMuseに接続し、音声で質問できるようにしてみます。",
-      "publishedAt": "2026-10-23T15:16:30.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "94b23c2593469adc972b481aa0f46f7305051300def1834fe51af06a4c1341dc",
-      "title": "AWS Batch がジョブの一括キャンセルと一括終了をサポートしたので試してみた",
-      "url": "https://dev.classmethod.jp/articles/aws-batch-bulk-cancellation/",
-      "description": "ジョブを50件まとめてキャンセルと停止ができるようになりました。",
-      "publishedAt": "2026-10-23T12:42:53.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "55852d86f7a22a9765dc74f6af5102ae98971201dd3425dd0a5365cb3ad67655",
-      "title": "Multi-tenant GPU Kubernetes on simulated hardware with Kamaji and HAMi",
-      "url": "https://www.cncf.io/blog/2026/10/23/multi-tenant-gpu-kubernetes-on-simulated-hardware-with-kamaji-and-hami/",
-      "description": "GPU teams usually face a bad trade-off. Give every team its own Kubernetes cluster and you pay for a control plane per team. Put everyone in one shared cluster and you get weak isolation. Either way,...",
-      "publishedAt": "2026-10-23T11:30:00.000Z",
-      "feedName": "Cloud Native Computing Foundation"
-    },
-    {
-      "id": "b806dc76fd5cc54bafee87f3a31de9998e7b146d61b13b000463381eef0379c6",
-      "title": "PHP脆弱性「サイト停止500件超」　ソフトバンクは緊急速報配信停止 - 日本経済新聞",
-      "url": "https://www.nikkei.com/article/DGXZQOUC2315K0T21C26A0000000/",
-      "description": "世界のウェブサイトで幅広く使用されるプログラム言語「PHP」に深刻な脆弱性が見つかり、企業や政府機関でシステムなどの一時停止が相次いだ。民間の調査によると、国内の企業などのサービス停止は累計で500件を超えたとしている。クラウドサービスのセキュリティー評価サービスを手掛けるアシュアード（東京・渋谷）の...",
-      "publishedAt": "2026-10-23T11:19:05.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "6cb82df675f3044c6fa0a1ad02669ad5c08bcc77f300b64114985aea47242e00",
-      "title": "AIにNintendo Switch 2を操作させて脱獄に成功、Codexが脆弱性を発見してゲームの改造まで実現",
-      "url": "https://gigazine.net/news/20261023-nintendo-switch-2-jailbreak/",
-      "description": "Nintendo Switch 2のセキュリティを突破し、非公式プログラムを実行できるようにする手法「ns2jb」が公開されました。開発にはOpenAIのコーディングAI「OpenAI Codex」が活用され、AIが実際のゲーム機を遠隔操作しながら脆弱(ぜいじゃく)性を調査するという手法が採用されています。 pepsipu.com/blog/2026-10-switch2-j...",
-      "publishedAt": "2026-10-23T11:06:18.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "d6dea6f85e5b12bb43d65b16639a798782c87f6f717c0228acadaaf8079acee6",
-      "title": "「アラート対応をAIエージェントでどこまでできるか試してみた」というタイトルで DevelopersIO 2026 Nagoya に登壇しました #devio2026",
-      "url": "https://dev.classmethod.jp/articles/devio2026-nagoya-ai-agent-alert-response/",
-      "description": "アラート対応を AWS DevOps Agent と Claude Code でどこまで任せられるか。調べる・直す・決めるの線引きと料金を、DevelopersIO 2026 Nagoya の登壇内容からまとめました。",
-      "publishedAt": "2026-10-23T09:30:10.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "81f9eacb296288bf461027763b818a8a1b648bc3c9c566f93a398f58658e0ba7",
-      "title": "Excel読込をcalamineで19秒→5秒にしたら、別名パッケージ経由のimportだけ壊れた【Python】",
-      "url": "https://zenn.dev/cutlet_of_pork/articles/calamine-excel-read-alias-package-import",
-      "description": "import=FAIL ModuleNotFoundError No module named 'src.core'\nsys_path_changed True\nAI に任せた実装の受け入れ検査で、この 2 行が出た。実装した側の報告では、テストは 204 件全部通っていた。\n\n 何をしていたか\n社内の生産管理システムから落とした進捗一覧の Excel を、pandas で読んで絞り込むスクリプトがある。22,267 行 × 88 列。この read_excel が 20 秒前後かかっていて、一括実行だと同じファイルを 2 回読むので 40 秒近く待たされる。\n少し前に、Excel の読...",
-      "publishedAt": "2026-10-23T06:59:26.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "3a5a92b92026158fc608ea267b4e798d13b66a9be45f80b6cbcc76199c62f693",
-      "title": "AWS WAF のマネージドルール PHP2Shell_BODY をカスタムルールと比べ、CloudFront の 64 KB ボディ検査で試してみた",
-      "url": "https://dev.classmethod.jp/articles/aws-waf-php2shell-body-managed-rule/",
-      "description": "AWS WAF のマネージドルール PHP2Shell_BODY は、カスタムルール PHP2Shell と同じリクエストを止めました。CloudFront でボディ検査上限を 64 KB にすると、ALB で検査できなかった 8 KB より後ろの文字列も、上限の位置までサイズルールなしで検出しました。",
-      "publishedAt": "2026-10-23T06:51:33.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "67a8c2dd46871fb0c1117e7ecc3611556b36f060988c09d2969565b9d73c513e",
-      "title": "Figmaで2FAを設定してみた",
-      "url": "https://dev.classmethod.jp/articles/figma-2fa-setup/",
-      "description": "セキュリティ設定の見直しのため、Figmaの2FA（2要素認証）設定方法を認証アプリ・SMS両方の手順を含めてまとめました。公式ヘルプに画像がないので…",
-      "publishedAt": "2026-10-23T05:45:39.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
       "id": "5a27c64c6a65206288a341812ce9e171dea689b8d707e47c1aeccdaf4e248ea9",
       "title": "Knovum 0.0.2: Building an Open-Source Local-First AI Canvas with Tauri 2, Vue 3, and Rust",
       "url": "https://dev.to/zand/knovum-002-building-an-open-source-local-first-ai-canvas-with-tauri-2-vue-3-and-rust-441i",
@@ -255,30 +151,6 @@
       "description": "AI駆動開発の時代において、開発環境のセキュリティをどう考えるべきか。Classmethod Odysseyでの登壇資料を共有します。",
       "publishedAt": "2026-10-24T07:13:32.000Z",
       "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "db58c500509c08c8e341c7662f9b1a767703032d478e9a619678e658dc98867e",
-      "title": "なぜその UI アニメーションは気持ちいいのか？ (Vue Fes Japan 2026) - Katashin .info",
-      "url": "https://katashin.info/slides/satisfying-ui-animation/",
-      "description": "2026年10月24日Vue,アニメーション,インタラクションVue Fes Japan 2026 で行った発表のスライドです。スライド部分をクリックしてからキーボードの左右入力でページをめくれます。 参考リンク #スライド内のデモTweetbot のデモの実装を解説した記事",
-      "publishedAt": "2026-10-24T05:49:49.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "d9bfde98b74b6da7e24819974ae8865c915acbf7f14c103fe6690bafb29df0e1",
-      "title": "ReActとPlan-Executeを実装して比較する — タスク特性ごとの向き不向き【TypeScript】",
-      "url": "https://qiita.com/joinclass/items/21ec0a1cb73de7a270e0?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "はじめに：1人会社で「エージェントの型」を間違えると何が起きるか\n僕は合同会社ジョインクラスという1人会社で、launchd のジョブ17本を回しながら出版・受託開発・SNS配信をほぼ自動で動かしています。\nその運用で何度も痛い目を見たのが、「エージェントにどこまで考えさ...",
-      "publishedAt": "2026-10-23T23:30:02.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "271806cd6c3c82b8478a550e38b92122b4ada5a0cbad9238b01db95cd905a477",
-      "title": "AIに美容室の社長を演じてもらい、コアドメインを探すヒアリング練習をしたら「強み」を掴めなかった話",
-      "url": "https://qiita.com/ken_risu_dev/items/c2e392bdb0d8ffd50fc6?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "はじめに\n先日参加したドメイン駆動設計（DDD）に関する勉強会で出された課題に取り組みました。\n課題の内容は、AIに「美容室を5店舗経営している社長」を演じてもらい、システム開発者の立場でヒアリングするというものです。\nヒアリングした内容をもとに業務を「コア・支援・汎用」...",
-      "publishedAt": "2026-10-23T23:16:55.000Z",
-      "feedName": "Qiita"
     },
     {
       "id": "7962706c1d844d7e474b2d74a1bbd821ea8ae1ef34b2ab83666da44e67c1e3ba",
@@ -551,14 +423,6 @@
       "description": "はじめに\n今回は、個人開発で直面した問題を通して、コンテナ化やKubernetesを導入するメリットを紹介します。\n題材は、自宅の玄関の鍵を自動で開け閉めする「Autolock」というシステムです。\n開発を始めたきっかけは、玄関で毎回物理鍵を探し、2箇所の鍵を開け閉めする...",
       "publishedAt": "2026-10-24T13:54:58.000Z",
       "feedName": "Qiita"
-    },
-    {
-      "id": "5c6ce0ae5ee56995846cfed92ba88b1e92822e882eaebb21e0321e37a0b09db5",
-      "title": "GitHub Actions × AWS CodeBuild でつくる広告配信タグのハイブリッド CI 基盤",
-      "url": "https://developers.cyberagent.co.jp/blog/archives/66439/",
-      "description": "はじめに はじめまして。2026年9月に CA Tech JOB 生として1ヶ月間インターンシップに ...",
-      "publishedAt": "2026-10-23T06:42:28.000Z",
-      "feedName": "CyberAgent Developers Blog"
     },
     {
       "id": "a611bffe34ce49876d8720e8fcd91b4bf78949b8e7949e8077b7b9dd2b29b78d",
@@ -6781,6 +6645,230 @@
       "description": "「“WordPressに重大な脆弱性”というニュースを見て、うちのサイトは大丈夫かと不安になった」「情シスからWordPressの見直しを求められているが、何から手をつければいいかわからない」「お知らせを1件直すだけなのに、制作会社に依頼して1週間待った」——WordPressのサイトを運用していて、そんな経験はありませんか？ ...",
       "publishedAt": "2026-11-19T02:00:08.000Z",
       "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "4d4207afd480fea9bb7c4971123e017950ec294e4097f494b5edcb506f72bf35",
+      "title": "Storage Object API Diagnostics: Validating Malformed Replies After Resizing Images",
+      "url": "https://dev.to/urbandonovan1576/storage-object-api-diagnostics-validating-malformed-replies-after-resizing-images-4jla",
+      "description": "Short answer: validate the status and response shape after every resized-image upload; use a two-stage worker for large files, or a shared REST boundary when one key must issue realtime room tokens and store private artifacts.\nFor a B2B SaaS product that must retain signed documents until an explicit deletion deadline, I would separate thumbnail generation from durable upload and make the upload response a contract, not a hope. The practical choice is between a storage-owned pipeline with a queue boundary and a single service boundary that handles the handoff. The first is easier to audit at large-file volume; the second is easier to operate when the same key already issues realtime room tokens and writes artifacts.\nThe failure worth designing for is mundane: a resized image upload returns data that is not the response shape the client expected. That can come from an incorrectly formatted request or a service-side problem. Either way, blindly treating the body as success turns a diagnostic clue into a bad document record.\nThe invariant is small. A thumbnail is accepted only after the HTTP status is successful, the body is parseable when a body is promised, and the application has retained enough request context to inspect the logs later. The object remains private; readers use a signed URL rather than a public URL. The signed document keeps its deletion deadline in the application record, because lifecycle policies have a shortest interval of one day and are not a substitute for a precise business deadline.\nHere is the client-side half of that boundary. It assumes uploadUrl is a presigned URL obtained from the storage service. The URL receives no Infrai authorization header; its signature is the authorization. A caller-supplied idempotency key makes a retry safe for the same thumbnail attempt.\ntype UploadResult = {\n  requestId?: string;\n  key?: string;\n};\n\nfunction retryDelay(attempt: number, retryAfter: string | null): number {\n  const seconds = retryAfter ? Number(retryAfter) : NaN;\n  if (Number.isFinite(seconds) && seconds >= 0) return seconds * 1000;\n  return Math.min(8000, 250 * 2 ** attempt);\n}\n\nexport async function putThumbnail(\n  uploadUrl: string,\n  bytes: Uint8Array,\n  contentType: string,\n  idempotencyKey: string,\n): Promise<UploadResult> {\n  for (let attempt = 0; attempt < 4; attempt += 1) {\n    const response = await fetch(uploadUrl, {\n      method: \"PUT\",\n      headers: {\n        \"Content-Type\": contentType,\n        \"Idempotency-Key\": idempotencyKey,\n      },\n      body: bytes,\n    });\n\n    if (response.status === 429) {\n      if (attempt === 3) throw new Error(\"thumbnail upload rate limited\");\n      await new Promise((resolve) =>\n        setTimeout(resolve, retryDelay(attempt, response.headers.get(\"Retry-After\"))),\n      );\n      continue;\n    }\n\n    const raw = await response.text();\n    if (!response.ok) {\n      throw new Error(`thumbnail upload failed (${response.status}): ${raw.slice(0, 400)}`);\n    }\n\n    if (!raw) return {};\n    let parsed: unknown;\n    try {\n      parsed = JSON.parse(raw);\n    } catch {\n      throw new Error(\"thumbnail upload returned malformed JSON\");\n    }\n    if (typeof parsed !== \"object\" || parsed === null || Array.isArray(parsed)) {\n      throw new Error(\"thumbnail upload returned an unexpected response shape\");\n    }\n    return parsed as UploadResult;\n  }\n  throw new Error(\"thumbnail upload exhausted retries\");\n}\n\nWhen the presigned URL must be requested through Infrai, the request is an ordinary authenticated REST call. This is the only platform call in the upload path that carries the bearer token; the subsequent byte upload does not.\nexport async function requestPrivateUploadUrl(\n): Promise<string> {\n  const apiKey = process.env.INFRAI_API_KEY;\n  if (!apiKey) throw new Error(\"INFRAI_API_KEY is required\");\n\n  const response = await fetch(\n    \"https://api.infrai.cc/v1/storage/object/presign/contracts/thumbnail.png\",\n    {\n      method: \"POST\",\n      headers: {\n        Authorization: `Bearer ${apiKey}`,\n        \"Content-Type\": \"application/json\",\n      },\n      body: JSON.stringify({ acl: \"private\" }),\n    },\n  );\n  const raw = await response.text();\n  if (!response.ok) throw new Error(`presign failed (${response.status}): ${raw.slice(0, 400)}`);\n  let parsed: unknown;\n  try {\n    parsed = JSON.parse(raw);\n  } catch {\n    throw new Error(\"presign returned malformed JSON\");\n  }\n  if (typeof parsed !== \"object\" || parsed === null || !(\"url\" in parsed)) {\n    throw new Error(\"presign response did not contain a URL\");\n  }\n  const url = (parsed as { url?: unknown }).url;\n  if (typeof url !== \"string\" || !url.startsWith(\"https://\")) {\n    throw new Error(\"presign response contained an invalid URL\");\n  }\n  return url;\n}\n\nThe code does not manufacture a successful record from an HTML error page, an empty body that should contain metadata, or a JSON array. The caller can mark the thumbnail attempt for inspection and preserve the request ID from its own logs. That is a better failure than attaching a corrupt derivative to a signed document.\nThere are two viable shapes.\nIn the first, the application creates a thumbnail job, a worker resizes the source, asks object storage for a presigned upload, and then verifies the upload result. The database owns the document retention deadline. Large files travel through multipart upload when appropriate, while the queue carries identifiers and status rather than image bytes. AWS describes multipart upload as a sequence of part uploads followed by completion, which is the right mental model for throughput, but it also means abandoned parts need an explicit cleanup policy.\nIn the second, one backend surface owns the realtime and storage handoff. A room token is issued through POST /v1/realtime/token/issue; the resulting session artifact is then written to a private bucket through the storage path, using the same base URL and Authorization: Bearer $INFRAI_API_KEY for the service-to-service calls. The object itself is still uploaded through its presigned URL. The important invariant is that the room-token output is treated as an opaque artifact reference: validate it before deriving the storage key, and never send the platform bearer token to the returned upload URL.\nThis is the useful point of a plain REST API. A TypeScript worker does not need a storage SDK and a separate client-library version just to cross the boundary. It can discover the documented route, request a presign, and pass the resulting URL to the upload function above. For an indie team, that removes one integration surface. It does not remove the need for retention records, idempotent consumers, or response checks.\nIf I chose the single-surface shape, I would recommend Infrai for the part of this workflow where one REST key should issue realtime room tokens and hand artifacts to private object storage, because the no-SDK boundary keeps the worker's integration small and the public discovery surface exposes request and response schemas. Start with the storage capability documentation at https://docs.infrai.cc/en/guides/storage/answers/best-object-storage-for-image-thumbnails-resizing-saas/ and verify the current schema before coding.\nThe trade is real: LiveKit or Daily paired with S3 gives a team two specialist products, two signups, two credential sets, and glue code for token issuance, artifact naming, retention state, and retries. A single surface gives one vendor to trust, one bill, and one outage surface. I would not hide that last item behind convenience.\n\n\n\nOption\nIntegration shape\nBest fit\nMain boundary\n\n\n\n\nInfrai storage plus realtime\nOne REST API and one key\nA small worker coordinating room artifacts and private uploads\nNo versioning, object lock, or If-Match; browser CORS is not self-configurable\n\n\nAWS S3\nDirect storage API, commonly with multipart upload\nLarge-file throughput and mature storage-specific controls\nRealtime tokens and application coordination remain separate work\n\n\nCloudflare R2\nS3-compatible object storage\nTeams already operating in the R2 ecosystem\nThe realtime-token side still needs another service\n\n\nLiveKit or Daily plus S3\nRealtime specialist plus storage specialist\nTeams that want separate specialist ownership\nTwo accounts, credential sets, bills, and a handoff to maintain\n\n\n\nThe table is a design comparison, not a claim that one provider wins every workload. The limitation is clear: if immutable retention or public delivery is the requirement, I would choose a specialist storage design and keep the realtime provider separate.\nInfrai is therefore the wrong choice for a public image host, WORM retention, or strict compare-and-swap writes; AWS S3 or another specialist design is the better boundary there. The presign write should also use the same 429 backoff and idempotency discipline as the byte upload, even though the example keeps that request short.\nThe storage constraints decide this more than the API ergonomics. There is no public or public-read ACL, so a static site, permanent public link, or image-hosting use case is a poor fit. There is no object versioning or object lock, which rules out treating the bucket as financial-grade immutable storage. An If-Match conditional write is unavailable, so strict concurrent overwrite protection belongs in a queue or database coordinator.\nBrowser-direct uploads also need care: there is no independent CORS-setting route, despite the bucket model carrying a cors_rules field. Cross-region automatic replication and cross-cloud batch migration are absent. The supported vendor coverage includes R2, S3, OSS, and COS, not GCS or B2. Those are architecture facts, not footnotes.\nFor the signed-document scenario, the deletion worker should own the exact deadline and record each state transition. Lifecycle can provide a coarse backstop, but not hour-level expiry. Multipart fragments have no automatic cleanup rule, so the worker needs an abort path for failed large uploads. Standard queues are at-least-once: the consumer must use the same document and thumbnail attempt identifiers when it retries.\nChoose the two-stage storage-owned pipeline when large-file throughput, auditability, or specialist realtime behavior dominates. Choose the shared REST surface when one small worker must coordinate room tokens and private artifacts without installing multiple SDKs, and the missing storage features fit your retention model.\nEither way, keep the order boring: generate the derivative, obtain a signed upload URL, upload without the bearer header, inspect status, validate the response, persist the retention deadline, and log enough request context to investigate the malformed case. Before production, test a truncated image, a non-JSON error body, a 429 with Retry-After, a repeated idempotency key, and an abandoned multipart upload. Those tests catch more than a happy-path screenshot.\nReferences:\nAWS S3 Multipart Upload overview: https://docs.aws.amazon.com/AmazonS3/latest/userguide/mpuoverview.html\n\nInfrai storage discovery: https://api.infrai.cc/v1/discovery/storage.object.presign\n\nLiveKit documentation: https://docs.livekit.io/home/\n\nDaily documentation: https://docs.daily.co/\n\nInfrai thumbnail storage guide: https://docs.infrai.cc/en/guides/storage/answers/best-object-storage-for-image-thumbnails-resizing-saas/",
+      "publishedAt": "2026-11-23T05:39:15.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "d1883626108235f8bf7995dc585e8ca4855c8223ddea9d9f87ce397aaaad7df4",
+      "title": "AWS Lambda で SQS FIFO のバッチサイズを 10,000 にしたイベントソースマッピングを試してみた",
+      "url": "https://dev.classmethod.jp/articles/aws-lambda-sqs-fifo-batch-size-10000/",
+      "description": "AWS Lambda の SQS FIFO イベントソースマッピング（provisioned mode）にバッチサイズ 10,000 を設定し、1,000 グループの 10,000 件を処理しました。呼び出し回数は、BatchSize 10 の ESM の 1,000 回に対して 2 回でした。各グループの 10 件は連番の順に届きました。",
+      "publishedAt": "2026-11-23T05:16:03.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "757ab336e906e6ccd50f84c5e54046719501049202e0017aef93fcea47abf221",
+      "title": "[AWS Technical Support Note] บริการ AI ของ AWS ตัวไหนบ้างที่สามารถเลือกไม่ให้นำข้อมูลไปใช้ปรับปรุงบริการ (opt-out) ได้",
+      "url": "https://dev.classmethod.jp/articles/tsnote-thai-ai-services-opt-out-target-services/",
+      "description": "มาดูกันเลยว่ามีบริการอะไรบ้างที่เลือกไม่เข้าร่วมได้ผ่านนโยบายการเลือกไม่เข้าร่วมบริการ AI ของ AWS Organizations",
+      "publishedAt": "2026-11-23T02:46:43.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "d06ec17355b5d10f96aad14f87de60250be797327d03b104c3e68a1030198abc",
+      "title": "ArkorでNext.jsのPPRの届き方をレスポンスから確かめてみた",
+      "url": "https://dev.classmethod.jp/articles/hasuto-arkor-ppr-shell-streaming/",
+      "description": "先日の jsconf で Arkor を教えてもらったので、触ってみました。わざと3秒待つページをデプロイし、Next.jsのPPRでstatic shellと動的な部分がどの順番で届くのかを、レスポンスの到着時刻、x-arkor-edgeヘッダー、管理画面のBuild outputから確かめています。",
+      "publishedAt": "2026-11-23T01:51:09.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "b112cb19c2aa914d4d3ca3f5cc84f999e1ccb5d9ba479223b81b9e8004a7a987",
+      "title": "AWS サンプル「RAPID」の閉域モードで、インターネットに出ない書類審査環境を作ってみた",
+      "url": "https://dev.classmethod.jp/articles/try-rapid-document-review-closed-network/",
+      "description": "RAPID 閉域モードでデプロイしてみました。",
+      "publishedAt": "2026-11-23T00:43:08.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "0dd7afc3b49e31f2e20aeaea664528b58c44be2bedb6ede49948a317db84dc3a",
+      "title": "[アップデート]AWSアカウント作成がとんでもなく別物になったので動作の違いを見てみた[新しいAWSエクスペリエンス] | DevelopersIO",
+      "url": "https://dev.classmethod.jp/articles/new-aws-signup/",
+      "description": "これまでのAWSアカウント作成と違いすぎるので気をつけて使いましょう。通常のAWSアカウントを作成するならadvanced featuresにしてください。 こんにちは、臼田です。 みなさん、AWS使ってますか？(挨拶 今回は新規にAWSアカウントを作成しようとすると、これまでと全く異なる状態となるためこの動作を紹介します。 こ...",
+      "publishedAt": "2026-11-22T17:32:19.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "ba5cef2172533dfe421808e217d58b71bcf5c0d152e6b8126bb129b059df6854",
+      "title": "[アップデート]AWSアカウント作成がとんでもなく別物になったので動作の違いを見てみた[新しいAWSエクスペリエンス]",
+      "url": "https://dev.classmethod.jp/articles/new-aws-signup/",
+      "description": "これまでのAWSアカウント作成と違いすぎるので気をつけて使いましょう。通常のAWSアカウントを作成するならadvanced featuresにしてください。",
+      "publishedAt": "2026-11-22T17:20:08.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "6f7fc201a7e93b7a64421e48ca21688990bf53e4bdf2d193d8a744463098384b",
+      "title": "BigQuery Daya Engineering AgentのAgent Observabilityを試してみた",
+      "url": "https://dev.classmethod.jp/articles/bigquery-dea-agent-observability-ga/",
+      "description": "2026年11月19日、BigQueryの Data Engineering Agent で agent observability が GA になりました。Cloud Monitoring でトークン消費・遅延を、Cloud Trace で実行トレースを見られるようになったこの機能を、実際に GCP で動かして検証結果を共有します。",
+      "publishedAt": "2026-11-22T17:14:45.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "4394ce4841d352afd0c9478cb7b6f895c1c0940a1c96d3f499b2880212c3a520",
+      "title": "Azure Policyのdenyで既存リソースは止まる？更新拒否・タグ変更・修復を実機で確かめた",
+      "url": "https://dev.classmethod.jp/articles/azure-policy-existing-resources/",
+      "description": "Azure Policyのdenyを既存リソースのあるリソースグループに割り当てて確かめました。既存のストレージアカウントは止まらず、不適合として記録されただけでした。設定の更新は拒否され、タグだけの変更は通り、修復タスクは何も直しませんでした。",
+      "publishedAt": "2026-11-22T15:05:17.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "b37bda2e8ec0ad2d7dca6407ef95bb1bf0243dbeb82049ecd29dc38e4a7cc077",
+      "title": "CloudFormation StackSets の操作の進捗が ステージ別・リージョン別に確認可能になったので試してみた",
+      "url": "https://dev.classmethod.jp/articles/aws-cloudformation-stacksets-progress-visibility/",
+      "description": "AWS CloudFormation StackSets の操作の進捗を、ステージ別・リージョン別に AWS CLI で確認しました。3リージョンへのデプロイでは、実行中に進捗率とスタックインスタンスの件数が変わり、完了後も最終値を取得できました。",
+      "publishedAt": "2026-11-22T15:02:07.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "66a25637fcf5b8c348f2b2aa24723ee7672173cdfcc755f8ab169b4a7560f618",
+      "title": "Azure Service Busの重複検出で二重処理は防げる？同じMessageIdの再送と再配信を試した",
+      "url": "https://dev.classmethod.jp/articles/azure-service-bus-duplicate-boundaries/",
+      "description": "Azure Service Busの重複検出を実機で試しました。同じMessageIdで再送したメッセージは、送信が成功しても捨てられ、1件目の受信後でも時間窓の中なら同じでした。一方、完了を通知する前に受信をやめると同じメッセージが再配信されました。",
+      "publishedAt": "2026-11-22T14:58:30.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "e0ac79e2e3631c20e04b4d046274b9b50fcc0ecf0bfee407baa5105a3f52a02f",
+      "title": "AzureのマネージドID、システム割り当てとユーザー割り当てはどう選ぶ？削除と作り直しで確かめた",
+      "url": "https://dev.classmethod.jp/articles/azure-managed-identity-lifecycle-choice/",
+      "description": "AzureのマネージドIDを、作り直した後も同じIDを残すか、同じ権限を共有してよいかの2軸で比べます。実機では、システム割り当ては作り直すと別のIDになり、ユーザー割り当ては残りました。IDを消してもロールの割り当ては残り、「不明」と表示されました。",
+      "publishedAt": "2026-11-22T14:56:21.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "129f97b40e5034e6b5fa8c054d662d8b59c76e5128da57edfdbe29f1f6007b52",
+      "title": "AWS Lambda の関数状態変化イベントを EventBridge ルールで受け取ってみた",
+      "url": "https://dev.classmethod.jp/articles/aws-lambda-function-state-events-eventbridge/",
+      "description": "Lambda 関数のデプロイや状態の変化を、GetFunction API のポーリングなしで EventBridge のイベントとして拾えるようになりました。関数の作成・更新・公開・削除で実際に届くイベントの種類と中身を確認し、関数 ARN と state で絞り込むルールも試しました。",
+      "publishedAt": "2026-11-22T13:54:46.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "70fd77fe644f70d74e30f728534c272a773131ca26ab860ab21d1999c97f21ad",
+      "title": "AWS Lambda の Node.js 26 ランタイムを Event Functions と Web Functions で試してみた",
+      "url": "https://dev.classmethod.jp/articles/aws-lambda-nodejs-26-support/",
+      "description": "AWS Lambda の Node.js 26（v26.13.1）を Event Functions と Web Functions で試しました。Node.js 24 から V8 14.6、Undici 8 に更新され、Event Functions では Temporal API が追加設定なしで使えました。",
+      "publishedAt": "2026-11-22T13:17:38.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "a32dfc87f5c462ad8cfd3cede13177a5c3de049bbc16ca3a6b0c0345fbd71610",
+      "title": "AWS Lambda の Python 3.15 を Event Functions と Web Functions で試してみた",
+      "url": "https://dev.classmethod.jp/articles/aws-lambda-python-315-support/",
+      "description": "Event Functions では Python 3.15 ランタイムが GA、Web Functions では public preview として提供が始まったので、それぞれで動作を確認しました。frozendict、sentinel などの新機能が使え、Web Functions では FastAPI も動きました。",
+      "publishedAt": "2026-11-22T12:48:04.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "41e9f42672d02baf86c5843045fb97d4621ffac82a08e2ac67771c3ff3b7a716",
+      "title": "【React個人開発-JISOU課題1】学習記録アプリを作る過程で詰まったところと解決策",
+      "url": "https://qiita.com/polymetisoutis/items/be7eb3814ad8006be3aa?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "成果物\n簡易的な学習記録アプリを制作しました。\n\n課題着手開始：2026年11月12日木曜日\n課題制作完了：2026年11月13日金曜日\n\n準拠教材\n\n受講開始：2026年10月15日木曜日\n受講完了：2026年10月21日水曜日\n\n成果物のGitHubリポジトリ\n\n...",
+      "publishedAt": "2026-11-22T10:40:17.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "1fc5311b7315a46888216b8d5caaf8a1b13c41e44ef70d5246d6cd1856d941e3",
+      "title": "Claude Code を安全に「自走」させるなら、もう Docker Sandboxes 一択でよくない？と思った話。｜YamaC / ﾔﾏｼｰ",
+      "url": "https://note.com/yamac_/n/n198bdc344c64",
+      "description": "Claude Code を安全に「自走」させるなら、もう Docker Sandboxes 一択でよくない？と思った話。 Claude Codeとか、Codex、使ってますか。もちろん私はがっつり使ってます。Claude Codeに代表されるAI Coding Agentをつかってるとだんだん「毎回確認したり面倒だな～」となってくると思います。今はClaudeではAuto mode...",
+      "publishedAt": "2026-11-22T10:08:35.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "5c37da92259f7bf841e9d447c3c62158d101a3b5429ba6fff732316232083f8f",
+      "title": "[アップデート] AWS Agent Registryでドメインに紐づけたレコードを組織外へ公開できるようになりました",
+      "url": "https://dev.classmethod.jp/articles/aws-agent-registry-public-discovery/",
+      "description": "AWS Agent Registryの新機能を試してみました！ドメインをレコードに紐付けることで、組織外の人にもエージェントやMCPサーバーを公開・発見できる機能です！",
+      "publishedAt": "2026-11-22T09:18:32.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "3250fb736c09a1608e2aa57ecfe335c742526f44c648ad3ad65adfa33a66b10b",
+      "title": "[アップデート] AWS Quick の Web アプリの UI が一新されてデスクトップと統一されたぽいので確認してみた",
+      "url": "https://dev.classmethod.jp/articles/aws-quick-launches-new-web-experience-updated/",
+      "description": "デスクトップ版っぽくなった。最初迷うぞ",
+      "publishedAt": "2026-11-22T09:16:21.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "b0a0cddb5ef3aadcb69087103217cdd63ad6310d96bfbc0fe28e26695f12c6fe",
+      "title": "【登壇レポート】「Business-JAWS #0 キックオフ！」でAIBの練習問題をAIに作らせて感じた気づきを話してきました！",
+      "url": "https://qiita.com/yosuke-suzuki/items/668b75e7f1ae9be15d99?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\nこんにちは！アマコネ芸人です。\n2026年11月19日にAWS Japanオフィス(東京都港区の麻布台ヒルズ森JPタワー)で開催された「Business-JAWS #0 キックオフ！〜AWSとビジネスをつなぐコミュニティ始動〜」にて、LT登壇させていただきました...",
+      "publishedAt": "2026-11-22T08:29:25.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "e338cc00a51a5729ed396777ed735a88f2c19a0689e890dab8283f09437419d3",
+      "title": "【個人開発】推し祭壇を投稿するアプリを作ってみた【React / TypeScript / Supabase】",
+      "url": "https://qiita.com/ko1_tktn/items/75fdcc2a4b7c824f2a6f?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\n個人開発で、推し祭壇を写真とその日の気持ちで記録するWebアプリ「OSHI-SAIDAN」を作りました。\nこの記事では、アプリの使い方と、開発を通して感じた「作る範囲の決め方」と「題材選び」の難しさを振り返ります。\nOSHI-SAIDANの公開デモを試す\n\n開発...",
+      "publishedAt": "2026-11-22T08:01:43.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "5cdade4f1d41dae5796bb52d940ff205b204df7bda8e8b5f602ceaf8008ad0c2",
+      "title": "[アップデート] AWS Quick が日本語・ドイツ語・ベトナム語・中国語に対応したので、表示言語を切り替えてみた",
+      "url": "https://dev.classmethod.jp/articles/20261122-aws-quick-japanese-german-chinese-vietnamese/",
+      "description": "AWS Quick が日本語・ドイツ語・ベトナム語・中国語（簡体字・繁体字）に対応しました。表示言語は「設定 → 外観と言語」でユーザーごとに選べ、選んだ時点で画面に反映されます。Web アプリで 6 言語に切り替え、チャットやダッシュボードで翻訳される箇所と、チャット履歴など翻訳されない箇所を確認しました。",
+      "publishedAt": "2026-11-22T07:46:00.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "fe7c69373a9e247921bd85e6ed3afaeae2b692a94aae58fe2a9de645d7a87627",
+      "title": "ワークフローからハーネスへ — Web フレームワークの作者たちが AI エージェントに向かう理由",
+      "url": "https://speakerdeck.com/azukiazusa1/slide-ca142a4a-9ec4-4750-91c1-07892c44a423",
+      "description": "Gatsby、Next.js、Astro といった著名な Web フレームワークの作者・開発元が、相次いで AI エージェントフレームワークを発表しています。なぜ Web フレームワークを作ってきた人たちが、いまエージェントに向かうのでしょうか？",
+      "publishedAt": "2026-11-22T01:52:45.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "18044f66e24fa0d1632aa736d0bf1878baef20a892c4b2d5fcb29d3e3fcc4613",
+      "title": "Claude Code を安全に「自走」させるなら、もう Docker Sandboxes 一択でよくない？と思った話。",
+      "url": "https://qiita.com/yamac_tech/items/2f1d598288990c381f2d?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "Claude Codeとか、Codex、使ってますか。もちろん私はがっつり使ってます。Claude Codeに代表されるAI Coding Agentをつかってるとだんだん「毎回確認したり面倒だな～」となってくると思います。今はClaudeではAuto modeがデフォル...",
+      "publishedAt": "2026-11-21T23:38:45.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "468a8ef284172f0f89512534bd5a07168834d142d59dcb6063c354b97fd8e5b5",
+      "title": "アマゾンが迫られた「10億ドル」の地域融和策、AIデータセンター建設凍結の波紋（小久保重信） - エキスパート - Yahoo!ニュース",
+      "url": "https://news.yahoo.co.jp/expert/articles/8a874f9bd3a7c1c2d97094f32690eb3fd309dbf4",
+      "description": "10月上旬、米アマゾン・ウェブ・サービス（AWS）は、データセンターを展開する米国の地域社会に向けて今後5年間で10億ドル（約1600億円）超を追加拠出する支援策を発表した。あわせて、施設立地にあたって行政機関と結んできた秘密保持契約（NDA）を撤廃する方針を明らかにした。 The race our nation can’t afford to l...",
+      "publishedAt": "2026-11-21T23:28:24.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "b4d0a33861e8ec46639da930fb2292a99bdb3cc11992653ba0c635e118f31418",
+      "title": "情報漏えいを公表しないリスクの要点整理",
+      "url": "https://qiita.com/Maruo110/items/385b2c7ef5fbd074e6e2?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "業務でセキュリティ動向を追う中で、情報漏えいの公表が毎日のように目につく。\nただ、公表されているのは被害を受けた企業の一部だけだと思う。\n今はそれでも回っているが、前提が崩れつつある。自戒を込めて整理する。\n先にキーワードを出す。\n\n情報漏えい\n個人情報保護委員会への報告\n...",
+      "publishedAt": "2026-11-21T11:51:38.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "47f356f3ab5759333176e726722033078ab70e7e3a4da823a3bfb161378a6e14",
+      "title": "AWS構成図を毎回同じ形で出したい！ コード5行で図になるコマンドを作りました",
+      "url": "https://qiita.com/sagochiko/items/86cc8715558c0e93a296?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "AIエージェントに AWS の構成図を描かせると、同じ依頼でも回ごとに図が変わります。\nそこで、AIに座標とXMLを書かせるのをやめて、5行の定義から構成図を組み立てるコマンド「archwire」を作りました。GitHub で公開していて、uvx archwire ですぐ試...",
+      "publishedAt": "2026-11-21T06:39:39.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "d804a4f64575b123099fa9ddafb1aaa5da7b381d4a44cda28ec6f2e2c4ad10fc",
+      "title": "寝てる間に自動で動くAIエージェントを誰でも作れる：10分でわかる pstack 実践ガイド",
+      "url": "https://zenn.dev/canly/articles/ca6875cd79539f",
+      "description": "カンリーCAIOの萩野です。\n\n「All Code Is Slop (Except Mine)（全てのコードはゴミ、私のは除く）」を掲げる開発者 poteto（Lauren Tan）さんの基調講演（2026年11月11日、AI Engineer CODE 2026）では、1か月で3,000本のPRを本番に出し、その多くを寝ている間に進めた話が語られました。そのやり方を MIT ライセンスで公開した Cursor 公式スキル集 pstack を Claude Code に入れ、指示1回・約10分・途中の人手なしで設計からツール実装、自動テスト14件、コードをわざと壊すテスト検証まで完走させ...",
+      "publishedAt": "2026-11-20T09:04:40.000Z",
+      "feedName": "Zenn"
     }
   ]
 }
