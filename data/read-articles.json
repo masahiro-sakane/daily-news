@@ -1,158 +1,6 @@
 {
   "articles": [
     {
-      "id": "5a27c64c6a65206288a341812ce9e171dea689b8d707e47c1aeccdaf4e248ea9",
-      "title": "Knovum 0.0.2: Building an Open-Source Local-First AI Canvas with Tauri 2, Vue 3, and Rust",
-      "url": "https://dev.to/zand/knovum-002-building-an-open-source-local-first-ai-canvas-with-tauri-2-vue-3-and-rust-441i",
-      "description": "Like many developers and researchers, I've spent the past two years experimenting with local LLMs (via Ollama) and local RAG. But existing desktop frontends repeatedly hit two frustrating walls:\nThe 1D Chat Trap: Linear chat streams work well for simple Q&A, but break down during deep research synthesis. Earlier reasoning turns scroll off the top, and you cannot visually compare multiple document excerpts side-by-side.\nThe Electron Memory Tax: Most desktop AI wrappers idle at 700MB–1GB RAM before you even load model weights into VRAM.\nTo solve this, we built Knovum — an open-source, local-first desktop AI knowledge workspace built on an infinite 2D canvas with Tauri 2, Rust, and Vue 3. \nToday we just shipped v0.0.2, so I wanted to share the engineering decisions behind the architecture, what we learned building it, and what's new.\n┌────────────────────────────────────────────────────────┐\n│             Vue 3 Spatial Frontend                     │\n│  (Konva Infinite 2D Canvas + JSON Canvas Specification) │\n└───────────────────────────┬────────────────────────────┘\n                            │ Tauri 2 IPC (Channels)\n┌───────────────────────────▼────────────────────────────┐\n│                    Rust Backend Core                   │\n│   ┌────────────────────┐      ┌────────────────────┐   │\n│   │   SQLite Storage   │      │ Embedded LanceDB   │   │\n│   │  (Notes, Boards,   │      │ (In-Process Vector │   │\n│   │   Numbered Migr.)  │      │   Search Engine)   │   │\n│   └────────────────────┘      └────────────────────┘   │\n│   ┌────────────────────┐      ┌────────────────────┐   │\n│   │    Ollama API      │      │ Embedded Whisper   │   │\n│   │ (Local LLM Router) │      │ (Speech-to-Text)   │   │\n│   └────────────────────┘      └────────────────────┘   │\n└────────────────────────────────────────────────────────┘\n\nBy leveraging native OS WebViews (WKWebView on macOS, WebView2 on Windows) orchestrated by a compiled Rust backend, Knovum cold-boots in sub-second time and idles around 45MB of RAM. This leaves virtually all of your machine's physical memory dedicated to loading model weights.\nSQLite: The canonical single source of truth for notes, cards, and relations, guarded by strict numbered migrations.\nEmbedded LanceDB: Runs in-process on disk for fast vector similarity search without requiring Docker, external daemons, or Python runtimes.\nEvery visual workspace is stored directly on your local filesystem using the open JSON Canvas (.canvas) specification. You can open, edit, and inspect any Knovum board directly in Obsidian Canvas or parse it with custom scripts.\nHere are the key improvements shipped in our 0.0.2 release:\nIn traditional vector RAG setups, updating a document collection often triggers expensive full re-indexes. In 0.0.2:\nRebuilding a space indexes only the gap (delta) instead of re-processing the entire space.\nThe live index stays fully readable and searchable while the background rebuild runs.\nIndexing is managed as a first-class, cancellable job in the unified Task Center.\nStreaming LLM answers now respect clear block boundaries instead of erasing or slicing through previous turns. Concurrency is strictly owned by a single writer per execution run.\nKnovum includes an on-device Whisper transcription engine. In 0.0.2, the voice library can be audited and heard before selection, and visualizes the active speaker in real time.\nShips an opaque window with the WebView2 bootstrapper directly embedded.\nStartup failures fail visibly instead of leaving hidden zombie windows.\nThe main window is revealed safely from the async runtime, eliminating white flashes on launch.\nLocal model memory verification admits memory the OS can dynamically allocate rather than hard-failing.\nWhen an LLM synthesizes an insight from your notes, the citation anchors to exact sentence-level character spans in the source note. If you edit or mutate the source note later, the citation badge automatically flags that the source has evolved—preventing silent hallucination decay.\nKnovum is 100% free and open-source under the Apache-2.0 license.\nGitHub Repository: https://github.com/madebyzan/knovum\n\n\nv0.0.2 Release Downloads: https://github.com/madebyzan/knovum/releases/tag/v0.0.2\n\n\nmacOS (Apple Silicon .dmg & Intel .dmg)\nWindows (x64-setup.exe)\nIf you're interested in local-first software, spatial computing, or running LLMs on your own hardware, give the repository a ⭐ on GitHub and let us know your feedback!",
-      "publishedAt": "2026-10-25T03:12:53.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "865b4eaf750609af8da20e0b60e54377ef69d764f9661ad140270f3be0837322",
-      "title": "Where your Codex usage actually goes (and how to make the window last longer)",
-      "url": "https://dev.to/xcrai/where-your-codex-usage-actually-goes-and-how-to-make-the-window-last-longer-314o",
-      "description": "If you use Codex every day, you know the moment. The plan is clear, half the feature is written, the tests are almost green, and the usage window closes. You didn't do anything unusual. You just did a normal afternoon of AI coding.\nThe frustrating part is that most of us don't really know which part of the work used the allowance. So let's break that down, look at how to check where you stand, and then talk about a workflow change that made the biggest difference for us.\nQuick disclosure before we start: I work on XCR, the plugin I mention later in this post. The habits in the first half work with or without it.\nCodex comes with ChatGPT plans, and each plan has usage limits. OpenAI's Codex help article lists what drives usage: the model, where the task runs, task complexity, context size, reasoning effort, speed and tools. A long-running agentic task can use a lot more than a short request.\nTwo details trip people up:\nUsage is tracked in two windows: a five-hour window and a weekly window.\nOn plans with shared allowances, Codex draws from the same pool as other agent features in ChatGPT.\nThe exact numbers change by plan and over time, so check the current ChatGPT plans page for yours rather than trusting a screenshot from a forum thread.\nWhen you look at a session after the fact, the expensive parts are pretty predictable.\n1. Implementation loops. Write code, run tests, read the failure, patch, run again. Every round re-reads the context. A feature with three or four rounds of test fixes is where most of the window goes.\n2. Long threads. Everything Codex has read and written in the thread rides along with each new turn. A thread that started as \"add an endpoint\" and wandered into \"also refactor auth\" is carrying a lot of baggage.\n3. Repository exploration. Opening file after file to understand a codebase before writing the first line. Useful, but heavy.\n4. Heavy reasoning on routine work. The strongest models with high reasoning effort use the allowance fastest. Using them to rename a prop is overkill.\nCompare that to planning a change or reviewing a diff. Those are light. Codex reads your request, thinks about the approach, or reads a diff and comments on it. It's the build (multi-file edits plus the test-fix loop) that's heavy.\nKeep that split in mind, because the rest of this post depends on it.\nDon't guess. Before starting something large:\nOpen Settings or the usage dashboard in ChatGPT or the Codex app to see which allowance you've used and when it resets.\nIn an active Codex CLI session, run:\n\n\n\n\n/status\n\nAnd one myth to kill: starting a new chat does not reset your limits. A fresh thread makes each turn lighter because old context stops riding along, but the windows reset on their own schedule.\nBefore any tooling, these habits do help:\nOne task per thread. Switch threads when you switch topics.\nFront-load the requirement. Goal, constraints and how to verify it, all in the first message. Drip-fed requirements mean rework.\nName the files. \"Look at orders/service.ts and orders/export.test.ts\" is far cheaper than \"find where orders are handled.\"\nKeep AGENTS.md lean. Codex reads it on every task, so every extra paragraph costs you on every task.\nMatch model and effort to the task. Lighter settings for routine edits; save the heavy settings for design questions and nasty bugs.\nThese all help. But they're still optimizing the heavy part, not moving it.\nHere's the idea that changed the math for us. If planning and review are cheap and the build is expensive, then the build is what you want off your Codex window. Codex is great at understanding what you want, choosing an approach and catching problems in a diff. That's the part that needs Codex.\nMy team built a plugin for exactly this split. It's called XCR, and it works with Codex, Claude Code, Cursor and Grok Build.\nThe flow looks like this:\nCodex hands the task over. Anything bigger than a small edit (multi-file changes, features, tests, refactors) gets passed to XCR. Quick questions and one-line fixes stay in Codex, same as before.\nXCR builds it. It hands the heavy steps off to other models, writes the change on a copy of your project, runs your project's own checks (type check, lint, tests) and repairs failures within the task's budget.\nCodex reviews. It gets a short report back: requirements done, files changed, check results. Then it checks the change against what you asked for.\nSo your Codex quota goes to the thinking and the reviewing, and the heavy build doesn't run on your Codex window. That's how the quota lasts longer.\nOn privacy, here's the short version: checks run on your machine. Code is sent to the model only for the task, and XCR doesn't store it.\nOpen the install page on xcr.ai and sign in with the link that gets emailed to you. No password, no card needed.\nIn the console, open Install on a computer and pick the Codex tab.\nRead \"What XCR will change on your computer\", tick the box, click Copy install instruction, paste it into Codex and allow the command.\nRestart Codex.\nUnder the hood, XCR registers itself as an MCP server in ~/.codex/config.toml and adds one short rule to ~/.codex/AGENTS.md so Codex knows when to hand work over. Your original files are backed up first.\nThen just work normally. Try something like:\nAdd CSV export to the orders page, with filters by date and status.\nWhen the checks pass, the change lands in your working tree without a commit, so you review it in your usual diff.\nA few things that matter if you're cautious (you should be):\nUndo: ask Codex to undo the XCR change.\nSpending caps: set a daily cap per computer, and every task has its own spending cap.\nPause: pause with one click in the console.\nUninstall: tell Codex \"Uninstall XCR from this computer\" and it removes exactly what XCR added and restores your files.\nThe Codex usage limit stings most when you don't know where the usage went. Most of it goes to the build-and-fix loop, not to the thinking. Tighten your habits, check /status before big sessions, and think about moving the heavy builds somewhere other than your Codex window.\nAI coding quota always running short? Hand the heavy work to XCR and make your quota last longer.\nOriginal article: Codex usage limit: make your Codex quota last longer\n\nSetup walkthrough: XCR quick start\n\n\n\nDisclosure, again: I work on XCR, so weigh my take accordingly.",
-      "publishedAt": "2026-10-25T03:12:27.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "7e09f6f371ce4e5f02da5557e3c760dc81e5a768b283f63bb2fd790cc711c0d3",
-      "title": "DSPy: The End of Prompt Engineering - Kevin Madura, AlixPartners | 告别提示词工程：用DSPy构建模块化、可优化的AI程序",
-      "url": "https://dev.to/cognitalk/dspy-the-end-of-prompt-engineering-kevin-madura-alixpartners-58oo",
-      "description": "https://www.youtube.com/watch?v=-cKUW6n8hBU\n想象一下，你以前指挥一个超级聪明的助手（大语言模型）做事，得事无巨细地写小纸条（提示词），比如“请用JSON格式输出，先思考再回答，语气要专业……”，这就像提示词工程，很繁琐，而且换一个助手（换模型）可能就得重写纸条。\n现在，有了一个叫 DSPy 的新工具。它让你换个思路：不用再纠结于怎么写小纸条，而是像搭乐高积木一样，用Python代码来设计一个工作流程。\n  关键点：\n\n\n  从“写提示”到“写程序”：你不再跟模型说“你要怎么做”，而是定义一个函数，告诉它“输入是什么，输出是什么”（这叫签名）。至于中间怎么实现，交给DSPy和模型自己去搞定。\n  模块化：你可以把复杂的任务拆解成一个个小的、独立的模块（比如“情感分析模块”、“文档摘要模块”），像搭积木一样组合起来。\n  自动优化：这是最酷的一点。当你搭好程序后，DSPy可以像一个智能教练，通过反复测试，自动帮你调整那些藏在背后的提示词，让你的程序表现更好，或者换成更便宜的小模型也能达到同样的效果。\n简单说，DSPy就是把“写提示词”这种手艺活，变成了“写代码”这种工程活，让你能更快、更稳定地开发基于大模型的应用程序。\n 演讲目的与风格：演讲者Kevin Madura开场表示，本次分享会很随意，欢迎大家随时提问。他计划用一半时间讲概念，另一半时间演示代码。\n 听众调查：现场大部分人都听说过DSPy，但只有少数人在生产环境中日常使用。演讲者希望今天能转化更多人去尝试。\n DSPy的定义：DSPy是一个声明式框架，用于构建模块化软件。它不是用来迭代提示词的，而是用来构建真正的Python程序。\n 个人使用动机：作为一个技术顾问，Kevin经常面对各种不同的问题（如法律调查、流程改进、合同审查）。DSPy让他和他的团队能够非常快速地迭代，构建出解决这些问题的应用。\n 核心价值：DSPy最大的好处是能将你的逻辑分解成一个把大语言模型（LLM）当作一等公民的程序。你最终只是在调用一个函数，而这个函数恰好背后是个LLM。DSPy提供了关于输入和输出类型的保证，让你可以专注于构建程序本身。\n 恰到好处的抽象层级：DSPy不像LangChain那样会让你感觉受到限制。它不会让你去处理 choices、messages、content 这些底层细节，也不需要你自己写字符串解析器。你只需要声明你的意图。\n 创建的是计算机程序：你是在构建一个程序，只是碰巧用了LLM。这比来回调整字符串式的提示词要高级得多。\n 系统思维与可迁移性：DSPy的创始人Omar提到，它是用“系统思维”构建的。关键在于，你设计的系统结构和控制流不会因为底层模型能力的快速变化而过时。你可以轻松地在不同模型之间切换，而无需重写整个程序。\n 便利性与精确性并存：DSPy提供了开箱即用的便利（如无需手动解析JSON），同时也保留了足够的精度和控制力。如果你想了解底层发生了什么，可以深入查看；否则，只需专注于你想做的事。\n 对模型和范式变化的鲁棒性：你可以保留程序的逻辑，同时灵活地嵌入不同的LLM。\n 签名 (Signatures)：这是DSPy最核心的概念。它用来指定你想要函数做什么，即定义输入和输出的类型。你可以用简单的字符串（如 \"text -> sentiment\"）或更复杂的类（基于Pydantic）来定义。字段名本身就充当了微型提示词，会被传递给模型。这是DSPy强大又有点奇怪的地方。\n\n\n  应对已有好提示词的情况：如果你已经有一个精心打磨过的提示词，完全可以将其作为系统指令注入到签名或模块中，作为优化的起点。\n 模块 (Modules)：模块是逻辑上组织程序的方式，基于签名构建。它们类似于PyTorch中的模块概念。DSPy内置了许多常用模块（如 Predict， ChainOfThought， ReAct），你也可以创建自己的模块。例如，一个模块可以先调用LLM，再进行一些硬编码的业务逻辑。\n 工具 (Tools)：在DSPy中，工具本质上就是Python函数。你可以很容易地将任何Python函数暴露给LLM使用（例如，一个天气查询函数、一个网络搜索函数）。\n 适配器 (Adapters)：适配器位于签名和实际的LLM调用之间。它们负责将你的输入输出签名翻译成最终的提示词格式（如JSON、XML、BAML）。不同的适配器可能会影响模型的表现（性能差异可达5-10%）。\n 优化器 (Optimizers)：这是DSPy最引人注目也最有争议的部分。优化器可以自动、量化地提升程序性能。它通过在后台迭代地调整发送给LLM的提示词来实现。这使得模型和用例之间的迁移成为可能，例如，你可以先用强大的模型优化程序，然后将其迁移到更便宜的小模型上，同时保持不错的性能。\n 指标 (Metrics)：指标与优化器配合使用，用来定义什么是“成功”。优化器会利用指标来判断每次调整是否有效。指标可以是严格的（如完全匹配），也可以是主观的（如让另一个LLM来评判）。\n 环境设置：演示了如何使用Phoenix（Arize的观测平台）来追踪LLM调用。定义了多个LLM（如Claude、Gemini、GPT-4.1 mini），并展示了如何在程序中混合使用它们。\n 简单的情感分类器：用一个极其简短的签名 \"text -> sentiment\" 就创建了一个情感分类器。通过添加额外指令（如“数字越低越负面”）来微调结果。展示了DSPy内置的缓存和用量统计功能。\n 处理PDF文档（简易RAG）：使用 attachments 库轻松加载在线PDF（如英伟达的SEC Form 4表单）。无需关心OCR或图像提取的细节，直接将其作为输入传给模型，询问“总共卖出了多少股？”。\n 灵活的文档分析：\n\n\n  无结构输出：创建一个签名，让模型自己决定从文档中提取哪些重要信息，并以字典形式返回。\n  有结构输出：预先定义好一个Pydantic模型（如包含交易日期、类型、数量等字段），然后让模型按照这个严格的结构提取信息，方便后续用 . 符号访问数据。\n 适配器对比：分别使用默认的JSON适配器和BAML适配器来处理同一个任务，并通过 inspect_history 查看底层生成的提示词。展示了BAML适配器生成的提示词更简洁、更易读，在某些复杂场景下性能更好。\n 多模态示例：上传一张包含街道标志的图片，询问“现在可以在这里停车吗？什么时候必须离开？”。演示了DSPy处理图像输入的能力。\n 自定义模块：将上述的图像分析逻辑封装成一个Python类（模块），并在其中添加计数器等业务逻辑，展示了模块的可复用性和可扩展性。\n 工具调用（ReAct Agent）：创建了一个“简历分析Agent”，它可以使用两个工具（Perplexity搜索和获取URL内容）来查找人物背景。演示了如何异步执行多个这样的Agent，并获取其工具调用的轨迹（trajectory）用于调试。\n 优化器（Jeepo）实战：以一个客服消息分类为例，展示了完整的优化流程。\n\n\n  创建一个包含多个签名和模块的程序。\n  定义基于数据集的指标（如“紧急程度是否匹配”）。\n  运行优化器，它会使用一个更强大的“教师模型”来提供反馈，迭代地改进提示词。\n  优化结果是一个新的、经过优化的程序模块，可以被序列化保存或直接调用。\n 综合案例：通用文件处理器：这是一个端到端的示例，演示了如何构建一个能处理多种文件（合同、SEC文件、城市基础设施图片）的单一DSPy程序。\n\n\n  路由逻辑：程序首先使用一个分类器判断文件类型。\n  差异化处理：如果是SEC文件，则提取特定信息；如果是合同，则进行递归摘要；如果是图片，则进行视觉解读。不同的处理步骤甚至可以调用不同的模型（如图片用Gemini，文本用GPT-4.1）。\n  文档边界检测：演示了如何通过将PDF页面转为图片，再用一个ReAct Agent进行自我反思和工具调用，来自动识别合同的章节边界（如主文档、附件一、附件二等）。\n 优化器的经验：只要你有质量良好、结构清晰的数据（10-100个输入输出对），优化效果就很显著。优化器不仅能提升整体分数，还能按指标分解，帮助你理解模型的强项和弱项。\n 优化器的输出是什么：优化器的输出本质上就是一个优化后的程序模块，你可以像使用其他模块一样保存、加载和调用它。其核心是一个被动态构建的、更优的提示词字符串。\n 优化器的工作原理：它本质上是LLM引导的，即用AI来构建AI。它通过分析失败案例，发现你没有明说的潜在要求（如“名字必须大写”），并将其添加到提示词中。\n 成本与上下文管理：\n\n\n  成本：DSPy本身不昂贵，成本取决于你调用了多少次LLM。虽然签名会增加一些提示词长度，但这通常不是主要的成本驱动因素。\n  长上下文：如果你担心长上下文带来的成本和性能问题，可以在程序或适配器中加入上下文压缩的逻辑。演讲者认为，随着模型上下文窗口越来越大，这个问题未来可能会被抽象掉。\n 持续学习：可以将用户反馈（如点赞/点踩）收集起来，加入到训练数据集中，然后定期重新运行优化器，实现离线版本的持续优化。\n 总结：DSPy为你提供了构建任意复杂工作流所需的基本构件（primitives）。它让你能够构建模块化、可组合的系统，并且拥有自动优化的能力。",
-      "publishedAt": "2026-10-25T03:10:18.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "7e7f212b4d71dc7a799fa0626c777e499cf634bce5a33a9c11529b8450978c34",
-      "title": "Why copying AI answers into Word still breaks (and how I built a client-side converter for LaTeX & tables)",
-      "url": "https://dev.to/xianye_huang_4becb58afe1a/why-copying-ai-answers-into-word-still-breaks-and-how-i-built-a-client-side-converter-for-latex--445o",
-      "description": "Live Tool:​ https://aitoword.online/en/\nIf you only work in Markdown, copying responses from ChatGPT, Claude, or DeepSeek is trivial. You click the copy button, paste it into Obsidian, VS Code, or Notion, and everything renders as expected.\nThe problem starts when you have to hand off a deliverable to someone who lives in Microsoft Word—a client report, a lab assignment, or internal documentation.\nDepending on how you copy an AI response into Word, you usually hit one of three failure modes:\nHighlighting and copying from the browser UI: Word inherits the web page's inline CSS. You get dark or gray background shading behind every paragraph, mismatched font sizes, and broken table widths.\nClicking the AI's \"Copy\" button and pasting into Word: Because the clipboard contains raw Markdown, Word treats # headings, ** bold markers, and | table pipes as literal characters.\nThe LaTeX math wall: ChatGPT and DeepSeek frequently wrap inline and block equations in \\(...\\) and \\[...\\] (or $...$ and $$...$$). Pasting these into Word leaves you with raw TeX strings. Worse, many online converters rasterize equations into static PNG images, meaning you cannot fix a single subscript in Word without re-generating the whole document.\nTo solve this without installing a local Pandoc + LaTeX toolchain on every machine, I built Aitoword—a free, browser-based converter that turns AI Markdown and supported LaTeX into editable .docx files entirely on the client side.\nHere is a breakdown of the formatting problems it solves, how the in-browser pipeline works, and the trade-offs involved.\nStandard Markdown math parsers usually look for $...$ and $$...$$. However, most LLMs default to LaTeX-style \\(...\\) and \\[...\\] delimiters unless explicitly prompted otherwise.\nA naive regex replacement across the whole document will accidentally corrupt escaped brackets inside fenced code blocks or inline code spans (for example, array indexing or regex literals in JavaScript).\nBefore building the .docx document tree, the parser has to isolate code blocks and inline code tokens first, and only normalize math delimiters in prose nodes:\nfunction normalizeMathOutsideCode(markdown) {\n  // Split by fenced code blocks and inline code spans first\n  const segments = markdown.split(/(```\n{% endraw %}\n[\\s\\S]*?\n{% raw %}\n\n\n|[^\\n]+`)/g);\nreturn segments\n  return segment\n    // Convert \\[ ... \\] display math to $$ ... $$\n    .replace(/\\\\\\[([\\s\\S]*?)\\\\\\]/g, (_, expr) => `$$${expr}$$`)\n    // Convert \\( ... \\) inline math to $ ... $\n    .replace(/\\\\\\(([\\s\\S]*?)\\\\\\)/g, (_, expr) => `$${expr}$`);\n})\n.join('');\n\n}\n\nOnce normalized, supported expressions (fractions, roots, subscripts/superscripts, sums, integrals, and basic matrices) are parsed via KaTeX into MathML and mapped into OMML (Office Math Markup Language)​.\nWhen you paste a raw Markdown table into Word, you get lines of pipe characters (|). When you copy an HTML table from a chat window, column widths often overflow the page margins.\nHeadings (H1–H6) map to native Word heading styles, so they immediately show up in Word's Navigation Pane and can be used to generate an automatic Table of Contents.\nComparison of Export Methods\n\n\n\nMethod\nHeadings & Bold\nLaTeX Math ($...$ / [...])\nTables\nPrivacy & Setup\n\n\n\n\nSelect & Copy from Web UI\nKeeps styles, but often brings gray background shading\nUsually pasted as plain text or uneditable DOM fragments\nBorders and column widths frequently break\nZero setup; requires manual \"Clear Formatting\" in Word\n\n\nClick AI \"Copy\" Button -> Word\nLeaves literal ### and ** characters\nLeaves raw LaTeX source code\nLeaves raw\npipe characters\n\n\nLocal Pandoc CLI\nNative Word styles\nNative OMML equations\nNative Word tables\nHigh privacy, but requires CLI setup and reference .docx templates\n\n\n​Aitoword (In-Browser)​\nNative Word H1–H6 & inline styles\nEditable native Word equations (OMML)\nNative bordered Word tables\nNo login, 100% client-side in browser, zero server uploads\n\n\n\nMany \"free online document converters\" work by uploading your text or .md file to a backend server, running a Python or LibreOffice worker, and returning a download link. If you are converting internal work notes, unpublished research, or client drafts, uploading that text to a third-party server is a non-starter.\nNo server round-trip:​ Whether you paste text or import a local .md / .txt file, the .docx Blob is packed in memory using JavaScript and downloaded directly via URL.createObjectURL().\n). Automatically fetching and embedding those images from the browser would leak your IP address to external image hosts and hit CORS errors. Instead, Aitoword deliberately converts external image links into plain text descriptions so no outbound requests are triggered.\nIf you regularly need to move ChatGPT, DeepSeek, or Markdown notes into Word without spending twenty minutes fixing equations and stripping # symbols, you can try it here (no account or signup required):\nGuide on fixing hashtags, asterisks, and gray backgrounds:​ How to Copy ChatGPT to Word and Fix Formatting Problems\nFeedback on edge-case LaTeX expressions or Markdown structures that trip up the parser is very welcome!",
-      "publishedAt": "2026-10-25T03:07:33.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "6b9d514cf130117d9a0719f5c649317392bb4c18db5c4eec5310b57e379ed35f",
-      "title": "AIも「自分の間違い」を認められない？　Claude Mythos 5、攻撃を正当化し続行",
-      "url": "https://japan.cnet.com/article/35253932/",
-      "description": "Anthropicと英国AIセキュリティ研究所（AISI）は10月23日、AIモデル「Claude Mythos 5」がサイバー攻撃の能力試験中に、試験とは無関係の実在の開発者を攻撃しようとした問題について、それぞれ分析結果を公表した。Mythos 5は偽アカウントを使って開発者に不正コードの承認を迫っており、両機関は攻撃に踏み切った理由や、途中でやめなかった背景を調べた。",
-      "publishedAt": "2026-10-25T02:33:00.000Z",
-      "feedName": "CNET Japan"
-    },
-    {
-      "id": "f9a59446b09067d5d969fba2007fc84a4fe004c9921ea0f18fc0fe5277d24f02",
-      "title": "AWS SDK for JavaScript v3 で requestTimeout を設定したのに、時間切れにならない原因を教えてください",
-      "url": "https://dev.classmethod.jp/articles/tsnote-sdk-js-v3-requesttimeout-throwonrequesttimeout/",
-      "description": "AWS SDK for JavaScript v3 で `requestTimeout` を設定しても効かなくなった問題と、その解決方法を紹介します。@smithy/node-http-handler の仕様変更により `throwOnRequestTimeout: true` の設定が必要になりました。",
-      "publishedAt": "2026-10-25T01:00:10.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "6c4479c6f573b73ff5e41a92df5fe9f04e3453098e89eff3eb1d87e5849a489e",
-      "title": "AWSにデプロイせず、FastAPI製Lambdaのarm64実行をCIで検証する",
-      "url": "https://zenn.dev/shingokumon/articles/4da5acb9697d56",
-      "description": "はじめに\nFastAPIで開発している案件判定API「SUMI Job Engine」に、AWSへデプロイせずにLambda向けパッケージを検証するCIを追加しました。\n今回確認したかったのは、「SAMでビルドできるか」の一歩先です。ビルドした成果物をarm64のLambda公式Pythonコンテナに読み込ませ、実際のハンドラーを呼び出せるかを確かめました。\nこの記事では、実プロジェクトで使った構成とコードの要点を紹介します。コードは既存アプリからの抜粋です。単独で動くサンプル一式ではないため、導入する場合はハンドラー、パス、環境変数を自分のアプリに合わせて置き換えてください。\n!\n...",
-      "publishedAt": "2026-10-24T16:07:43.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "d53271e162147ceeb877b15576d4a6fcade509be08d396250b73b849c55f89a7",
-      "title": "わからない言葉を、わからないままにしない。React基礎用語の学び直し！",
-      "url": "https://qiita.com/jota9613/items/138c3a90bd981659844f?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "はじめに\n分からない単語（わかっている風な単語のこと）があるので\n自分の言葉で説明できる様にするためにブログを書きます！\n\nアジェンダ\n\nSPA\nツールチェーン\nJSX\nトランスパイラー\nモジュール\nバンドラー\n\nアウトプット\n\nSPA（Single Page App...",
-      "publishedAt": "2026-10-24T13:53:48.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "6d93eb08c59709e4197ab5797cbbbc10e7a0c7838c83635a8dc0cc410a1510e0",
-      "title": "「HTTP2Shell」CVE-2026-111497、Node.js・Python・Bun・Envoyに影響 Brotliの重大脆弱性と修正版を確認|セキュリティニュースのセキュリティ対策Lab",
-      "url": "https://rocket-boys.co.jp/security-measures-lab/brotli_cve-2026-111497_http2shell_20261024/",
-      "description": "「HTTP2Shell」CVE-2026-111497、Node.js・Python・Bun・Envoyに影響　Brotliの重大脆弱性と修正版を確認 2026年10月21日、Node.js開発チームは、Brotliの展開処理に起因するメモリ破壊の脆弱性「CVE-2026-111497」を修正したセキュリティアップデートを公開しました。問題はNode.js固有のコードではなく、広く利用され...",
-      "publishedAt": "2026-10-24T12:12:42.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "0c69430f6081b838a3b1a62128835108967544f99e59f5a44ba41d260cda4fff",
-      "title": "AWS CDK でデプロイした Lambda 関数を以前のコードに戻したいです。以前のアセットはどこに残っていますか",
-      "url": "https://dev.classmethod.jp/articles/tsnote-cdk-lambda-rollback-asset-s3-cdk-gc/",
-      "description": "AWS CDK で Lambda 関数をデプロイした後、コードに不具合が見つかった時の切り戻し方法について解説します。ブートストラップ S3 バケットにアセットがどう残るのか、`cdk gc` で削除される仕組み、そして素早く対応するための方法をまとめました。",
-      "publishedAt": "2026-10-24T11:10:06.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "1218f6976bee3fb0ffb5db171338a51c6c5b6f9b5e12bc15decd8567d12c0100",
-      "title": "DevelopersIO 2026 TOKYOで 「バックアップは“消されないこと”が9割 〜AWS Backupで考えるランサムウェア対策とVaultの選び方〜」というタイトルで登壇しました #devio2026",
-      "url": "https://dev.classmethod.jp/articles/devio2026tokyo-aws-backup-ransomware/",
-      "description": "DevelopersIO（Tokyo）でランサムウェア対策とAWS Backupについて登壇してきました！初めての登壇で緊張もありましたが、満席のご来場をいただき、無事に終えることができたので、その様子をお伝えします。",
-      "publishedAt": "2026-10-24T11:08:49.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "16fff0232cacd80f809e49da684558ff1266a29a6feb1c210c3fe16cc324fe70",
-      "title": "AIで加速するサイバー攻撃と、防御をめぐる動き ――脆弱性の修正から、AIエージェントの行動制御まで | gihyo.jp",
-      "url": "https://gihyo.jp/article/2026/10/ai-security-defense",
-      "description": "AIで加速するサイバー攻撃と⁠⁠、防御をめぐる動き ――脆弱性の修正から⁠⁠、AIエージェントの行動制御まで 「約18カ月、持ちこたえる必要がある⁠」⁠。AnthropicのDeputy CISO（副最高情報セキュリティ責任者⁠）⁠、Jason D. Clinton氏は2026年10月22日、Xへの投稿で、サイバーセキュリティをめぐる直近4日間の深刻な状況に...",
-      "publishedAt": "2026-10-24T09:15:05.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "1695e20dec84ad3aa447c0758be2f07ef65f5042c227266a03e97b14c0e201a6",
-      "title": "GMO、不正取引の被害額を補償へ　見舞金5000円も　「お名前.com」FX用VPSへのサイバー攻撃で",
-      "url": "https://www.itmedia.co.jp/news/article/2610/24/2000002566/",
-      "description": "GMOインターネットは10月24日、FX自動売買用VPS「お名前.com デスクトップクラウド」がサイバー攻撃を受け、利用者の取引口座が不正操作された問題をめぐり、サービス利用中の全ユーザーに「お見舞金」として5000円を支払う他、不正取引で発生した損失を補償することを発表した。また、システムに「セキュリティ上の問題...",
-      "publishedAt": "2026-10-24T08:33:10.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "f5552725c82530482bf3b206366163fc098e124e2599e296439eec6b86bb0eb0",
-      "title": "リンクで確認した SNS のメール購読に、作り直さずに「解除の保護」を付ける",
-      "url": "https://zenn.dev/sk8jp/articles/260e3c0fa07ed9",
-      "description": "はじめに\nAmazon SNS のメール購読は、確認するときに AuthenticateOnUnsubscribe を true にすると、解除に AWS の認証（署名つきのリクエスト）が必要になります。メールの unsubscribe のリンクからは解除できなくなります。\nこの指定は確認するときにしか付けられず、確認のメールのリンクを押して確認すると付きません。\n\n\nAuthenticateOnUnsubscribe は、購読を確認する API（ConfirmSubscription）の引数です。確認の後に購読の属性を変える API（SetSubscriptionAttribute...",
-      "publishedAt": "2026-10-24T08:24:15.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "395997fe6cc5c6cfd0dc311e908ab4f717bed38d82623b6680f13158b41bb45c",
-      "title": "Contributing to Vite+ Inside Stories | ドクセル",
-      "url": "https://www.docswell.com/s/naokihaba/K4N7JN-2026-10-15-132213",
-      "description": "Contributing to Vite+ Inside Stories Naoki Haba Vue Fes Japan 2026 October 24, 2026 In This Talk How my journey with Vite+ began Moving from bug fixes to shaping core behavior Getting started with open source in the age of AI",
-      "publishedAt": "2026-10-24T08:08:36.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "67d9a81c29584cfb4b4e2b8166cfc57d749234153a86b6a15d7df526e83b3601",
-      "title": "「AWS DevOps Agentはどこまで任せられるか 〜機能の現在地と、機能拡張の実践〜」というタイトルでDevelopersIO 2026 TOKYOで登壇しました #devio2026",
-      "url": "https://dev.classmethod.jp/articles/devio2026tokyo-devops-agent/",
-      "description": "DevelopersIO 2026 TOKYOで登壇したAWS DevOps Agentの機能進化と、標準機能では届かないOS調査・自動修復の領域をMCPやEventBridgeで拡張した実践例を紹介します",
-      "publishedAt": "2026-10-24T08:07:56.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "5b9154f2c207bafe92f870766affdabe77fb0858fa1848f63bcd0da344d5b926",
-      "title": "[登壇レポート] DevelopersIO 2026 Tokyo で「知ってると差がつくかも？ AWS Control Tower / Organizations の小ネタ集」というタイトルで登壇しました",
-      "url": "https://dev.classmethod.jp/articles/202610-developersio-2026-tokyo-control-tower-organizations-tips/",
-      "description": "DevelopersIO 2026 Tokyo での登壇資料を共有します。Control Tower / Organizations の構築・運用で役立つ小ネタとして、Config ベースラインの使い分け、Bedrockのクロスリージョン推論とリージョン制限の工夫、SCP の NotResource を使った許可リスト管理、そして Guardrail を組織で強制する方法を紹介しました。",
-      "publishedAt": "2026-10-24T07:27:47.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "b8def9778c724967a47b7e612535af818ccb86c6be32c47a90d2f0470d07f2ab",
-      "title": "JSがこんなに減る！ HTML・CSS最新技術2026",
-      "url": "https://ics-ikeda.github.io/261024_vuefes_2026/",
-      "description": "Vue Fes Japan 2026 池田泰延の発表資料。HTML・CSSの新機能を使ったUI実装と、Vue.jsとの連携を紹介。",
-      "publishedAt": "2026-10-24T07:22:52.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "28b9fc17ecdccb432bbfd61132ed4166d8dde28d58148af32634e1bd58f2b300",
-      "title": "[登壇資料] 「AI駆動開発の開発環境のセキュリティの考え方」についてお話しました #devio2026",
-      "url": "https://dev.classmethod.jp/articles/ai-dev-environment-security-devio2026/",
-      "description": "AI駆動開発の時代において、開発環境のセキュリティをどう考えるべきか。Classmethod Odysseyでの登壇資料を共有します。",
-      "publishedAt": "2026-10-24T07:13:32.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
       "id": "7962706c1d844d7e474b2d74a1bbd821ea8ae1ef34b2ab83666da44e67c1e3ba",
       "title": "2026 Node.js Summarize Text API Chat Completions Example for Support Answers",
       "url": "https://dev.to/maximiliannilsson7568/2026-nodejs-summarize-text-api-chat-completions-example-for-support-answers-1i71",
@@ -343,86 +191,6 @@
       "description": "私が作っている自動売買(売り買いの判断と注文を、プログラムに任せる仕組み)は、「取得・記録・判断・発注」の4つの段を順に通る流れと、記録した価格で戦略(どういう条件で売買するかのルール)を試す「バックテスト」の、2つでできています。この記事では、その全体を1枚の図で表現します。\n\n 売買の対象\nシステムが扱っているのは、国内の証券会社で扱っている、株価指数(多くの株の値動きを、一つの数字で表したもの)に連動するCFDです。CFDは、株や指数そのもの(現物)を持たずに、価格の差額だけをやり取りする取引の仕組みです。\n\n 全体の流れ\n\n短い間隔で繰り返す流れが上の段で、記録した価格を使う検証...",
       "publishedAt": "2026-10-25T09:43:44.000Z",
       "feedName": "Zenn"
-    },
-    {
-      "id": "be2cf4a415cbc9d3ce90d5be87a0f3b8098914723db892006419a14204af753c",
-      "title": "Vue Fes Japan 2026で「あなたの await、OS まで届いてる？ strace で覗く JavaScript の非同期」というタイトルで登壇しました",
-      "url": "https://dev.classmethod.jp/articles/hasuto-vuefes-2026-await-strace-js/",
-      "description": "Vue Fes Japan 2026 のライトニングトークで登壇した「あなたの await、OS まで届いてる？ strace で覗く JavaScript の非同期」のスライド資料と、伝えたかったことを紹介しています。",
-      "publishedAt": "2026-10-25T08:11:06.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "2775cbd82c8106ed0ef0652abd6a116064fcc01ef84810e22bc638709f561b89",
-      "title": "AWS DevOps AgentをSlackのメンションで起動し、読み取り調査させてみた",
-      "url": "https://dev.classmethod.jp/articles/aws-devops-agent-slack-mention-read-only-investigation/",
-      "description": "CloudWatchアラームが鳴ったときの一次調査を、SlackでAWS DevOps Agentにメンションして頼んでみました。依頼から調査の作成、途中経過、根本原因と緩和策が届くまでの流れをまとめます。",
-      "publishedAt": "2026-10-25T08:10:21.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "dc00fe44e2d89cb559a948dcae856583dcbe0bc4b17e59546e653c9cf75b28e3",
-      "title": "AIに「答えを言わないで」と頼んでRustを学んだ2週間の日記 ― 生成AI時代に、新しい技術をちゃんと身につけるためのメモ",
-      "url": "https://qiita.com/zumiraku/items/1c456a902613f281356c?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "2週間前の日曜日から、Rust の勉強を始めました。\n仕事では PHP と Python と TypeScript が中心で、Rust はずっと「いつかやる」リストに入っていたものです。今回、重い腰を上げたのには理由があります。\n最近、新しいライブラリやフレームワークを触...",
-      "publishedAt": "2026-10-25T08:04:53.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "172faa370509cf4b2e0fdba5afacca522e48505002181e2d13cabf8db644f3d8",
-      "title": "Pythonの基礎学習が終わったら、Pythonでスクレイピングを始めよう！",
-      "url": "https://zenn.dev/momiji_ai/articles/67c7ce4c54fad3",
-      "description": "自己紹介\n普段はセキュリティやAIに興味があり、脆弱性、CVE-2026-73683を発見し、報告したことで採番されたり、AIを個人的に勉強している現役学生です。\n\n この記事を書く目的\n\n業務でPyppeteerを使うシステムのコスト削減に取り組んだから\n応用的な使い方も説明したいから\n\n\n はじめに\nこの記事では、Python から本物のブラウザを動かしてスクレイピングできるライブラリ Pyppeteer を、手を動かしながら学びます。\n前半の入門編では、スクレイピング練習用のサイトを相手に、STEP 1 から STEP 5 まで順にコードを動かします。\n最後には、商品一覧の全ペ...",
-      "publishedAt": "2026-10-25T07:46:55.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "77e20bf4a8c63fa6d6badcae2bd2226467a986f29b606c2c0b3b315013c84f07",
-      "title": "[登壇資料] 「AI駆動開発の開発環境のセキュリティの考え方」についてお話しました #devio2026",
-      "url": "https://dev.classmethod.jp/articles/ai-dev-environment-security-devio2026-rev/",
-      "description": "AI駆動開発時代の開発環境におけるセキュリティ上の課題と対策について、DevelopersIO 2026での登壇資料を共有します。",
-      "publishedAt": "2026-10-25T05:07:51.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "e9035bad8fe0383f05c2727830f2478ebbb3b09214eb3f717ed2bb3b19944753",
-      "title": "【AWS re:Invent準備】女性向け持ち物をまとめてみた",
-      "url": "https://qiita.com/hoshi7_n/items/de663b2bea8e87c2984f?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "忙しい人用\n\nリュックの中身\nスーツケースの中身\n\nはじめに\nre:Invent2025に初参加した際、スーツケースMサイズと大きめリュックで参加したのですが、実際に参加してみて必要だったもの・いらなかったものがあったので持ち物をまとめてみました。\n\nリュック（機内持ち...",
-      "publishedAt": "2026-10-25T04:25:36.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "7909f9a3179794467c785ce52316253771f1f179ff2a641c1f1f147e5d4f8cac",
-      "title": "確率と統計を視覚的なアニメーションで理解できる「Seeing Theory」",
-      "url": "https://gigazine.net/news/20261025-seeing-theory/",
-      "description": "「Seeing Theory」は確率と統計の基本概念をインタラクティブに視覚化し、直感的かつ分かりやすく学べるウェブサイトです。 Seeing Theory https://seeing-theory.brown.edu/ Seeing Theoryはブラウン大学の学部生であったダニエル・クーニン氏によって作成され、視覚化にはJavaScriptライブラリであるD3.jsが活用されて...",
-      "publishedAt": "2026-10-25T04:02:37.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "5d06cbce246ed228926e5b3c4e964b451e88e7a93a06804d265d2e6c2f981a4e",
-      "title": "git archive で作成した zip ファイルを AWS CodePipeline のビルドのソースとして使う場合はDOSタイムスタン",
-      "url": "https://zenn.dev/yskszk63/articles/codepipeline-zip-dostime",
-      "description": "git archive で作成した zip ファイルを AWS CodePipeline のビルドのソースとして使う場合はDOSタイムスタンプをUTCで作成すべき\n\n 要約\n\nzip ファイルには DOS タイムスタンプと拡張タイムスタンプがある\nDOS タイムスタンプはタイムゾーン無しのタイムスタンプ\n拡張タイムスタンプはUTCで格納されたタイムスタンプ\nAWS CodePipeline は zip ファイル展開時にDOSタイムスタンプでmtimeを設定するようだ\nAWS CodePipeline のソースとして利用する zip ファイルは TZ=UTC として作成すべき\n\n\n 何...",
-      "publishedAt": "2026-10-25T02:37:59.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "09f92666d7bd56944b10ab4a9d999d8f0eede0db4212f47a4a3a56bd4f63c42e",
-      "title": "学習過程備忘録アウトプット　ReactのuseXXX系の雑感 useState,useEffect,useCallback",
-      "url": "https://qiita.com/polymetisoutis/items/8c9c5383512311db2825?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "お断りと本記事のナラティブ\n\n3年前くらいからReactについて耳にしていたと思う。\n1年前に漸く身を乗り出しReactに向き合ってみようと調べだし、\nQiita記事にも触れるようになった。\n仕事でも、一時期全然分かっていない状態でReactのWebアプリケーションの改修...",
-      "publishedAt": "2026-10-24T17:11:15.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "bb0ec5c88cb93d1de031280145e918f3f98f5504b018b1910c84c057cd2f8a8f",
-      "title": "個人開発で学ぶKubernetes入門【#1】―Dockerでの運用に限界が見えた話",
-      "url": "https://qiita.com/takuteh/items/a097bd02403bbee7e3fe?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "はじめに\n今回は、個人開発で直面した問題を通して、コンテナ化やKubernetesを導入するメリットを紹介します。\n題材は、自宅の玄関の鍵を自動で開け閉めする「Autolock」というシステムです。\n開発を始めたきっかけは、玄関で毎回物理鍵を探し、2箇所の鍵を開け閉めする...",
-      "publishedAt": "2026-10-24T13:54:58.000Z",
-      "feedName": "Qiita"
     },
     {
       "id": "a611bffe34ce49876d8720e8fcd91b4bf78949b8e7949e8077b7b9dd2b29b78d",
@@ -6869,6 +6637,292 @@
       "description": "カンリーCAIOの萩野です。\n\n「All Code Is Slop (Except Mine)（全てのコードはゴミ、私のは除く）」を掲げる開発者 poteto（Lauren Tan）さんの基調講演（2026年11月11日、AI Engineer CODE 2026）では、1か月で3,000本のPRを本番に出し、その多くを寝ている間に進めた話が語られました。そのやり方を MIT ライセンスで公開した Cursor 公式スキル集 pstack を Claude Code に入れ、指示1回・約10分・途中の人手なしで設計からツール実装、自動テスト14件、コードをわざと壊すテスト検証まで完走させ...",
       "publishedAt": "2026-11-20T09:04:40.000Z",
       "feedName": "Zenn"
+    },
+    {
+      "id": "4bce7151ad16dc09fdba5c5488f674a61d371f4a8cacd78c8b4ad3f82a5e7a40",
+      "title": "Figma MCP with Claude Code: What 15,280 Calls Taught Me",
+      "url": "https://dev.to/pavlozhydkykh/figma-mcp-with-claude-code-what-15280-calls-taught-me-47k9",
+      "description": "Originally published on pzhydkykh.com.\nFigma MCP lets Claude Code read and edit Figma files through the Model Context Protocol. I design and build websites with Claude Code every day, so I counted every Figma MCP call it made for me from 14 July to 17 November 2026: 15,280 calls. Almost all of them drew into Figma. The design-to-code tool most guides are about ran 14 times.\nFrom 14 July to 17 November 2026 Claude Code made 15,280 Figma MCP calls in my sessions, across two servers.\nFigma Console MCP, which works through the Desktop Bridge plugin, made 14,059 of them in 143 sessions; figma_execute alone ran 9,994 times.\nThe official Figma MCP server made 1,195 calls in 19 sessions, and get_design_context, its design-to-code tool, only 14.\nAbout one call in three was a screenshot: 3,429 of them, because every drawing gets checked before I see it.\nWriting to the canvas through the official server is in beta, free during the beta and planned as a usage-based paid feature.\nEvery Claude Code session leaves a transcript on disk, and every tool call Claude makes is in it with the tool's name. I wrote a short script that reads all my transcripts from 14 July to 17 November 2026 and counts the calls whose tool belongs to a Figma MCP server, by server, by tool and by session.\nThe work behind those sessions is ordinary studio work: client websites on Framer and Astro, my own site, Figma screens for clients, blog covers and LinkedIn images. One limit: the count shows what Claude called, not how good the result was. Where I can point to the result, I do.\nI used two Figma MCP servers side by side. Figma Console MCP is a community server that talks to Figma Desktop through a plugin called Desktop Bridge. The official Figma MCP server is Figma's own, connected to Claude Code over HTTP.\n\n\n\nServer\nCalls\nSessions\nTop tools\n\n\n\n\nFigma Console MCP (Desktop Bridge)\n14,059\n143\nfigma_execute 9,994, figma_capture_screenshot 3,062, figma_take_screenshot 367, figma_list_open_files 291\n\n\nOfficial Figma MCP server\n1,195\n19\ngenerate_image 593, get_screenshot 268, use_figma 101, generate_figma_design 101, get_design_context 14\n\n\nOther Figma connectors\n26\n2\nuse_figma 24, get_metadata 2\n\n\nTotal\n15,280\n\n\n\n\n\nThe split is not about quality. The console server runs any Plugin API code I need in the file that is open on my Mac, which suits long drawing scripts. The official server has its own write tool, use_figma, and Figma's own docs still say that \"Writing to the canvas is currently in beta and free to use during the beta period.\" The same page adds that it will eventually become a usage-based paid feature.\nMost guides to Figma MCP with Claude Code start from a finished design and turn it into code. My numbers point the other way. figma_execute, the tool that runs Plugin API code inside the file, made 9,994 calls: that is Claude drawing frames, text, shapes and auto layout into Figma, not reading them out.\nThe second biggest group is screenshots, 3,429 on the console server and 268 on the official one. That is my working loop, not waste. Claude draws, takes a screenshot of the frame, looks for overlaps, clipped text and spacing that is off, fixes it and checks again. Roughly one screenshot for every three drawing calls is what it takes for a frame to be ready for my eyes.\nWhy draw in Figma at all, when Claude Code could write the page straight away? Because I prefer to show a Figma file first. A desktop screen, a phone screen and a board of states are faster to discuss and change than a deployed page, and the client can leave comments on the exact spot. Code comes after the design is approved.\nHere is the real work behind the count, all of it public:\nEvery cover on this blog. One script, covers.js, holds a flat geometric drawing per article. Claude runs it in my Figma file through the bridge and exports each frame as a 1,000 px PNG; when the bridge is off, a small renderer draws the same script without Figma, which is how this article's cover was made.\nLinkedIn post images. The images and carousels for my posts 01, 03, 04, 06 and 07 were built into the same Figma file by small builder scripts, then exported as images and PDFs.\nThe common thread: Claude writes a script once, and the script draws the same way every time. When a cover looks off, I fix the drawing in the script and run it again, instead of nudging shapes by hand.\nget_design_context is the official tool for turning a selected Figma layer into code. Figma describes it as the tool that \"Gets the design context for a layer or selection in Figma.\" By default it returns React and Tailwind. In four months it ran 14 times in my sessions, and get_metadata another 14.\nThe reason is how I build. Most of my sites are on Framer, where the design is rebuilt natively on the Framer canvas, or on Astro, where Claude writes components against the site's own tokens and existing components. For those, a screenshot of the approved frame and the design tokens tell Claude more than generated React it would have to rewrite anyway. Design to code still matters for me, but it is a small part of the Figma work, not the core of it.\nThese are the problems that cost me real time, so you can skip them:\nThe bridge must be open in the right file. Figma Console MCP talks only to files where the Desktop Bridge plugin is running. When the plugin was open in another file, Claude drew into that file. I now pass the file key with every call and check the list of open files first.\n\"Cannot unwrap symbol\". When a result holds figma.mixed, for example the font size of a text with mixed styles, returning it from the plugin fails with this error. Convert such values to plain strings or numbers before you return them.\nOnly a few localhost ports. The plugin can only fetch from localhost ports 9223 to 9232. My covers script and its exports go through a small local file server on port 9228 for that reason.\nA write tool that is not there. On the Figma forum, users report that use_figma or generate_figma_design is missing from the tool list while read tools work. In a February 2026 thread the fix that worked for several users was adding the remote server to Claude Code directly with claude mcp add instead of using a connector.\nNo new images and only cloud fonts. Figma's docs say use_figma cannot add new images on its own and fonts must be uploaded to your Figma account; fonts installed only on your computer are not available.\nIf I set up Figma MCP with Claude Code from scratch today, I would do it in this order:\nAdd the official server directly: claude mcp add --transport http figma https://mcp.figma.com/mcp, then sign in when Claude Code asks. It covers reading designs and, during the beta, writing to the canvas.\nLoad Figma's figma-use skill before drawing. In my skill count it was called 11 times and figma-generate-design 4 times; both carry the Plugin API rules that keep drawings in real auto layout.\nAdd a bridge server when you need full Plugin API control in an open desktop file, such as running a long drawing script, and always pass the file key.\nMake Claude check its own work. Ask for a screenshot after every drawing step and a fix before it reports back. That is where my 3,429 screenshots went.\nKeep drawings in scripts. A script you can rerun beats a hundred one-off prompts, and it makes the output the same every time.\nI wrote up which Claude Code skills actually get called in Best Claude Code skills for web design. If you would rather have the website itself designed in Figma and built this way, I design and build Framer and Astro + Sanity sites for AI, fintech and B2B startups.\nFigma MCP is a set of Model Context Protocol servers that let an AI agent such as Claude Code read Figma files and, with the write tools, create and edit content in them. Figma runs an official server, and community servers such as Figma Console MCP work through a desktop plugin.\nRun claude mcp add --transport http figma https://mcp.figma.com/mcp in your terminal and sign in to Figma when Claude Code asks. Several users on the Figma forum found that the write tools only appeared after adding the server this way rather than through a connector.\nYes. The official server's use_figma tool runs Plugin API code in your file, and bridge servers such as Figma Console MCP do the same through a desktop plugin. In my sessions, drawing into Figma made up almost all of 15,280 Figma MCP calls.\nFigma says writing to the canvas is in beta and free during the beta period, and that it will eventually become a usage-based paid feature. Check Figma's developer docs for your plan and seat before you rely on it.\nUsually the server was added through a connector or an older install. Remove old Figma MCP entries, add the remote server directly with claude mcp add, sign in again and restart Claude Code. A Figma staff reply on the forum adds that writing needs a Full seat with edit access.\nIt can be, and get_design_context returns React and Tailwind by default. In my own work it ran only 14 times in four months, because on Framer and Astro sites a screenshot of the approved frame and the design tokens are usually enough.",
+      "publishedAt": "2026-11-24T08:28:40.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "cd68a1c77b98ef4e7cf684bb2b6931306683d06925686808a999a0583a1328a6",
+      "title": "I distilled 65 viral short dramas into a \"writing DNA\" and built an AI pipeline that re-skins them beat by beat",
+      "url": "https://dev.to/epongzhaosketch/i-distilled-65-viral-short-dramas-into-a-writing-dna-and-built-an-ai-pipeline-that-re-skins-them-22oc",
+      "description": "Vertical short dramas (ReelShort, DramaBox…) are a multi-billion-dollar market\nA hit episode opens with a visual hook in 3 seconds, stacks an information hook\nengineered.\nSo I distilled 65 overseas vertical dramas — about 3,420 episodes and 55,000\nDrama Forge, an open-source pipeline that turns one proven hit into a\nUpload a hit sample, and the pipeline:\nDeconstructs it into a six-dimension report plus a per-episode beat map:\nwhat each beat does (humiliation / restraint / reversal / face-slap),\nits emotional intensity, where the paywall sits.\nRe-skins it into 10 concept variants. The core promise (\"contract\nmarriage → real love\", \"hidden identity revenge\") stays locked; only the\nsurface genre swaps — mafia, werewolf, billionaire, royal.\nProduces a full script package per concept: direction card, character\nbios, season outline, a coherent block of opening episodes, and two\nad-creative episodes. After final review, it keeps writing to the season\nfinale in resumable background batches.\nGrades everything with an editor-in-chief review pass.\nThe key discipline is beat-level mirroring: each new episode mirrors the\nA 60-episode script package is 10+ long LLM calls. Naive implementations die\nStreamed structured output everywhere (streamObject + a 15-minute\nundici agent). Non-streaming calls get killed by intermediaries after ~10\nminutes of silence.\ntRPC with JSONL heartbeats (pingMs: 4000) so long requests never go\nquiet.\nAsync jobs with server-side checkpoints: the browser submits and polls;\nevery batch is persisted, so a restart resumes from the exact missing\nepisodes. Idempotent merges by episode number make retries free.\nMissing-episode self-healing: LLMs sometimes return 4 episodes when\nasked for 5. Each batch retries up to 3 rounds and refuses to advance the\npipeline until the set is complete.\nStack: React 19 + Hono + tRPC 11 + Drizzle + MySQL, all TypeScript.\nThe model doesn't need to be \"creative\". It needs rails: a beat map to mirror,\nRepo (Apache-2.0): https://github.com/epongzhao-sketch/drama-forge\nThe corpus-distilled DNA ships in the repo. A newer rule pack, corrected\nIf you work in short-drama production and want to see what a full package\nlooks like, open an issue — I'll show you one.",
+      "publishedAt": "2026-11-24T08:28:23.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "be410d263f962488d76cfb2377f85009eb80b600aaa959ad1f46e5444aa8e4d7",
+      "title": "Tutoriel n8n : sauvegarder et versionner vos workflows (export JSON, CLI, Git et restauration)",
+      "url": "https://dev.to/fluxintelligent/tutoriel-n8n-sauvegarder-et-versionner-vos-workflows-export-json-cli-git-et-restauration-1jp2",
+      "description": "Un workflow n8n qui tourne en production, c'est souvent des heures de réglages : les bons filtres, les prompts de l'agent IA ajustés au fil des semaines, les cas particuliers gérés un par un. Et pourtant, beaucoup d'équipes n'en ont aucune copie en dehors de l'instance. Une mauvaise manipulation, une mise à jour ratée ou un serveur perdu, et tout est à refaire.\nCe tutoriel couvre quatre niveaux de protection, du plus simple au plus robuste : l'export manuel, l'export en ligne de commande, la sauvegarde automatique par un workflow, et le versionnement dans Git. On termine par le point que tout le monde oublie : savoir restaurer.\nUn workflow n8n est un document JSON : nœuds, paramètres, connexions, réglages. Mais il ne contient pas les secrets. Les credentials (clés API, mots de passe, jetons OAuth) sont stockés à part, chiffrés avec la clé de chiffrement de l'instance (N8N_ENCRYPTION_KEY).\nConcrètement, une sauvegarde complète, c'est trois choses :\nles workflows (JSON) ;\nles credentials (exportées chiffrées) ;\nla clé de chiffrement, conservée en lieu sûr, séparément. Sans elle, les credentials exportées sont illisibles par une autre instance.\nDans un workflow ouvert, le menu « … » en haut à droite propose Download. Vous obtenez un fichier .json que vous pouvez réimporter plus tard avec Import from File, ou simplement coller dans un éditeur vide (n8n accepte le JSON copié-collé).\nC'est utile avant une grosse modification : on télécharge, on modifie, et on a un point de retour. Mais ça repose sur la discipline de chacun, donc ça ne suffit pas pour la production.\nÀ savoir aussi : selon votre version et votre offre, n8n conserve un historique des versions de chaque workflow, consultable depuis l'éditeur. Pratique pour revenir en arrière, mais cet historique vit dans la même base de données que le reste : ce n'est pas une sauvegarde externe.\nSur une instance auto-hébergée, la CLI de n8n exporte tout d'un coup :\n# Tous les workflows, un fichier par workflow\nn8n export:workflow --all --separate --output=backups/workflows/\n\n# Toutes les credentials (restent chiffrées par défaut)\nn8n export:credentials --all --separate --output=backups/credentials/\n\nAvec Docker, on lance la même commande dans le conteneur, puis on récupère le dossier :\ndocker exec -u node n8n \\\n  n8n export:workflow --all --separate --output=/home/node/backups/workflows/\n\n(Adaptez le nom du conteneur et montez /home/node/backups sur un volume pour retrouver les fichiers sur l'hôte.)\nUne option --decrypted existe pour exporter les credentials en clair. Évitez-la, sauf migration ponctuelle et maîtrisée : un fichier de secrets en clair qui traîne dans un dossier de sauvegarde, c'est exactement ce qu'on veut éviter.\nPlanifiez ces commandes avec un cron système, copiez le résultat hors du serveur (stockage objet, autre machine), et vous avez déjà une vraie sauvegarde.\nSi vous préférez rester dans n8n, un petit workflow peut faire le travail :\nSchedule Trigger : chaque nuit, par exemple à 2h (pensez à définir le fuseau horaire du workflow).\nNœud n8n (l'API publique de n8n, avec une clé API créée dans les paramètres) : opération Get many sur les workflows.\nCode ou Edit Fields : pour chaque workflow, préparer un nom de fichier stable, par exemple {{ $json.id }}-{{ $json.name }}.json, et le contenu JSON.\nDestination : nœud GitHub (créer ou mettre à jour un fichier), Google Drive, ou stockage S3.\nSortie d'erreur vers une notification : une sauvegarde qui échoue en silence est pire que pas de sauvegarde, parce qu'on croit être protégé.\nDeux précautions :\nutilisez un nom de fichier basé sur l'ID du workflow, pas seulement sur son nom, pour ne pas écraser deux workflows homonymes ;\nce workflow ne sauvegarde que les workflows. Gardez la sauvegarde des credentials et de la clé de chiffrement côté serveur (niveau 2).\nUne fois les workflows exportés un fichier par workflow, les pousser dans un dépôt Git privé apporte ce que les sauvegardes seules n'ont pas : l'historique lisible des changements. On voit qui a modifié le prompt de l'agent IA, quand, et on peut comparer deux versions.\nUn script minimal, lancé après l'export :\ncd backups\ngit add workflows/\ngit commit -m \"Sauvegarde n8n $(date +%F)\" || echo \"Aucun changement\"\ngit push\n\nNe commitez jamais les credentials déchiffrées ni le fichier .env contenant N8N_ENCRYPTION_KEY. Ajoutez-les au .gitignore dès le départ.\nPour les équipes qui ont plusieurs instances (développement, test, production), n8n propose aussi une fonctionnalité de source control et environnements basée sur Git, réservée à certaines offres. Vérifiez dans la documentation officielle si elle est incluse dans la vôtre avant de construire votre propre mécanisme.\nUne sauvegarde n'a de valeur que si on sait la restaurer. Faites l'exercice au moins une fois, sur une instance de test :\nn8n import:credentials --separate --input=backups/credentials/\nn8n import:workflow --separate --input=backups/workflows/\n\nL'instance de test doit utiliser la même N8N_ENCRYPTION_KEY que l'instance d'origine, sinon les credentials importées ne fonctionneront pas.\nAprès l'import, vérifiez trois choses :\nles workflows importés sont désactivés tant que vous ne les avez pas relus (évitez qu'une copie de test envoie de vrais e-mails à vos clients) ;\nles credentials se connectent bien ;\nles webhooks pointent vers la bonne URL, qui change d'une instance à l'autre.\n[ ] Clé N8N_ENCRYPTION_KEY conservée hors du serveur, dans un gestionnaire de secrets\n[ ] Export automatique quotidien des workflows (CLI ou workflow dédié)\n[ ] Credentials exportées chiffrées, jamais en clair dans Git\n[ ] Copie hors du serveur\n[ ] Alerte en cas d'échec de la sauvegarde\n[ ] Une restauration testée au moins une fois\nC'est le genre de fondation peu visible qu'on met en place chez Flux Intelligent avant de confier des tâches importantes à des agents IA : quand un workflow devient critique pour l'activité, il mérite la même protection que le reste de vos données. Si vous voulez faire le point sur vos automatisations existantes, vous pouvez demander un audit.",
+      "publishedAt": "2026-11-24T08:28:21.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "5ad5430c7856a12a8d795f445247a1028f2c958ff7497362cd80ef9a296c5635",
+      "title": "What SOLID Taught Me About Life, Not Just Code",
+      "url": "https://dev.to/nour_elimen_ha/what-solid-taught-me-about-life-not-just-code-3f62",
+      "description": "I used to overthink everything. I wanted to lead every project, hold every thread, and be right every time. I gave to people with my whole heart, whether or not they deserved it.\nThen I learned SOLID, and one day I realized these five principles weren’t describing my code. They were describing real life.\nS: Single Responsibility Principle\nIn code: A class should have one reason to change. When one module does everything, everything breaks together.\nMy old behavior: I wanted to lead in everything, and I wanted everything in my hands. I called it “being responsible.”\nIn reality I was a God class: one person, a hundred responsibilities, zero room for anyone else to do their part. And a God class has a hundred reasons to break.\nNow: I lead where I’m strong, and I let other people own their part. A team works better when each person has one job and the trust to do it.\nin Tunisia , my homeland we say :\n=>Sharing responsibilities makes everything easier.\nO: Open/Closed Principle\nIn code: Open for extension, closed for modification. You can add new behavior without breaking what already works.\nMy old behavior: I overthought everything. Every time a doubt showed up, I went back and modified a decision that was already working. And like modifying working code, every edit risked breaking it and created new doubts.\nNow: Once a decision works, I treat it as closed for modification. When new information or a new doubt arrives, I extend instead: I add a next step, a plan B, a small adjustment, without rewriting what I already decided. Less noise in my head, and decisions that actually stand.\n“الذهب يرق يرق وما يتقطعش”\n=>You can change and adapt without losing the core.\nL: Liskov Substitution Principle\nIn code: If you replace a parent type with a subtype, the program must still behave correctly. A subtype can’t demand more than its parent did, or deliver less.\nMy old behavior: I wanted to be the leader, and I never said “I was wrong.” But a leader comes with a contract: people expect you to own your mistakes. My version of leading only worked as long as I was never wrong. I had quietly added a condition the parent type never had, and dropped a promise it did make.\nThat’s a Liskov violation: I carried the “Leader” label, but I behaved differently exactly when it mattered, so the people depending on me got a surprise.\nNow: I learned that “sorry” is part of the contract. A leader who can say “I was wrong” behaves like a real leader, so people can depend on me without surprises.\n“Practice what you preach.”\nI: Interface Segregation Principle\nIn code: Don’t force a client to depend on methods it doesn’t need. Expose small, focused interfaces, not a giant one.\nMy old behavior: I’m a giver. I gave with my whole heart to everyone, everywhere, and everyone got the full interface: my time, my energy, my attention, my yes, even when they only needed one method.\nNow: I learned that “no” is a valid method, and that not everyone, and not everywhere, gets full access to me. Different people get different parts of me. I’m still a giver, but now I choose which interface each person gets.\n“الماء الماشي للسدرة، الزيتونة أولى به”\n=>Direct your resources where they are needed.\nD: Dependency Inversion Principle\nIn code: High-level modules shouldn’t depend on low-level details. Both should depend on abstractions.\nIn everyday life: Think of a lamp. It doesn’t care whether its electricity comes from solar panels, a gas plant, or a wind farm. It depends on one thing: the socket. The socket is the abstraction. The power plants are details, and they can change without the lamp ever noticing.\nMy old behavior: My decisions were plugged straight into the power plant. They depended on low-level details: my mood that day, what someone said, how people reacted. When the detail changed, my decision changed with it.\nNow: I plug into the socket: my values. Moods, opinions, and reactions are still there, but they are details. My decisions and those details both answer to the same standard, so things can change around me without everything going dark.\n“Don’t put all your eggs in one basket.”\nThe Real Lesson\nEvery principle pointed to the same thing:\nS: You don’t have to carry everything.\nO: Don’t keep rewriting what works; add to it.\nL: Honor what your role promises, including owning your mistakes.\nI: Not everyone needs, or deserves, all of you.\nD: Base your decisions on your values, not on moods or reactions. \nI came to SOLID to write cleaner code. It made me a better person instead.\nWhich principle do you recognize in yourself? Share it in the comments, and add your own proverb. I’d love one in Arabic , French or your native language too.\nFor developers: If you want to apply SOLID in your code (and with AI), I built open-source skills for it: clean-code-skills on GitHub. I also wrote about how they work here: Clean Code in the Age of AI Agents: 5 Principles and 2 Skills I Built .",
+      "publishedAt": "2026-11-24T08:25:21.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "1ea73ec876d21900aa8d06b70d81c4af2682978fd8e8a66eabfdb697a9471e31",
+      "title": "I read this practical guide to SQL Server management in VisuaLeaf on Windows, Mac, and Linux: build queries, inspect schemas, use the SQL profiler, and migrate data.",
+      "url": "https://dev.to/roxana_haidiner/i-read-this-practical-guide-to-sql-server-management-in-visualeaf-on-windows-mac-and-linux-build-13j7",
+      "description": "SQL Server Management on Windows, Mac & Linux with VisuaLeaf\n\n\n  \nVisuaLeaf\n                    \n                  \n\n                \nNov 24\n        \n#sql\n            #database\n            #software\n            #sqlserver\n        \n3 reactions\n            \nAdd Comment\n            \n        \n        \n          \n            8 min read",
+      "publishedAt": "2026-11-24T08:24:52.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "39473ee943455f6f32138228ac16c48cd54ef781310892d59e4daa85e3225b2b",
+      "title": "Web AR Checklist: 8 Browser Numbers I Measure Before Launch",
+      "url": "https://dev.to/dave_gordon/web-ar-checklist-8-browser-numbers-i-measure-before-launch-35dn",
+      "description": "TL;DR\nWebGL 2.0 and a secure context are hard stops. Check them against your own analytics browser list, not a support badge.\nConstraints are requests. Read track.getSettings() back instead of trusting what you asked for.\nYour frame budget is arithmetic, not measurement: 33 ms at 30 fps, 16.7 ms at 60.\nDevice pixel ratio is the multiplier nobody writes down. 1280x720 at ratio 2 is twelve times the pixels of 640x480.\nThe transfer size of the WASM module is the number that reaches users, not the file size.\nHandle NotFoundError, not just NotAllowedError, or desktop users with no webcam get told they denied permission.\nMediaPipe dropped its non-SIMD build in November 2026. TensorFlow.js still ships three binaries and picks at load time. Check which one your page actually fetched.\nMeasure for minutes on your oldest phone, not seconds on your laptop.\nEvery web AR page I have shipped failed in the same place. The demo ran on my laptop and fell over on somebody's two-year-old Android.\nThe fix was never a better runtime. It was having eight numbers written down before launch instead of after. This is that list, in the order I run it.\nThis is a harness. There are no frame rates from my own devices in this post, because the numbers that matter are the ones your effect produces on your device list, and mine would only tell you about my hardware.\nSo: specified here, all eight checks, the arithmetic you can redo on paper, and the browser behaviour each one depends on, with a link to the documentation that defines it. Produced here, nothing. You run it.\nFace AR in a browser composites through WebGL, so WebGL 2.0 is the floor. Everything else here is pointless if this one fails.\nThe headline number looks safe. caniuse puts WebGL 2.0 at 97.29% global support, with no partial-support asterisk. The gap sits where you would expect: iOS Safari had it disabled by default from version 12 through 14.8, and only shipped it on by default in iOS 15. If your analytics still show a tail of old iPhones, that tail is the 2.7%.\nHow to run it: take your own analytics browser list, not a generic support claim, and check each entry against that table. Then feature-detect at runtime rather than trusting the user agent string.\nconst probe = document.createElement(\"canvas\")\nconst hasWebGL2 = probe.getContext(\"webgl2\") !== null\n\nUse a throwaway canvas, as above. getContext() returns null both when the context type is unsupported and when the canvas has already been set to a different context mode, so running the probe on a canvas that something already called getContext(\"2d\") on reports WebGL 2.0 as missing on a browser that supports it fine. That one cost me an afternoon.\nGood answer: every browser in your top 95% of sessions returns a context. Bad answer: a tail of old iPhones and in-app webviews that you find out about from support tickets. caniuse does not break webviews out, so that one you have to test yourself.\ngetUserMedia() is a secure-context feature, and MDN states the consequence plainly: \"in insecure contexts, navigator.mediaDevices is undefined, preventing access to getUserMedia()\". The call is not available at all, so you get a TypeError on property access rather than a rejected promise.\nSecure context is not the same as HTTPS. MDN counts HTTPS, file:/// and localhost, which is exactly why this breaks after dev and not during it.\nHow to run it: load every route that opens a camera over the real scheme users will get, including any embedded frame. A frame needs allow=\"camera\", and the Permissions-Policy header has to permit the origin.\nGood answer: the permission prompt appears on every route, first try. Bad answer: it works on your dev machine over localhost, which is a secure context, and dies on a staging host that is not.\nConstraints are requests. The browser honours them when hardware allows and quietly gives you something else when it does not, so read the track back instead of assuming.\nHow to run it: after the stream resolves, log track.getSettings() and compare width, height and frameRate against what you requested. Treat them as possibly absent rather than destructuring blind, because MDN notes that listed properties may be missing when the browser does not support them or the context does not provide them.\nUse min, max or exact only when you genuinely want the call to fail instead of degrade. Those three are inherently mandatory, and MDN is specific about what failure looks like: the promise rejects with OverconstrainedError \"and the user will not be prompted\". No permission dialog, no camera, no obvious reason. Plain values and ideal are the ones that degrade.\nGood answer: settings match the request on your low-end reference phone. Bad answer: you asked for 1280x720, you got 640x480, and your effect placement was tuned for the first one.\nNot a numbered check, but it belongs here, because three of these come straight out of check 3.\nDevelopers search error names verbatim, and these are specified rather than invented. Six of the seven below are DOMException rejections from getUserMedia(). TypeError is the JavaScript built-in, not a DOMException, so a handler that switches on instanceof DOMException misses it entirely.\nThe user denied access, or a permissions policy blocks the input. Treat it as a user-facing state with a retry path, never as a crash.\nMDN's entry for this one also still says it covers an insecure browsing context. That half is stale: in an insecure context navigator.mediaDevices is undefined, so you never reach a rejection. Do not write your insecure-context handling against this error.\nNo media tracks of the type you asked for exist. This is the desktop user with no webcam, and it is the one I see omitted most often. A page that handles NotAllowedError and not this one tells someone who has no camera that they denied permission, and then sends them into their browser settings to look for a toggle that will not help.\nNo device met the constraints you marked mandatory. It carries a constraint property naming the one that could not be met, so log that property rather than the message. Note that this can fire before any permission grant, which makes it a fingerprinting surface as well as an error.\nPermission was granted, then a hardware error at the operating system, browser or page level blocked the device. On laptops this is usually another application holding the camera.\nYour constraints object was empty or every member was false, or you called the method in an insecure context where navigator.mediaDevices does not exist. The second cause is the common one, and see the note under NotAllowedError.\nThe two I catch generically. AbortError is \"permission and hardware were both fine, and it still did not work\". SecurityError is user media support disabled on the document, by a mechanism each browser decides for itself. Neither has a useful retry path, so both go to the same fallback as NotReadableError.\nThis is the number most teams never write down, and it is arithmetic rather than measurement. At 30 frames per second the whole pipeline gets 1000 / 30, which is 33 ms per frame. At 60 frames per second it is 1000 / 60, or 16.7 ms. That budget covers capture, inference, effect rendering and compositing, not only the part you wrote.\nHow to run it: hang the timing off requestVideoFrameCallback so you time against delivered video frames instead of animation ticks. It is on HTMLVideoElement, it is in all three engines, and Firefox only shipped it in 132, so feature-detect:\nif (!(\"requestVideoFrameCallback\" in HTMLVideoElement.prototype)) {\n  // fall back to requestAnimationFrame and accept the mismatch\n}\n\nTwo things about the timing itself that I got wrong for longer than I would like.\nFirst, the callback already hands you now and a metadata object, so you do not need performance.now() on the entry side. That metadata carries presentedFrames, which is a far better dropped-frame detector than inferring drops from timing deltas, and processingDuration, which is decode time rather than your time.\nSecond, performance.now() is coarsened. MDN gives 5 microseconds when the document is cross-origin isolated and 100 microseconds when it is not. A rolling median is still worth keeping, because it rejects the frame that collided with a GC pause or a layout, but it does not buy you resolution below that floor. Quantisation is a deterministic floor on the clock, not zero-mean noise, so the median lands on the same grid every sample did. If your per-frame work is near a tenth of a millisecond, time across N frames and divide, or turn on cross-origin isolation and check crossOriginIsolated.\nGood answer: a median well inside the budget, with headroom for the render. Bad answer: a median at 31 ms, which looks fine in a spreadsheet and stutters the moment a background task takes the GPU.\nResolution choices scale geometrically, and two of them compound.\n\n\n\nWhat you set\nPixels per frame\nRelative cost\n\n\n\n\n640x480\n307,200\n1x\n\n\n1280x720\n921,600\n3x\n\n\n1280x720 at device pixel ratio 2\n3,686,400\n12x\n\n\n\n640x480 is 307,200 pixels a frame. Moving to 1280x720 makes it 921,600, which is three times the work. Rendering that at a device pixel ratio of 2 doubles each axis again, so the processed area reaches 3,686,400 pixels, twelve times the cheapest setting.\nThe ratio is the one people forget, because the display applies it and your code never mentions it.\nHow to run it: log window.devicePixelRatio on your reference devices, then log the real canvas backing-store size. Cap the ratio at 1 where effect detail is not the point.\nGood answer: you chose a number. Bad answer: the ratio chose it for you on a high-density phone.\nBrowser face tracking ships a WebAssembly module, and those files are large uncompressed. The current MediaPipe vision build is a fraction under 15 MB on disk. The figure that reaches your users is the transfer size, which is the compressed one.\nHow to run it: open the network panel, load the page cold with the cache disabled, and read the transferred column next to the resource size for the .wasm file, and for any .data companion file if your runtime still ships one, plus the Content-Encoding response header. If that header is missing on either, your host is serving it raw, and fixing that is the highest-return change available to you.\nPurely as illustrative arithmetic, so you can see the shape: a 12 MB module at a compression ratio of 3.4 transfers as roughly 3.5 MB. Measure your own ratio. Do not borrow mine or anyone else's.\nGood answer: Content-Encoding present, transfer size a fraction of file size. Bad answer: a multi-megabyte raw download in front of the first camera frame.\nThis check changed under me while I was writing, which is the best argument for running it yourself rather than reading about it.\nThe shape used to be simple: browser CV runtimes shipped a baseline WASM binary and a SIMD one, detected support at load time, and picked. That is still exactly what TensorFlow.js does, and it ships three, not two. Its README says it loads \"the appropriate WASM binary\" after \"testing the capabilities of your runtime\", across tfjs-backend-wasm.wasm, tfjs-backend-wasm-simd.wasm and tfjs-backend-wasm-threaded-simd.wasm. The threaded one needs cross-origin isolation, and without it you silently fall back to SIMD-only.\nMediaPipe no longer does this. Up to and including @mediapipe/tasks-vision 1.2.0 the package shipped a vision_wasm_nosimd_internal binary and selected against it at load time. From 1.2.2, published 3 November 2026, that file is gone and the SIMD detection with it. Current builds assume SIMD. I found this by diffing the published packages, because the MediaPipe documentation does not mention SIMD at all, before or after.\nSo the check is no longer \"did it get the fast one\". It is: which files does your runtime expect, and did your bundler actually serve them?\nHow to run it: load the page cold and read the network panel for every .wasm request, including the ones that 404. If you want to branch yourself, wasm-feature-detect is the small way to do it, and it is live again after a quiet stretch, at 1.10.1 in November 2026:\nimport { simd, threads } from \"wasm-feature-detect\"\nif (await simd()) { /* ... */ }\n\nTwo bundler traps worth knowing. The runtime fetches its .wasm relative to the JavaScript file, so your bundler has to serve it as a static asset at a predictable path, and the failure mode is a 404 rather than a build error. And TensorFlow.js documents a second one: if your minifier rewrites typeof foo == \"undefined\" into foo === void 0, which terser does under its typeofs option, you get \"_scriptDir is not defined\" thrown from a web worker, but only in browsers that qualified for the SIMD plus threading build. A failure that appears on fast machines only is a bad afternoon.\nGood answer: every .wasm your runtime asks for returns 200, and you know which one. Bad answer: one 404 on a binary, a silent fallback, and a performance mystery you chase for a day.\nThe first frames after model load are always slower, and sustained load behaves differently from a cold start as the device heats up. A reading taken over two seconds tells you about neither.\nHow to run it: run the effect continuously for several minutes on your oldest supported device, sample the frame time throughout, and keep the distribution rather than one average. If you are in requestVideoFrameCallback, keep presentedFrames alongside it, because a thermal throttle shows up as dropped frames before it shows up in a median. Record the discarded runs too, including the one where you had a video call open in another tab, because that is a real user condition.\nGood answer: the median holds across the window and you know the shape of the tail. Bad answer: a single screenshot of a good second.\nFace tracking has to keep working across browser releases nobody on your team controls, and that maintenance has no end date. Check 7 is the small version of the argument: a dependency I do not maintain changed its binary layout three weeks ago, and the only way I learned was by diffing packages. Multiply that by every browser release.\nI spent a long time on my own tracking layer before I accepted that, and I wrote up what moved me off it at more length.\nThe eight checks apply either way. They measure the page, not the runtime underneath it.\nPick your oldest supported phone. Run checks 1, 2 and 6 first, because each one is a hard stop rather than a slow page. Then write down your frame budget from check 4 and measure against it for five minutes rather than five seconds.\nKeep the numbers in the repository next to the integration code, so the next person to touch it starts from a baseline instead of an opinion. And put a date on them. Mine from a month ago would already be wrong about check 7.",
+      "publishedAt": "2026-11-24T08:24:37.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "3e729a9b209116d07b2fad07f254fe41bdab793c404c2920b3f5af9c6a4cc7c6",
+      "title": "How to Ship Clean Markdown Docs for AI Coding Agents (llms.txt, llms-full.txt & Next.js Routes Without External Crawlers)",
+      "url": "https://dev.to/muhammadahmadsandhu01/how-to-ship-clean-markdown-docs-for-ai-coding-agents-llmstxt-llms-fulltxt-nextjs-routes-2l7f",
+      "description": "If you maintain an SDK, API, or developer tool, you've probably watched an AI coding assistant hallucinate outdated flags because it tried to parse your heavily styled HTML docs—or got tripped up by client-side hydration.\nEven though Google Search does not use llms.txt for ranking, publishing a clean /llms.txt index and /llms-full.txt Markdown bundle is genuinely useful for developers and coding agents pulling your docs into context.\nThe catch: most online llms.txt generators work by pointing a remote crawler at your public URL. That breaks immediately if:\nYou're working on localhost or a password-protected staging environment.\nYour WAF/CDN rate-limits or blocks third-party scrapers.\nThe scraper ingests your <nav>, <footer>, and cookie banner into the output.\nHere is a clean, local-first workflow to generate, structure, and serve /llms.txt and /llms-full.txt in a Next.js App Router project.\n/llms.txt (Required index): A compact Markdown table of contents following llmstxt.org—one # H1 title, one > blockquote summary, curated ## H2 link lists with concise factual descriptions, and an ## Optional section for secondary pages.\n/llms-full.txt (Optional full bundle): Concatenated clean Markdown of your primary docs so an agent can ingest the entire core reference in one request.\n/llms-ctx.txt (Optional XML context): Prompt-friendly XML-wrapped context for direct LLM pasting.\n/llms.txt\n\n\n\n\n\n# AcmeSDK\n\n> TypeScript SDK for real-time webhook verification and idempotent event queues.\n\n## Core Documentation\n- [Quickstart](https://docs.example.com/quickstart): Install the SDK and verify your first webhook signature in 5 minutes.\n- [Authentication](https://docs.example.com/auth): API key scoping, rotation, and HMAC-SHA256 header verification.\n\n## API & SDK Reference\n- [Queues API](https://docs.example.com/api/queues): Enqueue jobs, configure retry backoff, and inspect dead-letter queues.\n- [Error Codes](https://docs.example.com/api/errors): HTTP status codes and retryable vs. terminal error payloads.\n\n## Optional\n- [Changelog](https://docs.example.com/changelog): Release notes and migration guides.\n\nThree mistakes to avoid: never use relative paths (always use full https:// canonical URLs), avoid vague link titles like \"Click here\" or \"Learn more,\" and strip marketing superlatives from descriptions so every token carries technical signal.\n/llms.txt Cleanly in Next.js App Router\n\n\nYou can drop static files straight into public/llms.txt, or serve them via a route handler with explicit text/plain; charset=utf-8 headers and CDN caching:\n// app/llms.txt/route.ts\nimport { NextResponse } from 'next/server';\n\nconst LLMS_TXT = `# AcmeSDK\n\n> TypeScript SDK for real-time webhook verification and idempotent event queues.\n\n## Core Documentation\n- [Quickstart](https://docs.example.com/quickstart): Install the SDK and verify your first webhook signature in 5 minutes.\n- [Authentication](https://docs.example.com/auth): API key scoping, rotation, and HMAC-SHA256 header verification.\n\n## Optional\n- [Changelog](https://docs.example.com/changelog): Release notes and migration guides.\n`;\n\nexport async function GET() {\n  return new NextResponse(LLMS_TXT, {\n    status: 200,\n    headers: {\n      'Content-Type': 'text/plain; charset=utf-8',\n      'Cache-Control': 'public, max-age=3600, s-maxage=86400',\n    },\n  });\n}\n\nrobots.txt Cross-Check\n\n\nBefore deploying, confirm two things in /robots.txt:\nYou aren't accidentally disallowing /llms.txt or /llms-full.txt.\nIf you add bot-specific User-agent: rules (to allow search citation bots while blocking training crawlers), repeat your global Disallow: paths (/admin/, /api/private/) inside each allowed bot block so RFC 9309 doesn't override your wildcard protections.\nIf you want to paste a local Sitemap XML or raw HTML pages (automatically stripping <nav>, <script>, and <footer>), check BPE token counts across GPT/Claude/Gemini/DeepSeek, lint both llms.txt and robots.txt together, and export ready-to-paste Next.js routes without sending private docs to an external crawler, KivaroTools' in-browser llms.txt studio handles the whole pipeline locally with no sign-up. You can also browse the main KivaroTools browser suite if you prefer local-first developer utilities.\nVerify curl -I https://yourdomain.com/llms.txt returns 200 OK and text/plain; charset=utf-8.\nKeep primary links concise and move changelogs/archive pages into ## Optional.\nCheck that robots.txt allows /llms.txt and repeats protected Disallow: routes inside any custom bot blocks.",
+      "publishedAt": "2026-11-24T08:24:23.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "8d2670b445b5f22ef30503c2d60e74713965439d086ceb82405ba720d3adf9f7",
+      "title": "[アップデート] AWS CodeDeploy で、デプロイ中の EC2 Auto Scaling プロセスを中断できるようになりました",
+      "url": "https://dev.classmethod.jp/articles/aws-codedeploy-suspend-asg-processes/",
+      "description": "独自スクリプトで中断＆再開みたいなの組んでた人には良いアップデートかも",
+      "publishedAt": "2026-11-24T06:58:50.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "f785b16fb100c5af7fa0ec8e099d1ea3f5d572e2f46422bba71ae4063b835a38",
+      "title": "AWS と SAP のエージェント間（Agent-to-Agent）相互運用性",
+      "url": "https://aws.amazon.com/jp/blogs/news/a2a-interoperability-between-aws-and-sap/",
+      "description": "AWS と SAP は、オープンプロトコル A2A によるエージェント連携をサポートしました。Amazon Bedrock AgentCore 上のエージェントが SAP の agent gateway を介して Joule エージェントを検出・呼び出し、SAP Cloud Identity Services によりユーザーの ID と既存の SAP 権限のもとで安全に実行されます。さらに AWS Quick から MCP コネクタ経由で Joule エージェントを利用でき、ビジネスユーザーは1つの会話で SAP と SAP 以外のシステムを横断して作業できます。",
+      "publishedAt": "2026-11-24T06:51:26.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "3968876f6fbfe5eed12286d673789578d18ac4ac7e9f298a11740f54b6275bed",
+      "title": "Claude Code v2.1.331 の主要アップデート - Code Mode の Amazon Bedrock・Claude Platform on AWS 対応",
+      "url": "https://dev.classmethod.jp/articles/20261124-cc-updates-v2-1-331/",
+      "description": "Claude Code v2.1.331 で、Code Mode が Amazon Bedrock や Claude Platform on AWS のターミナルセッションに対応しました。東京リージョンの Bedrock で動かし、CloudWatch で呼び出しを確認した手順と、135 件の変更の要点を紹介します。",
+      "publishedAt": "2026-11-24T06:20:36.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "5f8b07a68ec922b70f22352dee3740f97396b179ec2bc0c5cf76f9d49e8cb3c7",
+      "title": "チャネルコーポレーションのアーキテクチャモダナイゼーション：Amazon DynamoDB 活用事例 パート 3 ユーザーとバッジ",
+      "url": "https://aws.amazon.com/jp/blogs/news/how-channel-corporation-modernized-their-architecture-with-amazon-dynamodb-part-3-user-and-badge/",
+      "description": "チャネルコーポレーションが Amazon DynamoDB でアーキテクチャをモダナイズした事例の第 3 弾です。約 16.8 億件・1.8 TB の User テーブルからバッジの機能を UserBadge テーブルに分離し、バッジの更新によるスロットリングと GSI のバックプレッシャーを解消した経緯を紹介します。DynamoDB の Export to S3 と Import from S3、AWS Glue を使ったオンライン移行で、移行時間を 128 時間から 5.5〜6 時間に短縮し、コストを 36% 削減しました。",
+      "publishedAt": "2026-11-24T05:47:06.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "333f232993dd5aeec516831b96e06e00ec6993337f9a16c4f0aac56dba7973c1",
+      "title": "ヴェレダ公式通販、クレカ情報4万件超が漏えいか　番号・名義・有効期限・セキュリティコードも",
+      "url": "https://japan.cnet.com/article/35255332/",
+      "description": "ヴェレダ・ジャパンは11月24日、公式オンラインショップへの不正アクセスで、個人情報19万8792件とクレジットカード情報4万5689件が漏えいした可能性があると発表した。対象者にはメールで個別に連絡し、届かなかった人には郵送で知らせるという。",
+      "publishedAt": "2026-11-24T05:34:00.000Z",
+      "feedName": "CNET Japan"
+    },
+    {
+      "id": "bd1861a4f98010c6be3ef54b7a4582c54a40368f3e063f93a8d790d0602c5f0e",
+      "title": "半導体設計者向けリファレンスアーキテクチャ日本版を公開 – 解釈・実行・基盤の 3 つの構成を解説",
+      "url": "https://aws.amazon.com/jp/blogs/news/semicon-refe-arch-jp-2026/",
+      "description": "半導体設計者向けリファレンスアーキテクチャの日本版を、日本のお客様の要件に合わせて更新しました。検証ログを AI が読み解く「解釈」、キュー待ちの計算だけをクラウドで処理する「実行」、設計データをお客様の管理下に置く「基盤」の 3 つの構成を、全体図とともに解説します。",
+      "publishedAt": "2026-11-24T04:22:05.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "6484cba8b6b0ea65d9a340e315f0bf88c532d63f1fa47f72a985b1a7b453a8bf",
+      "title": "サイバー脅威に対応できている日本企業は19％、自動復旧やAIデータ検証に後れ──Cohesity調査",
+      "url": "https://enterprisezine.jp/news/detail/25539",
+      "description": "Cohesity Japanは11月20日、日本を含む世界12ヵ国のITおよびセキュリティ責任者3,200人を対象に実施した調査「Cohesity Global Cyber Resilience R...",
+      "publishedAt": "2026-11-24T03:42:00.000Z",
+      "feedName": "EnterpriseZine"
+    },
+    {
+      "id": "9e3c489557a576ae907481d1200cdd4252e76a47ca5976d6ea8f326fe4bc9cd8",
+      "title": "生成AI着せ替え体験 2026秋田編の振り返り＠JAWS FESTA 2026 in AKITA",
+      "url": "https://qiita.com/riz3f7/items/0cd185d945286ebe9192?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\n2026年11月7日に秋田のあきた芸術劇場ミルハスで開催されたJAWS FESTA 2026 in AKITAのお祭りトラックにて、バーチャル試着コンテンツ「生成AI着せ替え体験 2026秋田編」を出展しました。\nこのコンテンツは、昨年のJAWS FESTA ...",
+      "publishedAt": "2026-11-24T03:17:14.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "a985101c665297d6c85937eebd53d1fa424138eae418bfb6c174d375cf4146ca",
+      "title": "Wiz、AIセキュリティの技術イベントを12月18日にオンライン開催──AWSやOpenAIも登壇",
+      "url": "https://enterprisezine.jp/news/detail/25526",
+      "publishedAt": "2026-11-24T02:00:00.000Z",
+      "feedName": "EnterpriseZine"
+    },
+    {
+      "id": "18c707a549b0626243370824de74e72f8e850a2201b607681c87a41f61ad0b1b",
+      "title": "開発の市民化：Kiro で全社利用のシステム開発に挑む",
+      "url": "https://aws.amazon.com/jp/blogs/news/nec-kiro-spec-driven-development/",
+      "description": "AI コーディングエージェントの登場で、コーディングの経験が少ない人でも、システムを開発できるようになってきました。一方で、人と AI の関わり方や構築されたシステムの信頼性を高める方法など、新たな課題に直面している開発者の方々も多いと感じます。本記事では、NEC の開発チームが、AWS が提供する AI エージェント搭載の開発環境「Kiro」を使い、人と AI が協調する方法を模索しながら、着手から 5 週間で本番環境へのデプロイまで進めた取り組みを紹介します。",
+      "publishedAt": "2026-11-24T01:34:20.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "ce7c62cee4ef8be2d3c6f9d477373474528d8b467be1de415af88dd15115c792",
+      "title": "月額1000円台のVPSで“自分専用AIテスト環境”を作れる！　さくらのVPS＋さくらのAI Engine＋OpenCodeでゲーム開発に挑戦【イニシャルB【特別編】】[Sponsored]",
+      "url": "https://internet.watch.impress.co.jp/docs/topic/shimizu_sp/2126965.html",
+      "publishedAt": "2026-11-24T00:27:02.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "5c473a693924ac394256d555e6a2f5be784bc91c6014dab6835a99f0fd329a9e",
+      "title": "AWS Network Firewall に NAT Gateway を関連付けて、明示的プロキシを試してみた",
+      "url": "https://dev.classmethod.jp/articles/aws-network-firewall-proxy-nat-gateway/",
+      "description": "東京リージョンで AWS Network Firewall に NAT Gateway を関連付けて明示的プロキシとして設定し、curl にプロキシを指定した通信を DNS と TLS SNI のルールでドメインごとに許可・拒否できることを確認しました。送信元 IP は NAT Gateway の Elastic IP でした。",
+      "publishedAt": "2026-11-23T19:19:57.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "fce8dd024d71f75c7ad31b074598d6fbdf8288f4f4b93efa20c5effdd6c13579",
+      "title": "なぜ 11 月に日本のサイバー事故は「爆発」したのか — 605件を数えたら「日本が狙われている」だけではなかった",
+      "url": "https://qiita.com/songchong/items/073f202bb0ca65611b30?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "この図は IT連携マップで操作できます → https://renkeimap.jp/security/incidents\n上の図は、セキュリティ事故の一覧の頭にある図「事故の時期と規模」を 1 枚の画像にしたものです。サイトの図では、円を押すと、その事故のカード（漏...",
+      "publishedAt": "2026-11-23T19:05:56.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "c58db8d3aec8566b99b3330fd33fd29fde011fa0048a25b522ae72d5b3990356",
+      "title": "コーディングエージェントが変えたOSS開発のプロセスと喜び",
+      "url": "https://zenn.dev/cybergarage/articles/5ee7ac6b3b0565",
+      "description": "この記事は、2026年11月11日に公開した英語記事 Coding Agents Are Changing How I Build Open Source and Why I Do It の翻訳記事です。\n\n この記事の要点\n\n停滞していたOSSの開発や保守が再び動き出し、ユーザーからの不具合報告やセキュリティ課題にも手をつけられるようになった。\n並行して進められる仕事は増えたが、次々と判断を迫られる疲れがあり、自分の手でコードを書いていた頃とは楽しさの質が変わった。\n自分で代わりを作りやすくなると、既存のOSSを使う理由や貢献する意味も変わってくる。それでも、知見を持ち寄り一緒に保守...",
+      "publishedAt": "2026-11-23T17:37:18.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "01f076ee8513bcd9b3e8ba1e87f3c0ddf3d2e548ec7f1f57287d72a32882c163",
+      "title": "AWS Network Firewall の automated Internet firewall を試してみた",
+      "url": "https://dev.classmethod.jp/articles/network-firewall-automated-internet-firewall/",
+      "description": "パブリックプレビューの提供が始まった AWS Network Firewall の automated Internet firewall を AWS CLI で作成し、ルートテーブルを追加・変更せずに IGW で検査と NAT が行われることを確認しました。",
+      "publishedAt": "2026-11-23T16:09:33.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "d345f0ab640109159f6b5a2a5aa289af31b1c6ed3f83124b6d48f11f3fa6cc6b",
+      "title": "erasableSyntaxOnlyの対応",
+      "url": "https://qiita.com/J-T_ky2g/items/64629d7ae38f8feae15e?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "はじめに\n\nTypeScriptのclassをはじめて書いた\n\n問題\n\n以下のソースで erasableSyntaxOnly になる\n\nexport class Record {\n  constructor(\n    public id: string,\n    pub...",
+      "publishedAt": "2026-11-23T15:12:41.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "bc6457a43cc138a6153d92d62036cd25b1adfab1bea69c6964b25b535e8e4075",
+      "title": "Vite + React に Vitest と React Testing Library を導入してテストを書くまで",
+      "url": "https://qiita.com/Tukirukiki/items/45afa7dde5361301015c?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "title: 【初心者向け】Vite + React に Vitest と React Testing Library を導入してテストを書く\ntags: React Vite Vitest testing-library\n\nはじめに\nVite で作った React ア...",
+      "publishedAt": "2026-11-23T13:45:12.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "a6ca814d5ef1211e58c41f14083032205eff11c15dca96c7720eba17bdb935a5",
+      "title": "【microCMS × Vercel × Next.js】microCMSの記事を手動デプロイなしで静的ページに更新させる方法",
+      "url": "https://qiita.com/nagi-0106/items/3d25d8f2f5e5e16bcccd?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "こんにちは。\n以前に作成したmicroCMSのブログサイトはWebhookを用いてビルドなしでmicroCMSの記事がサイトに反映される仕組みにしました。\n\n当記事ではこの仕組みを実装するために行ったことを記載します。\n\n前提\n\nNext.jsのサイトはVercelでデ...",
+      "publishedAt": "2026-11-23T13:41:11.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "4e19d7e9c7346fd8e2c44035c0c00c94236d0c645f441b983a231ca50dce849f",
+      "title": "【AWS】Lambda Web FunctionsのPythonランタイムが使えるようになったのでDjango製Webアプリで試してみた！",
+      "url": "https://qiita.com/kuracchi_enj/items/bc6fb6161b211951217d?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "どうもどうも。\nさっき（2026/11/22）に、Twitter見てたらLambda Web FunctionsにPythonがキタっていうツイートを見たので、早速触ってみました。\n\n久々にちゃんとコーディングするかぁと思って、あまりAIを使わずに触ってみました。楽しかっ...",
+      "publishedAt": "2026-11-23T13:15:43.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "1bf7237b1d87b875daef38f61e65a21e7bcc11a4bc8a24b4419d0d7ee09c13bf",
+      "title": "1 つのスタックで VCF 全体を: EVS Deployment Orchestrator を使用して Amazon EVS へ VMware Cloud Foundation 9 をデプロイ",
+      "url": "https://aws.amazon.com/jp/blogs/news/one-stack-full-vcf-deploying-vmware-cloud-foundation-9-on-amazon-evs-with-the-evs-deployment-orchestrator/",
+      "description": "以前の段階的な自動化ワークフローを改善し、EVS Deployment Orchestrator (EDO) としてまとめ直しました。EDO はオープンソースのツールで、solutions-for-amazon-evs リポジトリで公開されています。AWS CloudFormation スタックを 1 つ起動すると、Amazon Elastic VMware Service (Amazon EVS) 上に VMware Cloud Foundation (VCF) 9.x 環境を最後まで自動で構築します。所要時間は約 4〜7 時間で、途中の手動作業はありません。",
+      "publishedAt": "2026-11-23T09:33:31.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "6b3d7708e9df314ee8a4e56d7542b7c1109e04e6930a96d5513a8146dfd84dcc",
+      "title": "AIが作りAIが決める時代に、人は何を「判断」するのか？",
+      "url": "https://zenn.dev/ncdc/articles/a522c2c50022d2",
+      "description": "この記事を書くキッカケ\n最初に、少し長くなりますがこの記事を書くキッカケから書こうと思います。\n前回の記事で、MCP Appsの各種機能を実際にアプリを作って動かすことで試してみました。\nhttps://zenn.dev/ncdc/articles/8cfbf2d20eec93\nこのお試し用のアプリを作るときに、Claude Codeは「試す環境の作り方を次の3択の中のどれにするか？」と聞いてきました。\n\nローカルで動かし、Cloudflare TunnelのQuick Tunnelsで公開する\nMCPの認証をOAuthで真面目に作りAWSにDeployする\n認証なしでAWSにDep...",
+      "publishedAt": "2026-11-23T08:30:05.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "3cb2d74784c9c44d532baa2d09a52c08427e4553d22872d0dcf2aeb09e530370",
+      "title": "[アップデート] AWS Quick の認証は IAM Identity Center のアカウントインスタンスが新しい定番、デスクトップアプリのサインインまで試してみた",
+      "url": "https://dev.classmethod.jp/articles/20261117-amazon-quick-desktop-idc-sign-in/",
+      "description": "AWS Quick on desktop が Web 版と同じサインイン方法に対応しました。IAM Identity Center のアカウントインスタンスなら MFA を使え、利用者ごとの IAM ユーザーも不要です。構築からデスクトップアプリへのサインインまでの手順と、導入時の考慮事項を紹介します。",
+      "publishedAt": "2026-11-23T07:45:48.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "683a942969ca2bd9a0d05624911399661cdb7b433bb79365e9a8a8d62d1d6dfa",
+      "title": "EventBridge Scheduler で新カスタムイベントバスへの配信と AWS SDK 連携を試してみた",
+      "url": "https://dev.classmethod.jp/articles/eventbridge-scheduler-event-bus-targets/",
+      "description": "新カスタムイベントバスへのイベント配信と、EC2 の停止、Lambda の予約済み同時実行数の変更を、Lambda 関数を利用せずに実行できました。各検証のコマンドと、バスに届いたイベントの形を紹介します。",
+      "publishedAt": "2026-11-23T07:09:29.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "1a00c2fd74bde040e28a264a6b5e60dacada1d082581b41272bf14d24f12c77b",
+      "title": "[アップデート] AWS Pricing Calculator に GetUsageLinesEstimatedCost が追加されたので使ってみた",
+      "url": "https://dev.classmethod.jp/articles/aws-pricing-calculator-api/",
+      "description": "calculator.aws みたいに作成と共有できる機能があると良いのだが",
+      "publishedAt": "2026-11-23T05:56:23.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "0d4498497728df3b8124adf5e408deaf062d5d62ddb22cb4c2f2dfb3eb0f4741",
+      "title": "著名なRust製OSSをLean 4で形式検証してみたら、めちゃめちゃバグが見つかった話",
+      "url": "https://zenn.dev/koukyosyumei/articles/31c8fcf4da45b7",
+      "description": "こんにちは。コロンビア大学の博士課程でシステムセキュリティ・形式検証の研究をしている Koukyosyumei です。\n今回は、ざっくり言うと、Rust製の有名なOSSをLean 4で形式検証するベンチマークを作っていたら、思いがけず実際のセキュリティ脆弱性をいくつも発見してしまった、という話です。\n現在私がやっているプロジェクトの一つに、RustのWebアプリケーションをLean 4で形式検証できるフレームワーク h5i があります。h5iは、RustのWebフレームワークであるAxumをベースに、アプリケーションの重要なロジックをLean 4に変換し、認可、データの分離、ビジネスロジ...",
+      "publishedAt": "2026-11-23T05:17:05.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "d2f3550f89c232a53a1e7ae9b61735a58c7452c07e65f956eb7eebd65640fd43",
+      "title": "[2026版]セキュリティ情報 406 件を「脆弱性-事故-対策」の1枚の分類図にまとめてから読めたこと",
+      "url": "https://qiita.com/songchong/items/4ad36f1857ba2b4ee4f1?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "分類図は IT連携マップで操作できます → https://renkeimap.jp/security/map\n上の図は、分類図の全体を 1 枚の画像にした一例です。サイトの分類図では、分類を押すと、つながる前後の分類だけが残り、その分類に入った件の一覧が出ます。上の...",
+      "publishedAt": "2026-11-22T22:01:05.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "21f5dabc2bfee1615e18833fde44da39d58f03907e9ed90a22b9d03fbeac3bfd",
+      "title": "GitHub - aws-samples/sample-reverse-spec-flow: A workflow that uses an AI coding agent (Claude Code or Kiro) to turn existing source code into AI-friendly specifications. Every statement cites its evidence (path:line) and is checked by a separate verifier",
+      "url": "https://github.com/aws-samples/sample-reverse-spec-flow",
+      "description": "A workflow that turns existing source code into \"AI-friendly specifications\" for AI agents to use Version: 2.2.1 / License: MIT-0 日本語版: README_ja.md The documents under docs/ and the rules the AI agent follows are currently written in Japanese. reverse-spec-flow creates specifications for AI ...",
+      "publishedAt": "2026-11-22T13:52:18.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "cfb8f700c3ee998ea4ac729951741d661aa72461d5f877df7c85c27eeaaf14a7",
+      "title": "なぜ今形式検証なのか",
+      "url": "https://zenn.dev/ncdc/articles/dcec80b0c067b0",
+      "description": "形式検証、Leanといったワードを最近よくみるので、どんなものなのか知っておきたいというのが今回の動機です。\n解説、詳説というよりは私自身のキャッチアップ記録になります。\n\n 形式検証って何？\n\n形式検証とは、テストや非形式的な議論だけに頼るのではなく、論理を用いてハードウェアやソフトウェアの設計の性質を確立することです。要求の形式的な仕様、実装の形式的なモデル、正確な推論規則を使い、たとえば実装が仕様を満たすことを証明します。\nNIST「formal verification」\n\n論理を用いてソフトウェアを検証するとのことですが、単体テストや統合テスト、e2eとは何が違うのでしょうか。...",
+      "publishedAt": "2026-11-18T23:00:05.000Z",
+      "feedName": "Zenn"
+    },
+    {
+      "id": "621d099fa90fafa6c0ec19c42e045763319aa0fc490b42c78d3f9dcb323c0664",
+      "title": "AWS Emulator を使用してローカルで AWS に対してアプリケーションをテストする | Amazon Web Services",
+      "url": "https://aws.amazon.com/jp/blogs/news/test-your-applications-against-aws-locally-with-aws-emulator/",
+      "description": "AWS は、2026 Gartner Magic Quadrant の SCPS 部門でリーダーに選ばれました",
+      "publishedAt": "2026-11-13T02:20:46.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
     }
   ]
 }
