@@ -1,230 +1,6 @@
 {
   "articles": [
     {
-      "id": "a611bffe34ce49876d8720e8fcd91b4bf78949b8e7949e8077b7b9dd2b29b78d",
-      "title": "Backend Task Monitoring Tools — Node.js Watchdogs vs Health Check APIs, Choose by Evidence",
-      "url": "https://dev.to/judsonrhodes1569/backend-task-monitoring-tools-nodejs-watchdogs-vs-health-check-apis-choose-by-evidence-n9e",
-      "description": "For healthtech backend task monitoring, choose tools that can answer the failure in front of you: an import watchdog catches “the task ran, but no usable result arrived,” while health check APIs and synthetic checks answer “can this endpoint respond right now?” They are complementary, but they do not produce the same evidence or belong on the same alert.\n\n\n\nApproach\nEvidence it produces\nPick it when\nMain boundary\n\n\n\n\nImport watchdog\nA scheduled run produced a count, timestamp, and outcome\nMissing or stale business data is the incident\nIt cannot prove that a user-facing API is reachable\n\n\nSynthetic health check\nA request crossed a network boundary and received an expected response\nAvailability of a route or dependency is the incident\nA healthy response can hide a stalled importer\n\n\nPull-based metrics and rules\nTime series showing freshness and error state\nThe team needs history, aggregation, and alert routing\nIt needs an exporter or collector to observe the job\n\n\n\nThe least complex design is a small Node.js watchdog that records one outcome per import, plus a health endpoint that reports process and dependency readiness. The watchdog owns freshness. The endpoint owns reachability. Cost attribution becomes much clearer when each alert has one observable claim.\nStart with the sentence an on-call engineer should be able to complete: “We are paging because ___.” For a scheduled import, useful completions include “the 06:00 run has not produced a result,” “the source returned zero records three times,” or “the importer is failing validation.” “The service is up” is a different sentence.\nThe trap is treating a successful HTTP response as proof that the backend task succeeded.\nKeep the claims separate.\nThat distinction matters in healthcare workflows. A process can return HTTP 200 while it has an empty payload, an old cursor, or a parser that discarded every row. A process can also be healthy while its public route is unreachable from outside the cluster. Treating those cases as one binary status creates noisy incidents and hides the cost of the check that found them.\nI use two timestamps in the import record: startedAt and completedAt. I also keep recordsAccepted, sourceBatchId, and a normalized outcome. The timestamp used for freshness is the completion time, not the scheduler's planned time. That small choice avoids paging on a slow run that still delivered valid data.\nHere is the boundary in words: the scheduler emits an event; the importer turns the event into an outcome; the watchdog measures the age of the latest successful outcome; the health endpoint reports whether the process can serve requests. An alerting rule consumes one of those signals and names its owner.\nThe health route should be cheap and bounded. It can check that the process is accepting requests and that required configuration is present. A readiness route may test a database connection with a short timeout. It should not start an import, scan a whole result table, or wait for a third-party source. Those operations turn a probe into an accidental workload. The API proves reachability; the task record proves freshness.\nThe watchdog can carry the slower, domain-specific check. This TypeScript sketch keeps the external interface generic and makes the decision visible in the data rather than hiding it in a vendor-specific callback:\ntype ImportOutcome = {\n  startedAt: string;\n  completedAt: string;\n  recordsAccepted: number;\n  sourceBatchId: string;\n  outcome: \"success\" | \"empty\" | \"failed\";\n};\n\ntype ImportStore = {\n  latestSuccessful(): Promise<ImportOutcome | null>;\n  save(outcome: ImportOutcome): Promise<void>;\n};\n\nexport async function runImport(store: ImportStore): Promise<ImportOutcome> {\n  const startedAt = new Date().toISOString();\n\n  try {\n    const batch = await fetchSourceBatch();\n    const accepted = validateAndCount(batch.records);\n    const outcome: ImportOutcome = {\n      startedAt,\n      completedAt: new Date().toISOString(),\n      recordsAccepted: accepted,\n      sourceBatchId: batch.id,\n      outcome: accepted === 0 ? \"empty\" : \"success\",\n    };\n\n    await store.save(outcome);\n    return outcome;\n  } catch (error) {\n    const outcome: ImportOutcome = {\n      startedAt,\n      completedAt: new Date().toISOString(),\n      recordsAccepted: 0,\n      sourceBatchId: \"unknown\",\n      outcome: \"failed\",\n    };\n\n    await store.save(outcome);\n    throw error;\n  }\n}\n\ndeclare function fetchSourceBatch(): Promise<{\n  id: string;\n  records: unknown[];\n}>;\n\ndeclare function validateAndCount(records: unknown[]): number;\n\nThe empty outcome is deliberate. It is not automatically an incident: some source systems legitimately publish no records. The policy should decide whether one empty batch is informational and whether repeated empties, measured over a defined window, are actionable. That policy belongs beside the data contract, where a reviewer can change it without rewriting probe code.\nFor the freshness calculation, keep the threshold in the same time unit as the schedule. If imports are expected every 30 minutes, a rule might mark the stream stale after 75 minutes. The extra 45 minutes is a policy choice for source delay, retries, and deployment pauses; it is not a universal magic number. Record the reason for the margin.\nCost attribution is easier when checks are assigned to work they can explain. A watchdog run has an execution cost and a data-processing cost. A synthetic check has request, network, and probe-frequency costs. Pull-based metrics add collection and retention costs. None of these should be disguised as a single “monitoring” line item.\nThat is a real trade-off. A backend tool that records every task outcome gives better failure evidence, but it adds persistence and retention work. A health-check API is lighter, but it cannot expose stale business data. Pick the cheaper evidence only when it still proves the incident you care about.\nThe product landscape reflects these shapes, without making the products interchangeable. Healthchecks.io is built around reporting scheduled-job completion through a ping. Prometheus is built around time-series collection and rule evaluation. Grafana Cloud includes metrics and synthetic monitoring as separate observability capabilities. Better Stack documents uptime checks alongside incident workflows. These are useful examples of different boundaries; the right comparison is the signal and its retention, not a feature-count contest.\nA practical allocation table might assign the importer to the data platform budget, external route probes to platform reliability, and long-lived metric retention to shared observability. The labels matter more than the dashboard. They let a team ask why a check runs, who acts on it, and how long its evidence must remain available.\nThe useful review is a short cost-and-evidence exercise, not a hunt for the longest feature list. Draw one line for the scheduled task and one for the public API. On the task line, record the run frequency, the outcome record, the freshness window, and the retention period needed for investigation. On the API line, record the probe interval, the network locations that matter, the response timeout, and the amount of history needed to see an availability pattern. If a proposed tool adds another signal, write down the decision that signal changes. If nobody can name that decision, the signal is overhead. If the signal replaces a manual check during a data incident, it may be worth the operational cost even when it does not reduce compute usage. This is the part that prevents a cheap-looking health endpoint from becoming an expensive source of false confidence.\nOpenTelemetry helps keep the vocabulary portable: logs describe discrete events, while metrics describe measurements over time. Emit the import outcome as a structured event and expose freshness as a measurement. Do not force a high-cardinality batch identifier into a metric label. Put it in the event or trace context instead. That preserves queryability without turning every source batch into a new time series.\nWrite the failure cases before choosing a monitoring service. For each case, specify the observed signal, the owner, the delay allowed, and the action. Then test the importer with a valid batch, an empty batch, malformed records, a timeout, and a retry that eventually succeeds. Health routes need their own tests for a ready process, a missing dependency, and a timeout.\nThe probe response should be stable enough for automation, but useful enough for an engineer. This is a deliberately small example:\ntype Readiness = {\n  status: \"ready\" | \"not_ready\";\n  checks: Record<string, \"pass\" | \"fail\">;\n};\n\nexport async function readiness(\n  checkDatabase: () => Promise<boolean>,\n): Promise<Readiness> {\n  const database = await Promise.race([\n    checkDatabase(),\n    new Promise<boolean>((resolve) => setTimeout(() => resolve(false), 800)),\n  ]);\n\n  return {\n    status: database ? \"ready\" : \"not_ready\",\n    checks: { database: database ? \"pass\" : \"fail\" },\n  };\n}\n\nDo not let a failed readiness check erase the last successful import timestamp. Those are separate facts. Alert routing can then distinguish “the API cannot accept traffic” from “fresh data is missing,” and a post-incident review can identify which check created the page.\nThat separation pays off during review.\nFor a real deployment, also define deduplication and recovery behavior. One alert should recover when the same condition clears, not every time a probe happens to pass. Keep a small sample of the raw event around long enough to answer what the importer received and accepted. That evidence is often more valuable than another dashboard panel.\nAn import watchdog cannot tell you that a clinician can reach the API. A synthetic health check cannot tell you that the last successful import contained complete, current data. Metrics can show a trend, but they cannot replace the payload-level evidence needed to investigate a rejected batch. A lightweight health check is a poor fit for a data-freshness incident; a full watchdog is unnecessary for a route-only availability question.\nThere is also a human limit. Every distinct failure claim needs an owner and a runbook. If the team cannot say what a notification means or what action follows, increasing probe frequency will only increase interruptions. Start with the smallest pair of signals that separates freshness from reachability, then add detail when an observed failure proves the need.\nhttps://opentelemetry.io/docs/concepts/signals/logs/\nhttps://prometheus.io/docs/alerting/latest/overview/\nhttps://prometheus.io/docs/concepts/data_model/\nhttps://healthchecks.io/docs/\nhttps://grafana.com/docs/grafana-cloud/testing/synthetic-monitoring/\nhttps://betterstack.com/docs/uptime/",
-      "publishedAt": "2026-10-29T04:24:08.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "f59b9836dc3766112773966fa38f57157bd38399dd48b1464cbfe67fe3cda242",
-      "title": "Egress allowlists need destination identity and a bounded IP range",
-      "url": "https://dev.to/onaeiuspkz/egress-allowlists-need-destination-identity-and-a-bounded-ip-range-4bm",
-      "description": "Egress allowlists need destination identity and a bounded IP range\n\n\nAn internal service can make outbound requests to package registries, model providers, webhooks, and partner APIs. Those connections are often treated as normal infrastructure traffic. If the service is compromised, the same network path can become a channel for data exfiltration, command-and-control, or access to a cloud metadata endpoint. An egress allowlist narrows that path, but only when it identifies the destination and protocol that the application actually needs.\nAn allowlist based on a broad IP range is easy to bypass when the destination uses a content delivery network or a shared cloud address. A hostname rule can also be too broad if it permits every path and method on a shared domain. The policy should combine a destination, a port, a protocol, and, where the proxy understands it, a path or TLS server name. The goal is to make the permitted traffic attributable to a use case.\nList each outbound dependency and the exact service, region, port, and protocol it requires. Record whether the connection is a public API, a private endpoint, a package mirror, or a webhook. Put the owner and expiry on every exception. A wildcard entry should be a reviewed temporary control, not the default that makes an application work.\nFor HTTP traffic, enforce policy at an egress proxy or gateway where it can inspect the destination host, TLS server name, and request method. A layer 3 network policy can permit or deny addresses, but it may not know that a broad service address belongs to an unrelated tenant. Pair network policy with application-level authorization and a trusted DNS resolver.\nWhen a Kubernetes workload needs an external service, an implementation may expose an explicit service entry or gateway route. Istio's egress guidance describes changing from an allow-any mode to a registry-only mode and creating a service entry for each approved destination. Gateway API documentation warns that external hostname backends still depend on DNS trust and recommends egress domain allowlists plus admission and network controls. Those controls address different failure modes.\nCloud metadata endpoints are not ordinary external dependencies. Block application access to metadata addresses unless the workload has a documented identity-federation need. Use a managed identity path that limits token scope, and test from the workload rather than assuming a network policy covers the host's routing table.\nDNS is part of the policy. A hostname allowlist that follows a DNS answer chosen by an untrusted resolver can be redirected. Use a controlled resolver, resolve internally, and apply policy to the resolved destination and the original host or TLS identity where possible. Protect the configuration that changes DNS records and monitor for new names that resolve to the same destination ranges.\nLogging must show the workload identity, permitted destination, policy rule, and decision, while avoiding sensitive request bodies. Count denied and allowed connections by service and owner. A sudden allowed connection to a permitted wildcard can be more useful evidence than a blocked request to an unknown address.\nTry a direct IP connection, a mismatched TLS server name, an alternate port, and a destination reached through a redirect. Confirm that the policy follows the same trust path the application would use. Test from a pod, a node, and a serverless function if they share the same account. A control that works in one runtime may not exist in another.\nRun a canary that attempts to reach an unapproved test domain and verify the denial is recorded. Then exercise each approved integration after a certificate rotation, DNS change, and provider outage. An allowlist that breaks recovery tools or blocks a trusted patching service may be removed under operational pressure unless the exception process is clear.\nThe final control is a small, reviewable set of destinations with an owner and a reason. Egress restriction is not a promise that a compromised service cannot communicate. It is a way to make that communication require an approved route and leave a record of which workload used it.\nIstio: Accessing external services and egress control\nIstio: Egress gateways\nGateway API backend security guidance",
-      "publishedAt": "2026-10-29T04:21:03.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "d14fd6f8e204b924a9d5bcaee23e8cd94e01af67ea30ab63c6fbe70a6b75866a",
-      "title": "How an Instagram Engagement Rate Calculator Works (Formulas + JS)",
-      "url": "https://dev.to/tenk_earn/how-an-instagram-engagement-rate-calculator-works-formulas-js-31c5",
-      "description": "How an Instagram Engagement Rate Calculator Works (Formulas + JS)\n\n\nFollower count is the number people see first. Engagement rate is the number that tells you whether content is doing its job. Two accounts with the same follower total can sit miles apart on engagement: one gets a few likes per post, the other pulls comments, saves and shares on almost every upload.\nThis post walks through the three formulas most Instagram calculators use, the edge cases that break naive math, and a small JavaScript snippet you can drop into a page or notebook. No API keys required. Everything here uses numbers you can pull from a public profile or from Instagram Insights on a professional account.\nFor a feed post, most calculators count some mix of:\nlikes\ncomments\nsaves\nshares\nStories add replies and sticker taps. Reels often lean hard on plays, likes, comments and shares. Profile visits and link taps are useful too, but they are harder to get from outside Insights, so public calculators usually stick to the four post actions above.\nThe important idea is ratio, not raw volume. Five hundred likes on a 200,000-follower account is weak. One hundred twenty likes on a 1,500-follower account is strong.\nThis is the public default. Anyone can compute it from a profile without Insights access.\nER_followers = (likes + comments + saves + shares) / followers * 100\n\nExample: a post gets 300 likes, 25 comments, 40 saves and 15 shares → 380 interactions. The account has 8,000 followers.\n380 / 8000 * 100 = 4.75%\n\nStrength: easy to compare accounts from the outside.\nWeakness: many followers never see a given post. If Instagram only showed the post to 1,200 of those 8,000 people, the follower-based rate understates how well the content worked for the people who actually saw it.\nReach is the number of unique accounts that saw the post. You get it from Insights.\nER_reach = total_interactions / reach * 100\n\nSame post, 380 interactions, reach of 1,200:\n380 / 1200 * 100 ≈ 31.7%\n\nThat looks huge next to 4.75%, and that is the point. Reach-based rate answers a different question: of the people who saw this, how many acted?\nUse this when you are tuning content. Use the follower version when you are comparing public profiles.\nImpressions count every view, including repeats from the same account.\nER_impressions = total_interactions / impressions * 100\n\nIf the same post had 1,800 impressions (some people saw it twice), then:\n380 / 1800 * 100 ≈ 21.1%\n\nImpressions-based rate sits between the other two when reach is lower than impressions, which is the usual case. It is useful for Reels and ads, where repeat views are common. For organic feed posts, reach is usually the cleaner denominator.\n\n\n\nGoal\nPrefer\n\n\n\n\nCompare public accounts\nby followers\n\n\nImprove your own content\nby reach\n\n\nAds / Reels with heavy repeats\nby impressions\n\n\n\nA calculator that offers all three, and labels them clearly, beats one that hides the formula. Pick one method for your dashboard and stick to it week to week so the trend line means something.\nDivision by zero. Guard it. Return null, 0, or a clear \"not enough data\" message. Never show Infinity or NaN in a UI.\nSaves and shares are not visible on someone else's public profile. Outside calculators often fall back to likes + comments only. Say so in the UI, or the number will look lower than an Insights-backed calculator for the same post.\nA carousel can rack up high saves. A Reel can rack up high shares and plays. If you mix formats in one average without labeling them, a \"bad\" week of carousels can look like a \"good\" week of Reels, or the reverse. Average by format when you can.\nOne post with 40% reach-based engagement will drag a 12-post average into fantasy land. Median across recent posts is often more honest than mean. At minimum, show both the average and the latest-post value.\nInstagram periodically removes inactive accounts. A sudden follower drop with flat engagement is often cleanup, not a content failure. Conversely, a bought or contest-driven follower spike tanks follower-based ER overnight even when the content did not change. Reach-based ER usually stays steadier through those swings.\nEngagement keeps trickling in for days. Calculating ER one hour after posting understates the final number. For fair comparisons, use a fixed window (for example, 48 hours after publish) or wait until Insights marks the post as settled.\nHere is a minimal function that covers the three formulas and the zero-denominator case. No dependencies.\n/**\n * @param {object} input\n * @param {number} input.likes\n * @param {number} input.comments\n * @param {number} [input.saves=0]\n * @param {number} [input.shares=0]\n * @param {number} [input.followers]\n * @param {number} [input.reach]\n * @param {number} [input.impressions]\n * @returns {{ byFollowers: number|null, byReach: number|null, byImpressions: number|null, interactions: number }}\n */\nfunction engagementRates({\n  likes = 0,\n  comments = 0,\n  saves = 0,\n  shares = 0,\n  followers,\n  reach,\n  impressions,\n} = {}) {\n  const interactions = likes + comments + saves + shares;\n\n  const pct = (num, den) =>\n    typeof den === \"number\" && den > 0\n      ? Math.round((num / den) * 10000) / 100 // two decimals\n      : null;\n\n  return {\n    interactions,\n    byFollowers: pct(interactions, followers),\n    byReach: pct(interactions, reach),\n    byImpressions: pct(interactions, impressions),\n  };\n}\n\n// example\nconsole.log(\n  engagementRates({\n    likes: 300,\n    comments: 25,\n    saves: 40,\n    shares: 15,\n    followers: 8000,\n    reach: 1200,\n    impressions: 1800,\n  })\n);\n// → { interactions: 380, byFollowers: 4.75, byReach: 31.67, byImpressions: 21.11 }\n\nRound to two decimals for display. Keep full precision internally if you are charting trends.\nfunction averageByFollowers(posts) {\n  const rates = posts\n    .map((p) => engagementRates(p).byFollowers)\n    .filter((r) => r !== null);\n\n  if (!rates.length) return null;\n  const sum = rates.reduce((a, b) => a + b, 0);\n  return Math.round((sum / rates.length) * 100) / 100;\n}\n\nSame pattern works for reach and impressions. For a sturdier number, sort rates and take the middle value (median) instead of the mean.\nThese are ballpark ranges people use when reading follower-based ER. They shift by niche, format and account size, so use them as context, not a grade:\nunder ~1%: quiet for most small accounts\n~1–3%: common for mid-size accounts\n~3–6%: solid for many creator niches\nabove ~6%: strong, especially past 10k followers\nReach-based numbers run much higher. Do not mix the two scales in one sentence.\nIf you wire this into a form:\nRequire likes, comments and at least one denominator.\nLabel which formula you used next to the result.\nNote when saves/shares were omitted.\nOffer a \"last 12 posts average\" mode so one viral post cannot dominate.\nThat is the whole engine behind most Instagram engagement rate calculators: three ratios, a few guards, and clear labels. Once you can compute it yourself, you can trust (or challenge) any number a tool shows you.\nFor a free browser version of the same math, try the Muddlefox engagement rate calculator. More Instagram and TikTok guides live at https://muddlefox.com/.",
-      "publishedAt": "2026-10-29T04:17:45.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "3b882619526d43cc9c84eab273521cdb39dc9380cfc7d168843734a248898929",
-      "title": "MySQL or PostgreSQL, Does It Matter to Choose Which?",
-      "url": "https://dev.to/mfarrasmajid/mysql-or-postgresql-does-it-matter-to-choose-which-1731",
-      "description": "When we develop a program, or an app, it is important to keep our data on some place. If you learn basic web app programming from Youtube or from other learning platform, you will be guided to choose MySQL as a starter database. MySQL is beginner friendly, easy to use, and versatile when it comes to intermediate level query. But there is other SQL version, which is PostgreSQL. So what is the difference between those two?\nSQL is Structured Query Language. It is a programming language of which we can use to manage MySQL and PostgreSQL. MySQL and PostgreSQL is a database management system. Those two are the places we can store the database, and SQL is the language we can use to access them.\nThe learning curve of SQL is quite lean. The core concept of the query is simple. But when it comes to complexes database which have tons of tables, it is quite challenging to optimize the syntax of the query. SQL language is quite a lot to explore, but we can grasp the core of SQL quite easy.\nFor example, the JOIN syntax. There are many kind of JOIN syntax like INNER JOIN or OUTER JOIN which have different purposes, but the concept is the same, to join the columns of the tables. Same as INSERT, UPDATE, and DELETE, quite explanatory each of those syntax for the SQL.\nMySQL is commonly used with web application, mostly with PHP and Javascript. Web applications store their user data, config data, and application data within MySQL. In PHP, they have mysqli extension which for some PHP installation is enabled by default. It is the interface for the web application to execute SQL Query to MySQL databases. The query which executed then returns output to the web application or changes data in the database.\nBut when you familiar with enterprise application like ERP or HRIS, you will heard PostgreSQL much more often. PostgreSQL is a database, just like MySQL. They have quite similar query syntax on INSERT, UPDATE, or DELETE, but on some cases like incremental key, upsert, or concatenate, they have different syntax. PostgreSQL much optimized for bigger application for which they have optimized for larger databases and more complex queries.\nWell, yes basically. PostgreSQL is more optimized to larger and complex databases.\nThe truth of deciding of which database to choose is based on what exactly the specifications do you need?\nIf you only need database for simple web application for about 100 users which not concurrently using, it is better to use MySQL. The installation is simple and will fulfill your app's need. MySQL interface on some programming language mostly pre-installed so it won't be too much of a hassle to install your database.\nBut if you need a more heavy load transaction and computation, most likely because your app used by a lot of concurrent users and maybe you will be using pgvector to use LLMs, you will need PostgreSQL. It is more optimized for larger JOINs for much more relational tables and even can be setup as Vector Database for your LLMs.\nThe more we know the capacity of those two database system, the better our app will perform.",
-      "publishedAt": "2026-10-29T04:16:45.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "e2b77180c2f4f2f9f10f24c7b605cbd95ac34879f2823483c799693cba208ec9",
-      "title": "What the Zeabur Breach Actually Broke (and What Isolation Architecture Could Have Stopped)",
-      "url": "https://dev.to/rbonweb/what-the-zeabur-breach-actually-broke-and-what-isolation-architecture-could-have-stopped-527j",
-      "description": "What the Zeabur Breach Actually Broke (and What Isolation Architecture Could Have Stopped)\n\n\nThe Zeabur breach ended the company. Taiwan-based hosting platform Zeabur disclosed a second major security incident on October 14-15, 2026, seven weeks after its first, and founder Yuanlin Lin announced on October 17 that Zeabur would shut down entirely by December 31. The root cause wasn't a zero-day. It was a publicly reachable admin interface and credentials that were never rotated.\nJump to the specific architecture choices that turned one compromise into every customer's problem if you're evaluating a hosting platform right now.\nThe August 27, 2026 incident started small. According to Zeabur's own incident report, an attacker exploited an authorization flaw in NextChat, an AI chat application one customer had deployed on Zeabur's shared cluster. BleepingComputer's reporting describes what happened next: the attacker moved from that single compromised application through poorly isolated internal systems, obtained a root AWS key, and read part of Zeabur's production database, including account information and environment variables holding other customers' third-party API keys and database passwords.\nThat sentence, \"moved through poorly isolated internal systems,\" is the entire story in miniature. One customer's vulnerable application became a pivot point into the hosting provider's own management plane. In a correctly isolated multi-tenant system, a bug in any single tenant's workload should never grant a path into the infrastructure that runs every other tenant's workload, regardless of how badly that one tenant's code is written.\nZeabur's own preliminary report lays out the October 14-15 chain in granular detail, and it's worth reading because the specifics matter more than the summary. The company confirms the admin tokens for its shared cluster \"had no expiry\" and had not been rotated since January 2024, stored in plaintext in a private configuration repository, with the admin interface itself reachable from the public internet.\nAn attacker used those credentials to access the shared cluster across nine regions, then ran read commands inside 865 customer database containers, mostly n8n and PostgreSQL instances, between October 14, 13:40 UTC and 17:04 UTC. A second, separate path targeted GCP servers Zeabur manages on customers' behalf as \"dedicated\" infrastructure: the attacker signed in as root to 101 of them, using root passwords that were, again, stored in plaintext in the servers' initialization settings. Zeabur confirms the attacker added SSH keys to 50 of those servers for persistence and attached copies of customer disks to attacker-controlled virtual machines.\nThe two paths converged when the attacker used stolen internal-network admin credentials, obtained from the shared-cluster path, to add a node to Zeabur's private network from a compromised GCP server. From there, a flat internal network let that single node reach the platform database directly. Zeabur confirmed 29 database connections and 8,903 traceable operations in the roughly 37 minutes before the node was removed, exposing 321,810 accounts and about 3.2 million environment variable records.\nHere's the detail that should worry anyone who thinks a post-incident credential rotation is sufficient on its own: Zeabur's own report states plainly that the cluster admin tokens and GCP keys used in the October breach \"were not included in the post-August rotation.\" The company rotated what it believed the first attacker had touched. It didn't rotate every credential that could reach the same blast radius, because the blast radius itself, a flat internal network where one admin credential unlocks nine regions and 101 servers, was never redrawn between the two incidents.\nBank Info Security's reporting adds that Zeabur's working theory is that the October credentials trace back to a GitHub App private key stolen in the August breach, left unchanged in a repository even after other keys were rotated. If that theory holds, both breaches share a single root: one secret, once exposed, kept paying out for seven more weeks because nobody could be certain everything downstream of it had actually been replaced.\nNone of this required a novel exploit. Every step is a known category of mistake, stacked:\nA tenant's workload could reach the provider's internal network at all. The August NextChat compromise should have ended at the boundary of that one customer's container. It didn't, because the internal systems behind it were, in Zeabur's own words, poorly isolated.\nAdmin credentials for multi-tenant infrastructure had no expiry. Tokens unused for over two years, since January 2024, remained valid for an admin interface controlling nine regions.\nThat admin interface was reachable from the public internet. Not VPN-gated, not IP-allowlisted: reachable by anyone who had the token, from anywhere.\nCredentials were stored in plaintext rather than a secrets manager. A compromised repository was enough; no additional decryption step stood in the way.\nThe internal network was flat. One node, added from one compromised server, could reach the platform database holding every customer's data.\n\"Dedicated\" servers still depended on a shared, plaintext root password the provider controlled. Customers paying for isolated infrastructure were still exposed to a single leaked key held by the platform operator.\nOur verdict: none of these six gaps are exotic. They're the same checklist every infrastructure security review already asks about. The lesson isn't that Zeabur was uniquely careless; it's that a platform can look secure in its marketing and still fail every one of these checks simultaneously, and the only way a customer finds out is after the breach, not before.\nCan a compromised customer workload reach the provider's own management plane? If the answer involves \"poorly isolated internal systems,\" that's the single biggest predictor of blast radius in this incident and in most multi-tenant breaches.\nAre admin and infrastructure credentials short-lived, or do they have no expiry? A credential with no expiry is a liability that compounds for as long as it exists, used or not.\nIs the admin interface reachable from the public internet, or gated behind a private network? Zeabur's was public. A provider that can't answer this clearly hasn't thought about it.\nDoes your \"dedicated\" server actually eliminate the provider's standing access, or just the other customers' access? If the provider holds a master root credential for infrastructure you're paying to have isolated, you've reduced one risk and kept another.\nIs the internal network segmented, or flat? A flat network turns any single compromised credential into access to everything behind it, which is exactly how 865 database containers and 101 servers both ended up exposed from what started as one customer's chat app.\nWhat caused the Zeabur breach?\nTwo separate incidents, seven weeks apart, and neither one was a single bug. The first, in August 2026, started when an attacker exploited a flaw in a customer's NextChat application and moved through poorly isolated internal systems into Zeabur's infrastructure. The second, in October, used plaintext admin credentials with no expiry, never rotated since January 2024, to access a publicly reachable admin interface and reach the platform database.\nWhy is Zeabur shutting down after the breach?\nFounder Yuanlin Lin announced on October 17, 2026 that Zeabur would wind down entirely by December 31, citing both security incidents alongside unsustainable growth and architectural complexity that the company's small team could not keep pace with, however much it tried to patch around the gaps after each incident.\nDid rotating credentials after the first Zeabur breach prevent the second one?\nNo, and that's the uncomfortable part. Zeabur's own report states the admin tokens and cloud keys used in the October breach were not included in the rotation performed after the August incident, meaning the same underlying exposure window remained open for seven more weeks.\nWe pulled Zeabur's own official incident report in full, cross-referenced the technical chain against BleepingComputer's and Bank Info Security's independent reporting, and confirmed the timeline (August 27 first incident, October 14-15 second incident, October 17 shutdown announcement) matches across all three sources. The theory linking the two breaches to a single leaked GitHub App key is explicitly labeled a working hypothesis by Zeabur itself, not a confirmed fact, and we've kept that qualification rather than stating it as settled.\nI'm Rohit, founder of Krova Cloud: every Cube boots with no public IP until you open a port yourself, and our own infrastructure has no standing path from a customer's workload back into our management plane, because that path is exactly what turned one vulnerable chat app into a seven-week, 321,810-account cascade for someone else. More debugging stories at debugly.dev.\n{\n  \"@context\": \"https://schema.org\",\n  \"@graph\": [\n    {\n      \"@type\": \"BlogPosting\",\n      \"headline\": \"What the Zeabur Breach Actually Broke (and What Isolation Architecture Could Have Stopped)\",\n      \"datePublished\": \"2026-10-29\",\n      \"dateModified\": \"2026-10-29\",\n      \"author\": {\n        \"@type\": \"Person\",\n        \"name\": \"Rohit\"\n      },\n      \"about\": [\"Zeabur breach\", \"cloud hosting platform security\", \"multi-tenant isolation architecture\", \"credential rotation failure\"]\n    },\n    {\n      \"@type\": \"FAQPage\",\n      \"mainEntity\": [\n        {\n          \"@type\": \"Question\",\n          \"name\": \"What caused the Zeabur breach?\",\n          \"acceptedAnswer\": {\n            \"@type\": \"Answer\",\n            \"text\": \"Two separate incidents, seven weeks apart. The first, in August 2026, started when an attacker exploited a flaw in a customer's NextChat application and moved through poorly isolated internal systems into Zeabur's infrastructure. The second, in October, used plaintext admin credentials with no expiry, never rotated since January 2024, to access a publicly reachable admin interface and reach the platform database.\"\n          }\n        },\n        {\n          \"@type\": \"Question\",\n          \"name\": \"Why is Zeabur shutting down after the breach?\",\n          \"acceptedAnswer\": {\n            \"@type\": \"Answer\",\n            \"text\": \"Founder Yuanlin Lin announced on October 17, 2026 that Zeabur would wind down entirely by December 31, citing both security incidents alongside unsustainable growth and architectural complexity that the company's team could not keep pace with as it scaled.\"\n          }\n        },\n        {\n          \"@type\": \"Question\",\n          \"name\": \"Did rotating credentials after the first Zeabur breach prevent the second one?\",\n          \"acceptedAnswer\": {\n            \"@type\": \"Answer\",\n            \"text\": \"No. Zeabur's own report states the admin tokens and cloud keys used in the October breach were not included in the rotation performed after the August incident, meaning the same underlying exposure window remained open for seven more weeks.\"\n          }\n        }\n      ]\n    }\n  ]\n}",
-      "publishedAt": "2026-10-29T04:15:00.000Z",
-      "feedName": "Dev.to"
-    },
-    {
-      "id": "3a77b76bb9c17604de997d9fcfaeca749abebcb991e3a618be84d49a9db4cba8",
-      "title": "MuseでAWS上のRemote MCP Server向けのCustom Connector作成を試す",
-      "url": "https://dev.classmethod.jp/articles/shuntaka-muse-custom-connector-remote-mcp/",
-      "description": "Metaのパーソナルアシスタント「Muse」をAWSの会議室予約アプリと連携させ、DCR対応の認証ありと認証なしの2つのMCP接続方式を検証しました。認証ありはMuseにコネクターとして登録されて完全に統合される一方で、認証なしはコネクター画面に表示されないながらも、Muse内部のクライアントから直接ツール呼び出しが可能な違いが見えてきます。",
-      "publishedAt": "2026-10-29T03:58:16.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "9a23d3ecf6a0c48a42ae90455a35e86a676994fb903a759b225cb68c6ed669a5",
-      "title": "EKS でスケーラブルな LLM 推論基盤を作る",
-      "url": "https://dev.classmethod.jp/articles/scalable-llm-inference-eks/",
-      "description": "EKS上でGPUノードと推論エンジンが0台から動的に増減するLLM推論基盤の実装例を紹介します。通常のWeb APIの常識がLLMではどう変わるか、その違いに対応したアーキテクチャまでを実装を通じて見ていきます。",
-      "publishedAt": "2026-10-29T03:45:29.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "4bdfaa0ba8b233eb5a2ca29b042bd06003c92a6af6d9382cacd02d9b42829fbe",
-      "title": "SAP移行のABAPコード変換が「87％減」　AWSの「Kiro」がベンチマークで示した実力",
-      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2610/29/news039.html",
-      "description": "AWSは、AIコーディングエージェント「Kiro」をベースにしたサンプルエージェントによる、SAPモダナイゼーションのユースケースとそのベンチマーク結果を公開した。ABAPコードの変換では工数を87％削減したという。",
-      "publishedAt": "2026-10-29T03:45:00.000Z",
-      "feedName": "＠IT"
-    },
-    {
-      "id": "b2e1b12b80c97fa3c78bf6d9c5e68d19faded601180288dcab4d897e21f32d99",
-      "title": "Amazon OpenSearch Serverless NextGen の時系列コレクションのご紹介",
-      "url": "https://aws.amazon.com/jp/blogs/news/introducing-the-next-generation-of-serverless-time-series-for-amazon-opensearch-service/",
-      "description": "本日、Amazon OpenSearch Serverless NextGen が時系列コレクションに対応したことを発表します。クラスターのプロビジョニングや管理なしでログ、メトリクス、トレース、イベントデータを取り込み、保存、分析でき、アラートと異常検知も利用できます。コレクションあたり最大 100 TB のホットストレージをサポートし、アプリケーション監視、セキュリティ分析、IoT テレメトリなど大規模なオブザーバビリティワークロードに対応します。",
-      "publishedAt": "2026-10-29T02:08:58.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "dc43703f6ada802f91b90f8776b54331dc41d123c1089e193dbcc6e34c1933ea",
-      "title": "グーグル、GPT-6 Astra超えの「Gemini 4 Carbon」発表　脆弱性の発見と修正を強化",
-      "url": "https://japan.cnet.com/article/35254129/",
-      "description": "グーグルは10月28日、ソフトウェアの脆弱性（セキュリティ上の弱点）の発見・修正能力を強化したAIモデル「Gemini 4 Carbon」を発表した。まずサイバー防御を担う一部の専門家に提供し、一般利用者には今後提供する予定だ。",
-      "publishedAt": "2026-10-29T02:05:00.000Z",
-      "feedName": "CNET Japan"
-    },
-    {
-      "id": "1768de0c6a1ffa9d4ce4f6beb97ffc9f4e525f7a4d558b631fcaf51548255a44",
-      "title": "Node.js 26.13.0リリース、コードネーム「Lithium」として長期サポート（LTS）に移行",
-      "url": "https://gihyo.jp/article/2026/10/node-js-26-13-0-lts?utm_source=feed",
-      "description": "Node.js開発チームは2026年10月28日、Node.js 26.13.0をリリースし、このバージョンからNode.js 26.xが「Lithium」というコードネームで長期サポート（LTS）に移行することを発表した。",
-      "publishedAt": "2026-10-29T01:46:00.000Z",
-      "feedName": "gihyo.jp"
-    },
-    {
-      "id": "f627e516ede98664927f5a87f42ebad6d6fb92ff58e9b49743c2ab1cda9a6ab1",
-      "title": "Absolute、「FirmGuard」買収でプラットフォーム拡大　AI時代のファームウェア基盤を確立へ",
-      "url": "https://enterprisezine.jp/news/detail/25390",
-      "description": "Absolute Security（以下、Absolute）は、米国の老舗ファームウェア企業Phoenix Technologiesのファームウェアセキュリティ・ネットワークサービス「FirmGua...",
-      "publishedAt": "2026-10-29T01:00:00.000Z",
-      "feedName": "EnterpriseZine"
-    },
-    {
-      "id": "8f48fbd88305337178e3f46a6a1e828dc7903480b36b6826d17e747e567263fb",
-      "title": "GitHub Actions workflow lockfiles are generally available - GitHub Changelog",
-      "url": "https://github.blog/changelog/2026-10-28-github-actions-workflow-lockfiles-are-generally-available/",
-      "description": "You can now use GitHub Actions workflow dependency lockfiles in general availability on GitHub Enterprise Cloud, GitHub Enterprise Cloud with data residency, Team, and Free plans. Lockfiles let you keep readable tag and branch references in your workflows while running the exact commits you locke...",
-      "publishedAt": "2026-10-29T00:55:43.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "7f7f39d2164e80dae93488a1f2542e69571629c377e10c0df871f03fc5bfdf28",
-      "title": "Amazon CloudFront と AWS WAF によりエッジで MCP エンドポイントを保護する",
-      "url": "https://aws.amazon.com/jp/blogs/news/protect-mcp-endpoints-at-the-edge-with-amazon-cloudfront-and-aws-waf/",
-      "description": "MCP は、 AI エージェントがツールやデータとやり取りするための標準的な方法として急速に普及しました。もともと MCP は、長時間のセッション、永続的な接続、クライアントとサーバーインスタンスの紐付けを前提としたステートフルなプロトコルでした。 2026 年 7 月 28 日の改定では、 MCP がステートレスな HTTP リクエスト/レスポンス型のプロトコルとして再設計されました。これにより、すべての MCP リクエストは自己完結した POST リクエストとなり、ネットワーク上ではほかの REST API 呼び出しと見分けがつかない形になりました。その結果、ほかの HTTP API の前段ですでに利用しているのと同じレイヤー 7 の検査、変換、最適化を、 MCP サーバーのコードを変更することなく CDN や AWS WAF のレイヤーで適用できるようになります。本記事では、Amazon CloudFront または Application Load Balancer (ALB) の背後にデプロイした MCP エンドポイントを、 AWS WAF で保護し、可視化する方法を紹介します。新しい仕様によって簡単に適用できる、次の 9 つのユースケースを順に説明します。",
-      "publishedAt": "2026-10-29T00:49:07.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "82fa7ca96571c4e0c3f2df205c71336f06b9608e167535f6bf8246ec737d9a07",
-      "title": "DevOps AgentにセルフホストのGrafanaを連携して、Loki / Tempo / AMPのどこまで読めるか確認してみた",
-      "url": "https://dev.classmethod.jp/articles/devops-agent-selfhosted-grafana-loki-tempo-amp/",
-      "description": "ECS FargateでセルフホストしたGrafana（Loki / Tempo / AMP）をAWS DevOps Agentに連携して、どこまで読めるかを確認してみました。",
-      "publishedAt": "2026-10-29T00:20:38.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "91945b5176f8532b1b2440c3a3d3de033ca2eec613d2596f0838c10a8cb3582d",
-      "title": "作図ツールで作るマトリクス図のメンテがつらいのでYAMLから自動生成するCLIツールを作りました",
-      "url": "https://developer.mamezou-tech.com/blogs/2026/10/29/introduction-tool_matrix-renderer/",
-      "description": "はじめに\n#\n開発計画などの全体像を表現する際に用いられることが多い2次元マトリクス図。多くの場合、オフィスソフトや作図ツールで作成されます。\nそこでYAMLで定義したマトリクスデータをもとにイメージファイルを生成するNode.jsのCLIツール（matrix-renderer）を公開しました。\n本記事では、このツールを作った背景や具体的な使い方について紹介します。\n出力例\n\nGitHubリポジトリ\nnpmパッケージ\n作成のきっかけ\n#\nあるタスクでガイドやツールの提供状況を明示するため、X軸にフェーズ、Y軸に技術的な関心領域（アプリ、インフラ、プロセスetc）をとるマトリクスが作成されていました。\nプロジェクトへの展開も考えていましたが、残念ながらSVGが使えずリンク要件を満たせなかったため、展開は断念。\n類似するツールとの違い\n#\nオフィスソフトや作図ツールと比べて得意なことと苦手なこと。\n得意なこと\n#\n継続的な更新がしやすい\n\n更新対象がYAMLなので変更しやすく、差分管理もしやすい\n更新と連動した公開が可能\n\nCLIツールなので、ビルドスクリプトやCI/CDパイプラインに組み込むことでYAMLファイルの更新をトリガーにしてイメージ生成できます。\nデプロイもCI/CDパイプラインに組み込めば、YAMLファイルの更新からイメージ公開までを自動化できます。\nレイアウトは自動配置が基本\n\nX軸、Y軸は等間隔で自動設定します。\n指定されたX軸の開始列/終了列およびY軸の行にアイテムを配置します。\n同一Y軸内で空いている領域があった場合は、アイテムを自動配置します。\n同じ行のアイテム同士で期間が重なる場合は、表示が重ならないよう縦方向に配置します。\nアイテムからのリンク\n\nSVGのみですが、アイテムへのURL埋め込みに対応しています。\n苦手なこと\n#\nレイアウトの自由度が低い\n\n特定のX軸、Y軸の幅は等間隔でカスタマイズできない\n同一Y軸内は自動配置するため、アイテム前後関係を付けるようなことはできない。\n多様な図形を用いた作図などは対応してない\n利用シーン\n#\n以下のような「2軸で物事を分類・マッピングし、継続的にドキュメントとして公開したい」ケースに最適です。\nフェーズ × 技術分類でツールやガイド管理\n組織の技術領域 × 習熟度/採用フェーズ（Adopt, Trial, Assess, Holdなど）で技術スタックの習熟度管理\n対応段階（平常時、検知、初動、原因調査、復旧、振り返り）× 担当領域で障害対応の手順やツールをマッピング\n部門 × 分類でシステム、機能の一覧\n使い方\n#\n実行環境\n#\nNode.js 24+\nYAMLを用意する\n#\n以下は、開発フェーズごとにガイドやツールを配置する入力ファイル例です。\nこちらを参照してください。\ntitle: 社内標準DevOpsツールチェーン & 開発ガイドマップ\nwidth: 1000\nxAxis:\n  label: 開発フェーズ\n  values:\n    - label: 要件定義・計画\n      color: \"#e8f8f5\"\n    - label: 設計・ビルド\n      color: \"#eaf2f8\"\n    - label: テスト・検証\n      color: \"#ebf5fb\"\n    - label: デプロイ\n      color: \"#f4ecf7\"\n    - label: 運用・監視\n      color: \"#fcf3cf\"\nyAxis:\n  label: テクノロジースタック\n  values:\n    - label: アプリケーション開発\n      color: \"#fdfefe\"\n    - label: インフラ・CI/CD\n      color: \"#fdfefe\"\n    - label: セキュリティ・品質\n      color: \"#fdfefe\"\nitems:\n  - id: git-guide\n    label: GitHub・Git利用規約ガイド\n    lane: アプリケーション開発\n    from: 要件定義・計画\n    to: 設計・ビルド\n    url: https://your-wiki.internal\n    color: \"#2471a3\"\n  - id: sonar-qube\n    label: SonarQube（静的解析コードレビュー）\n    lane: セキュリティ・品質\n    from: 設計・ビルド\n    to: テスト・検証\n    url: https://internal.net\n    color: \"#e67e22\"\n  - id: play-wright\n    label: Playwright（E2E自動テスト実行環境）\n    lane: セキュリティ・品質\n    from: テスト・検証\n    to: テスト・検証\n    url: https://your-wiki.internal\n    color: \"#cb4335\"\n  - id: argo-cd\n    label: ArgoCD（本番環境デプロイフロー）\n    lane: インフラ・CI/CD\n    from: デプロイ\n    to: デプロイ\n    url: https://internal.net\n    color: \"#1e8449\"\n  - id: datadog-ops\n    label: Datadog監視ダッシュボード\n    lane: インフラ・CI/CD\n    from: 運用・監視\n    to: 運用・監視\n    url: https://internal.net\n    color: \"#6c3483\"\n\n\n  \n\n\n\n\n項目\n内容\n\n\n\n\nタイトル\nマトリクスのタイトル\n\n\n幅\n出力イメージの幅\n\n\nX軸\nラベル、表示順および色\n\n\nY軸\nラベル、表示順および色\n\n\nアイテム\nID、表示名、配置する行、開始列、終了列、色、URL\n\n\n\n\nアイテムはlaneで配置する行を、fromとtoで開始列および終了列を指定します。\n同じ行のアイテム同士で期間が重なる場合は、表示が重ならないよう縦方向に配置します。\nxAxis.valuesとyAxis.valuesに書いた順番が、イメージ上の表示順になります。\nイメージ幅（width）、色（color）、URL（url）は省略可としています。\nイメージファイルを生成する\n#\nYAMLファイルからイメージファイルを生成するコマンド例は下記の通りです。\nこちらを参照してください。\n# 1. 入力ファイルのみ指定\nnpx matrix-renderer render -- docs/matrices/matrix.yaml\n\n# 2. 出力ファイル名を指定\nnpx matrix-renderer render -- docs/matrices/matrix.yaml --out public/images/development-guide\n\n# 3. 出力ファイル種類を指定\nnpx matrix-renderer render -- docs/matrices/matrix.yaml --out public/images/development-guide --out-type svg\n\n\n  \n\n\n1: 入力ファイルと同じフォルダーにイメージを生成します。\n\ndocs/matrices/matrix.png\ndocs/matrices/matrix.svg\n2: 指定されたディレクトリ/ファイル名でイメージを生成します。\n\npublic/images/development-guide.png\npublic/images/development-guide.svg\n3: 指定されたファイル種類のみ生成します。\n\npublic/images/development-guide.svg\nCI/CDに組み込む\n#\nGitHub ActionsなどのCI/CDワークフローに生成コマンドを追加すれば、YAMLの変更に合わせてイメージを再生成できます。\nname: Build documentation\n\non:\n  push:\n    branches: [main]\n    paths:\n      - \"docs/matrices/**\"\n      - \".github/workflows/docs.yml\"\n\njobs:\n  build:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v7\n      - uses: actions/setup-node@v7\n        with:\n          node-version: 24\n      - name: Render matrix images\n        run: npx --yes matrix-renderer@0.1.2 render -- docs/matrices/development-guide.yaml --out public/images/development-guide\n      # このあとデプロイを実施\n\n\n  \n\n\nまとめ\n#\nmatrix-rendererを使うと、YAMLで定義したマトリクスデータからPNGおよびSVGを生成できます。\nツール自体が公開サイトへのデプロイを行うわけではありませんが、CI/CDに組み込むことでYAML更新からデプロイまで自動化できます。\n自由なレイアウトよりも、マトリクスを継続的に更新したい場合にDoc as Codeの選択肢として活用できます。\nより詳細なコマンド、YAMLテンプレートおよびサンプルなどをGitHubに掲載しているので、そちらも併せてご覧ください。",
-      "publishedAt": "2026-10-29T00:00:00.000Z",
-      "feedName": "豆蔵デベロッパーサイト"
-    },
-    {
-      "id": "ee3fcc61185979bee30469211a5c0517d04d42f5bc6bd5b864a98a15db9c998a",
-      "title": "「異常検知はもう通用しない」　フロンティアAIが覆すセキュリティの前提、ガートナーが警鐘",
-      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2610/29/news026.html",
-      "description": "ガートナーは、2026年の日本におけるセキュリティ（AI時代のサイバーセキュリティ）のハイプサイクルを発表した。サイバーセキュリティリーダーがAI時代のサイバーセキュリティについて注目すべき重要なテクノロジー、手法、概念を取り上げている。",
-      "publishedAt": "2026-10-28T23:30:00.000Z",
-      "feedName": "＠IT"
-    },
-    {
-      "id": "7ae36c895a8c94906c4227c81ed8ce13b9c442abc0e635eef6a09ca7e90a5959",
-      "title": "「ハーネス」とは何か　工場の比喩が嫌いだった私がトヨタの自働化とアンドンを持ち出す理由",
-      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2610/29/news008.html",
-      "description": "編集担当者から、「ハーネスエンジニアリングという言葉はふわっとしていて気持ちが悪い」と言われました。実際、ハーネスには決まった定義がなく、どう使うかも会社によってまちまちです。今回は、生成AI以前のテストハーネスとの比較と、トヨタの工場の考え方を手掛かりに、私がハーネスをどう考えているかを紹介します。",
-      "publishedAt": "2026-10-28T20:00:00.000Z",
-      "feedName": "＠IT"
-    },
-    {
-      "id": "e4f3fb0992ee83d2fd3730ac0f634c12573d579551c9d7c56c45019f60c83d5a",
-      "title": "AMOREPACIFIC が Kiro でレガシー SAP ECC に AI 駆動開発を導入した方法",
-      "url": "https://aws.amazon.com/jp/blogs/news/how-amorepacific-brought-ai-driven-development-to-sap-ecc-with-kiro/",
-      "description": "AMOREPACIFIC の ERP Platform Planning チームが、GUI ベースのレガシーな SAP ECC 6.0 環境に AI 駆動開発を導入した事例です。Kiro の spec-driven development、AWS ソリューションアーキテクトが構築した SAP 専用 MCP サーバー、そして Steering ファイルを組み合わせ、組織のコーディング標準に従ったコード生成を実現しました。ABAP と SAPUI5 の 4 プロジェクトで、生産性は最大 72% 向上し、FS/TS ドキュメント作成時間は 80% 削減されました。",
-      "publishedAt": "2026-10-28T15:36:46.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "9843bcb084851aac3a3175b2d7220184bf375e018d27b63be0cb396d71b6081a",
-      "title": "いいから休め - Black October が終わる今、セキュリティエンジニアがやるべきこと",
-      "url": "https://zenn.dev/nayuta/articles/aec9ab2e11a7b7",
-      "description": "2026年10月、Black October、情報セキュリティの世界は変わってしまった。 2026年10月、情報セキュリティの世界は完全に変わりました。今この10月は Black October （暗黒の10月）と呼ばれ始めており、セキュリティへの関心も高まっています。でも、セキュリティに関わる人はみんなこう思っています。 「確かにもう少し...",
-      "publishedAt": "2026-10-28T13:54:02.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "04834c0bee972a8392a36abcd0280d918193096e48ad1847e16a643131be510a",
-      "title": "富士通、サイバー防御能力向上を支援するソリューション提供　ASMや脅威インテリジェンス活用",
-      "url": "https://enterprisezine.jp/news/detail/25392",
-      "description": "富士通は、2026年8月に発表したサイバーセキュリティ戦略に基づくサイバー防衛能力の向上を支援するソリューションの提供を開始すると発表した。\n\n　同ソリューションは、インターネット上からアクセス可能...",
-      "publishedAt": "2026-10-28T12:36:00.000Z",
-      "feedName": "EnterpriseZine"
-    },
-    {
-      "id": "b01bbecc2ae31e25e8c9404258457747aa174c6c3b933d9314c17d5876ae0c28",
-      "title": "週 1,000 件の PR でもソフトウェアファクトリーを安定させる方法",
-      "url": "https://aws.amazon.com/jp/blogs/news/software-factory-stability/",
-      "description": "Kiro Crew チームが、週 1,000 件のプルリクエストをマージしながら品質を保つ方法を紹介します。人間がすべての行を読まなくても確信を得られるよう、レビューの重大度分け、役割別の AI レビュアー、80 件以上のチェックを 1 つにまとめる PR Readiness 判定、prepare-pr スキルによる自動修正ループ、マージ後のセキュリティ対策へと段階的に発展させた過程を解説します。過剰なエンジニアリングへの対処法も紹介します。",
-      "publishedAt": "2026-10-28T10:59:02.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "9843bcb084851aac3a3175b2d7220184bf375e018d27b63be0cb396d71b6081a",
-      "title": "いいから休め - Black October が終わる今、セキュリティエンジニアがやるべきこと",
-      "url": "https://zenn.dev/nayuta/articles/aec9ab2e11a7b7",
-      "description": "2026年10月、Black October、情報セキュリティの世界は変わってしまった。\n2026年10月、情報セキュリティの世界は完全に変わりました。今この10月は Black October （暗黒の10月）と呼ばれ始めており、セキュリティへの関心も高まっています。でも、セキュリティに関わる人はみんなこう思っています。\n「確かにもう少し目を向けてほしかったけど、こんなこと…」と。\nしかし、この状況はまだ始まったばかりです。 Anthropic の Deputy CISO である Jason D. Clinton は「だいたい18ヶ月の間はこの状況に耐える必要がある」という趣旨の発...",
-      "publishedAt": "2026-10-28T10:14:03.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "88b4a098e8b987847c22760daa4ce6450cb90526639c54b1bc167956ca0c212e",
-      "title": "AWS で AI 生成コンテンツのオーディオ来歴情報を生成元で構築する",
-      "url": "https://aws.amazon.com/jp/blogs/news/jpmne-building-audio-provenance-for-ai-generated-content-at-the-source-with-aws/",
-      "description": "この記事は 2026 年 8 月 27 日に公開された Building audio provenance f […]",
-      "publishedAt": "2026-10-28T10:12:44.000Z",
-      "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "3a47639f1b8b16ade3f49bbc8a4a10ecacd5322faa0a1e68dada5294ae05f7a6",
-      "title": "Lambda Web Functionsをaws-sam-cliでデプロイする",
-      "url": "https://dev.classmethod.jp/articles/deploy-lambda-web-functions-with-aws-sam-cli/",
-      "description": "# 導入文\n\naws-sam-cliがLambda Web Functionsに対応したので、実際にデプロイしてみました。ビルド設定からデプロイまでの手順を、実装例を交えて紹介します。",
-      "publishedAt": "2026-10-28T10:09:12.000Z",
-      "feedName": "クラスメソッド開発ブログ"
-    },
-    {
-      "id": "14036b206558de25387d51aaa54eac4ceef523725119c15ed384edcd0a6e4545",
-      "title": "Kaigi on Rails で聞いた Local CI を試して、見送った話",
-      "url": "https://zenn.dev/my_vision/articles/b46011780a6090",
-      "description": "こんにちは、MyVision の大久保です！最近はゴルフにハマっています。\n\n TL;DR\n\nKaigi on Rails 2026 で聞いた「Local CI × GitHub Actions」を、自分たちの Rails アプリで試してみました。\n手元で回す CI の速さは Mac の性能しだいで、いちばん速くしても Actions と同じくらいでした。\n浮くお金も Actions 全体の 6.4% までと小さかったので、使うのはやめました。\nそのかわり Actions を見直すきっかけになって、PR の RuboCop は 264 秒から 22 秒になりました。\n\n\n きっかけ\nMy...",
-      "publishedAt": "2026-10-28T08:56:01.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "8f39422dab58cea28c0af34a9e16bec846eff5eca931185c517b85593b7db2b6",
-      "title": "「AIで攻撃コード生成はたったの数時間に」　Fortinetが5製品を緊急更新＆警鐘",
-      "url": "https://atmarkit.itmedia.co.jp/ait/articles/2610/28/news020.html",
-      "description": "Fortinetは複数のセキュリティ製品を対象に修正プログラムを公開し、外部公開機器の迅速な更新を呼び掛けた。同社によると、AIの進化で、脆弱性を突く攻撃コードの生成はわずか数時間で実現する可能性がある。これにどう備えればいいか。",
-      "publishedAt": "2026-10-28T08:00:00.000Z",
-      "feedName": "＠IT"
-    },
-    {
-      "id": "ca7e2e18f9f82d6b0620da04ecfcfdb2919f989f534faef3d37ffad8f1ca15a6",
-      "title": "人間が見るのは設計書だけ ― PdM不在・バグ修正中心のチームで、AI-DLCを開発フローごと作り直した話",
-      "url": "https://zenn.dev/canly/articles/85dc645c252832",
-      "description": "はじめに\nカンリーでトストアの開発を担当している鈴木です。\nトストアは、Google ビジネスプロフィールや Yahoo!プレイスなど、複数の地図・検索サービスに掲載する店舗情報・クチコミ・投稿を、企業がまとめて管理できるサービスです。もともとは別の会社のプロダクトでしたが、事業譲渡を経てカンリーに加わりました。現在は、将来的にメインプロダクトの「カンリー店舗集客」へ統合することを見据えて、安定稼働を守る保守の段階にあります。\nAI-DLC（AI-Driven Development Life Cycle）は、AI をコーディングだけでなく、要件定義・設計・実装・テストまで開発ライフ...",
-      "publishedAt": "2026-10-28T07:55:08.000Z",
-      "feedName": "Zenn"
-    },
-    {
       "id": "4a749687c38def1a64b5755b2ba2e138a423585e41b07667a89a5e519390d520",
       "title": "I counted every skill my AI invoked across 55 sessions. Here's the leaderboard.",
       "url": "https://dev.to/rakno/i-counted-every-skill-my-ai-invoked-across-55-sessions-heres-the-leaderboard-1e3a",
@@ -439,78 +215,6 @@
       "description": "AWS Japan では、2026 年 11 月から、AWS のセキュリティサービスを実際に操作するオンラインハンズオンを週次で開催します。AWS Security Agent、AWS WAF、Amazon Inspector、フロンティアモデルを活用したソースコードの脆弱性対策などをテーマに、座学とハンズオンで、ご自身の組織で試すための最初の一歩までをお伝えします。本記事は、開催日程を随時更新する案内ページです。",
       "publishedAt": "2026-10-29T06:39:47.000Z",
       "feedName": "Amazon Web Services ブログ"
-    },
-    {
-      "id": "ff64234300bb7c136ecb04634155f214aaf518fed5f2cd6fcf16bff1f52a9c52",
-      "title": "マイクロソフト、Windows・PC関連は2割減収　それでもクラウド好調で全社は2割増収",
-      "url": "https://japan.cnet.com/article/35254158/",
-      "description": "米Microsoftは10月28日（現地時間）、2026年7〜9月期（2027会計年度第1四半期）の決算を発表した。クラウド基盤「Azure」の売上高は前年同期比48％増だった一方、PCメーカー向けWindowsライセンスと自社製端末などの合計売上高は22％減少した。",
-      "publishedAt": "2026-10-29T06:20:00.000Z",
-      "feedName": "CNET Japan"
-    },
-    {
-      "id": "aff116b8f1f6d5d0cc9daf04c0cfb8392f4980692b5c425d52120dd60cd229b3",
-      "title": "ペンタセキュリティ、AI脅威にともない新たな防御基準「サイバーセキュリティ宣言」を発表",
-      "url": "https://enterprisezine.jp/news/detail/25395",
-      "description": "ペンタセキュリティは2026年10月28日、「サイバーセキュリティ宣言」を発表した。AI技術の発展にともない、サイバー脅威は高度化し予測が困難になっている。宣言はこうした脅威に対応するための新たな防...",
-      "publishedAt": "2026-10-29T05:40:00.000Z",
-      "feedName": "EnterpriseZine"
-    },
-    {
-      "id": "ffab33c595d298541e2b809bd87ceb608ac94a0e09de712a098e3712c0b13a38",
-      "title": "Claude Codeで「QAチーム」を組んだら、効いたのは「捨てる仕組み」だった ― AIだけが見つけた不具合・見逃しは？",
-      "url": "https://zenn.dev/sre_holdings/articles/d4acb079680a79",
-      "description": "SREホールディングス株式会社でプロジェクトマネージャ（PM）をしている鍋谷です。\n「AIにテストを手伝わせたい。でも、AIの『できました』はどこまで信用していいのか分からない」\nそんなモヤモヤ、あなたのチームにもありませんか？\n本記事では、Claude Code で「AIのQAチーム」を組み、社内の業務SaaSで1か月、手動の機能テストを回してみた結果として、AIだけが見つけた不具合、AIが見逃した不具合、そしてAIが自信満々に出してきた誤指摘をどう捨てたかを紹介します。\n\n 結論\n\nClaude Code のスキルとサブエージェントで「リーダー1・テスター複数・懐疑的な検証者」のQA...",
-      "publishedAt": "2026-10-29T05:00:29.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "b011454443320e5f0ad8c1c44017e89f592ab5693c8aa43f6f9c44eb27ed7902",
-      "title": "GitHub Actions で checkout@v7 のようなバージョン指定を書くのはやめよう！ 時代は actions.lock！",
-      "url": "https://zenn.dev/progate/articles/24b1140180300c",
-      "description": "Progate で業務委託エンジニアをしている横江( @yokoe24 )です！\nセキュリティの話が重要視される昨今ですが、\nみなさんは GitHub Actions の Workflow ファイルで、こんな書き方をしていませんか？\nsteps:\n  - uses: actions/checkout@v7\n・・・私は書いています！！🙈\nこの記事を書きながら、過去の個人リポジトリ、直さなきゃなぁ……って思っています。\n\n @v7 と書くリスク\nnpm の件などで敏感になっている方はお気付きかもしれませんが、\n@v7 のような書き方は、最新の v7.x.x に追従でき便利な一方[1]、\n攻撃...",
-      "publishedAt": "2026-10-29T03:48:15.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "91f85620027356ae9822e1c70c98b89da8b657150dde842087c64e9d283fc772",
-      "title": "PHP5.4 から PHP8.5へ",
-      "url": "https://zenn.dev/ctrlzr/articles/5a88eb939b3bfd",
-      "description": "PHP5.4で放置動かしていたサービスを、PHP8.5へ更新しました。\nPHPの脆弱性対策について\n\n システムの概要\n旧環境: CentOS 7 + PHP 5.4 + Apache\n新環境: php:8.5.12-apache-trixie\n\n 修正方針\n\n\nmysql_* は書き換えない（修正箇所が多いため）\nリファクタリングはしない\n\n\n 作業の流れ\n\nDockerイメージを更新\n\nmysql_ラッパーを追加\n埋め込み変数の書式を修正\nコンストラクタ追加\nデフォルトnullパラメータの書式を修正\n引用符なし文字列を引用符で囲む\ncsv系関数の引数を修正\ncurlのファイル送信にC...",
-      "publishedAt": "2026-10-29T02:37:00.000Z",
-      "feedName": "Zenn"
-    },
-    {
-      "id": "f6286cc26f9d9481f034fa79a87315d756af2b752ed7954d7a7ba7eb7c4fd952",
-      "title": "パスキーはなぜ偽サイトに強い？登録とログインの流れを図で追う",
-      "url": "https://qiita.com/kuma_3838/items/1781531150821e2f0491?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "はじめに\n弊社の代表から、セキュリティの高いログイン方式であるパスキーについて学んでほしい、と声がかかりました。セキュリティへの意識が高い会社として、取り組みを外にも伝えていきたいという話もありました。\n私はそれまで、パスキーの存在は知っていたものの、どういうものかを知り...",
-      "publishedAt": "2026-10-29T00:59:26.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "3073ce41d4e9fed487942eed7d6e0af35712532c33d0f87f49264e4b8642fdfe",
-      "title": "単体テストの本をデータ基盤チームで輪読会した話 - yasuhisa's blog",
-      "url": "https://www.yasuhisay.info/entry/2026/10/29/093840",
-      "description": "背景 課題感 解決策: チーム内の輪読会 前段階を整備する 進め方 輪読会を通じて得られた学び 輪読会をやってよかったこと 背景 データ基盤チームはSWE出身のメンバーだけでないことが多い アナリティクスエンジニアやアナリスト出身の人、PdMやマーケター出身の人など様々なバックグラウンドを持ったチームであることが...",
-      "publishedAt": "2026-10-29T00:52:08.000Z",
-      "feedName": "はてなブックマーク - テクノロジー"
-    },
-    {
-      "id": "d2cdc9b427472b3171c2b8da9202f919965b56ed4435329f35445e0ee5c00caa",
-      "title": "AIと結合テスト自動化で進める、具体と抽象の反復開発",
-      "url": "https://qiita.com/sc-sato/items/f92bcb49308a70633c59?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "はじめに\nこんにちは。Shizen ConnectのSato Toshiakiです。\n組み込み開発では、実機や周辺機器との連携、通信状態も含めた確認が必要です。私はこの確認を開発中に繰り返し使えるツールにするため、結合テスト自動化フレームワークを構築して運用しています。\n...",
-      "publishedAt": "2026-10-29T00:42:04.000Z",
-      "feedName": "Qiita"
-    },
-    {
-      "id": "6fd9a535765ab14dcb5d4c31b66e6a429f5299da73a1c1c11dac9c2bfd7a8ce9",
-      "title": "【Oracle】OAW2026 アプリケーションのセキュリティは、アプリケーションコードを書かずAPEXlangで守る",
-      "url": "https://qiita.com/nisshii0/items/d68f789f6c9f9b6307a7?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
-      "description": "「AI時代、信頼は後付けできない。アーキテクチャに組み込む」\n\nOracle AI World 2026にて発表\n2026年10月に開催されたDB Product Spotlightにて、Oracle Database Technologies担当エグゼクティブ・バイスプ...",
-      "publishedAt": "2026-10-28T22:15:00.000Z",
-      "feedName": "Qiita"
     },
     {
       "id": "3dc4479aa6d9d4f55dd8105349302831a9587353baa0f6d48f0fc3ee9cddeaad",
@@ -7402,6 +7106,214 @@
       "description": "オブザーバビリティプラットフォームとしておなじみのNew Relicですが、セキュリティの領域でも非常に強力な機能が提供されています。\nその中核を担うのが、今回ご紹介するSecurity RXです。\n\n📌 紹介している機能について\n現在、クラウドの脆弱性（誤設定）を検知す...",
       "publishedAt": "2026-11-25T06:13:19.000Z",
       "feedName": "Qiita"
+    },
+    {
+      "id": "597cd4e008c3c2720543a2a54f11f8ef5e4b6bbd02834e0ec71c4b6a99da7cc1",
+      "title": "How I Made My WordPress Site Readable to AI Assistants (llms.txt + JSON-LD)",
+      "url": "https://dev.to/jagdeepsinghrana/how-i-made-my-wordpress-site-readable-to-ai-assistants-llmstxt-json-ld-59a4",
+      "description": "AI assistants like ChatGPT, Claude, Perplexity and Gemini increasingly answer \"who is the best developer for X?\" questions. If your site isn't easy for them to read, they guess, or they skip you. I'm Jagdeep Singh Rana, a web developer from Roorkee, India, and I recently made my own WordPress portfolio machine-readable. Here is exactly what I did.\nllms.txt is a plain markdown file at the root of your domain that tells language models who you are and where your important pages are. Mine lives at https://jagdeepsinghrana.online/llms.txt and contains:\nA one-paragraph summary (who I am, where I work, what I build)\nLinks to my profile, services and case studies, each with a one-line description\nContact details\nA pointer to a longer llms-full.txt with everything on the site in one markdown file\nKeep it factual. Models quote what you write, so write the sentence you'd want quoted.\nI send a Link: <.../llms.txt>; rel=\"alternate\" HTTP header and list the file in robots.txt comments. I also explicitly allow the well-known AI crawlers in robots.txt so there is no ambiguity about whether they may read the site.\nI describe the same facts in JSON-LD (Person, WebSite, services and the organisations I'm connected to). Structured data is the format search engines and AI systems trust most because it is unambiguous: name, job title, location, sameAs profile links and what I offer.\nThe same name, location, services and links should appear on your site, llms.txt, schema, and your public profiles (GitHub, LinkedIn, DEV, Hashnode). When many independent pages agree, assistants are far more likely to repeat your details correctly.\nAI answers lean on sources that are linked and mentioned elsewhere. Publishing useful posts that link back to your site and to your business is the simplest way to build that trail.\nI'm the founder of Ragnar Studio's, a web design, Shopify and SEO studio, and I applied the same approach to its site. You can see how I work, and the services I offer, at https://jagdeepsinghrana.online/. If you need a WordPress, Shopify or React site made readable to both search engines and AI assistants, get in touch through the portfolio.",
+      "publishedAt": "2026-11-28T06:19:26.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "5a110dc9ac1c0b0f0c2f2996f4bd09c0e34fff0c7583a139d154542c7d0b2ee2",
+      "title": "Auditing Solana & Base Tokens with Live X (Twitter) Sentiment in One API Call (Python CLI + n8n Bot)",
+      "url": "https://dev.to/jistudio/auditing-solana-base-tokens-with-live-x-twitter-sentiment-in-one-api-call-python-cli-n8n-bot-38lf",
+      "description": "Anyone building a Solana or Base token screener quickly runs into the same glue-code mess:\nCall one DEX endpoint for price and liquidity (which frequently hits WAF/429 limits from Cloudflare or cloud IPs).\nCall a second endpoint for on-chain metadata and mint/freeze authority checks.\nCall a third service — or burn fragile cookie-based X accounts — just to verify whether the token's official Twitter/X account is real, active, or recently suspended.\nWe consolidated that entire workflow into a single 4-in-1 REST endpoint (/api/v1/crypto/token-x-intel) alongside live Solana/Base meme radar, DEX boosts, new token launches, and zero-cookie Twitter/X hydration.\nFull disclosure: I maintain the MIT-licensed Python/Node.js SDK and CLI at github.com/jistudio-dev/solana-x-intel-sdk and the hosted Twitter (X) & Crypto X-Intel API on RapidAPI.\ngit clone https://github.com/jistudio-dev/solana-x-intel-sdk.git\ncd solana-x-intel-sdk\nexport RAPIDAPI_KEY=\"YOUR_RAPIDAPI_KEY\"\npython examples/token_audit_cli.py DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263\n\nReal production output (BONK on Solana):\nBonk (Bonk) | Price: $0.000002189 | FDV: $194,603,724 | Liq: $1,210,604\nX URL: https://twitter.com/bonk_inu | Verdict: WATCHLIST (55/100)\n\nBehind the scenes, the edge worker uses multi-provider US-safe failover (Raydium v3, Pump.fun v3, KuCoin, Coinbase US, RugCheck, and Solana RPC) so requests keep returning real numbers even when individual DEX APIs throttle datacenter IPs.\nnpm i solana-x-intel-sdk)\n\n\n\n\n\nnpm install solana-x-intel-sdk\n\nimport { SolanaXIntelClient } from \"solana-x-intel-sdk\";\n\nconst client = new SolanaXIntelClient(process.env.RAPIDAPI_KEY);\n\n// Live Base chain radar (AERO, VIRTUAL, MORPHO, DEGEN, BRETT...)\nconst radar = await client.getMemeRadar({ chain: \"base\", limit: 5 });\nfor (const tok of radar.items) {\n  console.log(`${tok.symbol} @ $${tok.price_usd} | Liq: $${Math.round(tok.liquidity_usd).toLocaleString()}`);\n}\n\n// Also works for zero-cookie Twitter/X tweet & thread unrolling\nconst tweet = await client.getTweet(\"20\");\nconsole.log(\"Tweet author:\", tweet.author?.username);\n\nDownload 07-solana-base-pumpfun-x-intel-radar.json and import it straight into n8n:\nPolls /api/v1/crypto/meme-radar?chain=all&limit=8 every hour (adjustable to 5–15 minutes).\nFormats symbol, chain, live USD price, and USD liquidity.\nPosts alerts to your Discord webhook, Slack channel, or Telegram bot — and you can chain /api/v1/crypto/token-x-intel?ca=... for deep contract + X scoring on any token above your liquidity threshold.\nGitHub SDK, CLI & Postman Collection (10 Routes): github.com/jistudio-dev/solana-x-intel-sdk\n\n\nLive Playground (RapidAPI): Twitter (X) Real-Time Data & Crypto X-Intel API\n\n\nBulk Datasets (Apify): jistudio/twitter-scraper\n\n\nFree n8n Radar Template: github.com/jistudio-dev/free-n8n-ecommerce-workflows",
+      "publishedAt": "2026-11-28T06:17:59.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "c065771be716401582e52bc23f9f5d060be94d51d18f9b659cd629f9d4f1746a",
+      "title": "What Is TypeScript? Explained Simply for Beginners",
+      "url": "https://dev.to/kushkrg/what-is-typescript-explained-simply-for-beginners-4jcb",
+      "description": "Originally published on CodingCush.\nTypeScript is JavaScript with syntax for types. That is the official one line definition. You write normal JavaScript, you add small labels that say what kind of value each variable holds, and a tool called the TypeScript compiler checks those labels before your code ever runs. The result is still plain JavaScript, so it runs anywhere JavaScript runs: in a browser, on Node.js, and in your apps. TypeScript does not replace JavaScript. It sits on top of JavaScript and catches mistakes early.\nFive small steps will take you from zero to typed code that catches real mistakes. Each step adds one idea and one short example.\nTypeScript is a tool you install through npm, the Node.js package manager, so you need Node.js first. If you have never met Node.js, read our guide to what Node.js is, explained simply first. Then run one command:\nnpm install -g typescript\n\nThe -g flag installs it globally, so tsc works from any folder. Check it with tsc -v. Now create a file called hello.ts and type this:\nconst message: string = \"Hello, TypeScript!\";\nconsole.log(message);\n\nThe : string part is a type annotation, telling TypeScript that message will always hold text. Now compile the file into plain JavaScript:\ntsc hello.ts\n\nTypeScript creates hello.js next to it. Open it and you will see the type has vanished:\nconst message = \"Hello, TypeScript!\";\nconsole.log(message);\n\nTypes exist only while you write and check code. Run the JavaScript file with node hello.js and you get:\nHello, TypeScript!\n\nA type annotation is a small label after a name, written with a colon. The common types are string for text, number for numbers, and boolean for true or false. Here is a tiny function with annotations on its input and its output:\nfunction greet(name: string): string {\n  return \"Hello, \" + name + \"!\";\n}\n\nconsole.log(greet(\"Priya\"));\n\nThe first : string says the name must be text. The second says the function returns text. Compile it with tsc, run it with node, and you get:\nHello, Priya!\n\nNow call greet(42) instead of greet(\"Priya\"). TypeScript stops you before the code runs:\nArgument of type 'number' is not assignable to parameter of type 'string'.\n\nIn plain JavaScript, that mistake would run and print \"Hello, 42!\". In TypeScript, you find out in seconds, and that early warning is the main reason developers use types.\n\nThe TypeScript Handbook landing page, the official starting point for learning TypeScript.\nYou do not have to label everything. TypeScript can often work out the type from the value you give it. This is called type inference. Here is the handbook example:\nlet helloWorld = \"Hello World\";\n\nYou never wrote : string, but TypeScript knows helloWorld is a string, because \"Hello World\" is text. Add labels where they help, and let TypeScript fill in the rest.\nInference also powers the red squiggle in your code editor. Look at this example from the official TypeScript homepage:\nconst user = {\n  firstName: \"Angela\",\n  lastName: \"Davis\",\n  role: \"Professor\",\n};\n\nconsole.log(user.name);\n\nThere is no property called name here, only firstName, lastName, and role. TypeScript spots the typo at once:\nProperty 'name' does not exist on type '{ firstName: string; lastName: string; role: string; }'.\n\nIn plain JavaScript, console.log(user.name) would print undefined, and you might spend an hour wondering why your page is blank. TypeScript tells you the problem at once.\nReal programs pass objects around, and an object with the wrong shape is a classic source of bugs. An interface describes the shape an object must have. This example comes from the official handbook:\ninterface User {\n  name: string;\n  id: number;\n}\n\nconst user: User = {\n  name: \"Hayes\",\n  id: 0,\n};\n\nconsole.log(user.name + \" has id \" + user.id);\n\nA User has a name that is text and an id that is a number. Run it and you get:\nHayes has id 0\n\nNow mistype a property name:\nconst user: User = {\n  username: \"Hayes\",\n  id: 0,\n};\n\nTypeScript replies:\nObject literal may only specify known properties, and 'username' does not exist in type 'User'.\n\nThat message tells you exactly which word is wrong. Interfaces also work as documentation: a teammate can read one and see at a glance what a User looks like. The official TypeScript for JavaScript Programmers guide uses the same User example and shows interfaces with classes and functions too.\nSometimes a value can be one of a few options only. A union type lists them with a pipe character between them. Here is an example from the official TypeScript homepage:\ntype Result = \"pass\" | \"fail\";\n\nfunction verify(result: Result) {\n  if (result === \"pass\") {\n    console.log(\"Passed\");\n  } else {\n    console.log(\"Failed\");\n  }\n}\n\nverify(\"pass\");\nverify(\"fail\");\n\nRun it and you get:\nPassed\nFailed\n\nThe clever part is what happens when you make a mistake. Try verify(\"maybe\"). TypeScript refuses, because \"maybe\" is not in the union. A union turns a value into a short menu of allowed choices, a pattern used for loading states, button sizes, user roles, and form steps. The compiled JavaScript has every type removed. The official TypeScript Handbook explains unions and generics once you are ready for more.\nThe two languages are close cousins.\n\n\n\nFeature\nJavaScript\nTypeScript\n\n\n\n\nWhat it is\nThe language of the web\nJavaScript with syntax for types\n\n\nFile ending\n.js\n.ts\n\n\nRuns in a browser\nYes, directly\nNo, it compiles to JavaScript first\n\n\nCatches type errors early\nNo, they appear at run time\nYes, in your editor before you run the code\n\n\nLearning curve\nGentle for beginners\nGentle if you know JavaScript already\n\n\nBest for\nSmall scripts and first projects\nLarger apps, teams, and long lived code\n\n\n\nYou do not have to choose one and forget the other. The official docs say you can apply types step by step, and many developers add TypeScript file by file as the project grows.\nEvery beginner hits the same handful of snags.\ntsc is not recognised as a command. TypeScript is not installed yet, or it was installed without the -g flag. Run npm install -g typescript again, then check with tsc -v. Node.js must be installed first, or npm will not exist.\nYou tried to run a .ts file in the browser or with node. Browsers and Node.js run JavaScript, not TypeScript. Compile first with tsc hello.ts, then run the .js file.\nProperty 'x' does not exist on type. Check your spelling first. Most of the time it is a typo, like name instead of firstName. The error message lists the properties that do exist.\nYou used any for everything. The any type tells TypeScript to stop checking, which turns off the whole point of the tool. It is fine while you are learning, but replace any with a real type soon.\nNo. TypeScript is JavaScript with syntax for types. Your existing JavaScript code is also TypeScript code, and TypeScript code compiles down to plain JavaScript.\nYes. The official handbook recommends learning JavaScript first, because TypeScript builds directly on it.\nNo. Browsers only understand JavaScript. You write TypeScript, tsc turns it into JavaScript, and the browser runs that.\nYes. TypeScript is free and open source, and the official handbook and playground are free too.\nNo. For a tiny script, plain JavaScript is fine. TypeScript pays off as a project grows, and you can add types later, one file at a time.\nYes, it helps. Many front-end jobs list TypeScript alongside JavaScript, and popular tools such as React are commonly used with it. For the full picture, read our guide to what React is, explained simply and our roadmap on how to become a front-end developer.\nIn short, TypeScript is JavaScript with syntax for types. It checks your code before it runs, catches typos and wrong values early, and compiles to plain JavaScript that runs anywhere. Learn it in five small steps: install it, annotate a value, let it infer types, describe objects with interfaces, and combine types with unions.\nNow it is your turn. Create profile.ts, define an interface called Profile with a name, an age, and a favourite hobby, and write a function that prints a friendly sentence about your profile. Then change the age to a word like \"twenty\" and watch TypeScript catch it. That one red error message is the whole idea, and now you know how to read it.",
+      "publishedAt": "2026-11-28T06:16:57.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "525318cc65891bf6fbe6128c39332136c64504ae72f7c900d518f6c4f838fb21",
+      "title": "Connect Claude Desktop & Cursor to Live TikTok Shop, Shopee & YouTube Transcripts via Zero-Dependency MCP Servers",
+      "url": "https://dev.to/jistudio/connect-claude-desktop-cursor-to-live-tiktok-shop-shopee-youtube-transcripts-via-1i3o",
+      "description": "Most tutorials on the Model Context Protocol (MCP) stop at toy weather tools or local SQLite queries. Once you try connecting Claude Desktop or Cursor to live e-commerce and short-video data (TikTok Shop, Shopee, YouTube), you immediately run into cloud IP blocks, cookie expiry, and heavy node_modules dependency trees.\nWe built and open-sourced three zero-dependency MCP servers (MIT licensed, pure Node.js 18+ node:readline + native fetch) so AI agents can pull real-time commerce and video data in seconds:\nshopee-mcp-server — stdio JSON-RPC 2.0 server with 6 live tools across 8 Shopee markets (VN, ID, TH, PH, MY, SG, TW, BR).\ntiktok-shop-mcp — Remote Streamable HTTP /mcp server + SDKs covering 43 TikTok & TikTok Shop endpoints across 22+ countries.\nyoutube-transcript-mcp — stdio JSON-RPC 2.0 server for cloud-IP-safe YouTube transcripts, .SRT subtitles, Top-5 Most-Replayed viral heatmap peaks, and cloud MP4/M4A downloads.\nFull disclosure: All three MCP repositories are MIT-licensed under github.com/jistudio-dev and connect to our hosted RapidAPI and Apify backends (free tiers available).\nstdio MCP Matters\n\n\nInstead of shipping 150 MB of transitive npm packages that break across Node versions, a standard MCP stdio server only needs ~160 lines of Node.js 18+ handling four JSON-RPC 2.0 methods:\ninitialize → declares protocolVersion: \"2024-11-05\" and capabilities: { tools: {} }\n\n\nnotifications/initialized → handshake ack\ntools/list → exposes JSON Schema definitions for each tool\ntools/call → executes native fetch() and returns structured JSON text content\nNo npm install step. Clone, add your key, restart Claude Desktop or Cursor, and start prompting.\nnpx)\n\n\n\n\n\n{\n  \"mcpServers\": {\n    \"shopee-global\": {\n      \"command\": \"npx\",\n      \"args\": [\"-y\", \"shopee-mcp-server\"],\n      \"env\": {\n        \"RAPIDAPI_KEY\": \"YOUR_RAPIDAPI_KEY\"\n      }\n    }\n  }\n}\n\n(Prefer cloning? git clone https://github.com/jistudio-dev/shopee-mcp-server.git and run node bin/shopee-mcp.mjs.)\nPrompts you can immediately run in Claude / Cursor:\n\"Check the live price, stock, and exact unrounded sold count for https://shopee.vn/product/37251933/41412722725.\"\n\"Pull the top 10 daily trending picks on Shopee Indonesia (id) and check buyer search keywords for serum.\"\nIf you have used youtube-transcript-api from AWS, GCP, or Vercel, you have likely seen YouTube block datacenter IPs. youtube-heatmap-mcp runs through Apify Cloud (jistudio/youtube-transcript-scraper) and returns full transcripts, .SRT captions, and the video's Top-5 Most-Replayed Heatmap peaks matched to exact spoken sentences:\n{\n  \"mcpServers\": {\n    \"youtube-transcript-rag\": {\n      \"command\": \"npx\",\n      \"args\": [\"-y\", \"youtube-heatmap-mcp\"],\n      \"env\": {\n        \"APIFY_TOKEN\": \"YOUR_APIFY_TOKEN\"\n      }\n    }\n  }\n}\n\nPrompt idea: \"Extract the transcript and Top-5 Most-Replayed heatmap peaks from this 45-minute podcast URL, then write 3 short-form clip hooks around the highest retention spikes.\"\n/mcp)\n\n\nFor TikTok & TikTok Shop (43 endpoints across 22+ countries: no-watermark HD MP4, Whisper VTT transcripts, TikTok Shop products, sellers, and trending US/SEA buyer keywords), copy configs/cursor_mcp.json directly — no local server process needed.\nShopee MCP Server: github.com/jistudio-dev/shopee-mcp-server\n\n\nTikTok & Shop MCP + SDK + Postman: github.com/jistudio-dev/tiktok-shop-mcp\n\n\nYouTube Transcript & Heatmap MCP: github.com/jistudio-dev/youtube-transcript-mcp\n\n\n9 Free n8n Templates: github.com/jistudio-dev/free-n8n-ecommerce-workflows",
+      "publishedAt": "2026-11-28T06:16:23.000Z",
+      "feedName": "Dev.to"
+    },
+    {
+      "id": "9097afee13f95ea0dfab6dc7507939a11e57cac3182d2e38734c9968d32f88e4",
+      "title": "CloudWatch の AWS 提供メトリクスに基本エンリッチメントの概念が生まれ、追加料金無しで OpenTelemetry メトリクス化できるようになりました（リソースタグも含める場合は追加課金）",
+      "url": "https://dev.classmethod.jp/articles/cloudwatch-aws-vended-basic-metric-free/",
+      "description": "PromQL を使わない理由がどんどん消えていく",
+      "publishedAt": "2026-11-28T05:56:47.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "1d048b0575b6cbf395bb0d5889ac6aeb37038793d637dcc8c2ef89c1c178a16e",
+      "title": "AWS re:Invent 2026 を日本から学び、楽しむ方法 ― ライブ配信の登録、日本時間のスケジュール、振り返りイベントまで #AWSreInvent",
+      "url": "https://dev.classmethod.jp/articles/20261128-aws-reinvent-2026-from-japan/",
+      "description": "現地に行かなくても AWS re:Invent 2026 は日本から学べます。無料のライブ配信「Live from re:Invent」の登録手順、日本時間のキーノートと配信スケジュール、日本語で質問できる AI でのセッション探し、Black Belt 速報や re:Growth、JAWS-UG などの振り返りイベントをまとめました。",
+      "publishedAt": "2026-11-28T04:49:59.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "71c902e77fb323c8c6b10152b3263556191fccad7450ce66ea8938daa856ee7e",
+      "title": "Elastic Load Balancing for Envoy の ddos_protection と AWS WAF 連携を試してみた",
+      "url": "https://dev.classmethod.jp/articles/aws-elb-for-envoy-syn-cookie-waf/",
+      "description": "ddos_protection の SYN cookie mode を continuous にすると、SYN-ACK の形が変わり、不正な ACK に SYN-ACK を再送しなくなりました。AWS WAF の Block ルール（IP 指定、レートルール）による遮断も確認できました。",
+      "publishedAt": "2026-11-27T14:58:20.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "76255b772cdd950f281d8ebece9511440e330c34ddfc497251d5a000f3426ffc",
+      "title": "【2027 Japan All AWS Credentials Engineers】 Microcredentialsを受験して、バッジを取得してみた！",
+      "url": "https://dev.classmethod.jp/articles/202611-mitsuguchi-awsexam-microcredentials-serverless/",
+      "description": "2027年から AWS 認定に加えて Microcredentials の取得が条件になります。実際に「AWS サーバーレスの実証」を受験して合格しましたので、流れや難易度、受験してみた感覚をお届けします！",
+      "publishedAt": "2026-11-27T14:47:57.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "869e271af31806d71e28283cf003ba692db3883db4dbf6254c367b844abd0805",
+      "title": "CodeCommit のマージ方式（Fast Forward / 3-way / Squash）の違い、複数人が続けてマージするとエラーになる理由",
+      "url": "https://dev.classmethod.jp/articles/codecommit-merge-methods/",
+      "description": "複数人が AWS CodeCommit の main ブランチへ続けてマージするときに、2人目以降がエラーになった経験はありませんか？Fast Forward、3-way、Squash の3つのマージ方式の違いと、それぞれの使い分けについて図を交えて解説します。",
+      "publishedAt": "2026-11-27T14:09:33.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "7b2c634ae4c279011f206283129f65f91836d52b48df0b2a84ad10dac0ddb312",
+      "title": "AI の安全性は緊急ブレーキ頼みではなく、より優れたエンジニアリングで実現",
+      "url": "https://aws.amazon.com/jp/blogs/news/aws-ceo-ai-safety-engineering/",
+      "description": "AI の安全性は、緊急ブレーキだけに頼るのではなく、エンジニアリングで確保すべきです。信頼できる AI システムを構築するための実践的なツールは既に存在します。本記事では、AWS CEO の Matt Garman が、AI エージェントへの独自のアイデンティティの付与、最小権限、封じ込めの境界、監視対象から独立した監視、自動推論による制御の検証など、実績のあるセキュリティの基本原則を AI に適用する方法を紹介します。また、Nitro や Firecracker を活用し、モデルとは独立してインフラストラクチャレベルで分離を強制する AWS の取り組みも解説します。",
+      "publishedAt": "2026-11-27T12:24:32.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "687653afbf0ec42028489f2d963e65558f2e9110eb9af067d06befc538f7ab39",
+      "title": "AWS のセキュリティ新機能: API と AI エンドポイントの検出から保護までを実現",
+      "url": "https://aws.amazon.com/jp/blogs/news/introducing-api-and-ai-security-on-aws-from-discovery-to-protection/",
+      "description": "AI エージェントが API を直接呼び出すようになった今、API と AI エンドポイントを検出して保護するために AWS が 2026 年 11 月に一般提供を開始した 3 つの新機能を紹介します。Amazon API Gateway の API Portal は、シャドー API を含む各種 API と、MCP サーバーなどの AI エンドポイントを同じインベントリにまとめます。AWS WAF の API Security マネージドルールグループは、トークン改ざんやオブジェクトレベルの認可の不備 (BOLA) などの不正使用に対応します。AI Security マネージドルールグループは、MCP と A2A のプロトコル違反を検出し、Amazon Bedrock Guardrails と連携してプロンプト攻撃をチェックします。ラベルを使った独自ルールの作成方法も解説します。",
+      "publishedAt": "2026-11-27T12:23:09.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "bc760e6de80182eafb962ffe9284eed355f0ac70955f7a503ac700f32429d32c",
+      "title": "Enterprise-Managed Authorization で実現する AI エージェントによる AWS への安全なアクセス",
+      "url": "https://aws.amazon.com/jp/blogs/news/secure-agentic-access-to-aws-with-enterprise-managed-authorization/",
+      "description": "AWS サインインが、ID-JAG を使用した Enterprise-Managed Authorization (EMA) のサポートを開始しました。Okta などの既存のエンタープライズ IdP を通じて、AI エージェントによる AWS MCP Server へのアクセスを一元的かつ安全に認可できます。ユーザーが追加の長期的な認証情報を管理する必要はありません。この記事では、EMA と ID-JAG の仕組み、Okta と IAM ロールを使った設定手順、AWS CloudTrail による認可アクティビティの確認方法、セキュリティのベストプラクティスを紹介します。",
+      "publishedAt": "2026-11-27T12:22:24.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "4e3dce771bd0702d2e4dcdfa7a30dd8f717c4338140028c5dafb162b3c19f82a",
+      "title": "AWS Network Firewall で自動インターネットファイアウォールモード (プレビュー) の提供を開始",
+      "url": "https://aws.amazon.com/jp/blogs/news/aws-network-firewall-introduces-automated-internet-firewall-mode-preview/",
+      "description": "AWS Network Firewall の自動インターネットファイアウォールモード (プレビュー) では、一元的に定義したルールを各 VPC のインターネットゲートウェイで適用します。アウトバウンド専用の IPv4 接続には、組み込みの NAT を使用します。VPC ごとにファイアウォールエンドポイントや NAT ゲートウェイをデプロイする必要はありません。この記事では、仕組みとサブネットの接続タイプ、AWS Network Security Manager でのポリシー管理、監視モードから始める導入手順、既存の VPC の移行方法を紹介します。",
+      "publishedAt": "2026-11-27T12:21:30.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "b87dc52980a49fc31e95973102571152826f6ed2f091e07c6a9035994442a515",
+      "title": "AWS Network Firewall のコンテキスト対応ルールのご紹介: IP アドレスではなく AWS リソースに基づくトラフィック照合",
+      "url": "https://aws.amazon.com/jp/blogs/news/introducing-context-aware-rules-for-aws-network-firewall/",
+      "description": "AWS Network Firewall がコンテキスト対応ルールをサポートするようになりました。このルールは、IP アドレスではなく送信元や送信先の AWS リソースに基づいてトラフィックを照合します。VPC、サブネット、セキュリティグループ、Transit Gateway アタッチメントを指定でき、VPC に接続された Lambda 関数がスケールアウトする場合など、短期間しか存在しないワークロードにもルールが追随します。この記事では、コンテキストストアとトランジットゲートウェイによる仕組み、複数のアカウントにわたる設定手順、ログに記録されるコンテキストを紹介します。",
+      "publishedAt": "2026-11-27T12:20:58.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "9cfe3b119b319fd6e0610fb7c363e95f550469d7092512de470c135a9e566dd5",
+      "title": "AWS Network Firewall の Next Generation ポリシーの紹介: アクセス制御と脅威防御を個別のエンジンで実現",
+      "url": "https://aws.amazon.com/jp/blogs/news/introducing-aws-network-firewall-next-generation-policy/",
+      "description": "AWS Network Firewall の Next Generation ポリシーでは、アクセス制御を担うファイアウォールエンジンと脅威防御を担う IPS エンジンが分離され、それぞれが独自のルール容量を持ちます。この記事では、Classic ポリシーとの違い、ファイアウォールエンジンがフックとアクションスコープを使ってトラフィックを評価する仕組み、各エンジンが記録するログの読み方、監視モードでの検証方法を説明します。さらに、ドメイン許可リストと脅威防御を組み合わせたポリシーの作成例も紹介します。",
+      "publishedAt": "2026-11-27T12:20:13.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "317ff7a8323061ba72c7e99fd1c8e0c24adc13889e853b10a53b639c0da7b03c",
+      "title": "AWS-LC でポスト量子暗号の更新を日常的な作業にするアプローチ",
+      "url": "https://aws.amazon.com/jp/blogs/news/make-post-quantum-cryptography-updates-routine-with-aws-lc/",
+      "description": "ポスト量子暗号 (PQC) への移行を見据え、暗号アルゴリズムの更新を日常的な作業にするための考え方を紹介します。AWS が保守する暗号ライブラリ AWS-LC が、互換性、保証、パフォーマンスという 3 つの特性をどのように実現しているかを説明します。OpenSSL 互換の API、形式的検証、ML-KEM と ML-DSA の最適化に加え、ハイブリッドポスト量子鍵交換と ML-DSA 証明書が TLS ハンドシェイクに与える影響の測定結果も紹介します。",
+      "publishedAt": "2026-11-27T12:19:13.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "3cdc13b5fedcc90c0acf6ce3b53463886031293fabfb5cebfc1e3ee2208ef9bd",
+      "title": "Amazon Cognito の Plus 機能プラン: 99.99% のサービスコミットメントを踏まえた可用性計画",
+      "url": "https://aws.amazon.com/jp/blogs/news/planning-for-99-99-percent-availability-with-the-amazon-cognito-plus-feature-plan/",
+      "description": "AWS は、Amazon Cognito の Plus 機能プランのユーザープールについて、2026 年 11 月 1 日から月間稼働率に関する SLA のサービスコミットメントを従来の 99.9% から 99.99% に引き上げました。既に Plus を利用しているユーザープールには自動的に適用されます。この記事では、引き上げの理由、サービスクレジット、5 分単位の区間で可用性を測定する方法、2025 年 11 月から 2026 年 10 月までの可用性の実績を紹介します。あわせて、AWS マネジメントコンソールなどでユーザープールを Plus に切り替える手順も説明します。",
+      "publishedAt": "2026-11-27T12:17:52.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "5700d0efc6c59025665010775cddf3d6822b383a2897bf6ce8fa7e430c071c1d",
+      "title": "Amazon Cognito のポイントインタイムリカバリ (PITR) によるアイデンティティデータの保護",
+      "url": "https://aws.amazon.com/jp/blogs/news/protect-identity-data-with-point-in-time-recovery-in-amazon-cognito/",
+      "description": "Amazon Cognito ユーザープールのポイントインタイムリカバリ (PITR) を使用して、誤った一括操作の後にユーザープールを復旧し、アイデンティティデータを保護する方法を紹介します。リカバリの開始、プレビューでの影響件数の確認、承認またはキャンセルという 3 つのステップを説明します。あわせて、sub 識別子やアプリケーションの統合が変わらない点や、開始と承認の権限分離などのセキュリティに関する考慮事項も解説します。",
+      "publishedAt": "2026-11-27T12:17:00.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "57d14905461eb46ff06cff31c8e388803bb35006e9b442a47207418a4ee92f3e",
+      "title": "AWS Nitro System がお客様の最も機密性の高いデータを保護する仕組み",
+      "url": "https://aws.amazon.com/jp/blogs/news/aws-nitro-system-customer-data-privacy/",
+      "description": "AWS Nitro System は、新しい世代のすべての Amazon EC2 インスタンスを支える独自のハードウェアとソフトウェアです。AWS のオペレーターがお客様のデータにアクセスする手段を一切持たないように設計されています。本記事では、Xen ハイパーバイザーから Nitro Card への処理の移行と、転送中の暗号化やメモリ暗号化などの保護機能を紹介します。さらに、分離を担う Nitro Isolation Engine の仕組みと、AWS が形式的検証によって証明したその 4 つの性質を解説します。",
+      "publishedAt": "2026-11-27T12:15:56.000Z",
+      "feedName": "Amazon Web Services ブログ"
+    },
+    {
+      "id": "a780bcc44a3f54118ecbcc3cb70d43ac4aaf5c00e939fabffde150f6e6167fa9",
+      "title": "【資料公開】コードを書くAI、アーキテクチャーを決める組織",
+      "url": "https://www.ryuzee.com/contents/blog/14629",
+      "description": "みなさんこんにちは。@ryuzeeです。 2026年11月27日に開催されたアーキテクチャConference 2026で、「コードを書くAI、アーキテクチャーを決める組織」というテーマで登壇したので、資料を公開します（同じテーマでの社内講演依頼もお気軽にどうぞ！）。 AIがコードを書くのがあたりまえになって、コードを書くコストは...",
+      "publishedAt": "2026-11-27T11:42:28.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "486bce7c835c2bb8018f6244948fac5236cd8d51d88f67ddccc8c428b5c52c30",
+      "title": "AWSのAI-DLC v2に学ぶ AIにドメイン境界を守らせる設計",
+      "url": "https://speakerdeck.com/j5ik2o/archcon2026",
+      "description": "AIに正しさの基準を与えるのはドメインモデルです。今日はAWSのAI-DLC v2を解剖し、まず標準の基盤だけでタスク管理APIを作らせます。そのうえで自作プラグインを通じ、設計の形・入口の境界・層の依存の向きがどう変わったかを実例で整理します。検証対象は1つのAPIの中までとし、今後の拡張余地と人間が…",
+      "publishedAt": "2026-11-27T10:26:22.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "bd1ea5c715932d9431b201785ec8b74673f18f5fadb3f352ccddbdd23dda97f3",
+      "title": "[アップデート] AWS CloudFormation でも ELB for Envoy を作成できるようになりました",
+      "url": "https://dev.classmethod.jp/articles/cloudformation-elb-envoy/",
+      "description": "話題の ELB for Envoy が早速 CloudFormation に",
+      "publishedAt": "2026-11-27T08:46:36.000Z",
+      "feedName": "クラスメソッド開発ブログ"
+    },
+    {
+      "id": "e400ca3fe846dd7b65798afc6992f4306dca9e8144e7ff295a2aad7eba5d4f0d",
+      "title": "価格.comのAI駆動による全面刷新の現在地と振り返り",
+      "url": "https://speakerdeck.com/tkyowa/kakaku-com-ai-driven-system-renewal-202611",
+      "description": "アーキテクチャカンファレンス2026の登壇資料です。 価格.comでは、約960万行のC#／Classic ASPで構築されたシステムを、AIを活用して全面刷新する「DODAIプロジェクト」を進めています。本発表では、2026年6月の発表から約半年が経過したプロジェクトの現在地と、実践を通じて見え…",
+      "publishedAt": "2026-11-27T07:25:50.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "9990bcd7f64bb8a28ad2daa38a57fe0648625163035155f00e49e5fc0d482f7e",
+      "title": "ExastroをDocker Composeでインストールし、初期設定まで進める手順",
+      "url": "https://qiita.com/Exastro-community/items/e96452d6ab248958a987?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      "description": "本記事について\n\n対象読者は、Linux 環境で Exastro を試したいインフラエンジニアです。\n前提知識として、Linux のコマンド操作と、Docker の基本（コンテナやイメージ）を知っていることを想定しています。\n動作を確認したバージョンは、Exastro I...",
+      "publishedAt": "2026-11-27T06:00:27.000Z",
+      "feedName": "Qiita"
+    },
+    {
+      "id": "3073d9e2d4ca4a928e18bcbf078aaa1861e6fce5534bbdfa4bf8cbe90d3656e4",
+      "title": "Docker HubのPHP公式イメージから自前ビルドへ移行 〜Debian移行と最適化で稼働Pod数を約25%削減〜 - COLOPL Tech Blog",
+      "url": "https://blog.colopl.dev/entry/2026/11/27/110000",
+      "description": "こんにちは、サーバー基盤グループの駒崎です。 Google Kubernetes Engine（GKE）などコンテナ上で動く複数のゲームタイトル向けに、社内共通のPHPベースイメージを運用しています。インフラのCPU効率を基盤側から改善しようと手を入れた結果、Docker Hubの php 公式イメージをやめて、php.net のソースコードから自前で...",
+      "publishedAt": "2026-11-27T04:05:22.000Z",
+      "feedName": "はてなブックマーク - テクノロジー"
+    },
+    {
+      "id": "5a8177997d69debe1d13cd7d923a38fc1d3e6a21de54ad128b09c0dc70d3d2f2",
+      "title": "AIエージェントにWebのファイルを取得させるリスクについて考える",
+      "url": "https://zenn.dev/layerx/articles/65b4828efcaee2",
+      "description": "こんにちは、LayerX Ai Workforce事業部でFDE（Forward Deployed Engineer）をしている工藤です。 AIエージェントに仕事を任せると、「Webにある資料を読ませたい」という要望が出てきます。例えば、IR資料、開示資料、業界レポートといったものです。人間なら検索してPDFを開くだけの作業です。 ところが、エージェントに「任意のURLからファイルを取ってきて読む」能力を持たせるのは、セキュリティの観点ではかなり危ない行為です。 この記事は、あるAIエージェントのアプリケーションに、Webからファイルを取得する機能を足したときに考えたことをまとめたもので...",
+      "publishedAt": "2026-11-27T01:48:19.000Z",
+      "feedName": "Zenn"
     }
   ]
 }
